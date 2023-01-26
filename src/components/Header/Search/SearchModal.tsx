@@ -13,20 +13,20 @@ const searchClient = algoliasearch(CONFIG.ALGOLIA.appId, CONFIG.ALGOLIA.publicAp
 
 const recommendedArticles = [
   {
-    title: "Fund your contracts",
-    url: "/resources/fund-your-contract",
+    title: "Suggested Article A",
+    url: "/",
   },
   {
-    title: "Acquire testnet LINK",
-    url: "/resources/acquire-link",
+    title: "Suggested Article B",
+    url: "/",
   },
   {
-    title: "LINK Token Contracts",
-    url: "/resources/link-token-contracts",
+    title: "Suggested Article C",
+    url: "/",
   },
   {
-    title: "Hackathon Resources",
-    url: "/resources/hackathon-resources",
+    title: "Suggested Article D",
+    url: "/",
   },
 ]
 
