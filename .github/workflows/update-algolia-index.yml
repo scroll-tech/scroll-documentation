@@ -10,7 +10,7 @@ jobs:
     env:
       ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
       ALGOLIA_WRITE_API_KEY: ${{ secrets.ALGOLIA_WRITE_API_KEY }}
-      ALGOLIA_INDEX_NAME: prod_scroll-docs
+      ALGOLIA_INDEX_NAME: dev_scroll-docs
     defaults:
       run:
         working-directory: ./

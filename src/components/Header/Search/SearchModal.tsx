@@ -137,7 +137,7 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
   const getIndexName = () => {
     if (typeof window === "undefined") return
     const host = window.location.hostname
-    if (host === "docs.chain.link") return CONFIG.ALGOLIA.productionIndexName
+    if (host === "docs.scroll.io") return CONFIG.ALGOLIA.productionIndexName
     return CONFIG.ALGOLIA.testIndexName
   }
   return (
