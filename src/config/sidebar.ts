@@ -70,7 +70,7 @@ export const SIDEBAR = {
   developers: [
     {
       section: "Developers",
-      contents: [{ title: "Overview", url: "solana/overview" }],
+      contents: [{ title: "Overview", url: "/" }],
     },
     {
       section: "Section",
