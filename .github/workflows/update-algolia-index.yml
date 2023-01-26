@@ -16,7 +16,7 @@ jobs:
         working-directory: ./
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
+        uses: actions/checkout@v3
       - name: Install Dependencies
         run: npm i
       - name: Build
