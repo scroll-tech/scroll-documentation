@@ -1,0 +1,7 @@
+:root {
+  --color-fill-error: var(--red-500);
+  --color-fill-warning: var(--yellow-300);
+  --color-fill-success: var(--green-400);
+  --color-fill-info: var(--gray-600);
+  --color-fill-highlight: var(--blue-600);
+}

@@ -1,0 +1,35 @@
+:root {
+  /* Border radius */
+  --border-radius-primary: 4px; /* Inputs, Buttons */
+  --border-radius-secondary: 8px; /* Cards */
+  --border-radius-reset: 0; /* Border reset */
+  --border-radius-round: 50%; /* Rounded icon buttons*/
+
+  /* Border width */
+  --border-width-primary: 1px; /* Inputs */
+  --border-width-secondary: 2px; /* Buttons */
+  --border-width-reset: 0; /* Border reset */
+
+  /* Inner borders as box-shadow values */
+  --border-primary: 0px 0px 0px var(--border-width-primary) var(--color-border-primary);
+  --border-secondary: 0px 0px 0px var(--border-width-primary) var(--color-border-secondary);
+  --border-interactive: 0px 0px 0px var(--border-width-primary) var(--color-border-interactive);
+  --border-interactive-focus: 0px 0px 0px 4px var(--color-border-interactive-focus);
+
+  /* Color tokens */
+  --color-border-interactive: var(--gray-300);
+  --color-border-secondary: var(--gray-300);
+  --color-border-contrast: var(--blue-800);
+  --color-border-interactive-focus: var(--blue-600);
+  --color-border-interactive-hover: var(--gray-600);
+  --color-border-interactive-pressed: var(--gray-700);
+  --color-border-primary: var(--gray-200);
+  --color-border-interactive-error: var(--red-500);
+  --color-border-disabled: var(--gray-300);
+  --color-border-separator: var(--gray-400);
+
+  /* Border radius */
+  --border-radius-0: 0;
+  --border-radius-10: 4px;
+  --border-radius-20: 8px;
+}

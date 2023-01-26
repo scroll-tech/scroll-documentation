@@ -1,0 +1,46 @@
+.productCardGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4x);
+}
+
+@media (min-width: 50em) {
+  .productCardGrid {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+.cardTitle {
+  font-size: 1rem;
+  margin-top: 1rem;
+}
+
+.clSection {
+  text-align: center;
+}
+.clSectionCards {
+  text-align: center;
+  margin: var(--space-4x) 0;
+}
+.clProductCard {
+  text-align: center;
+  display: inline-flex;
+  align-content: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 150px;
+  height: 190px;
+  padding: var(--space-8x);
+  background-color: var(--white);
+  transition: all 0.2s;
+}
+.clProductCard:hover {
+  background: var(--blue-100);
+  transform: translateY(-4px);
+}
+.clProductCard h5 {
+  margin: 0;
+}
+.clProductCard img {
+  max-width: 48px;
+}

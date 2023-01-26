@@ -1,0 +1,8 @@
+.container {
+  margin-top: var(--space-4x);
+}
+
+.tab {
+  padding: var(--space-1x) var(--space-2x);
+  margin-right: var(--space-2x);
+}

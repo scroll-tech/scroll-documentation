@@ -1,0 +1,15 @@
+/*
+** DEPRECATED: This temporary component is to be removed when HexAddress is refactored
+*/
+.value-large span {
+  font-size: 1rem;
+  color: var(--color-text-value);
+}
+.value span {
+  color: var(--color-text-value);
+}
+
+.link-large a {
+  font-size: 1rem;
+  display: block;
+}

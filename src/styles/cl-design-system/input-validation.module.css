@@ -1,0 +1,16 @@
+.error {
+  margin-top: var(--space-2x);
+  /* margin-bottom: var(--space-6x); */
+  display: flex;
+  align-items: center;
+}
+
+.error img {
+  margin-right: 8px;
+}
+
+.invalid,
+input.invalid,
+textarea.invalid {
+  border-color: var(--red-600);
+}

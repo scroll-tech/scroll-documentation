@@ -1,0 +1,15 @@
+---
+import { Tabs } from "./Tabs"
+---
+
+<Tabs sharedStore="packageManagers" client:visible>
+  <Fragment slot="tab.npm">npm</Fragment>
+  <Fragment slot="tab.yarn">yarn</Fragment>
+  <Fragment slot="panel.npm">
+    <slot name="npm" />
+  </Fragment>
+
+  <Fragment slot="panel.yarn">
+    <slot name="yarn" />
+  </Fragment>
+</Tabs>

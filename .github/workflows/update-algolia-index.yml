@@ -1,0 +1,25 @@
+name: Update algolia index
+
+on: [push]
+
+jobs:
+  update-prod-index:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    name: Update algolia index
+    runs-on: ubuntu-latest
+    env:
+      ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
+      ALGOLIA_WRITE_API_KEY: ${{ secrets.ALGOLIA_WRITE_API_KEY }}
+      ALGOLIA_INDEX_NAME: docs-ui
+    defaults:
+      run:
+        working-directory: ./
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
+      - name: Install Dependencies
+        run: npm i
+      - name: Build
+        run: npm run build
+      - name: Update index
+        run: npm run update-algolia-index

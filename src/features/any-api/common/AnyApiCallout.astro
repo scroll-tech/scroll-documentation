@@ -1,0 +1,15 @@
+---
+const common = await Astro.glob("./CommonCallout.md")
+const CommonComponent = common[0].Content
+
+const prerequisites = await Astro.glob("./CommonPrerequisites.md")
+const PrerequisitesComponent = prerequisites[0].Content
+
+export type Props = {
+  callout?: "common" | "prerequisites"
+}
+const { callout } = Astro.props as Props
+---
+
+{callout === "common" && <CommonComponent />}
+{callout === "prerequisites" && <PrerequisitesComponent />}

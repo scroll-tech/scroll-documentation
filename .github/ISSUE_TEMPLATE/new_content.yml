@@ -1,0 +1,25 @@
+---
+body:
+  - attributes:
+      value: 'Thanks for taking the time to help out make Scroll Documentation better!'
+    type: markdown
+  - attributes:
+      description: 'A clear and concise description of what is missing.'
+      label: 'What would you like us to add?'
+    id: what-is-missing
+    type: textarea
+    validations:
+      required: true
+  - attributes:
+      description: 'A clear and concise description of how important for the users it is?'
+      label: 'How important it is?'
+    id: importance
+    type: textarea
+    validations:
+      required: true
+description: 'File a new content request'
+labels:
+  - new content
+  - triage
+name: 'New Content'
+title: '[New Content]: <your-title-here>'

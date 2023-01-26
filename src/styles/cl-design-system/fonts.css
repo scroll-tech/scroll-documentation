@@ -1,0 +1,28 @@
+@font-face {
+  font-family: "circular";
+  src: url("https://smartcontract.imgix.net/fonts/circular-book.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "circular";
+  src: url("https://smartcontract.imgix.net/fonts/circular-bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "circular";
+  src: url("https://smartcontract.imgix.net/fonts/circular-medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "fira code";
+  src: url("https://fonts.googleapis.com/css2?family=Fira+Code");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}

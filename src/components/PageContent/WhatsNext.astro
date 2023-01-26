@@ -1,0 +1,63 @@
+---
+export type Props = { content: Record<string, string> }
+const { content = {} } = Astro.props as Props
+---
+
+<section>
+  <h4>Whats Next</h4>
+  <ul class="whats-next">
+    {
+      Object.keys(content).map((key) => (
+        <li>
+          <a href={content[key]}>› {key}</a>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  .content {
+    padding: 0;
+    /* max-width: 75ch; */
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .content > section {
+    margin-bottom: 4rem;
+  }
+
+  .block {
+    display: block;
+  }
+
+  @media (min-width: 50em) {
+    .sm\:hidden {
+      display: none;
+    }
+  }
+
+  .whats-next {
+    border: 1px solid var(--color-border-primary);
+    padding: 0;
+  }
+  .whats-next li:first-child {
+    border-top: 0;
+  }
+  .whats-next li {
+    list-style: none;
+    border-top: 1px solid var(--color-border-primary);
+    margin: 0;
+  }
+  .whats-next li a {
+    padding: var(--space-4x);
+    width: 100%;
+    display: inline-flex;
+  }
+  .whats-next li a:hover {
+    background: var(--theme-bg-accent);
+  }
+</style>

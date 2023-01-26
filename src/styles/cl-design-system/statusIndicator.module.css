@@ -1,0 +1,9 @@
+/*
+** DEPRECATED: This temporary component is to be removed when StatusIndicator is refactored
+*/
+
+.container {
+  display: flex;
+  min-height: var(--space-6x);
+  align-items: center;
+}

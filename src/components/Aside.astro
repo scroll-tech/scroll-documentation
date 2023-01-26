@@ -1,0 +1,107 @@
+---
+import alertIcon from "./Alert/Assets/alert-icon.svg"
+import infoIcon from "./Alert/Assets/info-icon.svg"
+import dangerIcon from "./Alert/Assets/danger-icon.svg"
+export type Props = {
+  type?: "note" | "tip" | "caution" | "danger"
+  title?: string
+}
+
+const { type = "note", title = type } = Astro.props as Props
+
+// SVG icon paths based on GitHub Octicons
+const icons = {
+  note: infoIcon,
+  tip: infoIcon,
+  caution: alertIcon,
+  danger: dangerIcon,
+}
+---
+
+<aside class={`content ${type}`} aria-label={title}>
+  <div class="icon">
+    <img src={icons[type]} style="width: 1.5em;height: 1.5em;" alt={type} />
+  </div>
+  <section class="asideContent">
+    <p class="title heading-100" aria-hidden="true">
+      {title}
+    </p>
+    <slot />
+  </section>
+</aside>
+
+<style>
+  aside {
+    --aside-bg: var(--color-background-info);
+
+    padding: var(--space-4x);
+    gap: var(--space-4x);
+    background-color: var(--aside-bg);
+    border-radius: var(--border-radius-10);
+    color: var(--color-text-info);
+
+    /* Indicates the aside boundaries for forced colors users, transparent is changed to a solid color */
+    outline: 1px solid transparent;
+
+    display: flex;
+  }
+
+  .title {
+    font-weight: bold;
+    font-size: 14px;
+    text-transform: uppercase;
+  }
+
+  aside p {
+    color: var(--color-text-info);
+  }
+
+  .icon {
+    flex-shrink: 0;
+    width: 1.5em;
+  }
+  .icon svg {
+    vertical-align: middle;
+    fill: currentcolor;
+  }
+
+  aside :global(a),
+  aside :global(a > code:not([class*="language"])) {
+    color: var(--color-text-link);
+  }
+
+  aside :global(p),
+  aside.content :global(ul) {
+    color: var(--theme-text);
+  }
+
+  :global(.theme-dark) aside :global(code:not([class*="language"])) {
+    color: var(--theme-code-text);
+  }
+
+  aside :global(pre) {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .tip {
+  }
+
+  .caution {
+    --aside-bg: var(--color-background-warning);
+  }
+
+  .danger {
+    --aside-bg: var(--color-background-error);
+  }
+
+  .asideContent :global(p) {
+    margin-bottom: 0;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .asideContent :global(p + p) {
+    margin-top: var(--space-2x);
+  }
+</style>

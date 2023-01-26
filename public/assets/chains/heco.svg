@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generator: Adobe Illustrator 25.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+
+<svg
+   version="1.1"
+   id="图层_1"
+   x="0px"
+   y="0px"
+   viewBox="0 0 102.4 102.4"
+   xml:space="preserve"
+   sodipodi:docname="heco.svg"
+   width="102.4"
+   height="102.4"
+   inkscape:version="1.1.2 (b8e25be833, 2022-02-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><defs
+   id="defs34" /><sodipodi:namedview
+   id="namedview32"
+   pagecolor="#ffffff"
+   bordercolor="#666666"
+   borderopacity="1.0"
+   inkscape:pageshadow="2"
+   inkscape:pageopacity="0.0"
+   inkscape:pagecheckerboard="0"
+   showgrid="false"
+   inkscape:zoom="2.0825"
+   inkscape:cx="51.620648"
+   inkscape:cy="9.1236495"
+   inkscape:window-width="1920"
+   inkscape:window-height="1011"
+   inkscape:window-x="3000"
+   inkscape:window-y="609"
+   inkscape:window-maximized="1"
+   inkscape:current-layer="图层_1" />
+<style
+   type="text/css"
+   id="style2">
+	.st0{fill:#01943F;}
+	.st1{fill:#FFFFFF;}
+	.st2{fill:url(#SVGID_1_);}
+</style>
+<linearGradient
+   id="SVGID_1_"
+   gradientUnits="userSpaceOnUse"
+   x1="52.042599"
+   y1="52.0438"
+   x2="142.9415"
+   y2="142.9427"
+   gradientTransform="translate(-48.8,-48.8)">
+	<stop
+   offset="0"
+   style="stop-color:#66BA74"
+   id="stop4" />
+	<stop
+   offset="0.5"
+   style="stop-color:#18A34A"
+   id="stop6" />
+	<stop
+   offset="1"
+   style="stop-color:#10873D"
+   id="stop8" />
+</linearGradient>
+<path
+   class="st2"
+   d="M 51.2,0 C 23.04,0 0,23.04 0,51.2 v 0 c 0,28.16 23.04,51.2 51.2,51.2 v 0 c 28.16,0 51.2,-23.04 51.2,-51.2 v 0 C 102.4,23.04 79.36,0 51.2,0 Z"
+   id="path11"
+   style="fill:url(#SVGID_1_)" />
+<g
+   id="g29"
+   transform="translate(-48.8,-48.8)">
+	<g
+   id="g15">
+		<path
+   class="st1"
+   d="m 87.42,84.06 c 0.04,-0.02 0.07,-0.04 0.11,-0.05 0.41,-0.19 0.82,-0.37 1.23,-0.53 v -8.09 c 0,-1.47 -1.19,-2.67 -2.66,-2.67 H 75.07 v 23.22 c 2.65,-5.13 6.95,-9.35 12.35,-11.88 z"
+   id="path13" />
+	</g>
+	<g
+   id="g19">
+		<path
+   class="st1"
+   d="m 98.65,98.2 c 0.03,0 0.06,0 0.09,0 h 2.37 c 3.57,0 6.46,-2.89 6.46,-6.46 v -6.92 c -1.33,-0.23 -7.41,-0.36 -8.82,-0.36 -3.6,0 -7.02,0.8 -10.08,2.24 -7.61,3.56 -13.01,11.04 -13.61,19.84 -0.04,0.55 -0.06,1.1 -0.06,1.66 0,0.56 0.02,1.11 0.06,1.66 0,0 0,0 0,0 v 14.76 c 0,1.47 1.19,2.66 2.66,2.66 h 11.02 v 0 h 0.01 c 0,0 0,-5.6 0,-10.93 v -8.28 c 0.01,-5.46 4.44,-9.87 9.9,-9.87 z"
+   id="path17" />
+	</g>
+	<g
+   id="g23">
+		<path
+   class="st1"
+   d="m 112.6,115.94 c -0.04,0.02 -0.07,0.04 -0.11,0.05 -0.41,0.19 -0.82,0.37 -1.23,0.53 v 8.09 c 0,1.47 1.19,2.67 2.66,2.67 h 11.02 v -23.22 c -2.65,5.13 -6.95,9.35 -12.34,11.88 z"
+   id="path21" />
+	</g>
+	<g
+   id="g27">
+		<path
+   class="st1"
+   d="m 124.94,90.14 c 0,0 0,0 0,0 V 75.38 c 0,-1.47 -1.19,-2.66 -2.66,-2.66 h -0.01 c 0,0 0,0 0,0 h -11.02 c 0,0 0,14.96 0,19.21 -0.01,5.46 -4.44,9.87 -9.89,9.87 0,0 0,0 0,0 v 0 c -0.02,0 -0.05,0 -0.07,0 h -2.4 c -3.57,0 -6.46,2.89 -6.46,6.46 v 6.92 c 1.33,0.23 7.41,0.36 8.82,0.36 0.16,0 0.31,0 0.47,-0.01 3.41,-0.06 6.65,-0.85 9.56,-2.21 0.02,-0.01 0.04,-0.02 0.06,-0.03 7.61,-3.56 13.01,-11.04 13.61,-19.84 0.04,-0.55 0.06,-1.1 0.06,-1.66 -0.01,-0.55 -0.03,-1.1 -0.07,-1.65 z"
+   id="path25" />
+	</g>
+</g>
+</svg>

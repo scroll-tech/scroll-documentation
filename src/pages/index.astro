@@ -1,0 +1,31 @@
+---
+import NodesCTA from "../features/landing/sections/NodesCTA.astro"
+import ProductTabs from "../features/landing/sections/ProductTabs.astro"
+import LinksCTA from "../features/landing/sections/LinksCTA.astro"
+import ResourcesCTA from "../features/landing/sections/ResourcesCTA.astro"
+import LandingLayout from "../layouts/LandingLayout.astro"
+import TutorialsCTA from "../features/landing/sections/TutorialsCTA.astro"
+import HeroCTA from "../features/landing/sections/HeroCTA.astro"
+import NewUserCTA from "~/features/landing/sections/NewUserCTA.astro"
+---
+
+<LandingLayout>
+  <HeroCTA />
+  <div class="home-wrapper" id="article">
+    <NewUserCTA />
+    <!-- <ProductTabs /> -->
+    <ResourcesCTA />
+    <NodesCTA />
+    <TutorialsCTA />
+    <LinksCTA />
+  </div>
+</LandingLayout>
+
+<style>
+  .home-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-12x);
+    margin-top: var(--space-16x);
+  }
+</style>

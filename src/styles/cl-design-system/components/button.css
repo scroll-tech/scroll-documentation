@@ -1,0 +1,8 @@
+/**
+ * These are the styles that will be applied for all buttons globally.
+ * We want thse styles to be minimal, because our buttons can differ greatly,
+ * e.g. modal close button may not share styles with primary button.
+ */
+button {
+  cursor: pointer;
+}

@@ -1,0 +1,57 @@
+#cubeWrapper {
+  --bg-color: transparent;
+  --fill-color: zircon;
+  --size: 600;
+  --size-multiplier: 1.7;
+  --radius-amount: 66;
+
+  background-color: var(--bg-color);
+  position: relative;
+  height: calc(var(--size) * var(--size-multiplier));
+  width: calc(var(--size) * var(--size-multiplier));
+  mix-blend-mode: screen;
+}
+
+#wrapper {
+  transform: rotateX(236deg) rotateZ(-135deg);
+  width: var(--size);
+  height: var(--size);
+  position: absolute;
+  transform-style: preserve-3d;
+  top: 44.5%;
+  left: 20%;
+}
+
+#wrapper > div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.innerBox {
+  border-radius: calc(var(--size) / var(--border-radius));
+  background-color: var(--fill-color);
+}
+
+#topCenter {
+  transform: translateZ(-var(--size));
+}
+#topRight {
+  transform: rotateY(90deg);
+  transform-origin: left;
+}
+#bottomLeft {
+  transform: rotateY(-90deg);
+  transform-origin: right;
+}
+
+#topLeft {
+  transform: rotateX(-90deg);
+  transform-origin: top;
+}
+#bottomRight {
+  transform: rotateX(90deg);
+  transform-origin: bottom;
+}

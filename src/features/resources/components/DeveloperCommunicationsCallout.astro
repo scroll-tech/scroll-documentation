@@ -1,0 +1,42 @@
+---
+import { NewsletterCTA } from "@components/Footer/NewsletterCTA"
+---
+
+<div id="cta-wrapper">
+  <NewsletterCTA title="Subscribe to the latest Scroll Developer news" />
+</div>
+
+<!-- TODO: Figure out if we want to replace this with something else. -->
+<section>
+  <div class="cl-box cl-box-blue">
+    <h3>微信中文开发者社区</h3>
+    <h3>(WeChat Chinese Developer Community)</h3>
+    <img src="/images/contract-devs/qr.png" width="250" height="252" loading="lazy" />
+    <p>
+      <a href="https://u.wechat.com/MFfVjWlXvRIvwy5_hxFgvaE"> https://u.wechat.com/MFfVjWlXvRIvwy5_hxFgvaE</a>
+    </p>
+  </div>
+</section>
+
+<style>
+  #cta-wrapper {
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .cl-box-blue {
+    background-color: #375bd2;
+    border-radius: 16px;
+    color: #fff;
+    padding: 32px;
+    text-align: center;
+  }
+  .cl-box-blue h3 {
+    color: var(--white);
+  }
+  .cl-box-blue a {
+    color: var(--white);
+    border: 1px solid var(--white);
+    padding: 2px;
+    border-radius: 2px;
+  }
+</style>

@@ -1,0 +1,159 @@
+.primary,
+.secondary {
+  composes: paragraph-100 from global;
+  appearance: none;
+  border-radius: var(--border-radius-primary);
+  border-style: solid;
+  border-width: var(--border-width-secondary);
+  display: inline-block;
+  font-weight: var(--font-weight-medium);
+  /*
+  * In the design guide the border (2px in this case) is on the inside and it is not accounted towards the total height of the component.
+  * In order to make up for this and avoid having a larger button, this line-height was reduced by 4px.
+  */
+  line-height: 20px;
+  padding: var(--space-2x) var(--space-6x);
+  text-align: center;
+  text-decoration: none;
+}
+
+.primary:focus,
+.secondary:focus {
+  outline: 0;
+  box-shadow: 0px 0px 0px 4px var(--color-border-interactive-focus), 0px 12px 32px -12px rgba(12, 22, 44, 0.32);
+}
+
+.primary:disabled,
+.secondary:disabled {
+  cursor: not-allowed;
+  outline: 0;
+  box-shadow: none;
+}
+
+.primary {
+  color: var(--white);
+  background-color: var(--blue-600);
+  border-color: var(--blue-600);
+}
+
+.primary:active {
+  border-color: var(--gray-900);
+  background-color: var(--gray-900);
+}
+
+.primary:focus {
+  border-color: var(--gray-900);
+  background-color: var(--blue-800);
+}
+
+.primary:hover {
+  border-color: var(--gray-900);
+  background-color: var(--blue-800);
+}
+
+.primary:disabled {
+  border-color: var(--gray-200);
+  background-color: var(--gray-200);
+  color: var(--gray-500);
+}
+
+.secondary {
+  color: var(--blue-600);
+  background-color: var(--white);
+  border-color: var(--blue-600);
+}
+
+.secondary:active {
+  border-color: var(--gray-900);
+  background-color: var(--blue-100);
+  color: var(--gray-900);
+}
+
+.secondary:focus {
+  border-color: var(--blue-800);
+  background-color: var(--white);
+}
+
+.secondary:hover {
+  border-color: var(--blue-800);
+  background-color: var(--blue-100);
+  color: var(--blue-800);
+}
+
+.secondary:disabled {
+  border-color: var(--gray-300);
+  background-color: var(--white);
+  color: var(--gray-300);
+}
+
+.tertiary {
+  composes: paragraph-100 from global;
+  appearance: none;
+  display: inline-flex;
+  gap: var(--space-1x);
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  outline: none;
+  font-weight: var(--font-weight-medium);
+  line-height: 1rem;
+  color: var(--color-text-link);
+  padding: var(--space-3x) 0;
+  text-decoration: underline;
+  text-decoration-thickness: var(--border-width-secondary);
+  text-underline-position: under;
+}
+
+.tertiary svg {
+  color: var(--color-text-link);
+}
+
+.tertiary:active,
+.tertiary:active svg {
+  color: var(--color-text-link-pressed);
+}
+.tertiary:focus,
+.tertiary:focus svg {
+  color: var(--color-text-link-hover);
+  text-decoration-thickness: var(--space-1x);
+}
+.tertiary:hover,
+.tertiary:hover svg {
+  color: var(--color-text-link-hover);
+}
+.tertiary:disabled,
+.tertiary:disabled svg {
+  color: var(--color-text-disabled);
+}
+
+.reset {
+  background: transparent;
+  border-radius: var(--border-radius-primary);
+  border: none;
+}
+
+.reset:focus-visible {
+  outline-offset: var(--border-width-secondary);
+  outline: var(--border-width-primary) solid var(--blue-600);
+}
+
+.tag {
+  background: var(--blue-200);
+  border-radius: var(--border-radius-primary);
+  padding: var(--space-1x) var(--space-2x);
+  color: var(--blue-600);
+  border: var(--border-width-primary) solid transparent;
+  text-align: start;
+}
+
+.tag:focus-visible,
+.tag:hover {
+  background: transparent;
+  border: var(--border-width-primary) solid var(--blue-300);
+}
+
+.tag:active {
+  background: var(--blue-800);
+  color: var(--blue-200);
+}

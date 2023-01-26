@@ -1,0 +1,15 @@
+*,
+*:before,
+*:after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+summary {
+  list-style: none;
+}
+
+::-webkit-details-marker {
+  display: none;
+}

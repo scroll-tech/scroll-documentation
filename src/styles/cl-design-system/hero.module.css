@@ -1,0 +1,68 @@
+.container {
+  composes: container from global;
+  margin-top: var(--space-6x);
+}
+
+.container p {
+  color: var(--gray-700);
+  max-width: 640px;
+  margin-bottom: 0;
+}
+
+.container button,
+.container a {
+  width: 100%;
+  margin-top: var(--space-4x);
+}
+
+.container > p + a,
+.container > p + button {
+  margin-top: var(--space-6x);
+}
+
+.container h1 > img {
+  margin-right: var(--space-2x);
+  height: var(--space-6x);
+  width: var(--space-6x);
+}
+
+.container h1 button {
+  margin-top: var(--space-6x);
+}
+
+.container h1 a {
+  letter-spacing: normal;
+}
+
+.container p a {
+  color: var(--blue-600);
+  text-decoration: none;
+}
+
+@media screen and (min-width: 768px) {
+  .container {
+    margin-top: var(--space-12x);
+  }
+  .container h1 {
+    display: flex;
+    align-items: center;
+  }
+
+  .container h1 button,
+  .container h1 a,
+  .container h1 > div {
+    margin-left: auto;
+    margin-top: 0;
+  }
+
+  .container a,
+  .container button {
+    width: auto;
+  }
+
+  .container > p + a,
+  .container > p + button {
+    margin-right: var(--space-4x);
+    margin-top: var(--space-4x);
+  }
+}

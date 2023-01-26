@@ -1,0 +1,9 @@
+:root {
+  --font-family-text: "circular", Arial, "Helvetica Neue", Helvetica, sans-serif;
+  --font-family-code: "fira code", "Courier New", monospace, sans-serif;
+
+  /* Font weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+}

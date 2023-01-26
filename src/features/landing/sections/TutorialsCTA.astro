@@ -1,0 +1,144 @@
+---
+import button from "../../../styles/cl-design-system/button.module.css"
+import VideoPlayerIcon from "../assets/VideoPlayerIcon.astro"
+import tutorialPreview from "../assets/video-preview.png"
+import avatarAustin from "../assets/people/austin-griffith.png"
+import avatarPatrick from "../assets/people/patrick-collins.png"
+import avatarNader from "../assets/people/nader-dabit.png"
+import { LinkTuple } from "../types"
+import { clsx } from "~/lib"
+const links = [
+  ["Video A", "https://www.youtube.com/playlist?list="],
+  ["Video B", "https://www.youtube.com/playlist?list="],
+  ["Video C", "https://www.youtube.com/playlist?list="],
+  ["Video D", "https://www.youtube.com/"],
+] as LinkTuple[]
+const people = [
+  {
+    name: "DevRel Celeb",
+    image: avatarAustin,
+    link: "https://www.youtube.com/watch?",
+  },
+  {
+    name: "DevRel Celeb B",
+    image: avatarPatrick,
+    link: "https://www.youtube.com/watch?",
+  },
+  {
+    name: "DevRel Celeb C",
+    image: avatarNader,
+    link: "https://www.youtube.com/watch?",
+  },
+  {
+    name: "Satoshi",
+    image: avatarNader,
+    link: "https://www.youtube.com/watch?",
+  },
+  {
+    name: "Celeb C Again",
+    image: avatarNader,
+    link: "https://www.youtube.com/watch?",
+  },
+  {
+    name: "We really want to empahsize Celeb C",
+    image: avatarNader,
+    link: "https://www.youtube.com/watch?",
+  },
+]
+---
+
+<div class="tutorials-cta">
+  <div>
+    <a
+      href="https://www.youtube.com/watch?v=yN3zpI3sNAE"
+      target="_blank"
+      rel="noopener"
+      aria-label="Learn more about the technology we are building on our YouTube channel"
+    >
+      <img
+        class="videoPreview"
+        src={tutorialPreview}
+        alt="Learn more about the technology we are building on our YouTube channel"
+      />
+    </a>
+  </div>
+  <div class="cta-col">
+    <h4>Watch tutorials</h4>
+    <p>
+      Learn more about the technology we are building. We're constantly uploading new videos to our YouTube channel.
+    </p>
+    <a
+      class={clsx(button.primary, "cta-button")}
+      href="https://www.youtube.com/@Scroll_ZKP"
+      style="display: inline-flex;"
+      target="_blank"
+      rel="noopener"
+    >
+      <VideoPlayerIcon />
+      Watch tutorials
+    </a>
+  </div>
+  <div class="linklist">
+    {
+      links.map((link) => (
+        <a href={link[1]} target="_blank" rel="noopener">
+          {link[0]}
+        </a>
+      ))
+    }
+  </div>
+  <div class="linklist">
+    {
+      people.map((people) => (
+        <a href={people.link} target="_blank" rel="noopener">
+          <img
+            src={people.image}
+            style="width: var(--space-6x); height: var(--space-6x); border-radius: 50%"
+            alt={people.name}
+          />
+          {people.name}
+        </a>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .videoPreview {
+    border-radius: 4px;
+  }
+  .tutorials-cta {
+    background: var(--color-background-secondary);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4x);
+    padding: var(--space-8x);
+    border-radius: var(--border-radius-primary);
+  }
+
+  @media (min-width: 50em) {
+    .tutorials-cta {
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: var(--space-8x);
+    }
+  }
+
+  .resources-cta div a {
+    display: block;
+    margin-top: var(--space-4x);
+  }
+
+  .resources-cta div a:first-child {
+    margin-top: var(--space-0x);
+  }
+
+  .linklist a {
+    margin-top: var(--space-4x);
+    display: flex;
+    align-items: center;
+  }
+
+  .linklist a:first-child {
+    margin-top: var(--space-0x);
+  }
+</style>

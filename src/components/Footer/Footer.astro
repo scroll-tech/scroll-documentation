@@ -1,0 +1,223 @@
+---
+// TODO: Replace all footer elements -- INCLUDING SOCIAL MEDIA ICONS!
+---
+
+<footer class="footer">
+  <div class="footer-grid container">
+    <nav class="footer-col">
+      <h3 class="h3 footer-heading">Column 1</h3>
+      <ul role="list" class="footer-list">
+        <li class="footer-list-item">
+          <a href="/" class="footer-list-item-link">Item A</a>
+        </li>
+      </ul>
+    </nav>
+    <nav class="footer-col">
+      <h3 class="h3 footer-heading">Column 2</h3>
+      <ul role="list" class="footer-list">
+        <li class="footer-list-item">
+          <a href="/" class="footer-list-item-link">Item A</a>
+        </li>
+      </ul>
+    </nav>
+    <nav class="footer-col">
+      <h3 class="h3 footer-heading">Column 3</h3>
+      <ul role="list" class="footer-list">
+        <li class="footer-list-item">
+          <a href="/" class="footer-list-item-link">Item A</a>
+        </li>
+      </ul>
+    </nav>
+    <nav class="footer-col">
+      <h3 class="h3 footer-heading">Column 4</h3>
+      <ul role="list" class="footer-list">
+        <li class="footer-list-item">
+          <a href="/" class="footer-list-item-link">Item A</a>
+        </li>
+      </ul>
+    </nav>
+    <nav class="footer-col">
+      <h3 class="h3 footer-heading">Column 5</h3>
+      <ul role="list" class="footer-list">
+        <li class="footer-list-item">
+          <a href="/" class="footer-list-item-link">Item A</a>
+        </li>
+      </ul>
+    </nav>
+    <nav class="footer-col">
+      <h3 class="h3 footer-heading">Social</h3>
+      <ul role="list" class="footer-list">
+        <li class="footer-list-item-social">
+          <img
+            src="https://assets-global.website-files.com/5f6b7190899f41fb70882d08/5f760fcc8de393ea2bffa0ff_twitter.svg"
+            loading="lazy"
+            width="24"
+            height="24"
+            alt=""
+            class="footer-list-item-social-icon"
+          /><a href="https://twitter.com/scroll_zkp" class="footer-list-item-link"> Twitter</a>
+        </li>
+        <li class="footer-list-item-social">
+          <img
+            src="https://assets-global.website-files.com/5f6b7190899f41fb70882d08/5f760fcc3830fc22d9bc18c8_youtube.svg"
+            loading="lazy"
+            width="24"
+            height="24"
+            alt=""
+            class="footer-list-item-social-icon"
+          /><a href="https://www.youtube.com/@scroll_zkp" class="footer-list-item-link"> YouTube</a>
+        </li>
+        <li class="footer-list-item-social">
+          <img
+            src="https://assets-global.website-files.com/5f6b7190899f41fb70882d08/5f760fcff3840d5ec8300b30_discord.svg"
+            loading="lazy"
+            width="24"
+            height="24"
+            alt=""
+            class="footer-list-item-social-icon"
+          /><a href="https://discord.gg/scroll" class="footer-list-item-link"> Discord</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="footer-copyright-wrapper">
+    <div class="footer-copyright">
+      <div class="col footer-registry">
+        <a href="/" class="footer-copyright-logo">
+          <!-- TODO: Create thicker lined logo for white on dark, maybe render as png. -->
+          <img
+            src="/scroll-white.svg"
+            style="height:30px; width: auto"
+            loading="lazy"
+            alt="Scroll logo"
+            class="logo-white"
+          />
+        </a>
+        <div class="paragraph small footer-chainlinkreg hidden-sm">2023 Scroll</div>
+        <div class="paragraph small footer-chainlinkreg hidden-sm">
+          Forked from
+          <a href="https://github.com/smartcontractkit/documentation" target="_blank"> Chainlink Docs</a>
+        </div>
+      </div>
+      <div class="col footer-privacyandterms">
+        <!-- TODO: Link to our Privacy Policy and Terms of Use -->
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Use</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    padding: 82px 0 0;
+    background-color: var(--gray-800);
+    font-size: 16px;
+  }
+  .footer-grid {
+    display: grid;
+    padding-bottom: 64px;
+    gap: 32px;
+  }
+  .footer-heading {
+    color: var(--white);
+    font-size: 18px;
+  }
+  .footer-chainlinkreg {
+    white-space: nowrap;
+  }
+
+  .footer-list-item {
+    display: flex;
+    margin-bottom: 16px;
+    align-items: center;
+  }
+
+  .footer-list-item.footer-list-item-hidden {
+    display: none;
+  }
+
+  .footer-list-item-link {
+    color: #9ea2ab;
+  }
+  .footer-list-item-link:hover {
+    color: white;
+  }
+
+  .footer-list-item-social {
+    display: flex;
+    margin-bottom: 16px;
+  }
+
+  .footer-list-item-social-icon {
+    margin-right: 8px;
+  }
+
+  .footer-copyright-wrapper {
+    width: 100%;
+    background-color: var(--gray-900);
+    padding: var(--space-8x);
+    font-size: 14px;
+  }
+  .footer-copyright {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8x);
+  }
+  .footer-registry {
+    flex-wrap: wrap;
+    flex-direction: column;
+  }
+  .footer-privacyandterms {
+    justify-content: space-evenly;
+    gap: var(--space-8x);
+  }
+  .footer-privacyandterms a {
+    color: var(--white);
+  }
+
+  @media (min-width: 50em) {
+    .footer-grid {
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    }
+    .footer-copyright {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+    .footer-registry {
+      flex-direction: row;
+    }
+    .footer-copyright-logo {
+      margin-right: var(--space-8x);
+    }
+    .footer-chainlinkreg {
+      margin-right: var(--space-4x);
+    }
+  }
+
+  /** Utilities */
+  .col {
+    display: flex;
+    align-items: center;
+  }
+  .footer-logo-text-hide {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: -1;
+    width: 0;
+    height: 0;
+    min-width: 0;
+    opacity: 0;
+  }
+  .hidden-sm {
+    display: none;
+  }
+  @media (min-width: 50em) {
+    .hidden-sm {
+      display: block;
+    }
+  }
+</style>

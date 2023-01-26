@@ -1,0 +1,41 @@
+.overlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  top: 0;
+  left: 0;
+  z-index: 99;
+}
+.modal {
+  --modal-border: none;
+  --modal-border-radius: 0;
+  --modal-max-width: 100%;
+  --modal-max-height: 100%;
+  --modal-padding: var(--space-4x);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  max-width: var(--modal-max-width);
+  max-height: var(--modal-max-height);
+  overflow-y: auto;
+  background: var(--white);
+  box-shadow: var(--shadow-high);
+  border: var(--modal-border);
+  border-radius: var(--modal-border-radius);
+  padding: var(--modal-padding);
+  z-index: 100;
+}
+@media (min-width: 50em) {
+  .modal {
+    --modal-border: var(--border-width-primary) solid var(--gray-200);
+    --modal-border-radius: var(--border-radius-primary);
+    --modal-max-width: min(calc(100% - 32px), 768px);
+    --modal-max-height: calc(100% - 32px);
+    --modal-padding: var(--space-8x);
+    height: auto;
+  }
+}

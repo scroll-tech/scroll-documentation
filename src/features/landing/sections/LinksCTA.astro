@@ -1,0 +1,94 @@
+---
+import stackOverflow from "../assets/stack-overflow.svg"
+import discord from "../assets/discord.svg"
+import devExpert from "../assets/dev-expert.svg"
+
+const data = [
+  {
+    title: "Need integration support?",
+    description: "Talk to an expert once we TODO: a url",
+    link: "",
+    image: devExpert,
+  },
+  {
+    title: "Discord",
+    description: "Join the community",
+    link: "https://discord.gg/scroll",
+    image: discord,
+  },
+  {
+    title: "TODO: Discourse",
+    description: "Really, join the community",
+    link: "https://discord.gg/scroll",
+    image: discord,
+  },
+]
+---
+
+<div class="community-links-cta">
+  {
+    data.map((item) => (
+      <a href={item.link}>
+        <section class="card">
+          <div class="text">
+            <h5>{item.title}</h5>
+            <div>{item.description}</div>
+          </div>
+          <div class="img-circle">
+            <img src={item.image} alt={item.title} width="30" height="30" />
+          </div>
+        </section>
+      </a>
+    ))
+  }
+</div>
+
+<style>
+  .community-links-cta {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4x);
+  }
+
+  .community-links-cta > a {
+    /* transition: all 0.5s; */
+  }
+  .community-links-cta > a:hover {
+    /* transform: translateY(-8px); */
+  }
+
+  @media (min-width: 50em) {
+    .community-links-cta {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: var(--space-8x);
+    }
+  }
+
+  .community-links-cta .card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .community-links-cta .card .text > * {
+    margin: 0;
+    padding: 0;
+  }
+
+  .community-links-cta .card .text > a {
+    margin-top: var(--space-2x);
+  }
+
+  .img-circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--color-background-secondary);
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+  }
+</style>

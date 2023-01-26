@@ -1,0 +1,49 @@
+---
+import button from "../../../styles/cl-design-system/button.module.css"
+import nodesIcon from "../assets/nodes-icon.svg"
+import { clsx } from "~/lib"
+---
+
+<section class="cta-container">
+  <img src={nodesIcon} alt="Scroll Node" width="80" height="80" />
+  <h3>Need to run your own Scroll Node?</h3>
+  <p>See the Node Operator’s Guide to learn about starting and maintaining Scroll Nodes.</p>
+  <a class={clsx(button.secondary, "cta-button")} href="/infrastructure/"> Node Operator’s Guide</a>
+</section>
+
+<style>
+  .cta-container {
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--space-8x);
+    text-align: center;
+    background: var(--blue-600);
+    border-radius: var(--border-radius-primary);
+  }
+
+  .cta-container > :is(h3, p) {
+    color: var(--color-text-contrast);
+  }
+
+  .cta-container > img {
+    margin: var(--space-0x);
+  }
+
+  .cta-container > h3 {
+    margin: var(--space-8x) var(--space-0x) var(--space-0x) var(--space-0x);
+  }
+
+  .cta-container > p {
+    margin: var(--space-2x) var(--space-0x) var(--space-0x) var(--space-0x);
+  }
+
+  .cta-container > a {
+    margin: var(--space-6x) var(--space-0x) var(--space-0x) var(--space-0x);
+  }
+
+  .cta-container > * {
+    margin: var(--space-0x);
+  }
+</style>

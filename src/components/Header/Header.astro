@@ -1,0 +1,192 @@
+---
+import * as CONFIG from "../../config"
+import { Frontmatter, MENU } from "../../config/index"
+import SkipToContent from "./SkipToContent.astro"
+import SidebarToggle from "./SidebarToggle.tsx"
+import Search from "./Search/Search.tsx"
+import NotificationBanner from "~/features/notifications/components/NotificationBanner.astro"
+
+export type Props = {
+  frontmatter?: Frontmatter
+}
+const { frontmatter } = Astro.props
+
+const section = frontmatter?.section ?? ""
+---
+
+<!-- Google Tag Manager (noscript) --><!-- <noscript></noscript><iframe
+  src="https://www.googletagmanager.com/ns.html?id=GTM-N6DQ47T"
+  height="0"
+  width="0"
+  style="display:none;visibility:hidden"></iframe> --><!-- End Google Tag Manager (noscript) -->
+<header>
+  <SkipToContent />
+  <nav class="nav-wrapper" title="Top Navigation">
+    <div class="logo flex">
+      <a href="/">
+        <img src="/scroll-docs.svg" style="height:40px; width: 183px" alt={CONFIG.SITE.title ?? "Documentation"} />
+      </a>
+    </div>
+    <div class="navbar">
+      {
+        MENU.en.map((link) => (
+          <a class="nav-link" href={link.link} aria-current={link.section === section}>
+            {link.text}
+          </a>
+        ))
+      }
+    </div>
+
+    {
+      CONFIG.ALGOLIA && (
+        <div class="search-item">
+          <Search client:visible />
+        </div>
+      )
+    }
+    <a href="https://github.com/scroll-tech/scroll-documentation" class="github-url" target="_blank" rel="nofollow">
+      <img src="/assets/github.svg" />
+    </a>
+    <div class="menu-toggle">
+      <SidebarToggle client:idle />
+    </div>
+  </nav>
+</header>
+<NotificationBanner />
+
+<style>
+  header {
+    z-index: 11;
+    height: var(--theme-navbar-height);
+    width: 100%;
+    background-color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: sticky;
+    top: 0;
+  }
+
+  .nav-link {
+    color: var(--color-text-primary);
+  }
+
+  .nav-link:hover {
+    color: var(--color-text-link);
+  }
+
+  .logo {
+    display: flex;
+    overflow: hidden;
+    width: 183px;
+    height: 40px;
+    font-size: 2rem;
+    flex-shrink: 0;
+    font-weight: 600;
+    line-height: 1;
+    color: hsla(var(--color-base-white), 100%, 1);
+    gap: 0.25em;
+    z-index: -1;
+    flex-grow: 1;
+  }
+
+  .logo a {
+    display: flex;
+    padding: 0.5em 0.25em;
+    margin: -0.5em -0.25em;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .logo a {
+    transition: color 100ms ease-out;
+    color: var(--theme-text);
+  }
+
+  .logo a:hover,
+  .logo a:focus {
+    color: var(--theme-text-accent);
+  }
+
+  .logo h1 {
+    display: none;
+    font: inherit;
+    color: inherit;
+    margin: 0;
+  }
+
+  .nav-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1em;
+    width: 100%;
+    max-width: 82em;
+    margin: 0 1rem;
+  }
+  .spacer {
+    display: none;
+    flex-grow: 0.5;
+  }
+  .github-url {
+    display: none;
+  }
+
+  @media (min-width: 50em) {
+    .logo {
+      flex-grow: 0;
+    }
+
+    .spacer {
+      display: block;
+    }
+    header {
+      position: static;
+      padding: 1rem 0rem;
+    }
+
+    .logo {
+      margin: 0;
+      z-index: 0;
+    }
+
+    .logo h1 {
+      display: initial;
+    }
+
+    .menu-toggle {
+      display: none;
+    }
+  }
+
+  .navbar {
+    display: none;
+  }
+  @media (min-width: 50em) {
+    .navbar {
+      display: flex;
+      gap: 2rem;
+      flex-grow: 1;
+      justify-content: center;
+    }
+    .navbar a[aria-current="true"] {
+      border-bottom: 2px solid var(--color-text-link);
+    }
+    .github-url {
+      width: 24px;
+      display: flex;
+    }
+  }
+
+  .search-item {
+    display: none;
+    position: relative;
+    z-index: 10;
+    display: flex;
+  }
+
+  :global(.search-item > *) {
+    flex-grow: 1;
+  }
+</style>

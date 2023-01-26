@@ -1,0 +1,23 @@
+#outerWrapper {
+  position: absolute;
+  overflow: hidden;
+  width: 90vw;
+  height: 100vh;
+  z-index: -999;
+}
+
+#wrapper {
+  margin: 0px;
+  position: absolute;
+  top: -1180px;
+  right: -156px;
+  z-index: -1;
+}
+
+@media screen and (min-width: 1200px) {
+  #wrapper {
+    top: -1150px;
+    right: unset;
+    left: -800px;
+  }
+}

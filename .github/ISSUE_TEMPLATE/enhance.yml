@@ -1,0 +1,25 @@
+---
+body:
+  - attributes:
+      value: 'Thanks for taking the time to help out make Scroll Documentation better!'
+    type: markdown
+  - attributes:
+      description: 'A clear and concise description of what would you like us to improve.'
+      label: 'What would you like us to improve?'
+    id: to-improve
+    type: textarea
+    validations:
+      required: true
+  - attributes:
+      description: 'A clear and concise description of how important for the users it is?'
+      label: 'How important it is?'
+    id: importance
+    type: textarea
+    validations:
+      required: true
+description: 'Enhancement of existing docs'
+labels:
+  - enhancement
+  - triage
+name: 'Enhancement'
+title: '[Enhancement]: <your-title-here>'

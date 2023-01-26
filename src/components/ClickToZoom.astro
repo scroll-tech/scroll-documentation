@@ -1,0 +1,44 @@
+---
+export type Props = {
+  src: string
+}
+const { src } = Astro.props as Props
+
+/**
+ * This component adds the classNames required by the scripts/click-to-zoom.ts script.
+ */
+---
+
+<img src={src} class="click-to-zoom" />
+
+<style>
+  .click-to-zoom {
+    cursor: zoom-in;
+  }
+</style>
+<style is:global>
+  #expanded-image-preview {
+    max-height: 75vh;
+    max-width: 90vw;
+  }
+  #expanded-image-wrapper {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.214);
+    z-index: 100;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    margin: 0;
+    cursor: zoom-out;
+    display: none;
+  }
+  @media (min-width: 50em) {
+    #expanded-image-wrapper {
+      display: flex;
+    }
+  }
+</style>

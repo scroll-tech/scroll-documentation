@@ -1,0 +1,101 @@
+{
+  "name": "scroll-docs",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "format": "prettier --write .",
+    "linkcheck": "tsc scripts/linkcheck.ts && node scripts/linkcheck.js",
+    "update-algolia-index": "tsc scripts/update-algolia-index.ts --resolveJsonModule && node scripts/update-algolia-index.js ",
+    "sol:compile": "npx hardhat compile",
+    "format:check": "prettier --check .",
+    "format:fix": "prettier --write .",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix . ",
+    "lint-ts": "eslint --ext ts .",
+    "lint-ts:fix": "eslint --ext ts .",
+    "lint-solc": "solhint 'public/samples/**/*.sol'",
+    "prepare": "husky install"
+  },
+  "dependencies": {
+    "@algolia/client-search": "^4.14.2",
+    "@astro-community/astro-embed-youtube": "^0.2.1",
+    "@astrojs/partytown": "^1.0.1",
+    "@astrojs/prism": "^1.0.2",
+    "@astrojs/tailwind": "^2.1.3",
+    "@nanostores/preact": "^0.3.1",
+    "clipboard": "^2.0.11",
+    "ethers": "^5.7.2",
+    "focus-trap-react": "^10.0.0",
+    "github-slugger": "^1.4.0",
+    "nanostores": "^0.7.1",
+    "preact": "^10.11.3",
+    "query-string": "^7.1.1",
+    "react-instantsearch-hooks-web": "^6.38.1",
+    "tailwindcss": "^3.2.4"
+  },
+  "devDependencies": {
+    "@astrojs/mdx": "^0.11.6",
+    "@astrojs/preact": "^1.2.0",
+    "@astrojs/react": "^1.2.2",
+    "@astrojs/sitemap": "^1.0.0",
+    "@nomicfoundation/hardhat-toolbox": "^2.0.0",
+    "@nomiclabs/hardhat-ethers": "^2.2.1",
+    "@openzeppelin/contracts": "^4.8.0",
+    "@types/github-slugger": "^1.3.0",
+    "@typescript-eslint/eslint-plugin": "^5.43.0",
+    "@typescript-eslint/parser": "^5.43.0",
+    "astro": "^1.6.8",
+    "dart-linkcheck": "^2.0.15",
+    "dotenv": "^16.0.3",
+    "eslint": "^8.27.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.5.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "hardhat": "^2.12.2",
+    "husky": "^8.0.2",
+    "lint-staged": "^13.0.3",
+    "lodash": "^4.17.21",
+    "node-fetch": "^2.6.1",
+    "prettier": "^2.7.1",
+    "prettier-plugin-astro": "^0.7.0",
+    "prettier-plugin-solidity": "^1.0.0-rc.1",
+    "rehype-autolink-headings": "^6.1.1",
+    "rehype-slug": "^5.1.0",
+    "remark-directive": "^2.0.1",
+    "solhint": "^3.3.7",
+    "solhint-plugin-prettier": "^0.0.5",
+    "tsconfig-paths": "^4.1.0",
+    "typescript": "^4.8.4",
+    "unist-util-remove": "^3.1.0"
+  },
+  "lint-staged": {
+    "*.{css,md,mdx,yml,yaml,astro}": "prettier --write",
+    "*.{js,ts,json}": [
+      "prettier --write",
+      "eslint"
+    ],
+    "*.sol": [
+      "prettier --write",
+      "solhint"
+    ]
+  },
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/scroll-tech/scroll-documentation.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/scroll-tech/scroll-documentation/issues"
+  },
+  "homepage": "https://github.com/scroll-tech/scroll-documentation#readme"
+}

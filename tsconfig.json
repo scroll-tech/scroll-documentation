@@ -1,0 +1,28 @@
+{
+  "extends": "astro/tsconfigs/base",
+  "compilerOptions": {
+    // Enable top-level await, and other modern ESM features.
+    "target": "ESNext",
+    "module": "CommonJS",
+    // Enable node-style module resolution, for things like npm package imports.
+    "moduleResolution": "node",
+    // Enable JSON imports.
+    "resolveJsonModule": true,
+    // Enable stricter transpilation for better output.
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    // Add type definitions for our Vite runtime.
+    "types": ["vite/client"],
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["src/*"],
+      "@config": ["src/config/"],
+      "@config/*": ["src/config/*"],
+      "@features/*": ["src/features/*"],
+      "@variables": ["src/config/markdown-variables.ts"],
+      "@components/*": ["src/components/*"],
+      "@components": ["src/components/index.ts"],
+      "@abi": ["src/features/abi/index.ts"]
+    }
+  }
+}

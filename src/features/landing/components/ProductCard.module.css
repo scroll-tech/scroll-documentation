@@ -1,0 +1,65 @@
+.chainsWrapper {
+  display: flex;
+  gap: var(--space-2x);
+  flex-wrap: wrap;
+  margin-top: var(--space-4x);
+}
+
+.chainIcon {
+  width: var(--space-6x);
+  height: var(--space-6x);
+}
+
+.productCard {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 50em) {
+  .productCard {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 4rem;
+  }
+}
+
+.firstCol {
+}
+
+@media (min-width: 50em) {
+  .firstCol {
+    display: flex;
+    align-items: flex-start;
+  }
+}
+
+.firstCol img {
+  margin-right: var(--space-8x);
+  width: var(--space-16x);
+}
+
+.firstCol p {
+  margin: var(--space-2x) 0 var(--space-4x) 0;
+}
+
+.networks {
+  background: var(--gray-100);
+  border-radius: var(--border-radius-primary);
+  padding: 1rem;
+}
+
+.links-wrapper {
+  display: flex;
+}
+
+.links > * {
+  margin-top: var(--space-4x);
+}
+
+.links .separator {
+  border-top: 1px solid var(--gray-200);
+}
+
+.links > *:first-child {
+  margin: var(--space-0x);
+}

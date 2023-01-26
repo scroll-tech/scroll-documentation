@@ -1,0 +1,119 @@
+---
+layout: ../layouts/MainLayout.astro
+section: infrastructure
+title: Infra page Title
+---
+
+import button from "../styles/cl-design-system/button.module.css"
+import styles from "@features/landing/styles/EthereumLandingPage.module.css"
+
+Operating a Chainlink node allows you to be part of the Chainlink Network, helping developers build hybrid smart contracts, giving them access to real-world data and services.
+
+Learn more about Chainlink nodes with our step‑by‑step tutorials and documentation:
+
+<div class={styles.productCardGrid}>
+  <section class="card" >
+    <img
+    src="https://uploads-ssl.webflow.com/5e444500cbc42eeb5198206f/5e7898724c71bddf6749df17_DeFi2.svg"      class="cl-image-featured"
+      style="width: 48px"
+    />
+    <h3 class={styles.cardTitle}>Set Up a Chainlink Node</h3>
+    <p>
+      Install and Run your own node on a local machine or remote server.
+    </p>
+    <a
+      href="/chainlink-nodes/v1/running-a-chainlink-node"
+      class={button.secondary}
+      style="margin-top: var(--space-4x); display: inline-flex;"
+    >
+      {"Learn More"}
+      <img
+        class="cta-learnmore-arrow"
+        src="/images/card-icons/navigation-arrow-right.svg"
+        loading="lazy"
+        alt="Right arrow"
+        style="height: 16px"
+      />
+    </a>
+
+  </section>
+  <section class="card">
+    <div>
+      <img
+        src="https://uploads-ssl.webflow.com/5e444500cbc42eeb5198206f/5e7898724c71bd62c149df16_Example.svg"
+        class="cl-image-featured"
+        style="width: 48px"
+      />
+      <h3 class={styles.cardTitle}>Fulfill Your First Job Request</h3>
+      <p>              
+        Deploy an Oracle contract and make job requests to your node.
+      </p>
+      <a
+        href="/chainlink-nodes/v1/fulfilling-requests"
+        class={button.secondary}
+        style="margin-top: var(--space-4x); display: inline-flex;"
+      >
+        {"Learn More"}
+        <img
+          class="cta-learnmore-arrow"
+          src="/images/card-icons/navigation-arrow-right.svg"
+          loading="lazy"
+          alt="Right arrow"
+          style="height: 16px"
+        />
+      </a>
+    </div>
+
+  </section>
+  <section class="card">
+      <img
+        src="https://uploads-ssl.webflow.com/5e444500cbc42eeb5198206f/5e7894ddbc6262c7a18da684_RequestSmall.svg"        class="cl-image-featured"
+        height="50"
+      />
+      <h3 class={styles.cardTitle}>Add External Adapters to Your Node</h3>
+      <p>
+        Bring high-quality data and premium web APIs to contract developers.
+      </p>
+      <a href="/chainlink-nodes/external-adapters/node-operators"
+        class={button.secondary}
+        style="margin-top: var(--space-4x); display: inline-flex;"
+      >
+        {"Learn More"}
+        <img
+          class="cta-learnmore-arrow"
+          src="/images/card-icons/navigation-arrow-right.svg"
+          loading="lazy"
+          alt="Right arrow"
+          style="height: 16px"
+        />
+      </a>
+
+  </section>
+</div>
+
+<section class="card" style="text-align: center;">
+  <div class="cl-card-text">
+    <div class="card-icon-wrapper">
+      <img src="/images/card-icons/5f96ab4b4db522072b7ff30c_book-bookmark.svg" class="cl-image-featured"></img>
+    </div>
+    <h2>New to Chainlink and Smart Contracts?</h2>
+    <p>Learn the basics in the Getting Started Guide. Build your first smart contract on Ethereum.</p>
+    <a href="/getting-started/conceptual-overview/" class={button.secondary} style="margin-top: var(--space-4x);">
+      {"Getting Started Guide"}
+    </a>
+  </div>
+</section>
+
+<div class={styles.clSection}>
+  <h3>Explore Chainlink Node Tools</h3>
+  <div class={styles.clSectionCards}>
+    <a class={styles.clProductCard} href="https://market.link" target="_blank">
+      <img src="https://uploads-ssl.webflow.com/5e444500cbc42eeb5198206f/5e711675d22595473f1c0c20_Contract.svg" />
+      <h5>Chainlink Market</h5>
+    </a>
+    <a class={styles.clProductCard} href="https://reputation.link/" target="_blank">
+      <img src="https://uploads-ssl.webflow.com/5e444500cbc42eeb5198206f/5e711677c777c0bd0c747109_Nodes.svg" />
+      <h5>Chainlink Oracle Reputation</h5>
+    </a>
+  </div>
+</div>

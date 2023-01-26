@@ -1,0 +1,11 @@
+---
+const bridgeRisks = await Astro.glob("./read-bridge-risks.md")
+const BridgeRisksComponent = bridgeRisks[0].Content
+
+export type Props = {
+  callout?: "bridgeRisks"
+}
+const { callout } = Astro.props as Props
+---
+
+{callout === "bridgeRisks" && <BridgeRisksComponent />}

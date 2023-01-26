@@ -1,0 +1,46 @@
+---
+import heroBg from "../assets/hero-bg.png"
+import button from "../../styles/cl-design-system/button.module.css"
+import { clsx } from "../../../lib"
+import { SearchCTA } from "../components/SearchCTA.tsx"
+---
+
+<div class="hero-cta">
+  <div id="hero-search">
+    <h2>Welcome to the Scroll Documentation</h2>
+    <SearchCTA client:idle="react" />
+  </div>
+</div>
+
+<style>
+  #hero-search {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: var(--space-10x) 0;
+  }
+
+  #hero-search h2 {
+    color: var(--color-text-contrast);
+  }
+
+  #hero-search:before {
+    content: "";
+    background-image: url(../assets/hero-bg.png);
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 100%;
+    width: 100vw;
+    z-index: -1;
+    background-position: center left;
+    background-repeat: no-repeat;
+    background-color: #375bd3;
+  }
+
+  .hero-cta {
+    min-height: 100px;
+    position: relative;
+  }
+</style>

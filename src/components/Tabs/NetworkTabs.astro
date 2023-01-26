@@ -1,0 +1,14 @@
+---
+import { Tabs } from "./Tabs"
+---
+
+<Tabs sharedStore="networks" client:visible>
+  <Fragment slot="tab.Goerli">Goerli</Fragment>
+  <Fragment slot="tab.Mainnet">Mainnet</Fragment>
+  <Fragment slot="panel.Goerli">
+    <slot name="Goerli" />
+  </Fragment>
+  <Fragment slot="panel.Mainnet">
+    <slot name="Mainnet" />
+  </Fragment>
+</Tabs>

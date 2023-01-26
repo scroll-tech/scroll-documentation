@@ -1,0 +1,4 @@
+:root {
+  --container-margin: var(--space-6x);
+  --main-margin-bottom: var(--space-16x);
+}

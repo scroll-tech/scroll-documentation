@@ -1,0 +1,46 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.badge {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: var(--border-radius-primary);
+  padding: 2px 6px;
+  margin-right: var(--space-4x);
+  flex-shrink: 0;
+}
+
+.badge span {
+  color: var(--white);
+  letter-spacing: 1px;
+  line-height: var(--space-6x);
+}
+
+.container p {
+  margin-bottom: 0;
+  color: var(--white);
+  max-width: 1200px;
+}
+
+.container p a {
+  text-decoration: underline;
+  text-underline-offset: 5px;
+  text-decoration-thickness: 2px;
+  white-space: nowrap;
+  color: var(--white);
+}
+
+.additionalinfo {
+  display: none;
+}
+
+@media screen and (min-width: 768px) {
+  .additionalinfo {
+    display: inline;
+  }
+}

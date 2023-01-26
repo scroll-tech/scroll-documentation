@@ -1,0 +1,31 @@
+---
+import LandingLayout from "../layouts/LandingLayout.astro"
+---
+
+<LandingLayout>
+  <div class="wrapper">
+    <h2 class="highlight">404</h2>
+    <h2 class="heading-600">Page not found</h2>
+    <p>
+      We're sorry, but we couldn't find the page you were looking for. You can select a section from the top of the
+      page, or browse the links on the left. If you followed a broken link, <a
+        href="https://github.com/smartcontractkit/documentation/issues/new"
+        >let us know
+      </a>, or send a PR on <a href="https://github.com/smartcontractkit/documentation/">GitHub</a>
+    </p>
+  </div>
+</LandingLayout>
+
+<style>
+  .highlight {
+    color: var(--color-text-link);
+    font-size: 96px;
+  }
+  .wrapper {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--space-16x) var(--space-4x);
+  }
+</style>

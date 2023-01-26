@@ -1,0 +1,33 @@
+---
+import { Prism } from "@astrojs/prism"
+
+import fs from "node:fs/promises"
+import path from "node:path"
+
+export type Props = {
+  src: string
+  lang?: string
+  showButtonOnly?: boolean
+}
+const { src, lang, showButtonOnly } = Astro.props as Props
+
+const data = (await fs.readFile(path.join(process.cwd(), "public", src), "utf-8")).toString()
+
+const isSolidityFile = src.match(/\.sol/)
+const isSample = isSolidityFile && (src.indexOf("samples/") === 0 || src.indexOf("/samples/") === 0)
+
+// remove leading slashes
+const cleanSrc = src.replace(/^\/+/, "")
+---
+
+{!showButtonOnly && <Prism code={data} lang={lang ?? "solidity"} />}
+{
+  isSample && (
+    <div class="remix-callout">
+      <a href={`https://remix.ethereum.org/#url=https://docs.chain.link/${cleanSrc}`} target="_blank">
+        Open in Remix
+      </a>
+      <a href="/getting-started/conceptual-overview#what-is-remix">What is Remix?</a>
+    </div>
+  )
+}

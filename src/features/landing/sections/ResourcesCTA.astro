@@ -1,0 +1,40 @@
+<div class="resources-cta">
+  <h2 class="heading-500">Useful resources</h2>
+  <div>
+    <a href="/">Great Link 1</a><a href="/">Greater Link 2</a>
+  </div>
+  <div>
+    <a href="/">Prefect Resource 1</a><a href="/">More Perfect Resource 2</a>
+  </div>
+  <div>
+    <a href="/">The Resources Just Get Better</a>
+  </div>
+</div>
+
+<style>
+  .resources-cta {
+    background: var(--color-background-secondary);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4x);
+    padding: var(--space-8x);
+    border-radius: var(--border-radius-primary);
+  }
+  @media (min-width: 50em) {
+    .resources-cta {
+      background: var(--color-background-secondary);
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: var(--space-8x);
+    }
+  }
+
+  .resources-cta div a {
+    display: block;
+    margin-top: var(--space-4x);
+  }
+
+  .resources-cta div a:first-child {
+    margin-top: var(--space-0x);
+  }
+</style>

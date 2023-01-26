@@ -1,0 +1,45 @@
+---
+import newToChainlink from "../assets/new-to-chainlink.svg"
+import button from "../../../styles/cl-design-system/button.module.css"
+import { clsx } from "~/lib"
+---
+
+<section class="card">
+  <img class="img" src={newToChainlink} width="48" height="49" alt="New to Chainlink and Smart Contracts?" />
+  <div class="copy">
+    <h5>New to Scroll and ZK Rollups?</h5>
+    <p>Learn the basics in the Getting Started Guide.</p>
+  </div>
+  <div class="spacer"></div>
+  <a class={clsx(button.primary, "cta-button")} href="/getting-started/conceptual-overview"> Get Started</a>
+</section>
+
+<style>
+  .card {
+    text-align: center;
+    background: var(--blue-100);
+    border: 0;
+  }
+  .copy p {
+    color: var(--color-text-value);
+  }
+
+  @media (min-width: 50em) {
+    .card {
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: var(--space-4x);
+    }
+    .spacer {
+      flex-grow: 1;
+    }
+    .copy p {
+      margin: var(--space-0x);
+    }
+    .img {
+      width: 80px;
+      height: 80px;
+    }
+  }
+</style>

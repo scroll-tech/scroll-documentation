@@ -1,0 +1,46 @@
+:root {
+  /* Shadow color tints */
+  --shadow-color-primary: 226deg 19% 66%;
+  --shadow-color-secondary: 240deg 3% 62%;
+  --shadow-color-contrast: 226deg 2% 37%;
+
+  /* Shadow in form of layered box shadows */
+  --shadow-low: 0.3px 0.5px 0.8px hsl(var(--shadow-color-primary) / 0.1),
+    0.5px 0.9px 1.4px -0.4px hsl(var(--shadow-color-primary) / 0.26),
+    1px 2px 3.1px -0.7px hsl(var(--shadow-color-primary) / 0.42);
+
+  --shadow-mid: 0.3px 0.5px 0.8px hsl(var(--shadow-color-primary) / 0.12),
+    1px 2px 3px -0.3px hsl(var(--shadow-color-primary) / 0.21),
+    2.1px 4.3px 6.5px -0.7px hsl(var(--shadow-color-primary) / 0.31),
+    4.6px 9.3px 14px -1px hsl(var(--shadow-color-primary) / 0.4);
+
+  --shadow-high: 0.3px 0.5px 0.8px hsl(var(--shadow-color-contrast) / 0.11),
+    1.9px 3.7px 5.6px -0.1px hsl(var(--shadow-color-contrast) / 0.16),
+    3.3px 6.6px 10px -0.3px hsl(var(--shadow-color-contrast) / 0.2),
+    5px 10px 15.1px -0.4px hsl(var(--shadow-color-contrast) / 0.24),
+    7.3px 14.5px 21.9px -0.6px hsl(var(--shadow-color-contrast) / 0.28),
+    10.5px 20.9px 31.6px -0.7px hsl(var(--shadow-color-contrast) / 0.33),
+    15px 30px 45.3px -0.9px hsl(var(--shadow-color-contrast) / 0.37),
+    21.3px 42.5px 64.2px -1px hsl(var(--shadow-color-contrast) / 0.41);
+
+  --shadow-low-secondary: 0.3px 0.5px 0.8px hsl(var(--shadow-color-secondary) / 0.1),
+    0.5px 0.9px 1.4px -0.4px hsl(var(--shadow-color-secondary) / 0.26),
+    1px 2px 3.1px -0.7px hsl(var(--shadow-color-secondary) / 0.42);
+
+  --shadow-mid-secondary: 0.3px 0.5px 0.8px hsl(var(--shadow-color-secondary) / 0.12),
+    1px 2px 3px -0.3px hsl(var(--shadow-color-secondary) / 0.21),
+    2.1px 4.3px 6.5px -0.7px hsl(var(--shadow-color-secondary) / 0.31),
+    4.6px 9.3px 14px -1px hsl(var(--shadow-color-secondary) / 0.4);
+
+  --shadow-high-secondary: 0.3px 0.5px 0.8px hsl(var(--shadow-color-secondary) / 0.11),
+    1.9px 3.7px 5.6px -0.1px hsl(var(--shadow-color-secondary) / 0.16),
+    3.3px 6.6px 10px -0.3px hsl(var(--shadow-color-secondary) / 0.2),
+    5px 10px 15.1px -0.4px hsl(var(--shadow-color-secondary) / 0.24),
+    7.3px 14.5px 21.9px -0.6px hsl(var(--shadow-color-secondary) / 0.28),
+    10.5px 20.9px 31.6px -0.7px hsl(var(--shadow-color-secondary) / 0.33),
+    15px 30px 45.3px -0.9px hsl(var(--shadow-color-secondary) / 0.37),
+    21.3px 42.5px 64.2px -1px hsl(var(--shadow-color-secondary) / 0.41);
+
+  /*TO-DO: Remove as part of FM migartion https://app.shortcut.com/chainlinklabs/story/44114/move-fms-ui-into-fms*/
+  --shadow-mid: 0px 8px 24px -16px rgba(12, 22, 44, 0.32);
+}
