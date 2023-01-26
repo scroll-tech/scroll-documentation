@@ -33,5 +33,7 @@ typechain-types/
 
 .tmp
 
+.temp*
+
 .cache
 .vscode
