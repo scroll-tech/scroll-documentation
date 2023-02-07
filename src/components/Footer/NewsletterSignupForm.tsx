@@ -10,8 +10,6 @@ import toQueryString from "to-querystring"
 const TAG_1 = "Developers"
 const TAG_2 = "Developer Docs"
 
-// TODO: setup zapier hook or use custom integration for newsletter signup
-// const NEWSLETTER_URL = "https://hooks.zapier.com/hooks/catch/10015000/bb8efqc"
 const NEWSLETTER_URL =
   "https://gmail.us14.list-manage.com/subscribe/post-json?u=3b1d822eb27b2fa64d82d430b&id=0b4603244e"
 
