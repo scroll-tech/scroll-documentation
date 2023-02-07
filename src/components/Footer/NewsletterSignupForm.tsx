@@ -4,13 +4,14 @@ import { useState } from "preact/hooks"
 import "./NewsletterCTA.css"
 import button from "../../styles/cl-design-system/button.module.css"
 import { clsx } from "~/lib"
+import jsonp from "jsonp"
+import toQueryString from "to-querystring"
 
 const TAG_1 = "Developers"
 const TAG_2 = "Developer Docs"
 
-// TODO: setup zapier hook or use custom integration for newsletter signup
-// const NEWSLETTER_URL = "https://hooks.zapier.com/hooks/catch/10015000/bb8efqc"
-const NEWSLETTER_URL = ""
+const NEWSLETTER_URL =
+  "https://gmail.us14.list-manage.com/subscribe/post-json?u=3b1d822eb27b2fa64d82d430b&id=0b4603244e"
 
 export const NewsletterSignupForm = () => {
   const [isLoading, setIsLoading] = useState(false)
@@ -20,31 +21,26 @@ export const NewsletterSignupForm = () => {
     e.preventDefault()
     const email = new FormData(e.target).get("Email")
     setIsLoading(true)
-    fetch(NEWSLETTER_URL, {
-      mode: "no-cors",
-      method: "POST",
-      body: JSON.stringify({
-        email,
-        tag1: TAG_1,
-        tag2: TAG_2,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
+    const params = toQueryString({
+      EMAIL: email,
     })
-      .then((response) => {
-        if (response.type !== "opaque" && !response.ok) {
-          throw Error(response.statusText)
+    const url = NEWSLETTER_URL + "&" + params
+    jsonp(
+      url,
+      {
+        param: "c",
+      },
+      (err, data) => {
+        if (err) {
+          setIsError(true)
+        } else if (data.result !== "success") {
+          setIsError(true)
+        } else {
+          setIsSuccess(true)
         }
-        setIsSuccess(true)
-      })
-      .catch((err) => {
-        console.error(err)
-        setIsError(true)
-      })
-      .finally(() => {
         setIsLoading(false)
-      })
+      }
+    )
   }
 
   return (
