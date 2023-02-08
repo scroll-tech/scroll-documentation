@@ -30,6 +30,13 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site)
     <HeadCommon />
     <HeadSEO {content} {canonicalURL} />
     <title>{formattedContentTitle}</title>
+    <!-- Katex -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css"
+      integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ"
+      crossorigin="anonymous"
+    />
     <style>
       body {
         width: 100%;
