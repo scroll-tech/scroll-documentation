@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="72px" height="72px" viewBox="0 0 72 72" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>external-link</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="external-link" fill="#6D7380" fill-rule="nonzero">
+            <path d="M0,0 L0,72 L72,72 L72,36 L64,36 L64,64 L8,64 L8,8 L36,8 L36,0 L0,0 Z M44,0 L44,8 L58.343752,8 L21.1718752,45.171876 L26.8281248,50.828124 L64,13.65625 L64,28 L72,28 L72,0 L44,0 Z" id="形状"></path>
+        </g>
+    </g>
+</svg>

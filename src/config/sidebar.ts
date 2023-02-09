@@ -13,7 +13,7 @@ export const SIDEBAR = {
     {
       section: "Pre-Alpha Testnet",
       contents: [
-        { title: "Introduction", url: "/" },
+        { title: "Introduction", url: "https://l2scan.scroll.io/" },
         {
           title: "User Guide",
           url: "user-guide/",
@@ -24,7 +24,8 @@ export const SIDEBAR = {
             },
             {
               title: "Faucet",
-              url: "user-guide/faucet",
+              // url: "user-guide/faucet",
+              url: "https://scroll.io/prealpha/faucet",
             },
             {
               title: "Bridge",

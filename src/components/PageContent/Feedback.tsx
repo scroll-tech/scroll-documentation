@@ -17,6 +17,10 @@ const starOutline = (
     />
   </svg>
 )
+
+const appId = "hvIeDclG2pt2nzAdbKWM0qms-MdYXbMMI"
+const appKey = "lKObgvpdxLT2JK839oxSM4Fn"
+
 export const Feedback = () => {
   const [rating, setRating] = useState<number>(undefined)
   const [isSent, setIsSent] = useState(false)
@@ -29,7 +33,7 @@ export const Feedback = () => {
     }
     setRating(selectedNumber + 1)
     setIsSent(false)
-    const path = "https://docs2-cl-default-rtdb.firebaseio.com/allratings.json"
+    const path = "https://leancloud.scroll.io/1.1/classes/Feedback"
     const data = {
       rating: selectedNumber,
       time: Date.now(),
@@ -40,6 +44,8 @@ export const Feedback = () => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
+        "X-LC-Id": appId,
+        "X-LC-Key": appKey,
       },
       body: JSON.stringify(data),
     })
@@ -55,13 +61,15 @@ export const Feedback = () => {
       url: window.location.href,
     }
 
-    const path = "https://docs2-cl-default-rtdb.firebaseio.com/feedback.json"
+    const path = "https://leancloud.scroll.io/1.1/classes/Feedback"
     setIsSubmitting(true)
     fetch(path, {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
+        "X-LC-Id": appId,
+        "X-LC-Key": appKey,
       },
       body: JSON.stringify(data),
     })

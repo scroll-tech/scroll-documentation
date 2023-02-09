@@ -9,6 +9,7 @@ const { currentPage, content } = Astro.props as Props
 
 // SIDEBAR is a flat array. Group it by sections to properly render.
 const sidebarSections = !!SIDEBAR[content?.section] ? SIDEBAR[content?.section] : []
+const isExternal = (path: string) => /^(https?:|mailto:|tel:)/.test(path)
 
 const removeSlashes = function (url: string) {
   let sanitizedUrl = url
@@ -52,10 +53,18 @@ const currentPageMatch = removeSlashes(currentPage.slice(1))
                   <>
                     <li class="nav-link">
                       <a
-                        href={`${Astro.site.pathname}${child.url}`}
+                        href={isExternal(child.url) ? `${child.url}` : `${Astro.site.pathname}${child.url}`}
+                        target={isExternal(child.url) ? "_blank" : "_self"}
                         aria-current={`${currentPageMatch === removeSlashes(child.url) ? "page" : "false"}`}
                       >
                         {child.title}
+                        {isExternal(child.url) && (
+                          <img
+                            src="/assets/icons/external-link.svg"
+                            alt="external link"
+                            style="width:12px; height: 12px"
+                          />
+                        )}
                       </a>
                     </li>
                     {!!child.children && (
@@ -63,10 +72,20 @@ const currentPageMatch = removeSlashes(currentPage.slice(1))
                         {child.children.map((childItem) => (
                           <li class="nav-link nested">
                             <a
-                              href={`${Astro.site.pathname}${childItem.url}`}
+                              href={
+                                isExternal(childItem.url) ? childItem.url : `${Astro.site.pathname}${childItem.url}`
+                              }
+                              target={isExternal(child.url) ? "_blank" : "_self"}
                               aria-current={`${currentPageMatch === removeSlashes(childItem.url) ? "page" : "false"}`}
                             >
                               {childItem.title}
+                              {isExternal(childItem.url) && (
+                                <img
+                                  src="/assets/icons/external-link.svg"
+                                  alt="external link"
+                                  style="width:12px; height: 12px"
+                                />
+                              )}
                             </a>
                           </li>
                         ))}

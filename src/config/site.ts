@@ -21,4 +21,4 @@ export const OPEN_GRAPH = {
 export const GITHUB_EDIT_URL = `https://github.com/scroll-tech/scroll-documentation/tree/main/`
 
 // Uncomment this to add an "Join our Community" button to every page of documentation.
-export const COMMUNITY_INVITE_URL = `https://discord.gg/s84eJSdFhn`
+export const COMMUNITY_INVITE_URL = `https://discord.gg/scroll`
