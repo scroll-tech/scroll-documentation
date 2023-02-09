@@ -36,6 +36,9 @@
     "preact": "^10.11.3",
     "query-string": "^7.1.1",
     "react-instantsearch-hooks-web": "^6.38.1",
+    "rehype-katex": "^6.0.2",
+    "remark-gfm": "^3.0.1",
+    "remark-math": "^5.1.1",
     "tailwindcss": "^3.2.4",
     "to-querystring": "^1.1.1"
   },

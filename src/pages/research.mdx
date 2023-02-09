@@ -5,4 +5,38 @@ title: "Research Landing Title"
 isMdx: true
 ---
 
+import ClickToZoom from "../components/ClickToZoom.astro"
+
 Content for the Research landing page. for fancy stuff, see the infrastructure page.
+
+### Images zoom
+
+<ClickToZoom src="/images/contract-devs/price-aggr.png" />
+
+We define the Square-Fibonacci sequence[^1], a variation of the Fibonacci sequence:
+
+### Math
+
+- Let $f_0 = 1, f_1 = 1$
+- For $$i \geq 2$$, define $f_{i} := (f_{i-2})^2 + (f_{i-1})^2 \mod q$
+  - Where $q$ is a large prime integer. We use this modulus to bound the size of each element, so that it can be represented by some predetermined number of bits.
+
+### Tables
+
+| Syntax    | Description |
+| --------- | ----------- |
+| Header    | Title       |
+| Paragraph | Text        |
+
+### Callouts
+
+> 👍 Success
+>
+> Vitae reprehenderit at aliquid error voluptates eum dignissimos.
+
+### Footnotes
+
+Here's a simple footnote,[^1] and here's a longer one.[^bignote]
+
+[^1]: This is the first footnote.
+[^bignote]: Here's one with multiple paragraphs and code.
