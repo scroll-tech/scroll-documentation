@@ -23,6 +23,7 @@
   "dependencies": {
     "@algolia/client-search": "^4.14.2",
     "@astro-community/astro-embed-youtube": "^0.2.1",
+    "@astrojs/image": "^0.7.1",
     "@astrojs/partytown": "^1.0.1",
     "@astrojs/prism": "^1.0.2",
     "@astrojs/tailwind": "^2.1.3",

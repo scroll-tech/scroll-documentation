@@ -10,6 +10,7 @@ import rehypeAutolinkHeadings from "rehype-autolink-headings"
 import rehypeKatex from "rehype-katex"
 import remarkGfm from "remark-gfm"
 import remarkMath from "remark-math"
+import image from "@astrojs/image"
 
 import sitemap from "@astrojs/sitemap"
 
@@ -32,6 +33,7 @@ export default defineConfig({
     solidityRemixCode(),
     youtubeEmbed(),
     mdx(),
+    image(),
     tailwind({
       // Example: Disable injecting a basic `base.css` import on every page.
       // Useful if you need to define and/or import your own custom `base.css`.
