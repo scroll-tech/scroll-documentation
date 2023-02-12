@@ -10,7 +10,7 @@ const { src } = Astro.props as Props
  */
 ---
 
-<Image src={src} class="click-to-zoom" quality="80" format="avif" alt="image" />
+<Image src={src} class="click-to-zoom" quality={80} format="avif" alt="image" />
 
 <style>
   .click-to-zoom {
