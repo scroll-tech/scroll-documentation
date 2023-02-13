@@ -1,4 +1,5 @@
 ---
+import { Image } from "@astrojs/image/components"
 export type Props = {
   src: string
 }
@@ -9,11 +10,13 @@ const { src } = Astro.props as Props
  */
 ---
 
-<img src={src} class="click-to-zoom" />
+<Image src={src} class="click-to-zoom" quality={80} format="avif" alt="image" />
 
 <style>
   .click-to-zoom {
     cursor: zoom-in;
+    height: auto;
+    width: 100%;
   }
 </style>
 <style is:global>
