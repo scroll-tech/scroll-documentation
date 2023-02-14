@@ -54,7 +54,7 @@ export const NewsletterSignupForm = () => {
           onSubmit={onSubmit}
         >
           <div className="form-subscribe-field-wrapper">
-            <label htmlFor="Email" className="hiddenLabel ">
+            <label htmlFor="Email" className="overflow-hidden hidden w-0 h-0 indent-[100%] whitespace-nowrap">
               Email Address
             </label>
             <input

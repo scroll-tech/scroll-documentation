@@ -2,245 +2,177 @@
 
 /* Heading styles */
 :where(h1, h2, h3, h4, h5, h6) {
-  font-family: var(--font-family-text);
-  line-height: 1.3;
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-heading);
+  @apply font-text leading-[1.3] font-medium text-heading;
 }
 
 :where(h6) {
-  font-size: 1rem; /* 16px */
-  margin-bottom: var(--space-2x);
+  @apply text-base mb-2;
 }
 
 :where(h5) {
-  font-size: 1.25rem; /* 20px */
-  margin-bottom: var(--space-2x);
+  @apply text-[1.25rem] mb-2;
 }
 
 :where(h4) {
-  font-size: 1.5rem; /* 24px */
-  margin-bottom: var(--space-4x);
-  letter-spacing: -0.015rem;
+  @apply text-[1.5rem] mb-4 tracking-[-0.015rem];
 }
 
 :where(h3) {
-  font-size: 1.5rem; /* 24px on mobile */
-  margin-bottom: var(--space-4x); /* 16px */
-  letter-spacing: -0.015rem;
+  @apply text-[1.5rem] mb-4 tracking-[-0.015rem];
 }
 
 :where(h2) {
-  font-size: 1.75rem; /* 28px on mobile */
-  margin-bottom: var(--space-4x); /* 16px */
-  letter-spacing: -0.035rem;
+  @apply text-[1.75rem] mb-4 tracking-[-0.035rem];
 }
 
 :where(h1) {
-  font-size: 2rem; /* 32px on mobile */
-  margin-bottom: var(--space-4x); /* 16px on mobile */
-  letter-spacing: -0.04rem;
+  @apply text-[2rem] mb-4 tracking-[-0.04rem];
 }
 
 @media screen and (min-width: 768px) {
   :where(h3) {
-    font-size: 1.75rem;
-    letter-spacing: -0.0175rem;
+    @apply text-[1.75rem] tracking-[-0.0175rem];
   }
 
   :where(h2) {
-    font-size: 2rem;
-    letter-spacing: -0.04rem;
+    @apply text-[2rem] tracking-[-0.04rem];
   }
 
   :where(h1) {
-    font-size: 2.5rem;
-    margin-bottom: var(--space-6x);
-    letter-spacing: -0.05rem;
+    @apply text-[2.5rem] mb-6 tracking-[-0.05rem];
   }
 }
 
 /* Paragraph  */
 :where(body, p) {
-  font-family: var(--font-family-text);
-  line-height: 1.5;
-  font-weight: var(--font-weight-normal);
-  color: var(--color-text-primary); /* --gray-600 or #6d7380 */
+  @apply leading-[1.5] font-normal font-text text-primary;
 }
 
 :where(p) {
-  font-size: 1rem; /* 16px */
-  max-width: 640px;
-  margin-bottom: var(--space-6x);
-  max-width: 640px;
+  @apply text-base max-w-[640px] mb-6;
 }
 
 /* Text  */
 :where(span, label) {
-  font-family: var(--font-family-text);
-  font-weight: var(--font-weight-normal);
-  color: var(--color-text-primary);
-  line-height: 1rem;
-  font-size: 0.875rem; /* 14px */
+  @apply font-text font-normal text-primary leading-[1rem] text-[0.875rem];
 }
 
 :where(button, input, select, textarea) {
-  font-family: var(--font-family-text);
+  @apply font-text;
 }
 
 /* Typography Classes */
 
 /* Heading styles */
 :where(.heading, .heading-100, .heading-200, .heading-300, .heading-400, .heading-500, .heading-600) {
-  font-family: var(--font-family-text);
-  line-height: 1.3;
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-heading);
+  @apply font-text leading-[1.3] font-medium text-heading;
 }
 
 :where(.heading-100) {
-  font-size: 1rem; /* 16px */
-  margin-bottom: var(--space-2x);
+  @apply text-base mb-2;
 }
 
 :where(.heading-200) {
-  font-size: 1.25rem; /* 20px */
-  margin-bottom: var(--space-2x);
+  @apply text-[1.25rem] mb-2;
 }
 
 :where(.heading-300) {
-  font-size: 1.5rem; /* 24px */
-  margin-bottom: var(--space-4x);
-  letter-spacing: -0.015rem;
+  @apply text-[1.5rem] mb-4 tracking-[-0.015rem];
 }
 
 :where(.heading-400) {
-  font-size: 1.5rem; /* 24px on mobile */
-  margin-bottom: var(--space-4x); /* 16px */
-  letter-spacing: -0.015rem;
+  @apply text-[1.5rem] mb-4 tracking-[-0.015rem];
 }
 
 :where(.heading-500) {
-  font-size: 1.75rem; /* 28px on mobile */
-  margin-bottom: var(--space-4x); /* 16px */
-  letter-spacing: -0.035rem;
+  @apply text-[1.75rem] mb-4 tracking-[-0.035rem];
 }
 
 :where(.heading-600) {
-  font-size: 2rem; /* 32px on mobile */
-  margin-bottom: var(--space-4x); /* 16px on mobile */
-  letter-spacing: -0.04rem;
+  @apply text-[2rem] mb-4 tracking-[-0.04rem];
 }
 
 @media screen and (min-width: 768px) {
   :where(.heading-400) {
-    font-size: 1.75rem;
-    letter-spacing: -0.0175rem;
+    @apply text-[1.75rem] tracking-[-0.0175rem];
   }
 
   :where(.heading-500) {
-    font-size: 2rem;
-    letter-spacing: -0.04rem;
+    @apply text-[2rem] tracking-[-0.04rem];
   }
 
   :where(.heading-600) {
     font-size: 2.5rem;
-    margin-bottom: var(--space-6x);
-    letter-spacing: -0.05rem;
+    @apply text-[2.5rem] tracking-[-0.05rem] mb-6;
   }
 }
 
 /* Paragraph styles */
 :where(.paragraph, .paragraph-100, .paragraph-200, .paragraph-300) {
-  font-family: var(--font-family-text);
-  line-height: 1.5;
-  font-weight: var(--font-weight-normal);
-  color: var(--color-text-primary); /* --gray-600 or #6d7380 */
-  max-width: 640px;
+  @apply font-text leading-[1.5] font-normal text-primary max-w-[640px];
 }
 
 :where(.paragraph-100) {
-  font-size: 0.875rem; /* 14px */
+  @apply text-[0.875rem];
 }
 
 :where(.paragraph-200) {
-  margin-bottom: var(--space-6x);
-  font-size: 1rem; /* 16px */
+  @apply mb-6 text-base;
 }
 
 :where(.paragraph-300) {
-  font-size: 1.25rem;
+  @apply text-[1.25rem];
 }
 
 /* Text styles */
 :where(.text, .text-100, .text-200, .text-300, ) {
-  font-family: var(--font-family-text);
-  font-weight: var(--font-weight-normal);
-  color: var(--color-text-primary);
-  line-height: 1rem;
+  @apply font-text font-normal text-primary leading-[1rem];
 }
 
 :where(.text-100) {
-  font-size: 0.75rem; /* 12px */
+  @apply text-[0.75rem];
 }
 
 :where(.text-200) {
-  font-size: 0.875rem; /* 14px */
+  @apply text-[0.875rem];
 }
 
 :where(.text-300) {
-  font-size: 1rem;
+  @apply text-base;
 }
 
 /* Label style */
 :where(.label) {
-  font-family: var(--font-family-text);
-  font-size: 0.875rem; /* 14px */
-  line-height: 1rem;
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-label);
-  display: block;
+  @apply font-text text-[0.875rem] leading-[1rem] font-normal text-label block;
 }
 
 /* Display styles, primarily used on Marketing sites */
 :where(.display, .display-400, .display-500, .display-600) {
-  font-family: var(--font-family-text);
-  line-height: 1.2;
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-heading);
+  @apply font-text leading-[1.2] font-medium text-heading;
 }
 
 :where(.display-400) {
-  font-size: 2rem; /* 32px on mobile */
-  margin-bottom: var(--space-4x);
-  letter-spacing: -0.04rem;
+  @apply text-[2rem] mb-4 tracking-[-0.04rem];
 }
 
 :where(.display-500) {
-  font-size: 2.5rem; /* 40px on mobile */
-  margin-bottom: var(--space-6x);
-  letter-spacing: -0.05rem;
+  @apply text-[2.5rem] mb-6 tracking-[-0.05rem];
 }
 
 :where(.display-600) {
-  font-size: 3rem; /* 48px on mobile */
-  margin-bottom: var(--space-6x);
-  letter-spacing: -0.06rem;
+  @apply text-[3rem] mb-6 tracking-[-0.06rem];
 }
 
 @media screen and (min-width: 768px) {
   :where(.display-400) {
-    font-size: 2.5rem;
-    letter-spacing: -0.05rem;
+    @apply text-[2.5rem]  tracking-[-0.05rem];
   }
 
   :where(.display-500) {
-    font-size: 3rem;
-    letter-spacing: -0.06rem;
+    @apply text-[3rem] tracking-[-0.06rem];
   }
 
   :where(.display-600) {
-    font-size: 3.5rem;
-    letter-spacing: -0.07rem;
+    @apply text-[3.5rem] tracking-[-0.07rem];
   }
 }

@@ -9,22 +9,20 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: var(--border-radius-primary);
   padding: 2px 6px;
-  margin-right: var(--space-4x);
   flex-shrink: 0;
+  @apply rounded-primary mr-4;
 }
 
 .badge span {
-  color: var(--white);
   letter-spacing: 1px;
-  line-height: var(--space-6x);
+  @apply text-white leading-6;
 }
 
 .container p {
   margin-bottom: 0;
-  color: var(--white);
   max-width: 1200px;
+  @apply text-white;
 }
 
 .container p a {
@@ -32,7 +30,7 @@
   text-underline-offset: 5px;
   text-decoration-thickness: 2px;
   white-space: nowrap;
-  color: var(--white);
+  @apply text-white;
 }
 
 .additionalinfo {

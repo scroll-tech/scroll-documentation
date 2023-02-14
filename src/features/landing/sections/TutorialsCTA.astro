@@ -108,37 +108,34 @@ const people = [
     border-radius: 4px;
   }
   .tutorials-cta {
-    background: var(--color-background-secondary);
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-4x);
-    padding: var(--space-8x);
-    border-radius: var(--border-radius-primary);
+    @apply bg-background-secondary gap-4 p-8 rounded-primary;
   }
 
   @media (min-width: 50em) {
     .tutorials-cta {
       grid-template-columns: 1fr 1fr 1fr 1fr;
-      gap: var(--space-8x);
+      @apply gap-8;
     }
   }
 
   .resources-cta div a {
     display: block;
-    margin-top: var(--space-4x);
+    @apply mt-4;
   }
 
   .resources-cta div a:first-child {
-    margin-top: var(--space-0x);
+    @apply mt-0;
   }
 
   .linklist a {
-    margin-top: var(--space-4x);
     display: flex;
     align-items: center;
+    @apply mt-4;
   }
 
   .linklist a:first-child {
-    margin-top: var(--space-0x);
+    @apply mt-0;
   }
 </style>

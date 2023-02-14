@@ -1,17 +1,13 @@
 main {
-  margin-bottom: var(--main-margin-bottom);
+  @apply mb-16;
 }
 
 .container {
-  margin-left: var(--container-margin);
-  margin-right: var(--container-margin);
+  @apply mx-6 lg:mx-auto md:mx-8;
 }
 
 :where(.card) {
-  padding: var(--space-6x);
-  border: var(--border-width-primary) solid var(--color-border-primary);
-  background-color: var(--color-background-primary);
-  border-radius: var(--border-radius-primary);
+  @apply p-6 border-w-primary border-solid border-border-primary bg-background-primary rounded-primary;
 }
 
 @media screen and (min-width: 992px) {

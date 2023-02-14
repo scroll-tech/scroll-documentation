@@ -8,7 +8,7 @@ export type NewsletterCTAProps = {
 }
 export const NewsletterCTA = ({ title = "Stay updated on the latest Scroll news" }: NewsletterCTAProps) => {
   return (
-    <section className={"newsletter-cta"}>
+    <section className="newsletter-cta">
       <h2 className="cta-subscribe-h1 heading-600">{title}</h2>
       <NewsletterSignupForm />
     </section>

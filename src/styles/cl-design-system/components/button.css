@@ -4,5 +4,5 @@
  * e.g. modal close button may not share styles with primary button.
  */
 button {
-  cursor: pointer;
+  @apply cursor-pointer;
 }

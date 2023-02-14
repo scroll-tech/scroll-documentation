@@ -1,61 +1,30 @@
 /* Callout buttons for Remix and other redirects*/
 /* Applies to the first button, then applies different style to n+2 buttons */
-.remix-callout {
-  display: inline-flex;
-  flex-wrap: wrap;
-  margin-bottom: 0.5em;
-}
+@tailwind utilities;
 
-.remix-callout > a:nth-of-type(1) {
-  padding: 8px;
-  padding-left: 20px;
-  padding-right: 20px;
-  border: 2px solid #375bd2;
-  margin: 0px 6px;
-  border-radius: 6px;
-  box-sizing: border-box;
-  text-decoration: none !important;
-  color: #ffffff;
-  background-color: #375bd2;
-  text-align: center;
-  transition: all 0.2s;
-}
+@layer utilities {
+  .remix-callout {
+    @apply inline-flex flex-wrap mb-[0.5em];
+  }
 
-.remix-callout > a:nth-of-type(1):hover {
-  color: #ffffff;
-  background-color: #1a2b6b;
-  border: 2px solid #0c162c;
-}
+  .remix-callout > a:nth-of-type(1),
+  .remix-callout > a:nth-of-type(n + 2) {
+    @apply p-2 px-5 border-2 border-solid border-blue-600 my-0 mx-[8px] rounded-[8px] box-border text-white bg-blue-600 text-center transition-all duration-200;
+  }
 
-.remix-callout > a:nth-of-type(1):active {
-  color: #ffffff;
-  background-color: #0c162c;
-  border: 2px solid #0c162c;
-}
+  .remix-callout > a:nth-of-type(1):hover {
+    @apply text-white border-2 border-solid border-gray-900 bg-blue-800;
+  }
 
-.remix-callout > a:nth-of-type(n + 2) {
-  padding: 8px;
-  padding-left: 20px;
-  padding-right: 20px;
-  border: 2px solid #375bd2;
-  margin: 0px 6px;
-  border-radius: 6px;
-  box-sizing: border-box;
-  text-decoration: none !important;
-  color: #375bd2;
-  background-color: #ffffff;
-  text-align: center;
-  transition: all 0.2s;
-}
+  .remix-callout > a:nth-of-type(1):active {
+    @apply text-white border-2 border-solid border-gray-900 bg-gray-900;
+  }
 
-.remix-callout > a:nth-of-type(n + 2):hover {
-  color: #1a2b6b;
-  background-color: #f5f7fd;
-  border: 2px solid #1a2b6b;
-}
+  .remix-callout > a:nth-of-type(n + 2):hover {
+    @apply text-blue-800  bg-blue-100 border-2 border-solid border-blue-800;
+  }
 
-.remix-callout > a:nth-of-type(n + 2):active {
-  color: #0c162c;
-  background-color: #f5f7fd;
-  border: 2px solid #0c162c;
+  .remix-callout > a:nth-of-type(n + 2):active {
+    @apply text-gray-900  bg-blue-100 border-2 border-solid border-gray-900;
+  }
 }

@@ -1,13 +1,11 @@
 .chainsWrapper {
   display: flex;
-  gap: var(--space-2x);
   flex-wrap: wrap;
-  margin-top: var(--space-4x);
+  @apply gap-2 mt-4;
 }
 
 .chainIcon {
-  width: var(--space-6x);
-  height: var(--space-6x);
+  @apply w-6 h-6;
 }
 
 .productCard {
@@ -34,18 +32,16 @@
 }
 
 .firstCol img {
-  margin-right: var(--space-8x);
-  width: var(--space-16x);
+  @apply mr-8 w-16;
 }
 
 .firstCol p {
-  margin: var(--space-2x) 0 var(--space-4x) 0;
+  @apply mt-2 mx-0 mb-4;
 }
 
 .networks {
-  background: var(--gray-100);
-  border-radius: var(--border-radius-primary);
   padding: 1rem;
+  @apply bg-gray-100 rounded-primary;
 }
 
 .links-wrapper {
@@ -53,13 +49,13 @@
 }
 
 .links > * {
-  margin-top: var(--space-4x);
+  @apply mt-4;
 }
 
 .links .separator {
-  border-top: 1px solid var(--gray-200);
+  @apply border-0 border-t-[1px] border-solid border-gray-200;
 }
 
 .links > *:first-child {
-  margin: var(--space-0x);
+  @apply m-0;
 }

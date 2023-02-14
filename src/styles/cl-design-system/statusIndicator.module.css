@@ -4,6 +4,6 @@
 
 .container {
   display: flex;
-  min-height: var(--space-6x);
   align-items: center;
+  @apply min-h-[24px];
 }

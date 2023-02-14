@@ -2,8 +2,8 @@
 // TODO: Replace all footer elements -- INCLUDING SOCIAL MEDIA ICONS!
 ---
 
-<footer class="footer">
-  <div class="footer-grid container">
+<footer class="pt-[82px] bg-gray-800 text-base">
+  <div class="footer-grid grid pb-16 gap-8 container">
     <nav class="footer-col">
       <h3 class="h3 footer-heading">Column 1</h3>
       <ul role="list" class="footer-list">
@@ -110,44 +110,30 @@
 </footer>
 
 <style>
-  .footer {
-    padding: 82px 0 0;
-    background-color: var(--gray-800);
-    font-size: 16px;
-  }
-  .footer-grid {
-    display: grid;
-    padding-bottom: 64px;
-    gap: 32px;
-  }
   .footer-heading {
-    color: var(--white);
-    font-size: 18px;
+    @apply text-white text-[18px];
   }
   .footer-chainlinkreg {
-    white-space: nowrap;
+    @apply whitespace-nowrap;
   }
 
   .footer-list-item {
-    display: flex;
-    margin-bottom: 16px;
-    align-items: center;
+    @apply flex mb-4 items-center;
   }
 
   .footer-list-item.footer-list-item-hidden {
-    display: none;
+    @apply hidden;
   }
 
   .footer-list-item-link {
-    color: #9ea2ab;
+    @apply text-[#9ea2ab];
   }
   .footer-list-item-link:hover {
-    color: white;
+    @apply text-white;
   }
 
   .footer-list-item-social {
-    display: flex;
-    margin-bottom: 16px;
+    @apply flex mb-4;
   }
 
   .footer-list-item-social-icon {
@@ -155,69 +141,53 @@
   }
 
   .footer-copyright-wrapper {
-    width: 100%;
-    background-color: var(--gray-900);
-    padding: var(--space-8x);
-    font-size: 14px;
+    @apply w-full bg-gray-900 p-8 text-sm;
   }
   .footer-copyright {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-8x);
+    @apply flex flex-col gap-8;
   }
   .footer-registry {
-    flex-wrap: wrap;
-    flex-direction: column;
+    @apply flex-wrap flex-col;
   }
   .footer-privacyandterms {
-    justify-content: space-evenly;
-    gap: var(--space-8x);
+    @apply place-content-evenly gap-8;
+    /* justify-content: space-evenly; */
   }
   .footer-privacyandterms a {
-    color: var(--white);
+    @apply text-white;
   }
 
   @media (min-width: 50em) {
     .footer-grid {
-      grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+      @apply grid-cols-6;
     }
     .footer-copyright {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
+      @apply flex flex-row justify-between;
     }
     .footer-registry {
-      flex-direction: row;
+      @apply flex-row;
     }
     .footer-copyright-logo {
-      margin-right: var(--space-8x);
+      @apply mr-8;
     }
     .footer-chainlinkreg {
-      margin-right: var(--space-4x);
+      @apply mr-4;
     }
   }
 
   /** Utilities */
   .col {
-    display: flex;
-    align-items: center;
+    @apply flex items-center;
   }
   .footer-logo-text-hide {
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: -1;
-    width: 0;
-    height: 0;
-    min-width: 0;
-    opacity: 0;
+    @apply absolute left-0 top-0 z-[-1] w-0 h-0 min-w-0 opacity-0;
   }
   .hidden-sm {
-    display: none;
+    @apply hidden;
   }
   @media (min-width: 50em) {
     .hidden-sm {
-      display: block;
+      @apply block;
     }
   }
 </style>

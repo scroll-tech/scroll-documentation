@@ -1,5 +1,7 @@
 /* Starter file. Has to be replaced with styles from design-system */
 
+@tailwind utilities;
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -55,17 +57,17 @@ nav ul {
 }
 
 :where(a) {
-  color: var(--color-text-link);
   text-decoration: none;
   align-items: center;
   gap: 0.3rem;
+  @apply text-link;
 }
 
 :where(a:hover) {
-  color: var(--color-text-link-hover);
+  @apply text-link-hover;
 }
 :where(a:focus) {
-  color: var(--color-text-link-clicked);
+  @apply text-link-pressed;
 }
 article > section :is(ul, ol) > * + * {
   margin-top: 0.75rem;
@@ -98,7 +100,7 @@ article > section nav {
 
 article > section ::marker {
   font-weight: bold;
-  color: var(--theme-text-light);
+  @apply text-light;
 }
 
 article > section iframe {
@@ -125,9 +127,9 @@ article > section iframe {
 
 a > code {
   position: relative;
-  color: var(--theme-text-accent);
   background: transparent;
   text-underline-offset: var(--padding-block);
+  @apply text-accent;
 }
 
 a > code::before {
@@ -138,9 +140,8 @@ a > code::before {
   bottom: 0;
   left: 0;
   display: block;
-  background: var(--theme-accent);
-  opacity: var(--theme-accent-opacity);
   border-radius: var(--border-radius);
+  @apply bg-accent opacity-accent;
 }
 
 a:focus {
@@ -163,14 +164,13 @@ strong {
   --padding-block: 0.1rem;
   --padding-inline: 0.33rem;
 
-  font-family: var(--font-mono);
   font-size: 0.85em;
   color: inherit;
-  background-color: var(--theme-code-inline-bg);
   padding: var(--padding-block) var(--padding-inline);
   margin: calc(var(--padding-block) * -1) -0.125em;
   border-radius: var(--border-radius);
   word-break: break-word;
+  @apply font-mono bg-code-inline-bg;
 }
 
 pre.astro-code > code {
@@ -190,12 +190,12 @@ pre {
   padding-right: calc(var(--padding-inline) * 2);
   margin-left: calc(var(--padding-inline) * -1);
   margin-right: calc(var(--padding-inline) * -1);
-  font-family: var(--font-mono);
 
   line-height: 1.5;
   font-size: 0.85em;
   overflow-y: hidden;
   overflow-x: auto;
+  @apply font-mono;
 }
 
 table {
@@ -203,22 +203,18 @@ table {
   padding: var(--padding-block) 0;
   margin: 0;
   border-collapse: collapse;
-  color: var(--color-text-primary);
-  font-family: var(--font-family-text);
   background: #fff;
-  border: 1px solid var(--color-border-primary);
   line-height: 2;
+  @apply text-primary font-text border-[1px] border-solid border-border-primary;
 }
 
 table thead tr {
-  font-family: var(--font-family-text);
   line-height: 2.2;
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-heading);
+  @apply font-text font-medium text-heading;
 }
 
 table tbody tr {
-  border-top: 1px solid var(--color-border-primary);
+  @apply border-0 border-t-[1px] border-solid border-border-primary;
 }
 
 table code {
@@ -237,12 +233,11 @@ th {
 }
 
 pre {
-  background-color: var(--theme-code-bg);
-  color: var(--theme-code-text);
+  @apply text-code-text bg-code-bg;
 }
 
 blockquote code {
-  background-color: var(--theme-bg);
+  @apply bg-bg;
 }
 
 @media (min-width: 37.75em) {
@@ -257,10 +252,9 @@ blockquote code {
 blockquote {
   margin: 2rem 0;
   padding: 1.25em 1.5rem;
-  border-left: 3px solid var(--theme-text-light);
-  background-color: var(--theme-bg-offset);
   border-radius: 0 0.25rem 0.25rem 0;
   line-height: 1.7;
+  @apply border-0 border-l-[3px] border-solid border-light bg-bg-offset;
 }
 
 img {
@@ -269,7 +263,7 @@ img {
 
 .flex {
   display: flex;
-  align-items: center;
+  /* align-items: center; */
 }
 
 h2.heading {
@@ -283,18 +277,17 @@ h2.heading {
 .header-link {
   font-size: 1rem;
   padding: 0.1rem 0 0.1rem 1rem;
-  border-left: 4px solid var(--theme-divider);
+  @apply border-0 border-l-[4px] border-solid border-divider;
 }
 
 .header-link.active,
 .header-link:hover,
 .header-link:focus {
-  border-left-color: var(--theme-accent);
-  color: var(--theme-accent);
+  @apply border-l-accent text-accent;
 }
 .header-link:focus-within {
-  color: var(--theme-text-light);
   border-left-color: hsla(var(--color-gray-40), 1);
+  @apply text-light;
 }
 .header-link svg {
   opacity: 0.6;

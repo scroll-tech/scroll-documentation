@@ -1,13 +1,12 @@
 .button {
   background: transparent;
   border: 0;
-  padding: var(--space-2x);
   display: block;
   background-color: transparent;
   border: none;
   padding: 0;
-  color: var(--color-text-link);
   text-decoration: underline;
   text-underline-offset: 2px;
   text-decoration-thickness: 2px;
+  @apply p-2 text-link;
 }

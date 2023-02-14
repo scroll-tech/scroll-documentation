@@ -17,33 +17,31 @@ import { clsx } from "~/lib"
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: var(--space-8x);
     text-align: center;
-    background: var(--blue-600);
-    border-radius: var(--border-radius-primary);
+    @apply p-8 bg-blue-600 rounded-primary;
   }
 
   .cta-container > :is(h3, p) {
-    color: var(--color-text-contrast);
+    @apply text-contrast;
   }
 
   .cta-container > img {
-    margin: var(--space-0x);
+    @apply m-0;
   }
 
   .cta-container > h3 {
-    margin: var(--space-8x) var(--space-0x) var(--space-0x) var(--space-0x);
+    @apply m-0 mt-8;
   }
 
   .cta-container > p {
-    margin: var(--space-2x) var(--space-0x) var(--space-0x) var(--space-0x);
+    @apply m-0 mt-2;
   }
 
   .cta-container > a {
-    margin: var(--space-6x) var(--space-0x) var(--space-0x) var(--space-0x);
+    @apply m-0 mt-6;
   }
 
   .cta-container > * {
-    margin: var(--space-0x);
+    @apply m-0;
   }
 </style>
