@@ -25,8 +25,7 @@ const { content, githubEditUrl, headings, clientSideToc } = Astro.props
 
 <style>
   .feedback-wrapper {
-    padding-left: var(--space-4x);
-    margin-top: var(--space-2x);
+    @apply pl-4 mt-2;
   }
   .sidebar-nav {
     width: 100%;
@@ -37,8 +36,8 @@ const { content, githubEditUrl, headings, clientSideToc } = Astro.props
   .sidebar-nav-inner {
     height: 100%;
     padding: 0;
-    padding-top: var(--doc-padding);
     overflow: auto;
+    @apply pt-doc;
   }
   .sidebar-nav-inner > * {
     margin-top: 1rem;
@@ -48,6 +47,6 @@ const { content, githubEditUrl, headings, clientSideToc } = Astro.props
   }
 
   .sidebar-nav-inner h2 {
-    margin: var(--space-4x) 0 0 0;
+    @apply m-0 mt-4;
   }
 </style>

@@ -32,18 +32,14 @@ const icons = {
 
 <style>
   aside {
-    --aside-bg: var(--color-background-info);
-
-    padding: var(--space-4x);
-    gap: var(--space-4x);
-    background-color: var(--aside-bg);
-    border-radius: var(--border-radius-10);
-    color: var(--color-text-info);
-
     /* Indicates the aside boundaries for forced colors users, transparent is changed to a solid color */
     outline: 1px solid transparent;
 
+    --aside-bg: var(--color-background-info);
+    background-color: var(--aside-bg);
+
     display: flex;
+    @apply p-4 gap-4 rounded-[4px] text-info;
   }
 
   .title {
@@ -53,7 +49,7 @@ const icons = {
   }
 
   aside p {
-    color: var(--color-text-info);
+    @apply text-info;
   }
 
   .icon {
@@ -67,16 +63,16 @@ const icons = {
 
   aside :global(a),
   aside :global(a > code:not([class*="language"])) {
-    color: var(--color-text-link);
+    @apply text-link;
   }
 
   aside :global(p),
   aside.content :global(ul) {
-    color: var(--theme-text);
+    @apply text-text;
   }
 
   :global(.theme-dark) aside :global(code:not([class*="language"])) {
-    color: var(--theme-code-text);
+    @apply text-code-text;
   }
 
   aside :global(pre) {
@@ -102,6 +98,6 @@ const icons = {
   }
 
   .asideContent :global(p + p) {
-    margin-top: var(--space-2x);
+    @apply mt-2;
   }
 </style>

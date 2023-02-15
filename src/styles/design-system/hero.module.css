@@ -1,33 +1,31 @@
 .container {
   composes: container from global;
-  margin-top: var(--space-6x);
+  @apply mt-6;
 }
 
 .container p {
-  color: var(--gray-700);
   max-width: 640px;
   margin-bottom: 0;
+  @apply text-gray-700;
 }
 
 .container button,
 .container a {
   width: 100%;
-  margin-top: var(--space-4x);
+  @apply mt-4;
 }
 
 .container > p + a,
 .container > p + button {
-  margin-top: var(--space-6x);
+  @apply mt-6;
 }
 
 .container h1 > img {
-  margin-right: var(--space-2x);
-  height: var(--space-6x);
-  width: var(--space-6x);
+  @apply mr-2 h-6 w-6;
 }
 
 .container h1 button {
-  margin-top: var(--space-6x);
+  @apply mt-6;
 }
 
 .container h1 a {
@@ -35,13 +33,13 @@
 }
 
 .container p a {
-  color: var(--blue-600);
   text-decoration: none;
+  @apply text-blue-600;
 }
 
 @media screen and (min-width: 768px) {
   .container {
-    margin-top: var(--space-12x);
+    @apply mt-12;
   }
   .container h1 {
     display: flex;
@@ -62,7 +60,6 @@
 
   .container > p + a,
   .container > p + button {
-    margin-right: var(--space-4x);
-    margin-top: var(--space-4x);
+    @apply mx-4;
   }
 }

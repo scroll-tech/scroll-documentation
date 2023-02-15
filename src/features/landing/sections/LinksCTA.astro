@@ -47,7 +47,7 @@ const data = [
   .community-links-cta {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-4x);
+    @apply gap-4;
   }
 
   .community-links-cta > a {
@@ -61,7 +61,7 @@ const data = [
     .community-links-cta {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
-      gap: var(--space-8x);
+      @apply gap-8;
     }
   }
 
@@ -78,7 +78,7 @@ const data = [
   }
 
   .community-links-cta .card .text > a {
-    margin-top: var(--space-2x);
+    @apply mt-2;
   }
 
   .img-circle {
@@ -86,9 +86,9 @@ const data = [
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background: var(--color-background-secondary);
     width: 64px;
     height: 64px;
     flex-shrink: 0;
+    @apply bg-background-secondary;
   }
 </style>

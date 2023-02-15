@@ -112,7 +112,7 @@ const currentPageMatch = removeSlashes(currentPage.slice(1))
 
 <style>
   .menu-separator {
-    border-top: 1px solid var(--theme-divider);
+    @apply border-0 border-t-[1px] border-t-divider border-solid;
   }
   @media (min-width: 50em) {
     #mobile-menu,
@@ -138,12 +138,12 @@ const currentPageMatch = removeSlashes(currentPage.slice(1))
   }
 
   .nav-groups > :first-child {
-    padding-top: var(--doc-padding);
+    @apply pt-doc;
   }
 
   .nav-groups > :last-child {
     padding-bottom: 2rem;
-    margin-bottom: var(--theme-navbar-height);
+    @apply mb-navbar;
   }
 
   .nav-group-title {
@@ -166,13 +166,12 @@ const currentPageMatch = removeSlashes(currentPage.slice(1))
 
   .nav-link a:hover,
   .nav-link a:focus {
-    background-color: var(--theme-bg-hover);
+    @apply bg-bg-hover;
   }
 
   .nav-link a[aria-current="page"] {
-    color: var(--theme-text-accent);
-    background-color: var(--theme-bg-accent);
     font-weight: 600;
+    @apply text-accent bg-bg-accent;
   }
 
   :global(:root.theme-dark) .nav-link a[aria-current="page"] {
@@ -180,7 +179,7 @@ const currentPageMatch = removeSlashes(currentPage.slice(1))
   }
 
   .nested {
-    padding-left: var(--space-4x);
+    @apply pl-4;
   }
 
   @media (min-width: 50em) {

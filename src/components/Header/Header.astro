@@ -22,7 +22,7 @@ const section = frontmatter?.section ?? ""
 <header>
   <SkipToContent />
   <nav class="nav-wrapper" title="Top Navigation">
-    <div class="logo flex">
+    <div class="logo flex items-center">
       <a href="/">
         <img src="/scroll-docs.svg" style="height:40px; width: 183px" alt={CONFIG.SITE.title ?? "Documentation"} />
       </a>
@@ -57,23 +57,22 @@ const section = frontmatter?.section ?? ""
 <style>
   header {
     z-index: 11;
-    height: var(--theme-navbar-height);
     width: 100%;
-    background-color: var(--white);
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
     position: sticky;
     top: 0;
+    @apply h-navbar bg-white;
   }
 
   .nav-link {
-    color: var(--color-text-primary);
+    @apply text-primary;
   }
 
   .nav-link:hover {
-    color: var(--color-text-link);
+    @apply text-link;
   }
 
   .logo {
@@ -101,12 +100,12 @@ const section = frontmatter?.section ?? ""
 
   .logo a {
     transition: color 100ms ease-out;
-    color: var(--theme-text);
+    @apply text-text;
   }
 
   .logo a:hover,
   .logo a:focus {
-    color: var(--theme-text-accent);
+    @apply text-accent;
   }
 
   .logo h1 {
@@ -171,7 +170,7 @@ const section = frontmatter?.section ?? ""
       justify-content: center;
     }
     .navbar a[aria-current="true"] {
-      border-bottom: 2px solid var(--color-text-link);
+      @apply border-0 border-b-2 border-solid border-link;
     }
     .github-url {
       width: 24px;

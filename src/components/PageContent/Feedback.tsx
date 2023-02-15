@@ -1,5 +1,5 @@
 import { useState } from "preact/hooks"
-import button from "../../styles/cl-design-system/button.module.css"
+import button from "../../styles/design-system/button.module.css"
 
 const star = (
   <svg style={{ width: "var(--space-6x)", height: "var(--space-6x)" }} viewBox="0 0 24 24">

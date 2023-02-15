@@ -41,23 +41,23 @@ const { content = {} } = Astro.props as Props
   }
 
   .whats-next {
-    border: 1px solid var(--color-border-primary);
     padding: 0;
+    @apply border-[1px] border-solid border-border-primary;
   }
   .whats-next li:first-child {
     border-top: 0;
   }
   .whats-next li {
     list-style: none;
-    border-top: 1px solid var(--color-border-primary);
     margin: 0;
+    @apply border-0 border-t-[1px] border-solid border-border-primary;
   }
   .whats-next li a {
-    padding: var(--space-4x);
     width: 100%;
     display: inline-flex;
+    @apply p-4;
   }
   .whats-next li a:hover {
-    background: var(--theme-bg-accent);
+    @apply bg-bg-accent;
   }
 </style>

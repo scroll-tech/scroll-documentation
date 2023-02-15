@@ -1,5 +1,5 @@
 import React from "react"
-import headerbanner from "../../../styles/cl-design-system/headerbanner.module.css"
+import headerbanner from "../../../styles/design-system/headerbanner.module.css"
 
 type BannerType = "info" | "success" | "warning" | "danger"
 export type BannerContent = {

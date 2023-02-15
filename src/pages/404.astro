@@ -18,14 +18,14 @@ import LandingLayout from "../layouts/LandingLayout.astro"
 
 <style>
   .highlight {
-    color: var(--color-text-link);
     font-size: 96px;
+    @apply text-link;
   }
   .wrapper {
     text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: var(--space-16x) var(--space-4x);
+    @apply py-16 px-4;
   }
 </style>

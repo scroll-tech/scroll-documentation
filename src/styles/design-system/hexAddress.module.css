@@ -3,10 +3,10 @@
 */
 .value-large span {
   font-size: 1rem;
-  color: var(--color-text-value);
+  @apply text-value;
 }
 .value span {
-  color: var(--color-text-value);
+  @apply text-value;
 }
 
 .link-large a {

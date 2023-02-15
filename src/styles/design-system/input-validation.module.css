@@ -1,8 +1,7 @@
 .error {
-  margin-top: var(--space-2x);
-  /* margin-bottom: var(--space-6x); */
   display: flex;
   align-items: center;
+  @apply mt-2;
 }
 
 .error img {
@@ -12,5 +11,5 @@
 .invalid,
 input.invalid,
 textarea.invalid {
-  border-color: var(--red-600);
+  @apply border-red-600;
 }

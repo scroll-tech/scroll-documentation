@@ -3,7 +3,7 @@
 }
 
 .tabElement {
-  margin-top: var(--space-6x);
+  @apply mt-6;
 }
 
 .active {
@@ -14,22 +14,21 @@
   display: flex;
   list-style: none;
   margin: 0;
-  border-bottom: 2px solid var(--gray-200);
+  @apply border-0 border-b-[2px] border-solid border-gray-200;
 }
 
 .navTabs li a {
-  padding: var(--space-4x);
-  gap: var(--space-4x);
   display: inline-flex;
+  @apply p-4 gap-4;
 }
 
 .navTabs li:hover {
-  border-bottom: 2px solid var(--gray-300);
   margin-bottom: -2px;
+  @apply border-0 border-b-[2px] border-solid border-gray-300;
 }
 
 .activeTab,
 .navTabs .activeTab:hover {
-  border-bottom: 2px solid var(--color-text-link);
   margin-bottom: -2px;
+  @apply border-0 border-b-[2px] border-solid border-link;
 }

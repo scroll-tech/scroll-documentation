@@ -2,7 +2,7 @@
 
 import { useState } from "preact/hooks"
 import "./NewsletterCTA.css"
-import button from "../../styles/cl-design-system/button.module.css"
+import button from "../../styles/design-system/button.module.css"
 import { clsx } from "~/lib"
 import jsonp from "jsonp"
 import toQueryString from "to-querystring"
@@ -54,7 +54,7 @@ export const NewsletterSignupForm = () => {
           onSubmit={onSubmit}
         >
           <div className="form-subscribe-field-wrapper">
-            <label htmlFor="Email" className="hiddenLabel ">
+            <label htmlFor="Email" className="overflow-hidden hidden w-0 h-0 indent-[100%] whitespace-nowrap">
               Email Address
             </label>
             <input

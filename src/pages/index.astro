@@ -11,7 +11,7 @@ import NewUserCTA from "~/features/landing/sections/NewUserCTA.astro"
 
 <LandingLayout>
   <HeroCTA />
-  <div class="home-wrapper" id="article">
+  <div class="flex flex-col gap-12 mt-16" id="article">
     <NewUserCTA />
     <!-- <ProductTabs /> -->
     <ResourcesCTA />
@@ -20,12 +20,3 @@ import NewUserCTA from "~/features/landing/sections/NewUserCTA.astro"
     <LinksCTA />
   </div>
 </LandingLayout>
-
-<style>
-  .home-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-12x);
-    margin-top: var(--space-16x);
-  }
-</style>

@@ -1,0 +1,17 @@
+main {
+  @apply mb-16;
+}
+
+.container {
+  @apply mx-6 lg:mx-auto md:mx-8;
+}
+
+:where(.card) {
+  @apply p-6 border-w-primary border-solid border-border-primary bg-background-primary rounded-primary;
+}
+
+@media screen and (min-width: 992px) {
+  .container {
+    max-width: min(calc(1440px - 2 * var(--space-16x)), calc(100% - 2 * var(--space-16x)));
+  }
+}

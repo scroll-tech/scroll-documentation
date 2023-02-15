@@ -1,0 +1,178 @@
+/* Global tags - Tags are defined before classes in order to be able to correctly override tags with a class*/
+
+/* Heading styles */
+:where(h1, h2, h3, h4, h5, h6) {
+  @apply font-text leading-[1.3] font-medium text-heading;
+}
+
+:where(h6) {
+  @apply text-base mb-2;
+}
+
+:where(h5) {
+  @apply text-[1.25rem] mb-2;
+}
+
+:where(h4) {
+  @apply text-[1.5rem] mb-4 tracking-[-0.015rem];
+}
+
+:where(h3) {
+  @apply text-[1.5rem] mb-4 tracking-[-0.015rem];
+}
+
+:where(h2) {
+  @apply text-[1.75rem] mb-4 tracking-[-0.035rem];
+}
+
+:where(h1) {
+  @apply text-[2rem] mb-4 tracking-[-0.04rem];
+}
+
+@media screen and (min-width: 768px) {
+  :where(h3) {
+    @apply text-[1.75rem] tracking-[-0.0175rem];
+  }
+
+  :where(h2) {
+    @apply text-[2rem] tracking-[-0.04rem];
+  }
+
+  :where(h1) {
+    @apply text-[2.5rem] mb-6 tracking-[-0.05rem];
+  }
+}
+
+/* Paragraph  */
+:where(body, p) {
+  @apply leading-[1.5] font-normal font-text text-primary;
+}
+
+:where(p) {
+  @apply text-base max-w-[640px] mb-6;
+}
+
+/* Text  */
+:where(span, label) {
+  @apply font-text font-normal text-primary leading-[1rem] text-[0.875rem];
+}
+
+:where(button, input, select, textarea) {
+  @apply font-text;
+}
+
+/* Typography Classes */
+
+/* Heading styles */
+:where(.heading, .heading-100, .heading-200, .heading-300, .heading-400, .heading-500, .heading-600) {
+  @apply font-text leading-[1.3] font-medium text-heading;
+}
+
+:where(.heading-100) {
+  @apply text-base mb-2;
+}
+
+:where(.heading-200) {
+  @apply text-[1.25rem] mb-2;
+}
+
+:where(.heading-300) {
+  @apply text-[1.5rem] mb-4 tracking-[-0.015rem];
+}
+
+:where(.heading-400) {
+  @apply text-[1.5rem] mb-4 tracking-[-0.015rem];
+}
+
+:where(.heading-500) {
+  @apply text-[1.75rem] mb-4 tracking-[-0.035rem];
+}
+
+:where(.heading-600) {
+  @apply text-[2rem] mb-4 tracking-[-0.04rem];
+}
+
+@media screen and (min-width: 768px) {
+  :where(.heading-400) {
+    @apply text-[1.75rem] tracking-[-0.0175rem];
+  }
+
+  :where(.heading-500) {
+    @apply text-[2rem] tracking-[-0.04rem];
+  }
+
+  :where(.heading-600) {
+    font-size: 2.5rem;
+    @apply text-[2.5rem] tracking-[-0.05rem] mb-6;
+  }
+}
+
+/* Paragraph styles */
+:where(.paragraph, .paragraph-100, .paragraph-200, .paragraph-300) {
+  @apply font-text leading-[1.5] font-normal text-primary max-w-[640px];
+}
+
+:where(.paragraph-100) {
+  @apply text-[0.875rem];
+}
+
+:where(.paragraph-200) {
+  @apply mb-6 text-base;
+}
+
+:where(.paragraph-300) {
+  @apply text-[1.25rem];
+}
+
+/* Text styles */
+:where(.text, .text-100, .text-200, .text-300, ) {
+  @apply font-text font-normal text-primary leading-[1rem];
+}
+
+:where(.text-100) {
+  @apply text-[0.75rem];
+}
+
+:where(.text-200) {
+  @apply text-[0.875rem];
+}
+
+:where(.text-300) {
+  @apply text-base;
+}
+
+/* Label style */
+:where(.label) {
+  @apply font-text text-[0.875rem] leading-[1rem] font-normal text-label block;
+}
+
+/* Display styles, primarily used on Marketing sites */
+:where(.display, .display-400, .display-500, .display-600) {
+  @apply font-text leading-[1.2] font-medium text-heading;
+}
+
+:where(.display-400) {
+  @apply text-[2rem] mb-4 tracking-[-0.04rem];
+}
+
+:where(.display-500) {
+  @apply text-[2.5rem] mb-6 tracking-[-0.05rem];
+}
+
+:where(.display-600) {
+  @apply text-[3rem] mb-6 tracking-[-0.06rem];
+}
+
+@media screen and (min-width: 768px) {
+  :where(.display-400) {
+    @apply text-[2.5rem]  tracking-[-0.05rem];
+  }
+
+  :where(.display-500) {
+    @apply text-[3rem] tracking-[-0.06rem];
+  }
+
+  :where(.display-600) {
+    @apply text-[3.5rem] tracking-[-0.07rem];
+  }
+}

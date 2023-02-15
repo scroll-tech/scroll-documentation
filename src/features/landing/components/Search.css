@@ -15,8 +15,6 @@
   font-size: 1rem;
   font-family: inherit;
   line-height: inherit;
-  background-color: var(--theme-divider);
-  color: var(--color-text-placeholder);
   border-radius: 0.25rem;
   cursor: pointer;
   transition-timing-function: ease-out;
@@ -24,25 +22,24 @@
   transition-property: border-color, color;
   -webkit-font-smoothing: antialiased;
   font-style: italic;
-  padding: var(--space-4x);
   border: none;
+  @apply bg-divider text-placeholder p-4;
 }
 .search-cta-input img {
   width: 16px;
   height: 16px;
-  margin-right: var(--space-2x);
+  @apply mr-2;
 }
 .search-input:hover,
 .search-input:focus {
-  color: var(--theme-text);
-  border-color: var(--theme-text-light);
+  @apply text-text border-light;
 }
 .search-input:hover::placeholder,
 .search-input:focus::placeholder {
-  color: var(--theme-text-light);
+  @apply text-light;
 }
 .search-input::placeholder {
-  color: var(--theme-text-light);
+  @apply text-light;
 }
 .search-hint {
   position: absolute;
@@ -55,14 +52,12 @@
   justify-content: center;
   letter-spacing: 0.125em;
   font-size: 13px;
-  font-family: var(--font-mono);
   pointer-events: none;
-  border-color: var(--theme-text-lighter);
-  color: var(--theme-text-light);
   border-style: solid;
   border-width: 1px;
   border-radius: 0.25rem;
   line-height: 14px;
+  @apply font-mono border-lighter text-light;
 }
 
 @media (min-width: 50em) {
@@ -82,5 +77,5 @@
 
 .DocSearch-Modal .DocSearch-Hit a {
   box-shadow: none;
-  border: 1px solid var(--theme-accent);
+  @apply border-[1px] border-solid border-accent;
 }

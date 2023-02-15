@@ -1,7 +1,7 @@
 .productCardGrid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--space-4x);
+  @apply gap-4;
 }
 
 @media (min-width: 50em) {
@@ -20,7 +20,7 @@
 }
 .clSectionCards {
   text-align: center;
-  margin: var(--space-4x) 0;
+  @apply my-4 mx-0;
 }
 .clProductCard {
   text-align: center;
@@ -30,13 +30,12 @@
   flex-direction: column;
   width: 150px;
   height: 190px;
-  padding: var(--space-8x);
-  background-color: var(--white);
   transition: all 0.2s;
+  @apply p-8 bg-white;
 }
 .clProductCard:hover {
-  background: var(--blue-100);
   transform: translateY(-4px);
+  @apply bg-blue-100;
 }
 .clProductCard h5 {
   margin: 0;
