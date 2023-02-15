@@ -5,7 +5,7 @@ import { Web3Provider } from "@ethersproject/providers"
 // import LinkToken from "@chainlink/contracts/abi/v0.4/LinkToken.json"
 // import chains from "./reference/chains.json"
 // import linkNameSymbol from "./reference/linkNameSymbol.json"
-import buttonStyles from "../styles/cl-design-system/button.module.css"
+import buttonStyles from "../styles/design-system/button.module.css"
 
 // disable unnecessary warnings
 ethers.utils.Logger.setLogLevel(ethers.utils.Logger.levels.ERROR)

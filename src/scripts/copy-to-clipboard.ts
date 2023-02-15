@@ -1,6 +1,6 @@
 import ClipboardJS from "clipboard"
-// import button from "../../styles/cl-design-system/button.module.css"
-import button from "../styles/cl-design-system/button.module.css"
+// import button from "../../styles/design-system/button.module.css"
+import button from "../styles/design-system/button.module.css"
 
 const clipboard = new ClipboardJS(".copy-iconbutton")
 
