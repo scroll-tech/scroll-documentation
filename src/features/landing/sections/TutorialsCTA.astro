@@ -57,7 +57,7 @@ const people = [
     >
       <img
         class="videoPreview"
-        src={tutorialPreview}
+        src={tutorialPreview.src}
         alt="Learn more about the technology we are building on our YouTube channel"
       />
     </a>
@@ -92,7 +92,7 @@ const people = [
       people.map((people) => (
         <a href={people.link} target="_blank" rel="noopener">
           <img
-            src={people.image}
+            src={people.image.src}
             style="width: var(--space-6x); height: var(--space-6x); border-radius: 50%"
             alt={people.name}
           />
