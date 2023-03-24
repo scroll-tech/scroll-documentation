@@ -2,18 +2,12 @@ export const SIDEBAR = {
   gettingStarted: [
     {
       section: "Getting Started",
-      contents: [
-        { title: "Overview", url: "getting-started/overview" },
-        {
-          title: "Deploy Your First Contract",
-          url: "getting-started/deploy-your-first-contract",
-        },
-      ],
+      contents: [{ title: "Overview", url: "getting-started/overview" }],
     },
     {
-      section: "Pre-Alpha Testnet",
+      section: "Alpha Testnet",
       contents: [
-        { title: "Introduction", url: "https://l2scan.scroll.io/" },
+        // { title: "Introduction", url: "https://l2scan.scroll.io/" },
         {
           title: "User Guide",
           url: "user-guide/",
@@ -21,11 +15,6 @@ export const SIDEBAR = {
             {
               title: "Setup",
               url: "user-guide/setup",
-            },
-            {
-              title: "Faucet",
-              // url: "user-guide/faucet",
-              url: "https://scroll.io/prealpha/faucet",
             },
             {
               title: "Bridge",
@@ -36,34 +25,26 @@ export const SIDEBAR = {
               url: "user-guide/transfer-tokens",
             },
             {
-              title: "Swap",
-              url: "user-guide/swap",
-            },
-            {
               title: "Common Errors",
               url: "user-guide/common-errors",
             },
           ],
         },
-        { title: "Roll-up Explorer", url: "/pre-alpha/rollup-explorer" },
-        { title: "L1 & L2 Block Explorer", url: "/pre-alpha/block-explorer" },
+        { title: "Roll-up Explorer", url: "https://scroll.io/alpha/rollupscan" },
+        { title: "Alpha Block Explorer", url: "https://blockscout.scroll.io/" },
+        { title: "Goerli Block Explorer", url: "https://goerli.etherscan.io/" },
       ],
     },
     {
-      section: "Resources",
+      section: "Community",
       contents: [
         {
-          title: "Other stuff",
-          url: "getting-started/other-tutorials",
+          title: "Discord",
+          url: "https://discord.gg/scroll",
         },
-      ],
-    },
-    {
-      section: "Next Steps",
-      contents: [
         {
-          title: "Something else to do",
-          url: "architecture-overview/architecture-overview",
+          title: "Reserch Forum",
+          url: "https://community.scroll.io/",
         },
       ],
     },
@@ -71,29 +52,33 @@ export const SIDEBAR = {
   developers: [
     {
       section: "Developers",
-      contents: [{ title: "Overview", url: "/" }],
+      contents: [
+        { title: "Building on Scroll", url: "developers" },
+        { title: "Developer Quickstart", url: "developers/developer-quickstart" },
+        { title: "Alpha Testnet Contracts", url: "developers/alpha-testnet-contracts" },
+        { title: "Integrations", url: "developers/integrations" },
+        { title: "Ethereum & Alpha Testnet Differences", url: "developers/ethereum-and-alpha-testnet-differences" },
+      ],
     },
     {
-      section: "Section",
+      section: "Guides",
       contents: [
         {
-          title: "Using Scroll",
-          url: "",
+          title: "Contract Deployment Tutorial",
+          url: "developers/guides/contract-deployment-tutorial",
         },
       ],
     },
     {
       section: "Resources",
       contents: [
-        { title: "Getting Help", url: "resources/getting-help" },
-        {
-          title: "Off-site Link (Doesn't work)",
-          url: "https://scroll.io/",
-        },
+        { title: "Roll-up Explorer", url: "https://scroll.io/alpha/rollupscan" },
+        { title: "Alpha Block Explorer", url: "https://blockscout.scroll.io/" },
+        { title: "Goerli Block Explorer", url: "https://goerli.etherscan.io/" },
       ],
     },
   ],
-  research: [
+  technology: [
     {
       section: "Overview",
       contents: [
@@ -123,7 +108,7 @@ export const SIDEBAR = {
       ],
     },
   ],
-  zkevm: [
+  learn: [
     {
       section: "zkEVM",
       contents: [{ title: "Overview", url: "/" }],
