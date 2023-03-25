@@ -4,11 +4,12 @@ section: gettingStarted
 date: Last Modified
 title: "Common Errors"
 permalink: "user-guide/common-errors/"
+excerpt: "Seeing an error when trying to interact with Scroll Alpha Testnet? Here are some common configuration errors and how to quickly fix them."
 ---
 
 ## Incorrect nonce error when sending a transaction in MetaMask
 
-You will encounter this error when the local nonce stored in your MetaMask wallet is different from the nonce in the Scroll testnet node. It could be because there is a recent pending transaction, or the network was reset for bug fixes and feature releases. Although we aim to minimize this, we may reset the network in this Alpha phase to enable rapid development. We will notify users in advance before resetting the network.&#x20;
+You will encounter this error when the local nonce stored in your MetaMask wallet is different from the nonce in the Scroll testnet node. It could be because there is a recent pending transaction, or the network was reset for bug fixes and feature releases. Although we aim to minimize this, we may reset the network in this Alpha phase to enable rapid development. We will notify users in advance before resetting the network.
 
 To fix this issue, you need to reset your account in MetaMask for the Scroll Alpha Testnet. The steps to reset the account are:
 
@@ -25,11 +26,11 @@ _Note: Removing and re-adding a network is NOT enough to fix this - you must res
 
 ## Nothing happens when confirming a bridging/swapping transaction
 
-If no error or console logs appear, this is likely due to a nonce issue, please reset your MetaMask account as outlined above at [#incorrect-nonce-error-when-sending-a-transaction-in-metamask](common-errors.md#incorrect-nonce-error-when-sending-a-transaction-in-metamask "mention").
+If no error or console logs appear, this is likely due to a nonce issue, please reset your MetaMask account as outlined above at [#incorrect-nonce-error-when-sending-a-transaction-in-metamask](#incorrect-nonce-error-when-sending-a-transaction-in-metamask).
 
 ## Block Explorer shows "Internal server error"
 
-Use an incognito window, or open your browser developer console and remove the `_explorer_key` cookie (or all cookies: [https://www.contentstack.com/docs/developers/how-to-guides/clear-caches-and-cookies-in-different-browsers/](https://www.contentstack.com/docs/developers/how-to-guides/clear-caches-and-cookies-in-different-browsers/)).
+Use an incognito window, or open your browser developer console and remove the `_explorer_key` cookie (or all cookies). [See this guide for how to remove cookies.](https://www.contentstack.com/docs/developers/how-to-guides/clear-caches-and-cookies-in-different-browsers/).
 
 ## Sending max amount of Ether in MetaMask results in a "Failed" error
 

@@ -4,20 +4,15 @@ section: gettingStarted
 date: Last Modified
 title: "Alpha Testnet User Guide"
 permalink: "user-guide/"
-excerpt: "index page in userguide"
-whatsnext: { "Setup Your Wallet": "/user-guide/setup" }
-metadata:
-  title: "Conceptual Overview"
-  description: "Learn the basic concepts about what smart contracts are and, how to write them, and how Chainlink oracles work with smart contracts."
-  image:
-    0: "/files/1a63254-link.png"
+excerpt: "Thank you for testing out our Alpha Testnet. The Alpha Testnet consists of Ethereum's Goerli Testnet and the Scroll Alpha test network."
+whatsnext: { "Set Up Your Wallet": "/user-guide/setup" }
 ---
 
 ### Welcome to Scroll's Alpha Testnet!
 
 Thank you for testing out our Alpha Testnet. If you have questions or want to give feedback, join our [Discord](https://discord.gg/scroll)!
 
-The Alpha Testnet consists of _Ethereum's_ _Goerli Testnet_ and the _Scroll Alpha_ test network. Goerli is an Ethereum test network with PoS-based consensus, while Scroll Alpha is a zero-knowledge rollup testnet deployed on top of the former. There are some pre-deployed demo applications: a bridge between _Goerli_ and _Scroll Alpha_ based on the [Hop Exchange](https://hop.exchange/) UI, a block explorer for _Scroll Alpha_ using [Blockscout](https://blockscout.com/), and a rollup explorer.
+The Alpha Testnet consists of _Ethereum's Goerli Testnet_ and the _Scroll Alpha_ test network. Goerli is an Ethereum test network with PoS-based consensus, while Scroll Alpha is a zero-knowledge rollup testnet deployed on top of the former. There are some pre-deployed demo applications: a bridge between _Goerli_ and _Scroll Alpha_ based on the [Hop Exchange](https://hop.exchange/) UI, a block explorer for _Scroll Alpha_ using [Blockscout](https://blockscout.com/), and a rollup explorer.
 
 To view submitted transactions, check out Ethereum's official Goerli block explorers on [Etherscan](https://goerli.etherscan.io/) and [Blockscout](https://eth-goerli.blockscout.com/). \
 \_\_

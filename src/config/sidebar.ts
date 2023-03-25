@@ -17,6 +17,10 @@ export const SIDEBAR = {
               url: "user-guide/setup",
             },
             {
+              title: "Faucet",
+              url: "user-guide/faucet",
+            },
+            {
               title: "Bridge",
               url: "user-guide/bridge",
             },
@@ -30,7 +34,7 @@ export const SIDEBAR = {
             },
           ],
         },
-        { title: "Roll-up Explorer", url: "https://scroll.io/alpha/rollupscan" },
+        { title: "Rollup Explorer", url: "https://scroll.io/alpha/rollupscan" },
         { title: "Alpha Block Explorer", url: "https://blockscout.scroll.io/" },
         { title: "Goerli Block Explorer", url: "https://goerli.etherscan.io/" },
       ],
@@ -43,7 +47,7 @@ export const SIDEBAR = {
           url: "https://discord.gg/scroll",
         },
         {
-          title: "Reserch Forum",
+          title: "Community Forum",
           url: "https://community.scroll.io/",
         },
       ],
@@ -72,7 +76,7 @@ export const SIDEBAR = {
     {
       section: "Resources",
       contents: [
-        { title: "Roll-up Explorer", url: "https://scroll.io/alpha/rollupscan" },
+        { title: "Rollup Explorer", url: "https://scroll.io/alpha/rollupscan" },
         { title: "Alpha Block Explorer", url: "https://blockscout.scroll.io/" },
         { title: "Goerli Block Explorer", url: "https://goerli.etherscan.io/" },
       ],

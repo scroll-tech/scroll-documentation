@@ -4,12 +4,12 @@ section: developers
 date: Last Modified
 title: ""
 permalink: "developers/integrations"
-excerpt: "index page in userguide"
+excerpt: "Lots of projects have already deployed support for Scroll’s Alpha Testnet. If you’re looking for infrastructure to build on or projects to collaborate with, these are already live, with many more coming on our Goerli release!"
 ---
 
 # Integrations
 
-Lots of projects have already deployed support for Scroll’s Alpha Testnet. If you’re looking for infrastructure to build on or projects to collaborate with, these are already live, with many more coming with our Goerli release!
+Lots of projects have already deployed support for Scroll’s Alpha Testnet. If you’re looking for infrastructure to build on or projects to collaborate with, these are already live, with many more coming on our Goerli release!
 
 > ℹ️ **Note**
 >

@@ -4,7 +4,6 @@ section: developers
 date: Last Modified
 title: "Developer Quickstart"
 permalink: "developers/developer-quickstart"
-excerpt: "index page in userguide"
 ---
 
 With Scroll, your favorite tools for building and testing smart contracts just work.
@@ -15,9 +14,9 @@ If you run into any issues, please reach out in [our Discord](https://discord.gg
 
 ## Acquiring Testnet Ether
 
-To start building on Scroll, you'll first need to acquire some testnet ETH. See the [Faucet](../user-guide/faucet.md) page for tips on getting test tokens on Goerli. After this, you can bridge your testnet ETH to the Scroll Alpha Testnet (Layer 2) using our [Bridge](../user-guide/bridge/).
+To start building on Scroll, you'll first need to acquire some testnet ETH. See the [Faucet](/user-guide/faucet) page for tips on getting test tokens on Goerli. After this, you can bridge your testnet ETH to the Scroll Alpha Testnet (Layer 2) using our [Bridge](/user-guide/bridge).
 
-For a walkthrough, start with the User Guide's [Setup](../user-guide/setup.md) page.
+For a walkthrough, start with the User Guide's [Setup](/user-guide/setup) page.
 
 ## Network Configuration
 
@@ -61,7 +60,7 @@ To deploy using the Scroll Alpha Testnet Public RPC, run:
 
 ### Remix Web IDE
 
-After compiling your contracts, the easiest way to deploy using Remix is by [setting up Metamask](../user-guide/setup.md), then selecting the **Scroll Alpha Testnet** network.
+After compiling your contracts, the easiest way to deploy using Remix is by [setting up Metamask](/user-guide/setup#metamask), then selecting the **Scroll Alpha Testnet** network.
 
 <figure><img src="../.gitbook/assets/image (11).png" alt=""><figcaption><p>Metamask with the Scroll Alpha Testnet selected as Network</p></figcaption></figure>
 

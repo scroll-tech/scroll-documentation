@@ -4,6 +4,8 @@ section: gettingStarted
 date: Last Modified
 title: "Setup"
 permalink: "user-guide/setup/"
+whatsnext: { "Grab Goerli ETH from a Faucet": "/user-guide/faucet" }
+excerpt: "You need to have a wallet to interact with the Scroll Testnet. You can find some example wallets and configuration tips here."
 ---
 
 ## Wallet

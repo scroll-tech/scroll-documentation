@@ -4,7 +4,7 @@ section: developers
 date: Last Modified
 title: "Alpha Testnet Contracts"
 permalink: "developers/alpha-testnet-contracts"
-excerpt: "index page in userguide"
+excerpt: "The network info and contract addresses you need to start with Scroll Alpha Testnet."
 ---
 
 ## Network Info

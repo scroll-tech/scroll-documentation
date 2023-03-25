@@ -4,7 +4,7 @@ section: developers
 date: Last Modified
 title: "Contract Deployment Tutorial"
 permalink: "developers/guides/contract-deployment-tutorial"
-excerpt: "index page in userguide"
+excerpt: "Our Alpha Testnet allows the community to deploy smart contracts on Scroll. In this tutorial, we will teach you how to deploy a contract on the Scroll Testnet."
 ---
 
 Our Alpha Testnet allows the community to deploy smart contracts on Scroll. In this tutorial, we will teach you how to deploy a contract on the Scroll Testnet. This [demo repo](https://github.com/scroll-tech/scroll-contract-deploy-demo) illustrates contract deployment with [Hardhat](https://hardhat.org/) and [Foundry](https://github.com/foundry-rs/foundry).
