@@ -13,13 +13,8 @@ export const MENU: MenuItems = {
       link: "/getting-started/overview",
       section: "gettingStarted",
     },
-    { text: "Developers", link: "/developers", section: "developer" },
-    { text: "Research", link: "/research", section: "research" },
-    { text: "zkEVM", link: "/zkevm", section: "zkevm" },
-    {
-      text: "Infrastructure",
-      link: "/infrastructure",
-      section: "infrastructure",
-    },
+    { text: "Developers", link: "/developers", section: "developers" },
+    { text: "Technology", link: "/technology", section: "technology" },
+    { text: "Learn", link: "/learn", section: "learn" },
   ],
 }
