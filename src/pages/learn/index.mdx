@@ -7,12 +7,38 @@ isMdx: true
 
 import ClickToZoom from "../../components/ClickToZoom.astro"
 import priceAggr from "../../assets/images/contract-devs/price-aggr.png"
+import ToggleElement from "../../components/ToggleElement.astro"
 
 Content for the Research landing page. for fancy stuff, see the infrastructure page.
 
 ### Images zoom
 
 <ClickToZoom src={priceAggr} />
+
+<ToggleElement anchor="Why build on Scroll?">
+  <div slot="title">Why build on Scroll?</div>
+  <p>
+    Scroll enables creators to turn their content into interactive, explorable experiences. With Scroll, you can create
+    rich, interactive stories that engage readers, provide a better user experience, and help you stand out from the
+    crowd.
+  </p>
+</ToggleElement>
+<ToggleElement anchor="How does Scroll work?">
+  <div slot="title">How does Scroll work?</div>
+  <p>
+    Scroll combines powerful technologies like WebGL and WebRTC to create immersive, interactive experiences. The
+    platform allows you to build 3D environments, add interactivity, and embed content from popular web services to
+    create a unique, engaging experience for your audience.
+  </p>
+</ToggleElement>
+<ToggleElement anchor="What can I build with Scroll?">
+  <div slot="title">What can I build with Scroll?</div>
+  <p>
+    You can build a wide range of experiences with Scroll, from interactive articles to immersive product demos and
+    virtual tours. Scroll is designed to help you create engaging, interactive experiences that elevate your content and
+    captivate your audience.
+  </p>
+</ToggleElement>
 
 We define the Square-Fibonacci sequence[^1], a variation of the Fibonacci sequence:
 

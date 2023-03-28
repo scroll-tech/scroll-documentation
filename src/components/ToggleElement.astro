@@ -1,0 +1,92 @@
+---
+export type Props = {
+  anchor: string
+}
+const { anchor = "" } = Astro.props as Props
+const anchorHash = anchor.replace(/\s+/g, "-")
+---
+
+<details id={anchorHash}>
+  <summary>
+    <div>
+      <slot name="title" />
+    </div>
+    <a href={`#${anchorHash}`} dir="auto" aria-label={anchor}> #</a>
+  </summary>
+  <div>
+    <slot />
+  </div>
+</details>
+
+<script define:vars={{ anchorHash }}>
+  const detailsElement = document.getElementById(anchorHash)
+  const checkHash = () => {
+    if (window.location.hash === `#${anchorHash}`) {
+      detailsElement.open = true
+    } else {
+      detailsElement.open = false
+    }
+  }
+  window.addEventListener("hashchange", checkHash)
+
+  // Automatically open if hash is present in the URL
+  checkHash()
+</script>
+
+<style>
+  details {
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    overflow: hidden;
+    color: var(--color-text-heading);
+    font-weight: 600;
+    padding-left: 0.3rem;
+  }
+
+  details:hover {
+    border-color: var(--color-text-link);
+  }
+
+  summary {
+    cursor: pointer;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+  }
+
+  a {
+    visibility: hidden;
+    font-weight: 500;
+  }
+
+  summary:hover a {
+    visibility: visible;
+  }
+
+  summary div {
+    padding: 0;
+    flex: 1;
+  }
+
+  div {
+    padding: 0rem 1rem 1rem 2.6rem;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary::before {
+    content: "▶";
+    display: inline-block;
+    font-size: 0.75em;
+    transform: rotate(0deg);
+    transition: transform 0.25s ease-in-out;
+    margin-right: 1rem;
+  }
+
+  details[open] summary::before {
+    transform: rotate(90deg);
+  }
+</style>
