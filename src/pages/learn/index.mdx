@@ -8,12 +8,40 @@ isMdx: true
 import ClickToZoom from "../../components/ClickToZoom.astro"
 import priceAggr from "../../assets/images/contract-devs/price-aggr.png"
 import ToggleElement from "../../components/ToggleElement.astro"
+import Aside from "../../components/Aside.astro"
 
 Content for the Research landing page. for fancy stuff, see the infrastructure page.
+
+### Callouts
+
+<Aside type="note" title="note">
+  {" "}
+  Astro helps you build faster websites with “Islands Architecture”.{" "}
+</Aside>
+<Aside type="caution" title="caution">
+  {" "}
+  Astro helps you build faster websites with “Islands Architecture”.{" "}
+</Aside>
+<Aside type="danger" title="danger">
+  {" "}
+  Astro helps you build faster websites with “Islands Architecture”.{" "}
+</Aside>
+
+<Aside type="tip" title="tip">
+  For .md file you can use this code.
+</Aside>
+
+```
+:::tip[Did you know?]
+ Astro helps you build faster websites with “Islands Architecture”.
+:::
+```
 
 ### Images zoom
 
 <ClickToZoom src={priceAggr} />
+
+### Toggle
 
 <ToggleElement anchor="Why build on Scroll?">
   <div slot="title">Why build on Scroll?</div>
@@ -55,7 +83,7 @@ We define the Square-Fibonacci sequence[^1], a variation of the Fibonacci sequen
 | Header    | Title       |
 | Paragraph | Text        |
 
-### Callouts
+### Blockquotes
 
 > 👍 Success
 >
