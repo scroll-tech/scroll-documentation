@@ -7,22 +7,24 @@ permalink: "developers/ethereum-and-alpha-testnet-differences"
 excerpt: "There are a number of technical details that differ between Ethereum mainnet's EVM and Scroll's modified design for a zkEVM. Below you can see those differences as they exist now."
 ---
 
+import Aside from "../../components/Aside.astro"
+
 There are a number of technical details that differ between Ethereum mainnet's EVM and Scroll's modified design for a zkEVM. Below you can see those differences as they exist now.
 
 For open-source contributors and infrastructure builders, please contact our team for additional support.
 
-> ℹ️ **Info**
->
-> For the average Solidity developer, these details won't affect your development experience.
+<Aside type="note" title="note">
+  For the average Solidity developer, these details won't affect your development experience.
+</Aside>
 
 ## EVM Opcodes
 
-| Opcode                      | Solidity equivalent | Ethereum Behavior                                                                                                                                                                                                                                                          | Scroll Behavior                                                                                                                                           |
-| --------------------------- | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `BLOCKHASH`                 | `block.blockhash`   | <p><strong>Input:</strong> <code>blockNumber</code> from top of the stack, and the valid range is [<code>NUMBER</code>-256, <code>NUMBER</code>-1].</p><p><strong>Output:</strong> hash of the given block number, or 0 if the block number is not in the valid range.</p> | Matches Ethereum, but limits the range of input `blockNumber` to be `NUMBER`-1.                                                                           |
-| `COINBASE`                  | `block.coinbase`    | In Ethereum Clique, the eth address of the signer.                                                                                                                                                                                                                         | Returns the pre-deployed fee vault contract address. See [Alpha Testnet Contracts](/developers/alpha-testnet-contracts).                                  |
-| `DIFFICULTY` / `PREVRANDAO` | `block.difficulty`  | After PoS, the previous block’s `randao` value.                                                                                                                                                                                                                            | Returns 0.                                                                                                                                                |
-| `SELFDESTRUCT`              | `selfdestruct`      | [Plans to deprecate and substitute with `SENDALL`](https://eips.ethereum.org/EIPS/eip-4758)                                                                                                                                                                                | <p>Disabled in the sequencer. Runtime error, same behavior as the INVALID opcode.<br><em>Will change to adopt Ethereum’s solution in the future.</em></p> |
+| Opcode                      | Solidity equivalent | Ethereum Behavior                                                                                                                                                                                                                                                          | Scroll Behavior                                                                                                                                             |
+| --------------------------- | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `BLOCKHASH`                 | `block.blockhash`   | <p><strong>Input:</strong> <code>blockNumber</code> from top of the stack, and the valid range is [<code>NUMBER</code>-256, <code>NUMBER</code>-1].</p><p><strong>Output:</strong> hash of the given block number, or 0 if the block number is not in the valid range.</p> | Matches Ethereum, but limits the range of input `blockNumber` to be `NUMBER`-1.                                                                             |
+| `COINBASE`                  | `block.coinbase`    | In Ethereum Clique, the eth address of the signer.                                                                                                                                                                                                                         | Returns the pre-deployed fee vault contract address. See [Alpha Testnet Contracts](/developers/alpha-testnet-contracts).                                    |
+| `DIFFICULTY` / `PREVRANDAO` | `block.difficulty`  | After PoS, the previous block’s `randao` value.                                                                                                                                                                                                                            | Returns 0.                                                                                                                                                  |
+| `SELFDESTRUCT`              | `selfdestruct`      | [Plans to deprecate and substitute with `SENDALL`](https://eips.ethereum.org/EIPS/eip-4758)                                                                                                                                                                                | <p>Disabled in the sequencer. Runtime error, same behavior as the INVALID opcode.<br /><em>Will change to adopt Ethereum’s solution in the future.</em></p> |
 
 ## State Account
 

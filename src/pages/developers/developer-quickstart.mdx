@@ -4,7 +4,10 @@ section: developers
 date: Last Modified
 title: "Developer Quickstart"
 permalink: "developers/developer-quickstart"
+whatsnext: { "Verify Your Smart Contracts": "/developers/verifying-smart-contracts" }
 ---
+
+import Aside from "../../components/Aside.astro"
 
 With Scroll, your favorite tools for building and testing smart contracts just work.
 
@@ -62,11 +65,21 @@ To deploy using the Scroll Alpha Testnet Public RPC, run:
 
 After compiling your contracts, the easiest way to deploy using Remix is by [setting up Metamask](/user-guide/setup#metamask), then selecting the **Scroll Alpha Testnet** network.
 
-<figure><img src="../.gitbook/assets/image (11).png" alt=""><figcaption><p>Metamask with the Scroll Alpha Testnet selected as Network</p></figcaption></figure>
+<figure>
+  <img src="../.gitbook/assets/image (11).png" alt="" />
+  <figcaption>
+    <p>Metamask with the Scroll Alpha Testnet selected as Network</p>
+  </figcaption>
+</figure>
 
 Now, in the “Deploy and Run Transactions” tab, use the “Environment” drop down and select “Injected Provider - MetaMask.”
 
-<figure><img src="../.gitbook/assets/image (18).png" alt=""><figcaption><p>Remix using MetaMask as a Network Provider for accessing the Scroll Alpha Testnet</p></figcaption></figure>
+<figure>
+  <img src="../.gitbook/assets/image (18).png" alt="" />
+  <figcaption>
+    <p>Remix using MetaMask as a Network Provider for accessing the Scroll Alpha Testnet</p>
+  </figcaption>
+</figure>
 
 Connect your wallet and select the Scroll Alpha Testnet. Your account should be selected automatically in Remix, and you can click “Deploy.”
 
@@ -145,9 +158,10 @@ module.exports = {
 
 Be sure to fund the deployment wallet as well! Run `yarn generate` to create the wallet and `yarn account` to check its funds. Once funded, run `yarn deploy --network scrollAlpha` to deploy on the Alpha testnet.
 
-> ⚠️ Warning
->
-> On some project forks, you'll want to disable the contract verification which relies on Etherscan. This can be commented out in `packages/hardhat/deploy/00_deploy_your_contract.js`
+<Aside type="danger" title="warning">
+  On some project forks, you'll want to disable the contract verification which relies on Etherscan. This can be
+  commented out in `packages/hardhat/deploy/00_deploy_your_contract.js`
+</Aside>
 
 #### Configure the Frontend
 

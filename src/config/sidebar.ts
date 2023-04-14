@@ -59,6 +59,7 @@ export const SIDEBAR = {
       contents: [
         { title: "Building on Scroll", url: "developers" },
         { title: "Developer Quickstart", url: "developers/developer-quickstart" },
+        { title: "Verifying Smart Contracts", url: "developers/verifying-smart-contracts" },
         { title: "Alpha Testnet Contracts", url: "developers/alpha-testnet-contracts" },
         { title: "Integrations", url: "developers/integrations" },
         { title: "Ethereum & Alpha Testnet Differences", url: "developers/ethereum-and-alpha-testnet-differences" },
@@ -87,52 +88,27 @@ export const SIDEBAR = {
       section: "Overview",
       contents: [
         {
-          title: "Scroll Architecture",
-          url: "architecture-overview/architecture-overview",
-          children: [
-            {
-              title: "Child Page A",
-              url: "architecture-overview/architecture-request-model",
-            },
-            {
-              title: "Child Page B",
-              url: "architecture-overview/architecture-request-model",
-            },
-          ],
+          title: "Intro to zkEVM",
+          url: "technology/intro-to-zkevm",
         },
-      ],
-    },
-    {
-      section: "Another Section",
-      contents: [
         {
-          title: "Introduction to Rollups",
-          url: "data-feeds",
+          title: "zkEVM Overview",
+          url: "technology/zkevm-overview",
         },
       ],
     },
   ],
   learn: [
     {
-      section: "zkEVM",
-      contents: [{ title: "Overview", url: "/" }],
+      section: "Ethereum & Protocols",
+      contents: [{ title: "Intro to Rollups", url: "learn/intro-to-rollups" }],
     },
     {
-      section: "Section",
+      section: "Zero Knowledge",
       contents: [
         {
-          title: "zkEVM Overview",
-          url: "/",
-        },
-      ],
-    },
-    {
-      section: "Resources",
-      contents: [
-        { title: "Getting Help", url: "resources/getting-help" },
-        {
-          title: "Off-site Link (Doesn't work)",
-          url: "https://scroll.io/",
+          title: "What is ZK?",
+          url: "learn/what-is-zk",
         },
       ],
     },
