@@ -1,9 +1,9 @@
 ---
-layout: ../../layouts/MainLayout.astro
+layout: ../../../layouts/MainLayout.astro
 section: learn
 date: Last Modified
 title: "What is ZK?"
-permalink: "learn/what-is-zk"
+permalink: "learn/zero-knowledge/what-is-zk"
 # excerpt: ""
 # whatsnext: { "zkEVM Overview": "/technology/zkevm-overview" }
 ---

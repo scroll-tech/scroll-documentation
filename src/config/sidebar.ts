@@ -85,7 +85,20 @@ export const SIDEBAR = {
   ],
   technology: [
     {
-      section: "Overview",
+      section: "Architecture",
+      contents: [
+        {
+          title: "Scroll Architecture",
+          url: "technology/intro-to-zkevm",
+        },
+        {
+          title: "Principles",
+          url: "technology/intro-to-zkevm",
+        },
+      ],
+    },
+    {
+      section: "zkEVM",
       contents: [
         {
           title: "Intro to zkEVM",
@@ -97,29 +110,72 @@ export const SIDEBAR = {
         },
       ],
     },
+    {
+      section: "Bridge",
+      contents: [
+        {
+          title: "Bridge",
+          url: "technology/intro-to-zkevm",
+        },
+        {
+          title: "Proof Validation",
+          url: "technology/zkevm-overview",
+        },
+      ],
+    },
+    {
+      section: "Sequencer",
+      contents: [
+        {
+          title: "Execution Client",
+          url: "technology/intro-to-zkevm",
+        },
+        {
+          title: "zk trie",
+          url: "technology/zkevm-overview",
+        },
+        {
+          title: "Sync Service",
+          url: "technology/zkevm-overview",
+        },
+      ],
+    },
+    {
+      section: "Prover",
+      contents: [
+        {
+          title: "Proof Generation",
+          url: "technology/zkevm-overview",
+        },
+        {
+          title: "CPU Prover Repo",
+          url: "https://github.com/",
+        },
+      ],
+    },
   ],
   learn: [
     {
       section: "Ethereum & Protocols",
-      contents: [{ title: "Intro to Rollups", url: "learn/intro-to-rollups" }],
+      contents: [
+        { title: "The Scalability Problem", url: "learn/the-scalability-problem" },
+        { title: "Intro to Rollups", url: "learn/intro-to-rollups" },
+      ],
     },
     {
       section: "Zero Knowledge",
       contents: [
         {
           title: "What is ZK?",
-          url: "learn/what-is-zk",
+          url: "learn/zero-knowledge/what-is-zk",
         },
-      ],
-    },
-  ],
-  infrastructure: [
-    {
-      section: "EXTERNAL ADAPTERS",
-      contents: [
         {
-          title: "Introduction",
-          url: "",
+          title: "Polynomial Commitment Schemes",
+          url: "learn/zero-knowledge/polynomial-commitment-schemes",
+        },
+        {
+          title: "KZG Commitment Scheme",
+          url: "learn/zero-knowledge/kzg-commitment-scheme",
         },
       ],
     },
