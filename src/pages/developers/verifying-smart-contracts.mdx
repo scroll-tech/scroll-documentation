@@ -6,14 +6,17 @@ title: "Verifying Smart Contracts"
 permalink: "developers/verifying-smart-contracts"
 ---
 
+import Aside from "../../components/Aside.astro"
 import ClickToZoom from "../../components/ClickToZoom.astro"
 import verify1 from "./images/verify1.png"
 
 After deploying your smart contracts, it's important to verify your code on [our block explorer](https://blockscout.scroll.io/). This can be done in an automated way using your developer tooling or using Blockscout's Web UI.
 
-:::danger[Warning]
-Our Blockscout instance currently has inconsistent behavior in verifying contracts with Foundry. We're working on a fix, along with other stability improvements. Don't hesitate to come ask for help [on Discord](https://discord.com/channels/853955156100907018/1028102371894624337) though.
-:::
+<Aside type="danger" title="Warning">
+  Our Blockscout instance currently has inconsistent behavior in verifying contracts with Foundry. We're working on a
+  fix, along with other stability improvements. Don't hesitate to come ask for help [on
+  Discord](https://discord.com/channels/853955156100907018/1028102371894624337) though.
+</Aside>
 
 ## Using Developer Tools
 
@@ -67,9 +70,11 @@ For example, this how a smart contract that receives two uint parameters in the 
 npx hardhat verify --network scrollAlpha 0xD9880690bd717189cC3Fbe7B9020F27fae7Ac76F 123 456
 ```
 
-:::danger[Warning]
-You may receive an error stating `etherscan.apiKey.trim is not a function` . If so, you need to update `@nomiclabs/hardhat-etherscan` to be able to support custom chains. Try running `npm update @nomiclabs/hardhat-etherscan`
-:::
+<Aside type="danger" title="Warning">
+  You may receive an error stating `etherscan.apiKey.trim is not a function` . If so, you need to update
+  `@nomiclabs/hardhat-etherscan` to be able to support custom chains. Try running `npm update
+  @nomiclabs/hardhat-etherscan`
+</Aside>
 
 ### Foundry
 

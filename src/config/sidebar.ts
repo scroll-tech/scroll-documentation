@@ -131,8 +131,8 @@ export const SIDEBAR = {
           url: "technology/intro-to-zkevm",
         },
         {
-          title: "zk trie",
-          url: "technology/zkevm-overview",
+          title: "zkTrie",
+          url: "technology/sequencer/zktrie",
         },
         {
           title: "Sync Service",
