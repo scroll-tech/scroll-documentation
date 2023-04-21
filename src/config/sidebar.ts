@@ -89,11 +89,11 @@ export const SIDEBAR = {
       contents: [
         {
           title: "Scroll Architecture",
-          url: "technology/intro-to-zkevm",
+          url: "technology/architecture/scroll-architecture",
         },
         {
           title: "Principles",
-          url: "technology/intro-to-zkevm",
+          url: "technology/architecture/principles",
         },
       ],
     },
@@ -102,11 +102,11 @@ export const SIDEBAR = {
       contents: [
         {
           title: "Intro to zkEVM",
-          url: "technology/intro-to-zkevm",
+          url: "technology/zkevm/intro-to-zkevm",
         },
         {
           title: "zkEVM Overview",
-          url: "technology/zkevm-overview",
+          url: "technology/zkevm/zkevm-overview",
         },
       ],
     },
@@ -114,12 +114,12 @@ export const SIDEBAR = {
       section: "Bridge",
       contents: [
         {
-          title: "Bridge",
-          url: "technology/intro-to-zkevm",
+          title: "Bridge Overview",
+          url: "technology/bridge/bridge-overview",
         },
         {
           title: "Proof Validation",
-          url: "technology/zkevm-overview",
+          url: "technology/bridge/proof-validation",
         },
       ],
     },
@@ -128,7 +128,7 @@ export const SIDEBAR = {
       contents: [
         {
           title: "Execution Client",
-          url: "technology/intro-to-zkevm",
+          url: "technology/sequencer/execution-client",
         },
         {
           title: "zkTrie",
@@ -136,7 +136,7 @@ export const SIDEBAR = {
         },
         {
           title: "Sync Service",
-          url: "technology/zkevm-overview",
+          url: "technology/sequencer/sync-service",
         },
       ],
     },
@@ -145,7 +145,7 @@ export const SIDEBAR = {
       contents: [
         {
           title: "Proof Generation",
-          url: "technology/zkevm-overview",
+          url: "technology/prover/proof-generation",
         },
         {
           title: "CPU Prover Repo",

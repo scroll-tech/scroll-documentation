@@ -1,11 +1,11 @@
 ---
-layout: ../../layouts/MainLayout.astro
+layout: ../../../layouts/MainLayout.astro
 section: technology
 date: Last Modified
 title: "Intro to zkEVM"
 permalink: "technology/intro-to-zkevm"
 excerpt: "ZK rollups are widely recognized as the ideal scaling solution for Ethereum."
-whatsnext: { "zkEVM Overview": "/technology/zkevm-overview" }
+whatsnext: { "zkEVM Overview": "/technology/zkevm/zkevm-overview" }
 ---
 
 ## Introduction and motivation
