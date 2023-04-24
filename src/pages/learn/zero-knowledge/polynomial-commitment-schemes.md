@@ -18,7 +18,7 @@ A **[commitment scheme](https://en.wikipedia.org/wiki/Commitment_scheme)** is a 
 
 Secure commitment schemes have two properties:
 
-1. **Binding**: once publishing the commitment $c$, the committer should not be able to find some other value $v’ \neq v$ that also corresponds to $c$. I.e., the commitment $c$ binds the committer to his original value $v$.
+1. **Binding**: once publishing the commitment $c$, the committer should not be able to find some other value $v’$ distinct from $v$ that also corresponds to $c$. I.e., the commitment $c$ binds the committer to his original value $v$.
 2. **Hiding**: the verifier should not be able to learn any information about the original value $v$ from the commitment $c$. I.e., the commitment $c$ hides all information about the original value $v$.
 
 ## Polynomial commitment schemes

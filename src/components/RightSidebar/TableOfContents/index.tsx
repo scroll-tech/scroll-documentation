@@ -81,9 +81,6 @@ const TableOfContents: FunctionalComponent<{
     <>
       <h2 className="heading">On this page</h2>
       <ul ref={tableOfContents}>
-        <li className={`header-link depth-2 ${currentID === "overview" ? "active" : ""}`.trim()}>
-          <a href="#overview">Overview</a>
-        </li>
         {headings
           .filter(({ depth }) => depth > 1 && depth < 4)
           .map((header) => (

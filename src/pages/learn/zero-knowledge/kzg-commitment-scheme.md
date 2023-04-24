@@ -8,21 +8,19 @@ permalink: "learn/zero-knowledge/kzg-commitment-scheme"
 # whatsnext: { "zkEVM Overview": "/technology/zkevm-overview" }
 ---
 
-One of the most widely used polynomial commitment schemes is the KZG commitment scheme. Originally [published](https://www.iacr.org/archive/asiacrypt2010/6477178/6477178.pdf) in 2010 by Kate, Zaverucha, and Goldberg.
+One of the most widely used polynomial commitment schemes is the KZG commitment scheme. The scheme was originally [published](https://www.iacr.org/archive/asiacrypt2010/6477178/6477178.pdf) in 2010 by Kate, Zaverucha, and Goldberg.
 
-Perhaps most notably, KZG is used in Ethereum’s [Proto-Danksharding](https://notes.ethereum.org/@vbuterin/proto_danksharding_faq). We at Scroll also use KZG in our proof generation.
+KZG is used Ethereum’s [Proto-Danksharding](https://notes.ethereum.org/@vbuterin/proto_danksharding_faq), and is also used in Scroll's proof system.
 
 This article will give an overview of the KZG commitment scheme.
 
-## KZG Commitment Scheme
-
-### Preliminaries and notation
+## Preliminaries and notation
 
 Recall the premise of polynomial commitment schemes. We have some polynomial $P(x)$ that we would like to commit to. We’ll assume the polynomial has a degree less than $l$.
 
 KZG commitments rely on [elliptic curve pairings](https://vitalik.ca/general/2017/01/14/exploring_ecp.html). Let $\mathbb{G}_1$ and $\mathbb{G}_2$ be two elliptic curve groups of order $p$, with a non-trivial [bilinear mapping](https://en.wikipedia.org/wiki/Bilinear_map) $e: \mathbb{G}_1 \times \mathbb{G}_2 \rightarrow \mathbb{G}_T$. Let $g$ be a generator of $\mathbb{G}_1$, and $h$ a generator of $\mathbb{G}_2$. We will use the notation $[x]_1 := x \cdot g$ and $[x]_2 := x \cdot h$, where $x \in \mathbb{F}_p$.
 
-### 1. Trusted setup
+## 1. Trusted setup
 
 Before computing any KZG commitments, a one-time trusted setup must be performed. Once the trusted setup is completed, it can be reused to commit and reveal as many different polynomials as desired. The trusted setup works as follows:
 
@@ -35,21 +33,21 @@ Note that $\tau$ should not be revealed - it is a secret parameter of the setup,
 
 There are established methods of conducting trusted setup ceremonies with weak trust assumptions (1-out-of-N trust assumption) using [multi-party computation](https://en.wikipedia.org/wiki/Secure_multi-party_computation) (MPC). For more on how trusted setups work, see this [post](https://vitalik.ca/general/2022/03/14/trustedsetup.html) by Vitalik.
 
-### 2. Committing to a polynomial
+## 2. Committing to a polynomial
 
 - Given a polynomial $P(x) = \sum_{i=0}^{l} p_i x^i$
 - Compute and output the commitment $c = [P(\tau)]_1$
   - Although the committer cannot compute $P(\tau)$ directly (since he doesn’t know $\tau$), he can compute it using the output of the trusted setup:
     - $[P(\tau)]_1 = [\sum_{i=0}^{l} p_i \tau^i]_1 = \sum_{i=0}^{l} p_i [\tau^i]_1$
 
-### 3. Prove an evaluation
+## 3. Prove an evaluation
 
 - Given an evaluation $P(a) = b$
 - Compute and output the proof $\pi = [Q(\tau)]_1$
   - Where $Q(x) := \frac{P(x)-b}{x-a}$
     - This is called the “quotient polynomial.”Note that such a $Q(x)$ exists if and only if $P(a) = b$. The existence of this quotient polynomial therefore serves as a proof of the evaluation.
 
-### 4. Verify an evaluation proof
+## 4. Verify an evaluation proof
 
 - Given a commitment $c = [P(\tau)]_1$, an evaluation $P(a) = b$, and a proof $\pi = [Q(\tau)]_1$
 - Verify that $e(\pi, [\tau - a]_2) = e(c - [b]_1, h)$

@@ -166,10 +166,6 @@ export const SIDEBAR = {
       section: "Zero Knowledge",
       contents: [
         {
-          title: "What is ZK?",
-          url: "learn/zero-knowledge/what-is-zk",
-        },
-        {
           title: "Polynomial Commitment Schemes",
           url: "learn/zero-knowledge/polynomial-commitment-schemes",
         },
