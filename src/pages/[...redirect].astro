@@ -1,6 +1,9 @@
 ---
+import { changeLanguage } from "i18next"
 import { GetStaticPathsResult } from "astro"
 import redirects from "../features/redirects/redirects.json"
+
+changeLanguage("en")
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   const sanitizeSource = (source: string) => {
@@ -9,7 +12,6 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
     if (newSource[0] === "/") return newSource.slice(1, newSource.length)
     return newSource
   }
-
   return redirects.redirects.map((entry) => {
     return {
       params: { redirect: sanitizeSource(entry.source) },
@@ -22,7 +24,6 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
     }
   })
 }
-
 const { to } = Astro.props
 ---
 

@@ -2,13 +2,14 @@
 import button from "../../../styles/design-system/button.module.css"
 import nodesIcon from "../assets/nodes-icon.svg"
 import { clsx } from "~/lib"
+import { t } from "i18next"
 ---
 
 <section class="cta-container">
   <img src={nodesIcon} alt="Scroll Node" width="80" height="80" />
-  <h3>Need to run your own Scroll Node?</h3>
-  <p>See the Node Operator’s Guide to learn about starting and maintaining Scroll Nodes.</p>
-  <a class={clsx(button.secondary, "cta-button")} href="/infrastructure/"> Node Operator’s Guide</a>
+  <h3>{t("landing.nodesCTA.title")}</h3>
+  <p>{t("landing.nodesCTA.description")}</p>
+  <a class={clsx(button.secondary, "cta-button")} href="/infrastructure/">{t("landing.nodesCTA.buttonText")}</a>
 </section>
 
 <style>

@@ -3,6 +3,7 @@ layout: ../../layouts/MainLayout.astro
 section: gettingStarted
 date: Last Modified
 title: "Faucet"
+lang: "en"
 permalink: "user-guide/faucet/"
 whatsnext: { "Bridge your ETH to Scroll Alpha": "/user-guide/bridge" }
 excerpt: "To interact with our testnet, you first need to acquire Goerli ETH. There are a few Goerli faucet apps to get you started."

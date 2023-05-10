@@ -3,6 +3,7 @@ layout: ../../layouts/MainLayout.astro
 section: gettingStarted
 date: Last Modified
 title: "Transfer Tokens"
+lang: "en"
 permalink: "user-guide/transfer-tokens/"
 excerpt: "You can use your wallet as usual to transfer tokens within the Scroll Alpha Testnet."
 ---

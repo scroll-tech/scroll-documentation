@@ -3,6 +3,7 @@ layout: ../../../layouts/MainLayout.astro
 section: developers
 date: Last Modified
 title: "Contract Deployment Tutorial"
+lang: "en"
 permalink: "developers/guides/contract-deployment-tutorial"
 excerpt: "Our Alpha Testnet allows the community to deploy smart contracts on Scroll. In this tutorial, we will teach you how to deploy a contract on the Scroll Testnet."
 ---

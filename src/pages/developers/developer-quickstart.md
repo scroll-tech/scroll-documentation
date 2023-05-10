@@ -3,6 +3,7 @@ layout: ../../layouts/MainLayout.astro
 section: developers
 date: Last Modified
 title: "Developer Quickstart"
+lang: "en"
 permalink: "developers/developer-quickstart"
 ---
 

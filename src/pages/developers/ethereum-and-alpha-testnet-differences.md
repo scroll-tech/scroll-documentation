@@ -3,6 +3,7 @@ layout: ../../layouts/MainLayout.astro
 section: developers
 date: Last Modified
 title: "Ethereum & Alpha Testnet Differences"
+lang: "en"
 permalink: "developers/ethereum-and-alpha-testnet-differences"
 excerpt: "There are a number of technical details that differ between Ethereum mainnet's EVM and Scroll's modified design for a zkEVM. Below you can see those differences as they exist now."
 ---

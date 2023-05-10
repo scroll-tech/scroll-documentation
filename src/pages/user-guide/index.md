@@ -3,6 +3,7 @@ layout: ../../layouts/MainLayout.astro
 section: gettingStarted
 date: Last Modified
 title: "Alpha Testnet User Guide"
+lang: "en"
 permalink: "user-guide/"
 excerpt: "Thank you for testing out our Alpha Testnet. The Alpha Testnet consists of Ethereum's Goerli Testnet and the Scroll Alpha test network."
 whatsnext: { "Set Up Your Wallet": "/user-guide/setup" }

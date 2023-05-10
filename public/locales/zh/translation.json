@@ -1,0 +1,87 @@
+{
+  "landing": {
+    "test": "test",
+    "search": {
+      "title": "欢迎使用Scroll文档",
+      "placeholder": "搜索Scroll文档..."
+    },
+    "newUserCTA": {
+      "title": "Scroll 和 ZK Rollups 的新手？",
+      "description": "在入门指南中学习基础知识。"
+    },
+    "resourcesCTA": {
+      "title": "有用的资源"
+    },
+    "nodesCTA": {
+      "title": "需要运行自己的Scroll节点？",
+      "description": "请参阅节点操作员指南以了解有关启动和维护Scroll节点的信息。",
+      "buttonText": "节点操作员指南"
+    },
+    "TutorialsCTA": {
+      "title": "观看教程",
+      "description": "详细了解我们正在构建的技术。 我们不断将新视频上传到我们的 YouTube 频道。",
+      "buttonText": "观看教程"
+    },
+    "LinksCTA": {
+      "card1": {
+        "title": "需要集成支持？",
+        "description": "TODO 后与专家交谈：一个 url"
+      },
+      "card2": {
+        "title": "Discord",
+        "description": "加入社区"
+      },
+      "card3": {
+        "title": "TODO: Discourse",
+        "description": "真的，加入社区"
+      }
+    },
+    "NewsletterCTA": {
+      "title": "随时了解最新的 Scroll 新闻",
+      "placeholder": "输入你的电子邮箱地址",
+      "buttonText": "报名"
+    }
+  },
+  "sidebar": {
+    "gettingStarted": {
+      "gettingStarted": "入门",
+      "overview": "概述",
+      "alphaTestnet": "Alpha测试网络",
+      "userGuide": "用户指南",
+      "setup": "设置",
+      "faucet": "水龙头",
+      "bridge": "桥接器",
+      "transferTokens": "转移代币",
+      "commonErrors": "常见错误",
+      "rollupExplorer": "Rollup浏览器",
+      "alphaBlockExplorer": "Alpha块浏览器",
+      "goerliBlockExplorer": "Goerli块浏览器",
+      "community": "社区",
+      "communityForum": "社区论坛"
+    },
+    "developers": {
+      "developers": "开发者",
+      "buildingOnScroll": "构建Scroll应用",
+      "developerQuickstart": "开发者快速入门",
+      "alphaTestnetContracts": "Alpha测试网络合约",
+      "integrations": "集成",
+      "ethereum&AlphaTestnetDifferences": "以太坊与Alpha测试网络的区别",
+      "guides": "指南",
+      "contractDeploymentTutorial": "合约部署教程",
+      "resources": "资源",
+      "rollupExplorer": "Rollup浏览器",
+      "alphaBlockExplorer": "Alpha块浏览器",
+      "goerliBlockExplorer": "Goerli块浏览器"
+    },
+    "technology": {
+      "overview": "概述",
+      "scrollArchitecture": "Scroll架构"
+    },
+    "learn": {
+      "zkEVMOverview": "zkEVM概述"
+    },
+    "infrastructure": {
+      "introduction": "介绍"
+    }
+  }
+}

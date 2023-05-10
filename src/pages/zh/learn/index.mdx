@@ -1,0 +1,98 @@
+---
+layout: ../../../layouts/MainLayout.astro
+section: learn
+title: "学习登陆标题"
+lang: "zh"
+isMdx: true
+---
+
+import ClickToZoom from "../../../components/ClickToZoom.astro"
+import priceAggr from "../../../assets/images/contract-devs/price-aggr.png"
+import ToggleElement from "../../../components/ToggleElement.astro"
+import Aside from "../../../components/Aside.astro"
+
+Content for the Research landing page. for fancy stuff, see the infrastructure page.
+
+### Callouts
+
+<Aside type="note" title="note">
+  {" "}
+  Astro helps you build faster websites with “Islands Architecture”.{" "}
+</Aside>
+<Aside type="caution" title="caution">
+  {" "}
+  Astro helps you build faster websites with “Islands Architecture”.{" "}
+</Aside>
+<Aside type="danger" title="danger">
+  {" "}
+  Astro helps you build faster websites with “Islands Architecture”.{" "}
+</Aside>
+
+<Aside type="tip" title="tip">
+  For .md file you can use this code.
+</Aside>
+
+```
+:::tip[Did you know?]
+ Astro helps you build faster websites with “Islands Architecture”.
+:::
+```
+
+### Images zoom
+
+<ClickToZoom src={priceAggr} />
+
+### Toggle
+
+<ToggleElement anchor="Why build on Scroll?">
+  <div slot="title">Why build on Scroll?</div>
+  <p>
+    Scroll enables creators to turn their content into interactive, explorable experiences. With Scroll, you can create
+    rich, interactive stories that engage readers, provide a better user experience, and help you stand out from the
+    crowd.
+  </p>
+</ToggleElement>
+<ToggleElement anchor="How does Scroll work?">
+  <div slot="title">How does Scroll work?</div>
+  <p>
+    Scroll combines powerful technologies like WebGL and WebRTC to create immersive, interactive experiences. The
+    platform allows you to build 3D environments, add interactivity, and embed content from popular web services to
+    create a unique, engaging experience for your audience.
+  </p>
+</ToggleElement>
+<ToggleElement anchor="What can I build with Scroll?">
+  <div slot="title">What can I build with Scroll?</div>
+  <p>
+    You can build a wide range of experiences with Scroll, from interactive articles to immersive product demos and
+    virtual tours. Scroll is designed to help you create engaging, interactive experiences that elevate your content and
+    captivate your audience.
+  </p>
+</ToggleElement>
+
+We define the Square-Fibonacci sequence[^1], a variation of the Fibonacci sequence:
+
+### Math
+
+- Let $f_0 = 1, f_1 = 1$
+- For $$i \geq 2$$, define $f_{i} := (f_{i-2})^2 + (f_{i-1})^2 \mod q$
+  - Where $q$ is a large prime integer. We use this modulus to bound the size of each element, so that it can be represented by some predetermined number of bits.
+
+### Tables
+
+| Syntax    | Description |
+| --------- | ----------- |
+| Header    | Title       |
+| Paragraph | Text        |
+
+### Blockquotes
+
+> 👍 Success
+>
+> Vitae reprehenderit at aliquid error voluptates eum dignissimos.
+
+### Footnotes
+
+Here's a simple footnote,[^1] and here's a longer one.[^bignote]
+
+[^1]: This is the first footnote.
+[^bignote]: Here's one with multiple paragraphs and code.

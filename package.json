@@ -28,6 +28,7 @@
     "@astrojs/prism": "^1.0.2",
     "@astrojs/tailwind": "^2.1.3",
     "@nanostores/preact": "^0.3.1",
+    "astro-i18next": "^1.0.0-beta.21",
     "clipboard": "^2.0.11",
     "ethers": "^5.7.2",
     "focus-trap-react": "^10.0.0",

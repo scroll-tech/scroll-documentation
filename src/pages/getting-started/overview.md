@@ -3,6 +3,7 @@ layout: ../../layouts/MainLayout.astro
 section: gettingStarted
 date: Last Modified
 title: "Scroll Overview"
+lang: "en"
 permalink: "docs/conceptual-overview/"
 excerpt: "ZK Rollups and Scroll"
 whatsnext: { "Next Up Page 1": "/", "Second Next Up Page": "/" }

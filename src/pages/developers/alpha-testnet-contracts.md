@@ -3,6 +3,7 @@ layout: ../../layouts/MainLayout.astro
 section: developers
 date: Last Modified
 title: "Alpha Testnet Contracts"
+lang: "en"
 permalink: "developers/alpha-testnet-contracts"
 excerpt: "The network info and contract addresses you need to start with Scroll Alpha Testnet."
 ---

@@ -3,6 +3,7 @@ layout: ../../layouts/MainLayout.astro
 section: gettingStarted
 date: Last Modified
 title: "Common Errors"
+lang: "en"
 permalink: "user-guide/common-errors/"
 excerpt: "Seeing an error when trying to interact with Scroll Alpha Testnet? Here are some common configuration errors and how to quickly fix them."
 ---

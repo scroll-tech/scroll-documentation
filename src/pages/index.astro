@@ -1,4 +1,5 @@
 ---
+import i18next, { changeLanguage } from "i18next"
 import NodesCTA from "../features/landing/sections/NodesCTA.astro"
 import ProductTabs from "../features/landing/sections/ProductTabs.astro"
 import LinksCTA from "../features/landing/sections/LinksCTA.astro"
@@ -7,6 +8,8 @@ import LandingLayout from "../layouts/LandingLayout.astro"
 import TutorialsCTA from "../features/landing/sections/TutorialsCTA.astro"
 import HeroCTA from "../features/landing/sections/HeroCTA.astro"
 import NewUserCTA from "~/features/landing/sections/NewUserCTA.astro"
+
+changeLanguage("en")
 ---
 
 <LandingLayout>

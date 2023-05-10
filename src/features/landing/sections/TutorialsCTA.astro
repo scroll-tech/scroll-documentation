@@ -7,6 +7,7 @@ import avatarPatrick from "../assets/people/patrick-collins.png"
 import avatarNader from "../assets/people/nader-dabit.png"
 import { LinkTuple } from "../types"
 import { clsx } from "~/lib"
+import { t } from "i18next"
 const links = [
   ["Video A", "https://www.youtube.com/playlist?list="],
   ["Video B", "https://www.youtube.com/playlist?list="],
@@ -63,9 +64,9 @@ const people = [
     </a>
   </div>
   <div class="cta-col">
-    <h4>Watch tutorials</h4>
+    <h4>{t("landing.TutorialsCTA.title")}</h4>
     <p>
-      Learn more about the technology we are building. We're constantly uploading new videos to our YouTube channel.
+      {t("landing.TutorialsCTA.description")}
     </p>
     <a
       class={clsx(button.primary, "cta-button")}
@@ -75,7 +76,7 @@ const people = [
       rel="noopener"
     >
       <VideoPlayerIcon />
-      Watch tutorials
+      {t("landing.TutorialsCTA.buttonText")}
     </a>
   </div>
   <div class="linklist">

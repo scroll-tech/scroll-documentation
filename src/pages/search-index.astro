@@ -1,10 +1,12 @@
 ---
+import { changeLanguage } from "i18next"
 import { MarkdownInstance } from "astro"
 import fs from "node:fs"
 
+changeLanguage("en")
+
 // import .astro files
 const pages = await Astro.glob("./**/*.astro")
-
 // import .md files
 const posts = [...(await Astro.glob("./**/*.md")).filter((post) => !post.frontmatter.draft)]
 const postsMdx = [...(await Astro.glob("./**/*.mdx")).filter((post) => !post.frontmatter.draft)]
@@ -13,11 +15,8 @@ const postsMdxWithContent = postsMdx.map((post) => {
   const content = fs.readFileSync(url, "utf-8")
   return { ...post, rawContent: () => content }
 })
-
 const markDownFiles = [...posts, ...postsMdxWithContent]
-
 const allContent = [...pages, ...posts, ...postsMdx]
-
 const transformMarkdownInstancesToIndexes = async (instances: MarkdownInstance<Record<string, any>>[]) => {
   return Promise.all(
     instances.map(async (instance) => {
@@ -35,11 +34,8 @@ const transformMarkdownInstancesToIndexes = async (instances: MarkdownInstance<R
     })
   )
 }
-
 const index = await transformMarkdownInstancesToIndexes(markDownFiles)
-
 const stringifiedJson = JSON.stringify({ index }, null, 2)
-
 fs.writeFileSync(`${process.cwd()}/public/search-index.json`, stringifiedJson)
 ---
 
