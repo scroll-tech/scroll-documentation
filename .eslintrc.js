@@ -13,6 +13,7 @@ module.exports = {
   plugins: ["@typescript-eslint", "prettier"],
   rules: {
     "no-unused-expressions": "off",
+    "@typescript-eslint/triple-slash-reference": "off",
     "prettier/prettier": [2],
   },
 }

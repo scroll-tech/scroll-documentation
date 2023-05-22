@@ -83,5 +83,8 @@
     "infrastructure": {
       "introduction": "Introduction"
     }
+  },
+  "notTranslated": {
+    "notTranslated": "This page has not been translated yet."
   }
 }

@@ -1,0 +1,64 @@
+---
+import { getCollection } from "astro:content"
+import i18next, { t, changeLanguage } from "i18next"
+import MainLayout from "../../../layouts/MainLayout.astro"
+
+export async function getStaticPaths() {
+  const pages = await getCollection("docs")
+  const languages = i18next.languages
+  const allSlugs = new Set(
+    pages.map((page) => {
+      const [, ...slug] = page.slug.split("/")
+      return slug.join("/")
+    })
+  )
+  const allPaths = []
+  for (let slug of allSlugs) {
+    for (let lang of languages) {
+      allPaths.push({ params: { lang, slug: slug || undefined } })
+    }
+  }
+  const paths = allPaths.map((path) => {
+    let page = pages.find((page) => {
+      const [pageLang, ...pageSlug] = page.slug.split("/")
+      return pageLang === path.params.lang && pageSlug.join("/") === path.params.slug
+    })
+    if (!page) {
+      page = pages.find((page) => {
+        const [, ...pageSlug] = page.slug.split("/")
+        return pageSlug.join("/") === path.params.slug
+      })
+      return { params: path.params, props: { ...page, notTranslated: true } }
+    } else {
+      return { params: path.params, props: page }
+    }
+  })
+  return paths
+}
+let page = Astro.props
+let params = Astro.params
+// Only call render if page is not translated
+let Content
+if (!page.notTranslated) {
+  Content = (await page.render()).Content
+} else {
+  changeLanguage(params.lang)
+}
+
+const content = {
+  ...page.data,
+  lang: params.lang,
+}
+---
+
+{
+  Content ? (
+    <MainLayout content={content} headings={[]}>
+      <Content />
+    </MainLayout>
+  ) : (
+    <MainLayout content={content} headings={[]}>
+      {t("notTranslated.notTranslated")}
+    </MainLayout>
+  )
+}

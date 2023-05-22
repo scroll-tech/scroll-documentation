@@ -58,9 +58,9 @@ const currentPageMatch = removeSlashes(currentPage.slice(1))
                   <>
                     <li class="nav-link">
                       <a
-                        href={isExternal(child.url) ? `${child.url}` : localizePath(child.url)}
+                        href={isExternal(child.url) ? `${child.url}` : localizePath("/docs/" + child.url)}
                         target={isExternal(child.url) ? "_blank" : "_self"}
-                        aria-current={`${currentPage === localizePath(child.url) ? "page" : "false"}`}
+                        aria-current={`${currentPage === localizePath("/docs/" + child.url) ? "page" : "false"}`}
                       >
                         {child.title}
                         {isExternal(child.url) && (
@@ -77,9 +77,11 @@ const currentPageMatch = removeSlashes(currentPage.slice(1))
                         {child.children.map((childItem) => (
                           <li class="nav-link nested">
                             <a
-                              href={isExternal(childItem.url) ? childItem.url : localizePath(childItem.url)}
+                              href={isExternal(childItem.url) ? childItem.url : localizePath("/docs/" + childItem.url)}
                               target={isExternal(child.url) ? "_blank" : "_self"}
-                              aria-current={`${currentPage === localizePath(childItem.url) ? "page" : "false"}`}
+                              aria-current={`${
+                                currentPage === localizePath("/docs/" + childItem.url) ? "page" : "false"
+                              }`}
                             >
                               {childItem.title}
                               {isExternal(childItem.url) && (
