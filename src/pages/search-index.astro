@@ -1,6 +1,7 @@
 ---
 import { changeLanguage } from "i18next"
 import { MarkdownInstance } from "astro"
+import { getCollection } from "astro:content"
 import fs from "node:fs"
 
 changeLanguage("en")
@@ -8,8 +9,8 @@ changeLanguage("en")
 // import .astro files
 const pages = await Astro.glob("./**/*.astro")
 // import .md files
-const posts = [...(await Astro.glob("./**/*.md")).filter((post) => !post.frontmatter.draft)]
-const postsMdx = [...(await Astro.glob("./**/*.mdx")).filter((post) => !post.frontmatter.draft)]
+const posts = [...(await Astro.glob("../content/**/*.md")).filter((post) => !post.frontmatter.draft)]
+const postsMdx = [...(await Astro.glob("../content/**/*.mdx")).filter((post) => !post.frontmatter.draft)]
 const postsMdxWithContent = postsMdx.map((post) => {
   const url = new URL(post.file, import.meta.url)
   const content = fs.readFileSync(url, "utf-8")
