@@ -4,6 +4,10 @@ import { Frontmatter, MENU } from "../../config/index"
 import SkipToContent from "./SkipToContent.astro"
 import SidebarToggle from "./SidebarToggle.tsx"
 import Search from "./Search/Search.tsx"
+import { LanguageSelector } from "astro-i18next/components"
+import { localizePath } from "astro-i18next"
+import i18next from "i18next"
+
 import NotificationBanner from "~/features/notifications/components/NotificationBanner.astro"
 
 export type Props = {
@@ -23,13 +27,13 @@ const section = frontmatter?.section ?? ""
   <SkipToContent />
   <nav class="nav-wrapper" title="Top Navigation">
     <div class="logo flex items-center">
-      <a href="/">
+      <a href={localizePath("/")}>
         <img src="/scroll-docs.svg" style="height:40px; width: 183px" alt={CONFIG.SITE.title ?? "Documentation"} />
       </a>
     </div>
     <div class="navbar">
       {
-        MENU.en.map((link) => (
+        MENU[i18next.language].map((link) => (
           <a class="nav-link" href={link.link} aria-current={link.section === section}>
             {link.text}
           </a>
@@ -44,6 +48,7 @@ const section = frontmatter?.section ?? ""
         </div>
       )
     }
+    <LanguageSelector showFlag={true} class="language-selector" />
     <a href="https://github.com/scroll-tech/scroll-documentation" class="github-url" target="_blank" rel="nofollow">
       <img src="/assets/github.svg" />
     </a>
@@ -67,6 +72,9 @@ const section = frontmatter?.section ?? ""
     @apply h-navbar bg-white;
   }
 
+  .language-selector {
+    height: 36px;
+  }
   .nav-link {
     @apply text-primary;
   }

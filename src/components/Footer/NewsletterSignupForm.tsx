@@ -6,6 +6,7 @@ import button from "../../styles/design-system/button.module.css"
 import { clsx } from "~/lib"
 import jsonp from "jsonp"
 import toQueryString from "to-querystring"
+import { t } from "i18next"
 
 const TAG_1 = "Developers"
 const TAG_2 = "Developer Docs"
@@ -63,7 +64,7 @@ export const NewsletterSignupForm = () => {
               maxLength={256}
               name="Email"
               data-name="Email"
-              placeholder="Enter your email address"
+              placeholder={t("landing.NewsletterCTA.placeholder")}
               onChange={() => setIsError(false)}
               id="Email"
               required
@@ -71,7 +72,7 @@ export const NewsletterSignupForm = () => {
             <input
               id="subscribe-button"
               type="submit"
-              value={isLoading ? "Please Wait..." : "Sign up"}
+              value={isLoading ? "Please Wait..." : t("landing.NewsletterCTA.buttonText")}
               disabled={isLoading}
               className={clsx(button.secondary, "text-300")}
             />

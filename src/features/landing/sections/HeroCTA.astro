@@ -3,11 +3,12 @@ import heroBg from "../assets/hero-bg.png"
 import button from "../../styles/design-system/button.module.css"
 import { clsx } from "../../../lib"
 import { SearchCTA } from "../components/SearchCTA.tsx"
+import { t } from "i18next"
 ---
 
 <div class="hero-cta">
   <div id="hero-search">
-    <h2>Welcome to the Scroll Documentation</h2>
+    <h2>{t("landing.search.title")}</h2>
     <SearchCTA client:idle="react" />
   </div>
 </div>

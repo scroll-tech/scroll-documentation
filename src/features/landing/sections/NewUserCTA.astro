@@ -2,13 +2,14 @@
 import newToChainlink from "../assets/new-to-chainlink.svg"
 import button from "../../../styles/design-system/button.module.css"
 import { clsx } from "~/lib"
+import i18next, { t } from "i18next"
 ---
 
 <section class="card">
   <img class="img" src={newToChainlink} width="48" height="49" alt="New to Chainlink and Smart Contracts?" />
   <div class="copy">
-    <h5>New to Scroll and ZK Rollups?</h5>
-    <p>Learn the basics in the Getting Started Guide.</p>
+    <h5>{t("landing.newUserCTA.title")}</h5>
+    <p>{t("landing.newUserCTA.description")}</p>
   </div>
   <div class="spacer"></div>
   <a class={clsx(button.primary, "cta-button")} href="/getting-started/conceptual-overview"> Get Started</a>

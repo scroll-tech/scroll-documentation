@@ -1,0 +1,25 @@
+---
+import i18next, { changeLanguage } from "i18next"
+import NodesCTA from "../../features/landing/sections/NodesCTA.astro"
+import ProductTabs from "../../features/landing/sections/ProductTabs.astro"
+import LinksCTA from "../../features/landing/sections/LinksCTA.astro"
+import ResourcesCTA from "../../features/landing/sections/ResourcesCTA.astro"
+import LandingLayout from "../../layouts/LandingLayout.astro"
+import TutorialsCTA from "../../features/landing/sections/TutorialsCTA.astro"
+import HeroCTA from "../../features/landing/sections/HeroCTA.astro"
+import NewUserCTA from "~/features/landing/sections/NewUserCTA.astro"
+
+changeLanguage("zh")
+---
+
+<LandingLayout>
+  <HeroCTA />
+  <div class="flex flex-col gap-12 mt-16" id="article">
+    <NewUserCTA />
+    <!-- <ProductTabs /> -->
+    <ResourcesCTA />
+    <NodesCTA />
+    <TutorialsCTA />
+    <LinksCTA />
+  </div>
+</LandingLayout>

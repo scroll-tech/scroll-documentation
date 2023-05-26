@@ -2,23 +2,24 @@
 import stackOverflow from "../assets/stack-overflow.svg"
 import discord from "../assets/discord.svg"
 import devExpert from "../assets/dev-expert.svg"
+import { t } from "i18next"
 
 const data = [
   {
-    title: "Need integration support?",
-    description: "Talk to an expert once we TODO: a url",
+    title: t("landing.LinksCTA.card1.title"),
+    description: t("landing.LinksCTA.card1.description"),
     link: "",
     image: devExpert,
   },
   {
-    title: "Discord",
-    description: "Join the community",
+    title: t("landing.LinksCTA.card2.title"),
+    description: t("landing.LinksCTA.card2.description"),
     link: "https://discord.gg/scroll",
     image: discord,
   },
   {
-    title: "TODO: Discourse",
-    description: "Really, join the community",
+    title: t("landing.LinksCTA.card3.title"),
+    description: t("landing.LinksCTA.card3.description"),
     link: "https://discord.gg/scroll",
     image: discord,
   },
