@@ -1,179 +1,190 @@
-export const SIDEBAR = {
-  gettingStarted: [
-    {
-      section: "Getting Started",
-      contents: [{ title: "Overview", url: "getting-started/overview" }],
-    },
-    {
-      section: "Alpha Testnet",
-      contents: [
-        // { title: "Introduction", url: "https://l2scan.scroll.io/" },
-        {
-          title: "User Guide",
-          url: "user-guide/",
-          children: [
-            {
-              title: "Setup",
-              url: "user-guide/setup",
-            },
-            {
-              title: "Faucet",
-              url: "user-guide/faucet",
-            },
-            {
-              title: "Bridge",
-              url: "user-guide/bridge",
-            },
-            {
-              title: "Transfer Tokens",
-              url: "user-guide/transfer-tokens",
-            },
-            {
-              title: "Common Errors",
-              url: "user-guide/common-errors",
-            },
-          ],
-        },
-        { title: "Rollup Explorer", url: "https://scroll.io/alpha/rollupscan" },
-        { title: "Alpha Block Explorer", url: "https://blockscout.scroll.io/" },
-        { title: "Goerli Block Explorer", url: "https://goerli.etherscan.io/" },
-      ],
-    },
-    {
-      section: "Community",
-      contents: [
-        {
-          title: "Discord",
-          url: "https://discord.gg/scroll",
-        },
-        {
-          title: "Community Forum",
-          url: "https://community.scroll.io/",
-        },
-      ],
-    },
-  ],
-  developers: [
-    {
-      section: "Developers",
-      contents: [
-        { title: "Building on Scroll", url: "developers" },
-        { title: "Developer Quickstart", url: "developers/developer-quickstart" },
-        { title: "Verifying Smart Contracts", url: "developers/verifying-smart-contracts" },
-        { title: "Alpha Testnet Contracts", url: "developers/alpha-testnet-contracts" },
-        { title: "Integrations", url: "developers/integrations" },
-        { title: "Ethereum & Alpha Testnet Differences", url: "developers/ethereum-and-alpha-testnet-differences" },
-      ],
-    },
-    {
-      section: "Guides",
-      contents: [
-        {
-          title: "Contract Deployment Tutorial",
-          url: "developers/guides/contract-deployment-tutorial",
-        },
-      ],
-    },
-    {
-      section: "Resources",
-      contents: [
-        { title: "Rollup Explorer", url: "https://scroll.io/alpha/rollupscan" },
-        { title: "Alpha Block Explorer", url: "https://blockscout.scroll.io/" },
-        { title: "Goerli Block Explorer", url: "https://goerli.etherscan.io/" },
-      ],
-    },
-  ],
-  technology: [
-    {
-      section: "Architecture",
-      contents: [
-        {
-          title: "Scroll Architecture",
-          url: "technology/architecture/scroll-architecture",
-        },
-        {
-          title: "Principles",
-          url: "technology/architecture/principles",
-        },
-      ],
-    },
-    {
-      section: "zkEVM",
-      contents: [
-        {
-          title: "Intro to zkEVM",
-          url: "technology/zkevm/intro-to-zkevm",
-        },
-        {
-          title: "zkEVM Overview",
-          url: "technology/zkevm/zkevm-overview",
-        },
-      ],
-    },
-    {
-      section: "Bridge",
-      contents: [
-        {
-          title: "Bridge Overview",
-          url: "technology/bridge/bridge-overview",
-        },
-        {
-          title: "Proof Validation",
-          url: "technology/bridge/proof-validation",
-        },
-      ],
-    },
-    {
-      section: "Sequencer",
-      contents: [
-        {
-          title: "Execution Client",
-          url: "technology/sequencer/execution-client",
-        },
-        {
-          title: "zkTrie",
-          url: "technology/sequencer/zktrie",
-        },
-        {
-          title: "Sync Service",
-          url: "technology/sequencer/sync-service",
-        },
-      ],
-    },
-    {
-      section: "Prover",
-      contents: [
-        {
-          title: "Proof Generation",
-          url: "technology/prover/proof-generation",
-        },
-        {
-          title: "CPU Prover Repo",
-          url: "https://github.com/",
-        },
-      ],
-    },
-  ],
-  learn: [
-    {
-      section: "Ethereum & Protocols",
-      contents: [
-        { title: "The Scalability Problem", url: "learn/the-scalability-problem" },
-        { title: "Intro to Rollups", url: "learn/intro-to-rollups" },
-      ],
-    },
-    {
-      section: "Zero Knowledge",
-      contents: [
-        {
-          title: "Polynomial Commitment Schemes",
-          url: "learn/zero-knowledge/polynomial-commitment-schemes",
-        },
-        {
-          title: "KZG Commitment Scheme",
-          url: "learn/zero-knowledge/kzg-commitment-scheme",
-        },
-      ],
-    },
-  ],
+import { t } from "i18next"
+
+export const getSidebar = () => {
+  return {
+    gettingStarted: [
+      {
+        section: t("sidebar.gettingStarted.gettingStarted"),
+        contents: [{ title: t("sidebar.gettingStarted.overview"), url: "getting-started/overview" }],
+      },
+      {
+        section: t("sidebar.gettingStarted.alphaTestnet"),
+        contents: [
+          {
+            title: t("sidebar.gettingStarted.userGuide"),
+            url: "user-guide/",
+            children: [
+              {
+                title: t("sidebar.gettingStarted.setup"),
+                url: "user-guide/setup",
+              },
+              {
+                title: t("sidebar.gettingStarted.faucet"),
+                url: "user-guide/faucet",
+              },
+              {
+                title: t("sidebar.gettingStarted.bridge"),
+                url: "user-guide/bridge",
+              },
+              {
+                title: t("sidebar.gettingStarted.transferTokens"),
+                url: "user-guide/transfer-tokens",
+              },
+              {
+                title: t("sidebar.gettingStarted.commonErrors"),
+                url: "user-guide/common-errors",
+              },
+            ],
+          },
+          { title: t("sidebar.gettingStarted.rollupExplorer"), url: "https://scroll.io/alpha/rollupscan" },
+          { title: t("sidebar.gettingStarted.alphaBlockExplorer"), url: "https://blockscout.scroll.io/" },
+          { title: t("sidebar.gettingStarted.goerliBlockExplorer"), url: "https://goerli.etherscan.io/" },
+        ],
+      },
+      {
+        section: t("sidebar.gettingStarted.community"),
+        contents: [
+          {
+            title: t("sidebar.gettingStarted.discord"),
+            url: "https://discord.gg/scroll",
+          },
+          {
+            title: t("sidebar.gettingStarted.communityForum"),
+            url: "https://community.scroll.io/",
+          },
+        ],
+      },
+    ],
+    developers: [
+      {
+        section: "Developers",
+        contents: [
+          { title: t("sidebar.developers.buildingOnScroll"), url: "developers" },
+          { title: t("sidebar.developers.developerQuickstart"), url: "developers/developer-quickstart" },
+          { title: t("sidebar.developers.alphaTestnetContracts"), url: "developers/alpha-testnet-contracts" },
+          { title: t("sidebar.developers.integrations"), url: "developers/integrations" },
+          {
+            title: t("sidebar.developers.ethereum&AlphaTestnetDifferences"),
+            url: "developers/ethereum-and-alpha-testnet-differences",
+          },
+        ],
+      },
+      {
+        section: "Guides",
+        contents: [
+          {
+            title: t("sidebar.developers.contractDeploymentTutorial"),
+            url: "developers/guides/contract-deployment-tutorial",
+          },
+        ],
+      },
+      {
+        section: "Resources",
+        contents: [
+          { title: t("sidebar.developers.rollupExplorer"), url: "https://scroll.io/alpha/rollupscan" },
+          { title: t("sidebar.developers.alphaBlockExplorer"), url: "https://blockscout.scroll.io/" },
+          { title: t("sidebar.developers.goerliBlockExplorer"), url: "https://goerli.etherscan.io/" },
+        ],
+      },
+    ],
+    technology: [
+      {
+        section: t("sidebar.technology.architecture"),
+        contents: [
+          {
+            title: t("sidebar.technology.scrollArchitecture"),
+            url: "technology/architecture/scroll-architecture",
+          },
+          {
+            title: t("sidebar.technology.principles"),
+            url: "technology/architecture/principles",
+          },
+        ],
+      },
+      {
+        section: t("sidebar.technology.zkevm"),
+        contents: [
+          {
+            title: t("sidebar.technology.introToZkevm"),
+            url: "technology/zkevm/intro-to-zkevm",
+          },
+          {
+            title: t("sidebar.technology.zkevmOverview"),
+            url: "technology/zkevm/zkevm-overview",
+          },
+        ],
+      },
+      {
+        section: t("sidebar.technology.bridge"),
+        contents: [
+          {
+            title: t("sidebar.technology.bridgeOverview"),
+            url: "technology/bridge/bridge-overview",
+          },
+          {
+            title: t("sidebar.technology.proofValidation"),
+            url: "technology/bridge/proof-validation",
+          },
+        ],
+      },
+      {
+        section: t("sidebar.technology.sequencer"),
+        contents: [
+          {
+            title: t("sidebar.technology.executionClient"),
+            url: "technology/sequencer/execution-client",
+          },
+          {
+            title: t("sidebar.technology.zkTrie"),
+            url: "technology/sequencer/zktrie",
+          },
+          {
+            title: t("sidebar.technology.syncService"),
+            url: "technology/sequencer/sync-service",
+          },
+        ],
+      },
+      {
+        section: t("sidebar.technology.prover"),
+        contents: [
+          {
+            title: t("sidebar.technology.proofGeneration"),
+            url: "technology/prover/proof-generation",
+          },
+          {
+            title: t("sidebar.technology.cpuProverRepo"),
+            url: "https://github.com/",
+          },
+        ],
+      },
+    ],
+    learn: [
+      {
+        section: t("sidebar.learn.ethereumAndProtocols"),
+        contents: [
+          {
+            title: t("sidebar.learn.theScalabilityProblem"),
+            url: "learn/the-scalability-problem",
+          },
+          {
+            title: t("sidebar.learn.introToRollups"),
+            url: "learn/intro-to-rollups",
+          },
+        ],
+      },
+      {
+        section: t("sidebar.learn.zeroKnowledge"),
+        contents: [
+          {
+            title: t("sidebar.learn.polynomialCommitmentSchemes"),
+            url: "learn/zero-knowledge/polynomial-commitment-schemes",
+          },
+          {
+            title: t("sidebar.learn.zkgCommitmentScheme"),
+            url: "learn/zero-knowledge/kzg-commitment-scheme",
+          },
+        ],
+      },
+    ],
+  }
 }

@@ -8,6 +8,7 @@ import RightSidebar from "../components/RightSidebar/RightSidebar.astro"
 import * as CONFIG from "../config"
 import { NewsletterCTA } from "../components/Footer/NewsletterCTA.tsx"
 import Footer from "~/components/Footer/Footer.astro"
+import { changeLanguage } from "i18next"
 
 const { content = {}, frontmatter } = Astro.props
 // Astro.props?.headings is for .mdx pages, Astro.props?.content?.astro.headings is for .md pages
@@ -20,6 +21,7 @@ const formattedContentTitle = content.title
   ? `${content.title} | ${CONFIG.SITE.title}`
   : `${CONFIG.PAGE.titleFallback} | ${CONFIG.SITE.title}`
 const canonicalURL = new URL(Astro.url.pathname, Astro.site)
+changeLanguage(content.lang)
 
 // TODO: Part 1 - figure out if we need this script that will add a wallet injected depending on metadata of an article
 // const includeLinkToWalletScript = !!Astro.props?.content?.metadata?.linkToWallet

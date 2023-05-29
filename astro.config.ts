@@ -1,6 +1,7 @@
 import { defineConfig } from "astro/config"
 import preact from "@astrojs/preact"
 import react from "@astrojs/react"
+import astroI18next from "astro-i18next"
 import { astroCallouts } from "./integrations/astro-callouts"
 import { solidityRemixCode } from "./integrations/solidity-remix"
 import { youtubeEmbed } from "./integrations/youtube-embed"
@@ -39,6 +40,7 @@ export default defineConfig({
       // Useful if you need to define and/or import your own custom `base.css`.
       config: { applyBaseStyles: false },
     }),
+    astroI18next(),
   ],
   markdown: {
     drafts: true,

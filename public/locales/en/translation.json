@@ -1,0 +1,90 @@
+{
+  "landing": {
+    "test": "test",
+    "search": {
+      "title": "Welcome to the Scroll Documentation",
+      "placeholder": "Search Scroll documentation..."
+    },
+    "newUserCTA": {
+      "title": "New to Scroll and ZK Rollups?",
+      "description": "Learn the basics in the Getting Started Guide."
+    },
+    "resourcesCTA": {
+      "title": "Useful resources"
+    },
+    "nodesCTA": {
+      "title": "Need to run your own Scroll Node?",
+      "description": "See the Node Operator’s Guide to learn about starting and maintaining Scroll Nodes.",
+      "buttonText": "Node Operator’s Guide"
+    },
+    "TutorialsCTA": {
+      "title": "Watch tutorials",
+      "description": "Learn more about the technology we are building. We're constantly uploading new videos to our YouTube channel.",
+      "buttonText": "Watch tutorials"
+    },
+    "LinksCTA": {
+      "card1": {
+        "title": "Need integration support?",
+        "description": "Talk to an expert once we TODO: a url"
+      },
+      "card2": {
+        "title": "Discord",
+        "description": "Join the community"
+      },
+      "card3": {
+        "title": "TODO: Discourse",
+        "description": "Really, join the community"
+      }
+    },
+    "NewsletterCTA": {
+      "title": "Stay updated on the latest Scroll news",
+      "placeholder": "Enter your email address",
+      "buttonText": "Sign up"
+    }
+  },
+  "sidebar": {
+    "gettingStarted": {
+      "gettingStarted": "Getting Started",
+      "overview": "Overview",
+      "alphaTestnet": "Alpha Testnet",
+      "userGuide": "User Guide",
+      "setup": "Setup",
+      "faucet": "Faucet",
+      "bridge": "Bridge",
+      "transferTokens": "Transfer Tokens",
+      "commonErrors": "Common Errors",
+      "rollupExplorer": "Rollup Explorer",
+      "alphaBlockExplorer": "Alpha Block Explorer",
+      "goerliBlockExplorer": "Goerli Block Explorer",
+      "community": "Community",
+      "communityForum": "Community Forum"
+    },
+    "developers": {
+      "developers": "Developers",
+      "buildingOnScroll": "Building on Scroll",
+      "developerQuickstart": "Developer Quickstart",
+      "alphaTestnetContracts": "Alpha Testnet Contracts",
+      "integrations": "Integrations",
+      "ethereum&AlphaTestnetDifferences": "Ethereum & Alpha Testnet Differences",
+      "guides": "Guides",
+      "contractDeploymentTutorial": "Contract Deployment Tutorial",
+      "resources": "Resources",
+      "rollupExplorer": "Rollup Explorer",
+      "alphaBlockExplorer": "Alpha Block Explorer",
+      "goerliBlockExplorer": "Goerli Block Explorer"
+    },
+    "technology": {
+      "overview": "Overview",
+      "scrollArchitecture": "Scroll Architecture"
+    },
+    "learn": {
+      "zkEVMOverview": "zkEVM Overview"
+    },
+    "infrastructure": {
+      "introduction": "Introduction"
+    }
+  },
+  "notTranslated": {
+    "notTranslated": "This page has not been translated yet."
+  }
+}
