@@ -74,11 +74,29 @@
       "goerliBlockExplorer": "Goerli Block Explorer"
     },
     "technology": {
-      "overview": "Overview",
-      "scrollArchitecture": "Scroll Architecture"
+      "architecture": "Architecture",
+      "scrollArchitecture": "Scroll Architecture",
+      "principles": "Principles",
+      "zkevm": "zkEVM",
+      "introToZkevm": "Intro to zkEVM",
+      "zkEVMOverview": "zkEVM Overview",
+      "bridge": "Bridge",
+      "bridgeOverview": "Bridge Overview",
+      "proofValidation": "Proof Validation",
+      "sequencer": "Sequencer",
+      "executionClient": "Execution Client",
+      "zkTrie": "zkTrie",
+      "syncService": "Sync Service",
+      "prover": "Prover",
+      "proofGeneration": "Proof Generation",
+      "cpuProverRepo": "CPU Prover Repo"
     },
     "learn": {
-      "zkEVMOverview": "zkEVM Overview"
+      "theScalabilityProblem": "The Scalability Problem",
+      "introToRollups": "Intro to Rollups",
+      "zeroKnowledge": "Zero Knowledge",
+      "polynomialCommitmentSchemes": "Polynomial Commitment Schemes",
+      "kzgCommitmentScheme": "KZG Commitment Scheme"
     },
     "infrastructure": {
       "introduction": "Introduction"
