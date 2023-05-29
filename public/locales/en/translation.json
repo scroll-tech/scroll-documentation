@@ -84,7 +84,7 @@
       "zkevmOverview": "zkEVM Overview",
       "bridge": "Bridge",
       "bridgeOverview": "Bridge Overview",
-      "proofValidation": "Proof Validation",
+      "rollupProcess": "Rollup Process",
       "sequencer": "Sequencer",
       "executionClient": "Execution Client",
       "zkTrie": "zkTrie",

@@ -123,8 +123,8 @@ export const getSidebar = () => {
             url: "technology/bridge/bridge-overview",
           },
           {
-            title: t("sidebar.technology.proofValidation"),
-            url: "technology/bridge/proof-validation",
+            title: t("sidebar.technology.rollupProcess"),
+            url: "technology/bridge/rollup-process",
           },
         ],
       },
