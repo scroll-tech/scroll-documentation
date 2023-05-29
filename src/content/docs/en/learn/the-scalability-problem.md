@@ -1,5 +1,4 @@
 ---
-layout: ../../layouts/MainLayout.astro
 section: learn
 date: Last Modified
 title: "The Scalability Problem"

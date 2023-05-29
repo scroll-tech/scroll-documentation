@@ -57,6 +57,7 @@
       "alphaBlockExplorer": "Alpha Block Explorer",
       "goerliBlockExplorer": "Goerli Block Explorer",
       "community": "Community",
+      "discord": "Discord",
       "communityForum": "Community Forum"
     },
     "developers": {
@@ -79,7 +80,7 @@
       "principles": "Principles",
       "zkevm": "zkEVM",
       "introToZkevm": "Intro to zkEVM",
-      "zkEVMOverview": "zkEVM Overview",
+      "zkevmOverview": "zkEVM Overview",
       "bridge": "Bridge",
       "bridgeOverview": "Bridge Overview",
       "proofValidation": "Proof Validation",
@@ -92,14 +93,12 @@
       "cpuProverRepo": "CPU Prover Repo"
     },
     "learn": {
+      "ethereumAndProtocols": "Ethereum & Protocols",
       "theScalabilityProblem": "The Scalability Problem",
       "introToRollups": "Intro to Rollups",
       "zeroKnowledge": "Zero Knowledge",
       "polynomialCommitmentSchemes": "Polynomial Commitment Schemes",
       "kzgCommitmentScheme": "KZG Commitment Scheme"
-    },
-    "infrastructure": {
-      "introduction": "Introduction"
     }
   },
   "notTranslated": {

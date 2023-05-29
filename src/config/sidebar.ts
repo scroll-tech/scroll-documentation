@@ -180,7 +180,7 @@ export const getSidebar = () => {
             url: "learn/zero-knowledge/polynomial-commitment-schemes",
           },
           {
-            title: t("sidebar.learn.zkgCommitmentScheme"),
+            title: t("sidebar.learn.kzgCommitmentScheme"),
             url: "learn/zero-knowledge/kzg-commitment-scheme",
           },
         ],
