@@ -61,6 +61,7 @@ export const getSidebar = () => {
         contents: [
           { title: t("sidebar.developers.buildingOnScroll"), url: "developers" },
           { title: t("sidebar.developers.developerQuickstart"), url: "developers/developer-quickstart" },
+          { title: t("sidebar.developers.verifyingSmartContracts"), url: "developers/verifying-smart-contracts" },
           { title: t("sidebar.developers.alphaTestnetContracts"), url: "developers/alpha-testnet-contracts" },
           { title: t("sidebar.developers.integrations"), url: "developers/integrations" },
           {

@@ -2,6 +2,7 @@
 section: learn
 date: Last Modified
 title: "The Scalability Problem"
+lang: "en"
 permalink: "learn/intro-to-rollups"
 excerpt: "Ethereum’s strong decentralization and security come at the cost of sacrificing scalability: to ensure that all the participating nodes can keep up with the network, the network’s throughput is limited. This limit ultimately results in higher costs and latencies for users."
 whatsnext: { "Intro to Rollups": "/learn/intro-to-rollups" }

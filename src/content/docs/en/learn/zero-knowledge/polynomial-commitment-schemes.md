@@ -2,6 +2,7 @@
 section: learn
 date: Last Modified
 title: "Polynomial Commitment Schemes"
+lang: "en"
 permalink: "learn/zero-knowledge/polynomial-commitment-schemes"
 # excerpt: ""
 # whatsnext: { "zkEVM Overview": "/technology/zkevm-overview" }

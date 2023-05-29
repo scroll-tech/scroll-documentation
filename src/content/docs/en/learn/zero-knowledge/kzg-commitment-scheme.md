@@ -2,6 +2,7 @@
 section: learn
 date: Last Modified
 title: "KZG Commitment Scheme"
+lang: "en"
 permalink: "learn/zero-knowledge/kzg-commitment-scheme"
 # excerpt: ""
 # whatsnext: { "zkEVM Overview": "/technology/zkevm-overview" }
