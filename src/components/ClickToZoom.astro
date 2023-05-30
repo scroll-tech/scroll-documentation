@@ -2,15 +2,17 @@
 import { Image } from "@astrojs/image/components"
 export type Props = {
   src: string
+  alt: string
+  caption: string
 }
-const { src } = Astro.props as Props
+const { src, alt } = Astro.props as Props
 
 /**
  * This component adds the classNames required by the scripts/click-to-zoom.ts script.
  */
 ---
 
-<Image src={src} class="click-to-zoom" quality={80} format="avif" alt="image" />
+<Image src={src} class="click-to-zoom" quality={80} format="avif" alt={alt || "image"} />
 
 <style>
   .click-to-zoom {

@@ -16,6 +16,6 @@ To interact with our testnet, you first need to receive testnet ETH on _Goerli._
 
 Once you receive ETH on Goerli, you should see it in your wallet on the **Goerli Network**. It may take a few seconds for them to appear, but you can check the status by looking for a transaction to your address on any [Goerli Block Explorer](https://goerli.etherscan.io/).
 
-> ℹ️ **Note**
->
-> You can only request test tokens once every 24 hours.
+:::note[Note]
+You can only request test tokens once every 24 hours.
+:::

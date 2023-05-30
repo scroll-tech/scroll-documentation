@@ -45,7 +45,7 @@ export const getSidebar = () => {
         section: t("sidebar.gettingStarted.community"),
         contents: [
           {
-            title: "Discord",
+            title: t("sidebar.gettingStarted.discord"),
             url: "https://discord.gg/scroll",
           },
           {
@@ -61,6 +61,7 @@ export const getSidebar = () => {
         contents: [
           { title: t("sidebar.developers.buildingOnScroll"), url: "developers" },
           { title: t("sidebar.developers.developerQuickstart"), url: "developers/developer-quickstart" },
+          { title: t("sidebar.developers.verifyingSmartContracts"), url: "developers/verifying-smart-contracts" },
           { title: t("sidebar.developers.alphaTestnetContracts"), url: "developers/alpha-testnet-contracts" },
           { title: t("sidebar.developers.integrations"), url: "developers/integrations" },
           {
@@ -89,66 +90,99 @@ export const getSidebar = () => {
     ],
     technology: [
       {
-        section: t("sidebar.technology.overview"),
+        section: t("sidebar.technology.architecture"),
         contents: [
           {
             title: t("sidebar.technology.scrollArchitecture"),
-            url: "architecture-overview/architecture-overview",
-            children: [
-              {
-                title: "Child Page A",
-                url: "architecture-overview/architecture-request-model",
-              },
-              {
-                title: "Child Page B",
-                url: "architecture-overview/architecture-request-model",
-              },
-            ],
+            url: "technology/architecture/scroll-architecture",
+          },
+          {
+            title: t("sidebar.technology.principles"),
+            url: "technology/architecture/principles",
           },
         ],
       },
       {
-        section: "Another Section",
+        section: t("sidebar.technology.zkevm"),
         contents: [
           {
-            title: "Introduction to Rollups",
-            url: "data-feeds",
+            title: t("sidebar.technology.introToZkevm"),
+            url: "technology/zkevm/intro-to-zkevm",
+          },
+          {
+            title: t("sidebar.technology.zkevmOverview"),
+            url: "technology/zkevm/zkevm-overview",
+          },
+        ],
+      },
+      {
+        section: t("sidebar.technology.bridge"),
+        contents: [
+          {
+            title: t("sidebar.technology.bridgeOverview"),
+            url: "technology/bridge/bridge-overview",
+          },
+          {
+            title: t("sidebar.technology.rollupProcess"),
+            url: "technology/bridge/rollup-process",
+          },
+        ],
+      },
+      {
+        section: t("sidebar.technology.sequencer"),
+        contents: [
+          {
+            title: t("sidebar.technology.executionClient"),
+            url: "technology/sequencer/execution-client",
+          },
+          {
+            title: t("sidebar.technology.zkTrie"),
+            url: "technology/sequencer/zktrie",
+          },
+          {
+            title: t("sidebar.technology.syncService"),
+            url: "technology/sequencer/sync-service",
+          },
+        ],
+      },
+      {
+        section: t("sidebar.technology.prover"),
+        contents: [
+          {
+            title: t("sidebar.technology.proofGeneration"),
+            url: "technology/prover/proof-generation",
+          },
+          {
+            title: t("sidebar.technology.cpuProverRepo"),
+            url: "https://github.com/",
           },
         ],
       },
     ],
     learn: [
       {
-        section: "zkEVM",
-        contents: [{ title: t("sidebar.learn.zkEVMOverview"), url: "/" }],
-      },
-      {
-        section: "Section",
+        section: t("sidebar.learn.ethereumAndProtocols"),
         contents: [
           {
-            title: t("sidebar.learn.zkEVMOverview"),
-            url: "/",
+            title: t("sidebar.learn.theScalabilityProblem"),
+            url: "learn/the-scalability-problem",
+          },
+          {
+            title: t("sidebar.learn.introToRollups"),
+            url: "learn/intro-to-rollups",
           },
         ],
       },
       {
-        section: "Resources",
+        section: t("sidebar.learn.zeroKnowledge"),
         contents: [
-          { title: "Getting Help", url: "resources/getting-help" },
           {
-            title: "Off-site Link (Doesn't work)",
-            url: "https://scroll.io/",
+            title: t("sidebar.learn.polynomialCommitmentSchemes"),
+            url: "learn/zero-knowledge/polynomial-commitment-schemes",
           },
-        ],
-      },
-    ],
-    infrastructure: [
-      {
-        section: "EXTERNAL ADAPTERS",
-        contents: [
           {
-            title: t("sidebar.infrastructure.introduction"),
-            url: "",
+            title: t("sidebar.learn.kzgCommitmentScheme"),
+            url: "learn/zero-knowledge/kzg-commitment-scheme",
           },
         ],
       },

@@ -9,9 +9,9 @@ excerpt: "Our Alpha Testnet allows the community to deploy smart contracts on Sc
 
 Our Alpha Testnet allows the community to deploy smart contracts on Scroll. In this tutorial, we will teach you how to deploy a contract on the Scroll Testnet. This [demo repo](https://github.com/scroll-tech/scroll-contract-deploy-demo) illustrates contract deployment with [Hardhat](https://hardhat.org/) and [Foundry](https://github.com/foundry-rs/foundry).
 
-> ℹ️ **Note**
->
-> Before you start deploying the contract, you need to request test tokens from a Goerli faucet and use the [bridge](https://scroll.io/alpha/bridge) to transfer some test ETH from _Goerli_ to _Scroll Alpha_.
+:::note[Note]
+Before you start deploying the contract, you need to request test tokens from a Goerli faucet and use the [bridge](https://scroll.io/alpha/bridge) to transfer some test ETH from _Goerli_ to _Scroll Alpha_.
+:::
 
 ### Deploy contracts with Hardhat
 

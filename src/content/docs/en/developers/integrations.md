@@ -1,19 +1,17 @@
 ---
 section: developers
 date: Last Modified
-title: ""
+title: "Integrations"
 lang: "en"
 permalink: "developers/integrations"
 excerpt: "Lots of projects have already deployed support for Scroll’s Alpha Testnet. If you’re looking for infrastructure to build on or projects to collaborate with, these are already live, with many more coming on our Goerli release!"
 ---
 
-# Integrations
-
 Lots of projects have already deployed support for Scroll’s Alpha Testnet. If you’re looking for infrastructure to build on or projects to collaborate with, these are already live, with many more coming on our Goerli release!
 
-> ℹ️ **Note**
->
-> Some of these projects may not have updated their integrations from our Pre-Alpha network.
+:::caution[Note]
+Some of these projects may not have updated their integrations from our Pre-Alpha network.
+:::
 
 ### RPC Providers
 

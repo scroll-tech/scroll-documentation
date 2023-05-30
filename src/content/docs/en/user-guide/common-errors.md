@@ -22,7 +22,9 @@ To fix this issue, you need to reset your account in MetaMask for the Scroll Alp
 
 You will not lose any assets during the MetaMask account reset.
 
-_Note: Removing and re-adding a network is NOT enough to fix this - you must reset your account._
+:::caution[Caution]
+Removing and re-adding a network is NOT enough to fix this - you must reset your account.
+:::
 
 ## Nothing happens when confirming a bridging/swapping transaction
 

@@ -1,0 +1,133 @@
+---
+section: developers
+date: Last Modified
+title: "Verifying Smart Contracts"
+lang: "en"
+permalink: "developers/verifying-smart-contracts"
+---
+
+import Aside from "../../../../components/Aside.astro"
+import ClickToZoom from "../../../../components/ClickToZoom.astro"
+import verify1 from "./_images/verify1.png"
+
+After deploying your smart contracts, it's important to verify your code on [our block explorer](https://blockscout.scroll.io/). This can be done in an automated way using your developer tooling or using Blockscout's Web UI.
+
+<Aside type="danger" title="Warning">
+  Our Blockscout instance currently has inconsistent behavior in verifying contracts with Foundry. We're working on a
+  fix, along with other stability improvements. Don't hesitate to come ask for help [on
+  Discord](https://discord.com/channels/853955156100907018/1028102371894624337) though.
+</Aside>
+
+## Using Developer Tools
+
+Most smart contract tooling has plugins for verifying your contracts easily on Etherscan. Blockscout supports Etherscan's contract verification APIs, and it's straight forward to use these tools with the Scroll Alpha Testnet.
+
+### Hardhat
+
+First, modify `hardhat.config.ts` to point to Scroll's RPC and `blockscout.scroll.io/api`. A dummy `apyKey` value is required, but anything works for its value.
+
+```javascript
+...
+
+const config: HardhatUserConfig = {
+  ...
+  networks: {
+    scrollAlpha: {
+      url: 'https://alpha-rpc.scroll.io/l2' || '',
+      accounts:
+        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    },
+  },
+  etherscan: {
+    apiKey: {
+      scrollAlpha: 'abc',
+    },
+    customChains: [
+      {
+        network: 'scrollAlpha',
+        chainId: 534353,
+        urls: {
+          apiURL: 'https://blockscout.scroll.io/api',
+          browserURL: 'https://blockscout.scroll.io/',
+        },
+      },
+    ],
+  },
+}
+
+...
+```
+
+Now you can verify the smart contract by running the following command.
+
+```solidity
+npx hardhat verify --network scrollAlpha <contract address> <space separated constructor parameters>
+```
+
+For example, this how a smart contract that receives two uint parameters in the constructor would look like.
+
+```solidity
+npx hardhat verify --network scrollAlpha 0xD9880690bd717189cC3Fbe7B9020F27fae7Ac76F 123 456
+```
+
+<Aside type="danger" title="Warning">
+  You may receive an error stating `etherscan.apiKey.trim is not a function` . If so, you need to update
+  `@nomiclabs/hardhat-etherscan` to be able to support custom chains. Try running `npm update
+  @nomiclabs/hardhat-etherscan`
+</Aside>
+
+### Foundry
+
+When using Foundry, the `verify-contract` helps us verifying contracts.
+
+```bash
+forge verify-contract <Contract Address> <Space separated params> <Solidity file>:<Contract name> --chain-id 534353 --verifier-url <https://blockscout.scroll.io/api> --verifier blockscout
+```
+
+For example, this what verifying a smart contract that receives two `uint` parameters in the constructor looks like:
+
+```bash
+forge verify-contract 0xD9880690bd717189cC3Fbe7B9020F27fae7Ac76F 123 456 src/MyContract.sol:MyContract --chain-id 534353 --verifier-url <https://blockscout.scroll.io/api> --verifier blockscout
+```
+
+### Truffle
+
+To verify contracts with Truffle, first install the `truffle-plugin-verify` plugin.
+
+```solidity
+npm install -D truffle-plugin-verify
+```
+
+Then, enable the plugin and connect Scroll's Alpha Testnet using the RPC URL and Blockscout verification API.
+
+```javascript
+module.exports = {
+  plugins: ['truffle-plugin-verify'],
+  networks: {
+    scrollAlpha: {
+      provider: () =>
+        new HDWalletProvider(process.env.PRIVATE_KEY, 'https://alpha-rpc.scroll.io/l2'),
+      network_id: '*',
+      verify: {
+        apiUrl: 'https://blockscout.scroll.io/api',
+        apiKey: 'abc',
+        explorerUrl: 'https://blockscout.scroll.io/',
+      },
+    },
+
+...
+```
+
+After migrating our smart contract, we can verify it.
+
+```solidity
+npx truffle run verify MyContract --network scrollAlpha
+```
+
+## Using the Blockscout Web UI
+
+Shorter contracts can be verified using Blockscout's Web UI. To do so, combine all your Solidity code into one single file, including all the imported libraries. Then, lookup the deployed contract on on Blockscout, then visit the "Code" tab and select "Verify & Publish". Follow the instructions to submit your code.
+
+For a more in-depth guide, see Blockscount's official documentation on [Verifying a Smart Contract](https://docs.blockscout.com/for-users/verifying-a-smart-contract).
+
+<ClickToZoom src={verify1} />
