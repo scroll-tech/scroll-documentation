@@ -10,21 +10,21 @@ export const MENU: MenuItems = {
   en: [
     {
       text: "Getting Started",
-      link: "/en/docs/getting-started/overview",
+      link: "/en/getting-started/overview",
       section: "gettingStarted",
     },
-    { text: "Developers", link: "/en/docs/developers", section: "developers" },
-    { text: "Technology", link: "/en/docs/technology", section: "technology" },
-    { text: "Learn", link: "/en/docs/learn", section: "learn" },
+    { text: "Developers", link: "/en/developers", section: "developers" },
+    { text: "Technology", link: "/en/technology", section: "technology" },
+    { text: "Learn", link: "/en/learn", section: "learn" },
   ],
   zh: [
     {
       text: "入门",
-      link: "/zh/docs/getting-started/overview",
+      link: "/zh/getting-started/overview",
       section: "gettingStarted",
     },
-    { text: "开发者", link: "/zh/docs/developers", section: "developers" },
-    { text: "技术", link: "/zh/docs/technology", section: "technology" },
-    { text: "学习", link: "/zh/docs/learn", section: "learn" },
+    { text: "开发者", link: "/zh/developers", section: "developers" },
+    { text: "技术", link: "/zh/technology", section: "technology" },
+    { text: "学习", link: "/zh/learn", section: "learn" },
   ],
 }

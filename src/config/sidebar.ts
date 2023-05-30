@@ -1,4 +1,6 @@
-import { t } from "i18next"
+import i18next, { t } from "i18next"
+
+const formatUrl = (url) => `${i18next.language}/${url}`
 
 export const getSidebar = () => {
   return {
@@ -12,27 +14,27 @@ export const getSidebar = () => {
         contents: [
           {
             title: t("sidebar.gettingStarted.userGuide"),
-            url: "user-guide/",
+            url: formatUrl("user-guide/"),
             children: [
               {
                 title: t("sidebar.gettingStarted.setup"),
-                url: "user-guide/setup",
+                url: formatUrl("user-guide/setup"),
               },
               {
                 title: t("sidebar.gettingStarted.faucet"),
-                url: "user-guide/faucet",
+                url: formatUrl("user-guide/faucet"),
               },
               {
                 title: t("sidebar.gettingStarted.bridge"),
-                url: "user-guide/bridge",
+                url: formatUrl("user-guide/bridge"),
               },
               {
                 title: t("sidebar.gettingStarted.transferTokens"),
-                url: "user-guide/transfer-tokens",
+                url: formatUrl("user-guide/transfer-tokens"),
               },
               {
                 title: t("sidebar.gettingStarted.commonErrors"),
-                url: "user-guide/common-errors",
+                url: formatUrl("user-guide/common-errors"),
               },
             ],
           },
@@ -66,7 +68,7 @@ export const getSidebar = () => {
           { title: t("sidebar.developers.integrations"), url: "developers/integrations" },
           {
             title: t("sidebar.developers.ethereum&AlphaTestnetDifferences"),
-            url: "developers/ethereum-and-alpha-testnet-differences",
+            url: formatUrl("developers/ethereum-and-alpha-testnet-differences"),
           },
         ],
       },
@@ -75,7 +77,7 @@ export const getSidebar = () => {
         contents: [
           {
             title: t("sidebar.developers.contractDeploymentTutorial"),
-            url: "developers/guides/contract-deployment-tutorial",
+            url: formatUrl("developers/guides/contract-deployment-tutorial"),
           },
         ],
       },
