@@ -1,18 +1,28 @@
 ---
-import { changeLanguage } from "i18next"
+import i18next, { t, changeLanguage } from "i18next"
 import { GetStaticPathsResult } from "astro"
 import redirects from "../features/redirects/redirects.json"
+import { getCollection } from "astro:content"
 
 changeLanguage("en")
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
+  const pages = await getCollection("docs")
+  const allSlugs = new Set(
+    pages.map((page) => {
+      const [, ...slug] = page.slug.split("/")
+      return slug.join("/")
+    })
+  )
+
   const sanitizeSource = (source: string) => {
     let newSource = source
     if (newSource[newSource.length - 1] === "/") newSource = newSource.slice(0, newSource.length - 1)
     if (newSource[0] === "/") return newSource.slice(1, newSource.length)
     return newSource
   }
-  return redirects.redirects.map((entry) => {
+
+  const paths = redirects.redirects.map((entry) => {
     return {
       params: { redirect: sanitizeSource(entry.source) },
       props: {
@@ -23,6 +33,11 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
       },
     }
   })
+
+  for (let slug of allSlugs) {
+    paths.push({ params: { redirect: slug }, props: { to: `/en/${slug}` } })
+  }
+  return paths
 }
 const { to } = Astro.props
 ---

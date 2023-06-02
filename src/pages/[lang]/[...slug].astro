@@ -1,7 +1,7 @@
 ---
 import { getCollection } from "astro:content"
 import i18next, { t, changeLanguage } from "i18next"
-import MainLayout from "../../../layouts/MainLayout.astro"
+import MainLayout from "../../layouts/MainLayout.astro"
 
 export async function getStaticPaths() {
   const pages = await getCollection("docs")
