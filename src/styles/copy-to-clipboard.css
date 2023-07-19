@@ -1,5 +1,6 @@
 .copy-code-button-wrapper {
-  margin-top: 0 !important;
+  margin-top: -7px !important;
+  margin-right: 4px !important;
   display: flex;
   z-index: 999;
   justify-content: flex-end;
@@ -11,7 +12,8 @@
 
 .copy-code-button-wrapper > button {
   display: flex;
-  @apply p-1;
+  border-radius: 50%;
+  padding: 11px;
 }
 
 .copy-code-button-wrapper > button > img {

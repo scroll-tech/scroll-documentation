@@ -41,9 +41,26 @@ const whatsNext = content.whatsnext
     display: block;
   }
 
+  .content :global(a) {
+    font-weight: 500;
+  }
+
+  .content :global(h2) {
+    font-weight: 500;
+    margin-top: 30px;
+    margin-bottom: 20px;
+  }
+
   @media (min-width: 50em) {
     .sm\:hidden {
       display: none;
+    }
+    .content :global(h2) {
+      font-weight: 600;
+      margin-top: 100px;
+    }
+    .content :global(a) {
+      font-weight: 600;
     }
   }
 </style>

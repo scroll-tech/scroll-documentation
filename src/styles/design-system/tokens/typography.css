@@ -1,15 +1,15 @@
 :root {
-  --color-text-primary: var(--gray-600);
+  --color-text-primary: var(--black-100);
   --color-text-secondary: var(--gray-700);
-  --color-text-heading: var(--blue-800);
+  --color-text-heading: var(--black-100);
   --color-text-error: var(--red-500);
   --color-text-warning: var(--gray-700);
   --color-text-success: var(--green-500);
   --color-text-info: var(--blue-800);
   --color-text-contrast: var(--gray-100);
-  --color-text-link: var(--blue-600);
-  --color-text-link-hover: var(--blue-800);
-  --color-text-link-pressed: var(--blue-900);
+  --color-text-link: var(--orange-400);
+  --color-text-link-hover: var(--orange-400);
+  --color-text-link-pressed: var(--orange-400);
   --color-text-disabled: var(--gray-400);
   --color-text-placeholder: var(--gray-600);
   --color-text-value: var(--gray-900);

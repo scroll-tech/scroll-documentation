@@ -1,40 +1,69 @@
 ---
 import { t } from "i18next"
+import SectionHeader from "../components/SectionHeader.tsx"
+
+const data = new Array(10).fill({
+  link: "https://www.google.com",
+})
 ---
 
 <div class="resources-cta">
-  <h2 class="heading-500">{t("landing.resourcesCTA.title")}</h2>
-  <div>
-    <a href="/">Great Link 1</a><a href="/">Greater Link 2</a>
-  </div>
-  <div>
-    <a href="/">Prefect Resource 1</a><a href="/">More Perfect Resource 2</a>
-  </div>
-  <div>
-    <a href="/">The Resources Just Get Better</a>
-  </div>
+  <SectionHeader
+    title="Developer Quickstart"
+    description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ut urna iaculis quam mollis consequat.   "
+  />
+  <ul>
+    {
+      data.map((item) => (
+        <li>
+          <a href={item.link}>
+            <img src={item.image} />
+          </a>
+        </li>
+      ))
+    }
+  </ul>
 </div>
 
 <style>
   .resources-cta {
-    display: grid;
+    /* display: grid;
     grid-template-columns: 1fr;
-    @apply bg-background-secondary gap-4 p-8 rounded-primary;
+    @apply bg-background-secondary gap-4 p-8 rounded-primary; */
+    @apply px-[60px];
+  }
+  ul {
+    list-style: none;
+    display: flex;
+    overflow: scroll;
+    margin-top: 100px;
+  }
+
+  ul li {
+    margin-right: 55px;
+    flex-shrink: 0;
+  }
+
+  ul img {
+    width: 152px;
+    height: 152px;
+    background: var(--black-100);
+    border-radius: 50%;
   }
   @media (min-width: 50em) {
-    .resources-cta {
+    /* .resources-cta {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr 1fr;
       @apply bg-background-secondary gap-8;
-    }
+    } */
   }
 
   .resources-cta div a {
-    display: block;
-    @apply mt-4;
+    /* display: block;
+    @apply mt-4; */
   }
 
   .resources-cta div a:first-child {
-    @apply mt-0;
+    /* @apply mt-0; */
   }
 </style>

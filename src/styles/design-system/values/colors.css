@@ -28,11 +28,12 @@
   --green-900: #042013;
   --white: #ffffff;
   --black: #000000;
-  --orange-100: #fff5f0;
+  --black-100: #101010;
+  --orange-100: #fcf1df;
   --orange-200: #fee9e0;
   --orange-300: #f8a077;
-  --orange-400: #e56f3e;
-  --orange-500: #bf4f20;
+  --orange-400: #ff684b;
+  --orange-500: #c58d49;
   --orange-600: #9f421a;
   --orange-700: #7f3514;
   --orange-800: #50210c;
@@ -64,4 +65,5 @@
   --yellow-700: #5e451d;
   --yellow-800: #3b2812;
   --yellow-900: #211608;
+  --beige-100: #fff8f3;
 }

@@ -26,3 +26,32 @@
   font-style: normal;
   font-display: swap;
 }
+@font-face {
+  font-family: "Fira Code";
+  font-style: normal;
+  font-weight: 500;
+  src: url(https://fonts.gstatic.com/s/firacode/v21/uU9eCBsR6Z2vfE9aq3bL0fxyUs4tcw4W_A9sJVD7NuzlojwUKQ.woff2)
+    format("woff2");
+}
+
+@font-face {
+  font-family: "trans-sans";
+  src: url("/fonts/TransSansPremium-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "trans-sans";
+  src: url("/fonts/TransSansPremium-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "trans-sans";
+  src: url("/fonts/TransSansPremium-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}

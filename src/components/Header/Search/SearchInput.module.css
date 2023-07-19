@@ -1,8 +1,15 @@
 .wrapper {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 1rem;
-  @apply bg-white p-modal pb-6 m-[calc(theme('padding.modal')_*_-1)] mb-0;
+  width: 346px;
+  height: 35px;
+  flex-shrink: 0;
+  border-radius: 40px;
+  overflow: hidden;
+  @apply bg-white;
+  /* @apply bg-white p-modal pb-6 m-[calc(theme('padding.modal')_*_-1)] mb-0; */
 }
 
 .input {
@@ -15,15 +22,15 @@
   background-repeat: no-repeat;
   border: none;
   appearance: none;
-  line-height: 16px;
-  background-image: url(/assets/search.svg);
-  background-position: left 16px top 50%;
-  background-size: 16px;
+  height: 35px;
+  line-height: 35px;
+  background: #f6f6f6 url(/assets/search.svg) left 12px top 50% / 17px no-repeat;
   flex-grow: 1;
-  @apply bg-white p-4 pl-[40px];
+  /* margin-bottom: 30px; */
+  /* @apply bg-white p-4 pl-[40px]; */
 }
 .input:focus {
-  outline: 2px solid var(--color-text-link);
+  outline: none;
   @apply rounded-primary;
 }
 .input::placeholder {
@@ -35,6 +42,7 @@
   border: none;
   padding: 0;
   display: none;
+  height: 25px;
 }
 
 .closeButtonMobile {
@@ -49,14 +57,14 @@
 }
 @media (min-width: 50em) {
   .wrapper {
-    align-items: flex-start;
+    /* align-items: flex-start; */
   }
 
   .input {
-    font-size: 20px;
-    line-height: 24px;
-    background-size: 24px;
-    @apply p-4 pl-[52px];
+    font-size: 18px;
+    line-height: 15px;
+    /* background-size: 15px; */
+    @apply pl-[40px];
   }
 
   .closeButton {

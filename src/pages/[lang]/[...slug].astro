@@ -38,9 +38,11 @@ export async function getStaticPaths() {
 let page = Astro.props
 let params = Astro.params
 // Only call render if page is not translated
-let Content
+let Content, headings
 if (!page.notTranslated) {
-  Content = (await page.render()).Content
+  const render = await page.render()
+  Content = render.Content
+  headings = render.headings
 } else {
   changeLanguage(params.lang)
 }
@@ -53,7 +55,7 @@ const content = {
 
 {
   Content ? (
-    <MainLayout content={content} headings={[]}>
+    <MainLayout content={content} headings={headings}>
       <Content />
     </MainLayout>
   ) : (

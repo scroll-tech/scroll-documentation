@@ -2,7 +2,7 @@
 
 /* Heading styles */
 :where(h1, h2, h3, h4, h5, h6) {
-  @apply font-text leading-[1.3] font-medium text-heading;
+  @apply font-text leading-[1.3] font-medium tracking-[0.18px];
 }
 
 :where(h6) {
@@ -14,38 +14,38 @@
 }
 
 :where(h4) {
-  @apply text-[1.5rem] mb-4 tracking-[-0.015rem];
+  @apply text-[1.5rem] mb-4;
 }
 
 :where(h3) {
-  @apply text-[1.5rem] mb-4 tracking-[-0.015rem];
+  @apply text-[1.5rem] mb-[36px] mt-[40px];
 }
 
 :where(h2) {
-  @apply text-[1.75rem] mb-4 tracking-[-0.035rem];
+  @apply text-[32px] mb-4;
 }
 
 :where(h1) {
-  @apply text-[2rem] mb-4 tracking-[-0.04rem];
+  @apply text-[40px] mb-4 leading-[1];
 }
 
 @media screen and (min-width: 768px) {
   :where(h3) {
-    @apply text-[1.75rem] tracking-[-0.0175rem];
+    @apply text-[1.75rem];
   }
 
   :where(h2) {
-    @apply text-[2rem] tracking-[-0.04rem];
+    @apply text-[2rem];
   }
 
   :where(h1) {
-    @apply text-[2.5rem] mb-6 tracking-[-0.05rem];
+    @apply text-[2.5rem] mb-6;
   }
 }
 
 /* Paragraph  */
 :where(body, p) {
-  @apply leading-[1.5] font-normal font-text text-primary;
+  @apply leading-[1.5] font-normal font-text text-primary tracking-[0.18px];
 }
 
 :where(p) {
@@ -77,33 +77,33 @@
 }
 
 :where(.heading-300) {
-  @apply text-[1.5rem] mb-4 tracking-[-0.015rem];
+  @apply text-[1.5rem] mb-4;
 }
 
 :where(.heading-400) {
-  @apply text-[1.5rem] mb-4 tracking-[-0.015rem];
+  @apply text-[1.5rem] mb-4;
 }
 
 :where(.heading-500) {
-  @apply text-[1.75rem] mb-4 tracking-[-0.035rem];
+  @apply text-[1.75rem] mb-4;
 }
 
 :where(.heading-600) {
-  @apply text-[2rem] mb-4 tracking-[-0.04rem];
+  @apply text-[2rem] mb-4;
 }
 
 @media screen and (min-width: 768px) {
   :where(.heading-400) {
-    @apply text-[1.75rem] tracking-[-0.0175rem];
+    @apply text-[1.75rem];
   }
 
   :where(.heading-500) {
-    @apply text-[2rem] tracking-[-0.04rem];
+    @apply text-[2rem];
   }
 
   :where(.heading-600) {
     font-size: 2.5rem;
-    @apply text-[2.5rem] tracking-[-0.05rem] mb-6;
+    @apply text-[2.5rem]  mb-6;
   }
 }
 
@@ -152,27 +152,27 @@
 }
 
 :where(.display-400) {
-  @apply text-[2rem] mb-4 tracking-[-0.04rem];
+  @apply text-[2rem] mb-4;
 }
 
 :where(.display-500) {
-  @apply text-[2.5rem] mb-6 tracking-[-0.05rem];
+  @apply text-[2.5rem] mb-6;
 }
 
 :where(.display-600) {
-  @apply text-[3rem] mb-6 tracking-[-0.06rem];
+  @apply text-[3rem] mb-6;
 }
 
 @media screen and (min-width: 768px) {
   :where(.display-400) {
-    @apply text-[2.5rem]  tracking-[-0.05rem];
+    @apply text-[2.5rem];
   }
 
   :where(.display-500) {
-    @apply text-[3rem] tracking-[-0.06rem];
+    @apply text-[3rem];
   }
 
   :where(.display-600) {
-    @apply text-[3.5rem] tracking-[-0.07rem];
+    @apply text-[3.5rem];
   }
 }

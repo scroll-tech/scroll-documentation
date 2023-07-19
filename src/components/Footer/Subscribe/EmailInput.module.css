@@ -1,0 +1,82 @@
+/* Path: src/components/Footer/Subscribe/Subscribe.module.css */
+.container {
+  position: relative;
+  display: inline-block;
+  height: 54px;
+  width: 448px;
+}
+
+.mask {
+  width: 54px;
+  height: 100%;
+  position: absolute;
+  background-color: #1f1f1f;
+  border-radius: 10px;
+  z-index: 1;
+  top: 0;
+  display: flex;
+  transition: width 0.5s ease;
+  overflow: hidden;
+}
+
+.iconButton {
+  width: 54px;
+  height: 100%;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  cursor: pointer;
+  user-select: none;
+  vertical-align: middle;
+  appearance: none;
+  text-decoration: none;
+  text-align: center;
+  flex: 0 0 auto;
+  font-size: 15px;
+  padding: 8px;
+  border-radius: 50%;
+  overflow: visible;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.iconButton img {
+  width: 21px;
+  height: 16px;
+}
+
+.success {
+  font-size: 20px;
+  font-weight: 600;
+  color: #fff;
+  background-color: #1f1f1f;
+  border-radius: 10px;
+  border-left: none;
+  text-align: center;
+  flex: 1;
+  line-height: 54px;
+}
+
+.inputBase {
+  font-size: 20px;
+  font-weight: 600;
+  height: 100%;
+  width: 100%;
+  color: #000;
+  background-color: #fff;
+  border-radius: 10px;
+  border: 1px solid #000;
+  border-left: none;
+  text-align: center;
+}
+
+.inputBase::placeholder {
+  color: #dcdcdc;
+}

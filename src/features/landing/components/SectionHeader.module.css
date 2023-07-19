@@ -1,0 +1,16 @@
+.title {
+  color: #101010;
+  font-size: 46px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 50px; /* 108.696% */
+  letter-spacing: 0.46px;
+}
+.description {
+  color: #101010;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 30px; /* 125% */
+  letter-spacing: 0.24px;
+}

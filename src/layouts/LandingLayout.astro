@@ -3,8 +3,8 @@ import HeadCommon from "../components/HeadCommon.astro"
 import HeadSEO from "../components/HeadSEO.astro"
 import Header from "../components/Header/Header.astro"
 import * as CONFIG from "../config"
-import { NewsletterCTA } from "../components/Footer/NewsletterCTA.tsx"
-import Footer from "~/components/Footer/Footer.astro"
+// import { NewsletterCTA } from "../components/Footer/NewsletterCTA.tsx"
+import Footer from "~/components/Footer/Footer.tsx"
 import LeftSidebar from "~/components/LeftSidebar/LeftSidebar.astro"
 
 const { content = {} } = Astro.props
@@ -64,7 +64,8 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site)
       }
       @media (min-width: 72em) {
         .layout {
-          grid-template-columns: min(calc(1440px - 2 * var(--space-16x)), calc(100% - 2 * var(--space-16x)));
+          /* grid-template-columns: min(calc(1440px - 2 * var(--space-16x)), calc(100% - 2 * var(--space-16x))); */
+          grid-template-columns: 100%;
           padding-left: 0;
           padding-right: 0;
           margin-left: auto;
@@ -108,6 +109,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site)
       <slot />
     </div>
   </main>
-  <NewsletterCTA client:visible />
+  <!-- <NewsletterCTA client:visible />
+  <Footer /> -->
   <Footer />
 </body>

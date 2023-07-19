@@ -18,16 +18,23 @@ import { t } from "i18next"
     display: flex;
     flex-direction: column;
     justify-content: center;
-    @apply py-10 px-0;
+    @apply py-20 px-0;
   }
 
   #hero-search h2 {
+    max-width: 460px;
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 55px; /* 114.583% */
+    letter-spacing: 0.48px;
+
     @apply text-contrast;
   }
 
   #hero-search:before {
     content: "";
-    background-image: url(../assets/hero-bg.png);
+    /* background-image: url(../assets/hero-bg.png); */
     position: absolute;
     top: 0;
     left: 50%;
@@ -37,7 +44,7 @@ import { t } from "i18next"
     z-index: -1;
     background-position: center left;
     background-repeat: no-repeat;
-    background-color: #375bd3;
+    background-color: var(--black-100);
   }
 
   .hero-cta {

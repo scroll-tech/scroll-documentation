@@ -1,11 +1,10 @@
 import * as CONFIG from "@config"
-import React from "react"
+import React from 'react';
 import styles from "./Search.module.css"
 import algoliasearch from "algoliasearch/lite"
 
 import { InstantSearch, useInstantSearch, useHits, UseHitsProps } from "react-instantsearch-hooks-web"
 
-import { Modal } from "../../Modal/Modal"
 import { SearchInput } from "./SearchInput"
 import { clsx } from "~/lib"
 
@@ -39,7 +38,9 @@ function EmptyQueryBoundary({ children, fallback }) {
     return (
       <div className={styles.queryResults}>
         <div>
-          <h6 style={{ paddingLeft: "var(--space-2x)" }}>Recommended articles</h6>
+          <h6 style={{ paddingLeft: "var(--space-2x)", marginBottom: "1rem" }}>
+            Recommended articles
+          </h6>
           <div className={styles.hitWrapper}>
             <ul className={styles.hitList}>
               {recommendedArticles.map((article) => (
@@ -59,7 +60,9 @@ function EmptyQueryBoundary({ children, fallback }) {
         <div>
           {!!recentArticles.length && (
             <>
-              <h6 style={{ paddingLeft: "var(--space-2x)" }}>Recently viewed</h6>
+              <h6 style={{ paddingLeft: "var(--space-2x)", marginBottom: "1rem" }}>
+                Recently viewed
+              </h6>
               <div className={styles.hitWrapper}>
                 <ul className={styles.hitList}>
                   {recentArticles.map((article) => (
@@ -118,7 +121,7 @@ function CustomHits({ title, hitClassName, ...props }: UseHitsProps & { title: s
           {hits.map((hit: any) => (
             <li style={{ borderRadius: "var(--border-radius-primary)" }}>
               <a
-                style={{ padding: "var(--space-1x) var(--space-2x)" }}
+                // style={{ padding: "var(--space-1x) var(--space-2x)" }}
                 href={hit.url}
                 className={clsx(styles.hit, hitClassName, "paragraph-200")}
                 dangerouslySetInnerHTML={{
@@ -134,17 +137,18 @@ function CustomHits({ title, hitClassName, ...props }: UseHitsProps & { title: s
 }
 
 export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+
   const getIndexName = () => {
     if (typeof window === "undefined") return
     const host = window.location.hostname
     if (host === "docs.scroll.io") return CONFIG.ALGOLIA.productionIndexName
     return CONFIG.ALGOLIA.testIndexName
   }
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} modalId={styles.searchModal}>
+    <div id={styles.searchModal}>
       <InstantSearch indexName={getIndexName()} searchClient={searchClient}>
-        <SearchInput onClose={onClose} />
-        <hr className={styles.modalDivider} />
+        <SearchInput />
         <div className={styles.resultsWrapper}>
           <EmptyQueryBoundary fallback={null}>
             <NoResultsBoundary>
@@ -167,6 +171,6 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
           </EmptyQueryBoundary>
         </div>
       </InstantSearch>
-    </Modal>
+    </div>
   )
 }

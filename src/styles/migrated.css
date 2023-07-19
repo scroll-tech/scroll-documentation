@@ -4,27 +4,96 @@
 
 @layer utilities {
   .remix-callout {
-    @apply inline-flex flex-wrap mb-[0.5em];
+    font-size: 16px;
+    padding-right: 8px;
+    height: 48px;
+    line-height: 48px;
+    border: 1px solid #ed7255;
+    border-radius: 11px;
+    cursor: pointer;
+    margin: 0;
+    min-width: 250px;
+    font-weight: 600;
+    @apply inline-flex flex-wrap mb-[0.5em] relative;
   }
 
-  .remix-callout > a:nth-of-type(1),
-  .remix-callout > a:nth-of-type(n + 2) {
-    @apply p-2 px-5 border-2 border-solid border-blue-600 my-0 mx-[8px] rounded-[8px] box-border text-white bg-blue-600 text-center transition-all duration-200;
+  .remix-callout a {
+    padding-left: 60px;
+    text-align: center;
+    width: 100%;
   }
 
-  .remix-callout > a:nth-of-type(1):hover {
-    @apply text-white border-2 border-solid border-gray-900 bg-blue-800;
+  .remix-callout:hover a {
+    color: #ffffff;
+    position: relative;
   }
 
-  .remix-callout > a:nth-of-type(1):active {
-    @apply text-white border-2 border-solid border-gray-900 bg-gray-900;
+  .remix-callout::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    background: #ed7255
+      url("data:image/svg+xml,%3Csvg fill='none' height='16' viewBox='0 0 21 16' width='21' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m21 8.00267-8.3996 7.99733v-2.7067l4.5767-4.35752c-5.7251-.08013-11.45204.31876-17.1565267.05877l-.02057369-1.96951c5.68391039.23862 11.34730039-.1389 17.03120039-.06055l-4.4308-4.21858v-2.74591055l8.3996 7.99733055z' fill='%23fff8f3'/%3E%3C/svg%3E")
+      left 16px center no-repeat;
+    border-radius: 10px;
+    right: calc(100% - 48px);
+    transition: right 0.3s ease-in-out;
   }
 
-  .remix-callout > a:nth-of-type(n + 2):hover {
-    @apply text-blue-800  bg-blue-100 border-2 border-solid border-blue-800;
+  .remix-callout:hover::before {
+    right: 0;
+  }
+  .remix-callout:hover::before {
+    right: 0;
   }
 
-  .remix-callout > a:nth-of-type(n + 2):active {
-    @apply text-gray-900  bg-blue-100 border-2 border-solid border-gray-900;
+  @media screen and (min-width: 50em) {
+    .remix-callout {
+      font-size: 18px;
+      padding-right: 8px;
+      height: 54px;
+      line-height: 54px;
+      border: 1px solid #ed7255;
+      border-radius: 11px;
+      cursor: pointer;
+      margin: 0;
+      min-width: 250px;
+      font-weight: 600;
+      @apply inline-flex flex-wrap mb-[0.5em] relative;
+    }
+
+    .remix-callout a {
+      padding-left: 60px;
+      text-align: center;
+      width: 100%;
+    }
+
+    .remix-callout:hover a {
+      color: #ffffff;
+      position: relative;
+    }
+
+    .remix-callout::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      background: #ed7255
+        url("data:image/svg+xml,%3Csvg fill='none' height='16' viewBox='0 0 21 16' width='21' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m21 8.00267-8.3996 7.99733v-2.7067l4.5767-4.35752c-5.7251-.08013-11.45204.31876-17.1565267.05877l-.02057369-1.96951c5.68391039.23862 11.34730039-.1389 17.03120039-.06055l-4.4308-4.21858v-2.74591055l8.3996 7.99733055z' fill='%23fff8f3'/%3E%3C/svg%3E")
+        left 16px center no-repeat;
+      border-radius: 10px;
+      right: calc(100% - 54px);
+      transition: right 0.3s ease-in-out;
+    }
+
+    .remix-callout:hover::before {
+      right: 0;
+    }
+    .remix-callout:hover::before {
+      right: 0;
+    }
   }
 }

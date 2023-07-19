@@ -50,17 +50,25 @@ pre[class*="language-"] {
   padding: 1em;
   margin: 0.5em 0;
   overflow: auto;
+  margin-top: 0px;
+  margin-bottom: 30px;
 }
 
 :not(pre) > code[class*="language-"],
 pre[class*="language-"] {
   background: #2b2b2b;
+  border-radius: 27px;
+  padding: 17px;
 }
 
 /* Inline code */
 :not(pre) > code[class*="language-"] {
   padding: 0.1em;
   border-radius: 0.3em;
+}
+
+.token.class-name {
+  color: #afafaf;
 }
 
 .token.comment,

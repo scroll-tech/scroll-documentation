@@ -156,6 +156,9 @@ module.exports = {
         medium: "var(--font-weight-medium)",
         bold: "var(--font-weight-bold)",
       },
+      fontSize: {
+        base: ['18px', '30px'],
+      },
       height: {
         navbar: "var(--theme-navbar-height)",
       },

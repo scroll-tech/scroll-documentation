@@ -6,8 +6,9 @@ import PageContent from "../components/PageContent/PageContent.astro"
 import LeftSidebar from "../components/LeftSidebar/LeftSidebar.astro"
 import RightSidebar from "../components/RightSidebar/RightSidebar.astro"
 import * as CONFIG from "../config"
-import { NewsletterCTA } from "../components/Footer/NewsletterCTA.tsx"
-import Footer from "~/components/Footer/Footer.astro"
+// import { NewsletterCTA } from "../components/Footer/NewsletterCTA.tsx"
+// import Footer from "~/components/Footer/Footer.astro"
+import Footer from "~/components/Footer/Footer.tsx"
 import { changeLanguage } from "i18next"
 
 const { content = {}, frontmatter } = Astro.props
@@ -45,7 +46,7 @@ changeLanguage(content.lang)
         display: grid;
         grid-template-rows: var(--theme-navbar-height) 1fr;
         --gutter: var(--space-6x);
-        --doc-padding: 2rem;
+        --doc-padding: 65px;
       }
 
       .layout {
@@ -53,6 +54,8 @@ changeLanguage(content.lang)
         grid-auto-flow: column;
         grid-template-columns: 0fr minmax(0, var(--max-width)) 0fr;
         overflow-x: hidden;
+        margin-left: 20px;
+        margin-right: 20px;
       }
 
       .layout :global(> *) {
@@ -75,7 +78,7 @@ changeLanguage(content.lang)
       }
 
       #grid-main {
-        padding: var(--doc-padding) var(--gutter);
+        padding: var(--doc-padding) 0;
         grid-column: 2;
         display: flex;
         flex-direction: column;
@@ -84,12 +87,20 @@ changeLanguage(content.lang)
 
       #grid-right {
         display: none;
+        padding-top: 100px;
       }
 
       @media (min-width: 50em) {
+        body {
+          width: 100%;
+          display: grid;
+          grid-template-rows: var(--theme-navbar-height) 1fr;
+          --gutter: var(--space-6x);
+          --doc-padding: 115px;
+        }
         .layout {
           overflow: initial;
-          grid-template-columns: 18rem minmax(0, var(--max-width));
+          grid-template-columns: 1fr 3fr;
           gap: 1em;
         }
 
@@ -103,11 +114,11 @@ changeLanguage(content.lang)
 
       @media (min-width: 72em) {
         .layout {
-          grid-template-columns: 18rem minmax(0, var(--max-width)) 18rem;
+          grid-template-columns: 2fr 7fr 3fr;
           padding-left: 0;
           padding-right: 0;
-          margin-left: auto;
-          margin-right: auto;
+          margin-left: 20px;
+          margin-right: 20px;
         }
 
         #grid-right {
@@ -168,9 +179,9 @@ changeLanguage(content.lang)
         <RightSidebar {content} githubEditUrl={githubEditUrl} {headings} clientSideToc={!!frontmatter?.clientSideToc} />
       </aside>
     </main>
-    <NewsletterCTA client:visible />
-    <Footer />
-
+    <!-- <NewsletterCTA client:visible />
+    <Footer /> -->
+    <Footer client:idle />
     <!-- TODO: Part 3 - Figure out if we need this footer script tag for linking to wallet. -->
 
     <!-- <script>
