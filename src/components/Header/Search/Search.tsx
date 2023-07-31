@@ -13,7 +13,9 @@ export default function Search() {
   }, [setIsOpen])
 
   const onClose = useCallback(() => {
-    setIsOpen(false)
+    setTimeout(() => {
+      setIsOpen(false)
+    }, 200)
   }, [setIsOpen])
 
   useKeyPress("/", {

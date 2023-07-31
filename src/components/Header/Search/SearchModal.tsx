@@ -148,7 +148,7 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
   return (
     <div id={styles.searchModal}>
       <InstantSearch indexName={getIndexName()} searchClient={searchClient}>
-        <SearchInput />
+        <SearchInput onClose={onClose} />
         <div className={styles.resultsWrapper}>
           <EmptyQueryBoundary fallback={null}>
             <NoResultsBoundary>
