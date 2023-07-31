@@ -6,7 +6,7 @@ import PureFooter from "./PureFooter/PureFooter.tsx"
 const Footer = () => {
   return (
     <>
-      {/* <Subscribe /> */}
+      <Subscribe />
       <PureFooter />
     </>
   )

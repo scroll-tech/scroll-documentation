@@ -1,5 +1,5 @@
 .container {
-  @apply py-[60px] px-[32px] bg-[#ffd0c7] md:px-[20px];
+  @apply py-[60px] px-[20px] bg-[#ffd0c7] md:px-[32px];
 }
 
 .subscribeBox {
@@ -7,7 +7,7 @@
 }
 
 .subscribeIcon {
-  font-size: 70px;
+  width: 48px;
 }
 .copyBox {
   display: flex;
@@ -16,13 +16,13 @@
 }
 
 .subscribeTitle {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 600;
   line-height: normal;
 }
 
 .subscribeText {
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 400;
   /* margin-top: 10px; */
 }
@@ -34,6 +34,7 @@
   flex: 1;
   width: auto;
   text-align: right;
+  width: 100%;
 }
 
 .errorMessage {
@@ -44,4 +45,32 @@
   margin-top: 10px;
   width: 100%;
   line-height: normal;
+}
+
+@media (min-width: 50em) {
+  .container {
+  }
+
+  .subscribeBox {
+  }
+
+  .subscribeIcon {
+    width: 70px;
+  }
+  .copyBox {
+  }
+
+  .subscribeTitle {
+    font-size: 24px;
+  }
+
+  .subscribeText {
+    font-size: 20px;
+  }
+
+  .emailBox {
+  }
+
+  .errorMessage {
+  }
 }

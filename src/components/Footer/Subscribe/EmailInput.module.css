@@ -2,12 +2,13 @@
 .container {
   position: relative;
   display: inline-block;
-  height: 54px;
-  width: 448px;
+  height: 48px;
+  width: 100%;
+  max-width: 448px;
 }
 
 .mask {
-  width: 54px;
+  width: 48px;
   height: 100%;
   position: absolute;
   background-color: #1f1f1f;
@@ -53,7 +54,7 @@
 }
 
 .success {
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 600;
   color: #fff;
   background-color: #1f1f1f;
@@ -65,7 +66,7 @@
 }
 
 .inputBase {
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 600;
   height: 100%;
   width: 100%;
@@ -79,4 +80,30 @@
 
 .inputBase::placeholder {
   color: #dcdcdc;
+}
+@media (min-width: 50em) {
+  .container {
+    height: 54px;
+  }
+
+  .mask {
+    width: 54px;
+  }
+
+  .iconButton {
+    width: 54px;
+  }
+
+  .iconButton img {
+    width: 21px;
+    height: 16px;
+  }
+
+  .success {
+    font-size: 20px;
+  }
+
+  .inputBase {
+    font-size: 20px;
+  }
 }
