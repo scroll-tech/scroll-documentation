@@ -38,14 +38,13 @@ const icons = {
     --aside-bg: var(--color-background-info);
     background-color: var(--aside-bg);
 
-    display: flex;
-    @apply p-4 gap-4 rounded-[4px] text-info;
+    /* display: flex; */
+    @apply p-[30px] gap-4 rounded-[27px] text-info;
   }
 
-  .title {
+  aside p.title {
     font-weight: bold;
-    font-size: 14px;
-    text-transform: uppercase;
+    font-size: 18px;
   }
 
   aside p {
@@ -55,6 +54,7 @@ const icons = {
   .icon {
     flex-shrink: 0;
     width: 1.5em;
+    margin-bottom: 10px;
   }
   .icon svg {
     vertical-align: middle;
@@ -63,7 +63,7 @@ const icons = {
 
   aside :global(a),
   aside :global(a > code:not([class*="language"])) {
-    @apply text-link;
+    @apply text-link underline;
   }
 
   aside :global(p),
@@ -93,8 +93,8 @@ const icons = {
 
   .asideContent :global(p) {
     margin-bottom: 0;
-    font-size: 14px;
-    line-height: 1.4;
+    font-size: 16px;
+    line-height: 25px;
   }
 
   .asideContent :global(p + p) {
