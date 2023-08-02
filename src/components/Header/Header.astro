@@ -30,7 +30,7 @@ const section = frontmatter?.section ?? ""
   <nav class="nav-wrapper" title="Top Navigation">
     <div class="logo flex items-center">
       <a href={localizePath("/")}>
-        <img src="/scroll.svg" style="height:22px; width: 80px" alt={CONFIG.SITE.title ?? "Documentation"} />
+        <img src="/scroll.svg" alt={CONFIG.SITE.title ?? "Documentation"} />
       </a>
     </div>
     <div class="right-box">
@@ -119,9 +119,13 @@ const section = frontmatter?.section ?? ""
     margin: 0;
   }
 
+  .logo img {
+    height: 22px;
+  }
+
   .nav-wrapper {
     display: grid;
-    grid-template-columns: 1fr 3fr;
+    grid-template-columns: 4fr 5fr;
     gap: 1em;
     width: 100%;
     margin: 0 1.25rem;
