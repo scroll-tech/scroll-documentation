@@ -32,7 +32,7 @@ const currentPageMatch = removeSlashes(currentPage.slice(1))
   <ul id="mobile-menu" class="nav-groups">
     <li style="margin: 0; padding-bottom: 0;">
       <div class="nav-group">
-        <h2 class="nav-group-title">NAVIGATION</h2>
+        <h2 class="nav-group-title">Navigation</h2>
         <ul>
           {
             MENU.en.map((child) => (
@@ -133,8 +133,14 @@ const currentPageMatch = removeSlashes(currentPage.slice(1))
 
 <style>
   .menu-separator {
+    width: calc(100vw - 40px);
+
     @apply border-0 border-t-[1px] border-t-divider border-solid;
   }
+  .sidebar-nav-groups.nav-groups > :first-child {
+    @apply pt-[15px];
+  }
+
   @media (min-width: 50em) {
     #mobile-menu,
     .menu-separator {
@@ -212,6 +218,9 @@ const currentPageMatch = removeSlashes(currentPage.slice(1))
   @media (min-width: 50em) {
     .nav-groups {
       padding: 0;
+    }
+    .sidebar-nav-groups.nav-groups > :first-child {
+      @apply pt-doc;
     }
   }
 </style>

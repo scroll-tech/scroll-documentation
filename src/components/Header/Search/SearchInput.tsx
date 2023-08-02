@@ -41,9 +41,9 @@ export const SearchInput = ({ onClose }: { onClose: () => void }) => {
           <path d="M16 16L8 8" stroke="#555C6C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
       </button> */}
-      <button onClick={onClose} className={styles.closeButtonMobile}>
+      {/* <button onClick={onClose} className={styles.closeButtonMobile}>
         Cancel
-      </button>
+      </button> */}
     </div>
   )
 }

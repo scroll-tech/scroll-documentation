@@ -8,6 +8,7 @@
   text-decoration: underline;
   text-underline-offset: 2px;
   text-decoration-thickness: 2px;
+  /* width: 23px; */
   @apply text-link;
   padding: 12px 0 0 20px;
 }

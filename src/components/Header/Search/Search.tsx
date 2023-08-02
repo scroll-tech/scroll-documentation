@@ -3,7 +3,6 @@ import styles from "./Search.module.css"
 
 import { useKeyPress } from "~/hooks/useKeyPress"
 import { SearchModal } from "./SearchModal"
-import { SearchInput } from "./SearchInput"
 
 export default function Search() {
   const [isOpen, setIsOpen] = useState(false)
@@ -25,7 +24,7 @@ export default function Search() {
   })
 
   return (
-    <div style={{ position: "relative" }}>
+    <div className={styles.container}>
       <div onClick={onOpen} className={styles.searchInput}>
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
           <path
@@ -36,13 +35,31 @@ export default function Search() {
           />
         </svg>
       </div>
-      {/* <SearchInput onOpen={onOpen} onClose={onClose}> 
-      </SearchInput> */}
-      {isOpen && <SearchModal isOpen={isOpen} onClose={onClose} />}
-
-      <button onClick={onOpen} className={styles.searchInputMobile}>
-        <img src="/assets/search.svg" alt="search" aria-label="Search" width={16} height={16} />
-      </button>
+      {isOpen ? (
+        <>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 18 18"
+            fill="none"
+            className={styles.closeButtonMobile}
+            onClick={onClose}
+          >
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M17.731 1.56775C18.0897 1.20911 18.0897 0.627628 17.731 0.268984C17.3724 -0.0896612 16.7909 -0.0896612 16.4322 0.268984L9 7.70123L1.56775 0.268984C1.20911 -0.0896612 0.627629 -0.0896612 0.268984 0.268984C-0.089661 0.627628 -0.089661 1.20911 0.268984 1.56775L7.70123 9L0.268984 16.4323C-0.0896612 16.7909 -0.0896612 17.3724 0.268984 17.731C0.627628 18.0897 1.20911 18.0897 1.56775 17.731L17.731 1.56775ZM12.0065 10.7078C11.6479 10.3491 11.0664 10.3491 10.7078 10.7078C10.3491 11.0664 10.3491 11.6479 10.7078 12.0065L16.4323 17.731C16.7909 18.0897 17.3724 18.0897 17.731 17.731C18.0897 17.3724 18.0897 16.7909 17.731 16.4322L12.0065 10.7078Z"
+              fill="black"
+            />
+          </svg>
+          <SearchModal isOpen={isOpen} onClose={onClose} />
+        </>
+      ) : (
+        <button onClick={onOpen} className={styles.searchInputMobile}>
+          <img src="/assets/search.svg" alt="search" aria-label="Search" width={20} height={20} />
+        </button>
+      )}
     </div>
   )
 }
