@@ -48,7 +48,7 @@ Some networks are not EVM-compatible and use languages other than Solidity for s
 
 The structure of a smart contract is similar to that of a class in Javascript, with a few differences. For example, the following `HelloWorld` contract is a simple smart contract that stores a single variable and includes a function to update the value of that variable.
 
-::solidity-remix[samples/Tutorials/HelloWorld.sol]
+::solidity-remix[/samples/Tutorials/HelloWorld.sol]
 
 ### Solidity versions
 

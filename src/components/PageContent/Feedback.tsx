@@ -90,8 +90,7 @@ export const Feedback = () => {
             }}
             style={{
               cursor: "pointer",
-              // marginRight: "10px",
-              marginLeft: "10px",
+              marginRight: "10px",
             }}
           >
             {rating >= i + 1 ? star : starOutline}

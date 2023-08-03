@@ -42,7 +42,7 @@ export default function Subscribe() {
         <img className={styles.subscribeIcon} src="/images/footer/subscribe.svg" />
         <div className={styles.copyBox}>
           <div className={styles.subscribeTitle}>Stay up-to-date on the latest Scroll Developer news</div>
-          <div className={styles.subscribeText}>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>
+          <div className={styles.subscribeText}>Roadmap updates, virtual and live events, ecosystem opportunities and more</div>
         </div>
         <MailchimpSubscribe
           url={url}
