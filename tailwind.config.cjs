@@ -157,7 +157,7 @@ module.exports = {
         bold: "var(--font-weight-bold)",
       },
       fontSize: {
-        base: ['18px', '30px'],
+        base: ['16px', '30px'],
       },
       height: {
         navbar: "var(--theme-navbar-height)",
