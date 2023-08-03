@@ -204,12 +204,27 @@ pre {
 
 table {
   width: 100%;
+  border-radius: 27px;
   padding: var(--padding-block) 0;
   margin: 0;
   border-collapse: collapse;
   background: #fff;
   line-height: 2;
-  @apply text-primary font-text border-[1px] border-solid border-border-primary;
+  @apply text-primary font-text border-none;
+  border-radius: 10px;
+  position: relative;
+}
+
+table::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  border-radius: 27px;
+  border: 1px solid #dadada;
 }
 
 table thead tr {
@@ -232,8 +247,9 @@ th {
 }
 td,
 th {
-  padding: 6px;
+  padding: 8px 30px;
   text-align: left;
+  font-size: 16px;
 }
 
 pre {
@@ -249,7 +265,9 @@ blockquote {
   padding: 1.25em 1.5rem;
   border-radius: 0 0.25rem 0.25rem 0;
   line-height: 1.7;
-  @apply border-0 border-l-[3px] border-solid border-light bg-bg-offset;
+  @apply border-0 border-l-[29px] border-solid border-[#FFF0DD];
+  border-radius: 27px;
+  background: #fff8f3;
 }
 
 img {

@@ -1,5 +1,5 @@
 .container {
-  @apply py-[60px] px-[20px] bg-[#ffd0c7] md:px-[32px];
+  @apply py-[60px] px-[20px] bg-[#EAF5FD] md:py-[32px];
 }
 
 .subscribeBox {
