@@ -2,8 +2,8 @@ import { defineConfig } from "astro/config"
 import preact from "@astrojs/preact"
 import react from "@astrojs/react"
 import astroI18next from "astro-i18next"
-import { astroCallouts } from "./integrations/astro-callouts"
-import { solidityRemixCode } from "./integrations/solidity-remix"
+import { astroCallouts, asideAutoImport } from "./integrations/astro-callouts"
+import { solidityRemixCode, codeSampleAutoImport } from "./integrations/solidity-remix"
 import { youtubeEmbed } from "./integrations/youtube-embed"
 import mdx from "@astrojs/mdx"
 import rehypeSlug from "rehype-slug"
@@ -12,6 +12,7 @@ import rehypeKatex from "rehype-katex"
 import remarkGfm from "remark-gfm"
 import remarkMath from "remark-math"
 import image from "@astrojs/image"
+import AutoImport from "astro-auto-import"
 
 import sitemap from "@astrojs/sitemap"
 
@@ -24,6 +25,9 @@ export default defineConfig({
     astroFlavoredMarkdown: true,
   },
   integrations: [
+    AutoImport({
+      imports: [asideAutoImport, codeSampleAutoImport],
+    }),
     preact({
       compat: true,
     }),

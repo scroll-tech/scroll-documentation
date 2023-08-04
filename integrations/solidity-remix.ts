@@ -10,8 +10,13 @@ import { h } from "hastscript"
 import remarkDirective from "remark-directive"
 import { visit } from "unist-util-visit"
 import { remove } from "unist-util-remove"
+import { makeComponentNode } from "./utils/makeComponentNode"
 
 const CodeSampleTagName = "AutoImportedCodeSample"
+
+export const codeSampleAutoImport: Record<string, [string, string][]> = {
+  "~/components/CodeSample/CodeSample.astro": [["default", CodeSampleTagName]],
+}
 
 /**
  * remark plugin that converts blocks delimited with `:::` into instances of
@@ -52,6 +57,18 @@ function remarkSolidityRemix(): unified.Plugin<[], mdast.Root> {
 
       if (!src) throw Error("No source was provided for the solidity example")
 
+      // const codeSnippetWrapper = makeComponentNode(
+      // 	CodeSnippetTagname,
+      // 	{ mdx: isMDX, attributes },
+      // 	code
+      // );
+
+      // parent.children[index] = makeComponentNode(
+      // 	AsideTagname,
+      // 	{ mdx: isMDXFile(file), attributes: { type, title } },
+      // 	...node.children
+      // );
+
       const data = node.data || (node.data = {})
       data.hName = CodeSampleTagName
       data.hProperties = h(CodeSampleTagName, {
@@ -73,18 +90,12 @@ export function solidityRemixCode(): AstroIntegration {
   return {
     name: "@smart-contract/solidity-remix",
     hooks: {
-      "astro:config:setup": ({ injectScript, updateConfig }) => {
+      "astro:config:setup": ({ updateConfig }) => {
         updateConfig({
           markdown: {
             remarkPlugins: [remarkDirective, remarkSolidityRemix()],
           },
         })
-
-        // Auto-import the Aside component and attach it to the global scope
-        injectScript(
-          "page-ssr",
-          `import ${CodeSampleTagName} from "~/components/CodeSample/CodeSample.astro"; global.${CodeSampleTagName} = ${CodeSampleTagName};`
-        )
       },
     },
   }
