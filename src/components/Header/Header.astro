@@ -14,8 +14,13 @@ import NotificationBanner from "~/features/notifications/components/Notification
 
 export type Props = {
   frontmatter?: Frontmatter
+  dark?: boolean
 }
-const { frontmatter } = Astro.props
+const { frontmatter, dark } = Astro.props
+
+const backgroundColor = dark ? "#101010" : "#ffffff"
+
+const textColor = dark ? "#FFF8F3" : "#101010"
 
 const section = frontmatter?.section ?? ""
 ---
@@ -30,7 +35,7 @@ const section = frontmatter?.section ?? ""
   <nav class="nav-wrapper" title="Top Navigation">
     <div class="logo flex items-center">
       <a href={localizePath("/")}>
-        <img src="/scroll.svg" alt={CONFIG.SITE.title ?? "Documentation"} />
+        <img src={dark ? "/scroll-white.svg" : "/scroll.svg"} alt={CONFIG.SITE.title ?? "Documentation"} />
       </a>
     </div>
     <div class="right-box">
@@ -54,18 +59,18 @@ const section = frontmatter?.section ?? ""
 
         <LanguageSelector class="language-selector" />
         <a href="https://github.com/scroll-tech/scroll-documentation" class="github-url" target="_blank" rel="nofollow">
-          <img src="/assets/github.svg" />
+          <img src={dark ? "/assets/github-white.svg" : "/assets/github.svg"} />
         </a>
       </div>
       <div class="menu-toggle">
-        <SidebarToggle client:idle />
+        <SidebarToggle client:idle dark={dark} />
       </div>
     </div>
   </nav>
 </header>
 <NotificationBanner />
 
-<style>
+<style define:vars={{ backgroundColor, textColor }}>
   /* Basic Styles */
   header {
     z-index: 11;
@@ -74,13 +79,13 @@ const section = frontmatter?.section ?? ""
     top: 0;
     display: flex;
     align-items: center;
-    background: #ffffff;
+    background: var(--backgroundColor);
     @apply h-navbar;
   }
 
   .nav-link {
     line-height: 40px;
-    @apply text-primary;
+    color: var(--textColor);
   }
   .nav-link:hover {
     @apply text-link;

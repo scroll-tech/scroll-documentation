@@ -12,6 +12,11 @@
   @apply bg-white;
 }
 
+.wrapper.large {
+  height: 48px;
+  border-radius: 40px;
+}
+
 .input {
   margin: 0;
   font-size: 16px;
@@ -28,6 +33,12 @@
   border-bottom: 1px solid #000;
   height: 50px;
   line-height: 45px;
+}
+.input.large {
+  height: 48px;
+  border-bottom: none;
+  padding-bottom: 0;
+  background: transparent url(/svgs/search.svg) left center no-repeat;
 }
 
 .input::placeholder {
@@ -55,6 +66,10 @@
     padding: unset;
   }
 
+  .wrapper.large {
+    height: 55px;
+  }
+
   .input {
     font-size: 16px;
     line-height: 15px;
@@ -64,6 +79,12 @@
     line-height: 35px;
     padding-bottom: 0;
     @apply pl-[40px];
+  }
+
+  .input.large {
+    height: 55px;
+    background: transparent url(/svgs/search.svg) left 22px center no-repeat;
+    padding-left: 60px;
   }
 
   .input:focus {

@@ -1,0 +1,35 @@
+---
+import HeadCommon from "../components/HeadCommon.astro"
+import HeadSEO from "../components/HeadSEO.astro"
+import Header from "../components/Header/Header.astro"
+import * as CONFIG from "../config"
+import Footer from "~/components/Footer/Footer"
+
+const { content = {}, dark } = Astro.props
+
+const formattedContentTitle = content.title
+  ? `${content.title} | ${CONFIG.SITE.title}`
+  : `${CONFIG.PAGE.titleFallback} | ${CONFIG.SITE.title}`
+const canonicalURL = new URL(Astro.url.pathname, Astro.site)
+---
+
+<html dir={content.dir ?? "ltr"} lang={content.lang ?? "en-us"} class="initial">
+  <head>
+    <HeadCommon />
+    <HeadSEO content={content} canonicalURL={canonicalURL} site="" />
+    <title>{formattedContentTitle}</title>
+    <style is:global>
+      .search-item {
+        display: none !important;
+      }
+    </style>
+  </head>
+</html>
+
+<body>
+  <Header dark={dark} />
+  <main>
+    <slot />
+  </main>
+  <Footer />
+</body>
