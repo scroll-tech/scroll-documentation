@@ -51,7 +51,7 @@ pre[class*="language-"] {
   margin: 0.5em 0;
   overflow: auto;
   margin-top: 0px;
-  margin-bottom: 30px;
+  margin-bottom: 16px;
 }
 
 :not(pre) > code[class*="language-"],

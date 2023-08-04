@@ -110,20 +110,24 @@ article > section iframe {
   position: relative;
 }
 
+.main-section :not(h1, h2, h3) {
+  font-family: "Roboto Flex";
+}
+
 .main-section .remix-callout {
   margin-top: 30px;
 }
 
 .main-section :is(p) {
   /* Override styles from design-system */
-  margin-bottom: 20px;
+  margin: 0 0 16px;
   max-width: 100%;
 }
 
 .main-section :is(h2, h3, h4) {
   /* Override styles from design-system */
   margin-top: 40px;
-  margin-bottom: 36px;
+  margin-bottom: 40px;
   max-width: 100%;
 }
 
@@ -233,7 +237,7 @@ table thead tr {
 }
 
 table tbody tr {
-  @apply border-0 border-t-[1px] border-solid border-border-primary;
+  @apply border-0 border-t-[1px] border-solid border-[#dadada];
 }
 
 table code {
@@ -262,7 +266,7 @@ blockquote code {
 
 blockquote {
   margin: 2rem 0;
-  padding: 1.25em 1.5rem;
+  padding: 20px 1.5rem 4px;
   border-radius: 0 0.25rem 0.25rem 0;
   line-height: 1.7;
   @apply border-0 border-l-[29px] border-solid border-[#FFF0DD];
@@ -280,7 +284,7 @@ img {
 }
 
 h2.heading {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
   padding: 0.1rem 0rem;
   /* margin-top: 30px; */
@@ -288,7 +292,7 @@ h2.heading {
 }
 
 .header-link {
-  font-size: 18px;
+  font-size: 16px;
   line-height: normal;
   padding: 0 0 10px 1rem;
   /* margin-left: 1rem; */
@@ -333,7 +337,7 @@ h2.heading {
   text-decoration: none;
 }
 .header-link a span {
-  font-size: 18px;
+  font-size: 16x;
   line-height: normal;
 }
 
