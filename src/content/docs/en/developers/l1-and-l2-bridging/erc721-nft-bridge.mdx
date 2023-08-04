@@ -7,7 +7,7 @@ permalink: "TODO"
 excerpt: "TODO"
 ---
 
-# ERC721 NFT Bridge
+import Aside from "../../../../../components/Aside.astro"
 
 ## Deposit ERC721 tokens from L1
 
@@ -15,9 +15,11 @@ NFT bridging from L1 to L2 is done via the `L1ERC721Gateway` contract instead of
 
 NFT contracts on both L1 and l2 must be launched and connected through the Gateways to enable bridging. This means deposit and withdraw transactions will revert if a contract on either L1 or L2 is missing or not mapped through the `updateTokenMapping` function.
 
-{% hint style="info" %}
-**`depositERC721`** is a payable function. The amount of ETH sent to this function will be used to pay for L2 fees. If the amount is not enough, the transaction will not be sent. All excess eth will be sent back to the sender. `0.00001 ETH` should be more than enough to process a token deposit.
-{% endhint %}
+<Aside type="tip" title="">
+  **`depositERC721`** is a payable function. The amount of ETH sent to this function will be used to pay for L2 fees. If
+  the amount is not enough, the transaction will not be sent. All excess eth will be sent back to the sender. `0.00001
+  ETH` should be more than enough to process a token deposit.
+</Aside>
 
 ### Creating a ScrollERC721 token on L2
 
@@ -54,13 +56,17 @@ All assets can be bridged securely and permissionlessly through Gateway contract
 
 The `L2ERC721Gateway` contract is used to send tokens from L2 to L1. Before bridging, the `L2ERC721Gateway` contract has to be approved by the NFT contract. Once that is done, `withdrawERC721` can be called to perform the asset bridge.
 
-{% hint style="info" %}
-**`withdrawERC721`** is a payable function, and the amount of ETH sent to this function will be used to pay for L1 fees. If the amount is not enough, the transaction will not be sent. All excess ETH will be sent back to sender. Fees depend on L1 activity but `0.005 ETH` should be enough to process a token withdrawal.
-{% endhint %}
+<Aside type="tip" title="">
+  **`withdrawERC721`** is a payable function, and the amount of ETH sent to this function will be used to pay for L1
+  fees. If the amount is not enough, the transaction will not be sent. All excess ETH will be sent back to sender. Fees
+  depend on L1 activity but `0.005 ETH` should be enough to process a token withdrawal.
+</Aside>
 
-{% hint style="warning" %}
-**Make sure the transaction won't revert on L1** while sending from L2. There is no way to recover the NFT bridged if you're transaction reverts on L1. All assets are burnt on L2 when the transaction is sent, and it's impossible to mint them again.
-{% endhint %}
+<Aside type="caution" title="">
+  **Make sure the transaction won't revert on L1** while sending from L2. There is no way to recover the NFT bridged if
+  you're transaction reverts on L1. All assets are burnt on L2 when the transaction is sent, and it's impossible to mint
+  them again.
+</Aside>
 
 ## L1ERC721Gateway API
 

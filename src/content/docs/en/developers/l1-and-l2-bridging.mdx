@@ -1,13 +1,15 @@
 ---
 section: developers
 date: Last Modified
-title: "L1 and L2 Briding"
+title: "L1 and L2 Bridging"
 lang: "en"
 permalink: "TODO"
 excerpt: "TODO"
 ---
 
-# L1 and L2 Bridging
+import ClickToZoom from "../../../../components/ClickToZoom.astro"
+import L1GatewayWHITE from "../../../../assets/images/developers/l1-and-l2-bridging/L1GatewayWHITE.png"
+import withdrawWHITE from "../../../../assets/images/developers/l1-and-l2-bridging/withdrawWHITE.png"
 
 The Scroll bridge enables the transfer of ETH, ERC20 tokens, NFTs, and arbitrary messages between L1 and L2. It serves as a secure mechanism for moving various digital assets across L1 and L2.
 
@@ -19,13 +21,13 @@ In addition to token transfers, the Scroll Messenger contract enables cross-chai
 
 ## L1 Gateway architecture
 
-<figure><img src="../../.gitbook/assets/L1GatewayWHITE.png" alt=""><figcaption><p>L1 Gateway</p></figcaption></figure>
+<ClickToZoom src={L1GatewayWHITE} />
 
 There are many entry points from the user to the Scroll bridge. This will depend on what you want to do and how you want to do it. If you want to send ETH or ERC20 tokens, you should use the `GatewayRouter` . If you want to send NFTs, you should use the `L1ERC721Gateway` or `L1ERC1155Gateway`. If you want to send arbitrary data, you should use the `L1ScrollMessenger`. All Gateway transfers use the Scroll Messenger to send assets cross-chain, whose job is to append the transactions to the Message Queue for L2 inclusion.
 
 ## L2 Gateway architecture
 
-<figure><img src="../../.gitbook/assets/bridge &#x26; rollup-withdrawWHITE (1).png" alt=""><figcaption><p>Bridge and rollup withdraws</p></figcaption></figure>
+<ClickToZoom src={withdrawWHITE} />
 
 Regarding possible permissionlessly callable entry points, the L2 Gateway Architecture is very similar to L1. The difference is that when sending a message from L2, calling the `appendMessage` function will store the message in an append-only binary merkle tree (aka withdraw tree) in the `L2MessageQueue`. When a new message is sent to the `L2MessageQueue`, the relayer will detect it and store it in the database. When the block is finalized, it will generate a proof of the new merkle path and pass it to the L1geth node to execute on `L1ScrollMessenger` . All finalized withdraw roots will be stored in the rollup contract so we can verify the proof against them. In the next Scroll versions, the Relayer won't be needed since all users will be able to finalize the transaction on L1.
 
