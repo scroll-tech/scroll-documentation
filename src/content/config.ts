@@ -23,7 +23,7 @@ const docsCollection = defineCollection({
       .object({
         title: z.string().optional(),
         description: z.string().optional(),
-        // image: z.array(z.string()).optional(),
+        image: z.array(z.string()).optional(),
       })
       .optional(),
 
