@@ -1,0 +1,34 @@
+.container {
+  position: relative;
+  width: 684px;
+}
+.searchInput {
+  display: flex;
+  box-sizing: border-box;
+  padding: 8px 22px;
+  font-weight: 500;
+  cursor: pointer;
+  width: 100%;
+  height: 55px;
+  border-radius: 40px;
+  font-style: italic;
+  background: var(--white);
+}
+
+.searchInput img {
+  width: 22px;
+}
+
+@media screen and (max-width: 600px) {
+  .container {
+    width: 100%;
+  }
+  .searchInput {
+    width: 100%;
+    height: 48px;
+    padding: 8px 18px;
+  }
+  .searchInput img {
+    width: 20px;
+  }
+}

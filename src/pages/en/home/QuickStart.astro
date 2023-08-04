@@ -1,0 +1,79 @@
+---
+import SectionHeader from "~/components/SectionHeader/index.astro"
+const toolList = [
+  { icon: "/svgs/Hardhat.svg", name: "Hardhat", link: "https://hardhat.org/" },
+  { icon: "/svgs/Foundry.svg", name: "Foundry", link: "https://getfoundry.sh/" },
+  { icon: "/svgs/Remix.svg", name: "Remix", link: "https://remix-project.org/" },
+  { icon: "/svgs/EthersJS.svg", name: "EthersJS", link: "https://ethers.org/" },
+  { icon: "/svgs/Brownie.svg", name: "Brownie", link: "https://github.com/eth-brownie" },
+  { icon: "/svgs/Truffle.svg", name: "Truffle", link: "https://trufflesuite.com/" },
+]
+---
+
+<div>
+  <SectionHeader
+    title="Developer Quickstart"
+    content="Start developing on Scroll with all of your favourite tools for building and testing smart contracts."
+  />
+  <div class="tools">
+    {
+      toolList.map(({ icon, name, link }) => (
+        <a href={link} target="_blank" class="tools-item">
+          <figure>
+            <img src={icon} alt={name} />
+          </figure>
+          <span>{name}</span>
+        </a>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .tools {
+    margin-top: 96px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .tools-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+  }
+  .tools-item figure {
+    font-size: 0;
+    width: 140px;
+    height: 140px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background-color: #fff0dd;
+  }
+  .tools-item figure:hover {
+    background-color: #ffdeb5;
+  }
+  .tools-item span {
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  @media screen and (max-width: 600px) {
+    .tools {
+      flex-wrap: wrap;
+      gap: 50px;
+      justify-content: center;
+    }
+    .tools-item figure {
+      width: 116px;
+      height: 116px;
+    }
+    .tools-item figure img {
+      width: 78px;
+    }
+    .tools-item span {
+      font-size: 16px;
+    }
+  }
+</style>
