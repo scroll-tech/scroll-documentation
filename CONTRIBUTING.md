@@ -1,20 +1,26 @@
 # Contributing to the Scroll Documentation
 
-PRs are welcome! We try to keep a clean commit history, so we'll follow a standard process initially created by the Chainlink team whose documentation we forked:
+As we build out the initial scope of the documentation, we intend to be selective about PRs, especially in our English language documentation. If you're interested in making a code or content contribution, please start by creating an issue and discussing the idea with a member of our team.
 
-- Create a PR
+If you want information about contributing a translation, please see [TRANSLATION.md](./TRANSLATION.md).
+
+We try to keep a clean commit history, so we'll follow a standard process initially created by the Chainlink team whose documentation we forked:
+
+- Create a new issue
+  - Comment on the issue if you'd like to be assigned to it
+- Fork the Repo & Create a PR
   - If your PR contains multiple commits, we'll ask you to squash them
-  - If your PR has conflicts with `main`, we'll ask you to rebase it
+  - If your PR has conflicts with `develop`, we'll ask you to rebase it
 - Someone will review your PR
 - Your PR will be merged, amended, closed, or you'll be asked for changes
 
 ## Standards
 
 - Commit messages
-  - Start with a present tense verb
+  - Start with a present-tense verb
   - Keep your commit headline short but sufficient to understand the scope and focus of the change.
   - Changes are often formatted like `add doc X`, `fix page Y`, `improve docs for Z`.
-  - Example: "`update contract addresses for BSC`".
+  - Example: "`update contract addresses for USDC on Scroll Sepolia`".
 - If you touch any infrastructure, make sure it builds with `yarn build`
 - Trust the autoformatter (prettier)
 - Make sure images are optimized and compressed
@@ -29,7 +35,7 @@ git rebase origin/main
 git push -f
 ```
 
-It's okay to force push over your own PR branch. In fact, that's what we want so that the commits are clean.
+It's okay to force push over your own PR branch. That's what we want so that the commits are clean.
 
 ## How to squash a PR
 

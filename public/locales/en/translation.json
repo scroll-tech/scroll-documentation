@@ -46,7 +46,7 @@
     "gettingStarted": {
       "gettingStarted": "Getting Started",
       "overview": "Overview",
-      "alphaTestnet": "Alpha Testnet",
+      "scrollSepoliaTestnet": "Scroll Seplolia Testnet",
       "userGuide": "User Guide",
       "setup": "Setup",
       "faucet": "Faucet",
@@ -56,6 +56,8 @@
       "rollupExplorer": "Rollup Explorer",
       "alphaBlockExplorer": "Alpha Block Explorer",
       "goerliBlockExplorer": "Goerli Block Explorer",
+      "scrollSepoliaBlockExplorer": "Scroll Sepolia Explorer",
+      "sepoliaBlockExplorer": "Sepolia Explorer",
       "community": "Community",
       "discord": "Discord",
       "communityForum": "Community Forum"
@@ -73,18 +75,23 @@
       "resources": "Resources",
       "rollupExplorer": "Rollup Explorer",
       "alphaBlockExplorer": "Alpha Block Explorer",
-      "goerliBlockExplorer": "Goerli Block Explorer"
+      "goerliBlockExplorer": "Goerli Block Explorer",
+      "scrollSepoliaBlockExplorer": "Scroll Sepolia Explorer",
+      "sepoliaBlockExplorer": "Sepolia Explorer"
     },
     "technology": {
-      "architecture": "Architecture",
-      "scrollArchitecture": "Scroll Architecture",
+      "introduction": "Introduction",
       "principles": "Principles",
+      "scrollArchitecture": "Scroll Architecture",
+      "scrollProtocol": "Scroll Protocol",
+      "overview": "Overview",
+      "rollupProcess": "Rollup Process",
+
       "zkevm": "zkEVM",
       "introToZkevm": "Intro to zkEVM",
       "zkevmOverview": "zkEVM Overview",
       "bridge": "Bridge",
       "bridgeOverview": "Bridge Overview",
-      "rollupProcess": "Rollup Process",
       "sequencer": "Sequencer",
       "executionClient": "Execution Client",
       "zkTrie": "zkTrie",
@@ -98,8 +105,10 @@
       "theScalabilityProblem": "The Scalability Problem",
       "introToRollups": "Intro to Rollups",
       "zeroKnowledge": "Zero Knowledge",
+      "introToZeroKnowledge": "Intro to Zero Knowledge",
       "polynomialCommitmentSchemes": "Polynomial Commitment Schemes",
-      "kzgCommitmentScheme": "KZG Commitment Scheme"
+      "kzgCommitmentScheme": "KZG Commitment Scheme",
+      "additionalResources": "Additional Resources"
     }
   },
   "notTranslated": {
