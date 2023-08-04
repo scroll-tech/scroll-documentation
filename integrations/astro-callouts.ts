@@ -1,18 +1,16 @@
-/**
- * Astro's implementation of callouts
- * https://github.com/withastro/docs/blob/main/integrations/astro-asides.ts
- */
-
 import type { AstroIntegration } from "astro"
 import type * as mdast from "mdast"
-import type * as unified from "unified"
-import { h } from "hastscript"
 import remarkDirective from "remark-directive"
-import { visit } from "unist-util-visit"
+import type * as unified from "unified"
 import { remove } from "unist-util-remove"
+import { visit } from "unist-util-visit"
+import { makeComponentNode } from "./utils/makeComponentNode"
 
 const AsideTagname = "AutoImportedAside"
 
+export const asideAutoImport: Record<string, [string, string][]> = {
+  "~/components/Aside.astro": [["default", AsideTagname]],
+}
 /**
  * remark plugin that converts blocks delimited with `:::` into instances of
  * the `<Aside>` component. Depends on the `remark-directive` module for the
@@ -38,8 +36,9 @@ function remarkAsides(): unified.Plugin<[], mdast.Root> {
   const variants = new Set(["note", "tip", "caution", "danger"])
 
   const transformer: unified.Transformer<mdast.Root> = (tree) => {
-    visit(tree, (node) => {
-      if (node.type !== "containerDirective") return
+    // @ts-expect-error Possibly infinite type instantiation we can’t do anything about.
+    visit(tree, (node, index, parent) => {
+      if (!parent || index === null || node.type !== "containerDirective") return
       const type = node.name
       if (!variants.has(type)) return
 
@@ -57,9 +56,8 @@ function remarkAsides(): unified.Plugin<[], mdast.Root> {
         }
       })
 
-      const data = node.data || (node.data = {})
-      data.hName = AsideTagname
-      data.hProperties = h(AsideTagname, { type, title }).properties
+      // Replace this node with the aside component it represents.
+      parent.children[index] = makeComponentNode(AsideTagname, { attributes: { type, title } }, ...node.children)
     })
   }
 
@@ -75,18 +73,12 @@ export function astroCallouts(): AstroIntegration {
   return {
     name: "@astrojs/callouts",
     hooks: {
-      "astro:config:setup": ({ injectScript, updateConfig }) => {
+      "astro:config:setup": ({ updateConfig }) => {
         updateConfig({
           markdown: {
             remarkPlugins: [remarkDirective, remarkAsides()],
           },
         })
-
-        // Auto-import the Aside component and attach it to the global scope
-        injectScript(
-          "page-ssr",
-          `import ${AsideTagname} from "~/components/Aside.astro"; global.${AsideTagname} = ${AsideTagname};`
-        )
       },
     },
   }

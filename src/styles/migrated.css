@@ -4,7 +4,9 @@
 
 @layer utilities {
   .remix-callout {
-    font-size: 16px;
+    font-weight: 600;
+    /* padding: 0.1rem 1rem; */
+    padding: 0.1rem 0;
     padding-right: 8px;
     height: 48px;
     line-height: 48px;
@@ -14,6 +16,7 @@
     margin: 0;
     min-width: 250px;
     font-weight: 600;
+    font-size: 18px;
     @apply inline-flex flex-wrap mb-[0.5em] relative;
   }
 
@@ -21,6 +24,7 @@
     padding-left: 60px;
     text-align: center;
     width: 100%;
+    font-family: "trans-sans";
   }
 
   .remix-callout:hover a {
@@ -52,9 +56,9 @@
   @media screen and (min-width: 50em) {
     .remix-callout {
       font-size: 18px;
-      padding-right: 8px;
+      padding-right: 22px;
       height: 54px;
-      line-height: 54px;
+      line-height: 52px;
       border: 1px solid #ed7255;
       border-radius: 11px;
       cursor: pointer;
@@ -65,7 +69,7 @@
     }
 
     .remix-callout a {
-      padding-left: 60px;
+      padding-left: 76px;
       text-align: center;
       width: 100%;
     }

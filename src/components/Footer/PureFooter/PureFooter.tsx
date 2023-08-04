@@ -6,7 +6,7 @@ const Footer = () => {
   return (
     <div className={styles.footerLayout}>
       <a className={styles.logo} href="/">
-        <img src="/scroll-logo-light.svg" />
+        <img src="/scroll-white.svg" />
       </a>
       <div className={styles.about}>
         <p className={styles.title}>About Scroll</p>

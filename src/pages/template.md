@@ -10,5 +10,5 @@ metadata:
   title: ""
   description: ""
   image:
-    0: "/files/fileInPublicFolder.png"
+    - "/files/fileInPublicFolder.png"
 ---

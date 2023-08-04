@@ -5,7 +5,12 @@ title: "Scroll Overview"
 lang: "en"
 permalink: "docs/conceptual-overview/"
 excerpt: "ZK Rollups and Scroll"
-# whatsnext: { "Next Up Page 1": "/", "Second Next Up Page": "/" }
+whatsnext: { "Next Up Page 1": "/", "Second Next Up Page": "/" }
+metadata:
+  title: "Conceptual Overview"
+  description: "Metadata for social media and search results."
+  image:
+    - "/files/ToDo:-image-file-name.png"
 ---
 
 #### Welcome to the Scroll docs!
