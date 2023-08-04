@@ -55,3 +55,38 @@
   font-style: normal;
   font-display: swap;
 }
+
+@font-face {
+  font-family: "roboto-flex";
+  src: url("/fonts/TransSansPremium-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Roboto Flex";
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: 100%;
+  src: url(https://fonts.gstatic.com/s/robotoflex/v9/NaNeepOXO_NexZs0b5QrzlOHb8wCikXpYqmZsWI-__OGfttPZktqc2VdZ80KvCLZaPcSBZtOx2MifRuWR28sPJtUMbsFEK6cRrleUx9Xgbm3WLHa_F4Ep4Fm0PN19Ik5Dntczx0wZGzhPlL1YNMYKbv9_1IQXOw7AiUJVXRrV8cWW4O8LJCoXjCnwSRSaLshNP1d9-wmF8tqHbFvug.woff2)
+    format("woff2");
+}
+
+@font-face {
+  font-family: "Roboto Flex";
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: 100%;
+  src: url(https://fonts.gstatic.com/s/robotoflex/v9/NaNeepOXO_NexZs0b5QrzlOHb8wCikXpYqmZsWI-__OGfttPZktqc2VdZ80KvCLZaPcSBZtOx2MifRuWR28sPJtUMbsFEK6cRrleUx9Xgbm3WLHa_F4Ep4Fm0PN19Ik5Dntczx0wZGzhPlL1YNMYKbv9_1IQXOw7AiUJVXRrV8cWW4O8LJCoXjCnwSRSaLshNP1d9-wmF8tqHbFvug.woff2)
+    format("woff2");
+}
+
+@font-face {
+  font-family: "Roboto Flex";
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: 100%;
+  src: url(https://fonts.gstatic.com/s/robotoflex/v9/NaNeepOXO_NexZs0b5QrzlOHb8wCikXpYqmZsWI-__OGfttPZktqc2VdZ80KvCLZaPcSBZtOx2MifRuWR28sPJtUMbsFEK6cRrleUx9Xgbm3WLHa_F4Ep4Fm0PN19Ik5Dntczx0wZGzhPlL1YNMYKbv9_1IQXOw7AiUJVXRrV8cWW4O8LJCoXjCnwSRSaLshNP1d9-wmF8tqHbFvug.woff2)
+    format("woff2");
+}

@@ -2,6 +2,7 @@
 import alertIcon from "./Alert/Assets/alert-icon.svg"
 import infoIcon from "./Alert/Assets/info-icon.svg"
 import dangerIcon from "./Alert/Assets/danger-icon.svg"
+import tipIcon from "./Alert/Assets/tip-icon.svg"
 export type Props = {
   type?: "note" | "tip" | "caution" | "danger"
   title?: string
@@ -12,7 +13,7 @@ const { type = "note", title = type } = Astro.props as Props
 // SVG icon paths based on GitHub Octicons
 const icons = {
   note: infoIcon,
-  tip: infoIcon,
+  tip: tipIcon,
   caution: alertIcon,
   danger: dangerIcon,
 }
@@ -81,6 +82,7 @@ const icons = {
   }
 
   .tip {
+    --aside-bg: #eee;
   }
 
   .caution {
