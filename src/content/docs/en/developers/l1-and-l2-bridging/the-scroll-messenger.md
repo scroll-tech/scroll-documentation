@@ -9,10 +9,10 @@ excerpt: "The Scroll Messenger documentation for arbitrary message passing betwe
 
 # The Scroll Messenger
 
-You can send arbitrary messages from L1 to L2 or vice versa through the Scroll Messenger contracts. This means we can execute functions on another chain in a secure and permissionless way. If you want to send a message from L1 to L2, use the messenger smart contract deployed at `0x5260e38080BFe97e6C4925d9209eCc5f964373b6` on Goerli testnet. If you want to send a message from L2 to L1, use the contract deployed at `0xb75d7e84517e1504C151B270255B087Fd746D34C` on Scroll Alpha.
+You can send arbitrary messages from L1 to L2 or vice versa through the Scroll Messenger contracts. This means we can execute functions on another chain in a secure and permissionless way. If you want to send a message from L1 to L2, use the messenger smart contract deployed on L1. If you want to send a message from L2 to L1, use the contract deployed on L1.
 
 {% hint style="warning" %}
-When sending a transaction through the **Scroll Messenger** deployed on Goerli and Scroll Alpha, the resulting transaction sender (`CALLER` or `msg.sender`) will be the Messenger Contract address deployed on the receiving chain. In future Scroll versions, enforced transactions will be introduced as a L1 contract. Sending enforced transactions will allow setting the sender on L2 as the original one on L1. It will also allow 3rd parties to relay signed transactions and also setting the&#x20;
+When sending a transaction through the **Scroll Messenger** deployed on L1 and L2, the resulting transaction sender (`CALLER` or `msg.sender`) will be the Messenger Contract address deployed on the receiving chain. In future Scroll versions, enforced transactions will be introduced as a L1 contract. Sending enforced transactions will allow setting the sender on L2 as the original one on L1. It will also allow 3rd parties to relay signed transactions and also setting the&#x20;
 {% endhint %}
 
 ## Messenger API

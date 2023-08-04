@@ -9,9 +9,9 @@ excerpt: "TODO"
 
 # ETH and ERC20 Token Bridge
 
-## Deposit ETH and ERC20 tokens from Goerli
+## Deposit ETH and ERC20 tokens from L1
 
-The Gateway Router allows ETH and ERC20 token bridging from L1 to L2 using the `depositETH` and `depositERC20` functions respectively. It is a permissionless bridge deployed on Goerli Testnet at `0xeF37207c1A1efF6D6a9d7BfF3cF4270e406d319b` serving Scroll Alpha testnet. Notice that ERC20 tokens will have a different address on L2, you can use the `getL2ERC20Address` function to query the new address.
+The Gateway Router allows ETH and ERC20 token bridging from L1 to L2 using the `depositETH` and `depositERC20` functions respectively. It is a permissionless bridge deployed on L1. Notice that ERC20 tokens will have a different address on L2, you can use the `getL2ERC20Address` function to query the new address.
 
 {% hint style="info" %}
 **`depositETH`** and **`depositERC20`** are payable functions, the amount of ETH sent to these functions will be used to pay for L2 fees. If the amount is not enough, the transaction will not be sent. All excess ETH will be sent back to the sender. `0.00001 ETH` should be more than enough to process a token deposit.
@@ -19,8 +19,8 @@ The Gateway Router allows ETH and ERC20 token bridging from L1 to L2 using the `
 
 When bridging ERC20 tokens, you don’t have to worry about selecting the right Gateway. This is because the `L1GatewayRouter` will choose the correct underlying entry point to send the message:
 
-- `L1StandardERC20Gateway`: This Gateway permits any ERC20 deposit and will be selected as the default by the L1GatewayRouter for an ERC20 token that doesn’t need custom logic on Scroll. On the very first token bridging, a new token will be created on Scroll L2 that implements the ScrollStandardERC20. To bridge a token, call the `depositERC20` function on the `L1GatewayRouter`.
-- `L1CustomERC20Gateway`: This Gateway will be selected by the `L1GatewayRouter` for tokens with custom logic. For an L1/L2 token pair to work on the Scroll Custom ERC20 Bridge, the L2 token contract has to implement `IScrollStandardERC20`. Additionally, the token should grant `mint` or `burn` capability to the `L2CustomERC20Gateway`. The address of `L2CustomERC20Gateway` is `0xa07Cb742657294C339fB4d5d6CdF3fdBeE8C1c68`. Visit the [bridge-erc20-through-the-custom-gateway.md](../../developer-guides/bridge-erc20-through-the-custom-gateway.md "mention") guide for a step-by-step example of how to bridge a custom token.
+- `L1StandardERC20Gateway`: This Gateway permits any ERC20 deposit and will be selected as the default by the L1GatewayRouter for an ERC20 token that doesn’t need custom logic on L2. On the very first token bridging, a new token will be created on L2 that implements the ScrollStandardERC20. To bridge a token, call the `depositERC20` function on the `L1GatewayRouter`.
+- `L1CustomERC20Gateway`: This Gateway will be selected by the `L1GatewayRouter` for tokens with custom logic. For an L1/L2 token pair to work on the Scroll Custom ERC20 Bridge, the L2 token contract has to implement `IScrollStandardERC20`. Additionally, the token should grant `mint` or `burn` capability to the `L2CustomERC20Gateway`. Visit the [bridge-erc20-through-the-custom-gateway.md](../../developer-guides/bridge-erc20-through-the-custom-gateway.md "mention") guide for a step-by-step example of how to bridge a custom token.
 
 All Gateway contracts will form the message and send it to the `L1ScrollMessenger` which can send arbitrary messages to L2. The `L1ScrollMessenger` passes the message to the `L1MessageQueue`. Any user can send messages directly to the Messenger to execute arbitrary data on L2. This means they can execute any function on L2 from a transaction made on L1 via the bridge. Although an application could directly pass messages to existing token contracts, the Gateway abstracts the specifics and simplifies making transfers and calls.
 
@@ -30,23 +30,23 @@ Users can also bypass the **`L1ScrollMessenger`** and send messages directly to 
 
 When a new block gets created on L1, the Watcher will detect the message on the `L1MessageQueue` and will pass it to the Relayer service, which will submit the transaction to the L2 via the l2geth node. Finally, the l2geth node will pass the transaction to the `L2ScrollMessagner` contract for execution on L2.
 
-## Withdraw ETH and ERC20 tokens from Scroll Alpha
+## Withdraw ETH and ERC20 tokens from L2
 
-The L2 Gateway is very similar to the L1 Gateway. We can withdraw ETH and ERC20 tokens back to L1 using the `withdrawETH` and `withdrawERC20` functions. The contract address is deployed on Scroll Alpha at `0x6d79Aa2e4Fbf80CF8543Ad97e294861853fb0649`. We use the `getL1ERC20Address` to retrieve the token address on L1.
+The L2 Gateway is very similar to the L1 Gateway. We can withdraw ETH and ERC20 tokens back to L1 using the `withdrawETH` and `withdrawERC20` functions. The contract address is deployed on L2. We use the `getL1ERC20Address` to retrieve the token address on L1.
 
 {% hint style="info" %}
-**`withdrawETH`** and **`withdrawERC20`** are payable functions, and the amount of ETH sent to these functions will be used to pay for L1 fees. If the amount is not enough, the transaction will not be sent. All excess ETH will be sent back to the sender. Fees will depend on Goerli activity but `0.005 ETH` should be enough to process a token withdrawal.
+**`withdrawETH`** and **`withdrawERC20`** are payable functions, and the amount of ETH sent to these functions will be used to pay for L1 fees. If the amount is not enough, the transaction will not be sent. All excess ETH will be sent back to the sender. Fees will depend on L1 activity but `0.005 ETH` should be enough to process a token withdrawal.
 {% endhint %}
 
 {% hint style="warning" %}
-**Make sure the transactions won't revert on Goerli** while sending from Scroll Alpha. There is no way to recover bridged ETH, tokens, or NFTs if your transaction reverts on Goerli. All assets are burnt on Scroll when the transaction is sent, and it's impossible to mint them again.
+**Make sure the transactions won't revert on L1** while sending from L2. There is no way to recover bridged ETH, tokens, or NFTs if your transaction reverts on L1. All assets are burnt on Scroll when the transaction is sent, and it's impossible to mint them again.
 {% endhint %}
 
 ## Creating an ERC20 token with custom logic on L2
 
-If a token needs custom logic on Scroll Alpha, it will need to be bridged through a `L1CustomERC20Gateway` and `L2CustomERC20Gateway` respectively. The custom token on Scroll Alpha will need to give permission to the Gateway to mint new tokens when a deposit occurs and to burn when tokens are withdrawn.&#x20;
+If a token needs custom logic on L2, it will need to be bridged through a `L1CustomERC20Gateway` and `L2CustomERC20Gateway` respectively. The custom token on L2 will need to give permission to the Gateway to mint new tokens when a deposit occurs and to burn when tokens are withdrawn.&#x20;
 
-The following interface is the `IScrollStandardERC20` needed for deploying tokens compatible with the `L2CustomERC20Gateway` on Scroll Alpha.
+The following interface is the `IScrollStandardERC20` needed for deploying tokens compatible with the `L2CustomERC20Gateway` on L2.
 
 ```jsx
 interface IScrollStandardERC20 {
@@ -81,7 +81,7 @@ interface IScrollStandardERC20 {
 
 ### Adding a Custom L2 ERC20 token to the Scroll Bridge
 
-Tokens can be bridged securely and permissionlessly through Gateway contracts deployed by any developer. However, Scroll also manages an ERC20 Router and a Gateway where all tokens created by the community are welcome. Being part of the Scroll-managed Gateway means you won't need to deploy the Gateway contracts, and your token will appear in the Scroll frontend. To be part of the Scroll Gateway, you must contact the Scroll team to add the token to both Goerli and Scroll Alpha bridge contracts. To do so, follow the instructions on the [token lists](https://github.com/scroll-tech/token-list) repository to add your new token to the official Scroll frontend.
+Tokens can be bridged securely and permissionlessly through Gateway contracts deployed by any developer. However, Scroll also manages an ERC20 Router and a Gateway where all tokens created by the community are welcome. Being part of the Scroll-managed Gateway means you won't need to deploy the Gateway contracts, and your token will appear in the Scroll frontend. To be part of the Scroll Gateway, you must contact the Scroll team to add the token to both L1 and L2 bridge contracts. To do so, follow the instructions on the [token lists](https://github.com/scroll-tech/token-list) repository to add your new token to the official Scroll frontend.
 
 ## L1 Gateway API
 
@@ -134,7 +134,7 @@ Returns the corresponding L2 token address given L1 token address.
 function updateTokenMapping(address _l1Token, address _l2Token) external;
 ```
 
-Update the mapping that connects an ERC20 token from Goerli to Scroll Alpha.
+Update the mapping that connects an ERC20 token from L1 to L2.
 
 | Parameter | Description                                     |
 | --------- | ----------------------------------------------- |
@@ -190,7 +190,7 @@ Returns the corresponding L1 token address given an L2 token address.
 function updateTokenMapping(address _l1Token, address _l2Token) external;
 ```
 
-Update the mapping that connects an ERC20 contract from Scroll Alpha to Goerli.
+Update the mapping that connects an ERC20 contract from L2 to L1.
 
 | Parameter | Description                                     |
 | --------- | ----------------------------------------------- |

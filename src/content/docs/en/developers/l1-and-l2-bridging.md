@@ -9,11 +9,11 @@ excerpt: "TODO"
 
 # L1 and L2 Bridging
 
-The Scroll bridge enables the transfer of ETH, ERC20 tokens, NFTs, and arbitrary messages between the Goerli and Scroll Alpha. It serves as a secure mechanism for moving various digital assets across L1 and L2.
+The Scroll bridge enables the transfer of ETH, ERC20 tokens, NFTs, and arbitrary messages between L1 and L2. It serves as a secure mechanism for moving various digital assets across L1 and L2.
 
-To facilitate the transfer of ETH and ERC20 tokens, the Scroll bridge utilizes the Gateway Router. This contract ensures the smooth passage of these assets between the Goerli and Scroll Alpha networks, allowing users to transfer their Ethereum-based tokens seamlessly.
+To facilitate the transfer of ETH and ERC20 tokens, the Scroll bridge utilizes the Gateway Router. This contract ensures the smooth passage of these assets between L1 and L2, allowing users to transfer their Ethereum-based tokens seamlessly.
 
-The ERC721 and ERC1155 Gateway enables the transfer of non-fungible assets between the two networks, allowing users to move their NFTs across the Goerli and Scroll Alpha networks.
+The ERC721 and ERC1155 Gateway enables the transfer of non-fungible assets between the two networks, allowing users to move their NFTs across L1 and L2.
 
 In addition to token transfers, the Scroll Messenger contract enables cross-chain contract interaction. This means that contracts on one network can interact with contracts on the other network through the Scroll Messenger contract. This functionality expands the possibilities for decentralized applications and smart contracts to operate seamlessly across both networks.
 

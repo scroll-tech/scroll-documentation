@@ -9,9 +9,9 @@ excerpt: "TODO"
 
 # ERC1155 Token Bridge
 
-## Deposit ERC1155 tokens from Goerli
+## Deposit ERC1155 tokens from L1
 
-ERC1155 bridging from Goerli to Scroll Alpha is done via the L1ERC1155Gateway deployed on Goerli at `0xd1bE599aaCBC21448fD6373bbc7c1b4c7806f135`. Similarly to ERC721 bridging, we don't use a router but the `depositERC1155` function on the Gateway directly.
+ERC1155 bridging from L1 to L2 is done via the L1ERC1155Gateway. Similarly to ERC721 bridging, we don't use a router but the `depositERC1155` function on the Gateway directly.
 
 {% hint style="info" %}
 **`depositERC1155`** is a payable function, and the amount of ETH sent to this function will be used to pay for L2 fees. If the amount is not enough, the transaction will not be sent. All excess eth will be sent back to sender. `0.00001 ETH` should be more than enough to process a token deposit.
@@ -19,9 +19,9 @@ ERC1155 bridging from Goerli to Scroll Alpha is done via the L1ERC1155Gateway de
 
 ### Creating an ERC1155 token on L2
 
-Similar to ERC721 bridging, in order to bridge ERC1155 tokens, a contract compatible with the `IScrollERC1155` standard has to be launched and mapped on a `L1ERC1155Gateway` and `L2ERC1155Gateway` on Goerli and Scroll Alpha, respectively. This contract has to grant permission to the Gateway on Scroll Alpha to mint when a token is deposited and burn when the token is withdrawn.
+Similar to ERC721 bridging, in order to bridge ERC1155 tokens, a contract compatible with the `IScrollERC1155` standard has to be launched and mapped on a `L1ERC1155Gateway` and `L2ERC1155Gateway` on both L1 and L2 respectively. This contract has to grant permission to the Gateway on L2 to mint when a token is deposited and burn when the token is withdrawn.
 
-The following interface is the `IScrollERC1155` needed for deploying ERC1155 tokens compatible with the `L2ERC1155Gateway` on Scroll Alpha.
+The following interface is the `IScrollERC1155` needed for deploying ERC1155 tokens compatible with the `L2ERC1155Gateway` on L2.
 
 ```jsx
 interface IScrollERC1155 {
@@ -83,18 +83,18 @@ interface IScrollERC1155 {
 
 ### Adding an ERC1155 token to the Scroll Bridge
 
-All assets can be bridged securely and permissionlessly through Gateway contracts deployed by any developer. However, Scroll also manages an ERC1155 Gateway contract where all NFTs created by the community are welcome. Being part of the Scroll-managed Gateway means you won't need to deploy the Gateway contracts, and your token will appear in the Scroll frontend. To be part of the Scroll Gateway, you must contact the Scroll team to add the token to both Goerli and Scroll Alpha Gateway contracts. To do so, follow the instructions on the [token lists](https://github.com/scroll-tech/token-list) repository to add your token to the Scroll official frontend.
+All assets can be bridged securely and permissionlessly through Gateway contracts deployed by any developer. However, Scroll also manages an ERC1155 Gateway contract where all NFTs created by the community are welcome. Being part of the Scroll-managed Gateway means you won't need to deploy the Gateway contracts, and your token will appear in the Scroll frontend. To be part of the Scroll Gateway, you must contact the Scroll team to add the token to both L1 and L2 Gateway contracts. To do so, follow the instructions on the [token lists](https://github.com/scroll-tech/token-list) repository to add your token to the Scroll official frontend.
 
-## Withdraw ERC1155 tokens from Scroll
+## Withdraw ERC1155 tokens from L2
 
-The `L2ERC1155Gateway` contract deployed at `0xfe5Fc32777646bD123564C41f711FF708Dd48360` is used to send tokens from Scroll Alpha to Goerli. Before bridging, the `L2ERC1155Gateway` contract has to be approved by the token contract. Once that is done, `withdrawERC1155` can be called to perform the asset bridge.
+The `L2ERC1155Gateway` contract is used to send tokens from L2 to L1. Before bridging, the `L2ERC1155Gateway` contract has to be approved by the token contract. Once that is done, `withdrawERC1155` can be called to perform the asset bridge.
 
 {% hint style="info" %}
-**`withdrawERC1155`** is a payable function, and the amount of ETH sent to this function will be used to pay for L1 fees. If the amount is not enough, the transaction will not be sent. All excess ETH will be sent back to sender. Fees depend on Goerli activity but `0.005 ETH` should be enough to process a token withdrawal.
+**`withdrawERC1155`** is a payable function, and the amount of ETH sent to this function will be used to pay for L1 fees. If the amount is not enough, the transaction will not be sent. All excess ETH will be sent back to sender. Fees depend on L1 activity but `0.005 ETH` should be enough to process a token withdrawal.
 {% endhint %}
 
 {% hint style="warning" %}
-**Make sure the transaction won't revert on Goerli** while sending from Scroll Alpha. There is no way to recover tokens bridged if you're transaction reverts on Goerli. All assets are burnt on Scroll Alpha when the transaction is sent, and it's impossible to mint them again.
+**Make sure the transaction won't revert on L1** while sending from L2. There is no way to recover tokens bridged if you're transaction reverts on L1. All assets are burnt on L2 when the transaction is sent, and it's impossible to mint them again.
 {% endhint %}
 
 ## L1ERC1155Gateway API
@@ -113,15 +113,15 @@ function depositERC1155(
 ) external payable;
 ```
 
-Deposit an ERC1155 token from Goerli to a recipient's account on Scroll Alpha.
+Deposit an ERC1155 token from L1 to a recipient's account on L2.
 
-| Parameter | Description                                                 |
-| --------- | ----------------------------------------------------------- |
-| token     | The address of ERC1155 token contract on Goerli.            |
-| to        | The address of recipient's account on Scroll Alpha.         |
-| tokenId   | The NFT id to deposit.                                      |
-| amount    | The amount of tokens to deposit.                            |
-| gasLimit  | Gas limit required to complete the deposit on Scroll Alpha. |
+| Parameter | Description                                       |
+| --------- | ------------------------------------------------- |
+| token     | The address of ERC1155 token contract on L1.      |
+| to        | The address of recipient's account on L2.         |
+| tokenId   | The NFT id to deposit.                            |
+| amount    | The amount of tokens to deposit.                  |
+| gasLimit  | Gas limit required to complete the deposit on L2. |
 
 ### updateTokenMapping
 
@@ -129,7 +129,7 @@ Deposit an ERC1155 token from Goerli to a recipient's account on Scroll Alpha.
 function updateTokenMapping(address _l1Token, address _l2Token) external;
 ```
 
-Update the mapping that connects an ERC1155 token contract from Goerli to Scroll Alpha.
+Update the mapping that connects an ERC1155 token contract from L1 to L2.
 
 | Parameter | Description                                       |
 | --------- | ------------------------------------------------- |
@@ -144,12 +144,12 @@ Update the mapping that connects an ERC1155 token contract from Goerli to Scroll
 function withdrawERC1155(address token, address to, uint256 tokenId, uint256 amount, uint256 gasLimit) external payable;
 ```
 
-Send ERC1155 tokens from Scroll Alpha to a recipient's account on Goerli.
+Send ERC1155 tokens from L2 to a recipient's account on L1.
 
 | Parameter | Description                                                              |
 | --------- | ------------------------------------------------------------------------ |
-| token     | The address of ERC1155 token contract on Scroll Alpha.                   |
-| to        | The address of recipient's account on Goerli.                            |
+| token     | The address of ERC1155 token contract on L2.                             |
+| to        | The address of recipient's account on L1.                                |
 | tokenId   | The NFT id to withdraw.                                                  |
 | amount    | The amount of tokens to withdraw.                                        |
 | gasLimit  | Unused, but included for potential forward compatibility considerations. |
@@ -160,7 +160,7 @@ Send ERC1155 tokens from Scroll Alpha to a recipient's account on Goerli.
 function updateTokenMapping(address _l1Token, address _l2Token) external;
 ```
 
-Update the mapping that connects an ERC1155 token contract from Scroll Alpha to Goerli.
+Update the mapping that connects an ERC1155 token contract from L2 to L1.
 
 | Parameter | Description                                       |
 | --------- | ------------------------------------------------- |
