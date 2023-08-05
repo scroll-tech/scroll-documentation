@@ -4,8 +4,17 @@
 
 @layer utilities {
   .remix-callout {
+    gap: 1rem;
+    @apply inline-flex flex-wrap mb-[1em] relative;
+  }
+
+  .remix-callout a {
+    text-align: center;
+    font-family: var(--font-family-text);
+    position: relative;
+    z-index: 1;
     font-weight: 600;
-    padding: 0.1rem 0;
+    padding: 0.1rem 16px 0.1rem 64px;
     height: 48px;
     line-height: 46px;
     border: 1px solid #ed7255;
@@ -16,23 +25,15 @@
     width: 100%;
     font-weight: 600;
     font-size: 16px;
-    @apply inline-flex flex-wrap mb-[0.5em] relative;
   }
 
-  .remix-callout a {
-    padding-left: 48px;
-    text-align: center;
-    width: 100%;
-    font-family: "trans-sans";
-  }
-
-  .remix-callout:hover a {
+  .remix-callout a:hover {
     color: #ffffff;
-    position: relative;
   }
 
-  .remix-callout::before {
+  .remix-callout a::before {
     content: "";
+    z-index: -1;
     position: absolute;
     top: 0;
     bottom: 0;
@@ -45,59 +46,33 @@
     transition: right 0.3s ease-in-out;
   }
 
-  .remix-callout:hover::before {
-    right: 0;
-  }
-  .remix-callout:hover::before {
+  .remix-callout a:hover::before {
     right: 0;
   }
 
   @media screen and (min-width: 50em) {
     .remix-callout {
-      font-size: 18px;
-      height: 54px;
-      line-height: 52px;
-      border: 1px solid #ed7255;
-      border-radius: 11px;
-      cursor: pointer;
-      margin: 0;
-      min-width: 250px;
-      font-weight: 600;
-      width: auto;
-      @apply inline-flex flex-wrap mb-[0.5em] relative;
     }
 
     .remix-callout a {
-      padding-left: 76px;
-      padding-right: 22px;
-      text-align: center;
-      width: 100%;
+      padding: 0.1rem 16px 0.1rem 64px;
+      height: 54px;
+      line-height: 52px;
+      font-size: 18px;
+      width: auto;
     }
 
-    .remix-callout:hover a {
-      color: #ffffff;
-      position: relative;
+    .remix-callout a:hover {
     }
 
-    .remix-callout::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
+    .remix-callout a::before {
       background: #ed7255
         url("data:image/svg+xml,%3Csvg fill='none' height='16' viewBox='0 0 21 16' width='21' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m21 8.00267-8.3996 7.99733v-2.7067l4.5767-4.35752c-5.7251-.08013-11.45204.31876-17.1565267.05877l-.02057369-1.96951c5.68391039.23862 11.34730039-.1389 17.03120039-.06055l-4.4308-4.21858v-2.74591055l8.3996 7.99733055z' fill='%23fff8f3'/%3E%3C/svg%3E")
         left 16px center no-repeat;
-      border-radius: 10px;
       right: calc(100% - 54px);
-      transition: right 0.3s ease-in-out;
     }
 
-    .remix-callout:hover::before {
-      right: 0;
-    }
-    .remix-callout:hover::before {
-      right: 0;
+    .remix-callout a:hover::before {
     }
   }
 }
