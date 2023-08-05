@@ -18,11 +18,6 @@ export default function MarkmapHooks({value}) {
   }, [refSvg.current]);
 
   useEffect(() => {
-    // Create markmap and save to refMm
-    console.log('refSvg.current');
-  }, []);
-
-  useEffect(() => {
     // Update data for markmap once value is changed
     const mm = refMm.current;
     if (!mm) return;
