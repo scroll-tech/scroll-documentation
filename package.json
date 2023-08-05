@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "npm run setup; astro build",
     "preview": "astro preview",
     "format": "prettier --write .",
     "linkcheck": "tsc scripts/linkcheck.ts && node scripts/linkcheck.js",
@@ -18,7 +18,8 @@
     "lint-ts": "eslint --ext ts .",
     "lint-ts:fix": "eslint --ext ts .",
     "lint-solc": "solhint 'public/samples/**/*.sol'",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "setup": "npx playwright install"
   },
   "dependencies": {
     "@algolia/client-search": "^4.14.2",
