@@ -35,7 +35,11 @@ const section = frontmatter?.section ?? ""
   <nav class="nav-wrapper" title="Top Navigation">
     <div class="logo flex items-center">
       <a href={localizePath("/")}>
-        <img src={dark ? "/scroll-white.svg" : "/scroll.svg"} alt={CONFIG.SITE.title ?? "Documentation"} />
+        <img
+          style={{ height: "22px" }}
+          src={dark ? "/scroll-white.svg" : "/scroll.svg"}
+          alt={CONFIG.SITE.title ?? "Documentation"}
+        />
       </a>
     </div>
     <div class="right-box">
