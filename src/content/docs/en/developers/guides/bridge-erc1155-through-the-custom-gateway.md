@@ -3,8 +3,8 @@ section: developers
 date: Last Modified
 title: "Bridge ERC1155 through the Custom Gateway"
 lang: "en"
-permalink: "TODO"
-excerpt: "TODO"
+permalink: "developers/guides/bridge-erc1155-through-the-custom-gateway"
+excerpt: "Whenever you want to bridge an ERC1155 NFT, you may interact with the Gateway and NFT contracts on Sepolia and Scroll testnet. In this guide, we'll cover different approaches to doing so."
 ---
 
 Whenever you want to bridge an ERC1155 NFT, you may interact with the Gateway and NFT contracts on Sepolia and Scroll testnet. In this guide, we'll cover different approaches to doing so.
@@ -15,7 +15,7 @@ If you already have an existing token on Sepolia, feel free to skip this step. I
 
 ```solidity
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.19;
+pragma solidity ^0.8.16;
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 
@@ -32,35 +32,36 @@ contract MockNFT is ERC1155 {
 
 This step is needed only if you want to launch your own Gateway. Launching your own gateway is fully permissionless and also allows you to have custom logic called every time a token is deposited. You can skip this step if you use the Scroll ERC1155 bridge launched at `TODO: TODO: 0xd1bE599aaCBC21448fD6373bbc7c1b4c7806f135`. More information is available [here](https://github.com/scroll-tech/token-list). This contract will allow you to send ERC1155 tokens from Sepolia to Scroll testnet.
 
-<pre class="language-solidity"><code class="lang-solidity"><strong>// SPDX-License-Identifier: MIT
-</strong>pragma solidity 0.8.19;
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.19;
 
-import "@scroll-tech/contracts@0.0.10/L1/gateways/L1ERC1155Gateway.sol";
+import "@scroll-tech/contracts@0.1.0/L1/gateways/L1ERC1155Gateway.sol";
 
 contract MyL1ERC1155Gateway is L1ERC1155Gateway {
-    function _depositERC1155(
-        address _token,
-        address _to,
-        uint256 _tokenId,
-        uint256 _amount,
-        uint256 _gasLimit
-    ) internal override nonReentrant {
-        super._depositERC1155(_token, _to, _tokenId, _amount, _gasLimit);
-        /*custom logic goes here*/
-    }
+  function _depositERC1155(
+    address _token,
+    address _to,
+    uint256 _tokenId,
+    uint256 _amount,
+    uint256 _gasLimit
+  ) internal override nonReentrant {
+    super._depositERC1155(_token, _to, _tokenId, _amount, _gasLimit);
+    /*custom logic goes here*/
+  }
 
-    function _batchDepositERC1155(
-        address _token,
-        address _to,
-        uint256[] calldata _tokenIds,
-        uint256[] calldata _amounts,
-<strong>        uint256 _gasLimit
-</strong>    ) internal override nonReentrant {
-        super._batchDepositERC1155(_token, _to, _tokenIds, _amounts, _gasLimit);
-        /*custom logic goes here*/
-    }
+  function _batchDepositERC1155(
+    address _token,
+    address _to,
+    uint256[] calldata _tokenIds,
+    uint256[] calldata _amounts,
+    uint256 _gasLimit
+  ) internal override nonReentrant {
+    super._batchDepositERC1155(_token, _to, _tokenIds, _amounts, _gasLimit);
+    /*custom logic goes here*/
+  }
 }
-</code></pre>
+```
 
 ## Step 3: Launch the Gateway on Scroll
 
@@ -68,9 +69,9 @@ This step is needed only if you want to launch your own Gateway. Launching your 
 
 ```solidity
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.19;
+pragma solidity =0.8.16;
 
-import "@scroll-tech/contracts@0.0.10/L2/gateways/L2ERC1155Gateway.sol";
+import "@scroll-tech/contracts@0.1.0/L2/gateways/L2ERC1155Gateway.sol";
 
 contract MyL2ERC1155Gateway is L2ERC1155Gateway {
   function _withdrawERC1155(
@@ -103,10 +104,10 @@ This contract has to follow the IScrollERC1155 standard interface. It has to all
 
 ```solidity
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.19;
+pragma solidity ^0.8.16;
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
-import "@scroll-tech/contracts@0.0.10/libraries/token/IScrollERC1155.sol";
+import "@scroll-tech/contracts@0.1.0/libraries/token/IScrollERC1155.sol";
 
 contract MockNFT is ERC1155, IScrollERC1155 {
   address GATEWAY;

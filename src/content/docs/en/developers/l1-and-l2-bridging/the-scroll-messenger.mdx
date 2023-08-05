@@ -3,7 +3,7 @@ section: developers
 date: Last Modified
 title: "The Scroll Messenger"
 lang: "en"
-permalink: "todo"
+permalink: "developers/l1-and-l2-bridging/the-scroll-messenger"
 excerpt: "The Scroll Messenger documentation for arbitrary message passing between L1 and L2."
 ---
 
@@ -37,35 +37,34 @@ function sendMessage(
 
 Sends arbitrary data from one chain to another. It allows us to execute functions cross-chain.
 
-<table>
-  <thead>
-    <tr>
-      <th width="180">Parameter</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>target</td>
-      <td>
-        The address of account who receive the message. The receiver can be either a smart contract or a EOA wallet.
-      </td>
-    </tr>
-    <tr>
-      <td>value</td>
-      <td>The amount of ether passed when call target contract.</td>
-    </tr>
-    <tr>
-      <td>message</td>
-      <td>The content of the message. This is the arbitrary calldata to be executed.</td>
-    </tr>
-    <tr>
-      <td>gasLimit</td>
-      <td>Gas limit required to complete the message relay on corresponding chain.</td>
-    </tr>
-    <tr>
-      <td>refundAddress</td>
-      <td>The address of account who will receive the refunded fee.</td>
-    </tr>
-  </tbody>
-</table>
+| Parameter     | Description                                                                                                  |
+| ------------- | ------------------------------------------------------------------------------------------------------------ |
+| target        | The address of account who receive the message. The receiver can be either a smart contract or a EOA wallet. |
+| value         | The amount of ether passed when call target contract.                                                        |
+| message       | The content of the message. This is the arbitrary calldata to be executed.                                   |
+| gasLimit      | Gas limit required to complete the message relay on corresponding chain.                                     |
+| refundAddress | The address of account who will receive the refunded fee.                                                    |
+
+### relayMessageWithProof
+
+```solidity
+function relayMessageWithProof(
+  address from,
+  address to,
+  uint256 value,
+  uint256 nonce,
+  bytes memory message,
+  L2MessageProof memory proof
+) external;
+```
+
+Relay a L2 => L1 message with message proof.
+
+| Parameter | Description                                                  |
+| --------- | ------------------------------------------------------------ |
+| from      | The address of the sender of the message.                    |
+| to        | The address of the recipient of the message.                 |
+| value     | The msg.value passed to the message call.                    |
+| nonce     | The nonce of the message to avoid replay attack.             |
+| message   | The content of the message.                                  |
+| proof     | The proof used to verify the correctness of the transaction. |

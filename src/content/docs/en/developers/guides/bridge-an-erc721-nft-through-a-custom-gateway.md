@@ -3,8 +3,8 @@ section: developers
 date: Last Modified
 title: "Bridge an ERC721 NFT through a Custom Gateway"
 lang: "en"
-permalink: "TODO"
-excerpt: "TODO"
+permalink: "developers/guides/bridge-an-erc721-nft-through-a-custom-gateway"
+excerpt: "Whenever you want to bridge an ERC721 NFT, you may interact with the Gateway and NFT contracts on Sepolia and Scroll testnet. In this guide, we'll cover different ways of doing so."
 ---
 
 Whenever you want to bridge an ERC721 NFT, you may interact with the Gateway and NFT contracts on Sepolia and Scroll testnet. In this guide, we'll cover different ways of doing so.
@@ -15,7 +15,7 @@ If you already have an existing token on Sepolia, feel free to skip this step. I
 
 ```solidity
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.19;
+pragma solidity ^0.8.16;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
@@ -34,9 +34,9 @@ This step is needed only if you want to launch your own Gateway. Launching your 
 
 ```solidity
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.19;
+pragma solidity =0.8.16;
 
-import "@scroll-tech/contracts@0.0.10/L1/gateways/L1ERC721Gateway.sol";
+import "@scroll-tech/contracts@0.1.0/L1/gateways/L1ERC721Gateway.sol";
 
 contract MyL1ERC721Gateway is L1ERC721Gateway {
   function _depositERC721(
@@ -61,15 +61,15 @@ contract MyL1ERC721Gateway is L1ERC721Gateway {
 }
 ```
 
-## Step 3: Launch the Gateway on Scroll Alpha
+## Step 3: Launch the Gateway on Scroll testnet
 
 You can also skip this step if you use the Scroll ERC721 Gateway launched at `TODO: 0x8Fee20e0C0Ef16f2898a8073531a857D11b9C700`. This contract lets you bridge tokens from Scroll testnet back to Sepolia.
 
 ```solidity
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.19;
+pragma solidity =0.8.16;
 
-import "@scroll-tech/contracts@0.0.10/L2/gateways/L2ERC721Gateway.sol";
+import "@scroll-tech/contracts@0.1.0/L2/gateways/L2ERC721Gateway.sol";
 
 contract MyL2ERC721Gateway is L2ERC721Gateway {
   function _withdrawERC721(
@@ -94,16 +94,16 @@ contract MyL2ERC721Gateway is L2ERC721Gateway {
 }
 ```
 
-## Step 4: Launch the custom token on Scroll Alpha
+## Step 4: Launch the custom token on Scroll testnet
 
 This contract has to follow the IScrollERC721 standard interface. It has to allow the gateway to mint tokens on deposit and burn on withdrawal. The following example shows a sample implementation by passing as constructor parameters the L2 gateway (either the one you just launched or Scroll's at `TODO: 0x1C441Dfc5C2eD7A2AA8636748A664E59CB029157`) and your token address on Sepolia.
 
 ```solidity
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.19;
+pragma solidity ^0.8.16;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@scroll-tech/contracts@0.0.10/libraries/token/IScrollERC721.sol";
+import "@scroll-tech/contracts@0.1.0/libraries/token/IScrollERC721.sol";
 
 contract MockNFT is ERC721, IScrollERC721 {
   address GATEWAY;
