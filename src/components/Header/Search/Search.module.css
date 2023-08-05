@@ -1,6 +1,6 @@
 /** Style Algolia */
 
-#searchModal {
+#searchModal.mini {
   background: #ffffff;
   position: fixed;
   top: 65px;
@@ -9,6 +9,17 @@
   height: 100vh;
   padding-top: 60px;
   border-radius: 0;
+}
+
+#searchModal.large {
+  top: 0;
+  height: fit-content;
+  max-height: 80vh;
+  background: #fff;
+  position: absolute;
+  border-radius: 24px;
+  padding-top: 0;
+  width: 100%;
 }
 
 .resultsWrapper {
@@ -183,7 +194,7 @@
     position: relative;
   }
 
-  #searchModal {
+  #searchModal.mini {
     top: 0;
     height: fit-content;
     max-height: 80vh;
@@ -191,6 +202,10 @@
     position: absolute;
     border-radius: 17.5px;
     padding-top: 0;
+  }
+
+  #searchModal.large {
+    border-radius: 27.5px;
   }
 
   .queryResults {

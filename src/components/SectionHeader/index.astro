@@ -1,0 +1,40 @@
+---
+interface Props {
+  title: string
+  content: string
+}
+const { title, content } = Astro.props as Props
+---
+
+<>
+  <p class="title">{title}</p>
+  <p class="content">{content}</p>
+</>
+
+<style>
+  p {
+    margin-bottom: 0;
+  }
+  .title {
+    font-size: 46px;
+    font-weight: 500;
+    line-height: 50px;
+    margin-bottom: 25px;
+  }
+  .content {
+    font-size: 24px;
+    line-height: 34px;
+  }
+
+  @media screen and (max-width: 600px) {
+    .title {
+      font-size: 32px;
+      line-height: 34px;
+      margin-bottom: 22px;
+    }
+    .content {
+      font-size: 18px;
+      line-height: normal;
+    }
+  }
+</style>
