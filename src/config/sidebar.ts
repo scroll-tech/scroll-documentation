@@ -68,13 +68,56 @@ export const getSidebar = () => {
             url: formatUrl("developers/verifying-smart-contracts"),
           },
           {
-            title: t("sidebar.developers.alphaTestnetContracts"),
-            url: formatUrl("developers/alpha-testnet-contracts"),
+            title: t("sidebar.developers.scrollContracts"),
+            url: formatUrl("developers/scroll-contracts"),
           },
-          { title: t("sidebar.developers.integrations"), url: formatUrl("developers/integrations") },
           {
-            title: t("sidebar.developers.ethereum&AlphaTestnetDifferences"),
-            url: formatUrl("developers/ethereum-and-alpha-testnet-differences"),
+            title: t("sidebar.developers.ethereumAndScrollDifferences"),
+            url: formatUrl("developers/ethereum-and-scroll-differences"),
+          },
+          {
+            title: t("sidebar.developers.l1AndL2Bridging"),
+            url: formatUrl("developers/l1-and-l2-bridging"),
+            children: [
+              {
+                title: t("sidebar.developers.ethAndErc20TokenBridge"),
+                url: formatUrl("developers/l1-and-l2-bridging/eth-and-erc20-token-bridge"),
+              },
+              {
+                title: t("sidebar.developers.erc721NftBridge"),
+                url: formatUrl("developers/l1-and-l2-bridging/erc721-nft-bridge"),
+              },
+              {
+                title: t("sidebar.developers.erc1155TokenBridge"),
+                url: formatUrl("developers/l1-and-l2-bridging/erc1155-token-bridge"),
+              },
+              {
+                title: t("sidebar.developers.theScrollMessenger"),
+                url: formatUrl("developers/l1-and-l2-bridging/the-scroll-messenger"),
+              },
+            ],
+          },
+          {
+            title: t("sidebar.developers.transactionFeesOnScroll"),
+            url: formatUrl("developers/transaction-fees-on-scroll"),
+            // children: [
+            //   {
+            //     title: t("sidebar.developers.l2Fee"),
+            //     url: formatUrl("developers/transaction-fees-on-scroll/l2-fee"),
+            //   },
+            //   {
+            //     title: t("sidebar.developers.l1Fee"),
+            //     url: formatUrl("developers/transaction-fees-on-scroll/l1-fee"),
+            //   },
+            //   {
+            //     title: t("sidebar.developers.gasOracle"),
+            //     url: formatUrl("developers/transaction-fees-on-scroll/gas-oracle"),
+            //   },
+            //   {
+            //     title: t("sidebar.developers.future"),
+            //     url: formatUrl("developers/transaction-fees-on-scroll/future"),
+            //   },
+            // ],
           },
         ],
       },
@@ -85,14 +128,34 @@ export const getSidebar = () => {
             title: t("sidebar.developers.contractDeploymentTutorial"),
             url: formatUrl("developers/guides/contract-deployment-tutorial"),
           },
+          // {
+          //   title: t("sidebar.developers.crossChainInteraction"),
+          //   url: formatUrl("developers/guides/"),
+          // },
+          // {
+          //   title: t("sidebar.developers.bridgingERC20TokenThroughCustomGateway"),
+          //   url: formatUrl("developers/guides/"),
+          // },
+          // {
+          //   title: t("sidebar.developers.bridgingERC721NftThroughCustomGateway"),
+          //   url: formatUrl("developers/guides/"),
+          // },
+          // {
+          //   title: t("sidebar.developers.bridgingERC1155ThroughCustomGateway"),
+          //   url: formatUrl("developers/guides/"),
+          // },
+          // {
+          //   title: t("sidebar.developers.estimatingGasAndTxFees"),
+          //   url: formatUrl("developers/guides/"),
+          // },
         ],
       },
       {
         section: "Resources",
         contents: [
-          { title: t("sidebar.developers.rollupExplorer"), url: "https://scroll.io/alpha/rollupscan" },
-          { title: t("sidebar.developers.scrollSepoliaBlockExplorer"), url: "https://blockscout.scroll.io/" },
-          { title: t("sidebar.developers.sepoliaBlockExplorer"), url: "https://goerli.etherscan.io/" },
+          { title: t("sidebar.developers.rollupExplorer"), url: "https://scroll.io/rollupscan" },
+          { title: t("sidebar.developers.scrollSepoliaBlockExplorer"), url: "https://sepolia-blockscout.scroll.io/" },
+          { title: t("sidebar.developers.sepoliaBlockExplorer"), url: "https://sepolia.etherscan.io/" },
         ],
       },
     ],

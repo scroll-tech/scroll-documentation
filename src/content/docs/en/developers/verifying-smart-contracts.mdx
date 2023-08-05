@@ -11,7 +11,7 @@ import ClickToZoom from "../../../../components/ClickToZoom.astro"
 import verify1 from "./_images/verify1.png"
 import CodeSample from "../../../../components/CodeSample/CodeSample.astro"
 
-After deploying your smart contracts, it's important to verify your code on [our block explorer](https://blockscout.scroll.io/). This can be done in an automated way using your developer tooling or using Blockscout's Web UI.
+After deploying your smart contracts, it's important to verify your code on [our block explorer](https://sepolia-blockscout.scroll.io/). This can be done in an automated way using your developer tooling or using Blockscout's Web UI.
 
 <Aside type="danger" title="Warning">
   Our Blockscout instance currently has inconsistent behavior in verifying contracts with Foundry. We're working on a
@@ -25,7 +25,7 @@ Most smart contract tooling has plugins for verifying your contracts easily on E
 
 ### Hardhat
 
-First, modify `hardhat.config.ts` to point to Scroll's RPC and `blockscout.scroll.io/api`. A dummy `apyKey` value is required, but anything works for its value.
+First, modify `hardhat.config.ts` to point to Scroll's RPC and `sepolia-blockscout.scroll.io/api`. A dummy `apyKey` value is required, but anything works for its value.
 
 ```javascript
 ...
@@ -34,7 +34,7 @@ const config: HardhatUserConfig = {
   ...
   networks: {
     scrollAlpha: {
-      url: 'https://alpha-rpc.scroll.io/l2' || '',
+      url: 'https://sepolia-rpc.scroll.io' || '',
       accounts:
         process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
     },
@@ -45,11 +45,11 @@ const config: HardhatUserConfig = {
     },
     customChains: [
       {
-        network: 'scrollAlpha',
-        chainId: 534353,
+        network: 'scrollSepolia',
+        chainId: 534351,
         urls: {
-          apiURL: 'https://blockscout.scroll.io/api',
-          browserURL: 'https://blockscout.scroll.io/',
+          apiURL: 'https://sepolia-blockscout.scroll.io/api',
+          browserURL: 'https://sepolia-blockscout.scroll.io/',
         },
       },
     ],
@@ -62,13 +62,13 @@ const config: HardhatUserConfig = {
 Now you can verify the smart contract by running the following command.
 
 ```solidity
-npx hardhat verify --network scrollAlpha <contract address> <space separated constructor parameters>
+npx hardhat verify --network scrollSepolia <contract address> <space separated constructor parameters>
 ```
 
-For example, this how a smart contract that receives two uint parameters in the constructor would look like.
+For example, this is how a smart contract that receives two uint parameters in the constructor should look:
 
 ```solidity
-npx hardhat verify --network scrollAlpha 0xD9880690bd717189cC3Fbe7B9020F27fae7Ac76F 123 456
+npx hardhat verify --network scrollSepolia 0xD9880690bd717189cC3Fbe7B9020F27fae7Ac76F 123 456
 ```
 
 <Aside type="danger" title="Warning">
@@ -79,8 +79,8 @@ npx hardhat verify --network scrollAlpha 0xD9880690bd717189cC3Fbe7B9020F27fae7Ac
 
 ### Foundry
 
-When using Foundry, the `verify-contract` helps us verifying contracts.
+When using Foundry, the `verify-contract` helps automate the process of verifying contracts.
 
 ```bash
-forge verify-contract <Contract Address> <Space separated params> <Solidity file>:<Contract name> --chain-id 534353 --verifier-url <https://blockscout.scroll.io/api> --verifier blockscout
+forge verify-contract <Contract Address> <Space separated params> <Solidity file>:<Contract name> --chain-id 534351 --verifier-url <https://sepolia-blockscout.scroll.io/api> --verifier blockscout
 ```
