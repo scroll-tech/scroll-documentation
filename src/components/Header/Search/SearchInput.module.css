@@ -14,7 +14,7 @@
 
 .wrapper.large {
   height: 48px;
-  border-radius: 40px;
+  border-radius: 24px;
 }
 
 .input {
@@ -39,6 +39,7 @@
   border-bottom: none;
   padding-bottom: 0;
   background: transparent url(/svgs/search.svg) left center no-repeat;
+  background-size: 20px auto;
 }
 
 .input::placeholder {
@@ -68,6 +69,8 @@
 
   .wrapper.large {
     height: 55px;
+    border-radius: 27.5px;
+    width: 100%;
   }
 
   .input {
@@ -83,8 +86,9 @@
 
   .input.large {
     height: 55px;
-    background: transparent url(/svgs/search.svg) left 22px center no-repeat;
+    background: transparent url(/svgs/search.svg) left 20px center no-repeat;
     padding-left: 60px;
+    padding-right: 22px;
   }
 
   .input:focus {

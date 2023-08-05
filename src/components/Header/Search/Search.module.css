@@ -17,7 +17,7 @@
   max-height: 80vh;
   background: #fff;
   position: absolute;
-  border-radius: 40px;
+  border-radius: 24px;
   padding-top: 0;
   width: 100%;
 }
@@ -202,6 +202,10 @@
     position: absolute;
     border-radius: 17.5px;
     padding-top: 0;
+  }
+
+  #searchModal.large {
+    border-radius: 27.5px;
   }
 
   .queryResults {

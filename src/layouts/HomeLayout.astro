@@ -4,9 +4,10 @@ import HeadSEO from "../components/HeadSEO.astro"
 import Header from "../components/Header/Header.astro"
 import * as CONFIG from "../config"
 import Footer from "~/components/Footer/Footer"
+import LeftSidebar from "../components/LeftSidebar/LeftSidebar.astro"
 
 const { content = {}, dark } = Astro.props
-
+const currentPage = new URL(Astro.request.url).pathname
 const formattedContentTitle = content.title
   ? `${content.title} | ${CONFIG.SITE.title}`
   : `${CONFIG.PAGE.titleFallback} | ${CONFIG.SITE.title}`
@@ -18,9 +19,44 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site)
     <HeadCommon />
     <HeadSEO content={content} canonicalURL={canonicalURL} site="" />
     <title>{formattedContentTitle}</title>
+    <style>
+      body {
+        --doc-padding: 65px;
+      }
+      .home-layout {
+        margin-bottom: 0;
+      }
+
+      #grid-left {
+        position: fixed;
+        background-color: var(--theme-bg);
+        z-index: 10;
+        display: none;
+      }
+
+      @media (min-width: 50em) {
+        #grid-left {
+          display: flex;
+          position: sticky;
+          grid-column: 1;
+          background: transparent;
+        }
+      }
+    </style>
     <style is:global>
       .search-item {
         display: none !important;
+      }
+      .mobile-sidebar-toggle {
+        overflow: hidden;
+      }
+
+      .mobile-sidebar-toggle #grid-left {
+        display: block;
+        top: 2rem;
+        left: 0;
+        padding: 0 20px;
+        height: calc(100vh - 2rem);
       }
     </style>
   </head>
@@ -28,7 +64,10 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site)
 
 <body>
   <Header dark={dark} />
-  <main>
+  <aside id="grid-left" class="grid-sidebar" title="Site Navigation">
+    <LeftSidebar currentPage={currentPage} {content} />
+  </aside>
+  <main class="home-layout">
     <slot />
   </main>
   <Footer />
