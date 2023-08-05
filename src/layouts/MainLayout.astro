@@ -16,7 +16,7 @@ const { content = {}, frontmatter } = Astro.props
 const headings = Astro.props?.headings || Astro.props?.content?.astro.headings
 
 const currentPage = new URL(Astro.request.url).pathname
-const currentFile = `src/pages${currentPage.replace(/\/$/, "")}.${frontmatter?.file.split(".").pop() || "md"}`
+const currentFile = `src/content/docs${currentPage.replace(/\/$/, "")}.${frontmatter?.file.split(".").pop() || "md"}`
 const githubEditUrl = CONFIG.GITHUB_EDIT_URL + currentFile
 const formattedContentTitle = content.title
   ? `${content.title} | ${CONFIG.SITE.title}`
