@@ -4,11 +4,10 @@ import styles from "./SearchInput.module.css"
 import useDebounce from "~/hooks/useDebounce"
 import { clsx } from "~/lib"
 
-export const SearchInput = ({ onClose }: { onClose: () => void }) => {
+export const SearchInput = ({ size, onClose }: { onClose: () => void }) => {
   const queryHook = useCallback((query, search) => {
     query && search(query)
     inputRef.current?.focus()
-
   }, [])
   const [value, setValue] = useState("")
   const searchBoxApi = useSearchBox({ queryHook })
@@ -24,16 +23,15 @@ export const SearchInput = ({ onClose }: { onClose: () => void }) => {
     searchBoxApi.refine(debouncedValue)
   }, [debouncedValue])
 
-  
   return (
-    <div className={styles.wrapper}>
+    <div className={clsx(styles.wrapper, styles[size])}>
       <input
-        className={clsx(styles.input, ".focus-visible")}
+        className={clsx(styles.input, styles[size], ".focus-visible")}
         onBlur={onClose}
         onChange={handleChange}
         ref={inputRef}
       />
-      
+
       {/* <button onClick={onClose} className={styles.closeButton}>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="12" cy="12" r="12" fill="white" />

@@ -81,6 +81,10 @@
   margin-right: 27px;
 }
 
+.footerLayout .follow a:last-of-type {
+  margin-right: 0;
+}
+
 .footerLayout .follow a:hover {
   color: var(--orange-500);
 }

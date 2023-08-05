@@ -111,7 +111,7 @@ article > section iframe {
 }
 
 .main-section :not(h1, h2, h3) {
-  font-family: "Roboto Flex";
+  font-family: var(--font-family-body-text);
 }
 
 .main-section .remix-callout {
@@ -289,6 +289,7 @@ h2.heading {
   padding: 0.1rem 0rem;
   /* margin-top: 30px; */
   margin-bottom: 20px;
+  font-family: var(--font-family-body-text);
 }
 
 .header-link {
@@ -337,7 +338,7 @@ h2.heading {
   text-decoration: none;
 }
 .header-link a span {
-  font-size: 16x;
+  font-size: 16px;
   line-height: normal;
 }
 

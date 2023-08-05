@@ -1,0 +1,56 @@
+---
+import { changeLanguage } from "i18next"
+import HomeLayout from "../../../layouts/HomeLayout.astro"
+import Search from "../../../components/HomeSearch"
+import QuickStart from "./QuickStart.astro"
+import Navigate from "./Navigate.astro"
+import ConnectUs from "./ConnectUs.astro"
+
+changeLanguage("en")
+---
+
+<HomeLayout dark>
+  <div class="header">
+    <p class="header-title">Welcome to<br /> Scroll Documentation</p>
+    <Search client:visible />
+  </div>
+  <div class="content">
+    <QuickStart />
+    <Navigate />
+    <ConnectUs />
+  </div>
+</HomeLayout>
+
+<style>
+  .header {
+    height: 390px;
+    background-color: var(--color-text-primary);
+    padding: 70px 60px 110px;
+  }
+  .header-title {
+    color: var(--white);
+    font-size: 55px;
+    font-weight: 600;
+    line-height: 65px;
+  }
+
+  .content {
+    padding: 52px 60px 160px;
+    background-color: #fff8f3;
+  }
+
+  @media screen and (max-width: 600px) {
+    .header {
+      height: 350px;
+      padding: 70px 20px 115px;
+    }
+    .header-title {
+      font-size: 40px;
+      line-height: 50px;
+      width: 100%;
+    }
+    .content {
+      padding: 82px 20px 120px;
+    }
+  }
+</style>
