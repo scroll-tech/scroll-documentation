@@ -98,14 +98,14 @@ export const getSidebar = () => {
     ],
     technology: [
       {
-        section: t("sidebar.technology.introduction"),
+        section: t("Overview"),
         contents: [
           // {
           //   title: t("sidebar.technology.principles"),
           //   url: "technology/architecture/principles",
           // },
           {
-            title: t("sidebar.technology.scrollArchitecture"),
+            title: t("Scroll Architecture"),
             url: "technology/architecture/scroll-architecture",
           },
         ],

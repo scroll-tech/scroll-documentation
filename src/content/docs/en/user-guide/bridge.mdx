@@ -23,40 +23,45 @@ Withdrawals require a second intraction after the withdrawal is finalized on Sep
 
 [^1]: Forked from [Hop Exchange]('https://hop.exchange/')'s UI
 
-::caution[]
-
+::caution["Waiting a long time for a bridge transaction?"]
+The time estimates above are typical for normal network behavior and activity levels. Because we only process so many queued L1 transactions per an L2 block, bridged messages may take longer to be included on Scroll in times of exceptional network usage.
 :::
 
 ## Deposit from Sepolia to Scroll Sepolia
 
-#### Instructions
+### Instructions
 
-1. First, switch to the **Sepolia** network in your wallet.
-2. In the bridge app, ensure that **Goerli** is on top and **Scroll Alpha** is on the bottom. You can click the "**↓**" button to switch the positions.
-3. Select the token that you want to transfer from Goerli to Scroll Alpha.&#x20;
-4. If this is your first time transferring an ERC20 token, you need to **Approve** the Goerli Bridge contract to access your ERC20 token.
-5. Next, click the **Send** button to make the deposit. Your wallet will pop up a window asking for confirmation of the transfer transaction.
-6. Once the transfer transaction is sent and confirmed, the token will be deducted from your Goerli wallet.
+1. First, navigate to the [Scroll Bridge](https://scroll.io/bridge) and press the "Connect Wallet."
+1. In app, ensure that **Ethereum Sepolia** is on top and **Scroll Sepolia** is on the bottom. You can click the "**↓**" button to switch their positions.
+1. Select the token you want to transfer from Sepolia to Scroll Sepolia. If it's you're first time bridging, try "ETH."
+1. If this is your first time transferring a specific ERC20 token, you must **Approve** the Sepolia Bridge contract to access your ERC20 token.
+1. Next, click the **Send to Scroll Sepolia** button to make the deposit. Your wallet will ask to confirm the transfer transaction.
+1. Once the transfer transaction is sent and confirmed, the token will be deducted from your Sepolia wallet.
+1. You can always check the status of a transaction by pressing the "History" icon next to your wallet address in the top-right corner.
 
-#### When will the token arrive in your Scroll Alpha wallet?
+### When will the token arrive in your Scroll Alpha wallet?
 
-It could take between **8 to 14 minutes** (awaiting block to become [_Safe_](https://www.alchemy.com/overviews/ethereum-commitment-levels#what-are-ethereum-commitment-levels) on Goerli) before the token shows up in your Scroll Alpha wallet. You can check the progress of deposit transactions as follows:
+It could take between **8 to 14 minutes** (awaiting block to become [_Safe_](https://www.alchemy.com/overviews/ethereum-commitment-levels#what-are-ethereum-commitment-levels) on Sepolia) before the token shows up in your Scroll Sepolia wallet. You can check the progress of deposit transactions as follows:
 
-1. Click your wallet address at the top-right corner of the Bridge web app.&#x20;
+##### 1. Click the "History" icon next to your wallet address in the top-right corner.
 
 <ClickToZoom src={bridge1} />
 
-The pop-up panel lists the most recent transactions that you made in the Bridge app (see the image below). There are two statuses: L1 status and L2 status. For deposit transactions (L1 -> L2), once your transaction becomes _Safe_ on Goerli (**8 to 14 minutes**), you will see the **`success`** status shown. Your funds will be relayed to L2 after this.
+The pop-up panel lists the most recent transactions made in the Bridge app. There are two statuses: Sepolia status and Scroll Sepolia status. For deposit transactions (L1 -> L2), once your transaction becomes _Safe_ on Sepolia (**8 to 14 minutes**), you will see the **`success`** status shown. Your funds will be relayed to Scoll Sepolia after this.
 
-2. Click on the most recent transaction’s Goerli transaction hash:
+The Recent Bridge Transactions window should give you an estimate of the time expected before your transaction is _Safe_ on Sepolia.
+
+##### 2. Click on the most recent transaction’s Sepolia transaction hash.
 
 <ClickToZoom src={bridge2} />
 
-It will open the Transaction Details page in a new tab. You can see this transaction is confirmed on Goerli.
+It will open the Transaction Details page in a new tab. You can see this transaction is confirmed on Sepolia. To check the Block's confirmation status, click the Block number and read the "Status" field.
 
 <ClickToZoom src={bridge3} />
 
-3. Go back to the [Bridge](https://scroll.io/alpha/bridge) app. Once your transaction status shows **`success`** on L2, you should see the funds in your Scroll L2 wallet and a transaction hash:&#x20;
+##### 3. Return to the Bridge app and wait!
+
+Once your transaction status shows **`success`** on Scroll Sepolia, you should see the funds in your Scroll L2 wallet and a transaction hash:
 
 <ClickToZoom src={bridge4} />
 
