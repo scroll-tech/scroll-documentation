@@ -110,7 +110,7 @@ article > section iframe {
   position: relative;
 }
 
-.main-section :not(h1, h2, h3) {
+.main-section :not(h1, h2, h3, code) {
   font-family: var(--font-family-body-text);
 }
 

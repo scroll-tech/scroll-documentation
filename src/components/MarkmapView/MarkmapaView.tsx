@@ -4,7 +4,7 @@ import { Markmap } from 'markmap-view';
 
 const transformer = new Transformer();
 
-export default function MarkmapHooks({value}) {
+export default function MarkmapHooks({value, children}) {
   // Ref for SVG element
   const refSvg = useRef<SVGSVGElement>();
   // Ref for markmap object
@@ -21,7 +21,7 @@ export default function MarkmapHooks({value}) {
     // Update data for markmap once value is changed
     const mm = refMm.current;
     if (!mm) return;
-    const { root } = transformer.transform(value);
+    const { root } = transformer.transform(children?.props?.value || value);
     mm.setData(root);
     mm.fit();
   }, [refMm.current, value]);
