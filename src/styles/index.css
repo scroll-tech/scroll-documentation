@@ -110,8 +110,8 @@ article > section iframe {
   position: relative;
 }
 
-.main-section :not(h1, h2, h3, code) {
-  font-family: var(--font-family-body-text);
+.main-section :is(h1, h2, h3) {
+  font-family: var(--font-family-text);
 }
 
 .main-section .remix-callout {
@@ -284,12 +284,11 @@ img {
 }
 
 h2.heading {
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 18px;
+  font-weight: 700 !important;
   padding: 0.1rem 0rem;
   /* margin-top: 30px; */
   margin-bottom: 20px;
-  font-family: var(--font-family-body-text);
 }
 
 .header-link {
@@ -389,6 +388,7 @@ h2.heading {
     margin-left: 1rem;
   }
   h2.heading {
+    font-size: 16px;
     padding: 0.1rem 1rem;
   }
 }
