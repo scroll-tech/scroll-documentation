@@ -16,4 +16,14 @@ const data = (await fs.readFile(path.join(process.cwd(), "public", src), "utf-8"
 const cleanSrc = src.replace(/^\/+/, "")
 ---
 
-<MarkmapaView client:idle value={data} />
+<MarkmapaView client:idle value={data}>
+  {
+    `
+  # markmap 
+  - beautiful1 
+  - useful 
+  - easy 
+  - interactive
+  `
+  }
+</MarkmapaView>

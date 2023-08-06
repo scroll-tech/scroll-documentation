@@ -19,20 +19,6 @@
   font-style: normal;
   font-display: swap;
 }
-@font-face {
-  font-family: "fira code";
-  src: url("https://fonts.googleapis.com/css2?family=Fira+Code");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Fira Code";
-  font-style: normal;
-  font-weight: 500;
-  src: url(https://fonts.gstatic.com/s/firacode/v21/uU9eCBsR6Z2vfE9aq3bL0fxyUs4tcw4W_A9sJVD7NuzlojwUKQ.woff2)
-    format("woff2");
-}
 
 @font-face {
   font-family: "trans-sans";
@@ -50,6 +36,28 @@
 }
 @font-face {
   font-family: "trans-sans";
+  src: url("/fonts/TransSansPremium-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "trans-sans";
+  src: url("/fonts/TransSansPremium-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "FTPolarMono";
+  src: url("/fonts/FTPolarMono-Regular.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "FTPolarMono";
   src: url("/fonts/TransSansPremium-SemiBold.woff2") format("woff2");
   font-weight: 600;
   font-style: normal;
