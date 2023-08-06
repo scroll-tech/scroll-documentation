@@ -10,6 +10,27 @@ jobs:
     env:
       ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
       ALGOLIA_WRITE_API_KEY: ${{ secrets.ALGOLIA_WRITE_API_KEY }}
+      ALGOLIA_INDEX_NAME: prod_scroll-docs
+    defaults:
+      run:
+        working-directory: ./
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+      - name: Install Dependencies
+        run: npm i
+      - name: Build
+        run: npm run build
+      - name: Update index
+        run: npm run update-algolia-index
+
+  update-dev-index:
+    if: ${{ github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/sepolia-content-population' }}
+    name: Update algolia index
+    runs-on: ubuntu-latest
+    env:
+      ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
+      ALGOLIA_WRITE_API_KEY: ${{ secrets.ALGOLIA_WRITE_API_KEY }}
       ALGOLIA_INDEX_NAME: dev_scroll-docs
     defaults:
       run:
