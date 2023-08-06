@@ -32,7 +32,7 @@ pre[class*="language-"] {
 code,
 code[class*="language-"] *,
 pre[class*="language-"] * {
-  font-family: var(--font-family-code);
+  font-family: var(--font-family-code) !important;
   font-size: 16px;
 }
 
