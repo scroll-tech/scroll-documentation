@@ -3,8 +3,8 @@ section: developers
 date: Last Modified
 title: "Bridge ERC20 through the Custom Gateway"
 lang: "en"
-permalink: "TODO"
-excerpt: "TODO"
+permalink: "developers/guides/bridge-erc20-through-the-custom-gateway"
+excerpt: "This guide will walk through how to use Scroll's bridge for ERC20s that need custom functionality using the Custom Gateway."
 ---
 
 This guide will walk through how to use Scroll's bridge for ERC20s that need custom functionality using the Custom Gateway.
@@ -15,7 +15,7 @@ There is no need for a particular implementation for a token to be compatible wi
 
 ```solidity
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.19;
+pragma solidity ^0.8.16;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
@@ -39,10 +39,10 @@ The following is a complete example of a token compatible with the bridge. As th
 
 ```solidity
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.19;
+pragma solidity ^0.8.16;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@scroll-tech/contracts@0.0.10/libraries/token/IScrollERC20Extension.sol";
+import "@scroll-tech/contracts@0.1.0/libraries/token/IScrollERC20Extension.sol";
 
 contract L2Token is ERC20, IScrollERC20Extension {
   // We store the gateway and the L1 token address to provide the gateway() and counterpart() functions which are needed from the Scroll Standard ERC20 interface
@@ -109,9 +109,9 @@ Let’s start by launching the following contract on Sepolia.
 
 ```solidity
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.19;
+pragma solidity =0.8.16;
 
-import "@scroll-tech/contracts@0.0.10/L1/gateways/L1CustomERC20Gateway.sol";
+import "@scroll-tech/contracts@0.1.0/L1/gateways/L1CustomERC20Gateway.sol";
 
 contract MyL1Gateway is L1CustomERC20Gateway {
   function _deposit(
@@ -133,9 +133,9 @@ Now let’s launch the counterpart contract on Scroll testnet.
 
 ```solidity
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.19;
+pragma solidity =0.8.16;
 
-import "@scroll-tech/contracts@0.0.10/L2/gateways/L2CustomERC20Gateway.sol";
+import "@scroll-tech/contracts@0.1.0/L2/gateways/L2CustomERC20Gateway.sol";
 
 contract MyL2Gateway is L2CustomERC20Gateway {
   function _withdraw(

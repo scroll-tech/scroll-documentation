@@ -3,8 +3,8 @@ section: developers
 date: Last Modified
 title: "Greeting Contract with Cross-chain Interaction"
 lang: "en"
-permalink: "TODO"
-excerpt: "TODO"
+permalink: "developers/guides/greeting-contract-with-cross-chain-interaction"
+excerpt: "In this example, we will launch a dummy smart contract on either Sepolia or Scroll testnet and interact with it from the opposite chain."
 ---
 
 In this example, we will launch a dummy smart contract on either Sepolia or Scroll testnet and interact with it from the opposite chain. We will be using the `ScrollMessenger` that is deployed on both Sepolia and Scroll testnet.
@@ -15,7 +15,7 @@ Let’s start by deploying the target smart contract. We will use the Greeter sm
 
 ```solidity
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.19;
+pragma solidity ^0.8.16;
 
 // This Greeter contract will be interacted with through the ScrollMessenger across the bridge
 contract Greeter {
@@ -36,11 +36,11 @@ Now switch to the other chain and deploy the `GreeterOperator`. If you deployed 
 
 ```solidity
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.19;
+pragma solidity ^0.8.16;
 
 // The Scroll Messenger interface is the same on both L1 and L2, it allows sending cross-chain transactions
 // Let's import it directly from the Scroll Contracts library
-import "@scroll-tech/contracts@0.0.10/libraries/IScrollMessenger.sol";
+import "@scroll-tech/contracts@0.1.0/libraries/IScrollMessenger.sol";
 
 // The GreeterOperator is capable of executing the Greeter function through the bridge
 contract GreeterOperator {
