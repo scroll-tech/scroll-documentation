@@ -295,7 +295,7 @@ h2.heading {
 .header-link {
   font-size: 16px;
   line-height: normal;
-  padding: 0 0 10px 1rem;
+  padding: 4.5px 0 5.5px 1rem;
   /* margin-left: 1rem; */
   border-color: var(--black-100);
   @apply border-0 border-l-[4px] border-solid;

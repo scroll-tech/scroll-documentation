@@ -4,17 +4,17 @@ date: Last Modified
 title: "Common Errors"
 lang: "en"
 permalink: "user-guide/common-errors/"
-excerpt: "Seeing an error when trying to interact with Scroll Alpha Testnet? Here are some common configuration errors and how to quickly fix them."
+excerpt: "Seeing an error when trying to interact with Scroll Sepolia Testnet? Here are some common configuration errors and how to quickly fix them."
 ---
 
 ## Incorrect nonce error when sending a transaction in MetaMask
 
-You will encounter this error when the local nonce stored in your MetaMask wallet is different from the nonce in the Scroll testnet node. It could be because there is a recent pending transaction, or the network was reset for bug fixes and feature releases. Although we aim to minimize this, we may reset the network in this Alpha phase to enable rapid development. We will notify users in advance before resetting the network.
+You will encounter this error when the local nonce stored in your MetaMask wallet is different from the nonce in the Scroll testnet node. It could be because there is a recent pending transaction.
 
-To fix this issue, you need to reset your account in MetaMask for the Scroll Alpha Testnet. The steps to reset the account are:
+To fix this issue, you need to reset your account in MetaMask for the Scroll Sepolia Testnet. The steps to reset the account are:
 
 1. Open the **MetaMask** extension in the browser
-2. Select **Scroll Alpha Testnet** in the top area
+2. Select **Scroll Sepolia Testnet** in the top area
 3. Click the round **account icon** in the top-right corner
 4. Select **Settings**
 5. Go to **Advanced**
