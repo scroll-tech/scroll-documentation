@@ -20,53 +20,50 @@ import Aside from "../../../../components/Aside.astro"
 
 ## Scroll Sepolia Contracts
 
-{/* TODO: These are actually the Alpha Contracts! */}
-
 ### Rollup
 
-- L1 Rollup: `0x3C584eC7f0f2764CC715ac3180Ae9828465E9833`
+- L1 Rollup (Scroll Chain): `0x2D567EcE699Eabe5afCd141eDB7A4f2D0D6ce8a0`
 
 ### ETH and ERC20 Bridge
 
-- L1 ERC20 Gateway Router: `0xe5E30E7c24e4dFcb281A682562E53154C15D3332`
-- L2 ERC20 Gateway Router: `0x6d79Aa2e4Fbf80CF8543Ad97e294861853fb0649`
+- L1 ERC20 Gateway Router: `0x13FBE0D0e5552b8c9c4AE9e2435F38f37355998a`
+- L2 ERC20 Gateway Router: `0x9aD3c5617eCAa556d6E166787A97081907171230`
 
 ### Advanced Bridge Contracts
 
 - Scroll Messenger
-  - L1 Messenger: `0x5260e38080BFe97e6C4925d9209eCc5f964373b6`
-  - L2 Messenger: `0xb75d7e84517e1504C151B270255B087Fd746D34C`
+  - L1 Messenger: `0x50c7d3e7f7c656493D1D76aaa1a836CedfCBB16A`
+  - L2 Messenger: `0xBa50f5340FB9F3Bd074bD638c9BE13eCB36E603d`
 - ETH Bridge
-  - L1 ETH Gateway: `0x429b73A21cF3BF1f3E696a21A95408161daF311f`
-  - L2 ETH Gateway: `0x32139B5C8838E94fFcD83E60dff95Daa7F0bA14c`
-  - L1 WETH Gateway: `0x8be69E499D8848DfFb4cF9bac909f3e2cF2FeFa0`
-  - L2 WETH Gateway: `0xBb88bF582F2BBa46702621dae5CB9271057bC85b`
+  - L1 ETH Gateway: `0x8A54A2347Da2562917304141ab67324615e9866d`
+  - L2 ETH Gateway: `0x91e8ADDFe1358aCa5314c644312d38237fC1101C`
+  - L1 WETH Gateway: `0x3dA0BF44814cfC678376b3311838272158211695`
+  - L2 WETH Gateway: `0x481B20A927206aF7A754dB8b904B052e2781ea27`
 - ERC20 Bridge
-  - L1 ERC20 Standard Gateway: `0xeF37207c1A1efF6D6a9d7BfF3cF4270e406d319b`
-  - L2 ERC20 Standard Gateway: `0xB878F37BB278bf0e4974856fFe86f5e6F66BD725`
-  - L1 ERC20 Custom Gateway: `0x920f906B814597cF5DC76F95100F09CBAF9c5748`
-  - L2 ERC20 Custom Gateway: `0xa07Cb742657294C339fB4d5d6CdF3fdBeE8C1c68`
+  - L1 ERC20 Standard Gateway: `0x65D123d6389b900d954677c26327bfc1C3e88A13`
+  - L2 ERC20 Standard Gateway: `0xaDcA915971A336EA2f5b567e662F5bd74AEf9582`
+  - L1 ERC20 Custom Gateway: `0x31C994F2017E71b82fd4D8118F140c81215bbb37`
+  - L2 ERC20 Custom Gateway: `0x058dec71E53079F9ED053F3a0bBca877F6f3eAcf`
 - ERC721 Bridge
-  - L1 ERC721 Gateway: `0x1C441Dfc5C2eD7A2AA8636748A664E59CB029157`
-  - L2 ERC721 Gateway: `0x8Fee20e0C0Ef16f2898a8073531a857D11b9C700`
+  - L1 ERC721 Gateway: `0xEF27A5E63aa3f1B8312f744b9b4DcEB910Ba77AC`
+  - L2 ERC721 Gateway: `0x179B9415194B67DC3c0b8760E075cD4415785c97`
 - ERC1155 Bridge
-  - L1 ERC1155 Gateway: `0xd1bE599aaCBC21448fD6373bbc7c1b4c7806f135`
-  - L2 ERC1155 Gateway: `0xfe5Fc32777646bD123564C41f711FF708Dd48360`
+  - L1 ERC1155 Gateway: `0xa5Df8530766A85936EE3E139dECE3bF081c83146`
+  - L2 ERC1155 Gateway: `0xe17C9b9C66FAF07753cdB04316D09f52144612A5`
 - Gas Oracle
-  - L2 Gas Oracle (deployed on Sepolia): `0x37D61987d0281Fb17DE079C9B8E56B367b1800c4`
+  - L2 Gas Oracle (deployed on Sepolia): `0x247969F4fad93a33d4826046bc3eAE0D36BdE548`
 
 ### L2 Predeploys
 
 - Message Queue: `0x5300000000000000000000000000000000000000`
-- Block Container: `0x5300000000000000000000000000000000000001`
 - Gas Price Oracle: `0x5300000000000000000000000000000000000002`
 - Whitelist: `0x5300000000000000000000000000000000000003`
-- WETH L2: `0xa1EA0B2354F5A344110af2b6AD68e75545009a03`
+- WETH L2: `0x5300000000000000000000000000000000000004`
 - Transaction Fee Vault: `0x5300000000000000000000000000000000000005`
 
-## Protocols on Sepolia
+{/* ## Protocols on Sepolia */}
 
-### Uniswap V3
+{/\* ### Uniswap V3
 
 - Frontend website: [https://uniswap-v3.scroll.io/](https://uniswap-v3.scroll.io/)
 - Main Contracts
@@ -82,7 +79,7 @@ import Aside from "../../../../components/Aside.astro"
   - descriptorProxyAddress: `0x9590F386eC21A221646A19ac03984683713366d7`
   - v3MigratorAddress: `0x5Db25d2b7dba65c8aA2b16465438Ec44f75b0511`
   - v3StakerAddress: `0xF957376105987D25EFe7D403eA63929e0dAc9E0c`
-  - quoterV2Address: `0xbf1c1FE1e9e900aFd5ba2Eb67480c44266D5eD84`
+  - quoterV2Address: `0xbf1c1FE1e9e900aFd5ba2Eb67480c44266D5eD84` \*/}
 
 ## Tokens
 
@@ -91,4 +88,4 @@ import Aside from "../../../../components/Aside.astro"
   [token-list](https://github.com/scroll-tech/token-list) repo.
 </Aside>
 
-- Sepolia USDC: `0x67aE69Fd63b4fc8809ADc224A9b82Be976039509`
+{/* - Sepolia USDC: `0x67aE69Fd63b4fc8809ADc224A9b82Be976039509` */}
