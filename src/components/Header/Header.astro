@@ -4,7 +4,9 @@ import { Frontmatter, MENU } from "../../config/index"
 import SkipToContent from "./SkipToContent.astro"
 import SidebarToggle from "./SidebarToggle.tsx"
 import Search from "./Search/Search.tsx"
-import { LanguageSelector } from "astro-i18next/components"
+// import LanguageSelector from "./LanguageSelector/index.tsx"
+import LanguageSelector from "./LanguageSelector/LanguageSelector.astro"
+
 import { localizePath } from "astro-i18next"
 import i18next from "i18next"
 
@@ -12,8 +14,13 @@ import NotificationBanner from "~/features/notifications/components/Notification
 
 export type Props = {
   frontmatter?: Frontmatter
+  dark?: boolean
 }
-const { frontmatter } = Astro.props
+const { frontmatter, dark } = Astro.props
+
+const backgroundColor = dark ? "#101010" : "#ffffff"
+
+const textColor = dark ? "#FFF8F3" : "#101010"
 
 const section = frontmatter?.section ?? ""
 ---
@@ -28,57 +35,58 @@ const section = frontmatter?.section ?? ""
   <nav class="nav-wrapper" title="Top Navigation">
     <div class="logo flex items-center">
       <a href={localizePath("/")}>
-        <img src="/scroll-docs.svg" style="height:40px; width: 183px" alt={CONFIG.SITE.title ?? "Documentation"} />
+        <img src={dark ? "/scroll-docs-white.svg" : "/scroll.svg"} alt={CONFIG.SITE.title ?? "Documentation"} />
       </a>
     </div>
-    <div class="navbar">
-      {
-        MENU[i18next.language].map((link) => (
-          <a class="nav-link" href={link.link} aria-current={link.section === section}>
-            {link.text}
-          </a>
-        ))
-      }
-    </div>
+    <div class="right-box">
+      <div class="navbar">
+        {
+          MENU[i18next.language].map((link) => (
+            <a class="nav-link" href={link.link} aria-current={link.section === section}>
+              {link.text}
+            </a>
+          ))
+        }
+      </div>
+      <div class="tools">
+        {
+          CONFIG.ALGOLIA && (
+            <div class="search-item">
+              <Search client:visible />
+            </div>
+          )
+        }
 
-    {
-      CONFIG.ALGOLIA && (
-        <div class="search-item">
-          <Search client:visible />
-        </div>
-      )
-    }
-    <LanguageSelector showFlag={true} class="language-selector" />
-    <a href="https://github.com/scroll-tech/scroll-documentation" class="github-url" target="_blank" rel="nofollow">
-      <img src="/assets/github.svg" />
-    </a>
-    <div class="menu-toggle">
-      <SidebarToggle client:idle />
+        <LanguageSelector class="language-selector" />
+        <a href="https://github.com/scroll-tech/scroll-documentation" class="github-url" target="_blank" rel="nofollow">
+          <img src={dark ? "/assets/github-white.svg" : "/assets/github.svg"} />
+        </a>
+      </div>
+      <div class="menu-toggle">
+        <SidebarToggle client:idle dark={dark} />
+      </div>
     </div>
   </nav>
 </header>
 <NotificationBanner />
 
-<style>
+<style define:vars={{ backgroundColor, textColor }}>
+  /* Basic Styles */
   header {
-    z-index: 11;
+    z-index: 1000;
     width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
     position: sticky;
     top: 0;
-    @apply h-navbar bg-white;
+    display: flex;
+    align-items: center;
+    background: var(--backgroundColor);
+    @apply h-navbar;
   }
 
-  .language-selector {
-    height: 36px;
-  }
   .nav-link {
-    @apply text-primary;
+    line-height: 40px;
+    color: var(--textColor);
   }
-
   .nav-link:hover {
     @apply text-link;
   }
@@ -86,7 +94,6 @@ const section = frontmatter?.section ?? ""
   .logo {
     display: flex;
     overflow: hidden;
-    width: 183px;
     height: 40px;
     font-size: 2rem;
     flex-shrink: 0;
@@ -95,7 +102,6 @@ const section = frontmatter?.section ?? ""
     color: hsla(var(--color-base-white), 100%, 1);
     gap: 0.25em;
     z-index: -1;
-    flex-grow: 1;
   }
 
   .logo a {
@@ -104,18 +110,13 @@ const section = frontmatter?.section ?? ""
     margin: -0.5em -0.25em;
     text-decoration: none;
     font-weight: bold;
-  }
-
-  .logo a {
     transition: color 100ms ease-out;
     @apply text-text;
   }
-
   .logo a:hover,
   .logo a:focus {
     @apply text-accent;
   }
-
   .logo h1 {
     display: none;
     font: inherit;
@@ -123,77 +124,88 @@ const section = frontmatter?.section ?? ""
     margin: 0;
   }
 
+  .logo img {
+    height: 30px;
+  }
+
   .nav-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
+    display: grid;
+    grid-template-columns: 4fr 5fr;
     gap: 1em;
     width: 100%;
-    max-width: 82em;
-    margin: 0 1rem;
+    margin: 0 1.25rem;
   }
-  .spacer {
-    display: none;
-    flex-grow: 0.5;
-  }
-  .github-url {
+
+  .spacer,
+  .github-url,
+  .navbar {
     display: none;
   }
 
+  .right-box {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .tools {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+    justify-content: space-between;
+    flex-direction: row-reverse;
+  }
+
+  .search-item {
+    display: flex;
+    position: relative;
+    z-index: 10;
+  }
+
+  /* Media Queries */
   @media (min-width: 50em) {
     .logo {
-      flex-grow: 0;
+      width: 183px;
     }
-
-    .spacer {
-      display: block;
+    .nav-wrapper {
+      grid-template-columns: 1fr 3fr;
+    }
+    .spacer,
+    .logo h1 {
+      display: initial;
     }
     header {
       position: static;
-      padding: 1rem 0rem;
     }
-
     .logo {
       margin: 0;
       z-index: 0;
     }
-
-    .logo h1 {
-      display: initial;
-    }
-
     .menu-toggle {
       display: none;
     }
-  }
-
-  .navbar {
-    display: none;
-  }
-  @media (min-width: 50em) {
     .navbar {
       display: flex;
-      gap: 2rem;
-      flex-grow: 1;
+      gap: 45px;
       justify-content: center;
     }
     .navbar a[aria-current="true"] {
-      @apply border-0 border-b-2 border-solid border-link;
+      font-weight: 600;
+      @apply border-0 border-solid border-link;
+    }
+    .tools {
+      width: unset;
+      flex-direction: row;
     }
     .github-url {
-      width: 24px;
+      width: 35px;
       display: flex;
     }
   }
 
-  .search-item {
-    display: none;
-    position: relative;
-    z-index: 10;
-    display: flex;
-  }
-
-  :global(.search-item > *) {
-    flex-grow: 1;
+  @media (min-width: 72em) {
+    .nav-wrapper {
+      grid-template-columns: 1fr 5fr;
+    }
   }
 </style>

@@ -32,12 +32,19 @@ const { content, githubEditUrl, headings, clientSideToc } = Astro.props
     position: sticky;
     top: 0;
   }
-
+  .feedback-title {
+    @apply !mb-6;
+  }
   .sidebar-nav-inner {
-    height: 100%;
-    padding: 0;
+    padding: 16px 20px 70px 4px;
     overflow: auto;
-    @apply pt-doc;
+    background: #fff8f3;
+    border-radius: 1em;
+    float: right;
+    width: 280px;
+    /* width: 250px; */
+    max-height: 100%;
+    /* @apply pt-doc; */
   }
   .sidebar-nav-inner > * {
     margin-top: 1rem;

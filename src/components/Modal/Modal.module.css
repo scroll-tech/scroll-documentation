@@ -26,16 +26,16 @@
   box-shadow: var(--shadow-high);
   border: var(--modal-border);
   border-radius: var(--modal-border-radius);
-  padding: var(--modal-padding);
+  /* padding: var(--modal-padding); */
   z-index: 100;
 }
 @media (min-width: 50em) {
   .modal {
     --modal-border: var(--border-width-primary) solid var(--gray-200);
     --modal-border-radius: var(--border-radius-primary);
-    --modal-max-width: min(calc(100% - 32px), 768px);
+    --modal-max-width: min(calc(100% - 32px), 500px);
     --modal-max-height: calc(100% - 32px);
-    --modal-padding: var(--space-8x);
+    /* --modal-padding: var(--space-8x); */
     height: auto;
   }
 }

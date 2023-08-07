@@ -1,33 +1,54 @@
 .wrapper {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 1rem;
-  @apply bg-white p-modal pb-6 m-[calc(theme('padding.modal')_*_-1)] mb-0;
+  width: 100%;
+  height: 50px;
+  flex-shrink: 0;
+  overflow: hidden;
+  padding: 0 20px;
+  border-radius: 0;
+  @apply bg-white;
+}
+
+.wrapper.large {
+  height: 48px;
+  border-radius: 24px;
 }
 
 .input {
-  margin: 0px;
+  margin: 0;
   font-size: 16px;
   width: 100%;
   color: rgb(12, 22, 44);
-  outline: 0px;
+  outline: none;
   display: block;
-  background-repeat: no-repeat;
-  border: none;
   appearance: none;
-  line-height: 16px;
-  background-image: url(/assets/search.svg);
-  background-position: left 16px top 50%;
-  background-size: 16px;
+  background: transparent url(/assets/search.svg) left 0 top 2px / 17px no-repeat;
   flex-grow: 1;
-  @apply bg-white p-4 pl-[40px];
+  padding-left: 36px;
+  padding-bottom: 30px;
+  border: none;
+  border-bottom: 1px solid #000;
+  height: 50px;
+  line-height: 45px;
 }
-.input:focus {
-  outline: 2px solid var(--color-text-link);
-  @apply rounded-primary;
+.input.large {
+  height: 48px;
+  border-bottom: none;
+  padding-bottom: 0;
+  background: transparent url(/svgs/search.svg) left center no-repeat;
+  background-size: 20px auto;
 }
+
 .input::placeholder {
   font-style: italic;
+}
+
+.input:focus {
+  outline: none;
+  border-radius: 0;
 }
 
 .closeButton {
@@ -35,28 +56,43 @@
   border: none;
   padding: 0;
   display: none;
+  height: 25px;
 }
 
-.closeButtonMobile {
-  display: block;
-  background-color: transparent;
-  border: none;
-  padding: 0;
-  font-size: 1rem;
-  line-height: 24px;
-  border-bottom: 2px solid;
-  @apply text-link;
-}
 @media (min-width: 50em) {
   .wrapper {
-    align-items: flex-start;
+    width: 346px;
+    height: 35px;
+    border-radius: 40px;
+    padding: unset;
+  }
+
+  .wrapper.large {
+    height: 55px;
+    border-radius: 27.5px;
+    width: 100%;
   }
 
   .input {
-    font-size: 20px;
-    line-height: 24px;
-    background-size: 24px;
-    @apply p-4 pl-[52px];
+    font-size: 16px;
+    line-height: 15px;
+    background: #f6f6f6 url(/assets/search.svg) left 12px top 50% / 17px no-repeat;
+    border: none;
+    height: 35px;
+    line-height: 35px;
+    padding-bottom: 0;
+    @apply pl-[40px];
+  }
+
+  .input.large {
+    height: 55px;
+    background: transparent url(/svgs/search.svg) left 20px center no-repeat;
+    padding-left: 60px;
+    padding-right: 22px;
+  }
+
+  .input:focus {
+    @apply rounded-primary;
   }
 
   .closeButton {

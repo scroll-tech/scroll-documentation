@@ -6,8 +6,9 @@ import PageContent from "../components/PageContent/PageContent.astro"
 import LeftSidebar from "../components/LeftSidebar/LeftSidebar.astro"
 import RightSidebar from "../components/RightSidebar/RightSidebar.astro"
 import * as CONFIG from "../config"
-import { NewsletterCTA } from "../components/Footer/NewsletterCTA.tsx"
-import Footer from "~/components/Footer/Footer.astro"
+// import { NewsletterCTA } from "../components/Footer/NewsletterCTA.tsx"
+// import Footer from "~/components/Footer/Footer.astro"
+import Footer from "~/components/Footer/Footer.tsx"
 import { changeLanguage } from "i18next"
 
 const { content = {}, frontmatter } = Astro.props
@@ -15,7 +16,7 @@ const { content = {}, frontmatter } = Astro.props
 const headings = Astro.props?.headings || Astro.props?.content?.astro.headings
 
 const currentPage = new URL(Astro.request.url).pathname
-const currentFile = `src/pages${currentPage.replace(/\/$/, "")}.${frontmatter?.file.split(".").pop() || "md"}`
+const currentFile = `src/content/docs${currentPage.replace(/\/$/, "")}.${frontmatter?.file.split(".").pop() || "md"}`
 const githubEditUrl = CONFIG.GITHUB_EDIT_URL + currentFile
 const formattedContentTitle = content.title
   ? `${content.title} | ${CONFIG.SITE.title}`
@@ -39,13 +40,23 @@ changeLanguage(content.lang)
       integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ"
       crossorigin="anonymous"
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@500&family=Roboto+Flex:opsz,wght@8..144,400;8..144,500;8..144,600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Roboto+Flex:opsz,wght@8..144,400;8..144,500;8..144,600&display=swap"
+      rel="stylesheet"
+    />
     <style>
       body {
         width: 100%;
         display: grid;
         grid-template-rows: var(--theme-navbar-height) 1fr;
         --gutter: var(--space-6x);
-        --doc-padding: 2rem;
+        --doc-padding: 65px;
       }
 
       .layout {
@@ -53,6 +64,12 @@ changeLanguage(content.lang)
         grid-auto-flow: column;
         grid-template-columns: 0fr minmax(0, var(--max-width)) 0fr;
         overflow-x: hidden;
+        margin-left: 20px;
+        margin-right: 20px;
+      }
+
+      .layout :global(*) {
+        font-family: var(--font-family-body-text);
       }
 
       .layout :global(> *) {
@@ -61,6 +78,7 @@ changeLanguage(content.lang)
       }
 
       .grid-sidebar {
+        width: 100%;
         height: 100vh;
         position: sticky;
         top: 0;
@@ -75,7 +93,7 @@ changeLanguage(content.lang)
       }
 
       #grid-main {
-        padding: var(--doc-padding) var(--gutter);
+        padding: var(--doc-padding) 0;
         grid-column: 2;
         display: flex;
         flex-direction: column;
@@ -84,12 +102,20 @@ changeLanguage(content.lang)
 
       #grid-right {
         display: none;
+        padding-top: 100px;
       }
 
       @media (min-width: 50em) {
+        body {
+          width: 100%;
+          display: grid;
+          grid-template-rows: var(--theme-navbar-height) 1fr;
+          --gutter: var(--space-6x);
+          --doc-padding: 115px;
+        }
         .layout {
           overflow: initial;
-          grid-template-columns: 18rem minmax(0, var(--max-width));
+          grid-template-columns: 1fr 3fr;
           gap: 1em;
         }
 
@@ -103,11 +129,11 @@ changeLanguage(content.lang)
 
       @media (min-width: 72em) {
         .layout {
-          grid-template-columns: 18rem minmax(0, var(--max-width)) 18rem;
+          grid-template-columns: 2fr minmax(0, 56vw) 3fr;
           padding-left: 0;
           padding-right: 0;
-          margin-left: auto;
-          margin-right: auto;
+          margin-left: 20px;
+          margin-right: 20px;
         }
 
         #grid-right {
@@ -129,6 +155,8 @@ changeLanguage(content.lang)
       .mobile-sidebar-toggle #grid-left {
         display: block;
         top: 2rem;
+        left: 0;
+        padding-left: 20px;
       }
     </style>
     <script>
@@ -168,9 +196,9 @@ changeLanguage(content.lang)
         <RightSidebar {content} githubEditUrl={githubEditUrl} {headings} clientSideToc={!!frontmatter?.clientSideToc} />
       </aside>
     </main>
-    <NewsletterCTA client:visible />
-    <Footer />
-
+    <!-- <NewsletterCTA client:visible />
+    <Footer /> -->
+    <Footer client:idle />
     <!-- TODO: Part 3 - Figure out if we need this footer script tag for linking to wallet. -->
 
     <!-- <script>

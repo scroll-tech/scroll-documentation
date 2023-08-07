@@ -10,7 +10,7 @@ metadata:
   title: "Conceptual Overview"
   description: "Metadata for social media and search results."
   image:
-    0: "/files/ToDo:-image-file-name.png"
+    - "/files/ToDo:-image-file-name.png"
 ---
 
 欢迎来到 Scroll 早期文档草稿。这个页面有很多我们从 Chainlink 文档中获取的样本内容，以便我们了解一个长页面的样子以及 MarkDown 解析器中的一些出色功能。

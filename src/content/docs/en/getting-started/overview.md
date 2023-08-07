@@ -10,7 +10,7 @@ metadata:
   title: "Conceptual Overview"
   description: "Metadata for social media and search results."
   image:
-    0: "/files/ToDo:-image-file-name.png"
+    - "/files/ToDo:-image-file-name.png"
 ---
 
 Welcome to the Scroll early docs draft. This page has a lot of sample content from the Chainlink docs that we've forked to get a sense of what a long page looks like and some of the great features in the MarkDown parser.

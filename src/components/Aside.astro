@@ -2,6 +2,7 @@
 import alertIcon from "./Alert/Assets/alert-icon.svg"
 import infoIcon from "./Alert/Assets/info-icon.svg"
 import dangerIcon from "./Alert/Assets/danger-icon.svg"
+import tipIcon from "./Alert/Assets/tip-icon.svg"
 export type Props = {
   type?: "note" | "tip" | "caution" | "danger"
   title?: string
@@ -12,7 +13,7 @@ const { type = "note", title = type } = Astro.props as Props
 // SVG icon paths based on GitHub Octicons
 const icons = {
   note: infoIcon,
-  tip: infoIcon,
+  tip: tipIcon,
   caution: alertIcon,
   danger: dangerIcon,
 }
@@ -38,14 +39,13 @@ const icons = {
     --aside-bg: var(--color-background-info);
     background-color: var(--aside-bg);
 
-    display: flex;
-    @apply p-4 gap-4 rounded-[4px] text-info;
+    /* display: flex; */
+    @apply p-[30px] gap-4 rounded-[27px] text-info mb-[1rem];
   }
 
-  .title {
+  aside p.title {
     font-weight: bold;
-    font-size: 14px;
-    text-transform: uppercase;
+    font-size: 16px;
   }
 
   aside p {
@@ -55,6 +55,7 @@ const icons = {
   .icon {
     flex-shrink: 0;
     width: 1.5em;
+    margin-bottom: 10px;
   }
   .icon svg {
     vertical-align: middle;
@@ -63,7 +64,7 @@ const icons = {
 
   aside :global(a),
   aside :global(a > code:not([class*="language"])) {
-    @apply text-link;
+    @apply text-link underline;
   }
 
   aside :global(p),
@@ -81,6 +82,7 @@ const icons = {
   }
 
   .tip {
+    --aside-bg: #eee;
   }
 
   .caution {
@@ -93,8 +95,8 @@ const icons = {
 
   .asideContent :global(p) {
     margin-bottom: 0;
-    font-size: 14px;
-    line-height: 1.4;
+    font-size: 16px;
+    line-height: 25px;
   }
 
   .asideContent :global(p + p) {

@@ -22,7 +22,7 @@ export function SearchCTA() {
         <span style={{ fontSize: "1rem" }}>{t("landing.search.placeholder")}</span>
       </button>
 
-      <SearchModal isOpen={isOpen} onClose={onClose} />
+      {/* <SearchModal isOpen={isOpen} onClose={onClose} /> */}
     </>
   )
 }

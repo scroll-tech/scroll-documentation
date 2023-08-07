@@ -1,0 +1,76 @@
+.container {
+  @apply py-[60px] px-[20px] bg-[#EAF5FD] md:py-[32px];
+}
+
+.subscribeBox {
+  @apply flex  flex-col gap-[18px] items-start md:gap-[22px] md:items-center md:flex-row md:justify-between;
+}
+
+.subscribeIcon {
+  width: 48px;
+}
+.copyBox {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.subscribeTitle {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.subscribeText {
+  font-size: 16px;
+  font-weight: 400;
+  /* margin-top: 10px; */
+}
+
+.emailBox {
+  /* position: "relative", mt: ["3.2rem", "3.2rem", 0], flex: 1, width: ["100%", "auto"], textAlign: "right"  */
+  position: relative;
+  /* margin-top: 32px; */
+  flex: 1;
+  width: auto;
+  text-align: right;
+  width: 100%;
+}
+
+.errorMessage {
+  /* position: "absolute", fontSize: "1.6rem", textAlign: "center", mt: "1rem", width: "100%", lineHeight: "normal" */
+  position: absolute;
+  font-size: 16px;
+  text-align: center;
+  margin-top: 10px;
+  width: 100%;
+  line-height: normal;
+}
+
+@media (min-width: 50em) {
+  .container {
+  }
+
+  .subscribeBox {
+  }
+
+  .subscribeIcon {
+    width: 70px;
+  }
+  .copyBox {
+  }
+
+  .subscribeTitle {
+    font-size: 20px;
+  }
+
+  .subscribeText {
+    font-size: 16px;
+  }
+
+  .emailBox {
+  }
+
+  .errorMessage {
+  }
+}

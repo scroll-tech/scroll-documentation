@@ -1,0 +1,29 @@
+---
+import { Prism } from "@astrojs/prism"
+
+import fs from "node:fs/promises"
+import path from "node:path"
+import MarkmapaView from "./MarkmapaView.tsx"
+
+export type Props = {
+  src?: string
+  content?: string
+}
+const { src, content } = Astro.props as Props
+// remove leading slashes
+const cleanSrc = src ? src.replace(/^\/+/, "") : ""
+
+let data: string = ""
+
+async function readFromFile(src: string) {
+  return (await fs.readFile(path.join(process.cwd(), "public", src), "utf-8")).toString()
+}
+
+if (src) {
+  data = await readFromFile(src)
+}
+---
+
+<MarkmapaView client:idle value={data}>
+  <slot />
+</MarkmapaView>

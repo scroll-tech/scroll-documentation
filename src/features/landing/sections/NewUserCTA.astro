@@ -8,21 +8,40 @@ import i18next, { t } from "i18next"
 <section class="card">
   <img class="img" src={newToChainlink} width="48" height="49" alt="New to Chainlink and Smart Contracts?" />
   <div class="copy">
-    <h5>{t("landing.newUserCTA.title")}</h5>
-    <p>{t("landing.newUserCTA.description")}</p>
+    <h5 class="title">{t("landing.newUserCTA.title")}</h5>
+    <p class="description">{t("landing.newUserCTA.description")}</p>
   </div>
   <div class="spacer"></div>
-  <a class={clsx(button.primary, "cta-button")} href="/getting-started/conceptual-overview"> Get Started</a>
+  <div class="remix-callout">
+    <a href="/getting-started/conceptual-overview"> Get Started</a>
+  </div>
 </section>
 
 <style>
   .card {
     text-align: center;
     border: 0;
-    @apply bg-blue-100;
+    background-color: #fff0dd;
+    /* @apply bg-blue-100; */
   }
   .copy p {
     @apply text-value;
+  }
+  .copy .title {
+    color: #101010;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: 0.24px;
+    margin-bottom: 0;
+  }
+
+  .copy .description {
+    color: #101010;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 30px; /* 150% */
+    letter-spacing: 0.2px;
   }
 
   @media (min-width: 50em) {

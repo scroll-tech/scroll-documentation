@@ -1,6 +1,7 @@
 :root {
-  --font-family-text: "circular", Arial, "Helvetica Neue", Helvetica, sans-serif;
-  --font-family-code: "fira code", "Courier New", monospace, sans-serif;
+  --font-family-text: "trans-sans", "circular", Arial, "Helvetica Neue", Helvetica, sans-serif;
+  --font-family-code: "FTPolarMono", "Fira Code", "Courier New", monospace, sans-serif;
+  --font-family-body-text: "Roboto Flex", "trans-sans", "circular", Arial, "Helvetica Neue", Helvetica, sans-serif;
 
   /* Font weights */
   --font-weight-normal: 400;

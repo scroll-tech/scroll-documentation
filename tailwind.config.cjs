@@ -122,7 +122,7 @@ module.exports = {
         "bg-hover": "var(--theme-bg-hover)",
         "bg-offset": "var(--theme-bg-offset)",
         "bg-accent": "var(--theme-bg-accent)",
-        divider: "var(--theme-divider)",
+        divider: "#000000",
         accent: "var(--theme-accent)",
         "code-text": "var(--theme-code-text)",
         "code-bg": "var(--theme-code-bg)",
@@ -155,6 +155,9 @@ module.exports = {
         normal: "var(--font-weight-normal)",
         medium: "var(--font-weight-medium)",
         bold: "var(--font-weight-bold)",
+      },
+      fontSize: {
+        base: ['16px', '28px'],
       },
       height: {
         navbar: "var(--theme-navbar-height)",
