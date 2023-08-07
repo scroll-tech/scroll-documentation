@@ -50,8 +50,8 @@ export const resourceList = [
     href: "https://scroll.io/blog",
   },
   {
-    name: "User Guide",
-    href: "https://guide.scroll.io/",
+    name: "Documentation",
+    href: "https://docs.scroll.io/",
   },
   {
     name: "Press Kit",

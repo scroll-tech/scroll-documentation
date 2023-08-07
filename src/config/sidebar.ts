@@ -38,9 +38,12 @@ export const getSidebar = () => {
               },
             ],
           },
-          { title: t("sidebar.gettingStarted.scrollSepoliaBlockExplorer"), url: "https://blockscout.scroll.io/" },
+          {
+            title: t("sidebar.gettingStarted.scrollSepoliaBlockExplorer"),
+            url: "https://sepolia-blockscout.scroll.io/",
+          },
           { title: t("sidebar.gettingStarted.sepoliaBlockExplorer"), url: "https://sepolia.etherscan.io/" },
-          { title: t("sidebar.gettingStarted.rollupExplorer"), url: "https://scroll.io/alpha/rollupscan" },
+          { title: t("sidebar.gettingStarted.rollupExplorer"), url: "https://scroll.io/rollupscan" },
         ],
       },
       {
