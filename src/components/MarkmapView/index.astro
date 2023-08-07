@@ -6,24 +6,24 @@ import path from "node:path"
 import MarkmapaView from "./MarkmapaView.tsx"
 
 export type Props = {
-  src: string
+  src?: string
+  content?: string
 }
-const { src } = Astro.props as Props
-
-const data = (await fs.readFile(path.join(process.cwd(), "public", src), "utf-8")).toString()
-
+const { src, content } = Astro.props as Props
 // remove leading slashes
-const cleanSrc = src.replace(/^\/+/, "")
+const cleanSrc = src ? src.replace(/^\/+/, "") : ""
+
+let data: string = ""
+
+async function readFromFile(src: string) {
+  return (await fs.readFile(path.join(process.cwd(), "public", src), "utf-8")).toString()
+}
+
+if (src) {
+  data = await readFromFile(src)
+}
 ---
 
 <MarkmapaView client:idle value={data}>
-  {
-    `
-  # markmap 
-  - beautiful1 
-  - useful 
-  - easy 
-  - interactive
-  `
-  }
+  <slot />
 </MarkmapaView>

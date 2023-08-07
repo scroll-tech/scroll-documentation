@@ -1,10 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Transformer } from 'markmap-lib';
 import { Markmap } from 'markmap-view';
+import TurndownService from 'turndown';
 
-const transformer = new Transformer();
+
 
 export default function MarkmapHooks({value, children}) {
+  const turndownService = new TurndownService()
+  const transformer = new Transformer();
+
   // Ref for SVG element
   const refSvg = useRef<SVGSVGElement>();
   // Ref for markmap object
@@ -21,7 +25,8 @@ export default function MarkmapHooks({value, children}) {
     // Update data for markmap once value is changed
     const mm = refMm.current;
     if (!mm) return;
-    const { root } = transformer.transform(children?.props?.value || value);
+    const  markdown = turndownService.turndown(children?.props?.value) || value
+    const { root } = transformer.transform(markdown);
     mm.setData(root);
     mm.fit();
   }, [refMm.current, value]);
