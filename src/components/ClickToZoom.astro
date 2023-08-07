@@ -18,7 +18,9 @@ const { src, alt } = Astro.props as Props
   .click-to-zoom {
     cursor: zoom-in;
     height: auto;
-    width: 100%;
+    max-width: 100%;
+    margin: 3em auto !important;
+    display: block;
   }
 </style>
 <style is:global>

@@ -1,9 +1,9 @@
 .footerLayout {
   grid-template-areas: "logo about resource follow version";
-  @apply grid w-full pb-[80px] pt-[60px] px-[20px] grid-cols-2 gap-[1em] bg-[var(--black-100)] md:grid-cols-[2fr_2fr_2fr_2fr_4fr]  md:pb-[100px];
+  @apply grid w-full pb-[80px] pt-[60px] px-[20px] grid-cols-2 gap-[1em] bg-[var(--black-100)] lg:grid-cols-[2fr_2fr_2fr_2fr_4fr]  lg:pb-[100px];
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 50em) {
   .footerLayout {
     grid-template-areas:
       "logo follow"

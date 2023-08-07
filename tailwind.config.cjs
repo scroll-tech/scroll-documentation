@@ -5,9 +5,9 @@ module.exports = {
     screens: {
       xs: "375px",
       sm: "480px",
-      md: "768px",
-      lg: "992px",
-      xl: "1200px",
+      md: "37.75em", //604px
+      lg: "50em", // 800px
+      xl: "72em", // 1152px
     },
     extend: {
       borderRadius: {
@@ -157,7 +157,7 @@ module.exports = {
         bold: "var(--font-weight-bold)",
       },
       fontSize: {
-        base: ['16px', '28px'],
+        base: ["16px", "28px"],
       },
       height: {
         navbar: "var(--theme-navbar-height)",

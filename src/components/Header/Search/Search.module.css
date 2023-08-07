@@ -234,7 +234,7 @@
   }
 }
 
-@media (max-width: 1200px) and (min-width: 50em) {
+@media (max-width: 72em) and (min-width: 50em) {
   :global(.right-box .tools) {
     display: none;
   }

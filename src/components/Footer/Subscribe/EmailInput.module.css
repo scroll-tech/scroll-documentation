@@ -81,6 +81,7 @@
 .inputBase::placeholder {
   color: #dcdcdc;
 }
+
 @media (min-width: 50em) {
   .container {
     height: 54px;

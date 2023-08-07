@@ -9,6 +9,7 @@ import mdx from "@astrojs/mdx"
 import rehypeSlug from "rehype-slug"
 import rehypeAutolinkHeadings from "rehype-autolink-headings"
 import rehypeKatex from "rehype-katex"
+import rehypeMermaid from "rehype-mermaidjs"
 import remarkGfm from "remark-gfm"
 import remarkMath from "remark-math"
 import image from "@astrojs/image"
@@ -51,6 +52,7 @@ export default defineConfig({
     remarkPlugins: [remarkMath, remarkGfm],
     rehypePlugins: [
       rehypeSlug,
+      [rehypeMermaid, { strategy: "img-png" }],
       [
         rehypeAutolinkHeadings,
         {

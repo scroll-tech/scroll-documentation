@@ -1,4 +1,5 @@
 ---
+import NavCard from "~/components/NavCard.astro"
 import SectionHeader from "~/components/SectionHeader/index.astro"
 
 const navList = [
@@ -32,19 +33,7 @@ const navList = [
 <div class="navigate">
   <SectionHeader title="Navigate the Docs" content="Start developing on Scroll today." />
   <div class="navs">
-    {
-      navList.map(({ icon, name, content, link }) => (
-        <div class="navs-item">
-          <span style={{ background: `url(${icon}) center no-repeat` }} class="navs-item-icon" />
-          <span class="navs-item-title">{name}</span>
-          <span class="navs-item-content">{content}</span>
-          <a class="navs-item-link" href={link}>
-            Read more
-            <span class="link-icon" />
-          </a>
-        </div>
-      ))
-    }
+    {navList.map(({ icon, name, content, link }) => <NavCard icon={icon} name={name} content={content} link={link} />)}
   </div>
 </div>
 
@@ -57,76 +46,14 @@ const navList = [
     display: flex;
     justify-content: space-between;
   }
-  .navs-item {
-    width: 250px;
-    display: flex;
-    flex-direction: column;
-    gap: 26px;
-    margin-top: 100px;
-  }
 
-  .navs-item-icon {
-    display: inline-block;
-    width: 35px;
-    height: 35px;
-  }
-  .navs-item-title {
-    font-size: 22px;
-    font-weight: 600;
-  }
-  .navs-item-content {
-    font-size: 20px;
-    line-height: normal;
-    height: 84px;
-  }
-  .navs-item-link {
-    width: 123px;
-    height: 34px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 20px;
-    font-size: 16px;
-    text-decoration: 1px underline;
-    text-underline-offset: 2px;
-    color: #c58d49;
-    background-color: #fff0dd;
-  }
-  .navs-item-link:hover {
-    background-color: #ffdeb5;
-  }
-
-  .link-icon {
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    margin-left: 2px;
-    background: url(/svgs/home-link.svg) center no-repeat;
-  }
-
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: 50em) {
     .navigate {
       margin-top: 106px;
     }
     .navs {
       flex-direction: column;
       align-items: center;
-    }
-    .navs-item {
-      align-items: center;
-      gap: 8px;
-      width: 260px;
-    }
-    .navs-item-title {
-      font-size: 20px;
-      line-height: normal;
-    }
-    .navs-item-content {
-      text-align: center;
-      height: auto;
-    }
-    .navs-item-link {
-      margin-top: 14px;
     }
   }
 </style>

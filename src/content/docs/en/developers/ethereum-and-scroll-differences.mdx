@@ -1,0 +1,105 @@
+---
+section: developers
+date: Last Modified
+title: "Ethereum & Scroll Differences"
+lang: "en"
+permalink: "developers/ethereum-and-scroll-differences"
+excerpt: "There are a number of technical details that differ between Ethereum mainnet's EVM and Scroll's modified design for a zkEVM. Below you can see those differences as they exist now."
+---
+
+import Aside from "../../../../components/Aside.astro"
+
+There are a number of technical details that differ between Ethereum mainnet's EVM and Scroll's modified design for a zkEVM. Below you can see those differences as they exist now.
+
+For open-source contributors and infrastructure builders, please contact our team for additional support.
+
+<Aside type="tip" title="Don't Worry!">
+  For the average Solidity developer, these details won't affect your development experience.
+</Aside>
+
+## EVM Opcodes
+
+| Opcode                      | Solidity equivalent | Ethereum Behavior                                                                                                                                                                                                                                                          | Scroll Behavior                                                                                            |
+| --------------------------- | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `BLOCKHASH`                 | `block.blockhash`   | <p><strong>Input:</strong> <code>blockNumber</code> from top of the stack, and the valid range is [<code>NUMBER</code>-256, <code>NUMBER</code>-1].</p><p><strong>Output:</strong> hash of the given block number, or 0 if the block number is not in the valid range.</p> | Returns `keccak(chain_id \|\| block_number)` for the last 256 blocks.                                      |
+| `COINBASE`                  | `block.coinbase`    | In Ethereum Clique, the eth address of the signer.                                                                                                                                                                                                                         | Returns the pre-deployed fee vault contract address. See [Scroll Contracts](/developers/scroll-contracts). |
+| `DIFFICULTY` / `PREVRANDAO` | `block.difficulty`  | After PoS, the previous block’s `randao` value.                                                                                                                                                                                                                            | Returns 0.                                                                                                 |
+| `BASEFEE`                   | `block.basefee`     | With EIP-1559: the minimum gas fee a user must pay to include a transaction in the next block                                                                                                                                                                              | Disabled.[^eip1559] If the opcode is encountered, the transaction will be reverted.                        |
+| `SELFDESTRUCT`              | `selfdestruct`      | Plans to deprecate and substitute with `SENDALL`[^sendall]                                                                                                                                                                                                                 | Disabled. If the opcode is encountered, the transaction will be reverted.[^willadpot]                      |
+
+[^sendall]: See [EIP-4758](https://eips.ethereum.org/EIPS/eip-4758) for more details.
+[^willadpot]: Will change to adopt Ethereum’s solution in the future.
+[^eip1559]: We have currently disabled EIP-1559 on Scroll.
+
+## EVM Precompiles
+
+The `SHA2-256` (address `0x2`), `RIPEMD-160` (address `0x3`), and `blake2f` (address `0x9`) precompiles are currently not supported. Calls to these precompiled contracts will revert. We plan to enable these three precompiles in a future hard fork.
+
+The `modexp` precompile is supported but only supports inputs of size less than or equal to 32 bytes (i.e. `u256`).
+
+The `ecPairing` precompile is supported, but the number of points(sets, pairs) is limited to 4, instead of 6.
+
+The other EVM precompiles are all supported: `ecRecover`, `identity`, `ecAdd`, `ecMul`.
+
+## State Account
+
+### **Additional Fields**
+
+We added two fields in the current `StateAccount` object: `PoseidonCodehash` and `CodeSize`.
+
+```go
+type StateAccount struct {
+	Nonce    uint64
+	Balance  *big.Int
+	Root     common.Hash // merkle root of the storage trie
+	KeccakCodeHash []byte // still the Keccak codehash
+	// added fields
+	PoseidonCodeHash []byte // the Poseidon codehash
+	CodeSize uint64
+}
+```
+
+### **CodeHash**
+
+Related to this, we maintain two types of codehash for each contract bytecode: Keccak hash and Poseidon hash.
+
+`KeccakCodeHash` is kept to maintain compatibility for `EXTCODEHASH`. `PoseidonCodeHash` is used for verifying correctness of bytecodes loaded in the zkEVM, where Poseidon hashing is far more efficient.
+
+### CodeSize
+
+When verifying `EXTCODESIZE`, it is expensive to load the whole contract data into the zkEVM. Instead, we store the contract size in storage during contract creation. This way, we do not need to load the code — a storage proof is sufficient to verify this opcode.
+
+## Block Time
+
+The Sepolia Testnet aims for a constant block time of 3 seconds. This is shorter and more consistent than the 12 seconds used in the Ethereum under ideal conditions.
+
+This was chosen for two reasons:
+
+- Having faster, constant block time results in quicker feedback and a better user experience.
+- As we optimize the zkEVM circuits in our testnets, even if we maintain a smaller gas limit per block or batch, we can still reach higher throughput than Ethereum.
+
+## Future EIPs
+
+We keep a close on eye on all emerging EIPs adopted by Ethereum and adopt them when suitable. If you’re interested in more specifics, reach out in [our community forum](https://community.scroll.io) or on the [Scroll Discord](https://discord.gg/scroll).
+
+## EVM Target version
+
+To ensure no unexpected behaviour happens in your contracts, we recommend using `london` as target version when compiling your smart contracts.
+
+You can read in more details on Shanghai hard fork differences from London on the [Ethereum Execution spec](https://github.com/ethereum/execution-specs/blob/master/network-upgrades/mainnet-upgrades/shanghai.md) and how the new `PUSH0` instruction [impacts the Solidity compiler](https://blog.soliditylang.org/2023/05/10/solidity-0.8.20-release-announcement/).
+
+{/* TODO: Is this still true after our support for PUSH0? */}
+
+## Transaction Fees
+
+The fee charged to Scroll Sepolia transactions contains two parts:
+
+- **L2 gas fee:** similar to L1, the amount of L2 execution fee equals to `L2_gas_price * L2_gas_used`, covering the following costs:
+  - L2 sequencer execution & storage cost
+  - Validity proof verification and finalization cost on L1
+  - Prover cost
+- **L1 data fee:** additional fee on top of L2 gas fee. The L1 data fee is only charged to L2-initiated transactions, not to L1-initiated transactions. The fee covers the cost of sending data to L1 for data availability. Because we roll up the tx data to L1, the L1 rollup fee is calculated based on the size of tx data.
+
+For more information, see [Transaction Fees on Scroll](/developers/transaction-fees-on-scroll).
+
+---
