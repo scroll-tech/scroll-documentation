@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react"
+import React, { useState, useCallback, useEffect } from "react"
 import styles from "./Search.module.css"
 
 import { useKeyPress } from "~/hooks/useKeyPress"
@@ -10,6 +10,16 @@ export default function Search() {
   const onOpen = useCallback(() => {
     setIsOpen(true)
   }, [setIsOpen])
+
+
+  useEffect(() => {
+    const body = document.getElementsByTagName("body")[0]
+    if (isOpen) {
+      body.classList.add("mobile-sidebar-toggle")
+    } else {
+      body.classList.remove("mobile-sidebar-toggle")
+    }
+  }, [isOpen])
 
   const onClose = useCallback(() => {
     setTimeout(() => {
