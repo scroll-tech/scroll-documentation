@@ -11,13 +11,17 @@ changeLanguage("en")
 
 <HomeLayout dark>
   <div class="header">
-    <p class="header-title">Welcome to<br /> Scroll Documentation</p>
-    <Search client:visible />
+    <div class="inner">
+      <p class="header-title">Welcome to<br /> Scroll Documentation</p>
+      <Search client:visible />
+    </div>
   </div>
   <div class="content">
-    <QuickStart />
-    <Navigate />
-    <ConnectUs />
+    <div class="inner">
+      <QuickStart />
+      <Navigate />
+      <ConnectUs />
+    </div>
   </div>
 </HomeLayout>
 
@@ -26,6 +30,10 @@ changeLanguage("en")
     height: 390px;
     background-color: var(--color-text-primary);
     padding: 70px 60px 110px;
+  }
+  .inner {
+    max-width: 1400px;
+    margin: 0 auto;
   }
   .header-title {
     color: var(--white);
@@ -39,7 +47,7 @@ changeLanguage("en")
     background-color: #fff8f3;
   }
 
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: 50em) {
     .header {
       height: 350px;
       padding: 70px 20px 115px;

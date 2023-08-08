@@ -59,7 +59,28 @@ const toolList = [
     font-weight: 600;
   }
 
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: 72em) {
+    .tools-item figure {
+      font-size: 0;
+      width: 12vw;
+      height: 12vw;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      background-color: #fff0dd;
+    }
+
+    .tools-item figure img {
+      width: 8vw;
+    }
+
+    .tools-item span {
+      font-size: 18px;
+    }
+  }
+
+  @media screen and (max-width: 50em) {
     .tools {
       flex-wrap: wrap;
       gap: 50px;

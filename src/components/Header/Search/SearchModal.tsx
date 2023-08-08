@@ -12,20 +12,20 @@ const searchClient = algoliasearch(CONFIG.ALGOLIA.appId, CONFIG.ALGOLIA.publicAp
 
 const recommendedArticles = [
   {
-    title: "Suggested Article A",
-    url: "/",
+    title: "User Guide",
+    url: "/en/user-guide",
   },
   {
-    title: "Suggested Article B",
-    url: "/",
+    title: "Developer Quickstart",
+    url: "/en/developers/developer-quickstart",
   },
   {
-    title: "Suggested Article C",
-    url: "/",
+    title: "Sepolia Testnet Contracts",
+    url: "/en/developers/alpha-testnet-contracts",
   },
   {
-    title: "Suggested Article D",
-    url: "/",
+    title: "Architecture Overview",
+    url: "/en/technology/architecture/scroll-architecture",
   },
 ]
 
@@ -141,7 +141,7 @@ export function SearchModal({ size = "mini", isOpen, onClose }: { size: Size; is
   const getIndexName = () => {
     if (typeof window === "undefined") return
     const host = window.location.hostname
-    if (host === "docs.scroll.io") return CONFIG.ALGOLIA.productionIndexName
+    if (host === "docs.scroll.io" || host === "docs.scroll.xyz") return CONFIG.ALGOLIA.productionIndexName
     return CONFIG.ALGOLIA.testIndexName
   }
 

@@ -16,7 +16,7 @@ const { content = {}, frontmatter } = Astro.props
 const headings = Astro.props?.headings || Astro.props?.content?.astro.headings
 
 const currentPage = new URL(Astro.request.url).pathname
-const currentFile = `src/pages${currentPage.replace(/\/$/, "")}.${frontmatter?.file.split(".").pop() || "md"}`
+const currentFile = `src/content/docs${currentPage.replace(/\/$/, "")}.${frontmatter?.file.split(".").pop() || "md"}`
 const githubEditUrl = CONFIG.GITHUB_EDIT_URL + currentFile
 const formattedContentTitle = content.title
   ? `${content.title} | ${CONFIG.SITE.title}`
@@ -46,6 +46,10 @@ changeLanguage(content.lang)
       href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@500&family=Roboto+Flex:opsz,wght@8..144,400;8..144,500;8..144,600&display=swap"
       rel="stylesheet"
     />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Roboto+Flex:opsz,wght@8..144,400;8..144,500;8..144,600&display=swap"
+      rel="stylesheet"
+    />
     <style>
       body {
         width: 100%;
@@ -62,6 +66,10 @@ changeLanguage(content.lang)
         overflow-x: hidden;
         margin-left: 20px;
         margin-right: 20px;
+      }
+
+      .layout :global(*) {
+        font-family: var(--font-family-body-text);
       }
 
       .layout :global(> *) {

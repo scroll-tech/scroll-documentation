@@ -2,7 +2,7 @@
 
 /* Heading styles */
 :where(h1, h2, h3, h4, h5, h6) {
-  @apply font-text leading-[1.3] font-medium tracking-[0.18px];
+  @apply leading-[1.3] font-medium tracking-[0.18px];
 }
 
 :where(h6) {
@@ -29,7 +29,7 @@
   @apply text-[40px] mb-4 leading-[1];
 }
 
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 50em) {
   :where(h3) {
     @apply text-[1.75rem];
   }
@@ -92,7 +92,7 @@
   @apply text-[2rem] mb-4;
 }
 
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 50em) {
   :where(.heading-400) {
     @apply text-[1.75rem];
   }
@@ -163,7 +163,7 @@
   @apply text-[3rem] mb-6;
 }
 
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 50em) {
   :where(.display-400) {
     @apply text-[2.5rem];
   }
