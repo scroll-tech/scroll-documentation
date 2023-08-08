@@ -4,8 +4,8 @@ date: Last Modified
 title: "Polynomial Commitment Schemes"
 lang: "en"
 permalink: "learn/zero-knowledge/polynomial-commitment-schemes"
-# excerpt: ""
-# whatsnext: { "zkEVM Overview": "/technology/zkevm-overview" }
+excerpt: "Polynomial commitment schemes are a core building block of zero-knowledge proof system"
+whatsnext: { "KZG Commitment Scheme": "/learn/zero-knowledge/kzg-commitment-scheme" }
 ---
 
 Polynomial commitment schemes are a core building block of zero-knowledge proof systems (as well as other cryptographic protocols).
