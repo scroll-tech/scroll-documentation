@@ -17,11 +17,11 @@ the messenger smart contract deployed on L1. If you want to send a message from 
   When sending a transaction through the **Scroll Messenger** deployed on L1 and L2, the resulting transaction sender
   (`CALLER` or `msg.sender`) will be the Messenger Contract address deployed on the receiving chain. In future Scroll
   versions, enforced transactions will be introduced as a L1 contract. Sending enforced transactions will allow setting
-  the sender on L2 as the original one on L1. It will also allow 3rd parties to relay signed transactions and also
-  setting the&#x20;
+  the sender on L2 as the original one on L1. It will also allow 3rd parties to relay signed transactions in a secure
+  way.
 </Aside>
 
-### Finalizing transactions from L2
+### Finalizing transactions on L1
 
 Any upcoming transactions from L2 need to be finalized using the `relayMessageWithProof` function on the Scroll Messenger
 contract. This includes both arbitrary messages and transfering assets through a gateway or the router. When you use
@@ -83,6 +83,13 @@ The API should return your transaction data on the following format:
 The `claimInfo` object under the `result` json returned has all the information needed to execute your transaction on L1. The
 parameters needed by the `relayMessageWithProof` are: `from`, `to`, `value`, `nonce`, `message` and `proof`. Supply them to
 the `relayMessageWithProof` function on L1 to execute and finalize your transaction on L1.
+
+<Aside type="tip" title="">
+  All L2 transactions are boundled into batches, you have to wait for the batch where your transaction is included to
+  finish before calling `relayMessageWithProof`. Your transaction batch index is returned in the `batch_index` value on
+  the `/claimable` endpoint and you can follow the progress on the [Scroll Rollup
+  Scan](https://sepolia--scroll-io.netlify.app/rollupscan?page=1&per_page=10).
+</Aside>
 
 ## Messenger API
 

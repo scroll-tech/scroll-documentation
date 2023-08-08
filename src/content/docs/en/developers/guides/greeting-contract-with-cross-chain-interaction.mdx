@@ -7,6 +7,8 @@ permalink: "developers/guides/greeting-contract-with-cross-chain-interaction"
 excerpt: "In this example, we will launch a dummy smart contract on either Sepolia or Scroll testnet and interact with it from the opposite chain."
 ---
 
+import Aside from "../../../../../components/Aside.astro"
+
 In this example, we will launch a dummy smart contract on either Sepolia or Scroll testnet and interact with it from the opposite chain. We will be using the `ScrollMessenger` that is deployed on both Sepolia and Scroll testnet.
 
 #### Target Smart Contract
@@ -71,7 +73,18 @@ We pass the message by executing the `executeFunctionCrosschain` by passing the 
 - `targetAddress`: The address of the `Greeter` contract on the opposite chain.
 - `value`: In this case, it is `0` because the `setGreeting`is not payable.
 - `greeting`: This is the parameter that will be sent through the message. Try passing `“This message was crosschain!”`
-- `gasLimit`: If you are sending the message from L1 to L2, around `5000` gas limit should be more than enough. If you are sending this from L2 to L1, you can pass `0` because this is an optional parameter.
+- `gasLimit`: If you are sending the message from L1 to L2, around `5000` gas limit should be more than enough. If you are sending this from L2 to L1, you can pass `0` because this is an optional parameter since the transaction will need to be finalized by executing an extra transaction on L1.
+
+<Aside type="caution" title="">
+  When a transaction is sent from L2 to L1 you will also need to call `relayMessageWithProof` on the Scroll Messanger
+  contract. You can do it directly on Sepolia Scan
+  [here](https://sepolia.etherscan.io/address/0x50c7d3e7f7c656493d1d76aaa1a836cedfcbb16a#writeProxyContract#F3). You
+  will need to pass the ZK proof of the batch and other paramaters that you can query on the Scroll API using this
+  format: `https://sepolia-api-bridge.scroll.io/api/claimable?address=GREETEROPERATORADDRESSONL2&page_size=10&page=1`
+  where `GREETEROPERATORADDRESSONL2` is your GreeterOperator contract address launched on L2. If you want to know more
+  information abut Finalizng transactions on L2 please refere to the [Scroll Messenger
+  documentation](../l1-and-l2-bridging/the-scroll-messenger).
+</Aside>
 
 After executing and confirming the transaction on both L1 and L2, the new state of `greeting` on the `Greeter` contract should be `“This message was crosschain!”`. Sending a message from one chain to the other should take around 20mins after the transactions are confirmed on the origin chain.
 
