@@ -9,7 +9,9 @@ excerpt: "The Scroll Messenger documentation for arbitrary message passing betwe
 
 import Aside from "../../../../../components/Aside.astro"
 
-You can send arbitrary messages from L1 to L2 or vice versa through the Scroll Messenger contracts. This means we can execute functions on another chain in a secure and permissionless way. If you want to send a message from L1 to L2, use the messenger smart contract deployed on L1. If you want to send a message from L2 to L1, use the contract deployed on L1.
+You can send arbitrary messages from L1 to L2 or vice versa through the Scroll Messenger contracts. This means we can
+execute functions on another chain in a secure and permissionless way. If you want to send a message from L1 to L2, use
+the messenger smart contract deployed on L1. If you want to send a message from L2 to L1, use the contract deployed on L1.
 
 <Aside type="caution" title="">
   When sending a transaction through the **Scroll Messenger** deployed on L1 and L2, the resulting transaction sender
@@ -18,6 +20,76 @@ You can send arbitrary messages from L1 to L2 or vice versa through the Scroll M
   the sender on L2 as the original one on L1. It will also allow 3rd parties to relay signed transactions and also
   setting the&#x20;
 </Aside>
+
+### Finalizing transactions from L2
+
+All upcoming transactions from L2 have to be finalized by using the `relayMessageWithProof` function on the Scroll Messenger.
+This includes both arbitrary messages and asset transfers through the gateway and router. When calling `relayMessageWithProof`
+you will need to provide the ZK proof of your transaction and other information as well. This can be done in a local and
+permissionless way. You can also use our backend API running at `https://sepolia-api-bridge.scroll.io/api/`.
+Supply the address of the EOA or contract that sent original transaction on L2 to the `/claimable` endpoint to retrieve
+all the parameters needed to finalize the transaction on L1 like in the following example:
+
+Any upcoming transactions from L2 need to be finalized using the `relayMessageWithProof` function on the Scroll Messenger
+contract. This includes both arbitrary messages and transfering assets through a gateway or the router. When you use
+`relayMessageWithProof`, you'll have to provide the ZK proof of your transaction along with other parameters. This
+can be done in a locally and permissionlessly. Alternatively, you can retrieve the parameters through our backend API
+at https://sepolia-api-bridge.scroll.io/api/.
+
+Supply the address of the EOA or contract responsible for initiating the original transaction on L2 to the `/claimable`
+endpoint. The API backend will provide you with all the necessary information to successfully conclude the transaction on L1.
+Take a look at the following example:
+
+```bash
+https://sepolia-api-bridge.scroll.io/api/claimable?address=0x031407eaaffFB4f1EC2c999bE4477E52C81de3c5&page_size=10&page=1
+```
+
+The API should return your transaction data on the following format:
+
+```json
+{
+  "errcode": 0,
+  "errmsg": "",
+  "data": {
+    "result": [
+      {
+        "hash": "0xa476850306d6ee52b127628ded34dcf2343570873cce9c5383bd497db48d4f9b",
+        "amount": "",
+        "to": "",
+        "isL1": false,
+        "l1Token": "",
+        "l2Token": "",
+        "blockNumber": 748,
+        "blockTimestamp": null,
+        "finalizeTx": {
+          "hash": "",
+          "amount": "",
+          "to": "",
+          "isL1": false,
+          "blockNumber": 0,
+          "blockTimestamp": null
+        },
+        "claimInfo": {
+          "from": "0x031407eaaffFB4f1EC2c999bE4477E52C81de3c5",
+          "to": "0x1039057185CFe192d16c03F5656225821A193FD5",
+          "value": "0",
+          "nonce": "9",
+          "batch_hash": "0x49a18d72dbceeb957f918947b532db452c031f528e7e6bf329007066638c5e50",
+          "message": "0xa413686200000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000005686f6c6973000000000000000000000000000000000000000000000000000000",
+          "proof": "0x69b4ee6cf9a38bed79668ddd347fef2bdff44c3760c9309fa41decfd60202d22ad3228b676f7d3cd4284a5443f17f1962b36e491b30a40b2405849e597ba5fb5b4c11951957c6f8f642c4af61cd6b24640fec6dc7fc607ee8206a99e92410d3079f53171df5c0661d2afe86c4d97b6f34278daf6a0ea9baff5b4fc979d5629a5",
+          "batch_index": "93"
+        },
+        "createdTime": null
+      }
+    ],
+    "total": 1
+  }
+}
+```
+
+The `claimInfo` object under the `result` json returned has all the information needed to execute your transaction on L1. The
+parameters needed by the `relayMessageWithProof` are: `from`, `to`, `value`, `nonce`, `message` and `proof`. Supply them to
+the `relayMessageWithProof` function on L1 to execute and finalize your transaction on L1.
 
 ## Messenger API
 
