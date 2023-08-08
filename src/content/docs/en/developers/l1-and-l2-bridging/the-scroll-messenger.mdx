@@ -23,13 +23,6 @@ the messenger smart contract deployed on L1. If you want to send a message from 
 
 ### Finalizing transactions from L2
 
-All upcoming transactions from L2 have to be finalized by using the `relayMessageWithProof` function on the Scroll Messenger.
-This includes both arbitrary messages and asset transfers through the gateway and router. When calling `relayMessageWithProof`
-you will need to provide the ZK proof of your transaction and other information as well. This can be done in a local and
-permissionless way. You can also use our backend API running at `https://sepolia-api-bridge.scroll.io/api/`.
-Supply the address of the EOA or contract that sent original transaction on L2 to the `/claimable` endpoint to retrieve
-all the parameters needed to finalize the transaction on L1 like in the following example:
-
 Any upcoming transactions from L2 need to be finalized using the `relayMessageWithProof` function on the Scroll Messenger
 contract. This includes both arbitrary messages and transfering assets through a gateway or the router. When you use
 `relayMessageWithProof`, you'll have to provide the ZK proof of your transaction along with other parameters. This
