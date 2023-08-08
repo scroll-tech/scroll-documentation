@@ -84,6 +84,15 @@ function EmptyQueryBoundary({ children, fallback }) {
   return children
 }
 
+function transformPath(path) {
+  path = path.replace('src/content/docs', '');
+
+  path = path.substring(0, path.lastIndexOf('.')) || path;
+
+  return path;
+}
+
+
 function NoResultsBoundary({ children }) {
   const { results } = useInstantSearch()
 
@@ -118,7 +127,7 @@ function CustomHits({ title, hitClassName, ...props }: UseHitsProps & { title: s
             <li style={{ borderRadius: "var(--border-radius-primary)" }}>
               <a
                 // style={{ padding: "var(--space-1x) var(--space-2x)" }}
-                href={hit.url}
+                href={hit.url && transformPath(hit.url)}
                 className={clsx(styles.hit, hitClassName, "paragraph-200")}
                 dangerouslySetInnerHTML={{
                   __html: hit._highlightResult.title.value,
