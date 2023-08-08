@@ -4,8 +4,8 @@ date: Last Modified
 title: "KZG Commitment Scheme"
 lang: "en"
 permalink: "learn/zero-knowledge/kzg-commitment-scheme"
-# excerpt: ""
-# whatsnext: { "zkEVM Overview": "/technology/zkevm-overview" }
+excerpt: "KZG is used Ethereum’s Proto-Danksharding, and is also used in Scroll’s proof system. This article will give an overview of the KZG commitment scheme."
+whatsnext: { "Additional Resources": "/learn/zero-knowledge/additional-zk-learning-resources" }
 ---
 
 One of the most widely used polynomial commitment schemes is the KZG commitment scheme. The scheme was originally [published](https://www.iacr.org/archive/asiacrypt2010/6477178/6477178.pdf) in 2010 by Kate, Zaverucha, and Goldberg.
