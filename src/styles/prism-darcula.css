@@ -66,6 +66,7 @@ pre[class*="language-"] {
   background: #2b2b2b;
   border-radius: 27px;
   padding: 17px;
+  padding-right: 70px;
 }
 
 /* Inline code */
