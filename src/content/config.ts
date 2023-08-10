@@ -28,8 +28,6 @@ const docsCollection = defineCollection({
       .optional(),
 
     whatsnext: z.record(z.string()).optional(),
-    isMd: z.boolean().optional(),
-    isIndex: z.boolean().optional(),
   }),
 })
 

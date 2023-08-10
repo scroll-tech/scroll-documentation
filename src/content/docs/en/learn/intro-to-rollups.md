@@ -5,7 +5,6 @@ title: "Intro to Rollups"
 lang: "en"
 permalink: "learn/intro-to-rollups"
 excerpt: "Rollups are the most predominant layer 2 scaling solution in the Ethereum ecosystem."
-isMd: true
 # whatsnext: { "zkEVM Overview": "/technology/zkevm-overview" }
 ---
 

@@ -6,7 +6,6 @@ lang: "en"
 permalink: "docs/conceptual-overview/"
 excerpt: "ZK Rollups and Scroll"
 whatsnext: { "User Guide": "/user-guide/", "Building on Scroll": "/developers/" }
-isMd: true
 ---
 
 #### Welcome to the Scroll docs!

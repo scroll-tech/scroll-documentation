@@ -6,6 +6,7 @@ import MainLayout from "../../layouts/MainLayout.astro"
 export async function getStaticPaths() {
   const pages = await getCollection("docs")
   const languages = i18next.languages
+
   const allSlugs = new Set(
     pages.map((page) => {
       const [, ...slug] = page.slug.split("/")
@@ -52,6 +53,7 @@ const content = {
   ...page.data,
   lang: params.lang,
   url: Astro.url.pathname,
+  file: page.id,
 }
 ---
 

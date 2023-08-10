@@ -5,7 +5,6 @@ title: "Greeting Contract with Cross-chain Interaction"
 lang: "en"
 permalink: "developers/guides/greeting-contract-with-cross-chain-interaction"
 excerpt: "In this example, we will launch a dummy smart contract on either Sepolia or Scroll testnet and interact with it from the opposite chain."
-isMd: true
 ---
 
 In this example, we will launch a dummy smart contract on either Sepolia or Scroll testnet and interact with it from the opposite chain. We will be using the `ScrollMessenger` that is deployed on both Sepolia and Scroll testnet.

@@ -6,7 +6,6 @@ lang: "en"
 permalink: "technology/intro-to-zkevm"
 excerpt: "ZK rollups are widely recognized as the ideal scaling solution for Ethereum."
 whatsnext: { "zkEVM Overview": "/technology/zkevm/zkevm-overview" }
-isMd: true
 ---
 
 ## Introduction and motivation
