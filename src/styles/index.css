@@ -217,12 +217,14 @@ table {
   @apply text-primary font-text border-none;
   border-radius: 10px;
   position: relative;
+  z-index: 1;
 }
 
-table::after {
+table::before {
   content: "";
   display: block;
   position: absolute;
+  z-index: -1;
   top: 0;
   left: 0;
   bottom: 0;
