@@ -20,6 +20,9 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site)
     <HeadSEO content={content} canonicalURL={canonicalURL} site="" />
     <title>{formattedContentTitle}</title>
     <style>
+      html {
+        scrollbar-gutter: stable;
+      }
       body {
         --doc-padding: 65px;
       }
