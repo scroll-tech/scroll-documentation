@@ -10,9 +10,9 @@ export default function Search() {
   useEffect(() => {
     const body = document.body
     if (isOpen) {
-      body.classList.add("mobile-sidebar-toggle")
+      body.classList.add("global-search-toggle")
     } else {
-      body.classList.remove("mobile-sidebar-toggle")
+      body.classList.remove("global-search-toggle")
     }
   }, [isOpen])
 

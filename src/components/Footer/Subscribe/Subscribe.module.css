@@ -31,7 +31,7 @@
   /* position: "relative", mt: ["3.2rem", "3.2rem", 0], flex: 1, width: ["100%", "auto"], textAlign: "right"  */
   position: relative;
   /* margin-top: 32px; */
-  width: 448px;
+  width: 100%;
   text-align: left;
 }
 
@@ -67,6 +67,7 @@
   }
 
   .emailBox {
+    width: 448px;
     text-align: right;
   }
 
