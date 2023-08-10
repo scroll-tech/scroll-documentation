@@ -5,6 +5,7 @@ title: "Common Errors"
 lang: "en"
 permalink: "user-guide/common-errors/"
 excerpt: "Seeing an error when trying to interact with Scroll Sepolia Testnet? Here are some common configuration errors and how to quickly fix them."
+isMd: true
 ---
 
 ## Incorrect nonce error when sending a transaction in MetaMask

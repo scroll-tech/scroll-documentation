@@ -51,6 +51,7 @@ if (!page.notTranslated) {
 const content = {
   ...page.data,
   lang: params.lang,
+  url: Astro.url.pathname,
 }
 ---
 

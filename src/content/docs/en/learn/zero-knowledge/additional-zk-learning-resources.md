@@ -5,6 +5,7 @@ title: "Additional ZK Learning Resources"
 lang: "en"
 permalink: "learn/zero-knowledge/additional-zk-learning-resources"
 excerpt: "Looking to dive deeper into ZK? Here are some of our favorite resources."
+isMd: true
 ---
 
 Looking to dive deeper into ZK? Here are some of our favorite resources.

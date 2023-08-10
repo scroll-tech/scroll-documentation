@@ -6,6 +6,7 @@ lang: "en"
 permalink: "user-guide/faucet/"
 whatsnext: { "Bridge your ETH to Scroll Sepolia": "/user-guide/bridge" }
 excerpt: "To interact with our testnet, you first need to acquire Sepolia ETH. There are a few Sepolia faucet apps to get you started."
+isMd: true
 ---
 
 To interact with our testnet, you first need to receive testnet ETH on _Sepolia Testnet_. Then you may bridge from _Sepolia Testnet_ to _Scroll Sepolia Testnet_.

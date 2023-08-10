@@ -5,6 +5,7 @@ title: "Transfer Tokens"
 lang: "en"
 permalink: "user-guide/transfer-tokens/"
 excerpt: "You can use your wallet as usual to transfer tokens within the Scroll Sepolia Testnet."
+isMd: true
 ---
 
 You can use your wallet's normal function for transferring tokens within the Scroll Sepolia Testnet -- no additional configurations are needed.

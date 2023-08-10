@@ -6,6 +6,8 @@ lang: "en"
 permalink: "user-guide/"
 excerpt: "Thank you for testing out our Sepolia Testnet. The Sepolia Testnet consists of Ethereum's Sepolia Testnet and the Scroll Sepolia test network."
 whatsnext: { "Set Up Your Wallet": "/user-guide/setup" }
+isMd: true
+isIndex: true
 ---
 
 Thank you for testing the Scroll Sepolia Testnet. If you have questions or want to give feedback, join our [Discord](https://discord.gg/scroll)!

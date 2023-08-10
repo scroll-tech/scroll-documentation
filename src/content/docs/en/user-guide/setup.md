@@ -6,6 +6,7 @@ lang: "en"
 permalink: "user-guide/setup/"
 whatsnext: { "Grab Sepolia ETH from a Faucet": "/user-guide/faucet" }
 excerpt: "You need to have a wallet to interact with the Scroll Testnet. You can find some example wallets and configuration tips here."
+isMd: true
 ---
 
 ## Wallet

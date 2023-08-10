@@ -5,6 +5,7 @@ title: "Bridge ERC20 through the Custom Gateway"
 lang: "en"
 permalink: "developers/guides/bridge-erc20-through-the-custom-gateway"
 excerpt: "This guide will walk through how to use Scroll's bridge for ERC20s that need custom functionality using the Custom Gateway."
+isMd: true
 ---
 
 This guide will walk through how to use Scroll's bridge for ERC20s that need custom functionality using the Custom Gateway.

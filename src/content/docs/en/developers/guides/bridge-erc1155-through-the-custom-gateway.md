@@ -5,6 +5,7 @@ title: "Bridge ERC1155 through the Custom Gateway"
 lang: "en"
 permalink: "developers/guides/bridge-erc1155-through-the-custom-gateway"
 excerpt: "Whenever you want to bridge an ERC1155 NFT, you may interact with the Gateway and NFT contracts on Sepolia and Scroll testnet. In this guide, we'll cover different approaches to doing so."
+isMd: true
 ---
 
 Whenever you want to bridge an ERC1155 NFT, you may interact with the Gateway and NFT contracts on Sepolia and Scroll testnet. In this guide, we'll cover different approaches to doing so.

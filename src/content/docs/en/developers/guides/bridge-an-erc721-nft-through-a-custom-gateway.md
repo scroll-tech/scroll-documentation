@@ -5,6 +5,7 @@ title: "Bridge an ERC721 NFT through a Custom Gateway"
 lang: "en"
 permalink: "developers/guides/bridge-an-erc721-nft-through-a-custom-gateway"
 excerpt: "Whenever you want to bridge an ERC721 NFT, you may interact with the Gateway and NFT contracts on Sepolia and Scroll testnet. In this guide, we'll cover different ways of doing so."
+isMd: true
 ---
 
 Whenever you want to bridge an ERC721 NFT, you may interact with the Gateway and NFT contracts on Sepolia and Scroll testnet. In this guide, we'll cover different ways of doing so.
