@@ -180,7 +180,7 @@ export const getSidebar = () => {
         section: t("sidebar.technology.scrollChain"),
         contents: [
           {
-            title: t("sidebar.technology.accounts"),
+            title: t("sidebar.technology.accountsAndState"),
             url: "technology/chain/accounts",
           },
           {
@@ -202,6 +202,23 @@ export const getSidebar = () => {
         ],
       },
       {
+        section: t("sidebar.technology.bridge"),
+        contents: [
+          {
+            title: t("sidebar.technology.crossDomainMessaging"),
+            url: "technology/bridge/cross-domain-messaging",
+          },
+          {
+            title: t("sidebar.technology.depositGateway"),
+            url: "technology/bridge/deposit-gateways",
+          },
+          {
+            title: t("sidebar.technology.withdrawGateway"),
+            url: "technology/bridge/withdraw-gateways",
+          },
+        ],
+      },
+      {
         section: t("sidebar.technology.zkevm"),
         contents: [
           {
@@ -211,19 +228,6 @@ export const getSidebar = () => {
           {
             title: t("sidebar.technology.zkevmOverview"),
             url: "technology/zkevm/zkevm-overview",
-          },
-        ],
-      },
-      {
-        section: t("sidebar.technology.bridge"),
-        contents: [
-          {
-            title: t("sidebar.technology.bridgeOverview"),
-            url: "technology/bridge/bridge-overview",
-          },
-          {
-            title: t("sidebar.technology.rollupProcess"),
-            url: "technology/bridge/rollup-process",
           },
         ],
       },
