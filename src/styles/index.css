@@ -172,12 +172,12 @@ strong {
   --padding-inline: 0.33rem;
 
   font-size: 0.85em;
-  color: var(--orange-500);
+  color: var(--black-100);
   padding: var(--padding-block) var(--padding-inline);
   margin: calc(var(--padding-block) * -1) -0.125em;
   border-radius: var(--border-radius);
   word-break: break-word;
-  background: var(--orange-100);
+  background: var(--gray-200);
   font-weight: 500;
   @apply font-mono;
 }
