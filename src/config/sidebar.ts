@@ -177,15 +177,27 @@ export const getSidebar = () => {
         ],
       },
       {
-        section: t("sidebar.technology.scrollProtocol"),
+        section: t("sidebar.technology.scrollChain"),
         contents: [
           {
-            title: t("sidebar.technology.scrollArchitecture"),
-            url: "technology/architecture/scroll-architecture",
+            title: t("sidebar.technology.accounts"),
+            url: "technology/chain/accounts",
           },
           {
-            title: t("sidebar.technology.principles"),
-            url: "technology/architecture/principles",
+            title: t("sidebar.technology.transactions"),
+            url: "technology/chain/transactions",
+          },
+          {
+            title: t("sidebar.technology.blocks"),
+            url: "technology/chain/blocks",
+          },
+          {
+            title: t("sidebar.technology.rollupProcess"),
+            url: "technology/chain/rollup",
+          },
+          {
+            title: t("sidebar.technology.evmDifferencesFromEthereum"),
+            url: "technology/chain/differences",
           },
         ],
       },

@@ -95,9 +95,14 @@
       "introduction": "Introduction",
       "principles": "Principles",
       "scrollArchitecture": "Scroll Architecture",
-      "scrollProtocol": "Scroll Protocol",
+      "scrollChain": "Scroll Chain",
       "overview": "Overview",
+
+      "accounts": "Accounts",
+      "blocks": "Blocks",
+      "transactions": "Transactions",
       "rollupProcess": "Rollup Process",
+      "evmDifferencesFromEthereum": "EVM Differences from Ethereum",
 
       "zkevm": "zkEVM",
       "introToZkevm": "Intro to zkEVM",
