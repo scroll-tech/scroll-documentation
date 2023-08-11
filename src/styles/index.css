@@ -43,6 +43,7 @@ nav ul {
 .content :is(ul, ol) {
   line-height: 1.25em;
   margin-bottom: 0.7em;
+  margin-bottom: 16px;
 }
 
 .content :is(ul, ol) > li > :is(ul, ol) {
@@ -126,8 +127,8 @@ article > section iframe {
 
 .main-section :is(h2, h3, h4) {
   /* Override styles from design-system */
-  margin-top: 40px;
-  margin-bottom: 40px;
+  margin-top: 36px;
+  margin-bottom: 24px;
   max-width: 100%;
 }
 
