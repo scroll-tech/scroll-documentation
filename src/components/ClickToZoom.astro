@@ -5,22 +5,33 @@ export type Props = {
   alt: string
   caption: string
 }
-const { src, alt } = Astro.props as Props
+const { src, alt, caption } = Astro.props as Props
 
 /**
  * This component adds the classNames required by the scripts/click-to-zoom.ts script.
  */
 ---
 
-<Image src={src} class="click-to-zoom" quality={80} format="avif" alt={alt || "image"} />
+<figure>
+  <Image src={src} class="click-to-zoom" quality={80} format="avif" alt={alt || "image"} />
+  <figcaption>{caption}</figcaption>
+</figure>
 
 <style>
   .click-to-zoom {
     cursor: zoom-in;
     height: auto;
     max-width: 100%;
-    margin: 3em auto !important;
     display: block;
+  }
+  figure {
+    margin: 32px auto !important;
+    width: fit-content;
+  }
+
+  figcaption {
+    font: italic;
+    text-align: center;
   }
 </style>
 <style is:global>
