@@ -106,8 +106,8 @@
 
       "bridge": "Bridge",
       "crossDomainMessaging": "Cross-Domain Messaging",
-      "depositTokenGateways": "Deposit Gateways",
-      "withdrawTokenGateways": "Withdraw Gateways",
+      "depositGateways": "Deposit Gateways",
+      "withdrawGateways": "Withdraw Gateways",
 
       "zkevm": "zkEVM",
       "introToZkevm": "Intro to zkEVM",

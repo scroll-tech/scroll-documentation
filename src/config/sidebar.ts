@@ -209,11 +209,11 @@ export const getSidebar = () => {
             url: "technology/bridge/cross-domain-messaging",
           },
           {
-            title: t("sidebar.technology.depositGateway"),
+            title: t("sidebar.technology.depositGateways"),
             url: "technology/bridge/deposit-gateways",
           },
           {
-            title: t("sidebar.technology.withdrawGateway"),
+            title: t("sidebar.technology.withdrawGateways"),
             url: "technology/bridge/withdraw-gateways",
           },
         ],

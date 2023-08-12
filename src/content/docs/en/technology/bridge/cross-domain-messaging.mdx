@@ -25,8 +25,18 @@ There are two primary approaches to sending a message from L1 to L2: sending arb
 As depicted in Figure 1, both arbitrary messages and enforced transactions are appended to the message queue stored in the `L1MessageQueue` contract. The `L1MessageQueue` contract provides two functions `appendCrossDomainMessage` and `appendEnforcedTransaction` for appending arbitrary messages and enforced transactions respectively.
 
 ```solidity
+/// @notice Append an arbitrary L1-to-L2 message into this contract.
+/// @param target The target address on L2.
+/// @param gasLimit The maximum gas can be used for this transaction on L2.
+/// @param data The calldata of the L1-initiated transaction.
 function appendCrossDomainMessage(address target, uint256 gasLimit, bytes calldata data) external;
 
+/// @notice Append an enforced transaction to this contract.
+/// @param sender The sender address of this transaction.
+/// @param target The target address of this transaction.
+/// @param value The value to be transferred on L2.
+/// @param gasLimit The maximum gas should be used for this transaction on L2.
+/// @param data he calldata of the L1-initiated transaction.
 function appendEnforcedTransaction(
   address sender,
   address target,
