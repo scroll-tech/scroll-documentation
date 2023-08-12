@@ -26,7 +26,7 @@ This document describes how users and developers can utilize gateways to deposit
 
 <ClickToZoom src={DepositWorkflow} alt="Deposit Workflow" />
 
-The figure depicts the deposit workflow from L1 to L2. Users call the gateways to initialize the token deposit. The deposit is then encoded into a message sent to the `L1ScrollMessenger` contract and a corresponding L1-initiated transaction is appended to the `L1MessageQueue`. To finalize the deposits on L2, the L2 sequencer collects the new L1 transaction events and includes the corresponding transactions in the L2 blocks it creates. The subsequent sections describe the details of how different tokens are deposited. You can find more details about the L1-to-L2 message relay workflow on the Cross-Domain Messaging](/technology/bridge/cross-domain-messaging#sending-messages-from-l1-to-l2) page.
+The figure depicts the deposit workflow from L1 to L2. Users call the gateways to initialize the token deposit. The deposit is then encoded into a message sent to the `L1ScrollMessenger` contract and a corresponding L1-initiated transaction is appended to the `L1MessageQueue`. To finalize the deposits on L2, the L2 sequencer collects the new L1 transaction events and includes the corresponding transactions in the L2 blocks it creates. The subsequent sections describe the details of how different tokens are deposited. You can find more details about the L1-to-L2 message relay workflow in the [Cross-Domain Messaging](/technology/bridge/cross-domain-messaging#sending-messages-from-l1-to-l2).
 
 ## Depositing ETH
 

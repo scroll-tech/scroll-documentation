@@ -193,7 +193,7 @@ Due to the behavior of the `CREATE` opcode, it is possible that someone deploys 
 
 <ClickToZoom src={L2ToL1} alt="L2 to L1 workflow" caption="Figure 2. L2 to L1 message relay workflow" />
 
-On L2, users can send arbitrary messages through `L2ScrollMessenger` to withdraw tokens and call L1 contracts. Similar to L1, we have built several standard token gateways to make it easier to initialize token withdrawals. For more details about L2 token gateways, please refer to the [Withdraw](Withdraw.md) page.
+On L2, users can send arbitrary messages through `L2ScrollMessenger` to withdraw tokens and call L1 contracts. Similar to L1, we have built several standard token gateways to make it easier to initialize token withdrawals. For more details about L2 token gateways, please refer to the [Withdraw Gateways](/technology/bridge/withdraw-gateways).
 
 The `L2ScrollMessenger` contract also provides a `sendMessage` function. The difference from the `L1ScrollMessenger.sendMessage` is that the `gasLimit` parameter is ignored in the function because the withdrawal execution transaction on L1 is submitted by users and the transaction fee is paid on L1 directly. Thus, the `sendMessage` function requires `msg.value` to be equal to the parameter `value`. The function encodes the arguments into a cross-domain message following the same schema as in [`L1ScrollMessenger`](#sending-arbitrary-messages).
 
