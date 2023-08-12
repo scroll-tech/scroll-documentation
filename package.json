@@ -91,7 +91,7 @@
     "unist-util-remove": "^3.1.0"
   },
   "lint-staged": {
-    "*.{css,md,mdx,yml,yaml,astro}": "prettier --write",
+    "*.{css,md,yml,yaml,astro}": "prettier --write",
     "*.{js,ts,json}": [
       "prettier --write",
       "eslint"
