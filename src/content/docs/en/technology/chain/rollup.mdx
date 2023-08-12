@@ -10,11 +10,13 @@ excerpt: ""
 import ClickToZoom from "../../../../../components/ClickToZoom.astro"
 import RollupProcess from "../_images/rollup.png"
 
-This document describes the rollup process in Scroll. The figure below illustrates the rollup workflow.
+This document describes the rollup process in Scroll.
+
+## Workflow
 
 <ClickToZoom src={RollupProcess} alt="Rollup Process" />
 
-The L2 sequencer contains three modules:
+The figure illustrates the rollup workflow. The L2 sequencer contains three modules:
 
 - **Sync service** subscribes to the event issued from the L1 bridge contract. Once it detects any newly appended messages to the L1 inbox, the Sync Service will generate a new `L1MessageTx` transaction accordingly and add it to the local L1 transaction queue.
 - **Mempool** collects the transactions that are directly submitted to the L2 sequencer.
@@ -23,7 +25,7 @@ The L2 sequencer contains three modules:
 The rollup node contains two modules:
 
 - **Relayer** submits the commit transactions and finalize transactions to the rollup contract for data availability and finality.
-- **Chunk Proposer** and **Batch Proposer** proposes new chunks and new batches following the constraints described in the [Transaction Batching](/RxRWLFtiQ7W_wbc0jMnQNA).
+- **Chunk Proposer** and **Batch Proposer** proposes new chunks and new batches following the constraints described in the [Transaction Batching](/technology/chain/transactions#transaction-batching).
 
 The rollup process can be broken down into three phases: transaction execution, batching and data commitment, and proof generation and finalization.
 
@@ -36,7 +38,7 @@ The rollup process can be broken down into three phases: transaction execution, 
 ### Phase 2. Batching and Data Commitment
 
 4. The rollup node monitors the latest L2 blocks and fetches the transaction data.
-5. If the criterion (described in the [Transaction Batching](/RxRWLFtiQ7W_wbc0jMnQNA)) are met, the rollup node proposes a new [chunk](/54Rp7dBOQIqAEWtmGT8_rQ#Chunk) or a [batch](/54Rp7dBOQIqAEWtmGT8_rQ#Batch) and writes it to the database. Otherwise, the rollup node keeps waiting for more blocks or chunks.
+5. If the criterion (described in the [Transaction Batching](/technology/chain/transactions#transaction-batching)) are met, the rollup node proposes a new chunk or a batch and writes it to the database. Otherwise, the rollup node keeps waiting for more blocks or chunks.
 6. Once a new batch is created, the rollup relayer collects the transaction data in this batch and submits a Commit Transaction to the rollup contract for data availability.
 
 ### Phase 3. Proof Generation and Finalization
@@ -66,7 +68,7 @@ After the `commitBatch` function verifies the parent batch is committed before, 
 mapping(uint256 => bytes32) public committedBatches;
 ```
 
-The encoding of batch header and chunk data are described in the [Codec](#Codec) section. Most fields in the batch header are straight-forward to derive from the chunk data. One important field to note is `dataHash` that will become part of the public input to verify the validity proof. Assuming that a batch contains `n` chunks, its `dataHash` is computed as follows
+The encoding of batch header and chunk data are described in the [Codec](#codec) section. Most fields in the batch header are straight-forward to derive from the chunk data. One important field to note is `dataHash` that will become part of the public input to verify the validity proof. Assuming that a batch contains `n` chunks, its `dataHash` is computed as follows
 
 ```
 batch.dataHash := keccak(chunk[0].dataHash || ... || chunk[n-1].dataHash)

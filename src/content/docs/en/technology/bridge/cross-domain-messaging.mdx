@@ -20,7 +20,7 @@ Scroll has an arbitrary message passing bridge that enables token transfers and 
 
 <ClickToZoom src={L1ToL2} alt="L1 to L2 workflow" caption="Figure 1. L1 to L2 message relay workflow" />
 
-There are two primary approaches to sending a message from L1 to L2: sending arbitrary messages via `L1ScrollMessenger` and sending enforced transactions via `EnforcedTxGateway`. Both approaches allow users to initiate a L2 transaction on L1 and call arbitrary contracts on L2. For arbitrary messages, the sender of the L2 transactions is the aliased `L1ScrollMessenger` address. For enforced transactions, the L2 sender is an externally-owned account (EOA). In addition, we provide several standard token gateways to make it easier for users to deposit ETH and other standard tokens including ERC-20, ERC-677, ERC-721, and ERC-1155. In essence, these gateways encode token deposits into a message and send it to their counterparts on L2 through the `L1ScrollMessenger` contract. You can find more details about the L1 token gateways on the [Deposit](/-oscADc8SoKAOxjtpcEqKg) page.
+There are two primary approaches to sending a message from L1 to L2: sending arbitrary messages via `L1ScrollMessenger` and sending enforced transactions via `EnforcedTxGateway`. Both approaches allow users to initiate a L2 transaction on L1 and call arbitrary contracts on L2. For arbitrary messages, the sender of the L2 transactions is the aliased `L1ScrollMessenger` address. For enforced transactions, the L2 sender is an externally-owned account (EOA). In addition, we provide several standard token gateways to make it easier for users to deposit ETH and other standard tokens including ERC-20, ERC-677, ERC-721, and ERC-1155. In essence, these gateways encode token deposits into a message and send it to their counterparts on L2 through the `L1ScrollMessenger` contract. You can find more details about the L1 token gateways in the [Deposit Gateways](/technology/bridge/deposit-gateways).
 
 As depicted in Figure 1, both arbitrary messages and enforced transactions are appended to the message queue stored in the `L1MessageQueue` contract. The `L1MessageQueue` contract provides two functions `appendCrossDomainMessage` and `appendEnforcedTransaction` for appending arbitrary messages and enforced transactions respectively.
 
@@ -29,24 +29,28 @@ As depicted in Figure 1, both arbitrary messages and enforced transactions are a
 /// @param target The target address on L2.
 /// @param gasLimit The maximum gas can be used for this transaction on L2.
 /// @param data The calldata of the L1-initiated transaction.
-function appendCrossDomainMessage(address target, uint256 gasLimit, bytes calldata data) external;
+function appendCrossDomainMessage(
+    address target,
+    uint256 gasLimit,
+    bytes calldata data
+) external;
 
 /// @notice Append an enforced transaction to this contract.
 /// @param sender The sender address of this transaction.
 /// @param target The target address of this transaction.
 /// @param value The value to be transferred on L2.
 /// @param gasLimit The maximum gas should be used for this transaction on L2.
-/// @param data he calldata of the L1-initiated transaction.
+/// @param data The calldata of the L1-initiated transaction.
 function appendEnforcedTransaction(
-  address sender,
-  address target,
-  uint256 value,
-  uint256 gasLimit,
-  bytes calldata data
+    address sender,
+    address target,
+    uint256 value,
+    uint256 gasLimit,
+    bytes calldata data
 ) external;
 ```
 
-Both functions construct an L1-initiated transaction with a new transaction type `L1MessageTx` introduced in the Scroll chain and compute the transaction hash (see more details in the [L1 Message Transaction](/cshOlMZdSea9RDGnGQNRww)). `L1MessageQueue` then appends the transaction hash to the message queue, and emits the event `QueueTransaction(sender, target, value, queueIndex, gasLimit, calldata)`. The difference between `appendCrossDomainMessage` and `appendEnforcedTransaction` when constructing L1 message transactions is:
+Both functions construct an L1-initiated transaction with a new transaction type `L1MessageTx` introduced in the Scroll chain and compute the transaction hash (see more details in the [L1 Message Transaction](/technology/chain/transactions#l1-message-transaction)). `L1MessageQueue` then appends the transaction hash to the message queue, and emits the event `QueueTransaction(sender, target, value, queueIndex, gasLimit, calldata)`. The difference between `appendCrossDomainMessage` and `appendEnforcedTransaction` when constructing L1 message transactions is:
 
 - `appendCrossDomainMessage` can be only called by `L1ScrollMessenger` and it uses the [aliased address](#address-alias) of `msg.sender`, which will be the address of `L1ScrollMessenger`, as the transaction sender.
 - `appendEnforcedTransaction` can be only called by `EnforcedTxGateway` and it uses `sender` from the function parameter as the transaction sender. This allows users to enforce a withdrawal or transfer of ETH from their L2 accounts directly through the L1 bridge.
@@ -79,13 +83,12 @@ function sendMessage(
 /// @param gasLimit The maximum gas can be used for this transaction on L2.
 /// @param refundAddress The address to refund excessive fee on L1.
 function sendMessage(
-address target,
-uint256 value,
-bytes calldata message,
-uint256 gasLimit,
-address refundAddress
+    address target,
+    uint256 value,
+    bytes calldata message,
+    uint256 gasLimit,
+    address refundAddress
 ) external payable;
-
 ````
 </ToggleElement>
 
@@ -120,10 +123,10 @@ The `EnforcedTxGateway` contract provides two `sendTransaction` functions to sen
 /// @param gasLimit The maximum gas can be used for this transaction on L2.
 /// @param data The calldata passed to target contract.
 function sendTransaction(
-  address target, 
-  uint256 value, 
-  uint256 gasLimit, 
-  bytes calldata data
+    address target,
+    uint256 value,
+    uint256 gasLimit,
+    bytes calldata data
 ) external payable;
 
 /// @param sender The sender address who will initiate this transaction on L2.
@@ -134,13 +137,13 @@ function sendTransaction(
 /// @param signature The signature for the corresponding `L1MessageTx` transaction.
 /// @param refundAddress The address to refund excessive fee on L1.
 function sendTransaction(
-  address sender,
-  address target,
-  uint256 value,
-  uint256 gasLimit,
-  bytes calldata data,
-  bytes memory signature,
-  address refundAddress
+    address sender,
+    address target,
+    uint256 value,
+    uint256 gasLimit,
+    bytes calldata data,
+    bytes memory signature,
+    address refundAddress
 ) external payable;
 ```
 
@@ -155,7 +158,7 @@ If a `L1MessageTx` transaction fails on L2 due to insufficient gas, users can re
 <ToggleElement anchor="replayMessage function signature">
 <div slot="title"><code>replayMessage</code> function signature</div>
 
-```
+```solidity
 /// @param from The address of the sender of the message.
 /// @param to The address of the recipient of the message.
 /// @param value The msg.value passed to the message call.
@@ -202,7 +205,12 @@ The `L2ScrollMessenger` contract also provides a `sendMessage` function. The dif
 /// @param value The value to withdraw to L1 from `msg.value`.
 /// @param message The message passed to target contract.
 /// @param _gasLimit Ignored in the L2ScrollMessenger because the withdrawal execution on L1 is done by the user.
-function sendMessage(address target, uint256 value, bytes memory message, uint256 _gasLimit) external payable;
+function sendMessage(
+    address target,
+    uint256 value,
+    bytes memory message,
+    uint256 _gasLimit
+) external payable;
 ```
 
 </ToggleElement>

@@ -44,7 +44,7 @@ The RLP encoding of `L1MessageTx` transactions follows the [EIP-2718](https://ei
 Two noticeable behaviors of the `L1MessageTx` transactions:
 
 - The `QueueIndex` in the transaction is the queue index in the L1 message queue, different from the `Nonce` of the `Sender` account. But the sender's `Nonce` will still increases by 1 after the transaction.
-- This type of transactions doesn't pay [L2 fee](/developer/transaction-fees-on-scroll#l1-fee) [L1 fee](/developer/transaction-fees-on-scroll#l1-fee). The L2 fee is already paid when user submit the transactions on L1. Because the data of `L1MessageTx` transactions was already stored in the L1 bridge contract, we don't need to submit the data to L1 again.
+- This type of transactions doesn't pay [L2 fee](/developers/transaction-fees-on-scroll#l2-fee) or [L1 fee](/developers/transaction-fees-on-scroll#l1-fee). The L2 fee is already paid when users submit transactions on L1. The L1 Fee isn't charged because the data of `L1MessageTx` transactions is already available in the L1 bridge contract.
 
 ## Transaction Life Cycle
 
