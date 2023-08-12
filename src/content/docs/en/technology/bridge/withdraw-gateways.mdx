@@ -101,11 +101,25 @@ We provide a custom gateway `L2WETHGateway` for Wrapped ETH token on L2 and reco
 The withdrawal of ERC-721 or ERC-1155 tokens works very similar to ERC20 tokens. One can use the gateway `L2ERC721Gateway` or `L2ERC1155Gateway` to withdraw ERC-721 /ERC-1155 tokens from L2.
 
 ```solidity
-function withdrawERC721(address _token, uint256 _tokenId, uint256 _gasLimit) external payable;
+function withdrawERC721(
+    address _token,
+    uint256 _tokenId,
+    uint256 _gasLimit
+) external payable;
 
-function withdrawERC721(address _token, address _to, uint256 _tokenId, uint256 _gasLimit) external payable;
+function withdrawERC721(
+    address _token,
+    address _to,
+    uint256 _tokenId,
+    uint256 _gasLimit
+) external payable;
 
-function withdrawERC1155(address _token, uint256 _tokenId, uint256 _amount, uint256 _gasLimit) external payable;
+function withdrawERC1155(
+    address _token,
+    uint256 _tokenId,
+    uint256 _amount,
+    uint256 _gasLimit
+) external payable;
 
 function withdrawERC1155(
     address _token,
@@ -119,7 +133,11 @@ function withdrawERC1155(
 To facilitate a large amount of ERC-721 or ERC-1155 token withdrawals, we also provide batch withdraw functions in the `L2ERC721Gateway` and `L2ERC1155Gateway` contract via the following functions:
 
 ```solidity
-function batchWithdrawERC721(address _token, uint256[] calldata _tokenIds, uint256 _gasLimit) external payable;
+function batchWithdrawERC721(
+    address _token,
+    uint256[] calldata _tokenIds,
+    uint256 _gasLimit
+) external payable;
 
 function batchWithdrawERC721(
     address _token,

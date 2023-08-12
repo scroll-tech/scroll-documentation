@@ -119,11 +119,25 @@ We provide a custom gateway `L1WETHGateway` for Wrapped ETH token on L1 and reco
 The deposit of ERC-721 or ERC-1155 tokens works very similar to ERC20 tokens. One can use the gateways `L1ERC721Gateway` or `L1ERC1155Gateway` to deposit ERC-721 /ERC-1155 tokens from L1.
 
 ```solidity
-function depositERC721(address _token, uint256 _tokenId, uint256 _gasLimit) external payable;
+function depositERC721(
+    address _token,
+    uint256 _tokenId,
+    uint256 _gasLimit
+) external payable;
 
-function depositERC721(address _token, address _to, uint256 _tokenId, uint256 _gasLimit) external payable;
+function depositERC721(
+    address _token,
+    address _to,
+    uint256 _tokenId,
+    uint256 _gasLimit
+) external payable;
 
-function depositERC1155(address _token, uint256 _tokenId, uint256 _amount, uint256 _gasLimit) external payable;
+function depositERC1155(
+    address _token,
+    uint256 _tokenId,
+    uint256 _amount,
+    uint256 _gasLimit
+) external payable;
 
 function depositERC1155(
     address _token,
@@ -137,7 +151,11 @@ function depositERC1155(
 To facilitate a large amount of ERC-721 or ERC-1155 token deposits, we also provide batch deposit functions in the `L1ERC721Gateway` and `L1ERC1155Gateway` contract via the following functions:
 
 ```solidity
-function batchDepositERC721(address _token, uint256[] calldata _tokenIds, uint256 _gasLimit) external payable;
+function batchDepositERC721(
+    address _token,
+    uint256[] calldata _tokenIds,
+    uint256 _gasLimit
+) external payable;
 
 function batchDepositERC721(
     address _token,
