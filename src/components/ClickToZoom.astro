@@ -14,7 +14,7 @@ const { src, alt, caption } = Astro.props as Props
 
 <figure>
   <Image src={src} class="click-to-zoom" quality={80} format="avif" alt={alt || "image"} />
-  <figcaption>{caption}</figcaption>
+  {caption && <figcaption>{caption}</figcaption>}
 </figure>
 
 <style>
@@ -30,8 +30,9 @@ const { src, alt, caption } = Astro.props as Props
   }
 
   figcaption {
-    font: italic;
+    font-style: italic;
     text-align: center;
+    margin-top: 16px;
   }
 </style>
 <style is:global>
