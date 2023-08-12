@@ -148,7 +148,7 @@ a > code::before {
   left: 0;
   display: block;
   border-radius: var(--border-radius);
-  @apply bg-accent opacity-accent;
+  /* @apply bg-accent opacity-accent; */
 }
 
 a:focus {
