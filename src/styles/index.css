@@ -148,7 +148,7 @@ a > code::before {
   left: 0;
   display: block;
   border-radius: var(--border-radius);
-  @apply bg-accent opacity-accent;
+  /* @apply bg-accent opacity-accent; */
 }
 
 a:focus {
@@ -170,15 +170,14 @@ strong {
   --border-radius: 3px;
   --padding-block: 0.1rem;
   --padding-inline: 0.33rem;
-
   font-size: 0.85em;
-  color: var(--orange-500);
   padding: var(--padding-block) var(--padding-inline);
-  margin: calc(var(--padding-block) * -1) -0.125em;
+  margin: 0.125em;
   border-radius: var(--border-radius);
   word-break: break-word;
-  background: var(--orange-100);
   font-weight: 500;
+  background: #eee;
+  color: var(--black-100);
   @apply font-mono;
 }
 
@@ -395,4 +394,13 @@ h2.heading {
     font-size: 16px;
     padding: 0.1rem 1rem;
   }
+}
+
+:is(h1, h2, h3):hover .icon-link {
+  background: url(/images/link.svg) no-repeat;
+  background-size: cover;
+  width: var(--space-4x);
+  height: var(--space-4x);
+  display: inline-block;
+  margin-left: var(--space-2x);
 }
