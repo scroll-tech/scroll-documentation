@@ -245,6 +245,8 @@ table tbody tr {
 
 table code {
   word-break: keep-all;
+  background: #eee;
+  color: var(--black-100);
 }
 
 th {
