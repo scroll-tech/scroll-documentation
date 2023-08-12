@@ -11,7 +11,6 @@ const anchorHash = anchor.replace(/\s+/g, "-")
     <div>
       <slot name="title" />
     </div>
-    <a href={`#${anchorHash}`} dir="auto" aria-label={anchor}></a>
   </summary>
   <div>
     <slot />
@@ -20,6 +19,14 @@ const anchorHash = anchor.replace(/\s+/g, "-")
 
 <script define:vars={{ anchorHash }}>
   const detailsElement = document.getElementById(anchorHash)
+  detailsElement.onclick = () => {
+    const hash = window.location.hash
+    if (hash === `#${anchorHash}`) {
+      history.replaceState(null, null, window.location.pathname)
+    } else {
+      history.replaceState(null, null, `#${anchorHash}`)
+    }
+  }
   const checkHash = () => {
     if (window.location.hash === `#${anchorHash}`) {
       detailsElement.open = true
