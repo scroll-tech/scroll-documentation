@@ -170,15 +170,14 @@ strong {
   --border-radius: 3px;
   --padding-block: 0.1rem;
   --padding-inline: 0.33rem;
-
   font-size: 0.85em;
-  color: var(--orange-500);
   padding: var(--padding-block) var(--padding-inline);
   margin: 0.125em;
   border-radius: var(--border-radius);
   word-break: break-word;
-  background: var(--orange-100);
   font-weight: 500;
+  background: #eee;
+  color: var(--black-100);
   @apply font-mono;
 }
 
@@ -245,8 +244,6 @@ table tbody tr {
 
 table code {
   word-break: keep-all;
-  background: #eee;
-  color: var(--black-100);
 }
 
 th {
