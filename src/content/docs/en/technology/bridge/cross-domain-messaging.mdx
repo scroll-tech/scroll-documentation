@@ -119,7 +119,12 @@ The `EnforcedTxGateway` contract provides two `sendTransaction` functions to sen
 /// @param value The value to withdraw from the `tx.origin` address on L2.
 /// @param gasLimit The maximum gas can be used for this transaction on L2.
 /// @param data The calldata passed to target contract.
-function sendTransaction(address target, uint256 value, uint256 gasLimit, bytes calldata data) external payable;
+function sendTransaction(
+  address target, 
+  uint256 value, 
+  uint256 gasLimit, 
+  bytes calldata data
+) external payable;
 
 /// @param sender The sender address who will initiate this transaction on L2.
 /// @param target The target address on L2.

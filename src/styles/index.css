@@ -396,3 +396,12 @@ h2.heading {
     padding: 0.1rem 1rem;
   }
 }
+
+:is(h1, h2, h3):hover .icon-link {
+  background: url(/images/link.svg) no-repeat;
+  background-size: cover;
+  width: var(--space-4x);
+  height: var(--space-4x);
+  display: inline-block;
+  margin-left: var(--space-2x);
+}
