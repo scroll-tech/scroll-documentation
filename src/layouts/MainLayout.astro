@@ -60,6 +60,9 @@ changeLanguage(content.lang)
     />
 
     <style>
+      html {
+        scrollbar-gutter: stable;
+      }
       body {
         width: 100%;
         display: grid;
@@ -168,6 +171,13 @@ changeLanguage(content.lang)
         top: 2rem;
         left: 0;
         padding-left: 20px;
+        height: calc(100% - 20px);
+      }
+
+      @media (min-width: 50em) {
+        .mobile-sidebar-toggle #grid-left {
+          padding-left: 0px;
+        }
       }
     </style>
     <script>

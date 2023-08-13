@@ -11,9 +11,8 @@ export default function Search() {
     setIsOpen(true)
   }, [setIsOpen])
 
-
   useEffect(() => {
-    const body = document.getElementsByTagName("body")[0]
+    const body = document.body
     if (isOpen) {
       body.classList.add("mobile-sidebar-toggle")
     } else {

@@ -28,7 +28,7 @@ const removeSlashes = function (url: string) {
 const currentPageMatch = removeSlashes(currentPage.slice(1))
 ---
 
-<nav aria-labelledby="grid-left">
+<nav aria-labelledby="grid-left" class="menu-nav">
   <ul id="mobile-menu" class="nav-groups">
     <li style="margin: 0; padding-bottom: 0;">
       <div class="nav-group">
@@ -148,7 +148,7 @@ const currentPageMatch = removeSlashes(currentPage.slice(1))
       height: 0;
     }
   }
-  nav {
+  .menu-nav {
     width: 100%;
   }
 
@@ -226,5 +226,23 @@ const currentPageMatch = removeSlashes(currentPage.slice(1))
     .nav-link a {
       font-weight: 400;
     }
+  }
+</style>
+
+<style is:global>
+  .mobile-sidebar-toggle .menu-nav {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mobile-sidebar-toggle #mobile-menu {
+    height: auto;
+    overflow-y: unset;
+  }
+
+  .mobile-sidebar-toggle .sidebar-nav-groups {
+    flex: 1;
+    height: unset;
   }
 </style>

@@ -34,6 +34,7 @@ nav ul {
 
 .content > section > * + * {
   margin-top: 1.25rem;
+  margin-bottom: 2.25rem;
 }
 
 .content > section > :first-child {
@@ -41,7 +42,7 @@ nav ul {
 }
 
 .content :is(ul, ol) {
-  line-height: 1.25em;
+  line-height: 1.4em;
   margin-bottom: 0.7em;
   margin-bottom: 16px;
 }
@@ -123,6 +124,7 @@ article > section iframe {
   /* Override styles from design-system */
   margin: 0 0 16px;
   max-width: 100%;
+  line-height: 1.6em;
 }
 
 .main-section :is(h2, h3, h4) {
@@ -175,8 +177,8 @@ strong {
   margin: 0.125em;
   border-radius: var(--border-radius);
   word-break: break-word;
+  background: var(--gray-200);
   font-weight: 500;
-  background: #eee;
   color: var(--black-100);
   @apply font-mono;
 }
