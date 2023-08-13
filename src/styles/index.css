@@ -183,6 +183,13 @@ strong {
   @apply font-mono;
 }
 
+a > code {
+  text-decoration-thickness: 1px;
+  text-decoration-line: underline;
+  text-decoration-skip-ink: 1px;
+  text-decoration-style: dashed;
+}
+
 pre.astro-code > code {
   all: unset;
 }
