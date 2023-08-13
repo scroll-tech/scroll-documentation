@@ -29,27 +29,18 @@ At a high level, the **L2 fee** is the cost of executing your transaction on the
 
 In short, `totalTxFee = l2Fee + l1Fee`, all denominated in ETH, the native gas token for the Scroll network.
 
-### Where are the tx fees sent to?
+<Aside type="note" title="Where are transaction fees sent?">
+All tx fees are collected into the `L2ScrollFeeVault` contract balance. This contract also tracks the amount we’ve historically withdrawn to L1 using `totalProcessed()(uint256)`.
 
-All tx fees are collected into the `L2ScrollFeeVault` contract, predeployed at address `0x5300000000000000000000000000000000000005`. The block producer receives no direct reward. (The `COINBASE` opcode returns the fee vault address.) This contract also tracks the amount we’ve historically withdrawn to L1.
+The block producer receives no direct reward, and the `COINBASE` opcode returns the fee vault address.
 
-To check the amount of ETH withdrawn to L1 using [Foundry Cast](https://book.getfoundry.sh/cast/):
-
-```bash
-cast call --rpc-url "https://sepolia-rpc.scroll.io" "0x5300000000000000000000000000000000000005" "totalProcessed()(uint256)" | cast --from-wei
-```
-
-To check the fees that have been collected but not yet withdrawn to L1:
-
-```bash
-cast balance --rpc-url "https://sepolia-rpc.scroll.io" "0x5300000000000000000000000000000000000005" | cast --from-wei
-```
+</Aside>
 
 ## L2 Fee
 
 Transactions on Scroll, like on Ethereum, must pay the cost of executing their computations and storing the data they produce.
 
-### How is the execution fee calculated?
+### Calculating the Execution Fee
 
 In short, it is calculated very simply:
 
@@ -63,29 +54,28 @@ In other words, the execution fee is calculated precisely like pre-[EIP1559](htt
 
 ## L1 Fee
 
-We ensure the security of our L2 network by committing data to the L1, thus inheriting some of its underlying security properties. All data needed for syncing a Scroll node and verifying proofs are publicly available on Ethereum. Every transaction's data is committed to Ethereum, which incurs an additional transaction fee, referred to as the "L1 Fee".
+Every transaction's calldata must be committed to Ethereum, which incurs an additional transaction fee, referred to as the "L1 Fee". Without doing this, Scroll couldn't be reconstructed from only L1 data.
 
-### What is committed to the L1?
+Transactions aren't committed 1-by-1 -- they are collected in batches of blocks (and blocks of transactions). The cost of an individual transaction is computed based on the zeros and non-zero bytes in its payload.
 
-For every transaction processed on Scroll, its transaction payload is committed to Ethereum L1. This is done to enable the reconstruction of the Scroll chain from L1 data.
-
-Blocks of transaction data are grouped, and commitments are posted at the chunk level (eventually at the batch level). Note that a "chunk" is a collection of blocks that fits into a single zkEVM circuit for proof generation. However, the cost that an individual transaction contributes to the total cost can be easily computed based on the number of zero and non-zero bytes in its payload.
-
-### How is the fee calculated?
+### Calculating the L1 Data Fee
 
 The data fee is based on multiple factors:
 
-- `l1GasPrice` - Current base fee on the L1
-- `additionalTransactionBytes` - Additional bytes on top of RLP Encoded unsigned transaction, constant of 16 \* 74 bytes
-- `l1CallDataGasSize` - Gas size of the calldata to be committed as part of a transaction, 4 \* zeroBytes(tx) + 16 \* nonZeroBytes(tx) + additionalTransactionBytes
-- `gasOverhead` - Additional gas overhead of a data commitment transaction
-- `scalingFactor` - Difference used for accounting price spikes
+- The bytes which are `zeros` and `nonzeros` of an RLP-encoded transaction with Signature
+- `l1BaseFee` - Current base fee on the L1
+- `overhead` - Additional gas overhead of a data commitment transaction
+- `scalingFactor` - A scaling factor used to account for price spikes
+- `PRECISION` - A constant used to scale the final fee
 
 Then, the final formula would be
 
 ```javascript
-l1Fee = l1GasPrice * (l1CallDataGasSize + gasOverhead) * scalingFactor
+l1Gas = zeros * 4 + (nonzeros + 4) * 16
+l1GasFee = ((l1Gas + overhead) * l1BaseFee * scalar) / PRECISION
 ```
+
+{/* TODO revise starting here */}
 
 ### What happens if gas fluctuates on L1?
 
