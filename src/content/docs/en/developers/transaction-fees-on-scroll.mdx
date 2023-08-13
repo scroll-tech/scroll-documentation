@@ -10,22 +10,40 @@ excerpt: "Understand how L1 and L2 transaction fees work on Scroll "
 
 import Aside from "../../../../components/Aside.astro"
 
-Scroll Sepolia Testnet fees are notably lower than on its supporting layer. Being an L2 rollup also means that the total transaction cost depends on the L1 since it has to be settled on Ethereum for final security.
+## Overview
 
-From the perspective of users and developers, gas fees on Scroll work very similarly to Ethereum mainnet. Scroll’s zkEVM equivalence allows all existing tools, wallets, and code to work the same.
+Scroll Sepolia Testnet fees are notably lower than on its supporting layer. Being an L2 rollup also means that the total transaction cost depends on the L1's costs, since, to leverage Ethereum's security, data and proofs have to be stored and computed on the L1.
 
-But, under the hood, Scroll Sepolia introduces some new dimensions into transaction fee calculation. The gas fee of a transaction can be dissected into several parts:
+For users and developers, transaction fees on Scroll work similarly to those on Ethereum mainnet, and all existing tools, wallets, and code should be expected to work the same.
+
+Behind the scenes, however, Scroll Sepolia introduces some new dimensions to transaction fee calculation. The final cost of a transaction is constructed from several parts:
 
 - **L2 fee**
-  - Calculated in the same manner as on the L1, with the formula being `gas_price * gas_used`
+  - Calculated in the same manner as on the L1, equaling `gas_price * gas_used`
 - **L1 fee**
-  - This additional fee covers sending data to L1 for data availability.
-  - It's calculated based on the size of the transaction calldata
-  - It is deducted automatically from the user’s ETH Balance on Scroll for that user’s transaction
+  - This additional fee covers sending data to L1 for data availability. Transactions initiated on the L1 do not pay this fee.
+  - It is calculated based on the size of the transaction's calldata
+  - ETH is automatically deducted from the user’s balance on Scroll for the fee
 
-At a high level, we can describe the **L2 fee** as the cost of executing your transaction on the L2 sequencer and the **L1 fee** as the cost of committing that transaction onto L1 and securing the network. **The latter part is one of the things that makes Scroll an L2.**
+At a high level, the **L2 fee** is the cost of executing your transaction on the L2 sequencer, and the **L1 fee** is the cost of committing that transaction onto L1.
 
-In summary, we can say that `totalTxFee = l2Fee + l1Fee`, all denominated in ETH.
+In short, `totalTxFee = l2Fee + l1Fee`, all denominated in ETH, the native gas token for the Scroll network.
+
+### Where are the tx fees sent to?
+
+All tx fees are collected into the `L2ScrollFeeVault` contract, predeployed at address `0x5300000000000000000000000000000000000005`. The block producer receives no direct reward. (The `COINBASE` opcode returns the fee vault address.) This contract also tracks the amount we’ve historically withdrawn to L1.
+
+To check the amount of ETH withdrawn to L1 using [Foundry Cast](https://book.getfoundry.sh/cast/):
+
+```bash
+cast call --rpc-url "https://sepolia-rpc.scroll.io" "0x5300000000000000000000000000000000000005" "totalProcessed()(uint256)" | cast --from-wei
+```
+
+To check the fees that have been collected but not yet withdrawn to L1:
+
+```bash
+cast balance --rpc-url "https://sepolia-rpc.scroll.io" "0x5300000000000000000000000000000000000005" | cast --from-wei
+```
 
 ## L2 Fee
 
@@ -39,25 +57,9 @@ In short, it is calculated very simply:
 l2TransactionExecutionFee = l2TransactionGasUsed * l2TransactionGasPrice
 ```
 
-The total fee depends on what the transaction does (`l2TransactionGasUsed`) as well as the current market conditions (`l2TransactionGasPrice`). Users set the gas price, and the "gas used" is determined by the `estimateGas` endpoint on our Nodes.
+The total fee depends on what the transaction does (`l2TransactionGasUsed`) as well as the current market conditions (`l2TransactionGasPrice`). Users set the gas price, and the "gas used" is assessed by calling the `estimateGas` endpoint on a Scroll node.
 
 In other words, the execution fee is calculated precisely like pre-[EIP1559](https://eips.ethereum.org/EIPS/eip-1559) Ethereum.
-
-### Where are the tx fees sent to?
-
-Currently, all L2 tx fees are collected into our L2 `FeeVault` predeploy at address `0x5300000000000000000000000000000000000005`. This contract also tracks the amount we’ve historically withdrawn to L1.
-
-Check amount withdrawn to L1 (in ETH):
-
-```bash
-cast call --rpc-url "https://sepolia-rpc.scroll.io/l2" "0x5300000000000000000000000000000000000005" "totalProcessed()(uint256)" | cast --from-wei
-```
-
-Check fees that have been collected on L2 but haven’t been bridged back to L1 (in ETH):
-
-```bash
-cast balance --rpc-url "https://sepolia-rpc.scroll.io/l2" "0x5300000000000000000000000000000000000005" | cast --from-wei
-```
 
 ## L1 Fee
 
