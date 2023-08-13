@@ -45,7 +45,7 @@
 
 /* Paragraph  */
 :where(body, p) {
-  @apply leading-[1.5] font-normal font-text text-primary tracking-[0.18px];
+  @apply leading-[1.5] font-normal font-text text-primary tracking-[0.09px];
 }
 
 :where(p) {
