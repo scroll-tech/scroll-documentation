@@ -131,14 +131,14 @@ export const getSidebar = () => {
             title: t("sidebar.developers.contractDeploymentTutorial"),
             url: formatUrl("developers/guides/contract-deployment-tutorial"),
           },
-          // {
-          //   title: t("sidebar.developers.crossChainInteraction"),
-          //   url: formatUrl("developers/guides/"),
-          // },
-          // {
-          //   title: t("sidebar.developers.bridgingERC20TokenThroughCustomGateway"),
-          //   url: formatUrl("developers/guides/"),
-          // },
+          {
+            title: t("sidebar.developers.crossChainInteraction"),
+            url: formatUrl("developers/guides/scroll-messenger-cross-chain-interaction"),
+          },
+          {
+            title: t("sidebar.developers.bridgingERC20TokenThroughCustomGateway"),
+            url: formatUrl("developers/guides/bridge-erc20-through-the-custom-gateway"),
+          },
           // {
           //   title: t("sidebar.developers.bridgingERC721NftThroughCustomGateway"),
           //   url: formatUrl("developers/guides/"),
