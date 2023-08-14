@@ -1,19 +1,23 @@
 ---
 section: developers
 date: Last Modified
-title: "Greeting Contract with Cross-chain Interaction"
+title: "Scroll Messenger Cross-chain Interaction"
 lang: "en"
-permalink: "developers/guides/greeting-contract-with-cross-chain-interaction"
-excerpt: "In this example, we will launch a dummy smart contract on either Sepolia or Scroll testnet and interact with it from the opposite chain."
+permalink: "developers/guides/scroll-messenger-cross-chain-interaction"
+excerpt: "In this example, we will launch a dummy smart contract on either Sepolia or Scroll Sepolia testnet and interact with it from the opposite chain."
 ---
 
 import Aside from "../../../../../components/Aside.astro"
 
-In this example, we will launch a dummy smart contract on either Sepolia or Scroll testnet and interact with it from the opposite chain. We will be using the `ScrollMessenger` that is deployed on both Sepolia and Scroll testnet.
+In this example, we will launch a dummy smart contract on either Sepolia or Scroll and interact
+with it from the opposite chain. We will be using the `ScrollMessenger` that is deployed on both
+Sepolia and Scroll.
 
 #### Target Smart Contract
 
-Let’s start by deploying the target smart contract. We will use the Greeter smart contract for this example, but you can use any other contract. Deploy it to either Sepolia or Scroll testnet — L1 and L2 use the same API, so it’s up to you.
+Let’s start by deploying the target smart contract. We will use the Greeter smart contract for this
+example, but you can use any other contract. Deploy it to either Sepolia or Scroll. On Scroll, L1
+and L2 use the same API, so it’s up to you.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -69,7 +73,7 @@ contract GreeterOperator {
 
 We pass the message by executing the `executeFunctionCrosschain` by passing the following parameters.
 
-- `scrollMessengerAddress`: This will depend on where you deployed the `GreeterOperator` contract. If you deployed it on L1 use `TODO: 0x5260e38080BFe97e6C4925d9209eCc5f964373b6`. If you deployed on L2 use `TODO: 0xb75d7e84517e1504C151B270255B087Fd746D34C`.
+- `scrollMessengerAddress`: This will depend on where you deployed the `GreeterOperator` contract. If you deployed it on L1 use `0x50c7d3e7f7c656493D1D76aaa1a836CedfCBB16A`. If you deployed on L2 use `0xBa50f5340FB9F3Bd074bD638c9BE13eCB36E603d`.
 - `targetAddress`: The address of the `Greeter` contract on the opposite chain.
 - `value`: In this case, it is `0` because the `setGreeting`is not payable.
 - `greeting`: This is the parameter that will be sent through the message. Try passing `“This message was crosschain!”`
