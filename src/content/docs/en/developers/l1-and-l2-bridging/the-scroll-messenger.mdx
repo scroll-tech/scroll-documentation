@@ -21,15 +21,15 @@ the messenger smart contract deployed on L1, `L1ScrollMessenger`. To send a mess
   on L1. It will also allow 3rd parties to relay signed transactions securely.
 </Aside>
 
-{/* TODO: Resolve question of "finalize tx" vs "execute withdraw tx" */}
-
-### Finalizing transactions on L1
+## Finalizing transactions on L1
 
 Any upcoming transactions from L2 need to be finalized using the `relayMessageWithProof` function on the Scroll Messenger
-contract. This includes both arbitrary messages and transfering assets through a gateway or the router. When you use
-`relayMessageWithProof`, you'll have to provide the ZK proof of your transaction along with other parameters. This
-can be done in a locally and permissionlessly. Alternatively, you can retrieve the parameters through our backend API
-at https://sepolia-api-bridge.scroll.io/api/.
+contract. We call this process "submitting an Execute Withdrawal transaction," and it is required for both sending arbitrary messages and transferring assets through a gateway or the router. When you use `relayMessageWithProof`, you'll have to provide a Merkle inclusion proof showing your transaction is included in the trie of "withdrawal" messages, along with other parameters. Producing this proof and these values can be done locally and permissionlessly, but at the moment, the easiest way to retrieve these parameters is through our backend API hosted at https://sepolia-api-bridge.scroll.io/api/.
+
+<Aside type="danger" title="Experimental API">
+  This API was made for our Bridge UI. It is not yet finalized and may change in the future. We will update this guide
+  when the API is finalized.
+</Aside>
 
 Supply the address of the EOA or contract responsible for initiating the original transaction on L2 to the `/claimable`
 endpoint. The API backend will provide you with all the necessary information to successfully conclude the transaction on L1.
@@ -39,7 +39,7 @@ Take a look at the following example:
 https://sepolia-api-bridge.scroll.io/api/claimable?address=0x031407eaaffFB4f1EC2c999bE4477E52C81de3c5&page_size=10&page=1
 ```
 
-The API should return your transaction data on the following format:
+The API should return your transaction data in the following format:
 
 ```json
 {
@@ -83,13 +83,13 @@ The API should return your transaction data on the following format:
 ```
 
 The `claimInfo` object under the `result` json returned has all the information needed to execute your transaction on L1. The
-parameters needed by the `relayMessageWithProof` are: `from`, `to`, `value`, `nonce`, `message` and `proof`. Supply them to
+parameters needed by the `relayMessageWithProof` are: `from`, `to`, `value`, `nonce`, `message` and `proof`. Supply these to
 the `relayMessageWithProof` function on L1 to execute and finalize your transaction on L1.
 
 <Aside type="tip" title="">
-  All L2 transactions are boundled into batches, you have to wait for the batch where your transaction is included to
-  finish before calling `relayMessageWithProof`. Your transaction batch index is returned in the `batch_index` value on
-  the `/claimable` endpoint and you can follow the progress on the [Scroll Rollup
+  All L2 transactions are bundled into batches – you have to wait for the batch that includes your transaction to
+  finalize before calling `relayMessageWithProof`. Your transaction batch index is returned in the `batch_index` value
+  on the `/claimable` endpoint, and you can follow the progress on the [Scroll Rollup
   Scan](https://sepolia--scroll-io.netlify.app/rollupscan?page=1&per_page=10).
 </Aside>
 
@@ -111,13 +111,13 @@ function sendMessage(
 
 Sends arbitrary data from one chain to another. It allows us to execute functions cross-chain.
 
-| Parameter     | Description                                                                                                  |
-| ------------- | ------------------------------------------------------------------------------------------------------------ |
-| target        | The address of account who receive the message. The receiver can be either a smart contract or a EOA wallet. |
-| value         | The amount of ether passed when call target contract.                                                        |
-| message       | The content of the message. This is the arbitrary calldata to be executed.                                   |
-| gasLimit      | Gas limit required to complete the message relay on corresponding chain.                                     |
-| refundAddress | The address of account who will receive the refunded fee.                                                    |
+| Parameter     | Description                                                                                                         |
+| ------------- | ------------------------------------------------------------------------------------------------------------------- |
+| target        | The address of the account that receives the message. The receiver can be either a smart contract or an EOA wallet. |
+| value         | The amount of ether passed when calling the target contract.                                                        |
+| message       | The content of the message. This is the arbitrary calldata to be executed.                                          |
+| gasLimit      | Gas limit required to complete the message relay on the corresponding chain.                                        |
+| refundAddress | The address of the account that will receive the refunded fee.                                                      |
 
 ### relayMessageWithProof
 
