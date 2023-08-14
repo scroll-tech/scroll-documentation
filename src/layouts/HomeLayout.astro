@@ -20,9 +20,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site)
     <HeadSEO content={content} canonicalURL={canonicalURL} site="" />
     <title>{formattedContentTitle}</title>
     <style>
-      html {
-        scrollbar-gutter: stable;
-      }
       body {
         --doc-padding: 65px;
       }
@@ -50,7 +47,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site)
       .search-item {
         display: none !important;
       }
-      .global-search-toggle,
+
       .mobile-sidebar-toggle {
         overflow: hidden;
       }
