@@ -96,7 +96,7 @@ To do so, you will need to pass a Merkle inclusion proof for the bridged transac
 
 {/* TODO: finish looking into API issues */}
 
-We're finalizing the API specifcs, but for now, fetch or curl the following endpoint:
+We're finalizing the API specifics, but for now, fetch or curl the following endpoint:
 
 ```bash
 curl "https://sepolia-api-bridge.scroll.io/api/claimable?page_size=10&page=1&address=GREETER_OPERATOR_ADDRESS_ON_L2"
@@ -104,6 +104,11 @@ curl "https://sepolia-api-bridge.scroll.io/api/claimable?page_size=10&page=1&add
 
 Replace `GREETER_OPERATOR_ADDRESS_ON_L2` with your GreeterOperator contract address as launched on L2. Read more about Execute Withdraw transactions
 in the [Scroll Messenger](/developers/l1-and-l2-bridging/the-scroll-messenger) article.
+
+<Aside type="danger" title="Experimental API">
+  This API was made for our Bridge UI. It is not yet finalized and may change in the future. We will update this guide
+  when the API is finalized.
+</Aside>
 
 <Aside type="caution" title="Anyone can execute your L2 → L1 Message">
   `relayMessageWithProof` is fully permissionless, so anyone can call it on your behalf if they're willing to pay the L1
