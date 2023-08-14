@@ -60,9 +60,6 @@ changeLanguage(content.lang)
     />
 
     <style>
-      html {
-        scrollbar-gutter: stable;
-      }
       body {
         width: 100%;
         display: grid;
@@ -172,6 +169,12 @@ changeLanguage(content.lang)
         left: 0;
         padding-left: 20px;
         height: calc(100% - 20px);
+      }
+
+      @media screen and (max-width: 50em) {
+        .global-search-toggle {
+          overflow: hidden;
+        }
       }
 
       @media (min-width: 50em) {

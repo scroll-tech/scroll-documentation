@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react"
+import React, { useState, useCallback } from "react"
 import styles from "./index.module.css"
 
 import { useKeyPress } from "~/hooks/useKeyPress"
@@ -6,15 +6,6 @@ import { SearchModal } from "../Header/Search/SearchModal"
 
 export default function Search() {
   const [isOpen, setIsOpen] = useState(false)
-
-  useEffect(() => {
-    const body = document.body
-    if (isOpen) {
-      body.classList.add("global-search-toggle")
-    } else {
-      body.classList.remove("global-search-toggle")
-    }
-  }, [isOpen])
 
   const onOpen = useCallback(() => {
     setIsOpen(true)
