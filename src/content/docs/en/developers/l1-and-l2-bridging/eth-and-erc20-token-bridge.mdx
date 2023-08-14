@@ -4,6 +4,7 @@ date: Last Modified
 title: "ETH and ERC20 Token Bridge"
 lang: "en"
 permalink: "developers/l1-and-l2-bridging/eth-and-erc20-token-bridge"
+whatsnext: { "ERC721 NFT Bridge": "/developers/l1-and-l2-bridging/erc721-nft-bridge/" }
 excerpt: "The Gateway Router allows ETH and ERC20 token bridging from L1 to L2 using the depositETH and depositERC20 functions respectively."
 ---
 
@@ -29,8 +30,8 @@ All Gateway contracts will form the message and send it to the `L1ScrollMessenge
 <Aside type="tip" title="">
   Users can also bypass the **`L1ScrollMessenger`** and send messages directly to the **`L1MessageQueue`**. If a message
   is sent via the `L1MessageQueue`, the transaction's sender will be the address of the user sending the transaction,
-  not the address of the `L1ScrollMessenger`. Learn more about sending arbitrary messages in the
-  [the-scroll-messenger.md](the-scroll-messenger.md "mention") documentation.&#x20;
+  not the address of the `L1ScrollMessenger`. Learn more about sending arbitrary messages in the [Scroll
+  Messenger](/en/developers/l1-and-l2-bridging/the-scroll-messenger) article.
 </Aside>
 
 When a new block gets created on L1, the Watcher will detect the message on the `L1MessageQueue` and will pass it to the Relayer service, which will submit the transaction to the L2 via the l2geth node. Finally, the l2geth node will pass the transaction to the `L2ScrollMessagner` contract for execution on L2.

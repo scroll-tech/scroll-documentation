@@ -47,16 +47,16 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site)
       .search-item {
         display: none !important;
       }
+
       .mobile-sidebar-toggle {
         overflow: hidden;
       }
-
       .mobile-sidebar-toggle #grid-left {
         display: block;
         top: 2rem;
         left: 0;
         padding: 0 20px;
-        height: calc(100vh - 2rem);
+        height: calc(100vh - 20px);
       }
     </style>
   </head>
@@ -70,5 +70,5 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site)
   <main class="home-layout">
     <slot />
   </main>
-  <Footer />
+  <Footer client:idle />
 </body>

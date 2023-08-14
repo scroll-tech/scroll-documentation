@@ -29,7 +29,17 @@ const section = frontmatter?.section ?? ""
   src="https://www.googletagmanager.com/ns.html?id=GTM-N6DQ47T"
   height="0"
   width="0"
-  style="display:none;visibility:hidden"></iframe> --><!-- End Google Tag Manager (noscript) -->
+  style="display:none;visibility:hidden"></iframe> --><!-- End Google Tag Manager (noscript) --><!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-56SBDN1LL2"></script>
+<script>
+  window.dataLayer = window.dataLayer || []
+  function gtag() {
+    dataLayer.push(arguments)
+  }
+  gtag("js", new Date())
+
+  gtag("config", "G-56SBDN1LL2")
+</script>
 <header>
   <SkipToContent />
   <nav class="nav-wrapper" title="Top Navigation">
@@ -84,7 +94,8 @@ const section = frontmatter?.section ?? ""
   }
 
   .nav-link {
-    line-height: 40px;
+    line-height: 32px;
+    padding-top: 7px;
     color: var(--textColor);
   }
   .nav-link:hover {
@@ -101,7 +112,6 @@ const section = frontmatter?.section ?? ""
     line-height: 1;
     color: hsla(var(--color-base-white), 100%, 1);
     gap: 0.25em;
-    z-index: -1;
   }
 
   .logo a {
@@ -125,7 +135,7 @@ const section = frontmatter?.section ?? ""
   }
 
   .logo img {
-    height: 30px;
+    height: 38px;
   }
 
   .nav-wrapper {
@@ -179,7 +189,6 @@ const section = frontmatter?.section ?? ""
     }
     .logo {
       margin: 0;
-      z-index: 0;
     }
     .menu-toggle {
       display: none;
