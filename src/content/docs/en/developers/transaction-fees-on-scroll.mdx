@@ -93,21 +93,21 @@ The following steps are taken to calculate the L1 data fee:
 
 1. Read three fields `l1BaseFee`, `overhead`, `scalar` from the `L1GasPriceOracle` contract. The slots for these fields in the contract are:
 
-| Field     | Slot |
-| --------- | ---- |
-| l1BaseFee | 1    |
-| overhead  | 2    |
-| scalar    | 3    |
+    | Field     | Slot |
+    | --------- | ---- |
+    | l1BaseFee | 1    |
+    | overhead  | 2    |
+    | scalar    | 3    |
 
 2. Count the number of zero bytes and non-zero bytes from the transaction.
 3. Calculate the L1 data fee (`PRECISION = 1e9`)
 
-```javascript
-l1Gas = zeros * 4 + (nonzeros + 4) * 16
-l1GasFee = ((l1Gas + overhead) * l1BaseFee * scalar) / PRECISION
-```
-
-We reserve an additional 4 bytes in the non-zero bytes to store the number of bytes in the RLP-encoded transaction.
+    ```javascript
+    l1Gas = zeros * TX_DATA_ZERO_GAS + (nonzeros + 4) * TX_DATA_NON_ZERO_GAS
+    l1GasFee = ((l1Gas + overhead) * l1BaseFee * scalar) / PRECISION
+    ```
+    , where `TX_DATA_ZERO_GAS = 4` and `TX_DATA_NON_ZERO_GAS = 16` (ref [EIP-2028](https://eips.ethereum.org/EIPS/eip-2028)).
+    We reserve an additional 4 bytes in the non-zero bytes to store the number of bytes in the RLP-encoded transaction.
 
 ### L1GasPriceOracle API
 
@@ -147,7 +147,7 @@ Computes the L1 portion of the fee based on the size of the RLP encoded input tr
 
 | Parameter | Description                                                        |
 | --------- | ------------------------------------------------------------------ |
-| data      | data Unsigned fully RLP-encoded transaction to get the L1 fee for. |
+| data      | Signed fully RLP-encoded transaction to get the L1 fee for.        |
 
 #### getL1GasUsed
 
@@ -159,9 +159,9 @@ Computes the amount of L1 gas used for a transaction. Adds the overhead which re
 
 **Returns:** Amount of L1 gas used to publish the transaction.
 
-| Parameter | Description                                                        |
-| --------- | ------------------------------------------------------------------ |
-| data      | data Unsigned fully RLP-encoded transaction to get the L1 fee for. |
+| Parameter | Description                                                  |
+| --------- | -------------------------------------------------------------|
+| data      | Signed fully RLP-encoded transaction to get the L1 fee for.  |
 
 ## Future Roadmap
 
