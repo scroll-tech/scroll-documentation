@@ -58,7 +58,28 @@ Every transaction's calldata must be committed to Ethereum, which incurs an addi
 
 Transactions aren't committed 1-by-1 -- they are collected in batches of blocks (and blocks of transactions). The cost of an individual transaction is computed based on the zeros and non-zero bytes in its payload.
 
-### Calculating the L1 Data Fee
+### Estimating the L1 Data Fee
+
+Scroll has a pre-deployed `L1GasPriceOracle`, accessible on Scroll Sepolia at ([`0x5300000000000000000000000000000000000002`](https://sepolia-blockscout.scroll.io/address/0x5300000000000000000000000000000000000002)). It provides a `getL1Fee` method to estimate the L1 data fee for a given transaction's raw data.
+
+```solidity
+function getL1Fee(bytes memory _data) external view override returns (uint256);
+```
+
+<Aside type="note" title="What happens if gas prices spike on L1?">
+
+Once the sequencer has processed a transaction, a user's L1 fee is locked in, and any fluctuations will not affect what a user pays.
+
+<br />
+Because of Scroll's short block times, any L1 gas changes between a transaction's submission and its inclusion in a block
+should be minimal. The sequencer will absorb any changes to L1 gas costs between a transaction's inclusion in a block and
+when the sequencer commits the data to L1.
+
+</Aside>
+
+### Calculating the L1 Data Fee with Gas Oracle
+
+As mentioned, the `L1GasPriceOracle` is used to estimate the L1 gas fee given raw transaction data. This is a **push oracle**, updated by a relayer run by Scroll.
 
 The data fee is based on multiple factors:
 
@@ -68,40 +89,9 @@ The data fee is based on multiple factors:
 - `scalingFactor` - A scaling factor used to account for price spikes
 - `PRECISION` - A constant used to scale the final fee
 
-Then, the final formula would be
+The following steps are taken to calculate the L1 data fee:
 
-```javascript
-l1Gas = zeros * 4 + (nonzeros + 4) * 16
-l1GasFee = ((l1Gas + overhead) * l1BaseFee * scalar) / PRECISION
-```
-
-{/* TODO revise starting here */}
-
-### What happens if gas fluctuates on L1?
-
-If a gas spike happens on the L1 after the transaction has been processed by the sequencer, it doesn’t affect what the user pays.
-
-The transaction execution happens in a few steps:
-
-1. Creation of transaction _(Client side)_
-2. Emitting of the transaction _(Client side)_
-3. Processing of the transaction _(Sequencer)_
-4. Committing of the transaction _(Sequencer)_
-
-Everything after the second step is the responsibility of the sequencer. Should the L1 gas cost increase (or decrease) between the processing and actual committing of a transaction, the user shouldn't be affected, and the sequencer will pay for all cost fluctuations.
-
-## Gas Oracle
-
-Scroll Sepolia has a pre-deployed contract `L1GasPriceOracle` (contract address [`0x5300000000000000000000000000000000000002`](https://sepolia-blockscout.scroll.io/address/0x5300000000000000000000000000000000000002)) used to estimate the L1 gas fee given raw transaction data. This is a **push oracle**, updated by a relayer run by Scroll.
-{/* TODO: Double check this address is used for Sepolia */}
-
-It stores the L1 base fee gas price and provides a public API, which can be used to estimate the total transaction fee for some L2 transactions.
-
-### How does it work?
-
-The L1 fee calculation works as follows.
-
-1. Read three fields `l1BaseFee`, `overhead`, `scalar` from the `L1GasPriceOracle` contract. The slots for these fields in the contract are
+1. Read three fields `l1BaseFee`, `overhead`, `scalar` from the `L1GasPriceOracle` contract. The slots for these fields in the contract are:
 
 | Field     | Slot |
 | --------- | ---- |
@@ -109,24 +99,17 @@ The L1 fee calculation works as follows.
 | overhead  | 2    |
 | scalar    | 3    |
 
-2. Count the number of zero bytes and non-zero bytes from the transaction callData.
-3. Calculate the sumL1 data fee (`PRECISION = 1e9`)
+2. Count the number of zero bytes and non-zero bytes from the transaction.
+3. Calculate the L1 data fee (`PRECISION = 1e9`)
 
-#### What does the commit tx consist of?
+```javascript
+l1Gas = zeros * 4 + (nonzeros + 4) * 16
+l1GasFee = ((l1Gas + overhead) * l1BaseFee * scalar) / PRECISION
+```
 
-Encoding of a transaction in the commit tx \[length] \[RLP-encoded transaction with signature] consists of two parts:
+We reserve an additional 4 bytes in the non-zero bytes to store the number of bytes in the RLP-encoded transaction.
 
-1. The sum of zero bytes and non-zero bytes in the RLP-encoded transaction without signature&#x20;
-2. Additional 74 bytes&#x20;
-   - 4 bytes: the length prefix of transaction data&#x20;
-   - 1 byte: RLP prefix for V&#x20;
-   - 3 bytes: V&#x20;
-   - 1 byte: RLP prefix for R&#x20;
-   - 32 bytes: R&#x20;
-   - 1 byte: RLP prefix for S&#x20;
-   - 32 bytes: S
-
-### API
+### L1GasPriceOracle API
 
 #### overhead
 
@@ -155,7 +138,7 @@ Returns the latest known l1 base fee
 #### getL1Fee
 
 ```solidity
-function getL1Fee(bytes memory data) external view returns (uint256);
+function getL1Fee(bytes memory _data) external view returns (uint256);
 ```
 
 Computes the L1 portion of the fee based on the size of the RLP encoded input transaction, the current L1 base fee, and the various dynamic parameters.
@@ -182,8 +165,8 @@ Computes the amount of L1 gas used for a transaction. Adds the overhead which re
 
 ## Future Roadmap
 
-Currently, the computation required for proof generation is done and subsidized by Scroll.
+Currently, the computation required for proof generation is completed by and subsidized by Scroll and various proving partners.
 
-In the future, the prover network will be decentralized and require the incorporation of rewards to be earned by the protocol’s actors for the system to be sustainable and scalable.
+As the prover network becomes decentralized, incentives for proof generation will need to be incorporated into the protocol for the system to be sustainable and scalable.
 
-The final gas cost will include the cost of proof generation, which, as the protocol becomes further optimized, will become cheaper as they're shared between all transactions on the network.
+We expect the final gas cost will include the cost of this proof generation. With further protocol optimization, this cost for the user should be minimal, as each proof covers many transactions.
