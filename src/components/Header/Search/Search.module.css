@@ -225,7 +225,7 @@
 
   .hitWrapper {
     max-height: calc(80vh - 100px);
-    overflow: scroll;
+    overflow: auto;
   }
 
   .hitList li {

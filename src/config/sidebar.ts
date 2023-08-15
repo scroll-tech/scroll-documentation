@@ -177,15 +177,44 @@ export const getSidebar = () => {
         ],
       },
       {
-        section: t("sidebar.technology.scrollProtocol"),
+        section: t("sidebar.technology.scrollChain"),
         contents: [
           {
-            title: t("sidebar.technology.scrollArchitecture"),
-            url: "technology/architecture/scroll-architecture",
+            title: t("sidebar.technology.accountsAndState"),
+            url: "technology/chain/accounts",
           },
           {
-            title: t("sidebar.technology.principles"),
-            url: "technology/architecture/principles",
+            title: t("sidebar.technology.transactions"),
+            url: "technology/chain/transactions",
+          },
+          {
+            title: t("sidebar.technology.blocks"),
+            url: "technology/chain/blocks",
+          },
+          {
+            title: t("sidebar.technology.rollupProcess"),
+            url: "technology/chain/rollup",
+          },
+          {
+            title: t("sidebar.technology.evmDifferencesFromEthereum"),
+            url: "technology/chain/differences",
+          },
+        ],
+      },
+      {
+        section: t("sidebar.technology.bridge"),
+        contents: [
+          {
+            title: t("sidebar.technology.crossDomainMessaging"),
+            url: "technology/bridge/cross-domain-messaging",
+          },
+          {
+            title: t("sidebar.technology.depositGateways"),
+            url: "technology/bridge/deposit-gateways",
+          },
+          {
+            title: t("sidebar.technology.withdrawGateways"),
+            url: "technology/bridge/withdraw-gateways",
           },
         ],
       },
@@ -199,19 +228,6 @@ export const getSidebar = () => {
           {
             title: t("sidebar.technology.zkevmOverview"),
             url: "technology/zkevm/zkevm-overview",
-          },
-        ],
-      },
-      {
-        section: t("sidebar.technology.bridge"),
-        contents: [
-          {
-            title: t("sidebar.technology.bridgeOverview"),
-            url: "technology/bridge/bridge-overview",
-          },
-          {
-            title: t("sidebar.technology.rollupProcess"),
-            url: "technology/bridge/rollup-process",
           },
         ],
       },

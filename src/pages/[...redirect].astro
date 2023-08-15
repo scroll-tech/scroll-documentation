@@ -42,4 +42,9 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
 const { to } = Astro.props
 ---
 
-<meta http-equiv="refresh" content={`0; url=${to}`} />
+<script define:vars={{ to }}>
+  document.addEventListener("DOMContentLoaded", function () {
+    const hash = window.location.hash || ""
+    window.location.href = `${to}${hash}`
+  })
+</script>

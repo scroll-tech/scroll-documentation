@@ -31,10 +31,8 @@
   /* position: "relative", mt: ["3.2rem", "3.2rem", 0], flex: 1, width: ["100%", "auto"], textAlign: "right"  */
   position: relative;
   /* margin-top: 32px; */
-  flex: 1;
-  width: auto;
-  text-align: left;
   width: 100%;
+  text-align: left;
 }
 
 .errorMessage {
@@ -69,6 +67,7 @@
   }
 
   .emailBox {
+    width: 448px;
     text-align: right;
   }
 

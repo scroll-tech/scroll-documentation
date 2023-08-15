@@ -34,6 +34,7 @@ nav ul {
 
 .content > section > * + * {
   margin-top: 1.25rem;
+  margin-bottom: 2.25rem;
 }
 
 .content > section > :first-child {
@@ -41,7 +42,7 @@ nav ul {
 }
 
 .content :is(ul, ol) {
-  line-height: 1.25em;
+  line-height: 1.4em;
   margin-bottom: 0.7em;
   margin-bottom: 16px;
 }
@@ -123,6 +124,7 @@ article > section iframe {
   /* Override styles from design-system */
   margin: 0 0 16px;
   max-width: 100%;
+  line-height: 1.6em;
 }
 
 .main-section :is(h2, h3, h4) {
@@ -148,7 +150,7 @@ a > code::before {
   left: 0;
   display: block;
   border-radius: var(--border-radius);
-  @apply bg-accent opacity-accent;
+  /* @apply bg-accent opacity-accent; */
 }
 
 a:focus {
@@ -170,16 +172,22 @@ strong {
   --border-radius: 3px;
   --padding-block: 0.1rem;
   --padding-inline: 0.33rem;
-
   font-size: 0.85em;
-  color: var(--orange-500);
   padding: var(--padding-block) var(--padding-inline);
-  margin: calc(var(--padding-block) * -1) -0.125em;
+  margin: 0.125em;
   border-radius: var(--border-radius);
   word-break: break-word;
-  background: var(--orange-100);
+  background: var(--gray-200);
   font-weight: 500;
+  color: var(--black-100);
   @apply font-mono;
+}
+
+a > code {
+  text-decoration-thickness: 1px;
+  text-decoration-line: underline;
+  text-decoration-skip-ink: 1px;
+  text-decoration-style: dashed;
 }
 
 pre.astro-code > code {
@@ -395,4 +403,13 @@ h2.heading {
     font-size: 16px;
     padding: 0.1rem 1rem;
   }
+}
+
+:is(h1, h2, h3):hover .icon-link {
+  background: url(/images/link.svg) no-repeat;
+  background-size: cover;
+  width: var(--space-4x);
+  height: var(--space-4x);
+  display: inline-block;
+  margin-left: var(--space-2x);
 }
