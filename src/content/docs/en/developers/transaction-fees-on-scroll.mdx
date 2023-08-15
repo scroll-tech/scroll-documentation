@@ -12,11 +12,11 @@ import Aside from "../../../../components/Aside.astro"
 
 ## Overview
 
-Scroll Sepolia Testnet fees are notably lower than on its supporting layer. Being an L2 rollup also means that the total transaction cost depends on the L1's costs, since, to leverage Ethereum's security, data and proofs have to be stored and computed on the L1.
+Scroll Sepolia Testnet fees are notably lower than on its supporting layer. For users and developers, transaction fees on Scroll appear to work similarly to those on Ethereum mainnet, and existing tools, wallets, and code will likely work as if they were. However, the transaction fee shown isn't the whole picture unless the software is specifically aware of Scroll's fee calculations.
 
-For users and developers, transaction fees on Scroll work similarly to those on Ethereum mainnet, and all existing tools, wallets, and code should be expected to work the same.
+Due to the design of L2 rollups, transaction costs depend on the L1's costs. To leverage Ethereum's security, Scroll must account for the cost of the transaction data and proofs that must be stored and verified on the L1.
 
-Behind the scenes, however, Scroll Sepolia introduces some new dimensions to transaction fee calculation. The final cost of a transaction is constructed from several parts:
+Scroll Sepolia introduces some new dimensions to transaction fee calculation to do this. The final cost of a transaction is constructed from several parts:
 
 - **L2 fee**
   - Calculated in the same manner as on the L1, equaling `gas_price * gas_used`
@@ -42,7 +42,7 @@ Transactions on Scroll, like on Ethereum, must pay the cost of executing their c
 
 ### Calculating the Execution Fee
 
-In short, it is calculated very simply:
+The L2 execution fee is straightforward:
 
 ```javascript
 l2TransactionExecutionFee = l2TransactionGasUsed * l2TransactionGasPrice
