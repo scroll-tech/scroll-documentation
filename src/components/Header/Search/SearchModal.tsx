@@ -21,7 +21,7 @@ const recommendedArticles = [
   },
   {
     title: "Sepolia Testnet Contracts",
-    url: "/en/developers/alpha-testnet-contracts",
+    url: "/en/developers/scroll-contracts",
   },
   {
     title: "Architecture Overview",
