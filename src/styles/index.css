@@ -16,6 +16,7 @@
   --user-font-scale: 1rem - 16px;
   --max-width: calc(100%);
   --fullwidth-max-width: calc(100% - 1rem);
+  scroll-behavior: smooth;
 }
 
 body {
