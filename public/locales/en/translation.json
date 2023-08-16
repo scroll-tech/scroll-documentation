@@ -54,8 +54,6 @@
       "transferTokens": "Transfer Tokens",
       "commonErrors": "Common Errors",
       "rollupExplorer": "Rollup Explorer",
-      "alphaBlockExplorer": "Alpha Block Explorer",
-      "goerliBlockExplorer": "Goerli Block Explorer",
       "scrollSepoliaBlockExplorer": "Scroll Sepolia Explorer",
       "sepoliaBlockExplorer": "Sepolia Explorer",
       "community": "Community",

@@ -15,7 +15,7 @@ To interact with our testnet, you first need to receive testnet ETH on _Sepolia 
 Here are a few Sepolia faucet apps:
 
 - [https://sepoliafaucet.com](https://sepoliafaucet.com//)
-- [https://sepolia-faucet.pk910.de](https://goerli-faucet.pk910.de/)
+- [https://sepolia-faucet.pk910.de](https://sepolia-faucet.pk910.de/)
 - [https://faucet.quicknode.com/drip](https://faucet.quicknode.com/drip)
 
 Once you receive ETH on Sepolia, you should see it in your wallet on the _Sepolia Network_. It may take a few seconds for them to appear, but you can check the status by looking for a transaction to your address on a [Sepolia Block Explorer](https://sepolia.etherscan.io/).
