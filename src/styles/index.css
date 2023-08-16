@@ -178,7 +178,6 @@ strong {
   border-radius: var(--border-radius);
   word-break: break-word;
   background: var(--gray-200);
-  font-weight: 500;
   color: var(--black-100);
   @apply font-mono;
 }
