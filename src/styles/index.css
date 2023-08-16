@@ -178,9 +178,15 @@ strong {
   border-radius: var(--border-radius);
   word-break: break-word;
   background: var(--gray-200);
-  font-weight: 500;
   color: var(--black-100);
   @apply font-mono;
+}
+
+a > code {
+  text-decoration-thickness: 1px;
+  text-decoration-line: underline;
+  text-decoration-skip-ink: 1px;
+  text-decoration-style: dashed;
 }
 
 pre.astro-code > code {

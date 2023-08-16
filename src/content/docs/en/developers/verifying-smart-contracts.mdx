@@ -23,7 +23,7 @@ After deploying your smart contracts, it's important to verify your code on [our
 
 ## Using Developer Tools
 
-Most smart contract tooling has plugins for verifying your contracts easily on Etherscan. Blockscout supports Etherscan's contract verification APIs, and it's straight forward to use these tools with the Scroll Alpha Testnet.
+Most smart contract tooling has plugins for verifying your contracts easily on Etherscan. Blockscout supports Etherscan's contract verification APIs, and it's straightforward to use these tools with the Scroll Sepolia Testnet.
 
 ### Hardhat
 
@@ -35,7 +35,7 @@ First, modify `hardhat.config.ts` to point to Scroll's RPC and `sepolia-blocksco
 const config: HardhatUserConfig = {
   ...
   networks: {
-    scrollAlpha: {
+    scrollSepolia: {
       url: 'https://sepolia-rpc.scroll.io' || '',
       accounts:
         process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
@@ -43,7 +43,7 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: {
-      scrollAlpha: 'abc',
+      scrollSepolia: 'abc',
     },
     customChains: [
       {

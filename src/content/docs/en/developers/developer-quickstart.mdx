@@ -27,7 +27,7 @@ For a walkthrough, start with the User Guide's [Setup](/user-guide/setup) page.
 
 ## Network Configuration
 
-Use the table below to configure your Ethereum tools to the Scroll Alpha Testnet.
+Use the table below to configure your Ethereum tools to the Scroll Sepolia Testnet.
 
 | Network Name       | Scroll Sepolia Testnet                                                        | Sepolia Testnet                                                              |
 | ------------------ | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
@@ -53,7 +53,7 @@ Modify your Hardhat config file `hardhat.config.ts` to point at the Scroll Sepol
 const config: HardhatUserConfig = {
   ...
   networks: {
-    scrollAlpha: {
+    scrollSepolia: {
       url: "https://sepolia-rpc.scroll.io/" || "",
       accounts:
         process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
@@ -93,7 +93,7 @@ const HDWalletProvider = require("@truffle/hdwallet-provider")
 ...
 module.exports = {
   networks: {
-    scrollAlpha: {
+    scrollSepolia: {
       provider: () =>
         new HDWalletProvider(process.env.PRIVATE_KEY, "https://sepolia-rpc.scroll.io/"),
       network_id: '*',
@@ -107,7 +107,7 @@ module.exports = {
 To add the Scroll Sepolia Testnet, run the following command:
 
 ```bash
-brownie networks add Ethereum scrollAlpha host=https://sepolia-rpc.scroll.io/ chainid=534351
+brownie networks add Ethereum scrollSepolia host=https://sepolia-rpc.scroll.io/ chainid=534351
 ```
 
 To set this as your default network, add the following in your project config file:
@@ -156,7 +156,7 @@ const provider = new ethers.providers.JsonRpcProvider("https://sepolia-rpc.scrol
 
 ### scaffold-eth
 
-To deploy using Scaffold-eth, you’ll need to point both your Hardhat and React settings at the Scroll Alpha Testnet.
+To deploy using Scaffold-eth, you’ll need to point both your Hardhat and React settings at the Scroll Sepolia Testnet.
 
 #### Configure Hardhat
 
@@ -201,7 +201,7 @@ To add the network, modify `packages/react-app/src/constants.js` .
 ...
 export const NETWORKS = {
 ...
-  scrollAlpha: {
+  scrollSepolia: {
     name: "scrollSepolia",
     color: "#e9d0b8",
     chainId: 534351,

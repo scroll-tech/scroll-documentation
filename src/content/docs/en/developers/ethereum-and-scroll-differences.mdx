@@ -10,7 +10,7 @@ excerpt: "There are a number of technical details that differ between Ethereum m
 
 import Aside from "../../../../components/Aside.astro"
 
-There are a number of technical details that differ between Ethereum mainnet's EVM and Scroll's modified design for a zkEVM. Below you can see those differences as they exist now.
+A number of technical details differ between Ethereum mainnet's EVM and Scroll's modified design for a zkEVM. Below you can see those differences as they exist on Scroll Sepolia.
 
 For open-source contributors and infrastructure builders, please contact our team for additional support.
 
@@ -20,17 +20,16 @@ For open-source contributors and infrastructure builders, please contact our tea
 
 ## EVM Opcodes
 
-| Opcode                      | Solidity equivalent | Ethereum Behavior                                                                                                                                                                                                                                                          | Scroll Behavior                                                                                            |
-| --------------------------- | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| `BLOCKHASH`                 | `block.blockhash`   | <p><strong>Input:</strong> <code>blockNumber</code> from top of the stack, and the valid range is [<code>NUMBER</code>-256, <code>NUMBER</code>-1].</p><p><strong>Output:</strong> hash of the given block number, or 0 if the block number is not in the valid range.</p> | Returns `keccak(chain_id \|\| block_number)` for the last 256 blocks.                                      |
-| `COINBASE`                  | `block.coinbase`    | In Ethereum Clique, the eth address of the signer.                                                                                                                                                                                                                         | Returns the pre-deployed fee vault contract address. See [Scroll Contracts](/developers/scroll-contracts). |
-| `DIFFICULTY` / `PREVRANDAO` | `block.difficulty`  | After PoS, the previous block’s `randao` value.                                                                                                                                                                                                                            | Returns 0.                                                                                                 |
-| `BASEFEE`                   | `block.basefee`     | With EIP-1559: the minimum gas fee a user must pay to include a transaction in the next block                                                                                                                                                                              | Disabled.[^eip1559] If the opcode is encountered, the transaction will be reverted.                        |
-| `SELFDESTRUCT`              | `selfdestruct`      | Plans to deprecate and substitute with `SENDALL`[^sendall]                                                                                                                                                                                                                 | Disabled. If the opcode is encountered, the transaction will be reverted.[^willadpot]                      |
+| Opcode                      | Solidity equivalent | Scroll Behavior                                                                                            |
+| --------------------------- | ------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `BLOCKHASH`                 | `block.blockhash`   | Returns `keccak(chain_id \|\| block_number)` for the last 256 blocks.                                      |
+| `COINBASE`                  | `block.coinbase`    | Returns the pre-deployed fee vault contract address. See [Scroll Contracts](/developers/scroll-contracts). |
+| `DIFFICULTY` / `PREVRANDAO` | `block.difficulty`  | Returns 0.                                                                                                 |
+| `BASEFEE`                   | `block.basefee`     | Disabled.[^eip1559] If the opcode is encountered, the transaction will be reverted.                        |
+| `SELFDESTRUCT`              | `selfdestruct`      | Disabled. If the opcode is encountered, the transaction will be reverted.[^willadpot]                      |
 
-[^sendall]: See [EIP-4758](https://eips.ethereum.org/EIPS/eip-4758) for more details.
-[^willadpot]: Will change to adopt Ethereum’s solution in the future.
 [^eip1559]: We have currently disabled EIP-1559 on Scroll.
+[^willadpot]: Will change to adopt Ethereum’s solution in the future.
 
 ## EVM Precompiles
 
@@ -81,15 +80,13 @@ This was chosen for two reasons:
 
 ## Future EIPs
 
-We keep a close on eye on all emerging EIPs adopted by Ethereum and adopt them when suitable. If you’re interested in more specifics, reach out in [our community forum](https://community.scroll.io) or on the [Scroll Discord](https://discord.gg/scroll).
+We keep a close eye on all emerging EIPs adopted by Ethereum and adopt them when suitable. If you’re interested in more specifics, reach out in [our community forum](https://community.scroll.io) or on the [Scroll Discord](https://discord.gg/scroll).
 
 ## EVM Target version
 
-To ensure no unexpected behaviour happens in your contracts, we recommend using `london` as target version when compiling your smart contracts.
+To ensure no unexpected behavior happens in your contracts, we recommend using `london` as the target version when compiling your smart contracts.
 
-You can read in more details on Shanghai hard fork differences from London on the [Ethereum Execution spec](https://github.com/ethereum/execution-specs/blob/master/network-upgrades/mainnet-upgrades/shanghai.md) and how the new `PUSH0` instruction [impacts the Solidity compiler](https://blog.soliditylang.org/2023/05/10/solidity-0.8.20-release-announcement/).
-
-{/* TODO: Is this still true after our support for PUSH0? */}
+You can read in more detail on Shanghai hard fork differences from London on the [Ethereum Execution spec](https://github.com/ethereum/execution-specs/blob/master/network-upgrades/mainnet-upgrades/shanghai.md) and how the new `PUSH0` instruction [impacts the Solidity compiler](https://blog.soliditylang.org/2023/05/10/solidity-0.8.20-release-announcement/).
 
 ## Transaction Fees
 
