@@ -2,7 +2,7 @@
   margin-top: -7px !important;
   margin-right: 4px !important;
   display: flex;
-  z-index: 999;
+  z-index: 1;
   justify-content: flex-end;
   position: absolute;
   transform: translateY(5px);
