@@ -11,8 +11,8 @@ export const PAGE = {
 
 export const OPEN_GRAPH = {
   image: {
-    src: "https://scroll.io/static/media/logo_with_text.7c6cafcac81093d6f83b.png",
-    alt: "Scroll is scroll. Edit me in site.ts",
+    src: "https://docs.scroll.io/assets/images/social-website-card.png",
+    alt: "Scroll Documentation",
   },
   twitter: "Scroll_ZKP",
 }

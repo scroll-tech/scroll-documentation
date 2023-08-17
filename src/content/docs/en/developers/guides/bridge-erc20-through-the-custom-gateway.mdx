@@ -14,7 +14,7 @@ This guide will walk through how to use Scroll's bridge for ERC20s that need cus
 <Aside type="tip" title="Do you need custom logic?">
   Remember, for many contexts, you won't need to use the Custom Gateway to add additional features to your token or to
   its bridging logic. See the article on [ETH and ERC20 Token
-  Bridge](developers/l1-and-l2-bridging/eth-and-erc20-token-bridge#deposit-eth-and-erc20-tokens-from-l1) for more info.
+  Bridge](/developers/l1-and-l2-bridging/eth-and-erc20-token-bridge#deposit-eth-and-erc20-tokens-from-l1) for more info.
 </Aside>
 
 ## Step 1: Launch a token on Sepolia
@@ -101,9 +101,7 @@ You need to contact the Scroll team to add the token to `L2CustomERC20Gateway` c
 
 ## Step 4: Deposit tokens
 
-Once your token has been approved by the Scroll team, you should be able to deposit tokens from L1. To do so, you must first approve the `L1CustomGateway` contract address on Sepolia (`0x31C994F2017E71b82fd4D8118F140c81215bbb37`). Then, deposit tokens by calling the `depositERC20` function from the `L1CustomGateway` contract. This can be done using [our bridge UI](https://scroll.io/sepolia/bridge), [Etherscan Sepolia](https://sepolia.etherscan.io/address/0x31C994F2017E71b82fd4D8118F140c81215bbb37#writeProxyContract), or a smart contract.
-
-{/* TODO: is this the correct bridge url? */}
+Once your token has been approved by the Scroll team, you should be able to deposit tokens from L1. To do so, you must first approve the `L1CustomGateway` contract address on Sepolia (`0x31C994F2017E71b82fd4D8118F140c81215bbb37`). Then, deposit tokens by calling the `depositERC20` function from the `L1CustomGateway` contract. This can be done using [our bridge UI](https://scroll.io/bridge), [Etherscan Sepolia](https://sepolia.etherscan.io/address/0x31C994F2017E71b82fd4D8118F140c81215bbb37#writeProxyContract), or a smart contract.
 
 ## Step 5: Withdraw tokens
 

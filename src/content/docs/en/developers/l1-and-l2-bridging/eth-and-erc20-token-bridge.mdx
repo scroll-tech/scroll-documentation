@@ -22,16 +22,16 @@ The Gateway Router allows ETH and ERC20 token bridging from L1 to L2 using the `
 
 When bridging ERC20 tokens, you don’t have to worry about selecting the right Gateway. This is because the `L1GatewayRouter` will choose the correct underlying entry point to send the message:
 
-- `L1StandardERC20Gateway`: This Gateway permits any ERC20 deposit and will be selected as the default by the L1GatewayRouter for an ERC20 token that doesn’t need custom logic on L2. On the very first token bridging, a new token will be created on L2 that implements the ScrollStandardERC20. To bridge a token, call the `depositERC20` function on the `L1GatewayRouter`.
-- `L1CustomERC20Gateway`: This Gateway will be selected by the `L1GatewayRouter` for tokens with custom logic. For an L1/L2 token pair to work on the Scroll Custom ERC20 Bridge, the L2 token contract has to implement `IScrollStandardERC20`. Additionally, the token should grant `mint` or `burn` capability to the `L2CustomERC20Gateway`. Visit the [bridge-erc20-through-the-custom-gateway.md](../../developer-guides/bridge-erc20-through-the-custom-gateway.md "mention") guide for a step-by-step example of how to bridge a custom token.
+- **`L1StandardERC20Gateway`:** This Gateway permits any ERC20 deposit and will be selected as the default by the L1GatewayRouter for an ERC20 token that doesn’t need custom logic on L2. On the very first token bridging, a new token will be created on L2 that implements the ScrollStandardERC20. To bridge a token, call the `depositERC20` function on the `L1GatewayRouter`.
+- **`L1CustomERC20Gateway`:** This Gateway will be selected by the `L1GatewayRouter` for tokens with custom logic. For an L1/L2 token pair to work on the Scroll Custom ERC20 Bridge, the L2 token contract has to implement `IScrollStandardERC20`. Additionally, the token should grant `mint` or `burn` capability to the `L2CustomERC20Gateway`. Visit the [Bridge an ERC20 through the Custom Gateway](/developers/developer-guides/bridge-erc20-through-the-custom-gateway) guide for a step-by-step example of how to bridge a custom token.
 
 All Gateway contracts will form the message and send it to the `L1ScrollMessenger` which can send arbitrary messages to L2. The `L1ScrollMessenger` passes the message to the `L1MessageQueue`. Any user can send messages directly to the Messenger to execute arbitrary data on L2. This means they can execute any function on L2 from a transaction made on L1 via the bridge. Although an application could directly pass messages to existing token contracts, the Gateway abstracts the specifics and simplifies making transfers and calls.
 
 <Aside type="tip" title="">
-  Users can also bypass the **`L1ScrollMessenger`** and send messages directly to the **`L1MessageQueue`**. If a message
-  is sent via the `L1MessageQueue`, the transaction's sender will be the address of the user sending the transaction,
-  not the address of the `L1ScrollMessenger`. Learn more about sending arbitrary messages in the [Scroll
-  Messenger](/en/developers/l1-and-l2-bridging/the-scroll-messenger) article.
+  Users can also bypass the `L1ScrollMessenger` and send messages directly to the `L1MessageQueue`. If a message is sent
+  via the `L1MessageQueue`, the transaction's sender will be the address of the user sending the transaction, not the
+  address of the `L1ScrollMessenger`. Learn more about sending arbitrary messages in the [Scroll
+  Messenger](/developers/l1-and-l2-bridging/the-scroll-messenger) article.
 </Aside>
 
 When a new block gets created on L1, the Watcher will detect the message on the `L1MessageQueue` and will pass it to the Relayer service, which will submit the transaction to the L2 via the l2geth node. Finally, the l2geth node will pass the transaction to the `L2ScrollMessagner` contract for execution on L2.
