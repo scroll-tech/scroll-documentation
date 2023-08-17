@@ -23,10 +23,10 @@ const recommendedArticles = [
     title: "Sepolia Testnet Contracts",
     url: "/en/developers/scroll-contracts",
   },
-  // {
-  //   title: "Architecture Overview",
-  //   url: "/en/technology/architecture/scroll-architecture",
-  // },
+  {
+    title: "Architecture Overview",
+    url: "/en/technology",
+  },
 ]
 
 function EmptyQueryBoundary({ children, fallback }) {

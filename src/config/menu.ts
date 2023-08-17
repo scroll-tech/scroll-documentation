@@ -14,7 +14,7 @@ export const MENU: MenuItems = {
       section: "gettingStarted",
     },
     { text: "Developers", link: "/en/developers", section: "developers" },
-    // { text: "Technology", link: "/en/technology", section: "technology" },
+    { text: "Technology", link: "/en/technology", section: "technology" },
     { text: "Learn", link: "/en/learn", section: "learn" },
   ],
   zh: [
@@ -24,7 +24,7 @@ export const MENU: MenuItems = {
       section: "gettingStarted",
     },
     { text: "开发者", link: "/zh/developers", section: "developers" },
-    // { text: "技术", link: "/zh/technology", section: "technology" },
+    { text: "技术", link: "/zh/technology", section: "technology" },
     { text: "学习", link: "/zh/learn", section: "learn" },
   ],
 }
