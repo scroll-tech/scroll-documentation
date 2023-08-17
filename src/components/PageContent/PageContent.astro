@@ -33,10 +33,6 @@ const whatsNext = content.whatsnext
     flex-direction: column;
   }
 
-  .content > section {
-    margin-bottom: 4rem;
-  }
-
   .block {
     display: block;
   }
@@ -47,8 +43,6 @@ const whatsNext = content.whatsnext
 
   .content :global(h2) {
     font-weight: 500;
-    margin-top: 30px;
-    margin-bottom: 20px;
   }
 
   @media (min-width: 50em) {
@@ -57,7 +51,10 @@ const whatsNext = content.whatsnext
     }
     .content :global(h2) {
       font-weight: 600;
-      margin-top: 100px;
+      padding-top: 16px;
+    }
+    .content :global(h2:first-of-type) {
+      padding-top: 0;
     }
     .content :global(a) {
       font-weight: 600;

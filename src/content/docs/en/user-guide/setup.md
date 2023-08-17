@@ -22,9 +22,9 @@ You can import the Scroll Sepolia testnet configurations to your MetaMask wallet
 
 The **Add to wallet** links may not be compatible with every wallet. If you are having issues using them, you may need to manually add the _Sepolia Testnet_ and _Scroll Sepolia_ network by inserting the configuration details from the table below:
 
-| Network Name       | Scroll Alpha Testnet                                             | Goerli Testnet                                                               |
-| ------------------ | ---------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| RPC URL            | [https://sepolia-rpc.scroll.io/](https://sepolia-rpc.scroll.io/) | [https://eth-sepolia-public.unifra.io](https://eth-sepolia-public.unifra.io) |
-| Chain ID           | 534351                                                           | 11155111                                                                     |
-| Currency Symbol    | ETH                                                              | ETH                                                                          |
-| Block Explorer URL | [https://blockscout.scroll.io](https://blockscout.scroll.io/)    | [https://sepolia.etherscan.io](https://sepolia.etherscan.io)                 |
+| Network Name       | Scroll Sepolia Testnet                                                        | Sepolia Testnet                                                              |
+| ------------------ | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| RPC URL            | [https://sepolia-rpc.scroll.io/](https://sepolia-rpc.scroll.io/)              | [https://eth-sepolia-public.unifra.io](https://eth-sepolia-public.unifra.io) |
+| Chain ID           | 534351                                                                        | 11155111                                                                     |
+| Currency Symbol    | ETH                                                                           | ETH                                                                          |
+| Block Explorer URL | [https://sepolia-blockscout.scroll.io](https://sepolia-blockscout.scroll.io/) | [https://sepolia.etherscan.io](https://sepolia.etherscan.io)                 |

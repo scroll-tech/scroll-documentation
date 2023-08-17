@@ -84,8 +84,3 @@ body {
   background: #ffffff;
   color: var(--color-text-primary);
 }
-
-::selection {
-  color: var(--theme-selection-color);
-  background-color: var(--theme-selection-bg);
-}

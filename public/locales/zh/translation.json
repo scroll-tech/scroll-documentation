@@ -46,7 +46,6 @@
     "gettingStarted": {
       "gettingStarted": "入门",
       "overview": "概述",
-      "alphaTestnet": "Alpha测试网络",
       "userGuide": "用户指南",
       "setup": "设置",
       "faucet": "水龙头",
@@ -54,8 +53,6 @@
       "transferTokens": "转移代币",
       "commonErrors": "常见错误",
       "rollupExplorer": "Rollup浏览器",
-      "alphaBlockExplorer": "Alpha块浏览器",
-      "goerliBlockExplorer": "Goerli块浏览器",
       "community": "社区",
       "communityForum": "社区论坛"
     },
@@ -63,15 +60,11 @@
       "developers": "开发者",
       "buildingOnScroll": "构建Scroll应用",
       "developerQuickstart": "开发者快速入门",
-      "alphaTestnetContracts": "Alpha测试网络合约",
       "integrations": "集成",
-      "ethereum&AlphaTestnetDifferences": "以太坊与Alpha测试网络的区别",
       "guides": "指南",
       "contractDeploymentTutorial": "合约部署教程",
       "resources": "资源",
-      "rollupExplorer": "Rollup浏览器",
-      "alphaBlockExplorer": "Alpha块浏览器",
-      "goerliBlockExplorer": "Goerli块浏览器"
+      "rollupExplorer": "Rollup浏览器"
     },
     "technology": {
       "overview": "概述",

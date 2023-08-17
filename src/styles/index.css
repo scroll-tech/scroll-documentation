@@ -16,6 +16,7 @@
   --user-font-scale: 1rem - 16px;
   --max-width: calc(100%);
   --fullwidth-max-width: calc(100% - 1rem);
+  scroll-behavior: smooth;
 }
 
 body {
@@ -34,6 +35,7 @@ nav ul {
 
 .content > section > * + * {
   margin-top: 1.25rem;
+  margin-bottom: 2.25rem;
 }
 
 .content > section > :first-child {
@@ -41,8 +43,9 @@ nav ul {
 }
 
 .content :is(ul, ol) {
-  line-height: 1.25em;
+  line-height: 1.4em;
   margin-bottom: 0.7em;
+  margin-bottom: 16px;
 }
 
 .content :is(ul, ol) > li > :is(ul, ol) {
@@ -122,12 +125,13 @@ article > section iframe {
   /* Override styles from design-system */
   margin: 0 0 16px;
   max-width: 100%;
+  line-height: 1.6em;
 }
 
 .main-section :is(h2, h3, h4) {
   /* Override styles from design-system */
-  margin-top: 40px;
-  margin-bottom: 40px;
+  margin-top: 36px;
+  margin-bottom: 24px;
   max-width: 100%;
 }
 
@@ -147,7 +151,7 @@ a > code::before {
   left: 0;
   display: block;
   border-radius: var(--border-radius);
-  @apply bg-accent opacity-accent;
+  /* @apply bg-accent opacity-accent; */
 }
 
 a:focus {
@@ -169,16 +173,21 @@ strong {
   --border-radius: 3px;
   --padding-block: 0.1rem;
   --padding-inline: 0.33rem;
-
   font-size: 0.85em;
-  color: var(--orange-500);
   padding: var(--padding-block) var(--padding-inline);
-  margin: calc(var(--padding-block) * -1) -0.125em;
+  margin: 0.125em;
   border-radius: var(--border-radius);
   word-break: break-word;
-  background: var(--orange-100);
-  font-weight: 500;
+  background: var(--gray-200);
+  color: var(--black-100);
   @apply font-mono;
+}
+
+a > code {
+  text-decoration-thickness: 1px;
+  text-decoration-line: underline;
+  text-decoration-skip-ink: 1px;
+  text-decoration-style: dashed;
 }
 
 pre.astro-code > code {
@@ -217,12 +226,14 @@ table {
   @apply text-primary font-text border-none;
   border-radius: 10px;
   position: relative;
+  z-index: 1;
 }
 
-table::after {
+table::before {
   content: "";
   display: block;
   position: absolute;
+  z-index: -1;
   top: 0;
   left: 0;
   bottom: 0;
@@ -392,4 +403,13 @@ h2.heading {
     font-size: 16px;
     padding: 0.1rem 1rem;
   }
+}
+
+:is(h1, h2, h3):hover .icon-link {
+  background: url(/images/link.svg) no-repeat;
+  background-size: cover;
+  width: var(--space-4x);
+  height: var(--space-4x);
+  display: inline-block;
+  margin-left: var(--space-2x);
 }

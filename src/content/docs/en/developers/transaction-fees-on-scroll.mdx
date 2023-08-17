@@ -4,136 +4,114 @@ date: Last Modified
 title: "Transaction Fees on Scroll"
 lang: "en"
 permalink: "developers/transaction-fees-on-scroll"
-# excerpt: ""
+whatsnext: { "Contract Deployment Tutorial": "/developers/guides/contract-deployment-tutorial/" }
+excerpt: "Understand how L1 and L2 transaction fees work on Scroll "
 ---
 
 import Aside from "../../../../components/Aside.astro"
 
-Scroll Sepolia Testnet fees are notably lower than on its supporting layer. Being an L2 rollup also means that the total transaction cost depends on the L1 since it has to be settled on Ethereum for final security.
+## Overview
 
-From the perspective of users and developers, gas fees on Scroll work very similarly to Ethereum mainnet. Scroll’s zkEVM equivalence allows all existing tools, wallets, and code to work the same.
+Scroll Sepolia Testnet fees are notably lower than on its supporting layer. For users and developers, transaction fees on Scroll appear to work similarly to those on Ethereum mainnet, and existing tools, wallets, and code will likely work as if they were. However, the transaction fee shown in the wallet isn't the whole picture unless the software is specifically aware of Scroll's fee calculations.
 
-But, under the hood, Scroll Sepolia introduces some new dimensions into transaction fee calculation. The gas fee of a transaction can be dissected into several parts:
+Due to the design of L2 rollups, transaction costs depend on the L1's costs. To leverage Ethereum's security, Scroll must account for the cost of the transaction data and proofs that must be stored and verified on the L1.
+
+Compared to Ethereum mainnet, Scroll Sepolia introduces some new dimensions to transaction fee calculation to do this. The final cost of a transaction is constructed from several parts:
 
 - **L2 fee**
-  - Calculated in the same manner as on the L1, with the formula being `gas_price * gas_used`
+  - Calculated in the same manner as on the L1, equaling `gas_price * gas_used`
 - **L1 fee**
-  - This additional fee covers sending data to L1 for data availability.
-  - It's calculated based on the size of the transaction calldata
-  - It is deducted automatically from the user’s ETH Balance on Scroll for that user’s transaction
+  - This additional fee covers sending data to L1 for data availability. Transactions initiated on the L1 do not pay this fee.
+  - It is calculated based on the size of the transaction's calldata
+  - ETH is automatically deducted from the user’s balance on Scroll for the fee
 
-At a high level, we can describe the **L2 fee** as the cost of executing your transaction on the L2 sequencer and the **L1 fee** as the cost of committing that transaction onto L1 and securing the network. **The latter part is one of the things that makes Scroll an L2.**
+At a high level, the **L2 fee** is the cost of executing your transaction on the L2 sequencer, and the **L1 fee** is the cost of committing that transaction onto L1.
 
-In summary, we can say that `totalTxFee = l2Fee + l1Fee`, all denominated in ETH.
+In short, `totalTxFee = l2Fee + l1Fee`, all denominated in ETH, the native gas token for the Scroll network.
+
+<Aside type="note" title="Where are transaction fees sent?">
+All tx fees are collected into the `L2ScrollFeeVault` contract balance. This contract also tracks the amount we’ve historically withdrawn to L1 using `totalProcessed()(uint256)`.
+
+The block producer receives no direct reward, and the `COINBASE` opcode returns the fee vault address.
+
+</Aside>
 
 ## L2 Fee
 
 Transactions on Scroll, like on Ethereum, must pay the cost of executing their computations and storing the data they produce.
 
-### How is the execution fee calculated?
+### Calculating the Execution Fee
 
-In short, it is calculated very simply:
+The L2 execution fee is straightforward:
 
 ```javascript
 l2TransactionExecutionFee = l2TransactionGasUsed * l2TransactionGasPrice
 ```
 
-The total fee depends on what the transaction does (`l2TransactionGasUsed`) as well as the current market conditions (`l2TransactionGasPrice`). Users set the gas price, and the "gas used" is determined by the `estimateGas` endpoint on our Nodes.
+The total fee depends on what the transaction does (`l2TransactionGasUsed`) as well as the current market conditions (`l2TransactionGasPrice`). Users set the gas price, and the "gas used" is assessed by calling the `estimateGas` endpoint on a Scroll node.
 
 In other words, the execution fee is calculated precisely like pre-[EIP1559](https://eips.ethereum.org/EIPS/eip-1559) Ethereum.
 
-### Where are the tx fees sent to?
-
-Currently, all L2 tx fees are collected into our L2 `FeeVault` predeploy at address `0x5300000000000000000000000000000000000005`. This contract also tracks the amount we’ve historically withdrawn to L1.
-
-Check amount withdrawn to L1 (in ETH):
-
-```bash
-cast call --rpc-url "https://sepolia-rpc.scroll.io/l2" "0x5300000000000000000000000000000000000005" "totalProcessed()(uint256)" | cast --from-wei
-```
-
-Check fees that have been collected on L2 but haven’t been bridged back to L1 (in ETH):
-
-```bash
-cast balance --rpc-url "https://sepolia-rpc.scroll.io/l2" "0x5300000000000000000000000000000000000005" | cast --from-wei
-```
-
 ## L1 Fee
 
-We ensure the security of our L2 network by committing data to the L1, thus inheriting some of its underlying security properties. All data needed for syncing a Scroll node and verifying proofs are publicly available on Ethereum. Every transaction's data is committed to Ethereum, which incurs an additional transaction fee, referred to as the "L1 Fee".
+Every transaction's calldata must be committed to Ethereum, which incurs an additional transaction fee, referred to as the "L1 Fee". Without doing this, Scroll couldn't be reconstructed from only L1 data.
 
-### What is committed to the L1?
+Transactions aren't committed 1-by-1 -- they are collected in batches of blocks (and blocks of transactions). The cost of an individual transaction is computed based on the zeros and non-zero bytes in its payload.
 
-For every transaction processed on Scroll, its transaction payload is committed to Ethereum L1. This is done to enable the reconstruction of the Scroll chain from L1 data.
+### Estimating the L1 Data Fee
 
-Blocks of transaction data are grouped, and commitments are posted at the chunk level (eventually at the batch level). Note that a "chunk" is a collection of blocks that fits into a single zkEVM circuit for proof generation. However, the cost that an individual transaction contributes to the total cost can be easily computed based on the number of zero and non-zero bytes in its payload.
+Scroll has a pre-deployed `L1GasPriceOracle`, accessible on Scroll Sepolia at ([`0x5300000000000000000000000000000000000002`](https://sepolia-blockscout.scroll.io/address/0x5300000000000000000000000000000000000002)). It provides a `getL1Fee` method to estimate the L1 data fee for a given transaction's raw data.
 
-### How is the fee calculated?
+```solidity
+function getL1Fee(bytes memory _data) external view override returns (uint256);
+```
+
+<Aside type="note" title="What happens if gas prices spike on L1?">
+
+Once the sequencer has processed a transaction, a user's L1 fee is locked in, and any fluctuations will not affect what a user pays.
+
+<br />
+Because of Scroll's short block times, any L1 gas changes between a transaction's submission and its inclusion in a block
+should be minimal. The sequencer will absorb any changes to L1 gas costs between a transaction's inclusion in a block and
+when the sequencer commits the data to L1.
+
+</Aside>
+
+### Calculating the L1 Data Fee with Gas Oracle
+
+As mentioned, the `L1GasPriceOracle` is used to estimate the L1 gas fee given raw transaction data. This is a **push oracle**, updated by a relayer run by Scroll.
 
 The data fee is based on multiple factors:
 
-- `l1GasPrice` - Current base fee on the L1
-- `additionalTransactionBytes` - Additional bytes on top of RLP Encoded unsigned transaction, constant of 16 \* 74 bytes
-- `l1CallDataGasSize` - Gas size of the calldata to be committed as part of a transaction, 4 \* zeroBytes(tx) + 16 \* nonZeroBytes(tx) + additionalTransactionBytes
-- `gasOverhead` - Additional gas overhead of a data commitment transaction
-- `scalingFactor` - Difference used for accounting price spikes
+- The bytes which are `zeros` and `nonzeros` of an RLP-encoded transaction with Signature
+- `l1BaseFee` - Current base fee on the L1
+- `overhead` - Additional gas overhead of a data commitment transaction
+- `scalingFactor` - A scaling factor used to account for price spikes
+- `PRECISION` - A constant used to scale the final fee
 
-Then, the final formula would be
+The following steps are taken to calculate the L1 data fee:
 
-```javascript
-l1Fee = l1GasPrice * (l1CallDataGasSize + gasOverhead) * scalingFactor
-```
+1. Read three fields `l1BaseFee`, `overhead`, `scalar` from the `L1GasPriceOracle` contract. The slots for these fields in the contract are:
 
-### What happens if gas fluctuates on L1?
+   | Field     | Slot |
+   | --------- | ---- |
+   | l1BaseFee | 1    |
+   | overhead  | 2    |
+   | scalar    | 3    |
 
-If a gas spike happens on the L1 after the transaction has been processed by the sequencer, it doesn’t affect what the user pays.
+2. Count the number of zero bytes and non-zero bytes from the transaction.
+3. Calculate the L1 data fee, given `TX_DATA_ZERO_GAS = 4` and `TX_DATA_NON_ZERO_GAS = 16`[^eip-2028] and `PRECISION = 1e9`:
 
-The transaction execution happens in a few steps:
+   ```javascript
+   l1Gas = zeros * TX_DATA_ZERO_GAS + (nonzeros + 4) * TX_DATA_NON_ZERO_GAS
+   l1GasFee = ((l1Gas + overhead) * l1BaseFee * scalar) / PRECISION
+   ```
 
-1. Creation of transaction _(Client side)_
-2. Emitting of the transaction _(Client side)_
-3. Processing of the transaction _(Sequencer)_
-4. Committing of the transaction _(Sequencer)_
+   We reserve an additional 4 bytes in the non-zero bytes to store the number of bytes in the RLP-encoded transaction.
 
-Everything after the second step is the responsibility of the sequencer. Should the L1 gas cost increase (or decrease) between the processing and actual committing of a transaction, the user shouldn't be affected, and the sequencer will pay for all cost fluctuations.
+[^eip-2028]: See [EIP-2028](https://eips.ethereum.org/EIPS/eip-2028) for more info.
 
-## Gas Oracle
-
-Scroll Sepolia has a pre-deployed contract `L1GasPriceOracle` (contract address [`0x5300000000000000000000000000000000000002`](https://sepolia-blockscout.scroll.io/address/0x5300000000000000000000000000000000000002)) used to estimate the L1 gas fee given raw transaction data. This is a **push oracle**, updated by a relayer run by Scroll.
-{/* TODO: Double check this address is used for Sepolia */}
-
-It stores the L1 base fee gas price and provides a public API, which can be used to estimate the total transaction fee for some L2 transactions.
-
-### How does it work?
-
-The L1 fee calculation works as follows.
-
-1. Read three fields `l1BaseFee`, `overhead`, `scalar` from the `L1GasPriceOracle` contract. The slots for these fields in the contract are
-
-| Field     | Slot |
-| --------- | ---- |
-| l1BaseFee | 1    |
-| overhead  | 2    |
-| scalar    | 3    |
-
-2. Count the number of zero bytes and non-zero bytes from the transaction callData.
-3. Calculate the sumL1 data fee (`PRECISION = 1e9`)
-
-#### What does the commit tx consist of?
-
-Encoding of a transaction in the commit tx \[length] \[RLP-encoded transaction with signature] consists of two parts:
-
-1. The sum of zero bytes and non-zero bytes in the RLP-encoded transaction without signature&#x20;
-2. Additional 74 bytes&#x20;
-   - 4 bytes: the length prefix of transaction data&#x20;
-   - 1 byte: RLP prefix for V&#x20;
-   - 3 bytes: V&#x20;
-   - 1 byte: RLP prefix for R&#x20;
-   - 32 bytes: R&#x20;
-   - 1 byte: RLP prefix for S&#x20;
-   - 32 bytes: S
-
-### API
+### L1GasPriceOracle API
 
 #### overhead
 
@@ -162,16 +140,16 @@ Returns the latest known l1 base fee
 #### getL1Fee
 
 ```solidity
-function getL1Fee(bytes memory data) external view returns (uint256);
+function getL1Fee(bytes memory _data) external view returns (uint256);
 ```
 
 Computes the L1 portion of the fee based on the size of the RLP encoded input transaction, the current L1 base fee, and the various dynamic parameters.
 
 **Returns:** L1 fee that should be paid for the transaction
 
-| Parameter | Description                                                        |
-| --------- | ------------------------------------------------------------------ |
-| data      | data Unsigned fully RLP-encoded transaction to get the L1 fee for. |
+| Parameter | Description                                                 |
+| --------- | ----------------------------------------------------------- |
+| data      | Signed fully RLP-encoded transaction to get the L1 fee for. |
 
 #### getL1GasUsed
 
@@ -183,14 +161,14 @@ Computes the amount of L1 gas used for a transaction. Adds the overhead which re
 
 **Returns:** Amount of L1 gas used to publish the transaction.
 
-| Parameter | Description                                                        |
-| --------- | ------------------------------------------------------------------ |
-| data      | data Unsigned fully RLP-encoded transaction to get the L1 fee for. |
+| Parameter | Description                                                 |
+| --------- | ----------------------------------------------------------- |
+| data      | Signed fully RLP-encoded transaction to get the L1 fee for. |
 
 ## Future Roadmap
 
-Currently, the computation required for proof generation is done and subsidized by Scroll.
+Currently, the computation required for proof generation is completed by and subsidized by Scroll and various proving partners.
 
-In the future, the prover network will be decentralized and require the incorporation of rewards to be earned by the protocol’s actors for the system to be sustainable and scalable.
+As the prover network becomes decentralized, incentives for proof generation will need to be incorporated into the protocol for the system to be sustainable and scalable.
 
-The final gas cost will include the cost of proof generation, which, as the protocol becomes further optimized, will become cheaper as they're shared between all transactions on the network.
+We expect the final gas cost will include the cost of this proof generation. With further protocol optimization, this cost for the user should be minimal, as each proof covers many transactions.

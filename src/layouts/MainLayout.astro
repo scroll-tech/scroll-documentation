@@ -16,7 +16,8 @@ const { content = {}, frontmatter } = Astro.props
 const headings = Astro.props?.headings || Astro.props?.content?.astro.headings
 
 const currentPage = new URL(Astro.request.url).pathname
-const currentFile = `src/content/docs${currentPage.replace(/\/$/, "")}.${frontmatter?.file.split(".").pop() || "md"}`
+const currentFile = `src/content/docs/${content.file}`
+
 const githubEditUrl = CONFIG.GITHUB_EDIT_URL + currentFile
 const formattedContentTitle = content.title
   ? `${content.title} | ${CONFIG.SITE.title}`
@@ -50,6 +51,14 @@ changeLanguage(content.lang)
       href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Roboto+Flex:opsz,wght@8..144,400;8..144,500;8..144,600&display=swap"
       rel="stylesheet"
     />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Roboto+Flex:opsz,wght@8..144,400;8..144,500;8..144,600&family=Roboto+Mono:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap"
+      rel="stylesheet"
+    />
+
     <style>
       body {
         width: 100%;
@@ -79,7 +88,7 @@ changeLanguage(content.lang)
 
       .grid-sidebar {
         width: 100%;
-        height: 100vh;
+        max-height: 100vh;
         position: sticky;
         top: 0;
         padding: 0;
@@ -98,6 +107,7 @@ changeLanguage(content.lang)
         display: flex;
         flex-direction: column;
         height: 100%;
+        overflow: auto;
       }
 
       #grid-right {
@@ -105,7 +115,7 @@ changeLanguage(content.lang)
         padding-top: 100px;
       }
 
-      @media (min-width: 50em) {
+      @media screen and (min-width: 50em) {
         body {
           width: 100%;
           display: grid;
@@ -115,7 +125,8 @@ changeLanguage(content.lang)
         }
         .layout {
           overflow: initial;
-          grid-template-columns: 1fr 3fr;
+          /* grid-template-columns: 1fr 3fr; */
+          grid-template-columns: 1fr minmax(0, 68vw);
           gap: 1em;
         }
 
@@ -127,7 +138,7 @@ changeLanguage(content.lang)
         }
       }
 
-      @media (min-width: 72em) {
+      @media screen and (min-width: 72em) {
         .layout {
           grid-template-columns: 2fr minmax(0, 56vw) 3fr;
           padding-left: 0;
@@ -157,6 +168,19 @@ changeLanguage(content.lang)
         top: 2rem;
         left: 0;
         padding-left: 20px;
+        height: calc(100% - 20px);
+      }
+
+      @media screen and (max-width: 50em) {
+        .global-search-toggle {
+          overflow: hidden;
+        }
+      }
+
+      @media (min-width: 50em) {
+        .mobile-sidebar-toggle #grid-left {
+          padding-left: 0px;
+        }
       }
     </style>
     <script>
