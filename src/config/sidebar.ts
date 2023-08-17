@@ -164,17 +164,8 @@ export const getSidebar = () => {
     ],
     technology: [
       {
-        section: t("Overview"),
-        contents: [
-          // {
-          //   title: t("sidebar.technology.principles"),
-          //   url: "technology/architecture/principles",
-          // },
-          {
-            title: t("Scroll Architecture"),
-            url: "technology/architecture/scroll-architecture",
-          },
-        ],
+        section: "Overview",
+        contents: [{ title: t("Scroll Architecture"), url: formatUrl("technology") }],
       },
       {
         section: t("sidebar.technology.scrollChain"),
@@ -219,6 +210,36 @@ export const getSidebar = () => {
         ],
       },
       {
+        section: t("sidebar.technology.sequencer"),
+        contents: [
+          {
+            title: t("sidebar.technology.executionNode"),
+            url: "technology/sequencer/execution-node",
+          },
+          {
+            title: t("sidebar.technology.rollupNode"),
+            url: "technology/sequencer/rollup-node",
+          },
+          {
+            title: t("sidebar.technology.zkTrie"),
+            url: "technology/sequencer/zktrie",
+          },
+        ],
+      },
+      //   {
+      //     section: t("sidebar.technology.prover"),
+      //     contents: [
+      //       {
+      //         title: t("sidebar.technology.proofGeneration"),
+      //         url: "technology/prover/proof-generation",
+      //       },
+      //       {
+      //         title: t("sidebar.technology.cpuProverRepo"),
+      //         url: "https://github.com/",
+      //       },
+      //     ],
+      //   },
+      {
         section: t("sidebar.technology.zkevm"),
         contents: [
           {
@@ -228,36 +249,6 @@ export const getSidebar = () => {
           {
             title: t("sidebar.technology.zkevmOverview"),
             url: "technology/zkevm/zkevm-overview",
-          },
-        ],
-      },
-      {
-        section: t("sidebar.technology.sequencer"),
-        contents: [
-          {
-            title: t("sidebar.technology.executionClient"),
-            url: "technology/sequencer/execution-client",
-          },
-          {
-            title: t("sidebar.technology.zkTrie"),
-            url: "technology/sequencer/zktrie",
-          },
-          {
-            title: t("sidebar.technology.syncService"),
-            url: "technology/sequencer/sync-service",
-          },
-        ],
-      },
-      {
-        section: t("sidebar.technology.prover"),
-        contents: [
-          {
-            title: t("sidebar.technology.proofGeneration"),
-            url: "technology/prover/proof-generation",
-          },
-          {
-            title: t("sidebar.technology.cpuProverRepo"),
-            url: "https://github.com/",
           },
         ],
       },
