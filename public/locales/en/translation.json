@@ -107,14 +107,15 @@
       "depositGateways": "Deposit Gateways",
       "withdrawGateways": "Withdraw Gateways",
 
+      "sequencer": "Sequencer",
+      "executionNode": "Execution Node",
+      "rollupNode": "Rollup Node",
+      "zkTrie": "zkTrie",
+
       "zkevm": "zkEVM",
       "introToZkevm": "Intro to zkEVM",
       "zkevmOverview": "zkEVM Overview",
       "bridgeOverview": "Bridge Overview",
-      "sequencer": "Sequencer",
-      "executionClient": "Execution Client",
-      "zkTrie": "zkTrie",
-      "syncService": "Sync Service",
       "prover": "Prover",
       "proofGeneration": "Proof Generation",
       "cpuProverRepo": "CPU Prover Repo"

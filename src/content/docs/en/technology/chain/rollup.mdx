@@ -22,7 +22,7 @@ The figure illustrates the rollup workflow. The L2 sequencer contains three modu
 - **Mempool** collects the transactions that are directly submitted to the L2 sequencer.
 - **Executor** pulls the transactions from both the L1 transaction queue and L2 mempool, executes them to construct a new L2 block.
 
-The rollup node contains two modules:
+The rollup node contains three modules:
 
 - **Relayer** submits the commit transactions and finalize transactions to the rollup contract for data availability and finality.
 - **Chunk Proposer** and **Batch Proposer** proposes new chunks and new batches following the constraints described in the [Transaction Batching](/technology/chain/transactions#transaction-batching).
