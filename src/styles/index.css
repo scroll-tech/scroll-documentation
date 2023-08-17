@@ -134,13 +134,6 @@ article > section iframe {
   max-width: 100%;
 }
 
-a > code {
-  position: relative;
-  background: transparent;
-  text-underline-offset: var(--padding-block);
-  @apply text-accent;
-}
-
 a > code::before {
   content: "";
   position: absolute;
@@ -183,10 +176,9 @@ strong {
 }
 
 a > code {
-  text-decoration-thickness: 1px;
-  text-decoration-line: underline;
-  text-decoration-skip-ink: 1px;
-  text-decoration-style: dashed;
+  position: relative;
+  color: #ff684b;
+  background: #ffe7e2;
 }
 
 pre.astro-code > code {
