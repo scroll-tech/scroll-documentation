@@ -26,7 +26,7 @@ Ultimately, Ethereum smart contracts verify that every transaction on Scroll is 
 
 <!-- TODO: Confirm Architecture page exists -->
 
-For more information on our architecture, see [Scroll Architecture](/technology/architecture/scroll-architecture).
+<!-- For more information on our architecture, see [Scroll Architecture](/technology/architecture/scroll-architecture). -->
 
 ## Can I use Scroll today?
 
