@@ -20,10 +20,12 @@ Here is the suggested workflow to explore the Testnet:
 2. Request test tokens in the _Sepolia_ network from any Ethereum Faucet app. (see [Faucet](/user-guide/faucet) article)
 3. Transfer test tokens from _Sepolia_ to _Scroll Sepolia_ through the [Bridge](https://scroll.io/bridge) app.
 4. Transfer tokens to other wallets on _Scroll Sepolia_ using your wallet.
-5. Explore our ecosystem, interacting with contracts like [Uniswap](http://uniswap-v3.scroll.io/) and [Aave](https://app.aave.com/).
+5. Explore our ecosystem, interacting with contracts like [Uniswap](http://uniswap-showcase.sepolia.scroll.xyz/).
 6. Withdraw tokens from _Scroll Sepolia_ to _Sepolia_ through the [Bridge](https://scroll.io/bridge) app.
 
 You can find the instructions for each app in the rest of this user guide.
+
+<!-- TODO: Add Aave back in item number 5 once live. -->
 
 ## Questions & Feedback
 
