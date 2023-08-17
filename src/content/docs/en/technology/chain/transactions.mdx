@@ -4,7 +4,7 @@ date: Last Modified
 title: "Transactions"
 lang: "en"
 permalink: "technology/chain/transactions"
-excerpt: ""
+whatsnext: { "Blocks": "/technology/chain/blocks/" }
 ---
 
 import ClickToZoom from "../../../../../components/ClickToZoom.astro"
@@ -88,4 +88,4 @@ In Scroll, the transactions are batched in multiple tiers.
 
 The goal for this multi-layer batching schema is to reduce the gas cost of onchain data commitment and proof verification. This approach increases the granularity of the rollup units on L1 while takes the fixed circuit capacity into consideration. As a result, batching reduces the data to be stored in the contract and amortizes the proof verification cost to more L2 transactions.
 
-Once a chunk is created, a corresponding chunk proving task will be generated and sent to a zkEVM prover. Upon the creation of a new batch, two subsequent actions occur: (a) the rollup node commits the transaction data and block information from this batch to the L1 contract, and (b) a batch proving task to aggregate chunk proofs is dispatched to an aggregator prover. The standards for proposing a chunk and a batch are detailed in the [Rollup Node (PLACEHOLDER now, will fix)](/).
+Once a chunk is created, a corresponding chunk proving task will be generated and sent to a zkEVM prover. Upon the creation of a new batch, two subsequent actions occur: (a) the rollup node commits the transaction data and block information from this batch to the L1 contract, and (b) a batch proving task to aggregate chunk proofs is dispatched to an aggregator prover. The standards for proposing a chunk and a batch are detailed in the [Rollup Node](/technology/sequencer/rollup-node).
