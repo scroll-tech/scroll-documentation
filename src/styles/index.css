@@ -77,7 +77,7 @@ article > section li > :is(p, pre, blockquote):not(:first-child) {
 }
 
 article > section :is(ul) {
-  padding-left: 1em;
+  padding-left: 1.2em;
 }
 
 article > section :is(ul) p {
