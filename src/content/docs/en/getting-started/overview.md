@@ -24,7 +24,9 @@ Leveraging cutting-edge research in zero-knowledge proofs (”zk”), Scroll is 
 
 Ultimately, Ethereum smart contracts verify that every transaction on Scroll is valid for these proofs, lending the network incredible security, decentralization, and censorship resistance. This level of security and scalability for Ethereum is only possible with recent breakthroughs in zero-knowledge cryptography, blockchain protocol design, and hardware acceleration.
 
-For more information on our architecture, see [Technology: Scroll Architecture].
+<!-- TODO: Confirm Architecture page exists -->
+
+For more information on our architecture, see [Scroll Architecture](/technology/architecture/scroll-architecture).
 
 ## Can I use Scroll today?
 
@@ -32,7 +34,9 @@ Our Scroll Sepolia testnet is live. Although we have a [comprehensive guide](/us
 
 - Visit our [Bridge](https://scroll.io/bridge) and connect your wallet
 - Send tokens from Sepolia to Scroll Sepolia testnet (or use a [faucet](/user-guide/faucet))
-- Test out a dapp like [Uniswap](http://uniswap-v3.scroll.io/) or [Aave](https://app.aave.com/) -- just be sure to select the Scroll Sepolia network!
+- Test out a dapp like our [Uniswap Showcase](http://uniswap-showcase.sepolia.scroll.xyz/) -- just be sure to select the Scroll Sepolia network!
+
+<!-- TODO: Add Aave after Sepolia goes live -->
 
 ## Where is Scroll headed?
 
