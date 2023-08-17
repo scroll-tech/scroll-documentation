@@ -10,7 +10,7 @@ whatsnext: { "Set Up Your Wallet": "/user-guide/setup" }
 
 Thank you for testing the Scroll Sepolia Testnet. If you have questions or want to give feedback, join our [Discord](https://discord.gg/scroll)!
 
-The Sepolia Testnet consists of _Ethereum's Sepolia Testnet_ and the _Scroll Sepolia_ test network. Sepolia is an Ethereum test network, while Scroll Sepolia is a zero-knowledge rollup testnet deployed on top of the former. There are some pre-deployed demo applications: a [bridge](https://scroll.io/bridge) between _Sepolia_ and _Scroll Sepolia_,[^1] a [block explorer](https://blockscout.scroll.io/) for _Scroll Sepolia_,[^2] and a [rollup explorer](https://scroll.io/rollupscan).
+The Sepolia Testnet consists of _Ethereum's Sepolia Testnet_ and the _Scroll Sepolia_ test network. Sepolia is an Ethereum test network, while Scroll Sepolia is a zero-knowledge rollup testnet deployed on top of the former. There are some pre-deployed demo applications: a [bridge](https://scroll.io/bridge) between _Sepolia_ and _Scroll Sepolia_,[^1] a [block explorer](https://sepolia-blockscout.scroll.io/) for _Scroll Sepolia_,[^2] and a [rollup explorer](https://scroll.io/rollupscan).
 
 To view L1 transactions, check out Etherscan's [Sepolia explorer](https://sepolia.etherscan.io/).
 
