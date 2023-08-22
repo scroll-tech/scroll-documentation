@@ -13,6 +13,7 @@ Thank you for testing the Scroll Sepolia Testnet. If you have questions or want 
 The Sepolia Testnet consists of _Ethereum's Sepolia Testnet_ and the _Scroll Sepolia_ test network. Sepolia is an Ethereum test network, while Scroll Sepolia is a zero-knowledge rollup testnet deployed on top of the former. There are some pre-deployed demo applications: a [bridge](https://scroll.io/bridge) between _Sepolia_ and _Scroll Sepolia_,[^1] a [block explorer](https://sepolia-blockscout.scroll.io/) for _Scroll Sepolia_,[^2] and a [rollup explorer](https://scroll.io/rollupscan).
 
 To view L1 transactions, check out Etherscan's [Sepolia explorer](https://sepolia.etherscan.io/).
+To view L2 transactions, you can use Scroll's block explorer, but you may also want to try out the additional functionality provided by [Dora](https://www.ondora.xyz/network/scroll-sepolia/interactions) or [L2Scan](https://scroll.l2scan.co/).
 
 Here is the suggested workflow to explore the Testnet:
 
