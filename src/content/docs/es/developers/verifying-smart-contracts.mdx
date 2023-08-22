@@ -1,0 +1,88 @@
+---
+section: developers
+date: Last Modified
+title: "Verifying Smart Contracts"
+lang: "en"
+permalink: "developers/verifying-smart-contracts"
+whatsnext: { "Scroll Contracts": "/developers/scroll-contracts" }
+excerpt: "Easily verify your smart contracts with Scroll-supported developer tooling or the Blockscout Web API"
+---
+
+import Aside from "../../../../components/Aside.astro"
+import ClickToZoom from "../../../../components/ClickToZoom.astro"
+import verify1 from "./_images/verify1.png"
+import CodeSample from "../../../../components/CodeSample/CodeSample.astro"
+
+After deploying your smart contracts, it's important to verify your code on [our block explorer](https://sepolia-blockscout.scroll.io/). This can be done in an automated way using your developer tooling or using Blockscout's Web UI.
+
+<Aside type="danger" title="Warning">
+  Our Blockscout instance currently has inconsistent behavior in verifying contracts with Foundry. We're working on a
+  fix, along with other stability improvements. Don't hesitate to come ask for help [on
+  Discord](https://discord.com/channels/853955156100907018/1028102371894624337) though.
+</Aside>
+
+## Using Developer Tools
+
+Most smart contract tooling has plugins for verifying your contracts easily on Etherscan. Blockscout supports Etherscan's contract verification APIs, and it's straightforward to use these tools with the Scroll Sepolia Testnet.
+
+### Hardhat
+
+First, modify `hardhat.config.ts` to point to Scroll's RPC and `sepolia-blockscout.scroll.io/api`. A dummy `apyKey` value is required, but anything works for its value.
+
+```javascript
+...
+
+const config: HardhatUserConfig = {
+  ...
+  networks: {
+    scrollSepolia: {
+      url: 'https://sepolia-rpc.scroll.io' || '',
+      accounts:
+        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    },
+  },
+  etherscan: {
+    apiKey: {
+      scrollSepolia: 'abc',
+    },
+    customChains: [
+      {
+        network: 'scrollSepolia',
+        chainId: 534351,
+        urls: {
+          apiURL: 'https://sepolia-blockscout.scroll.io/api',
+          browserURL: 'https://sepolia-blockscout.scroll.io/',
+        },
+      },
+    ],
+  },
+}
+
+...
+```
+
+Now you can verify the smart contract by running the following command.
+
+```solidity
+npx hardhat verify --network scrollSepolia <contract address> <space separated constructor parameters>
+```
+
+For example, this is how a smart contract that receives two uint parameters in the constructor should look:
+
+```solidity
+npx hardhat verify --network scrollSepolia 0xD9880690bd717189cC3Fbe7B9020F27fae7Ac76F 123 456
+```
+
+<Aside type="danger" title="Warning">
+  You may receive an error stating `etherscan.apiKey.trim is not a function` . If so, you need to update
+  `@nomiclabs/hardhat-etherscan` to be able to support custom chains. Try running `npm update
+  @nomiclabs/hardhat-etherscan`
+</Aside>
+
+### Foundry
+
+When using Foundry, the `verify-contract` helps automate the process of verifying contracts.
+
+```bash
+forge verify-contract <Contract Address> <Space separated params> <Solidity file>:<Contract name> --chain-id 534351 --verifier-url <https://sepolia-blockscout.scroll.io/api> --verifier blockscout
+```
