@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   update-prod-index:
-    if: ${{ github.ref == 'refs/heads/main' }}
+    if: ${{ github.ref == 'refs/heads/prod' }}
     name: Update algolia index -- Prod
     runs-on: ubuntu-latest
     env:
@@ -25,7 +25,7 @@ jobs:
         run: npm run update-algolia-index
 
   update-dev-index:
-    if: ${{ github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/sepolia-content-population' }}
+    if: ${{ github.ref == 'refs/heads/develop' }}
     name: Update algolia index -- Dev
     runs-on: ubuntu-latest
     env:
