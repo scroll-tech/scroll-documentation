@@ -18,9 +18,9 @@ Looking to dive deeper into ZK? Here are some of our favorite resources.
 - [The 9th BIU Winter School on Cryptography - Zero Knowledge](https://youtube.com/playlist?list=PL8Vt-7cSFnw29cLUVqAIuMlg1QJ-szV0K)
   - These lectures lay the theoretical foundations for zero knowledge - they are targeted towards academics and audiences with mathematical maturity.
 - [ZK Symposium](https://www.youtube.com/playlist?list=PLrzRr7okCcmbAlgYpuFjzUJv8tAyowDQY)
-  - A mix of applied and theoretical presentations from some of the top researchers and product builders in the zero-knowledge space.
+  - A mix of applied and theoretical presentations from some of the top researchers and product builders in the zero knowledge space.
 
 ## Text
 
-- [Proofs, Arguments, and Zero-Knowledge](https://people.cs.georgetown.edu/jthaler/ProofsArgsAndZK.html) - Justin Thaler
-  - A comprehensive textbook on the theory of zero-knowledge.
+- [Proofs, Arguments, and Zero Knowledge](https://people.cs.georgetown.edu/jthaler/ProofsArgsAndZK.html) - Justin Thaler
+  - A comprehensive textbook on the theory of zero knowledge.
