@@ -9,6 +9,10 @@
       "logo follow"
       "about resource"
       "version version";
+    row-gap: 50px;
+  }
+  .version {
+    margin-top: 22px;
   }
 }
 
