@@ -1,0 +1,42 @@
+{
+  "Indexers": [
+    {
+      "project": "Covalent",
+      "url": null
+    },
+    {
+      "project": "SubQuery",
+      "url": "https://academy.subquery.network/quickstart/quickstart_chains/scroll-sepolia.html#scroll-sepolia-testnet-quick-start"
+    }
+  ],
+  "Oracles": [
+    {
+      "project": "Chainlink",
+      "url": null
+    },
+    {
+      "project": "Redstone",
+      "url": "https://docs.redstone.finance/docs/smart-contract-devs/supported-chains#the-following-evm-chains-are-supported"
+    }
+  ],
+  "Nodes & RPC": [
+    {
+      "project": "Chainstack",
+      "url": null
+    }
+  ],
+  "Bridges": [
+    {
+      "project": "Celer Network",
+      "url": null
+    }
+  ],
+  "Block Explorers": [],
+  "Aggregators": [],
+  "Other Dev Tooling": [
+    {
+      "project": "Hamster",
+      "url": null
+    }
+  ]
+}
