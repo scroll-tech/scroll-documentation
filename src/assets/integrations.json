@@ -17,11 +17,27 @@
     {
       "project": "Redstone",
       "url": "https://docs.redstone.finance/docs/smart-contract-devs/supported-chains#the-following-evm-chains-are-supported"
+    },
+    {
+      "project": "Pyth",
+      "url": null
     }
   ],
   "Nodes & RPC": [
     {
+      "project": "Unifra",
+      "url": null
+    },
+    {
+      "project": "Bware Labs / Blast API",
+      "url": null
+    },
+    {
       "project": "Chainstack",
+      "url": null
+    },
+    {
+      "project": "Ankr",
       "url": null
     }
   ],
@@ -29,10 +45,28 @@
     {
       "project": "Celer Network",
       "url": null
+    },
+    {
+      "project": "Orbiter",
+      "url": null
+    },
+    {
+      "project": "Owlto Finance",
+      "url": null
     }
   ],
-  "Block Explorers": [],
-  "Aggregators": [],
+  "Block Explorers": [
+    {
+      "project": "Dora",
+      "url": null
+    }
+  ],
+  "Aggregators": [
+    {
+      "project": "Rubic",
+      "url": null
+    }
+  ],
   "Other Dev Tooling": [
     {
       "project": "Hamster",
