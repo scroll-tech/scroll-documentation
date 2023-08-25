@@ -1,0 +1,26 @@
+---
+export type Props = {
+  contents: { project: string; url: string }[]
+}
+const { contents } = Astro.props as Props
+
+/**
+ * This component is used to render a list objects with a project name and a url.
+ */
+---
+
+<ul>
+  {
+    contents.map(({ project, url }) =>
+      url ? (
+        <li>
+          <a href={url} target="_blank">
+            {project}
+          </a>
+        </li>
+      ) : (
+        <li>{project}</li>
+      )
+    )
+  }
+</ul>
