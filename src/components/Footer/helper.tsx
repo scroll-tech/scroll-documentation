@@ -24,7 +24,7 @@ const TwitterIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
 export const aboutList = [
   {
     name: "Join Us",
-    href: "https://scroll.io/join-us",
+    href: "https://jobs.lever.co/ScrollFoundation",
   },
   {
     name: "Health Status",
