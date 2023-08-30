@@ -103,24 +103,6 @@ export const getSidebar = () => {
           {
             title: t("sidebar.developers.transactionFeesOnScroll"),
             url: formatUrl("developers/transaction-fees-on-scroll"),
-            // children: [
-            //   {
-            //     title: t("sidebar.developers.l2Fee"),
-            //     url: formatUrl("developers/transaction-fees-on-scroll/l2-fee"),
-            //   },
-            //   {
-            //     title: t("sidebar.developers.l1Fee"),
-            //     url: formatUrl("developers/transaction-fees-on-scroll/l1-fee"),
-            //   },
-            //   {
-            //     title: t("sidebar.developers.gasOracle"),
-            //     url: formatUrl("developers/transaction-fees-on-scroll/gas-oracle"),
-            //   },
-            //   {
-            //     title: t("sidebar.developers.future"),
-            //     url: formatUrl("developers/transaction-fees-on-scroll/future"),
-            //   },
-            // ],
           },
         ],
       },
@@ -151,6 +133,10 @@ export const getSidebar = () => {
           //   title: t("sidebar.developers.estimatingGasAndTxFees"),
           //   url: formatUrl("developers/guides/"),
           // },
+          {
+            title: t("sidebar.developers.additionalGuides"),
+            url: formatUrl("developers/guides/additional-guides"),
+          },
         ],
       },
       {

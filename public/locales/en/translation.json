@@ -84,6 +84,7 @@
       "bridgingERC721NftThroughCustomGateway": "Bridging ERC721 NFT through Custom Gateway",
       "bridgingERC1155ThroughCustomGateway": "Bridging ERC1155 through Custom Gateway",
       "estimatingGasAndTxFees": "Estimating Gas & Tx Fees",
+      "additionalGuides": "Additional Guides",
       "resources": "Resources",
       "rollupExplorer": "Rollup Explorer",
       "scrollSepoliaBlockExplorer": "Scroll Sepolia Explorer",
