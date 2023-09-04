@@ -1,51 +1,51 @@
 ---
 section: developers
 date: Last Modified
-title: "Ethereum & Scroll Differences"
-lang: "en"
+title: "Diferencias entre Scroll y Ethereum"
+lang: "es"
 permalink: "developers/ethereum-and-scroll-differences"
-whatsnext: { "L1 & L2 Bridging": "/developers/l1-and-l2-bridging/" }
-excerpt: "There are a number of technical details that differ between Ethereum mainnet's EVM and Scroll's modified design for a zkEVM. Below you can see those differences as they exist now."
+whatsnext: { "L1 y L2 Bridging": "/es/developers/l1-and-l2-bridging" }
+excerpt: "Hay una serie de detalles técnicos que difieren entre el EVM de Ethereum mainnet y el diseño modificado de Scroll para un zkEVM. A continuación puedes ver esas diferencias tal y como existen ahora."
 ---
 
 import Aside from "../../../../components/Aside.astro"
 
-A number of technical details differ between Ethereum mainnet's EVM and Scroll's modified design for a zkEVM. Below you can see those differences as they exist on Scroll Sepolia.
+Varios detalles técnicos difieren entre el EVM de Ethereum mainnet y el diseño modificado de Scroll para un zkEVM. A continuación puede ver esas diferencias tal y como existen en Scroll Sepolia.
 
-For open-source contributors and infrastructure builders, please contact our team for additional support.
+Los colaboradores de código abierto y los creadores de infraestructuras pueden ponerse en contacto con nuestro equipo para obtener ayuda adicional.
 
-<Aside type="tip" title="Don't Worry!">
-  For the average Solidity developer, these details won't affect your development experience.
+<Aside type="tip" title="No te preocupes!">
+  Para el desarrollador Solidity promedio, estos detalles no afectaran la experiencia de desarrollador.
 </Aside>
 
 ## EVM Opcodes
 
-| Opcode                      | Solidity equivalent | Scroll Behavior                                                                                            |
+| Opcode                      | Solidity equivalente | Comportamiento de Scroll                                                                                            |
 | --------------------------- | ------------------- | ---------------------------------------------------------------------------------------------------------- |
-| `BLOCKHASH`                 | `block.blockhash`   | Returns `keccak(chain_id \|\| block_number)` for the last 256 blocks.                                      |
-| `COINBASE`                  | `block.coinbase`    | Returns the pre-deployed fee vault contract address. See [Scroll Contracts](/developers/scroll-contracts). |
-| `DIFFICULTY` / `PREVRANDAO` | `block.difficulty`  | Returns 0.                                                                                                 |
-| `BASEFEE`                   | `block.basefee`     | Disabled.[^eip1559] If the opcode is encountered, the transaction will be reverted.                        |
-| `SELFDESTRUCT`              | `selfdestruct`      | Disabled. If the opcode is encountered, the transaction will be reverted.[^willadpot]                      |
+| `BLOCKHASH`                 | `block.blockhash`   | Regresa un `keccak(chain_id \|\| block_number)` por los últimos 256 bloques.                                      |
+| `COINBASE`                  | `block.coinbase`    | Regresa el pre-deployed fee vault contract address. Observa [Contractos de Scroll](/es/developers/scroll-contracts). |
+| `DIFFICULTY` / `PREVRANDAO` | `block.difficulty`  | Regresa 0.                                                                                                 |
+| `BASEFEE`                   | `block.basefee`     | Deshabilitado.[^eip1559] Si se encuentra el opcode, la transacción se revertirá.                        |
+| `SELFDESTRUCT`              | `selfdestruct`      | Deshabilitado. Si se encuentra el opcode, la transacción se revertirá.[^willadpot]                      |
 
-[^eip1559]: We have currently disabled EIP-1559 on Scroll.
-[^willadpot]: Will change to adopt Ethereum’s solution in the future.
+[^eip1559]: Actualmente hemos deshabilitado la EIP-1559 en Scroll.
+[^willadpot]: Cambiará para adoptar la solución de Ethereum en el futuro.
 
-## EVM Precompiles
+## Precompilados EVM
 
-The `SHA2-256` (address `0x2`), `RIPEMD-160` (address `0x3`), and `blake2f` (address `0x9`) precompiles are currently not supported. Calls to these precompiled contracts will revert. We plan to enable these three precompiles in a future hard fork.
+Los precompilados `SHA2-256` (address `0x2`), `RIPEMD-160` (address `0x3`), y `blake2f` (address `0x9`) actualmente no estan soportados. Las llamadas a estos contratos precompilados se revertiran. Planeamos habilitar estos tres precompilados en un futuro hard fork.
 
-The `modexp` precompile is supported but only supports inputs of size less than or equal to 32 bytes (i.e. `u256`).
+El precompilado `modexp` esta habilitado pero solo soporta entradas con un tamaño igual o menor a 32 bytes (i.e. `u256`).
 
-The `ecPairing` precompile is supported, but the number of points(sets, pairs) is limited to 4, instead of 6.
+El precompilado `ecPairing` esta soportado, pero el número de puntos (sets, pairs) esta limitado a 4, en lugar de 6.
 
-The other EVM precompiles are all supported: `ecRecover`, `identity`, `ecAdd`, `ecMul`.
+Los todos otros precompilados EVM estan habilitados: `ecRecover`, `identity`, `ecAdd`, `ecMul`.
 
 ## State Account
 
-### **Additional Fields**
+### **Campos Adicionales**
 
-We added two fields in the current `StateAccount` object: `PoseidonCodehash` and `CodeSize`.
+Hemos añadido 2 campos adicionales al objeto `StateAccount` actual: `PoseidonCodehash` y `CodeSize`.
 
 ```go
 type StateAccount struct {
@@ -61,43 +61,43 @@ type StateAccount struct {
 
 ### **CodeHash**
 
-Related to this, we maintain two types of codehash for each contract bytecode: Keccak hash and Poseidon hash.
+En relación con esto, mantenemos dos tipos de codehash para cada bytecode de contrato: Keccak hash y Poseidon hash.
 
-`KeccakCodeHash` is kept to maintain compatibility for `EXTCODEHASH`. `PoseidonCodeHash` is used for verifying correctness of bytecodes loaded in the zkEVM, where Poseidon hashing is far more efficient.
+`KeccakCodeHash` se mantiene para conservar la compatibilidad con `EXTCODEHASH`. `PoseidonCodeHash` se utiliza para verificar la corrección de los bytecodes cargados en la zkEVM, donde Poseidon hashing es mucho más eficiente.
 
 ### CodeSize
 
-When verifying `EXTCODESIZE`, it is expensive to load the whole contract data into the zkEVM. Instead, we store the contract size in storage during contract creation. This way, we do not need to load the code — a storage proof is sufficient to verify this opcode.
+A la hora de verificar el "EXTCODESIZE", resulta costoso cargar todos los datos del contrato en la zkEVM. En su lugar, almacenamos el tamaño del contrato durante la creación del mismo. De esta manera, no necesitamos cargar el código - una storage proof es suficiente para verificar este opcode.
 
-## Block Time
+## Tiempo de Bloques
 
-The Sepolia Testnet aims for a constant block time of 3 seconds. This is shorter and more consistent than the 12 seconds used in the Ethereum under ideal conditions.
+El Testnet de Sepolia tiene como objetivo un tiempo de bloque constante de 3 segundos. Esto es más corto y constante que los 12 segundos utilizados en Ethereum en condiciones ideales.
 
-This was chosen for two reasons:
+Esto se eligió por dos razones:
 
-- Having faster, constant block time results in quicker feedback and a better user experience.
-- As we optimize the zkEVM circuits in our testnets, even if we maintain a smaller gas limit per block or batch, we can still reach higher throughput than Ethereum.
+- Tener un tiempo de bloque más rápido y constante se traduce en una respuesta más rápida y una mejor experiencia de usuario.
+- A medida que optimizamos los circuitos zkEVM en nuestras redes de prueba, incluso si mantenemos un límite de gas menor por bloque o lote, podemos alcanzar un rendimiento superior al de Ethereum.
 
-## Future EIPs
+## EIPs Futuros
 
-We keep a close eye on all emerging EIPs adopted by Ethereum and adopt them when suitable. If you’re interested in more specifics, reach out in [our community forum](https://community.scroll.io) or on the [Scroll Discord](https://discord.gg/scroll).
+Seguimos de cerca todas las EIP emergentes adoptadas por Ethereum y las adoptamos cuando es conveniente. Si está interesado en más detalles, póngase en contacto con nosotros en [nuestro foro de la comunidad](https://community.scroll.io) o en [Scroll Discord](https://discord.gg/scroll).
 
-## EVM Target version
+## Versión objetivo de la EVM
 
-To ensure no unexpected behavior happens in your contracts, we recommend using `london` as the target version when compiling your smart contracts.
+Para garantizar que no se produzca ningún comportamiento inesperado en sus contratos, recomendamos utilizar `london` como versión de referencia al compilar sus smart contracts.
 
-You can read in more detail on Shanghai hard fork differences from London on the [Ethereum Execution spec](https://github.com/ethereum/execution-specs/blob/master/network-upgrades/mainnet-upgrades/shanghai.md) and how the new `PUSH0` instruction [impacts the Solidity compiler](https://blog.soliditylang.org/2023/05/10/solidity-0.8.20-release-announcement/).
+Puedes leer con más detalle las diferencias entre el hard fork de Shanghai y London en la [Ethereum Execution spec](https://github.com/ethereum/execution-specs/blob/master/network-upgrades/mainnet-upgrades/shanghai.md) y cómo la nueva instrucción `PUSH0` [afecta al compilador de Solidity](https://blog.soliditylang.org/2023/05/10/solidity-0.8.20-release-announcement/).
 
-## Transaction Fees
+## Comisiones de Transacciones
 
-The fee charged to Scroll Sepolia transactions contains two parts:
+La comisión aplicada a las transacciones de Scroll Sepolia consta de dos partes:
 
-- **L2 gas fee:** similar to L1, the amount of L2 execution fee equals to `L2_gas_price * L2_gas_used`, covering the following costs:
-  - L2 sequencer execution & storage cost
-  - Validity proof verification and finalization cost on L1
-  - Prover cost
-- **L1 data fee:** additional fee on top of L2 gas fee. The L1 data fee is only charged to L2-initiated transactions, not to L1-initiated transactions. The fee covers the cost of sending data to L1 for data availability. Because we roll up the tx data to L1, the L1 rollup fee is calculated based on the size of tx data.
+- **Tasa de gas L2:** similar a L1, el importe de la comisión de ejecución L2 es igual a `L2_gas_price * L2_gas_used`, cubriendo los siguientes costes:
+  - Coste de ejecución y almacenamiento del secuenciador L2
+  - Coste de verificación y finalización de la prueba de validez en L1
+  - Coste del prover
+- **Tasa de datos L1:** tasa adicional sobre la tasa de gas L2. La tasa de datos L1 sólo se cobra a las transacciones iniciadas en L2, no a las iniciadas en L1. La tarifa cubre el coste del envío de datos a L1 para la disponibilidad de datos. Dado que los datos tx se transfieren a L1, la tasa de transferencia a L1 se calcula en función del tamaño de los datos tx.
 
-For more information, see [Transaction Fees on Scroll](/developers/transaction-fees-on-scroll).
+Para obtener más información, consulte [Comisiones de Transacciones en Scroll](/es/developers/transaction-fees-on-scroll).
 
 ---

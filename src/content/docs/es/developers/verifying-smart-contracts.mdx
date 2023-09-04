@@ -1,11 +1,11 @@
 ---
 section: developers
 date: Last Modified
-title: "Verifying Smart Contracts"
-lang: "en"
+title: "Verificando Smart Contracts"
+lang: "es"
 permalink: "developers/verifying-smart-contracts"
-whatsnext: { "Scroll Contracts": "/developers/scroll-contracts" }
-excerpt: "Easily verify your smart contracts with Scroll-supported developer tooling or the Blockscout Web API"
+whatsnext: { "Scroll Contracts": "/es/developers/scroll-contracts" }
+excerpt: "Verifique fácilmente sus smart contracts con herramientas para desarrolladores compatibles con Scroll o con la Blockscout Web API."
 ---
 
 import Aside from "../../../../components/Aside.astro"
@@ -13,21 +13,20 @@ import ClickToZoom from "../../../../components/ClickToZoom.astro"
 import verify1 from "./_images/verify1.png"
 import CodeSample from "../../../../components/CodeSample/CodeSample.astro"
 
-After deploying your smart contracts, it's important to verify your code on [our block explorer](https://sepolia-blockscout.scroll.io/). This can be done in an automated way using your developer tooling or using Blockscout's Web UI.
+Después de desplegar tus smart contracts, es importante verificar tu código en [nuestro block explorer](https://sepolia-blockscout.scroll.io/). Esto se puede hacer de forma automatizada utilizando tus herramientas de desarrollo o la IU web de Blockscout.
 
-<Aside type="danger" title="Warning">
-  Our Blockscout instance currently has inconsistent behavior in verifying contracts with Foundry. We're working on a
-  fix, along with other stability improvements. Don't hesitate to come ask for help [on
-  Discord](https://discord.com/channels/853955156100907018/1028102371894624337) though.
+<Aside type="danger" title="Alerta">
+  Nuestra instancia de Blockscout tiene actualmente un comportamiento inconsistente en la verificación de contratos con Foundry. Estamos trabajando en
+  junto con otras mejoras de estabilidad. No dudes en pedir ayuda en [nuestro
+  Discord](https://discord.com/channels/853955156100907018/1028102371894624337)
 </Aside>
 
-## Using Developer Tools
-
-Most smart contract tooling has plugins for verifying your contracts easily on Etherscan. Blockscout supports Etherscan's contract verification APIs, and it's straightforward to use these tools with the Scroll Sepolia Testnet.
+## Uso de las herramientas para desarrolladores
+La mayoría de las herramientas de smart contracts tienen plugins para verificar tus contratos fácilmente en Etherscan. Blockscout soporta las APIs de verificación de contratos de Etherscan, y es sencillo utilizar estas herramientas con la Scroll Sepolia Testnet.
 
 ### Hardhat
 
-First, modify `hardhat.config.ts` to point to Scroll's RPC and `sepolia-blockscout.scroll.io/api`. A dummy `apyKey` value is required, but anything works for its value.
+Primero, modifica `hardhat.config.ts` para que apunte al RPC de Scroll y a `sepolia-blockscout.scroll.io/api`. Se requiere un valor `apyKey` ficticio, pero cualquier cosa sirve como valor.
 
 ```javascript
 ...
@@ -61,27 +60,27 @@ const config: HardhatUserConfig = {
 ...
 ```
 
-Now you can verify the smart contract by running the following command.
+Ahora puedes verificar el smart contract ejecutando el siguiente comando.
 
 ```solidity
 npx hardhat verify --network scrollSepolia <contract address> <space separated constructor parameters>
 ```
 
-For example, this is how a smart contract that receives two uint parameters in the constructor should look:
+Por ejemplo, así es como debería verse un smart contract que recibe dos parámetros uint en el constructor:
 
 ```solidity
 npx hardhat verify --network scrollSepolia 0xD9880690bd717189cC3Fbe7B9020F27fae7Ac76F 123 456
 ```
 
-<Aside type="danger" title="Warning">
-  You may receive an error stating `etherscan.apiKey.trim is not a function` . If so, you need to update
-  `@nomiclabs/hardhat-etherscan` to be able to support custom chains. Try running `npm update
-  @nomiclabs/hardhat-etherscan`
+<Aside type="danger" title="Alerta">
+  Es posible que reciba un error que indica que `etherscan.apiKey.trim no es una función` . Si es así, es necesario actualizar
+  `@nomiclabs/hardhat-etherscan` para poder soportar cadenas personalizadas. Intenta ejecutar `npm update
+  @nomiclabs/hardhat-etherscan`.
 </Aside>
 
 ### Foundry
 
-When using Foundry, the `verify-contract` helps automate the process of verifying contracts.
+Cuando se utiliza Foundry, la función `verify-contract` ayuda a automatizar el proceso de verificación de los contratos.
 
 ```bash
 forge verify-contract <Contract Address> <Space separated params> <Solidity file>:<Contract name> --chain-id 534351 --verifier-url <https://sepolia-blockscout.scroll.io/api> --verifier blockscout

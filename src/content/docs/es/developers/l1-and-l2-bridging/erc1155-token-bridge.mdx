@@ -2,29 +2,29 @@
 section: developers
 date: Last Modified
 title: "ERC1155 Token Bridge"
-lang: "en"
+lang: "es"
 permalink: "developers/l1-and-l2-bridging/erc1155-token-bridge"
-whatsnext: { "The Scroll Messenger": "/developers/l1-and-l2-bridging/the-scroll-messenger/" }
-excerpt: "ERC1155 bridging from L1 to L2 is done via the L1ERC1155Gateway."
+whatsnext: { "El Scroll Messenger": "/es/developers/l1-and-l2-bridging/the-scroll-messenger" }
+excerpt: "El bridging ERC1155 de L1 a L2 se realiza a través del L1ERC1155Gateway."
 ---
 
 import Aside from "../../../../../components/Aside.astro"
 
-## Deposit ERC1155 tokens from L1
+## Depósito de tokens ERC1155 de L1
 
-ERC1155 bridging from L1 to L2 is done via the L1ERC1155Gateway. Similarly to ERC721 bridging, we don't use a router but the `depositERC1155` function on the Gateway directly.
+El bridging ERC1155 de L1 a L2 se realiza a través del L1ERC1155Gateway. Al igual que en el bridging ERC721, no se utiliza un router, sino la función `depositERC1155` directamente en la Gateway.
 
 <Aside type="tip" title="">
-  **`depositERC1155`** is a payable function, and the amount of ETH sent to this function will be used to pay for L2
-  fees. If the amount is not enough, the transaction will not be sent. All excess eth will be sent back to sender.
-  `0.00001 ETH` should be more than enough to process a token deposit.
+  **`depositERC1155`** es una función de pago, y la cantidad de ETH enviada a esta función se utilizará para pagar L2
+  tasas. Si la cantidad no es suficiente, la transacción no será enviada. Todo el exceso de ETH será enviado de vuelta al remitente.
+  Un importe de `0.00001 ETH` debería ser más que suficiente para procesar un depósito de tokens.
 </Aside>
 
-### Creating an ERC1155 token on L2
+### Creación de un token ERC1155 en L2
 
-Similar to ERC721 bridging, in order to bridge ERC1155 tokens, a contract compatible with the `IScrollERC1155` standard has to be launched and mapped on a `L1ERC1155Gateway` and `L2ERC1155Gateway` on both L1 and L2 respectively. This contract has to grant permission to the Gateway on L2 to mint when a token is deposited and burn when the token is withdrawn.
+De forma similar al bridging ERC721, para realizar el bridging de tokens ERC1155 es necesario lanzar un contrato compatible con el estándar `IScrollERC1155` y asignarlo a una `L1ERC1155Gateway` y una `L2ERC1155Gateway` en L1 y L2 respectivamente. Este contrato tiene que conceder permiso a la Gateway en L2 para emitir cuando un token es depositado y quemar cuando el token es retirado.
 
-The following interface is the `IScrollERC1155` needed for deploying ERC1155 tokens compatible with the `L2ERC1155Gateway` on L2.
+La siguiente interfaz es el `IScrollERC1155` necesario para desplegar tokens ERC1155 compatibles con el `L2ERC1155Gateway` en L2.
 
 ```solidity
 interface IScrollERC1155 {
@@ -71,29 +71,28 @@ interface IScrollERC1155 {
 }
 ```
 
-### Adding an ERC1155 token to the Scroll Bridge
+### Añadiendo un token ERC1155 al Scroll Bridge
 
-All assets can be bridged securely and permissionlessly through Gateway contracts deployed by any developer. However, Scroll also manages an ERC1155 Gateway contract where all NFTs created by the community are welcome. Being part of the Scroll-managed Gateway means you won't need to deploy the Gateway contracts, and your token will appear in the Scroll frontend. To be part of the Scroll Gateway, you must contact the Scroll team to add the token to both L1 and L2 Gateway contracts. To do so, follow the instructions on the [token lists](https://github.com/scroll-tech/token-list) repository to add your token to the Scroll official frontend.
+Todos los activos pueden ser transferidos de forma segura y sin permisos a través de contratos Gateway desplegados por cualquier desarrollador. Sin embargo, Scroll también gestiona un contrato Gateway ERC1155 en el que todos los NFT creados por la comunidad son bienvenidos. Formar parte del Gateway gestionado por Scroll significa que no necesitarás desplegar los contratos Gateway, y tu token aparecerá en el frontend de Scroll. Para formar parte de la Gateway de Scroll, debe ponerse en contacto con el equipo de Scroll para añadir el token a los contratos de Gateway L1 y L2. Para ello, siga las instrucciones del repositorio [token lists](https://github.com/scroll-tech/token-list) para añadir su token al frontend oficial de Scroll.
 
-## Withdraw ERC1155 tokens from L2
+## Retiro de tokens ERC1155 de L2
 
-The `L2ERC1155Gateway` contract is used to send tokens from L2 to L1. Before bridging, the `L2ERC1155Gateway` contract has to be approved by the token contract. Once that is done, `withdrawERC1155` can be called to perform the asset bridge.
+El contrato `L2ERC1155Gateway` se utiliza para enviar tokens de L2 a L1. Antes de realizar el bridging, el contrato `L2ERC1155Gateway` tiene que ser aprobado por el contrato de tokens. Una vez hecho esto, se puede llamar a `withdrawERC1155` para realizar el intercambio de activos.
 
 <Aside type="tip" title="">
-  **`withdrawERC1155`** is a payable function, and the amount of ETH sent to this function will be used to pay for L1
-  fees. If the amount is not enough, the transaction will not be sent. All excess ETH will be sent back to sender. Fees
-  depend on L1 activity but `0.005 ETH` should be enough to process a token withdrawal.
+  **`withdrawERC1155`** es una función de pago, y la cantidad de ETH enviada a esta función se utilizará para pagar las tasas de L1. Si la cantidad no es suficiente, la transacción no será enviada. Todo el exceso de ETH será devuelto al remitente. Las tasas
+  dependen de la actividad de L1 pero `0.005 ETH` debería ser suficiente para procesar una retirada de tokens.
 </Aside>
 
 <Aside type="caution" title="">
-  **Make sure the transaction won't revert on L1** while sending from L2. There is no way to recover tokens bridged if
-  you're transaction reverts on L1. All assets are burnt on L2 when the transaction is sent, and it's impossible to mint
-  them again.
+  **Asegúrate de que la transacción no se revertirá en L1** mientras envías desde L2. No hay forma de recuperar los tokens puenteados si
+  tu transacción revierte en L1. Todos los activos se queman en L2 cuando se envía la transacción, y es imposible recuperarlos
+  de nuevo.
 </Aside>
 
-## L1ERC1155Gateway API
+## API de L1ERC1155Gateway
 
-Please visit the [npm library](https://www.npmjs.com/package/@scroll-tech/contracts?activeTab=code) for the complete Scroll contract API documentation.
+Visite la biblioteca [npm library](https://www.npmjs.com/package/@scroll-tech/contracts?activeTab=code) para consultar la documentación completa de la API de los contratos de Scroll.
 
 ### depositERC1155
 
@@ -107,15 +106,15 @@ function depositERC1155(
 ) external payable;
 ```
 
-Deposit an ERC1155 token from L1 to a recipient's account on L2.
+Depósito de un token ERC1155 desde L1 en la cuenta de un destinatario en L2.
 
-| Parameter | Description                                       |
+| Parámetro | Descripción                                       |
 | --------- | ------------------------------------------------- |
-| token     | The address of ERC1155 token contract on L1.      |
-| to        | The address of recipient's account on L2.         |
-| tokenId   | The NFT id to deposit.                            |
-| amount    | The amount of tokens to deposit.                  |
-| gasLimit  | Gas limit required to complete the deposit on L2. |
+| token     | La dirección del contrato de tokens ERC1155 en L1.      |
+| to        | La dirección de la cuenta del destinatario en L2.         |
+| tokenId   | El id del NFT a depositar.                            |
+| amount    | La cantidad de tokens a depositar.                  |
+| gasLimit  | Límite de gas necesario para completar el depósito en L2. |
 
 ### updateTokenMapping
 
@@ -123,14 +122,14 @@ Deposit an ERC1155 token from L1 to a recipient's account on L2.
 function updateTokenMapping(address _l1Token, address _l2Token) external;
 ```
 
-Update the mapping that connects an ERC1155 token contract from L1 to L2.
+Actualización del mapping que conecta un contrato de tokens ERC1155 de L1 a L2.
 
-| Parameter | Description                                       |
+| Parámetro | Descripción                                       |
 | --------- | ------------------------------------------------- |
-| \_l1Token | The address of the ERC1155 token in L1.           |
-| \_l2Token | The address of corresponding ERC1155 token in L2. |
+| \_l1Token | La dirección del token ERC1155 en L1.           |
+| \_l2Token | La dirección del token ERC1155 correspondiente en L2. |
 
-## L2ERC1155Gateway API
+## API de L2ERC1155Gateway
 
 ### withdrawERC1155
 
@@ -138,15 +137,15 @@ Update the mapping that connects an ERC1155 token contract from L1 to L2.
 function withdrawERC1155(address token, address to, uint256 tokenId, uint256 amount, uint256 gasLimit) external payable;
 ```
 
-Send ERC1155 tokens from L2 to a recipient's account on L1.
+Envío de tokens ERC1155 desde L2 a la cuenta de un destinatario en L1.
 
-| Parameter | Description                                                              |
+| Parámetro | Descripción                                                              |
 | --------- | ------------------------------------------------------------------------ |
-| token     | The address of ERC1155 token contract on L2.                             |
-| to        | The address of recipient's account on L1.                                |
-| tokenId   | The NFT id to withdraw.                                                  |
-| amount    | The amount of tokens to withdraw.                                        |
-| gasLimit  | Unused, but included for potential forward compatibility considerations. |
+| token     | La dirección del contrato de tokens ERC1155 en L2.                             |
+| to        | La dirección de la cuenta del destinatario en L1.                                |
+| tokenId   | El id del NFT a retirar.                                                  |
+| amount    | La cantidad de tokens a retirar.                                        |
+| gasLimit  | No se utiliza, pero se incluye por posibles consideraciones de compatibilidad futura. |
 
 ### updateTokenMapping
 
@@ -154,9 +153,9 @@ Send ERC1155 tokens from L2 to a recipient's account on L1.
 function updateTokenMapping(address _l1Token, address _l2Token) external;
 ```
 
-Update the mapping that connects an ERC1155 token contract from L2 to L1.
+Actualización del mapping que conecta un contrato de tokens ERC1155 de L2 a L1.
 
-| Parameter | Description                                       |
+| Parámetro | Descripción                                       |
 | --------- | ------------------------------------------------- |
-| \_l1Token | The address of th ERC1155 token in L1.            |
-| \_l2Token | The address of corresponding ERC1155 token in L2. |
+| \_l1Token | La dirección del token ERC1155 en L1.            |
+| \_l2Token | La dirección del token ERC1155 correspondiente en L2. |

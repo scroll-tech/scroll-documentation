@@ -1,11 +1,11 @@
 ---
 section: developers
 date: Last Modified
-title: "Developer Quickstart"
-lang: "en"
+title: "Inicio rápido para desarrolladores"
+lang: "es"
 permalink: "developers/developer-quickstart"
-excerpt: "Scroll Developer Quickstart helps you acquire testnet Ether, configure your network, and access all of your favorite tooling"
-whatsnext: { "Verify Your Smart Contracts": "/developers/verifying-smart-contracts" }
+excerpt: "Scroll Developer Quickstart te ayuda a adquirir testnet Ether, configurar tu red y acceder a todas tus herramientas favoritas"
+whatsnext: { "Verifica Tus Smart Contracts": "/es/developers/verifying-smart-contracts" }
 ---
 
 import Aside from "../../../../components/Aside.astro"
@@ -13,39 +13,39 @@ import ClickToZoom from "../../../../components/ClickToZoom.astro"
 import networkSelection from "./_images/mmNetworkSelection.png"
 import injectedProviderMM from "./_images/injectedProviderMM.png"
 
-With Scroll, your favorite tools for building and testing smart contracts just work.
+Con Scroll, tus herramientas favoritas para la creación y prueba de smart contracts simplemente funcionan.
 
-Since Scroll is bytecode equivalent with the EVM, you’ll just need to point your favorite builder tools at a Scroll Sepolia Testnet RPC Provider.
+Dado que Scroll es equivalente en código de bytes con la EVM, sólo tendrás que dirijir tus herramientas de creación favoritas a un proveedor RPC de Scroll Sepolia Testnet.
 
-If you run into any issues, please reach out in [our Discord](https://discord.gg/scroll).
+Si tiene algún problema, póngase en contacto con nosotros en [nuestro Discord](https://discord.gg/scroll).
 
-## Acquiring Testnet Ether
+## Adquiriendo Testnet Ether
 
-To start building on Scroll, you'll first need to acquire some testnet ETH. See the [Faucet](/user-guide/faucet) page for tips on getting test tokens on Sepolia. After this, you can bridge your testnet ETH to the Scroll Sepolia Testnet (Layer 2) using our [Bridge](/user-guide/bridge).
+Para empezar a construir en Scroll, primero tendrás que adquirir algunos ETH de testnet. Consulta la página [Faucet](/es/user-guide/faucet) para obtener consejos sobre la obtención de tokens de la testnet Sepolia. Después de esto, usted puede transferir sus testnet ETH a la Scroll Sepolia Testnet (Capa 2) utilizando nuestro [Bridge](/es/user-guide/bridge).
 
-For a walkthrough, start with the User Guide's [Setup](/user-guide/setup) page.
+Para obtener más información, consulte la página de [Setup](/es/user-guide/bridge) de la Guía del usuario.
 
-## Network Configuration
+## Configuración de red
 
-Use the table below to configure your Ethereum tools to the Scroll Sepolia Testnet.
+Utilice la siguiente tabla para configurar sus herramientas de Ethereum para la Scroll Sepolia Testnet.
 
-| Network Name       | Scroll Sepolia Testnet                                                        | Sepolia Testnet                                                              |
+| Nombre de red      | Scroll Sepolia Testnet                                                        | Sepolia Testnet                                                              |
 | ------------------ | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
 | RPC URL            | [https://sepolia-rpc.scroll.io/](https://sepolia-rpc.scroll.io/)              | [https://eth-sepolia-public.unifra.io](https://eth-sepolia-public.unifra.io) |
 | Chain ID           | 534351                                                                        | 11155111                                                                     |
 | Currency Symbol    | ETH                                                                           | ETH                                                                          |
 | Block Explorer URL | [https://sepolia-blockscout.scroll.io](https://sepolia-blockscout.scroll.io/) | [https://sepolia.etherscan.io](https://sepolia.etherscan.io)                 |
 
-## Configure your tooling
+## Configure sus herramientas
 
 <Aside type="tip" title="">
-  For setting up tooling to verify a smart contract deployment, see [Verifying Smart
-  Contracts](/developers/verifying-smart-contracts).
+  Para configurar herramientas para verificar la implementación de un smart contract, consulte [Verificando Smart
+  Contracts](/es/developers/verifying-smart-contracts).
 </Aside>
 
 ### Hardhat
 
-Modify your Hardhat config file `hardhat.config.ts` to point at the Scroll Sepolia Testnet public RPC.
+Modifica tu archivo de configuración de Hardhat `hardhat.config.ts` para que se dirija al RPC público de Scroll Sepolia Testnet.
 
 ```jsx
 ...
@@ -66,7 +66,7 @@ const config: HardhatUserConfig = {
 
 ### Foundry
 
-To deploy using the Scroll Sepolia Testnet Public RPC, run:
+Para desplegar utilizando el RPC público de Scroll Sepolia Testnet, ejecute:
 
 ```bash
 forge create ... --rpc-url=https://sepolia-rpc.scroll.io/ --legacy
@@ -74,19 +74,19 @@ forge create ... --rpc-url=https://sepolia-rpc.scroll.io/ --legacy
 
 ### Remix Web IDE
 
-After compiling your contracts, the easiest way to deploy using Remix is by [setting up Metamask](/user-guide/setup#metamask), then selecting the **Scroll Sepolia Testnet** network.
+Después de compilar sus contratos, la forma más fácil de desplegar usando Remix es [configurando Metamask](/es/user-guide/setup#metamask) y seleccionando la red **Scroll Sepolia Testnet**.
 
 <ClickToZoom src={networkSelection} />
 
-Now, in the “Deploy and Run Transactions” tab, use the “Environment” drop-down and select “Injected Provider - MetaMask.”
+Ahora, en la pestaña "Deploy and Run Transactions", utilice el desplegable "Environment" y seleccione "Injected Provider - MetaMask."
 
 <ClickToZoom src={injectedProviderMM} />
 
-Connect your wallet and select the Scroll Sepolia Testnet. Your account should be selected automatically in Remix, and you can click “Deploy.”
+Conecta tu wallet y selecciona el Scroll Sepolia Testnet. Tu cuenta debería seleccionarse automáticamente en Remix, y despues, puedes hacer clic en "Deploy."
 
 ### Truffle
 
-Assuming you already have a Truffle environment setup, go to the Truffle [configuration file](https://trufflesuite.com/docs/truffle/reference/configuration/), `truffle.js`. Make sure to have installed HDWalletProvider: `npm install @truffle/hdwallet-provider@1.4.0`
+Asumiendo que ya tienes un entorno Truffle configurado, ve al [archivo de configuración](https://trufflesuite.com/docs/truffle/reference/configuration/) de Truffle, `truffle.js`. Asegúrate de tener instalado HDWalletProvider: `npm install @truffle/hdwallet-provider@1.4.0`
 
 ```js
 const HDWalletProvider = require("@truffle/hdwallet-provider")
@@ -104,22 +104,22 @@ module.exports = {
 
 ### Brownie
 
-To add the Scroll Sepolia Testnet, run the following command:
+Para añadir la Scroll Sepolia Testnet, ejecute el siguiente comando:
 
 ```bash
 brownie networks add Ethereum scrollSepolia host=https://sepolia-rpc.scroll.io/ chainid=534351
 ```
 
-To set this as your default network, add the following in your project config file:
+Para establecer esta red como predeterminada, añada lo siguiente en el archivo de configuración del proyecto:
 
 ```yaml
 networks:
   default: scrollSepolia
 ```
 
-Another way to add the Scroll Sepolia Testnet is to create a `yaml` file and run a command to add it.
+Otra forma de añadir el Scroll Sepolia Testnet es crear un archivo `yaml` y ejecutar un comando para añadirlo.
 
-This is an example of a yaml file called `network-config.yaml`
+Este es un ejemplo de un archivo yaml llamado `network-config.yaml`.
 
 ```yaml
 live:
@@ -132,13 +132,13 @@ live:
    name: Scroll Sepolia Testnet
 ```
 
-To add the Scroll Sepolia Testnet to the network list, run the following command:
+Para añadir la Scroll Sepolia Testnet a la lista de redes, ejecute el siguiente comando:
 
 ```bash
 brownie networks import ./network-config.yaml
 ```
 
-To deploy on Scroll, run the following command. In this example, `token.py` is the script to deploy the smart contract. Replace this with the name of your script:
+Para desplegar en Scroll, ejecute el siguiente comando. En este ejemplo, `token.py` es el script para desplegar el smart contract. Sustitúyelo por el nombre de tu script:
 
 ```bash
 brownie run token.py --network scrollSepolia
@@ -146,7 +146,7 @@ brownie run token.py --network scrollSepolia
 
 ### ethers.js
 
-Setting up a Scroll Sepolia Testnet provider in an `ethers` script:
+Configuración de un proveedor de Scroll Sepolia Testnet en un script `ethers`:
 
 ```jsx
 import { ethers } from "ethers"
@@ -156,11 +156,11 @@ const provider = new ethers.providers.JsonRpcProvider("https://sepolia-rpc.scrol
 
 ### scaffold-eth
 
-To deploy using Scaffold-eth, you’ll need to point both your Hardhat and React settings at the Scroll Sepolia Testnet.
+Para desplegar usando Scaffold-eth, necesitarás dirigir tus configuraciones de Hardhat y React a la Testnet de Scroll Sepolia.
 
-#### Configure Hardhat
+#### Configure el Hardhat
 
-In the `packages/hardhat/hardhat.config.js` file, you’ll add the network and select it as the default network.
+En el archivo `packages/hardhat/hardhat.config.js`, añadirás la red y la seleccionarás como red por defecto.
 
 ```jsx
 ...
@@ -184,18 +184,18 @@ module.exports = {
 }
 ```
 
-Be sure to fund the deployment wallet as well! Run `yarn generate` to create the wallet and `yarn account` to check its funds. Once funded, run `yarn deploy --network scrollSepolia` to deploy on the Scroll Sepolia testnet.
+Asegúrate de financiar también la wallet de despliegue. Ejecute `yarn generate` para crear la wallet y `yarn account` para comprobar sus fondos. Una vez financiado, ejecuta `yarn deploy --network scrollSepolia` para desplegarlo en la Scroll Sepolia testnet.
 
-<Aside type="danger" title="warning">
-  On some project forks, you'll want to disable the contract verification, which relies on Etherscan. This can be
-  commented out in `packages/hardhat/deploy/00_deploy_your_contract.js`
+<Aside type="danger" title="alerta">
+  En algunos forks de proyectos, querrás desactivar la verificación de contratos, que depende de Etherscan. Esto puede ser
+  comentado en `packages/hardhat/deploy/00_deploy_your_contract.js`.
 </Aside>
 
-#### Configure the Frontend
+#### Configure el Frontend
 
-To configure your frontend, you need to add the Scroll Sepolia Testnet as a network option, then select it as default.
+Para configurar tu frontend, tienes que añadir la Scroll Sepolia Testnet como opción de red, y luego seleccionarlo como predeterminado.
 
-To add the network, modify `packages/react-app/src/constants.js` .
+Para añadir la red, modifica `packages/react-app/src/constants.js`.
 
 ```jsx
 ...
@@ -212,7 +212,7 @@ export const NETWORKS = {
 }
 ```
 
-Next, in `packages/react-app/src/App.jsx` modify
+A continuación, en `packages/react-app/src/App.jsx` modifica
 
 ```jsx
 ...

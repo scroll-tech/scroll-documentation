@@ -2,10 +2,10 @@
 section: technology
 date: Last Modified
 title: "zkTrie"
-lang: "en"
+lang: "es"
 permalink: "technology/sequencer/zktrie"
-whatsnext: { "zkEVM": "/technology/zkevm/intro-to-zkevm/" }
-excerpt: "zkTrie is a sparse binary Merkle Patricia Trie built using Poseidon hash."
+whatsnext: { "zkEVM": "/es/technology/zkevm/intro-to-zkevm/" }
+excerpt: "zkTrie es un Merkle Patricia Trie binario disperso construido usando Poseidon hash."
 ---
 
 import Aside from "../../../../../components/Aside.astro"
@@ -14,73 +14,73 @@ import zktrie1 from "../_images/zktrie-arch.png"
 import zktrie2 from "../_images/zktrie-insertion.png"
 import zktrie3 from "../_images/zktrie-deletion.png"
 
-This document describes zkTrie, a sparse binary Merkle Patricia Trie used to store key-value pairs efficiently. It explains the tree structure, construction, node hashing, and tree operations, including insertion and deletion.
+Este documento describe zkTrie, un Merkle Patricia Trie binario disperso utilizado para almacenar pares key-value de forma eficiente. Se explica la estructura del tree, la construcción, el hash de nodos y las operaciones del tree, incluyendo la inserción y la eliminación.
 
-You can also explore our [zktrie repo](https://github.com/scroll-tech/zktrie).
+También puedes explorar nuestro [zktrie repo](https://github.com/scroll-tech/zktrie).
 
-## Tree Structure
+## Estructura del Tree
 
-zkTrie is a sparse binary Merkle Patricia Trie, depicted in the above figure.
-Before diving into the Sparse Binary Merkle Patricia Trie, let's briefly touch on Merkle Trees and Patricia Tries.
-* **Merkle Tree**: A Merkle Tree is a tree where each leaf node represents a hash of a data block, and each non-leaf node represents the hash of its child nodes.
-* **Patricia Trie**: A Patricia Trie is a type of radix tree or compressed trie used to store key-value pairs efficiently. It encodes the nodes with same prefix of the key to share the common path, where the path is determined by the value of the node key.
+zkTrie es un Merkle Patricia Trie binario disperso, representado en la figura anterior.
+Antes de sumergirnos en el Merkle Patricia Trie binario disperso, hablemos brevemente de los Merkle Trees y los Patricia Tries.
+* **Merkle Tree**: Un Merkle Tree es un árbol donde cada nodo hoja representa un hash de un bloque de datos, y cada nodo no hoja representa el hash de sus nodos hijos.
+* **Patricia Trie**: Un Patricia Trie es un tipo de árbol radix o trie comprimido utilizado para almacenar pares key-value de forma eficiente. Codifica los nodos con el mismo prefijo de la key para compartir el camino común, donde el camino está determinado por el valor de la key del nodo.
 
-As illustrated in the Figure 1, there are three types of nodes in the zkTrie.
-- Branch Node: Given the zkTrie is a binary tree, a branch node has two children.
-- Leaf Node: A leaf node holds the data of a key-value pair.
-- Empty Node: An empty node is a special type of node, indicating the sub-trie that shares the same prefix is empty.
+Como se ilustra en la Figura 1, existen tres tipos de nodos en el zkTrie.
+- Branch Node: Dado que zkTrie es un sistema binario, un branch node dos hijos.
+- Leaf Node: Un leaf node contiene los datos de un par key-value.
+- Empty Node: Un empty node es un tipo especial de nodo, que indica que la sub-trie que comparte el mismo prefijo está vacía.
 
-In zkTrie, we use Poseidon hash to compute the node hash because it's more friendly and efficient to prove it in the zk circuit.
+En zkTrie, usamos Poseidon hash para calcular el hash de nodo porque es más amigable y eficiente probarlo en el circuito zk.
 
 <ClickToZoom src={zktrie1} alt="zkTrie Structure" caption="Figure 1. zkTrie Structure" />
 
-## Tree Construction
+## Construcción del Tree
 
-Given a key-value pair, we first compute a *secure key* for the corresponding leaf node by hashing the original key (i.e., account address and storage key) using the Poseidon hash function. This can make the key uniformly distributed over the key space. The node key hashing method is described in the [Node Hashing](#node-hashing) section below.
+Dado un par key-value, primero calculamos una *key segura* para el "leaf node" correspondiente haciendo un hash de la key original (es decir, la dirección de la cuenta y la key de almacenamiento) usando la función hash Poseidon. Esto puede hacer que la key se distribuya uniformemente sobre el key space. El método hash de la key del nodo se describe en la sección [Node Hashing](#node-hashing) más abajo.
 
-We encode the path of a new leaf node by traversing the secure key from Least Significant Bit (LSB) to the Most Significant Bit (MSB). At each step, if the bit is 0, we will traverse to the left child; otherwise, traverse to the right child.
+Codificamos la ruta de un nuevo leaf node recorriendo la key segura desde el Least Significant Bit (LSB) hasta el Most Significant Bit (MSB). En cada paso, si el bit es 0, pasaremos al hijo izquierdo; en caso contrario, pasaremos al hijo derecho.
 
-We limit the maximum depth of zkTrie to 248, meaning that the tree will only traverse the lower 248 bits of the key. Because the secure key space is a finite field used by Poseidon hash that doesn't occupy the full range of $2^{256}$. the bit representation of the key can be ambiguous in the finite field and thus results in a soundness issue in the zk circuit. After we truncate the key to lower 248 bits, the key space can fully occupy the range of $2^{248}$ and won't have the ambiguity in the bit representation.
+Limitamos la profundidad máxima de zkTrie a 248, lo que significa que el tree sólo recorrerá los 248 bits inferiores de la key. Debido a que el espacio de key segura es un campo finito utilizado por Poseidon hash que no ocupa todo el rango de $2^{256}$. la representación de bits de la key puede ser ambigua en el campo finito y por lo tanto resulta en un problema de solidez en el circuito zk. Después de truncar la key a 248 bits inferiores, el espacio de la key puede ocupar completamente el rango de $2^{248}$ y no tendrá la ambigüedad en la representación de bits.
 
-We apply an optimization to reduce the tree depth by contracting a subtree that has only one leaf node to a single leaf node. For example, in the Figure 1, the tree has three nodes in total, with keys `0100`, `0010`, and `1010`. Because there is only one node that has key with suffix `00`, the leaf node for key `0100` only traverses the suffix `00` and doesn't fully expand its key which would have resulted in depth of 4.
+Aplicamos una optimización para reducir la profundidad del tree contrayendo un subtree que sólo tiene un leaf node para un single leaf node. Por ejemplo, en la Figura 1, el tree tiene tres nodos en total, con las claves `0100`, `0010` y `1010`. Como sólo hay un nodo que tenga la key con sufijo `00`, el leaf node de la key `0100` sólo atraviesa el sufijo `00` y no expande completamente su key, lo que hubiera resultado en una profundidad de 4.
 
-## Tree Operations
+## Operaciones del Tree
 
-### Insertion
+### Inserción
 
 <ClickToZoom src={zktrie2} alt="zkTrie Structure" caption="Figure 2. Insert a new leaf node to zkTrie" />
 
-When we insert a new leaf node to a zkTrie, there are two cases illustrated in the Figure 2.
+Cuando insertamos un nuevo leaf node en una zkTrie, se dan dos casos ilustrados en la Figura 2.
 
-1. When traversing the path of the node key, it reaches an empty node (Figure 2a). In this case, we just need to replace this empty node by this leaf node and backtrace the path to update the merkle hash of branch nodes till the root.
-2. When traversing the path of the node key, it reaches another leaf node `b` (Figure 2b). In this case, we need to push down the existing leaf node `b` until the next bit in the node keys of two leaf nodes differs. At each push-down step, we need to insert an empty sibling node to the branch node. When we reach the level where the bits differ, we then place two leaf nodes `b` and `d` as the left child and the right child depending on their bits. At last, we backtrace the path and update the Merkle hash of all branch nodes.
+1. Al recorrer la ruta del key node, se llega a un empty node (Figura 2a). En este caso, sólo tenemos que sustituir este empty node por este leaf node y retroceder en el camino para actualizar el merkle hash de los branch nodes hasta la root.
+2. Cuando se recorre el camino del key node, se llega a otro leaf node `b` (Figura 2b). En este caso, tenemos que empujar hacia abajo el leaf node existente `b` hasta que el siguiente bit en las keys de los nodos de dos leaf nodes difiera. En cada paso de empuje hacia abajo, tenemos que insertar un empty node hermano en el branch node. Cuando llegamos al nivel en el que los bits difieren, colocamos dos leaf nodes `b` y `d` como hijo izquierdo e hijo derecho en función de sus bits. Por último, volvemos a trazar el camino y actualizamos el hash Merkle de todos los branch nodes.
 
-### Deletion
+### Eliminación
 
 <ClickToZoom src={zktrie3} alt="zkTrie Structure" caption="Figure 3. Delete a leaf node from the zkTrie" />
 
-The deletion of a leaf node is similar to the insertion. There are two cases illustrated in the Figure 3.
+La eliminación de un leaf node es similar a la inserción. En la Figura 3 se ilustran dos casos.
 
-1. The sibling node of to-be-deleted leaf node is a
-branch node (Figure 3a). In this case, we can simply replace the node `a` by an empty node and update the node hash of its ancestors till the root node.
-2. The node of to-be-deleted leaf node is a leaf node (Figure 3b). Similarly to case 1, we first replace the leaf node by an empty node and start to contract its sibling node upwards until its sibling node is not an empty node. For example, in Figure 3b, we replace the leaf node `b` by an empty node. Because the sibling of node `c` now becomes an empty node, we need to move node `c` one level upward and replace its parent. The new sibling of node `c`, node `e`, is still an empty node. So again we move node `c` upward. Now that the sibling of node `c` is node `a`, a leaf node, the deletion process is finished.
+1. El nodo hermano del leaf node que se va a eliminar es un branch node (Figura 3a).
+En este caso, podemos simplemente reemplazar el nodo `a` por un empty node y actualizar el hash de sus ancestros hasta el root node.
+2. El leaf node a eliminar es un leaf node (Figura 3b). De forma similar al caso 1, primero sustituimos el leaf node por un empty node y empezamos a contraer su nodo hermano hacia arriba hasta que su nodo hermano no sea un empty node. Por ejemplo, en la figura 3b, sustituimos el leaf node `b` por un empty node. Como el hermano del nodo `c` se convierte ahora en un empty node, tenemos que mover el nodo `c` un nivel hacia arriba y reemplazar a su padre. El nuevo hermano del nodo `c`, el nodo `e`, sigue siendo un empty node. Así que de nuevo movemos el nodo `c` hacia arriba. Ahora que el hermano del nodo `c` es el nodo `a`, un leaf node, el proceso de borrado ha terminado.
 
-Note that the sibling of a leaf node in a valid zkTrie cannot be an empty node. Otherwise, we should always prune the subtree and move the leaf node upwards.
+Ten en cuenta que el hermano de un leaf node en una zkTrie válida no puede ser un empty node. De lo contrario, siempre debemos purgar el subtree y mover el leaf node hacia arriba.
 
-## Node Hashing
+## Hash de Nodos
 
-In this section, we will describe how leaf secure key and node Merkle hash are computed. We use Poseidon hash with arity 2 for both hashing computation. In Scroll, the Poseidon hash function is configured to take two field element inputs each time and a `domain_value` as the initial context for domain separation, denoted as follows.
+En esta sección, describiremos cómo se calculan la key segura de hoja y el hash Merkle de nodo. Usamos Poseidon hash con arity 2 para ambos cálculos hash. En Scroll, la función hash Poseidon está configurada para tomar dos entradas de elementos de campo cada vez y un `domain_value` como contexto inicial para la separación de dominios, denotado como sigue.
 ```
 h{domain_value}(input1, input2)
 ```
 
 ### Empty Node
 
-The node hash of an empty node is 0.
+El hash de un empty node es 0.
 
 ### Branch Node
 
-The branch node hash is computed as follows
+El hash del nodo de la rama se calcula del siguiente modo
 
 ```go
 branchNodeHash = h{BranchNodeType}(leftChildHash, rightChildHash)
@@ -88,20 +88,20 @@ branchNodeHash = h{BranchNodeType}(leftChildHash, rightChildHash)
 
 ### Leaf Node
 
-The node hash of a leaf node is computed as follows.
+El hash de un leaf node se calcula de la siguiente manera.
 
 ```go
 leafNodeHash = h{LeafNodeType}(nodeKey, valueHash)
 ```
 
-The computation involves two fields `nodeKey` and `valueHash`.
-- `nodeKey` is hashed from the original key. The domain value used in the Poseidon hash is 256.
-- `valueHash` is calculated by hashing the leaf node value. The domain value used in the Poseidon hash is `256 * n`, where `n` is the number of elements in the leaf node value.
+El cálculo implica dos campos `nodeKey` y `valueHash`.
+- El `nodeKey` es un hash de la key original. El valor del dominio usado en el hash de Poseidon es 256.
+- El `valueHash` se calcula a partir del hash del valor del leaf node. El valor de dominio usado en el hash de Poseidon es `256 * n`, donde `n` es el número de elementos en el valor del leaf node.
 
-There are two types of leaf nodes: Ethereum accounts and storage key-value pairs. Next, we will describe the calculation method of the node key and value hash for each leaf node type respectively.
+Hay dos tipos de leaf nodes: Cuentas Ethereum y pares key-value de almacenamiento. A continuación, vamos a describir el método de cálculo de la node key y el valor hash para cada tipo de leaf node, respectivamente.
 
-#### Ethereum Account Leaf Node
-For an Ethereum Account Leaf Node, it consists of an Ethereum address and a state account data structure. The secure key is derived from the Ethereum address.
+#### Cuenta Ethereum Leaf Node
+Para una Cuenta Ethereum Leaf Node, consiste en una dirección de Ethereum y una estructura de datos de cuenta de estado. La key segura se deriva de la dirección de Ethereum.
 ```go
 var address byte[20] // 20 bytes in big-endian
 valHi := address[0:16]
@@ -109,7 +109,7 @@ valLo := address[16:20] * 2^96 // padding 12 bytes of 0 at the end
 nodeKey := h{256}(valHi, valLo)
 ```
 
-A state account struct in the Scroll consists of the following fields (`Fr` indicates the finite field and is a 254-bit value)
+Una estructura de cuenta de estado en el Scroll consta de los siguientes campos (`Fr` indica el campo finito y es un valor de 254 bits)
 
 - `Nonce`: u64
 - `Balance`: u256, but treated as Fr
@@ -118,7 +118,7 @@ A state account struct in the Scroll consists of the following fields (`Fr` indi
 - `PoseidonCodeHash`: Fr
 - `CodeSize`: u64
 
-Before computing the value hash, the state account is first marshaled into a list of `u256` values. The marshaling scheme is
+Antes de calcular el value hash, la cuenta de estado se transforma en una lista de valores `u256`. El esquema es el siguiente
 
 ```text
 (The following scheme assumes the big-endian encoding)
@@ -133,7 +133,7 @@ Before computing the value hash, the state account is first marshaled into a lis
 (total 160 bytes)
 ```
 
-The marshal function also returns a `flag` value along with a vector of `u256` values. The `flag` is a bitmap that indicates whether a `u256` value cannot be treated as a field element (Fr). The `flag` value for state account is 8, shown below.
+La función marshal también devuelve un valor `flag` junto con un vector de valores `u256`. El `flag` es un mapa de bits que indica si un valor `u256` no puede ser tratado como un elemento de campo (Fr). El valor `flag` para la cuenta de estado es 8, como se muestra a continuación.
 
 ```
          +--------------------+---------+------+----------+----------+
@@ -146,18 +146,18 @@ flag bit |          0         |    0    |   0  |     1    |     0    |
          (LSB)                                                   (MSB)
 ```
 
-The value hash is computed in two steps:
-1. Convert the value that cannot be represented as a field element of the Poseidon hash to the field element.
-2. Combine field elements in a binary tree structure till the tree root is treated as the value hash.
+El value hash se calcula en dos pasos:
+1. Convertir el valor que no puede ser representado como un elemento de campo del Poseidon hash al elemento de campo.
+2. Combinar elementos de campo en una estructura de tree binario hasta que la root del tree sea tratada como el value hash.
 
-In the first step, when the bit in the `flag` is 1 indicating the `u256` value that cannot be treated as a field element, we split the value into a high-128bit value and a low-128bit value, and then pass them to a Poseidon hash to derive a field element value, `h(valueHi, valueLo)`.
+En el primer paso, cuando el bit en el `flag` es 1 indicando el valor `u256` que no puede ser tratado como un elemento de campo, dividimos el valor en un valor alto-128bit y un valor bajo-128bit, y luego los pasamos a un Poseidon hash para derivar un valor de elemento de campo, `h(valueHi, valueLo)`.
 
 ```go
 // convert Keccak codehash to a field element
 compressedKeccakCodeHash := h{512}(keccakCodeHash[0:16], keccakCodeHash[16:32])
 ```
 
-Second, the value hash is computed as follows.
+En segundo lugar, el value hash se calcula del siguiente modo.
 
 ```go
 domain := 256 * 5  // 5 elements to compute the valueHash
@@ -174,9 +174,9 @@ valueHash :=
     )
 ```
 
-#### Storage Leaf Node
+#### Almacenamiento de Leaf Node
 
-A Storage Leaf Node encodes a key-value pair, which both key and value are `u256` values. The secure key of this leaf node is derived from the storage key.
+Un leaf node de almacenamiento codifica un par key-value, en el que tanto la key como el value son valores `u256`. La key segura de este leaf node se deriva de la key de almacenamiento.
 
 ```go
 var storageKey byte[32]  // 32 bytes in big-endian
@@ -185,7 +185,7 @@ valLo := storageKey[16:32]
 nodeKey := h{256}(valHi, valLo)
 ```
 
-The storage value is a `u256` value. The `flag` for the storage value is 1, showed below.
+El value de almacenamiento es un valor `u256`. El `flag` para el value or de almacenamiento es 1, como se muestra a continuación.
 
 ```
          +--------------+
@@ -197,7 +197,7 @@ flag bit |      1       |
          +--------------+
 ```
 
-The value hash is computed as follows
+El value hash se calcula del siguiente modo
 
 ```go
 valueHash = h{512}(storageValue[0:16], storageValue[16:32])
