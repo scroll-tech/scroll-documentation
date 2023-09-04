@@ -1,106 +1,106 @@
 ---
 section: developers
 date: Last Modified
-title: "Transaction Fees on Scroll"
-lang: "en"
+title: "Comisiones de Transacciones en Scroll"
+lang: "es"
 permalink: "developers/transaction-fees-on-scroll"
-whatsnext: { "Contract Deployment Tutorial": "/developers/guides/contract-deployment-tutorial/" }
-excerpt: "Understand how L1 and L2 transaction fees work on Scroll "
+whatsnext: { "Tutorial de Despliegue de Contratos": "/es/developers/guides/contract-deployment-tutorial" }
+excerpt: "Aprende cómo funcionan las comisiones de las transacción en L1 y L2 de Scroll "
 ---
 
 import Aside from "../../../../components/Aside.astro"
 
-## Overview
+## Vista General
 
-Scroll Sepolia Testnet fees are notably lower than on its supporting layer. For users and developers, transaction fees on Scroll appear to work similarly to those on Ethereum mainnet, and existing tools, wallets, and code will likely work as if they were. However, the transaction fee shown in the wallet isn't the whole picture unless the software is specifically aware of Scroll's fee calculations.
+Las comisiones de Scroll Sepolia Testnet son notablemente inferiores a las de su capa de soporte. Para usuarios y desarrolladores, las comisiones por transacción en Scroll parecen funcionar de forma similar a las de la mainnet de Ethereum, y las herramientas, wallets y código existentes probablemente funcionarán como si lo fueran. Sin embargo, la comisión por transacción que se muestra en el monedero no es la imagen completa, a menos que el software conozca específicamente los cálculos de comisiones de Scroll.
 
-Due to the design of L2 rollups, transaction costs depend on the L1's costs. To leverage Ethereum's security, Scroll must account for the cost of the transaction data and proofs that must be stored and verified on the L1.
+Debido al diseño de los rollups L2, los costes de transacción dependen de los costes del L1. Para aprovechar la seguridad de Ethereum, Scroll debe tener en cuenta el coste de los datos de las transacciones y las pruebas que deben almacenarse y verificarse en la L1.
 
-Compared to Ethereum mainnet, Scroll Sepolia introduces some new dimensions to transaction fee calculation to do this. The final cost of a transaction is constructed from several parts:
+En comparación con la mainnet de Ethereum, Scroll Sepolia introduce algunas nuevas dimensiones en el cálculo de la comisión de transacción para hacer esto. El coste final de una transacción se construye a partir de varias partes:
 
-- **L2 fee**
-  - Calculated in the same manner as on the L1, equaling `gas_price * gas_used`
-- **L1 fee**
-  - This additional fee covers sending data to L1 for data availability. Transactions initiated on the L1 do not pay this fee.
-  - It is calculated based on the size of the transaction's calldata
-  - ETH is automatically deducted from the user’s balance on Scroll for the fee
+- **Comisión L2**
+  - Calculada de la misma manera que en la L1, igual a `gas_price * gas_used`.
+- **Comisión L1**
+- Esta comisión adicional cubre el envío de datos al L1 para la disponibilidad de datos. Las transacciones iniciadas en el L1 no pagan esta comisión.
+  - Se calcula en función del tamaño de los datos de llamada de la transacción.
+  - ETH se deduce automáticamente del saldo del usuario en Scroll para el pago de comisión
 
-At a high level, the **L2 fee** is the cost of executing your transaction on the L2 sequencer, and the **L1 fee** is the cost of committing that transaction onto L1.
+A un alto nivel, la **comisión L2** es el coste de ejecutar su transacción en el secuenciador L2, y la **comisión L1** es el coste de comprometer esa transacción en L1.
 
-In short, `totalTxFee = l2Fee + l1Fee`, all denominated in ETH, the native gas token for the Scroll network.
+En resumen, `totalTxFee = l2Fee + l1Fee`, todo ello denominado en ETH, el token de gas nativo de la red Scroll.
 
-<Aside type="note" title="Where are transaction fees sent?">
-All tx fees are collected into the `L2ScrollFeeVault` contract balance. This contract also tracks the amount we’ve historically withdrawn to L1 using `totalProcessed()(uint256)`.
+<Aside type="note" title="¿Dónde se envían las comisiones de las transacciones?">
+Todas las comisiones de transferencia se recogen en el saldo del contrato `L2ScrollFeeVault`. Este contrato también realiza un seguimiento de la cantidad que hemos retirado históricamente a L1 utilizando `totalProcessed()(uint256)`.
 
-The block producer receives no direct reward, and the `COINBASE` opcode returns the fee vault address.
+El productor del bloque no recibe ninguna recompensa directa, y el opcode `COINBASE` devuelve la dirección de la vault de la comisión.
 
 </Aside>
 
-## L2 Fee
+## Comisiones de L2
 
-Transactions on Scroll, like on Ethereum, must pay the cost of executing their computations and storing the data they produce.
+Las transacciones en Scroll, como en Ethereum, deben pagar el coste de ejecutar sus cálculos y almacenar los datos que producen.
 
-### Calculating the Execution Fee
+### Cálculo de la comisión de ejecución
 
-The L2 execution fee is straightforward:
+La comisión de ejecución L2 es sencilla:
 
 ```javascript
 l2TransactionExecutionFee = l2TransactionGasUsed * l2TransactionGasPrice
 ```
 
-The total fee depends on what the transaction does (`l2TransactionGasUsed`) as well as the current market conditions (`l2TransactionGasPrice`). Users set the gas price, and the "gas used" is assessed by calling the `estimateGas` endpoint on a Scroll node.
+La comisión total depende de lo que haga la transacción (`l2TransactionGasUsed`), así como de las condiciones actuales del mercado (`l2TransactionGasPrice`). Los usuarios fijan el precio del gas, y el "gas utilizado" se evalúa llamando al endpoint `estimateGas` en un nodo Scroll.
 
-In other words, the execution fee is calculated precisely like pre-[EIP1559](https://eips.ethereum.org/EIPS/eip-1559) Ethereum.
+En otras palabras, la comisión de ejecución se calcula exactamente igual que antes de [EIP1559](https://eips.ethereum.org/EIPS/eip-1559) Ethereum.
 
-## L1 Fee
+## Comisiones de L1
 
-Every transaction's calldata must be committed to Ethereum, which incurs an additional transaction fee, referred to as the "L1 Fee". Without doing this, Scroll couldn't be reconstructed from only L1 data.
+La calldata de cada transacción deben confirmarse en Ethereum, lo que conlleva una comisión adicional por transacción, denominada "comisión L1". De lo contrario, no se podría reconstruir Scroll a partir únicamente de datos L1.
 
-Transactions aren't committed 1-by-1 -- they are collected in batches of blocks (and blocks of transactions). The cost of an individual transaction is computed based on the zeros and non-zero bytes in its payload.
+Las transacciones no se consignan de 1 en 1, sino en lotes de bloques (y bloques de transacciones). El coste de una transacción individual se calcula en función de los bytes ceros y no ceros de su payload.
 
-### Estimating the L1 Data Fee
+### Estimación de la Comisión de Datos L1
 
-Scroll has a pre-deployed `L1GasPriceOracle`, accessible on Scroll Sepolia at ([`0x5300000000000000000000000000000000000002`](https://sepolia-blockscout.scroll.io/address/0x5300000000000000000000000000000000000002)). It provides a `getL1Fee` method to estimate the L1 data fee for a given transaction's raw data.
+Scroll tiene un `L1GasPriceOracle` pre-desplegado, accesible en Scroll Sepolia en ([`0x5300000000000000000000000000000000000000000000000002`](https://sepolia-blockscout.scroll.io/address/0x5300000000000000000000000000000000000002)). Proporciona un método `getL1Fee` para estimar la comisión de datos L1 para la raw data de una transacción dada.
 
 ```solidity
 function getL1Fee(bytes memory _data) external view override returns (uint256);
 ```
 
-<Aside type="note" title="What happens if gas prices spike on L1?">
+<Aside type="note" title="¿Qué pasa si sube el precio del gas en L1?">
 
-Once the sequencer has processed a transaction, a user's L1 fee is locked in, and any fluctuations will not affect what a user pays.
+Una vez que el secuenciador ha procesado una transacción, la comisión de L1 de un usuario queda bloqueada, y cualquier fluctuación no afectará a lo que paga el usuario.
 
 <br />
-Because of Scroll's short block times, any L1 gas changes between a transaction's submission and its inclusion in a block
-should be minimal. The sequencer will absorb any changes to L1 gas costs between a transaction's inclusion in a block and
-when the sequencer commits the data to L1.
+Debido a los cortos tiempos de bloque de Scroll, cualquier cambio de gas L1 entre el envío de una transacción y su inclusión en un bloque
+debería ser mínimo. El secuenciador absorberá cualquier cambio en los costes de gas L1 entre la inclusión de una transacción en un bloque y
+cuando el secuenciador consigna los datos en L1.
 
 </Aside>
 
-### Calculating the L1 Data Fee with Gas Oracle
+### Cálculo de la Comisión de Datos L1 con Gas Oracle
 
-As mentioned, the `L1GasPriceOracle` is used to estimate the L1 gas fee given raw transaction data. This is a **push oracle**, updated by a relayer run by Scroll.
+Como ya se ha mencionado, el `L1GasPriceOracle` se utiliza para estimar la comisión de gas L1 dados la raw data de la transacción. Se trata de un **push oracle**, actualizado por un relayer ejecutado por Scroll.
 
-The data fee is based on multiple factors:
+La tarifa de datos se basa en múltiples factores:
 
-- The bytes which are `zeros` and `nonzeros` of an RLP-encoded transaction with Signature
-- `l1BaseFee` - Current base fee on the L1
-- `overhead` - Additional gas overhead of a data commitment transaction
-- `scalingFactor` - A scaling factor used to account for price spikes
-- `PRECISION` - A constant used to scale the final fee
+- Los bytes que son `ceros` y `no ceros` de una transacción codificada RLP con Firma
+- `l1BaseFee` - Comisión base actual en el L1
+- `overhead` - Sobrecarga de gas adicional de una transacción de compromiso de datos
+- `scalingFactor` - Factor de escala utilizado para tener en cuenta los picos de precios.
+- `PRECISION` - Constante utilizada para escalar la comisión final
 
-The following steps are taken to calculate the L1 data fee:
+Para calcular la comisión por datos L1 se realizan los siguientes pasos:
 
-1. Read three fields `l1BaseFee`, `overhead`, `scalar` from the `L1GasPriceOracle` contract. The slots for these fields in the contract are:
+1. Se leen tres campos `l1BaseFee`, `overhead`, `scalar` del contrato `L1GasPriceOracle`. Los slots para estos campos en el contrato son:
 
-   | Field     | Slot |
+   | Campo     | Slot |
    | --------- | ---- |
    | l1BaseFee | 1    |
    | overhead  | 2    |
    | scalar    | 3    |
 
-2. Count the number of zero bytes and non-zero bytes from the transaction.
-3. Calculate the L1 data fee, given `TX_DATA_ZERO_GAS = 4` and `TX_DATA_NON_ZERO_GAS = 16`[^eip-2028] and `PRECISION = 1e9`:
+2. Se cuenta el número de bytes cero y bytes no cero de la transacción.
+3. Se Calcula la comisión de datos L1, dados `TX_DATA_ZERO_GAS = 4` y `TX_DATA_NON_ZERO_GAS = 16`[^eip-2028] y `PRECISION = 1e9`:
 
    ```javascript
    l1Gas = zeros * TX_DATA_ZERO_GAS + (nonzeros + 4) * TX_DATA_NON_ZERO_GAS
@@ -109,9 +109,9 @@ The following steps are taken to calculate the L1 data fee:
 
    We reserve an additional 4 bytes in the non-zero bytes to store the number of bytes in the RLP-encoded transaction.
 
-[^eip-2028]: See [EIP-2028](https://eips.ethereum.org/EIPS/eip-2028) for more info.
+[^eip-2028]: Para más información, véase [EIP-2028](https://eips.ethereum.org/EIPS/eip-2028).
 
-### L1GasPriceOracle API
+### API de L1GasPriceOracle
 
 #### overhead
 
@@ -119,7 +119,7 @@ The following steps are taken to calculate the L1 data fee:
 function overhead() external view returns (uint256);
 ```
 
-Returns the current L1 fee overhead
+Devuelve el exceso de comisión L1 actual
 
 #### scalar
 
@@ -127,7 +127,7 @@ Returns the current L1 fee overhead
 function scalar() external view returns (uint256);
 ```
 
-Returns the current l1 fee scalar
+Devuelve el escalar de comisión l1 actual
 
 #### l1BaseFee
 
@@ -135,7 +135,7 @@ Returns the current l1 fee scalar
 function l1BaseFee() external view returns (uint256);
 ```
 
-Returns the latest known l1 base fee
+Devuelve la última comisión base l1 conocida
 
 #### getL1Fee
 
@@ -143,13 +143,13 @@ Returns the latest known l1 base fee
 function getL1Fee(bytes memory _data) external view returns (uint256);
 ```
 
-Computes the L1 portion of the fee based on the size of the RLP encoded input transaction, the current L1 base fee, and the various dynamic parameters.
+Calcula la parte L1 de la comisión en función del tamaño de la transacción de entrada codificada en RLP, la comisión base L1 actual y los distintos parámetros dinámicos.
 
-**Returns:** L1 fee that should be paid for the transaction
+**Devuelve:** La comisión de L1 que debe pagarse por la transacción
 
-| Parameter | Description                                                 |
+| Parámetro | Descripción                                                 |
 | --------- | ----------------------------------------------------------- |
-| data      | Signed fully RLP-encoded transaction to get the L1 fee for. |
+| data      | Transacción firmada totalmente codificada en RLP para obtener la comisión de L1. |
 
 #### getL1GasUsed
 
@@ -157,18 +157,18 @@ Computes the L1 portion of the fee based on the size of the RLP encoded input tr
 function getL1GasUsed(bytes memory data) external view returns (uint256);
 ```
 
-Computes the amount of L1 gas used for a transaction. Adds the overhead which represents the per-transaction gas overhead of posting the transaction and state roots to L1. Adds 74 bytes of padding to account for the fact that the input does not have a signature.
+Calcula la cantidad de gas L1 utilizado para una transacción. Añade el exceso que representa la sobrecarga de gas por transacción de publicar la transacción y las state roots en L1. Añade 74 bytes de relleno para tener en cuenta el hecho de que la entrada no tiene una firma.
 
-**Returns:** Amount of L1 gas used to publish the transaction.
+**Devuelve:** Cantidad de gas L1 utilizado para publicar la transacción.
 
-| Parameter | Description                                                 |
+| Parámetro | Descripción                                                 |
 | --------- | ----------------------------------------------------------- |
-| data      | Signed fully RLP-encoded transaction to get the L1 fee for. |
+| data      | Transacción firmada totalmente codificada en RLP para obtener la comisión L1. |
 
-## Future Roadmap
+## Roadmap Futuro
 
-Currently, the computation required for proof generation is completed by and subsidized by Scroll and various proving partners.
+En la actualidad, el cálculo necesario para la generación de pruebas es completado y financiado por Scroll y varios socios.
 
-As the prover network becomes decentralized, incentives for proof generation will need to be incorporated into the protocol for the system to be sustainable and scalable.
+A medida que la red de probadores se descentralice, será necesario incorporar incentivos a la generación de pruebas en el protocolo para que el sistema sea sostenible y escalable.
 
-We expect the final gas cost will include the cost of this proof generation. With further protocol optimization, this cost for the user should be minimal, as each proof covers many transactions.
+Esperamos que el coste final del gas incluya el coste de esta generación de pruebas. Con una mayor optimización del protocolo, este coste para el usuario debería ser mínimo, ya que cada prueba cubre muchas transacciones.

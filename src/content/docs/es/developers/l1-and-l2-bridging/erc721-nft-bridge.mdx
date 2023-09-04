@@ -2,31 +2,31 @@
 section: developers
 date: Last Modified
 title: "ERC721 NFT Bridge"
-lang: "en"
+lang: "es"
 permalink: "developers/l1-and-l2-bridging/erc721-nft-bridge"
-excerpt: "NFT bridging from L1 to L2 is done via the L1ERC721Gateway contract instead of using a router."
-whatsnext: { "ERC1155 Token Bridge": "/developers/l1-and-l2-bridging/erc721-nft-bridge/" }
+excerpt: "El bridging de NFTs de L1 a L2 se realiza a través del contrato L1ERC721Gateway en lugar de utilizar un router."
+whatsnext: { "ERC1155 Token Bridge": "/es/developers/l1-and-l2-bridging/erc1155-token-bridge" }
 ---
 
 import Aside from "../../../../../components/Aside.astro"
 
-## Deposit ERC721 tokens from L1
+## Depósito de tokens ERC721 de L1
 
-NFT bridging from L1 to L2 is done via the `L1ERC721Gateway` contract instead of using a router. Similarly to bridging ERC20 tokens, we use the `depositERC721` function to send tokens to L2, and we can later retrieve them back to L1 using `withdrawERC721` on the `L2ERC721Gateway` contract deployed on L2.
+El bridging NFTs de L1 a L2 se realiza a través del contrato `L1ERC721Gateway` en lugar de utilizar un router. De forma similar a el bridging de tokens ERC20, utilizamos la función `depositERC721` para enviar tokens a L2, y posteriormente podemos recuperarlos de vuelta a L1 utilizando `withdrawERC721` en el contrato `L2ERC721Gateway` desplegado en L2.
 
-NFT contracts on both L1 and l2 must be launched and connected through the Gateways to enable bridging. This means deposit and withdraw transactions will revert if a contract on either L1 or L2 is missing or not mapped through the `updateTokenMapping` function.
+Los contratos NFT tanto en L1 como en L2 deben lanzarse y conectarse a través de las Gateways para permitir el bridging. Esto significa que las transacciones de depósito y retirada se revertirán si falta un contrato en L1 o L2 o si no se asigna a través de la función `updateTokenMapping`.
 
 <Aside type="tip" title="">
-  **`depositERC721`** is a payable function. The amount of ETH sent to this function will be used to pay for L2 fees. If
-  the amount is not enough, the transaction will not be sent. All excess eth will be sent back to the sender. `0.00001
-  ETH` should be more than enough to process a token deposit.
+  **`depositERC721`** es una función de pago. La cantidad de ETH enviada a esta función se utilizará para pagar las tasas de la L2. Si
+  la cantidad no es suficiente, la transacción no será enviada. Todo el exceso de ETH será devuelto al remitente. `0.00001
+  ETH` debería ser más que suficiente para procesar un depósito de tokens.
 </Aside>
 
-### Creating a ScrollERC721 token on L2
+### Creación de un token ScrollERC721 en L2
 
-To deposit an ERC721 token to L2, a token contract compatible with the `IScrollERC721` standard has to be launched and mapped on a `L1ERC721Gateway` and `L2ERC721Gateway` on both L1 and L2, respectively. This contract has to grant permission to the Gateway on L2 to mint when a token is deposited and burn when the token is withdrawn.
+Para depositar un token ERC721 en L2, debe lanzarse un contrato de token compatible con el estándar `IScrollERC721` y asignarse a una `L1ERC721Gateway` y una `L2ERC721Gateway` en L1 y L2, respectivamente. Este contrato tiene que conceder permiso a la Gateway en L2 para emitir cuando un token es depositado y quemar cuando el token es retirado.
 
-The following interface is the `IScrollERC721` needed for deploying ERC721 tokens compatible with the `L2ERC721Gateway` on L2.
+La siguiente interfaz es el `IScrollERC721` necesario para desplegar tokens ERC721 compatibles con el `L2ERC721Gateway` en L2.
 
 ```solidity
 interface IScrollERC721 {
@@ -49,29 +49,28 @@ interface IScrollERC721 {
 }
 ```
 
-### Adding ERC721 NFTs to the Scroll Bridge
+### Añadiendo NFTs ERC721 al Scroll Bridge
 
-All assets can be bridged securely and permissionlessly through Gateway contracts deployed by any developer. However, Scroll also manages an ERC721 Gateway contract where all NFTs created by the community are welcome. Being part of the Scroll-managed Gateway means you won't need to deploy the Gateway contracts, and your token will appear in the Scroll frontend. To be part of the Scroll Gateway, you must contact the Scroll team to add the NFT on both L1 and L2 Gateway contracts. To do so, follow the instructions on the [token lists](https://github.com/scroll-tech/token-list) repository to add a new token to the Scroll official frontend.
+Todos los activos pueden ser transferidos de forma segura y sin permisos a través de contratos Gateway desplegados por cualquier desarrollador. Sin embargo, Scroll también gestiona un contrato Gateway ERC721 en donde todos los NFTs creados por la comunidad son bienvenidas. Formar parte del Gateway gestionado por Scroll significa que no necesitará desplegar los contratos Gateway, y su token aparecerá en el frontend de Scroll. Para formar parte de la Gateway gestionada por Scroll, debe ponerse en contacto con el equipo de Scroll para añadir el NFT en los contratos Gateway L1 y L2. Para ello, siga las instrucciones del repositorio [token lists](https://github.com/scroll-tech/token-list) para añadir un nuevo token al frontend oficial de Scroll.
 
-## Withdraw ERC721 tokens from Scroll
+## Retiro de tokens ERC721 de Scroll
 
-The `L2ERC721Gateway` contract is used to send tokens from L2 to L1. Before bridging, the `L2ERC721Gateway` contract has to be approved by the NFT contract. Once that is done, `withdrawERC721` can be called to perform the asset bridge.
+El contrato `L2ERC721Gateway` se utiliza para enviar tokens de L2 a L1. Antes de realizar el bridging, el contrato `L2ERC721Gateway` tiene que ser aprobado por el contrato NFT. Una vez hecho esto, se puede llamar a `withdrawERC721` para realizar el intercambio de activos.
 
 <Aside type="tip" title="">
-  **`withdrawERC721`** is a payable function, and the amount of ETH sent to this function will be used to pay for L1
-  fees. If the amount is not enough, the transaction will not be sent. All excess ETH will be sent back to sender. Fees
-  depend on L1 activity but `0.005 ETH` should be enough to process a token withdrawal.
+  **`withdrawERC721`** es una función de pago, y la cantidad de ETH enviada a esta función se utilizará para pagar las tasas de L1. Si la cantidad no es suficiente, la transacción no será enviada. Todo el exceso de ETH será devuelto al remitente. Las tasas
+  dependen de la actividad de L1 pero `0.005 ETH` debería ser suficiente para procesar una retirada de tokens.
 </Aside>
 
 <Aside type="caution" title="">
-  **Make sure the transaction won't revert on L1** while sending from L2. There is no way to recover the NFT bridged if
-  you're transaction reverts on L1. All assets are burnt on L2 when the transaction is sent, and it's impossible to mint
-  them again.
+  **Asegúrate de que la transacción no se revertirá en L1** mientras envías desde L2. No hay forma de recuperar el NFT puenteado si
+  tu transacción revierte en L1. Todos los activos se queman en L2 cuando se envía la transacción, y es imposible recuperarlos
+  de nuevo.
 </Aside>
 
-## L1ERC721Gateway API
+## API de L1ERC721Gateway 
 
-Please visit the [npm library](https://www.npmjs.com/package/@scroll-tech/contracts?activeTab=code) for the complete Scroll contract API documentation.
+Visite la biblioteca [npm library](https://www.npmjs.com/package/@scroll-tech/contracts?activeTab=code) para consultar la documentación completa de la API de los contratos de Scroll.
 
 ### depositERC721
 
@@ -79,14 +78,14 @@ Please visit the [npm library](https://www.npmjs.com/package/@scroll-tech/contra
 function depositERC721(address _token, address _to, uint256 _tokenId, uint256 _gasLimit) external payable;
 ```
 
-Deposit an ERC721 NFT from L1 to a recipient's account on L2.
+Depósito de un ERC721 NFT desde L1 a la cuenta de un destinatario en L2.
 
-| Parameter | Description                                       |
+| Parámetro | Descripción                                       |
 | --------- | ------------------------------------------------- |
-| token     | The address of ERC721 NFT contract on L1.         |
-| to        | The address of recipient's account on L2.         |
-| tokenId   | The NFT id to deposit.                            |
-| gasLimit  | Gas limit required to complete the deposit on L2. |
+| token     | La dirección del contrato ERC721 NFT en L1.         |
+| to        | La dirección de la cuenta del destinatario en L2.         |
+| tokenId   | El id del NFT a depositar.                            |
+| gasLimit  | Límite de gas necesario para completar el depósito en L2. |
 
 ### updateTokenMapping
 
@@ -94,14 +93,14 @@ Deposit an ERC721 NFT from L1 to a recipient's account on L2.
 function updateTokenMapping(address _l1Token, address _l2Token) external;
 ```
 
-Update the mapping that connects an NFT contract from L1 to L2.
+Actualización del mapping que conecta un contrato NFT de L1 a L2.
 
-| Parameter | Description                                      |
+| Parámetro | Descripción                                      |
 | --------- | ------------------------------------------------ |
-| \_l1Token | The address of ERC721 token in L1.               |
-| \_l2Token | The address of corresponding ERC721 token in L2. |
+| \_l1Token | La dirección del token ERC721 en L1.               |
+| \_l2Token | La dirección del token ERC721 correspondiente en L2. |
 
-## L2ERC721Gateway API
+## API de L2ERC721Gateway 
 
 ### withdrawERC721
 
@@ -109,14 +108,14 @@ Update the mapping that connects an NFT contract from L1 to L2.
 function depositERC721(address _token, address _to, uint256 _tokenId, uint256 _gasLimit) external payable;
 ```
 
-Send an ERC721 NFT from L2 to a recipient's account on L1.
+Envío de un ERC721 NFT desde L2 a la cuenta de un destinatario en L1.
 
-| Parameter | Description                                                              |
+| Parámetro | Descripción                                                              |
 | --------- | ------------------------------------------------------------------------ |
-| token     | The address of ERC721 NFT token contract on L2.                          |
-| to        | The address of recipient's account on L1.                                |
-| tokenId   | The NFT id to deposit.                                                   |
-| gasLimit  | Unused, but included for potential forward compatibility considerations. |
+| token     | La dirección del contrato de tokens ERC721 NFT en L2.                          |
+| to        | La dirección de la cuenta del destinatario en L1.                                |
+| tokenId   | El id del NFT a depositar.                                                   |
+| gasLimit  | No se utiliza, pero se incluye por posibles consideraciones de compatibilidad futura. |
 
 ### updateTokenMapping
 
@@ -124,9 +123,9 @@ Send an ERC721 NFT from L2 to a recipient's account on L1.
 function updateTokenMapping(address _l1Token, address _l2Token) external;
 ```
 
-Update the mapping that connects an NFT contract from L2 to L1.
+Actualización del mapping que conecta un contrato NFT de L2 a L1.
 
-| Parameter | Description                                      |
+| Parámetro | Descripción                                      |
 | --------- | ------------------------------------------------ |
-| \_l2Token | The address of ERC721 token in L2.               |
-| \_l1Token | The address of corresponding ERC721 token in L1. |
+| \_l2Token | La dirección del token ERC721 en L2.               |
+| \_l1Token | La dirección del token ERC721 correspondiente en L1. |

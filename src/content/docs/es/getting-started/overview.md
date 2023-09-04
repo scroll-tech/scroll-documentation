@@ -1,43 +1,44 @@
 ---
 section: gettingStarted
 date: Last Modified
-title: "Scroll Overview"
-lang: "en"
+title: "Vista General de Scroll"
+lang: "es"
 permalink: "docs/conceptual-overview/"
 excerpt: "ZK Rollups and Scroll"
-whatsnext: { "User Guide": "/user-guide/", "Building on Scroll": "/developers/" }
+whatsnext: { "Guía de Usuario": "/es/user-guide/", "Construyendo en Scroll": "/es/developers/" }
 ---
 
-#### Welcome to the Scroll docs!
+#### Bienvenido a la documentación de Scroll!
 
-Scroll is a security-focused scaling solution for Ethereum, using innovations in scaling design and zero-knowledge proofs to build a new layer on Ethereum. The Scroll network is more accessible, more responsive, and can support more users at once than Ethereum alone, and if you've ever used or developed an application on Ethereum, you'll be right home on Scroll.
+Scroll es una solución de escalabilidad centrada en la seguridad de Ethereum, que utiliza innovaciones en el diseño de escalado y pruebas de “zero-knowledge” para construir una nueva capa en Ethereum. La red de Scroll es más accesible, más receptiva y puede soportar a más usuarios a la vez que Ethereum por sí solo, y si alguna vez has utilizado o desarrollado una aplicación en Ethereum, te sentirás como en casa.
 
-Want to try out the Scroll Sepolia testnet? Check out our [User Guide](/user-guide/).
+¿Quieres probar la Scroll Sepolia Testnet? Echa un vistazo a nuestra. [Guía de Usuario](/es/user-guide/).
 
-## What is Scroll building?
+## ¿Qué está construyendo Scroll?
 
-Scroll is building the technology to scale Ethereum.
+Scroll está construyendo la tecnología para escalar Ethereum.
 
-While Ethereum is the leading blockchain network for powering decentralized applications, its popularity also brings higher costs, creating a barrier to adoption for the next wave of users and developers.
+Aunque Ethereum es la principal red blockchain para alimentar aplicaciones descentralizadas, su popularidad también conlleva costos más altos, lo que crea una barrera para la adopción de la próxima ola de usuarios y desarrolladores.
 
-Leveraging cutting-edge research in zero-knowledge proofs (”zk”), Scroll is building a Layer 2 rollup network on Ethereum. The team, in open-source collaboration with others in the Ethereum community, has created a “zkEVM” that allows for all activity on the network, which behaves just like Ethereum, to be secured by smart contracts _on_ Ethereum. The network publishes all of the transactions to Ethereum, and the zkEVM creates and publishes cryptographic "proofs" that the Scroll network is following the rules of Ethereum.
+Aprovechando investigaciones punteras en pruebas de “zero-knowledge” ("zk"), Scroll está construyendo una red de segunda capa (Layer 2 rollup) en Ethereum. El equipo, en colaboración de código abierto con otros en la comunidad de Ethereum, ha creado un "zkEVM" que permite que toda la actividad en la red, que se comporta de manera similar a Ethereum, esté asegurada por smart contracts en Ethereum. La red publica todas las transacciones en Ethereum, y el zkEVM crea y publica "pruebas" criptográficas de que la red de Scroll sigue las reglas de Ethereum.
 
-Ultimately, Ethereum smart contracts verify that every transaction on Scroll is valid for these proofs, lending the network incredible security, decentralization, and censorship resistance. This level of security and scalability for Ethereum is only possible with recent breakthroughs in zero-knowledge cryptography, blockchain protocol design, and hardware acceleration.
+En última instancia, los smart contracts de Ethereum verifican que cada transacción en Scroll sea válida para estas pruebas, brindando a la red una increíble seguridad, descentralización y resistencia a la censura. Este nivel de seguridad y escalabilidad para Ethereum solo es posible gracias a avances recientes en criptografía de “zero-knowledge”, diseño de protocolos blockchain y aceleración de hardware.
 
 <!-- TODO: Confirm Architecture page exists -->
 
-For more information on our architecture, see [Scroll Architecture](/technology/).
+Para obtener más información sobre nuestra arquitectura, consulta. [Arquitectura de Scroll](/es/technology/).
 
-## Can I use Scroll today?
+## ¿Puedo usar Scroll hoy?
 
-Our Scroll Sepolia testnet is live. Although we have a [comprehensive guide](/user-guide/), if you're familiar with using Ethereum, you can get started in minutes:
+Nuestra Scroll Sepolia testnet está funcionando. Aunque tenemos una [guía completa](/es/user-guide/), si estás familiarizado/a con el uso de Ethereum, puedes comenzar en minutos:
 
-- Visit our [Bridge](https://scroll.io/bridge) and connect your wallet
-- Send tokens from Sepolia to Scroll Sepolia testnet (or use a [faucet](/user-guide/faucet))
-- Test out a dapp like our [Uniswap Showcase](http://uniswap-showcase.sepolia.scroll.xyz/) -- just be sure to select the Scroll Sepolia network!
+- Visita nuestro [Bridge](https://scroll.io/bridge) y conecta tu wallet
+- Envía tokens de Ethereum Sepolia Testnet a la Scroll Sepolia Testnet
+  (o usa un [faucet](/es/user-guide/faucet))
+- Prueba una aplicación descentralizada (dapp) con nuestra [Uniswap Showcase](http://uniswap-showcase.sepolia.scroll.xyz/) -- ¡solo asegúrate de seleccionar la red Scroll Sepolia!
 
 <!-- TODO: Add Aave after Sepolia goes live -->
 
-## Where is Scroll headed?
+## ¿Hacia dónde se dirige Scroll?
 
-We're currently in our final testnet before launching our mainnet on Ethereum. Next up -- decentralizing each component of the stack. Check out [our roadmap](https://scroll.io) or follow along in [our Discord](https://discord.gg/scroll) or on [Twitter](https://twitter.com/scroll_zkp).
+Actualmente nos encontramos en nuestra red de pruebas final antes de lanzar nuestra mainnet en Ethereum. A continuación, descentralizaremos cada componente de la infraestructura. Echa un vistazo a [nuestro roadmap](https://scroll.io), síguenos en [nuestro Discord](https://discord.gg/scroll) o en [Twitter](https://twitter.com/scroll_zkp) para estar al tanto.

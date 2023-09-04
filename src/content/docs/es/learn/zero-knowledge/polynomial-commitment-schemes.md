@@ -1,35 +1,35 @@
 ---
 section: learn
 date: Last Modified
-title: "Polynomial Commitment Schemes"
-lang: "en"
+title: "Esquemas de Compromiso Polinómicos"
+lang: "es"
 permalink: "learn/zero-knowledge/polynomial-commitment-schemes"
-excerpt: "Polynomial commitment schemes are a core building block of zero-knowledge proof system"
-whatsnext: { "KZG Commitment Scheme": "/learn/zero-knowledge/kzg-commitment-scheme" }
+excerpt: "Los Polynomial commitment schemea son un componente básico de los sistemas de pruebas de zero-knowledge."
+whatsnext: { "Esquema de Compromiso KZG": "/es/learn/zero-knowledge/kzg-commitment-scheme" }
 ---
 
-Polynomial commitment schemes are a core building block of zero-knowledge proof systems (as well as other cryptographic protocols).
+Los Esquemas de Compromiso Polinómicos son un componente básico de los sistemas de pruebas de zero-knowledge (así como de otros protocolos criptográficos).
 
-As the name suggests, polynomial commitment schemes are commitment schemes where the object to be committed is a polynomial. These schemes also have a special property where an evaluation of the polynomial can be verified with access only to the polynomial’s commitment.
+Como su nombre indica, los esquemas de compromiso polinómicos son esquemas de compromiso en los que el objeto a comprometer es un polinomio. Estos esquemas también tienen una propiedad especial por la que una evaluación del polinomio puede verificarse con acceso únicamente al compromiso del polinomio.
 
-## Commitment schemes
+## Esquemas de Compromiso
 
-A **[commitment scheme](https://en.wikipedia.org/wiki/Commitment_scheme)** is a cryptographic primitive involving two parties: a _committer_ and a _verifier_. The committer commits to a value $v$ by computing a commitment $c$ and revealing it to the verifier. At a later point in time, the committer can reveal the original value, and the verifier can verify that the commitment corresponds to this revealed value.
+Un **[esquema de compromiso](https://en.wikipedia.org/wiki/Commitment_scheme)** es una primitiva criptográfica que implica a dos partes: un _committer_ y un _verifier_. El committer se compromete con un valor $v$ computando un compromiso $c$ y revelándolo al verifier. En un momento posterior, el committer puede revelar el valor original, y el verifier puede verificar que el compromiso corresponde a este valor revelado.
 
-Secure commitment schemes have two properties:
+Los esquemas de compromiso seguros tienen dos características:
 
-1. **Binding**: once publishing the commitment $c$, the committer should not be able to find some other value $v’$ distinct from $v$ that also corresponds to $c$. I.e., the commitment $c$ binds the committer to his original value $v$.
-2. **Hiding**: the verifier should not be able to learn any information about the original value $v$ from the commitment $c$. I.e., the commitment $c$ hides all information about the original value $v$.
+1. **Binding**: una vez publicado el compromiso $c$, el committer no debe ser capaz de encontrar algún otro valor $v'$ distinto de $v$ que también corresponda a $c$. Es decir, el compromiso $c$ vincula al committer a su valor original $v$.
+2. **Hiding**: el verifier no debe poder obtener ninguna información sobre el valor original $v$ a partir del compromiso $c$. Es decir, el compromiso $c$ oculta toda la información sobre el valor original $v$.
 
-## Polynomial commitment schemes
+## Esquemas de Compromiso Polinómicos
 
-A **polynomial commitment scheme** is a commitment scheme where the committer commits to a polynomial $P(x)$ by computing a commitment $c$. As in normal commitment schemes, the committer can later reveal the original polynomial, and the verifier can check that the commitment corresponds to the revealed polynomial. However, polynomial commitment schemes have an additional property: the committer can prove particular evaluations of the committed polynomial without revealing the polynomial itself. For example, the committer can prove that $P(a) = b$, and the verifier can verify such a proof using just the commitment $c$.
+Un **esquema de compromiso polinómicos** es un esquema de compromiso en el que el committer se compromete con un polinomio $P(x)$ calculando un compromiso $c$. Como en los esquemas de compromiso normales, el committer puede revelar más tarde el polinomio original, y el verifier puede comprobar que el compromiso corresponde al polinomio revelado. Sin embargo, los esquemas de compromiso polinómico tienen una propiedad adicional: el committer puede probar evaluaciones particulares del polinomio comprometido sin revelar el propio polinomio. Por ejemplo, el committer puede probar que $P(a) = b$, y el verifier puede verificar dicha prueba utilizando sólo el compromiso $c$.
 
-Polynomial commitment schemes are extremely useful for zero-knowledge applications. A prover can use such a scheme to prove that he knows some polynomial which satisfies certain properties (e.g. that it passes through a certain point $(a,b)$), without revealing the underlying polynomial.
+Los esquemas de compromiso polinómicos son extremadamente útiles para aplicaciones que usan zero-knowledge. Un prover puede utilizar un esquema de este tipo para demostrar que conoce un polinomio que satisface ciertas propiedades (por ejemplo, que pasa por un cierto punto $(a,b)$), sin revelar el polinomio subyacente.
 
-Another reason why polynomial schemes are useful is that the commitment $c$ is generally much smaller than the polynomial it represents, and can thus be thought of as a **compression** of the polynomial $P(x)$. The magnitude of compression depends on the particular scheme. For example, in the KZG polynomial commitment scheme, a polynomial of arbitrarily large degree can be compressed down to a commitment consisting of a single group element.
+Otra razón por la que los esquemas polinómicos son útiles es que el compromiso $c$ es generalmente mucho más pequeño que el polinomio que representa, y por lo tanto se puede considerar como una **compresión** del polinomio $P(x)$. La magnitud de la compresión depende del esquema concreto. Por ejemplo, en el esquema de compromiso polinómico KZG, un polinomio de grado arbitrariamente grande puede comprimirse hasta un compromiso consistente en un único elemento de grupo.
 
-## Learn more
+## Aprende Más
 
 - [https://en.wikipedia.org/wiki/Commitment_scheme](https://en.wikipedia.org/wiki/Commitment_scheme)
 - [https://learn.0xparc.org/materials/halo2/miscellaneous/polynomial-commitment](https://learn.0xparc.org/materials/halo2/miscellaneous/polynomial-commitment)

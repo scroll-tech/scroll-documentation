@@ -4,23 +4,32 @@ date: Last Modified
 title: "L1 y L2 Bridging"
 lang: "es"
 permalink: "developers/l1-and-l2-bridging"
-excerpt: "An overview of Scroll's Bridging architecture"
+whatsnext: { "ETH y ERC20 Token Bridge": "/es/developers/l1-and-l2-bridging/eth-and-erc20-token-bridge" }
+excerpt: "Visión general de la arquitectura de puentes de Scroll"
 ---
 
-The Scroll bridge enables the transfer of ETH, ERC20 tokens, NFTs, and arbitrary messages between L1 and L2. It serves as a secure mechanism for moving various digital assets across L1 and L2.
+import ClickToZoom from "../../../../components/ClickToZoom.astro"
+import L1GatewayWHITE from "../../../../assets/images/developers/L1GatewayWHITE.png"
+import withdrawWHITE from "../../../../assets/images/developers/withdrawWHITE.png"
 
-To facilitate the transfer of ETH and ERC20 tokens, the Scroll bridge utilizes the Gateway Router. This contract ensures the smooth passage of these assets between L1 and L2, allowing users to transfer their Ethereum-based tokens seamlessly.
+El puente Scroll permite la transferencia de ETH, tokens ERC20, NFT y mensajes arbitrarios entre L1 y L2. Sirve como mecanismo seguro para mover diversos activos digitales entre L1 y L2.
 
-The ERC721 and ERC1155 Gateway enables the transfer of non-fungible assets between the two networks, allowing users to move their NFTs across L1 and L2.
+Para facilitar la transferencia de tokens ETH y ERC20, el puente Scroll utiliza el Gateway Router. Este contrato garantiza el paso fluido de estos activos entre L1 y L2, permitiendo a los usuarios transferir sus tokens basados en Ethereum sin problemas.
 
-In addition to token transfers, the Scroll Messenger contract enables cross-chain contract interaction. This means that contracts on one network can interact with contracts on the other network through the Scroll Messenger contract. This functionality expands the possibilities for decentralized applications and smart contracts to operate seamlessly across both networks.
+La Gateway ERC721 y ERC1155 permite la transferencia de activos no fungibles entre las dos redes, permitiendo a los usuarios mover sus NFT entre L1 y L2.
 
-## L1 Gateway architecture
+Además de las transferencias de tokens, el contrato Scroll Messenger permite la interacción de contratos cross-chain. Esto significa que los contratos de una red pueden interactuar con los contratos de la otra red a través del contrato Scroll Messenger. Esta funcionalidad amplía las posibilidades de que las aplicaciones descentralizadas y los smart contracts operen sin problemas en ambas redes.
 
-There are many entry points from the user to the Scroll bridge. This will depend on what you want to do and how you want to do it. If you want to send ETH or ERC20 tokens, you should use the `GatewayRouter` . If you want to send NFTs, you should use the `L1ERC721Gateway` or `L1ERC1155Gateway`. If you want to send arbitrary data, you should use the `L1ScrollMessenger`. All Gateway transfers use the Scroll Messenger to send assets cross-chain, whose job is to append the transactions to the Message Queue for L2 inclusion.
+## Arquitectura de la Gateway L1
 
-## L2 Gateway arquitectura
+<ClickToZoom src={L1GatewayWHITE} />
 
-Regarding possible permissionlessly callable entry points, the L2 Gateway Architecture is very similar to L1. The difference is that when sending a message from L2, calling the `appendMessage` function will store the message in an append-only binary merkle tree (aka withdraw tree) in the `L2MessageQueue`. When a new message is sent to the `L2MessageQueue`, the relayer will detect it and store it in the database. When the block is finalized, it will generate a proof of the new merkle path and pass it to the L1geth node to execute on `L1ScrollMessenger` . All finalized withdraw roots will be stored in the rollup contract so we can verify the proof against them. In the next Scroll versions, the Relayer won't be needed since all users will be able to finalize the transaction on L1.
+Hay muchos puntos de entrada del usuario al Scroll bridge. Esto dependerá de lo que quieras hacer y cómo quieras hacerlo. Si quieres enviar tokens ETH o ERC20, deberías usar el `GatewayRouter` . Si quieres enviar NFTs, deberías usar `L1ERC721Gateway` o `L1ERC1155Gateway`. Si desea enviar datos arbitrarios, utilice `L1ScrollMessenger`. Todas las transferencias de Gateway utilizan el Scroll Messenger para enviar activos a través de la cadena, cuyo trabajo consiste en anexar las transacciones a la cola de mensajes para su inclusión en L2.
 
-In the upcoming sections, we will explore the technical aspects of the bridge, including the smart contract API required to utilize its capabilities. Detailed guides with code examples are provided in the Developer Guides section to assist developers and users in understanding and implementing these functionalities.
+## Arquitectura de la Gateway L2
+
+<ClickToZoom src={withdrawWHITE} />
+
+En cuanto a los posibles puntos de entrada accesibles sin permiso, la Arquitectura de la Gateway L2 es muy similar a la de la L1. La diferencia es que cuando se envía un mensaje desde L2, si se llama a la función `appendMessage`, el mensaje se almacenará en un merkle tree binario sólo para anexarlo (también conocido como withdraw tree) en la `L2MessageQueue`. Cuando se envía un nuevo mensaje a la `L2MessageQueue`, el relayer lo detecta y lo almacena en la base de datos. Cuando finalice el bloque, generará una prueba de el nuevo merkle path y la pasará al nodo L1geth para que la ejecute en `L1ScrollMessenger` . Todas las roots de retirada finalizadas se almacenarán en el contrato de rollup para que podamos verificar la prueba con ellas. En las próximas versiones de Scroll, el Relayer no será necesario, ya que todos los usuarios podrán finalizar la transacción en L1.
+
+En las próximas secciones, exploraremos los aspectos técnicos del puente, incluida la API de smart contract necesaria para utilizar sus capacidades. En la sección Guías para desarrolladores se ofrecen guías detalladas con ejemplos de código para ayudar a desarrolladores y usuarios a comprender e implementar estas funcionalidades.

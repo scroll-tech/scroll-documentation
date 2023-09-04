@@ -1,51 +1,51 @@
 ---
 section: learn
 date: Last Modified
-title: "Intro to Rollups"
-lang: "en"
+title: "Intro a los Rollups"
+lang: "es"
 permalink: "learn/intro-to-rollups"
-excerpt: "Rollups are the most predominant layer 2 scaling solution in the Ethereum ecosystem."
-whatsnext: { "Scroll Rollup Process": "/technology/chain/rollup" }
+excerpt: "Los rollups son la solución de escalado de capa 2 más predominante en el ecosistema Ethereum."
+whatsnext: { "Proceso del Rollup": "/es/technology/chain/rollup" }
 ---
 
-## What’s a rollup?
+## ¿Qué es un rollup?
 
-Rollups are the most predominant layer 2 scaling solution in the Ethereum ecosystem, and are viewed as a [central part](https://ethereum-magicians.org/t/a-rollup-centric-ethereum-roadmap/4698) of the Ethereum roadmap.
+Los rollups son la solución de escalado de capa 2 más predominante en el ecosistema Ethereum, y se consideran una [parte central](https://ethereum-magicians.org/t/a-rollup-centric-ethereum-roadmap/4698) de la hoja de ruta de Ethereum.
 
-A rollup processes batches of transactions off-chain (i.e. not on layer 1), and then posts the resulting data on-chain (i.e. on layer 1).
+Un rollup procesa lotes de transacciones fuera de la cadena (es decir, no en la capa 1), y luego publica los datos resultantes en la cadena (es decir, en la capa 1).
 
-The execution of each transaction is performed off-chain, and does not need to be re-executed layer 1 nodes. This allows for high transaction throughput, without impacting the decentralization of layer 1.
+La ejecución de cada transacción se realiza fuera de la cadena, y no es necesario que los nodos de la capa 1 vuelvan a ejecutarla. Esto permite un alto rendimiento de las transacciones, sin afectar a la descentralización de la capa 1.
 
-In order for a rollup to be secure, it must prove that its off-chain computation (the processing of transactions) was performed correctly. There are predominantly two mechanisms to prove the validity of off-chain computation: validity proofs and fraud proofs.
+Para que un rollup sea seguro, debe demostrar que su cálculo fuera de la cadena (el procesamiento de las transacciones) se ha realizado correctamente. Existen principalmente dos mecanismos para demostrar la validez del cálculo fuera de la cadena: las pruebas de validez y las pruebas de fraude.
 
-## What’s an optimistic rollup?
+## ¿Qué es un optimistic rollup?
 
-An optimistic rollup is a rollup that uses fraud proofs to assert the validity of its computation.
+Un optimistic rollup es un rollup que utiliza pruebas de fraude para afirmar la validez de sus cálculos.
 
-Fraud proofs are a mechanism that allow users to challenge and prove the invalidity of any computation performed on the L2. If a fraud proof is successfully submitted, the L2 can be rolled back to a previous state and the invalid computation can be corrected. Fraud proofs depend on at least one honest party checking that the L2 transactions have been correctly executed.
+Las pruebas de fraude son un mecanismo que permite a los usuarios cuestionar y demostrar la invalidez de cualquier cálculo realizado en el L2. Si una prueba de fraude se presenta con éxito, la L2 puede volver a un estado anterior y el cálculo no válido puede ser corregido. Las pruebas de fraude dependen de que al menos una parte honesta compruebe que las transacciones de la L2 se han ejecutado correctamente.
 
-## What’s a ZK rollup?
+## ¿Qué es un ZK rollup?
 
-A ZK rollup is a rollup that uses validity proofs to assert the validity of its computation.
+Un ZK rollup es un rollup que utiliza pruebas de validez para afirmar la legitimidad de sus cálculos.
 
-When a ZK rollup executes a batch of transactions and posts the resulting state to L1, it also posts a validity proof. This mathematical proof proves that the resulting state is indeed the state which results from correctly executing the batch of transactions.
+Cuando un ZK rollup ejecuta un lote de transacciones y publica el estado resultante en L1, también publica una prueba de validez. Esta prueba matemática demuestra que el estado resultante es efectivamente el estado resultante de ejecutar correctamente el lote de transacciones.
 
-Today, there are multiple types of ZK rollups, broadly defined as either zkVMs (zk Virtual Machines) or zkEVMs (zk Ethereum Virtual Machines).
+En la actualidad, existen múltiples tipos de ZK rollups, definidos en términos generales como zkVMs (zk Virtual Machines) o zkEVMs (zk Ethereum Virtual Machines).
 
-zkVMs are designed from the ground up to work well with ZK circuits and require different development workflows compared to a zkEVM. Some examples of these include Starkware and Aztec.
+Los zkVMs están diseñados desde cero para trabajar bien con circuitos ZK y requieren diferentes flujos de trabajo de desarrollo en comparación con un zkEVM. Algunos ejemplos son Starkware y Aztec.
 
-zkEVMs are designed to emulate the EVM. There are two major types of zkEVMs: bytecode-compatible, and language-compatible. Bytecode-compatible zkEVMs emulate the EVM at a very low level, allowing for a near-identical development and user experience compared to Ethereum Layer 1. Language-compatible zkEVMs compile Solidity and other high-level languages down into different bytecode, which can result in changes to workflow. zkSync is the most popular language-compatible zkEVM.
+Los zkEVMs están diseñados para emular la EVM. Existen dos tipos principales de zkEVMs: compatibles con bytecode y compatibles con lenguaje. Las zkEVM compatibles con bytecode emulan la EVM a un nivel muy bajo, permitiendo un desarrollo y una experiencia de usuario casi idénticos en comparación con Ethereum Layer 1. Los zkEVMs compatibles con lenguajes compilan Solidity y otros lenguajes de alto nivel en diferentes bytecodes, lo que puede resultar en cambios en el flujo de trabajo. zkSync es el zkEVM compatible con lenguajes más popular.
 
-Scroll is bytecode-compatible. This approach was chosen because it brings certain benefits:
+Scroll es compatible con bytecode. Se eligió este enfoque porque aporta ciertas ventajas:
 
-- Solidity, Vyper, and Huff work out of the box
-- No re-auditing necessary
-- Most existing tooling is inherited
-- Near-identical UX and DevX as Ethereum
+- Solidity, Vyper y Huff funcionan desde el primer momento.
+- No es necesario volver a auditar
+- Se hereda la mayoría de las herramientas existentes
+- UX y DevX casi idénticos a los de Ethereum.
 
-More detail on Scroll’s approach is found in the Technology section.
+Encontrará más información sobre el enfoque de Scroll en la sección Tecnología.
 
-## Further reading
+## Lecturas adicionales
 
 - [An Incomplete Guide to Rollups](https://vitalik.ca/general/2021/01/05/rollup.html) - Vitalik Buterin
 - [Scaling](https://ethereum.org/en/developers/docs/scaling/) - Ethereum Docs

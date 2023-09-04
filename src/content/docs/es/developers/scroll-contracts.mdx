@@ -1,35 +1,36 @@
 ---
 section: developers
 date: Last Modified
-title: "Scroll Sepolia Contracts"
-lang: "en"
+title: "Contratos de Scroll Sepolia"
+lang: "es"
 permalink: "developers/scroll-contracts"
+whatsnext: { "Diferencias entre Scroll y Ethereum": "/es/developers/ethereum-and-scroll-differences" }
 excerpt: "The network info and contract addresses you need to start with Scroll Sepolia Testnet."
 ---
 
 import Aside from "../../../../components/Aside.astro"
 
-## Network Info
+## Información de la Red
 
-| Network Name       | Scroll Sepolia Testnet                                                        | Sepolia Testnet                                                              |
+| Nombre de Red       | Scroll Sepolia Testnet                                                        | Sepolia Testnet                                                              |
 | ------------------ | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
 | RPC URL            | [https://sepolia-rpc.scroll.io/](https://sepolia-rpc.scroll.io/)              | [https://eth-sepolia-public.unifra.io](https://eth-sepolia-public.unifra.io) |
 | Chain ID           | 534351                                                                        | 11155111                                                                     |
 | Currency Symbol    | ETH                                                                           | ETH                                                                          |
 | Block Explorer URL | [https://sepolia-blockscout.scroll.io](https://sepolia-blockscout.scroll.io/) | [https://sepolia.etherscan.io](https://sepolia.etherscan.io)                 |
 
-## Scroll Sepolia Contracts
+## Contratos de Scroll Sepolia
 
 ### Rollup
 
 - L1 Rollup (Scroll Chain): `0x2D567EcE699Eabe5afCd141eDB7A4f2D0D6ce8a0`
 
-### ETH and ERC20 Bridge
+### ETH y ERC20 Bridge
 
 - L1 ERC20 Gateway Router: `0x13FBE0D0e5552b8c9c4AE9e2435F38f37355998a`
 - L2 ERC20 Gateway Router: `0x9aD3c5617eCAa556d6E166787A97081907171230`
 
-### Advanced Bridge Contracts
+### Contratos de Bridge Avanzados
 
 - Scroll Messenger
   - L1 Messenger: `0x50c7d3e7f7c656493D1D76aaa1a836CedfCBB16A`
@@ -51,7 +52,7 @@ import Aside from "../../../../components/Aside.astro"
   - L1 ERC1155 Gateway: `0xa5Df8530766A85936EE3E139dECE3bF081c83146`
   - L2 ERC1155 Gateway: `0xe17C9b9C66FAF07753cdB04316D09f52144612A5`
 - Gas Oracle
-  - L2 Gas Oracle (deployed on Sepolia): `0x247969F4fad93a33d4826046bc3eAE0D36BdE548`
+  - L2 Gas Oracle (Implementado en Sepolia): `0x247969F4fad93a33d4826046bc3eAE0D36BdE548`
 
 ### L2 Predeploys
 
@@ -61,7 +62,7 @@ import Aside from "../../../../components/Aside.astro"
 - WETH L2: `0x5300000000000000000000000000000000000004`
 - Transaction Fee Vault: `0x5300000000000000000000000000000000000005`
 
-## Protocols on Sepolia
+## Protocolos en Sepolia
 
 ### Uniswap v3
 
@@ -83,17 +84,17 @@ import Aside from "../../../../components/Aside.astro"
 
 ### Aave
 
-See this [Github gist](https://gist.github.com/dghelm/7fe68f0a524f30846e1142721c081d84).
+Observa este [Github gist](https://gist.github.com/dghelm/7fe68f0a524f30846e1142721c081d84).
 
-## Additional Useful Contracts
+## Contratos Útiles Adicionales
 
 - Multicall3: `0xcA11bde05977b3631167028862bE2a173976CA11`
 
 ## Tokens
 
 <Aside type="note" title="">
-  Bridged tokens from Sepolia using the native bridge can be added to the
-  [token-list](https://github.com/scroll-tech/token-list) repo.
+  Los tokens transferidos desde Sepolia utilizando el bridge nativo pueden añadirse al repositorio
+  [token-list](https://github.com/scroll-tech/token-list).
 </Aside>
 
 - Gho Token: `0xD9692f1748aFEe00FACE2da35242417dd05a8615`

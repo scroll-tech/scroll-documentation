@@ -1,36 +1,36 @@
 ---
 section: gettingStarted
 date: Last Modified
-title: "Scroll Sepolia User Guide"
-lang: "en"
+title: "Guía de Usuario de Scroll Sepolia"
+lang: "es"
 permalink: "user-guide/"
-excerpt: "Thank you for testing out our Sepolia Testnet. The Sepolia Testnet consists of Ethereum's Sepolia Testnet and the Scroll Sepolia test network."
-whatsnext: { "Set Up Your Wallet": "/user-guide/setup" }
+excerpt: "Gracias por probar nuestra Scroll Sepolia Testnet. La Sepolia Testnet está formada por la Sepolia Testnet de Ethereum y la red de pruebas Scroll Sepolia."
+whatsnext: { "Configuración de Wallet": "/es/user-guide/setup" }
 ---
 
-Thank you for testing the Scroll Sepolia Testnet. If you have questions or want to give feedback, join our [Discord](https://discord.gg/scroll)!
+Gracias por probar la Scroll Sepolia Testnet. Si tienes preguntas o quieres darnos tu opinión, ¡únete a nuestro [Discord](https://discord.gg/scroll)!
 
-The Sepolia Testnet consists of _Ethereum's Sepolia Testnet_ and the _Scroll Sepolia_ test network. Sepolia is an Ethereum test network, while Scroll Sepolia is a zero-knowledge rollup testnet deployed on top of the former. There are some pre-deployed demo applications: a [bridge](https://scroll.io/bridge) between _Sepolia_ and _Scroll Sepolia_,[^1] a [block explorer](https://sepolia-blockscout.scroll.io/) for _Scroll Sepolia_,[^2] and a [rollup explorer](https://scroll.io/rollupscan).
+Sepolia Testnet está formada por _Ethereum's Sepolia Testnet_ y la red de pruebas _Scroll Sepolia_. Sepolia es una red de pruebas de Ethereum, mientras que Scroll Sepolia es una zero-knowledge rollup testnet desplegada sobre la primera. Existen algunas aplicaciones demo predesplegadas: un [bridge](https://scroll.io/bridge) entre _Sepolia_ y _Scroll Sepolia_,[^1] un [block explorer](https://sepolia-blockscout.scroll.io/) para _Scroll Sepolia_,[^2] y un [rollup explorer](https://scroll.io/rollupscan).
 
-To view L1 transactions, check out Etherscan's [Sepolia explorer](https://sepolia.etherscan.io/).
-To view L2 transactions, you can use Scroll's block explorer, but you may also want to try out the additional functionality provided by [Dora](https://www.ondora.xyz/network/scroll-sepolia/interactions) or [L2Scan](https://scroll.l2scan.co/).
+Para ver transacciones L1, echa un vistazo al [Sepolia explorer] de Etherscan(https://sepolia.etherscan.io/).
+Para ver las transacciones L2, puedes usar el explorador de bloques de Scroll, pero también puedes probar la funcionalidad adicional proporcionada por [Dora](https://www.ondora.xyz/network/scroll-sepolia/interactions) o [L2Scan](https://scroll.l2scan.co/).
 
-Here is the suggested workflow to explore the Testnet:
+Este es el flujo de trabajo sugerido para explorar la Testnet:
 
-1. Add the [Sepolia Testnet](https://scroll.io/portal) configurations to your wallet.
-2. Request test tokens in the _Sepolia_ network from any Ethereum Faucet app. (see [Faucet](/user-guide/faucet) article)
-3. Transfer test tokens from _Sepolia_ to _Scroll Sepolia_ through the [Bridge](https://scroll.io/bridge) app.
-4. Transfer tokens to other wallets on _Scroll Sepolia_ using your wallet.
-5. Explore our ecosystem, interacting with contracts like [Uniswap](http://uniswap-showcase.sepolia.scroll.xyz/).
-6. Withdraw tokens from _Scroll Sepolia_ to _Sepolia_ through the [Bridge](https://scroll.io/bridge) app.
+1. Añade las configuraciones de [Sepolia Testnet](https://scroll.io/portal) a tu wallet.
+2. Solicita tokens de prueba en la red _Sepolia_ desde cualquier aplicación de Ethereum Faucet. (véase el artículo [Faucet](/es/user-guide/faucet)).
+3. Transfiere tokens de prueba de _Sepolia_ a _Scroll Sepolia_ a través del [Bridge](https://scroll.io/bridge).
+4. Transfiere tokens a otras wallets en _Scroll Sepolia_ utilizando tu wallet.
+5. Explora nuestro ecosistema, interactuando con contratos como [Uniswap](http://uniswap-showcase.sepolia.scroll.xyz/).
+6. Retira tokens de _Scroll Sepolia_ a _Sepolia_ a través del [Bridge](https://scroll.io/bridge).
 
-You can find the instructions for each app in the rest of this user guide.
+Encontrarás las instrucciones de cada aplicación en el resto de esta guía del usuario.
 
 <!-- TODO: Add Aave back in item number 5 once live. -->
 
-## Questions & Feedback
+## Preguntas y Feedback
 
-If you encounter any issues, join our [Discord](https://discord.gg/scroll) and talk to us in the `#general-support` channel. We would love to hear your thoughts or feedback on how we can improve your experience, too.
+Si tienes algún problema, únete a nuestro [Discord](https://discord.gg/scroll) y habla con nosotros en el canal `#general-support`. También nos encantaría conocer tus opiniones o comentarios sobre cómo podemos mejorar tu experiencia.
 
-[^1]: Forked from the [Hop Exchange](https://hop.exchange/) UI 🐇🙌
-[^2]: Using [Blockscout](https://blockscout.com/)'s great open source block explorer
+[^1]: Un fork de la IU de [Hop Exchange](https://hop.exchange/) 🐇🙌.
+[^2]: Usando el gran explorador de bloques de código abierto de [Blockscout](https://blockscout.com/)

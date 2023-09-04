@@ -1,46 +1,46 @@
 ---
 section: technology
 date: Last Modified
-title: "EVM Differences from Ethereum"
-lang: "en"
+title: "Diferencias de EVM respecto a Ethereum"
+lang: "es"
 permalink: "technology/chain/differences"
-whatsnext: { "Bridge": "/technology/bridge/cross-domain-messaging/" }
+whatsnext: { "Bridge": "/es/technology/bridge/cross-domain-messaging/" }
 ---
 
 ## Opcodes
 
-| Opcode                      | Scroll Behavior                                                                                                  |
+| Opcode                      | Comportamiento de Scroll                                                                                                  |
 | --------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `BLOCKHASH`                 | Returns `keccak(chain_id \|\| block_number)` for the last 256 blocks.                                            |
-| `COINBASE`                  | Returns the fee vault address (predeployed contract `0x5300000000000000000000000000000000000005`).               |
-| `DIFFICULTY` / `PREVRANDAO` | Always return 0.                                                                                                 |
-| `BASEFEE`                   | Disabled because currently we disabled EIP-1559. If the opcode is encountered, the transaction will be reverted. |
-| `SELFDESTRUCT`              | Disabled. If the opcode is encountered, the transaction will be reverted.                                        |
+| `BLOCKHASH`                 | Devuelve `keccak(chain_id \|\| block_number)` para los últimos 256 bloques.                                            |
+| `COINBASE`                  | Devuelve la dirección de la vault de comisiones (contrato predesplegado `0x53000000000000000000000000000000000000000005`).               |
+| `DIFFICULTY` / `PREVRANDAO` | Devuelve siempre 0.                                                                                                 |
+| `BASEFEE`                   | Desactivado porque actualmente desactivamos el EIP-1559. Si el opcode es detectado, la transacción será revertida. |
+| `SELFDESTRUCT`              | Desactivado. Si el opcode es detectado, la transacción será revertida.                                        |
 
-## Precompiled Contracts
+## Contratos Precompilados
 
-| Address | Name         | Scroll behavior                                                                                 |
+| Dirección | Nombre         | Comportamiento de Scroll                                                                                 |
 | ------- | ------------ | ----------------------------------------------------------------------------------------------- |
-| `0x02`  | `SHA2-256`   | Currently not supported.                                                                        |
-| `0x03`  | `RIPEMD-160` | Currently not supported.                                                                        |
-| `0x05`  | `modexp`     | Restrict the input values `B, E, M` to unsigned integers less than $2^{256}$.                   |
-| `0x08`  | `ecPairing`  | The inputs are still multiple of 6 32-byte values, but limit the number of tuples to at most 4. |
-| `0x09`  | `blake2f`    | Currently not supported.                                                                        |
+| `0x02`  | `SHA2-256`   | Actualmente no soportado.                                                                        |
+| `0x03`  | `RIPEMD-160` | Actualmente no soportado.                                                                        |
+| `0x05`  | `modexp`     | Restringe los valores de entrada `B, E, M` a enteros sin signo menores que $2^{256}$.                   |
+| `0x08`  | `ecPairing`  | Las entradas siguen siendo múltiplos de 6 valores de 32 bytes, pero limitan el número de tuplas a un máximo de 4. |
+| `0x09`  | `blake2f`    | Actualmente no soportado.                                                                        |
 
-The remaining precompiled contracts have the same behavior as Ethereum. However, their maximum usage within a block is constrained by a limit tied to the zkEVM circuit capacity.
+El resto de contratos precompilados tienen el mismo comportamiento que Ethereum. Sin embargo, su uso máximo dentro de un bloque está restringido por un límite ligado a la capacidad del circuito zkEVM.
 
 ## EIPs
 
-Our sequencer was developed based on the London fork initially. We disabled some EIPs in the London fork and introduced a few EIPs from the Shanghai fork to improve the compatibility.
+Nuestro secuenciador se desarrolló basándose inicialmente en la London fork. Deshabilitamos algunos EIPs en la London fork e introdujimos algunos EIPs de la Shanghai fork para mejorar la compatibilidad.
 
-Disabled EIPs until the London fork:
+EIPs deshabilitados hasta la London fork:
 
-- [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559): Fee market change and EIP-1559 transaction type
-- [EIP-2930](https://eips.ethereum.org/EIPS/eip-2930): Optional access lists
-- [EIP-3198](https://eips.ethereum.org/EIPS/eip-3198): `BASEFEE` opcode
+- [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559): Cambio en el "market fee" y tipo de transacción EIP-1559
+- [EIP-2930](https://eips.ethereum.org/EIPS/eip-2930): Listas de acceso opcionales
+- [EIP-3198](https://eips.ethereum.org/EIPS/eip-3198): opcode `BASEFEE` 
 
-EIPs imported from the Shanghai fork:
+EIP importados de la Shanghai fork:
 
 - [EIP-3651](https://eips.ethereum.org/EIPS/eip-3651): Warm `COINBASE`
-- [EIP-3855](https://eips.ethereum.org/EIPS/eip-3855): `PUSH0` instruction
-- [EIP-3860](https://eips.ethereum.org/EIPS/eip-3860): Limit and meter initcode
+- [EIP-3855](https://eips.ethereum.org/EIPS/eip-3855): instrucción `PUSH0`
+- [EIP-3860](https://eips.ethereum.org/EIPS/eip-3860): Límite y medidor initcode
