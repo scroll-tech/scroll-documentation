@@ -1,3 +1,5 @@
+![Contribute to Scroll](./src/assets/banner.png)
+
 This is the open source project for the Scroll documentation.
 
 ## Developing
@@ -8,12 +10,8 @@ npm install && npm run dev
 
 ## Docs architecture
 
-- All docs are markdown and stored in `/src/pages`.
+- All articles are markdown and stored in `/src/content/docs/`.
 - Navigation is JSON in `/src/config/sidebar.ts`
-
-## Deployment
-
-Managed by Scroll using Netlify at https://app.netlify.com/sites/scroll-documentation/overview.
 
 ## Credits
 
