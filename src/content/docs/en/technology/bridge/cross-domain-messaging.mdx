@@ -217,7 +217,7 @@ function sendMessage(
 
 Next, the cross-domain message hash is appended to `L2MessageQueue` by calling its `appendMessage` function. The `L2MessageQueue` contract maintains the [Withdraw Trie](#withdraw-trie), an append-only Merkle tree. Every time a new message is appended to the queue, the contract inserts it into the Withdraw Trie and updates the trie's root hash.
 
-After the transaction batch containing users' L2-to-L1 messages is finalized on the L1 rollup contract, users need to submit corresponding _Execute Withdrawal_ transactions to call `relayMessageWithProof` method in the `L1ScrollMessenger` contract that executes the withdrawal on L1. Thanks to the Merle proofs, the finalization of withdrawal transactions on L1 is trustless and can be submitted by user themselves or by a third party on behalf of users.
+After the transaction batch containing users' L2-to-L1 messages is finalized on the L1 rollup contract, users need to submit corresponding _Execute Withdrawal_ transactions to call `relayMessageWithProof` method in the `L1ScrollMessenger` contract that executes the withdrawal on L1. Thanks to the Merkle proofs, the finalization of withdrawal transactions on L1 is trustless and can be submitted by user themselves or by a third party on behalf of users.
 
 To make it easier to construct a withdraw MIP, Scroll maintains a service called Bridge History API. Bridge History API monitors `SentMessage` events emitted from `L2ScrollMessenger` and maintains a Withdraw Trie internally. It continuously generates Merkle proofs for every withdrawal messages. Users and third-party services can query Merkle proofs from the Bridge History API to include in the _Execute Withdrawal_ transactions.
 
