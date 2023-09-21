@@ -36,14 +36,14 @@ contract L1Token is ERC20 {
 
 ## Step 2: Launch the counterpart token on Scroll Sepolia testnet
 
-Next, launch you'll launch a counterpart to this token on Scroll, which will represent the original token on Sepolia. This token can implement custom logic to match that of the L1 token or even add additional features beyond those of the L1 token.
+Next, you'll launch a counterpart to this token on Scroll, which will represent the original token on Sepolia. This token can implement custom logic to match that of the L1 token or even add additional features beyond those of the L1 token.
 
 For this to work:
 
-- The token must implement the `IScrollStandardERC20`` interface in order to be compatible with the bridge.
+- The token must implement the `IScrollStandardERC20` interface in order to be compatible with the bridge.
 - The contract should provide the gateway address and the counterpart token addresses (the L1 token we just launched) under the `gateway()` and `counterpart()` functions. It should also allow the L2 gateway to call the token `mint()` and `burn()` functions, which are called when a token is deposited and withdrawn.
 
-The following is a complete example of a token compatible with the bridge. To the constructor, you will pass the official Scroll Custom Gateway address (`0x31C994F2017E71b82fd4D8118F140c81215bbb37`) and the address of the token launched on Sepolia.
+The following is a complete example of a token compatible with the bridge. To the constructor, you will pass the official Scroll Custom Gateway address (`0x058dec71E53079F9ED053F3a0bBca877F6f3eAcf`) and the address of the token launched on Sepolia.
 
 ```solidity
 // SPDX-License-Identifier: MIT

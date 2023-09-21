@@ -4,11 +4,11 @@ date: Last Modified
 title: "Polynomial Commitment Schemes"
 lang: "en"
 permalink: "learn/zero-knowledge/polynomial-commitment-schemes"
-excerpt: "Polynomial commitment schemes are a core building block of zero-knowledge proof system"
+excerpt: "Polynomial commitment schemes are a core building block of zero knowledge proof system"
 whatsnext: { "KZG Commitment Scheme": "/learn/zero-knowledge/kzg-commitment-scheme" }
 ---
 
-Polynomial commitment schemes are a core building block of zero-knowledge proof systems (as well as other cryptographic protocols).
+Polynomial commitment schemes are a core building block of zero knowledge proof systems (as well as other cryptographic protocols).
 
 As the name suggests, polynomial commitment schemes are commitment schemes where the object to be committed is a polynomial. These schemes also have a special property where an evaluation of the polynomial can be verified with access only to the polynomial’s commitment.
 
@@ -25,7 +25,7 @@ Secure commitment schemes have two properties:
 
 A **polynomial commitment scheme** is a commitment scheme where the committer commits to a polynomial $P(x)$ by computing a commitment $c$. As in normal commitment schemes, the committer can later reveal the original polynomial, and the verifier can check that the commitment corresponds to the revealed polynomial. However, polynomial commitment schemes have an additional property: the committer can prove particular evaluations of the committed polynomial without revealing the polynomial itself. For example, the committer can prove that $P(a) = b$, and the verifier can verify such a proof using just the commitment $c$.
 
-Polynomial commitment schemes are extremely useful for zero-knowledge applications. A prover can use such a scheme to prove that he knows some polynomial which satisfies certain properties (e.g. that it passes through a certain point $(a,b)$), without revealing the underlying polynomial.
+Polynomial commitment schemes are extremely useful for zero knowledge applications. A prover can use such a scheme to prove that he knows some polynomial which satisfies certain properties (e.g. that it passes through a certain point $(a,b)$), without revealing the underlying polynomial.
 
 Another reason why polynomial schemes are useful is that the commitment $c$ is generally much smaller than the polynomial it represents, and can thus be thought of as a **compression** of the polynomial $P(x)$. The magnitude of compression depends on the particular scheme. For example, in the KZG polynomial commitment scheme, a polynomial of arbitrarily large degree can be compressed down to a commitment consisting of a single group element.
 

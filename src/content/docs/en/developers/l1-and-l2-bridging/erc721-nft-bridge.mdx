@@ -5,7 +5,7 @@ title: "ERC721 NFT Bridge"
 lang: "en"
 permalink: "developers/l1-and-l2-bridging/erc721-nft-bridge"
 excerpt: "NFT bridging from L1 to L2 is done via the L1ERC721Gateway contract instead of using a router."
-whatsnext: { "ERC1155 Token Bridge": "/developers/l1-and-l2-bridging/erc721-nft-bridge/" }
+whatsnext: { "ERC1155 Token Bridge": "/developers/l1-and-l2-bridging/erc1155-token-bridge/" }
 ---
 
 import Aside from "../../../../../components/Aside.astro"
@@ -65,7 +65,7 @@ The `L2ERC721Gateway` contract is used to send tokens from L2 to L1. Before brid
 
 <Aside type="caution" title="">
   **Make sure the transaction won't revert on L1** while sending from L2. There is no way to recover the NFT bridged if
-  you're transaction reverts on L1. All assets are burnt on L2 when the transaction is sent, and it's impossible to mint
+  your transaction reverts on L1. All assets are burnt on L2 when the transaction is sent, and it's impossible to mint
   them again.
 </Aside>
 
