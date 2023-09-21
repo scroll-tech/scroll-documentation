@@ -33,7 +33,7 @@ const Footer = () => {
         <p className={styles.title}>Follow Us</p>
         <div>
           {mediaList.map((item) => (
-            <a external href={item.href} key={item.name}>
+            <a external href={item.href} key={item.name} target="_blank">
               {<item.icon />}
             </a>
           ))}
