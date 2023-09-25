@@ -62,7 +62,7 @@ export const getSidebar = () => {
     ],
     developers: [
       {
-        section: "Developers",
+        section: t("sidebar.developers.developers"),
         contents: [
           { title: t("sidebar.developers.buildingOnScroll"), url: formatUrl("developers") },
           { title: t("sidebar.developers.developerQuickstart"), url: formatUrl("developers/developer-quickstart") },
@@ -125,7 +125,7 @@ export const getSidebar = () => {
         ],
       },
       {
-        section: "Guides",
+        section: t("sidebar.developers.guides"),
         contents: [
           {
             title: t("sidebar.developers.contractDeploymentTutorial"),
@@ -154,7 +154,7 @@ export const getSidebar = () => {
         ],
       },
       {
-        section: "Resources",
+        section: t("sidebar.developers.resources"),
         contents: [
           { title: t("sidebar.developers.rollupExplorer"), url: "https://scroll.io/rollupscan" },
           { title: t("sidebar.developers.scrollSepoliaBlockExplorer"), url: "https://sepolia-blockscout.scroll.io/" },
@@ -164,8 +164,8 @@ export const getSidebar = () => {
     ],
     technology: [
       {
-        section: "Overview",
-        contents: [{ title: t("Scroll Architecture"), url: formatUrl("technology") }],
+        section: t("sidebar.technology.overview"),
+        contents: [{ title: t("sidebar.technology.scrollArchitecture"), url: formatUrl("technology") }],
       },
       {
         section: t("sidebar.technology.scrollChain"),
