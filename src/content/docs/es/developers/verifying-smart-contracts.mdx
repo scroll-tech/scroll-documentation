@@ -26,7 +26,7 @@ La mayoría de las herramientas de smart contracts tienen plugins para verificar
 
 ### Hardhat
 
-Primero, modifica `hardhat.config.ts` para que apunte al RPC de Scroll y a `sepolia-blockscout.scroll.io/api`. Se requiere un valor `apyKey` ficticio, pero cualquier cosa sirve como valor.
+Primero, modifica `hardhat.config.ts` para que apunte al RPC de Scroll y a `sepolia-blockscout.scroll.io/api`. Se requiere un valor `apyKey` ficticio, cualquier valor servirá.
 
 ```javascript
 ...
@@ -66,15 +66,15 @@ Ahora puedes verificar el smart contract ejecutando el siguiente comando.
 npx hardhat verify --network scrollSepolia <contract address> <space separated constructor parameters>
 ```
 
-Por ejemplo, así es como debería verse un smart contract que recibe dos parámetros uint en el constructor:
+Por ejemplo, así es como debería verse un smart contract que recibe dos parámetros tipo uint en el constructor:
 
 ```solidity
 npx hardhat verify --network scrollSepolia 0xD9880690bd717189cC3Fbe7B9020F27fae7Ac76F 123 456
 ```
 
 <Aside type="danger" title="Alerta">
-  Es posible que reciba un error que indica que `etherscan.apiKey.trim no es una función` . Si es así, es necesario actualizar
-  `@nomiclabs/hardhat-etherscan` para poder soportar cadenas personalizadas. Intenta ejecutar `npm update
+  Es posible que recibas un error que indica que `etherscan.apiKey.trim no es una función` . Si es así, es necesario actualizar
+  `@nomiclabs/hardhat-etherscan` para poder soportar chains personalizadas. Intenta ejecutar `npm update
   @nomiclabs/hardhat-etherscan`.
 </Aside>
 

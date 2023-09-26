@@ -10,7 +10,11 @@ excerpt: "Translation of English terms into Spanish"
 | English                                         | Spanish                                      |
 | ----------------------------------------------- | -------------------------------------------- |
 | Mapping                                         | Mapeo                                        |
-| Bridge                                          | Puente                                       |
+| Bridge                                          | Bridge                                       |
+| Bridging                                        | Bridging, conexión                           |
+| Assets                                          | Activos                                      |
+| Fee                                             | Comisión                                     |
+| Gateway                                         | La Gateway                                   |
 | Token                                           | Token                                        |
 | zero-knowledge Proof                            | Prueba Conocimiento Cero                     |
 | Rollup                                          | Rollup                                       |
