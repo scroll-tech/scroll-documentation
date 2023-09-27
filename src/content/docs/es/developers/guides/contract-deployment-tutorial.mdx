@@ -14,14 +14,14 @@ La Testnet de Scroll Sepolia permite a cualquiera desplegar un smart contract en
 
 <Aside type="tip" title="¿Tienes Testnet ETH?">
   Antes de empezar a desplegar el contrato, tienes que solicitar tokens de la testnet a través de un faucet de Sepolia y utilizar la función
-[bridge](https://scroll.io/bridge) para transferir algunos ETH de prueba de _Sepolia_ a _Scroll Sepolia_. Como alternativa
+[bridge](https://scroll.io/bridge) para transferir algunos ETH de prueba de _Sepolia_ a _Scroll Sepolia_. Como alternativa puedes
   adquirir directamente ETH de Scroll Sepolia. Consulta nuestras guías [Faucet](/es/user-guide/faucet/) y [Bridge](/es/user-guide/bridge/)
   para obtener ayuda.
 </Aside>
 
 ## Despliegue de contratos con Hardhat
 
-1. Si aún no lo ha hecho, instale [nodejs](https://nodejs.org/en/download/) y [yarn](https://classic.yarnpkg.com/lang/en/docs/install).
+1. Si aún no lo has hecho, instala [nodejs](https://nodejs.org/en/download/) y [yarn](https://classic.yarnpkg.com/lang/en/docs/install).
 2. Clona el repositorio e instala las dependencias:
 
    ```shell
@@ -67,7 +67,7 @@ La Testnet de Scroll Sepolia permite a cualquiera desplegar un smart contract en
      contracts/Lock.sol:Lock
    ```
 
-   - `<lock_amount>` es la cantidad de `ETH` de prueba que se bloqueará en el contrato. Intente establecer una cantidad pequeña, como `0.0000001ether`.&#x20;
+   - `<lock_amount>` es la cantidad de `ETH` de prueba que se bloqueará en el contrato. Intenta establecer una cantidad pequeña, como `0.0000001ether`.&#x20;
    - `<unlock_time>` es la marca de tiempo Unix después de la cual los fondos bloqueados en el contrato estarán disponibles para su retirada. Intenta ponerlo en algún timestamp Unix en el futuro, como `1696118400` (este timestamp Unix corresponde al 1 de Octubre de 2023).
 
    Por ejemplo:

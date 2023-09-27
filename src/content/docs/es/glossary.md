@@ -33,7 +33,7 @@ excerpt: "Translation of English terms into Spanish"
 | HartHat                                         | HartHat                                      |
 | Foundry                                         | Foundry                                      |
 | IDE                                             | Entorno de Desarrollo Integrado              |
-| Deploy                                          | Desplegar                                    |
+| Deploy                                          | Desplegar, lanzar                            |
 | Run                                             | Ejecutar                                     |
 | Transactions                                    | Transacciones                                |
 | Environment                                     | Entorno                                      |
@@ -55,7 +55,7 @@ excerpt: "Translation of English terms into Spanish"
 | Smart contracts                                 | Contratos inteligentes                       |
 | Mainnet                                         | Red principal                                |
 | Polynomial commitment scheme                    | Esquema de compromiso de polinomios          |
-| Commitment                                      | Compromiso                                   |
+| Commitment                                      | Compromiso, guardado                         |
 | Proof of validity                               | Prueba de validez                            |
 | Proof of fraud                                  | Prueba de fraude                             |
 | Optimistic rollup                               | Rollup optimista                             |

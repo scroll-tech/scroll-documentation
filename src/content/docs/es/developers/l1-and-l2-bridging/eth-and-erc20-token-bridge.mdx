@@ -22,7 +22,7 @@ para pagar la comisión en L2. Si la cantidad no es suficiente, la transacción 
 
 Al enviar tokens ERC20, no tienes que preocuparte de seleccionar la Gateway correcta. Esto se debe a que el `L1GatewayRouter` elegirá el punto de entrada subyacente correcto para enviar el mensaje:
 
-- **`L1StandardERC20Gateway`:** Esta Gateway permite cualquier depósito ERC20 y será seleccionada por defecto por el L1GatewayRouter para un token ERC20 que no necesite lógica personalizada en L2. En el primer bridging de tokens, se creará un nuevo token en L2 que implemente el ScrollStandardERC20. Para hacer bridging de un token, llama a la función `depositERC20` en el `L1GatewayRouter`.
+- **`L1StandardERC20Gateway`:** Esta Gateway permite cualquier depósito de tokens ERC20 y será seleccionada por defecto por la `L1GatewayRouter` para un token ERC20 que no necesite lógica personalizada en L2. En el primer bridging de tokens, se creará un nuevo token en L2 que implemente el ScrollStandardERC20. Para hacer bridging de un token, llama a la función `depositERC20` en el `L1GatewayRouter`.
 - **`L1CustomERC20Gateway`:** Esta Gateway será seleccionada por el `L1GatewayRouter` para tokens con lógica personalizada. Para que un pair de token L1/L2 funcione en el bridge de ERC20 personalizado de Scroll, el contrato de token en L2 tiene que implementar `IScrollStandardERC20`. Además, el token debe conceder la capacidad `mint` y `burn` a la `L2CustomERC20Gateway`.
 
   Visite la guía [Bridge ERC20 a través de una Gateway Personalizada](/developers/developer-guides/bridge-erc20-through-the-custom-gateway) para ver un ejemplo paso a paso de cómo hacer bridging de un token personalizado.
@@ -30,8 +30,8 @@ Al enviar tokens ERC20, no tienes que preocuparte de seleccionar la Gateway corr
 Todos los contratos Gateway formarán el mensaje y lo enviarán al `L1ScrollMessenger` que puede enviar mensajes arbitrarios a L2. El `L1ScrollMessenger` pasa el mensaje a la `L1MessageQueue`. Cualquier usuario puede enviar mensajes directamente al Messenger para ejecutar datos arbitrarios en L2. Esto significa que pueden ejecutar cualquier función en L2 desde una transacción realizada en L1 a través del bridge. Aunque una aplicación podría pasar directamente mensajes a los contratos de tokens existentes, el Gateway abstrae los detalles y simplifica las transferencias y llamadas.
 
 <Aside type="tip" title="">
-  Los usuarios también pueden omitir el `L1ScrollMessenger` y enviar mensajes directamente al `L1MessageQueue`. Si se envía un mensaje
-  a través de `L1MessageQueue`, el remitente de la transacción será la dirección del usuario que envía la transacción, no la dirección de `L1ScrollMessenger`.
+  Los usuarios también pueden omitir el `L1ScrollMessenger` y enviar mensajes directamente a la `L1MessageQueue`. Si se envía un mensaje
+  a través de `L1MessageQueue`, el remitente de la transacción será la dirección del usuario que envía la transacción, no la
   dirección del `L1ScrollMessenger`. Más información sobre el envío de mensajes arbitrarios en [ El Scroll
   Messenger](/es/developers/l1-and-l2-bridging/the-scroll-messenger).
 </Aside>
@@ -56,7 +56,7 @@ utilizada para pagar las comisiones en L1. Si la cantidad no es suficiente, la t
 
 ## Creación de un token ERC20 con lógica personalizada en L2
 
-Si un token necesita una lógica personalizada en L2, deberá puentearse a través de `L1CustomERC20Gateway` y `L2CustomERC20Gateway` respectivamente. El token personalizado en L2 deberá dar permiso a la Gateway para emitir nuevos tokens cuando se produzca un depósito y para quemarlos cuando se retiren.
+Si un token necesita una lógica personalizada en L2, deberá de hacer bridging a través de `L1CustomERC20Gateway` y `L2CustomERC20Gateway` respectivamente. El token personalizado en L2 deberá dar permiso a la Gateway para emitir nuevos tokens cuando se produzca un depósito y para quemarlos cuando se retiren.
 
 La siguiente interfaz es el `IScrollStandardERC20` necesario para desplegar tokens compatibles con el `L2CustomERC20Gateway` en L2.
 
@@ -89,7 +89,7 @@ interface IScrollStandardERC20 {
 
 ### Añadir un token L2 ERC20 personalizado al Scroll Bridge
 
-Los tokens pueden ser puenteados de forma segura y de manera permissionless a través de contratos Gateway desplegados por cualquier desarrollador. Sin embargo, Scroll también gestiona un Router ERC20 y un Gateway donde todos los tokens creados por la comunidad son bienvenidos. Formar parte del Gateway gestionado por Scroll significa que no necesitarás desplegar los contratos Gateway, y tu token aparecerá en el frontend de Scroll. Para formar parte de la Gateway de Scroll, debe ponerse en contacto con el equipo de Scroll para añadir el token a los contratos puente L1 y L2. Para ello, siga las instrucciones del repositorio [token lists](https://github.com/scroll-tech/token-list) para añadir su nuevo token al frontend oficial de Scroll.
+Los tokens pueden hacer bridging de forma segura y sin intermediarios a través de contratos Gateway desplegados por cualquier desarrollador. Sin embargo, Scroll también gestiona un Router ERC20 y un Gateway donde todos los tokens creados por la comunidad son bienvenidos. Formar parte del Gateway gestionado por Scroll significa que no necesitarás desplegar los contratos Gateway, y tu token aparecerá en el frontend de Scroll. Para formar parte de la Gateway de Scroll, debe ponerse en contacto con el equipo de Scroll para añadir el token a los contratos del bridge en L1 y L2. Para ello, siga las instrucciones del repositorio [token lists](https://github.com/scroll-tech/token-list) para añadir tu nuevo token al frontend oficial de Scroll.
 
 ## API de la Gateway L1
 
@@ -101,12 +101,12 @@ Visite la biblioteca [npm library](https://www.npmjs.com/package/@scroll-tech/co
 function depositETH(address _to, uint256 _amount, uint256 _gasLimit) public payable;
 ```
 
-Envia ETH desde L1 a L2.
+Envía ETH desde L1 a L2.
 
 | Parámetro | Descripción                                                                                                                 |
 | --------- | --------------------------------------------------------------------------------------------------------------------------- |
 | to        | Dirección de la cuenta del destinatario en L2.                                                                                   |
-| amount    | La cantidad de token a transferir, en wei.                                                                                    |
+| amount    | Cantidad de token a transferir, en wei.                                                                                    |
 | gasLimit  | Límite de gas necesario para completar el depósito en la L2. De 4000 a 10000 de gas debería ser suficiente para procesar la transacción. |
 
 ### depositERC20
@@ -115,13 +115,13 @@ Envia ETH desde L1 a L2.
 function depositERC20(address _token, address _to, uint256 _amount, uint256 _gasLimit) payable;
 ```
 
-Enviar ERC20 tokens desde L1 a L2.
+Envía ERC20 tokens desde L1 a L2.
 
 | Parámetro | Descripción                                                                                                                 |
 | --------- | --------------------------------------------------------------------------------------------------------------------------- |
-| token     | La dirección del token en L1.                                                                                                    |
+| token     | Dirección del token en L1.                                                                                                    |
 | to        | Dirección de la cuenta del destinatario en L2.                                                                                   |
-| amount    | La cantidad de token a transferir, en wei.                                                                                    |
+| amount    | Cantidad de token a transferir, en wei.                                                                                    |
 | gasLimit  | Límite de gas necesario para completar el depósito en la L2. De 4000 a 10000 de gas debería ser suficiente para procesar la transacción. |
 
 ### getL2ERC20Address
@@ -134,7 +134,7 @@ Devuelve la dirección de token L2 correspondiente dada la dirección de token L
 
 | Parámetro | Descripción              |
 | --------- | ------------------------ |
-| \_l1Token | La dirección del token l1. |
+| \_l1Token | Dirección del token l1. |
 
 ### updateTokenMapping
 
@@ -147,7 +147,7 @@ Actualiza el mapping que conecta un token ERC20 de L1 a L2.
 | Parámetro | Descripción                                     |
 | --------- | ----------------------------------------------- |
 | \_l1Token | Dirección del token ERC20 en L1.           |
-| \_l2Token | La dirección del token ERC20 correspondiente en L2. |
+| \_l2Token | Dirección del token ERC20 correspondiente en L2. |
 
 ## API de la Gateway L2
 
@@ -175,7 +175,7 @@ Envia tokens ERC20 desde L2 a L1.
 
 | Parámetro | Descripción                                                                                             |
 | --------- | ------------------------------------------------------------------------------------------------------- |
-| token     | La dirección del token en L2.                                                                                |
+| token     | Dirección del token en L2.                                                                                |
 | to        | Dirección de la cuenta del destinatario en L1.                                                               |
 | amount    | Cantidad de token a transferir, en wei.                                                                |
 | gasLimit  | Límite de gas necesario para completar el depósito en L1. Esto es opcional, envíe 0 si no desea establecerlo. |
@@ -190,7 +190,7 @@ Devuelve la dirección de token L1 correspondiente dada una dirección de token 
 
 | Parámetro | Descripción                  |
 | --------- | ---------------------------- |
-| l2Token   | La dirección del token L2. |
+| l2Token   | Dirección del token L2. |
 
 ### updateTokenMapping
 
@@ -202,5 +202,5 @@ Actualizar el mapping que conecta un contrato ERC20 de L2 a L1.
 
 | Parámetro | Descripción                                     |
 | --------- | ----------------------------------------------- |
-| \_l2Token | La dirección del token ERC20 en L2.           |
-| \_l1Token | La dirección del token ERC20 correspondiente en L1. |
+| \_l2Token | Dirección del token ERC20 en L2.           |
+| \_l1Token | Dirección del token ERC20 correspondiente en L1. |

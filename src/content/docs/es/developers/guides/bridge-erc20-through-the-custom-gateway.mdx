@@ -11,14 +11,14 @@ import Aside from "../../../../../components/Aside.astro"
 
 En esta guía se explica cómo utilizar el bridge de Scroll para los ERC20 que necesitan una funcionalidad personalizada mediante el uso de una Gateway Personalizada.
 
-<Aside type="tip" title="¿Necesita una lógica personalizada?">
-  Recuerde que, en muchos contextos, no necesitará utilizar la Gateway personalizada para añadir funciones adicionales a su token o a 
-  su lógica de bridging. Consulte el artículo sobre [ETH y ERC20 Token Bridge](/es/developers/l1-and-l2-bridging/eth-and-erc20-token-bridge#deposit-eth-and-erc20-tokens-from-l1) para más información.
+<Aside type="tip" title="¿Necesitas una lógica personalizada?">
+  Recuerda que, en muchos contextos, no necesitarás utilizar la Gateway personalizada para añadir funciones adicionales a tu token o a 
+  tu lógica de bridging. Consulta el artículo sobre [ETH y ERC20 Token Bridge](/es/developers/l1-and-l2-bridging/eth-and-erc20-token-bridge#deposit-eth-and-erc20-tokens-from-l1) para más información.
 </Aside>
 
 ## Paso 1: Lanza un token en Sepolia
 
-En primer lugar, necesitamos un token para hacer de bridge. No hay necesidad de una implementación ERC20 en particular para que un token sea compatible con L2. Si ya tienes un token, puedes saltarte este paso. Si desea desplegar un nuevo token, utilice el siguiente contrato de un token ERC20 que emite 1 millón de tokens al deployer cuando se lanza.
+En primer lugar, necesitamos un token para hacer bridging. No hay necesidad de una implementación ERC20 en particular para que un token sea compatible con L2. Si ya tienes un token, puedes saltarte este paso. Si deseas desplegar un nuevo token, utiliza el siguiente contrato de un token ERC20 que emite 1 millón de tokens al deployer cuando se lanza.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -35,12 +35,12 @@ contract L1Token is ERC20 {
 
 ## Paso 2: Lanzar el token contraparte en Scroll Sepolia testnet
 
-A continuación, lanzarás un token homólogo a este token en Scroll, que representará al token original en Sepolia. Este token puede implementar una lógica personalizada para que coincida con la del token L1 o incluso añadir funciones adicionales más allá de las del token L1.
+A continuación, lanzarás un token homólogo a este token en Scroll, que representará al token original en Sepolia. Este token puede implementar una lógica personalizada para que coincida con la del token en L1 o incluso añadir funciones adicionales más allá de las del token en L1.
 
 Para que funcione:
 
-- El token debe implementar la interfaz `IScrollStandardERC20`` para ser compatible con el bridge.
-- El contrato debe proporcionar la dirección de la gateway y las direcciones del token homólogo (el token L1 que acabamos de lanzar) bajo las funciones `gateway()` y `counterpart()`. También debe permitir que la gateway L2 llame a las funciones token `mint()` y `burn()`, que se llaman cuando se deposita y se retira un token.
+- El token debe implementar la interfaz `IScrollStandardERC20` para ser compatible con el bridge.
+- El contrato debe proporcionar la dirección de la gateway y las direcciones del token homólogo (el token L1 que acabamos de lanzar) bajo las funciones `gateway()` y `counterpart()`. También debe permitir que la gateway en L2 llame a las funciones token `mint()` y `burn()`, que se llaman cuando se deposita y se retira un token.
 
 A continuación se muestra un ejemplo completo de un token compatible con el bridge. Al constructor se le pasa la dirección oficial de la Gateway Personalizada de Scroll (`0x31C994F2017E71b82fd4D8118F140c81215bbb37`) y la dirección del token lanzado en Sepolia.
 
@@ -96,19 +96,19 @@ contract L2Token is ERC20, IScrollERC20Extension {
 
 ## Paso 3: Adición del token al Scroll Bridge
 
-Debe ponerse en contacto con el equipo de Scroll para añadir el token al contrato `L2CustomERC20Gateway` en Scroll y al contrato `L1CustomERC20Gateway` en L1. Además, siga las instrucciones del repositorio [token lists](https://github.com/scroll-tech/token-list) para añadir su token al frontend oficial del Scroll bridge.
+Debes ponerte en contacto con el equipo de Scroll para añadir el token al contrato `L2CustomERC20Gateway` en Scroll y al contrato `L1CustomERC20Gateway` en L1. Además, sigue las instrucciones del repositorio [token lists](https://github.com/scroll-tech/token-list) para añadir su token al frontend oficial del Scroll bridge.
 
 ## Paso 4: Depósito de tokens
 
-Una vez que tu token haya sido aprobado por el equipo de Scroll, deberías poder depositar tokens desde L1. Para ello, primero debe aprobar la dirección del contrato `L1CustomGateway` en Sepolia (`0x31C994F2017E71b82fd4D8118F140c81215bbb37`). Luego, deposita los tokens llamando a la función `depositERC20` desde el contrato `L1CustomGateway`. Esto se puede hacer usando [nuestro bridge](https://scroll.io/bridge), [Etherscan Sepolia](https://sepolia.etherscan.io/address/0x31C994F2017E71b82fd4D8118F140c81215bbb37#writeProxyContract), o un smart contract.
+Una vez que tu token haya sido aprobado por el equipo de Scroll, deberías poder depositar tokens desde L1. Para ello, primero debes aprobar la dirección del contrato `L1CustomGateway` en Sepolia (`0x31C994F2017E71b82fd4D8118F140c81215bbb37`). Luego, deposita los tokens llamando a la función `depositERC20` desde el contrato `L1CustomGateway`. Esto se puede hacer usando [nuestro bridge](https://scroll.io/bridge), [Etherscan Sepolia](https://sepolia.etherscan.io/address/0x31C994F2017E71b82fd4D8118F140c81215bbb37#writeProxyContract), o un smart contract.
 
 ## Paso 5: Retiro de tokens
 
-Deberá seguir pasos similares para enviar tokens de vuelta de L2 a L1. En primer lugar, apruebe la dirección `L2CustomGateway` (`0x058dec71E53079F9ED053F3a0bBca877F6f3eAcf`) y, después retire los tokens llamando al comando `withdrawERC20` del contrato `L2CustomGateway`.
+Deberás seguir pasos similares para enviar tokens de vuelta de L2 a L1. En primer lugar, aprueba la dirección `L2CustomGateway` (`0x058dec71E53079F9ED053F3a0bBca877F6f3eAcf`) y, después retira los tokens llamando al comando `withdrawERC20` del contrato `L2CustomGateway`.
 
-## Enfoque Alternativo: Lanzar y configurar un contrato de gateway personalizada L1
+## Modo Alternativo: Lanzar y configurar un contrato de gateway personalizada
 
-Añadir su token al bridge oficial de Scroll (como se ha descrito anteriormente) es el método recomendado para conectar tokens hacia y desde Scroll. Este método hará que sean más fáciles de descubrir y más seguros para los holders. Sin embargo, requerirá la aprobación del equipo de Scroll. Si desea lanzar un token personalizado sin el proceso de aprobación oficial, puedes lanzar una gateway personalizada tu mismo. Para ello, tendrá que desplegar un contrato `L1CustomERC20Gateway` en L1 y un `L2CustomERC20Gateway` en L2.
+Añadir tu token al bridge oficial de Scroll (como se ha descrito anteriormente) es el método recomendado para conectar tokens hacia y desde Scroll. Este método hará que sean más fáciles de descubrir y más seguros para los holders. Sin embargo, requerirá la aprobación del equipo de Scroll. Si deseas lanzar un token personalizado sin el proceso de aprobación oficial, puedes lanzar una gateway personalizada tú mismo. Para ello, tendrás que desplegar un contrato `L1CustomERC20Gateway` en L1 y un `L2CustomERC20Gateway` en L2.
 
 ### Lanzamiento de una Gateway Personalizada en L1
 
@@ -326,8 +326,8 @@ Una vez desplegados los contratos, llama a las siguientes funciones para inicial
 Primero, llama a la función `initialize` en el contrato `MyL1Gateway` con los siguientes parámetros:
 
 - `_counterpart`: La dirección de `MyL2Gateway` que acabamos de lanzar en Scroll.
-- `_router`: Ponlo en `0x13FBE0D0e5552b8c9c4AE9e2435F38f37355998a`, el contrato `L1GatewayRouter` de Sepolia.
-- `_messenger`: Ponlo en `0x50c7d3e7f7c656493D1D76aaa1a836CedfCBB16A`, el contrato `L1ScrollMessenger` de Sepolia.
+- `_router`: Coloca `0x13FBE0D0e5552b8c9c4AE9e2435F38f37355998a`, el contrato `L1GatewayRouter` de Sepolia.
+- `_messenger`: Coloca `0x50c7d3e7f7c656493D1D76aaa1a836CedfCBB16A`, el contrato `L1ScrollMessenger` de Sepolia.
 
 Una gateway personalizada puede alojar múltiples bridges de tokens. En este caso, sólo permitiremos el bridging entre L1Token y L2Token llamando a la función `updateTokenMapping` en el contrato `MyL1Gateway` con los siguientes parámetros:
 
@@ -341,8 +341,8 @@ Ahora cambiemos a la cadena Scroll e inicialicemos `MyL2Gateway`, siguiendo paso
 Primero, llama a la función `initialize` de `MyL2Gateway`:
 
 - `_counterpart`: La dirección de `MyL1Gateway` que acabamos de lanzar en Sepolia.
-- `_router`: Ponlo en `0x9aD3c5617eCAa556d6E166787A97081907171230`, el contrato `L2GatewayRouter` de Scroll.
-- `_messenger`: Ponle `0xBa50f5340FB9F3Bd074bD638c9BE13eCB36E603d`, el contrato `L2ScrollMessenger` de Scroll.
+- `_router`: Coloca `0x9aD3c5617eCAa556d6E166787A97081907171230`, el contrato `L2GatewayRouter` de Scroll.
+- `_messenger`: Coloca `0xBa50f5340FB9F3Bd074bD638c9BE13eCB36E603d`, el contrato `L2ScrollMessenger` de Scroll.
 
 A continuación, llama a `updateTokenMapping` en el contrato `MyL2Gateway`:
 
