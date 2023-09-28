@@ -8,7 +8,7 @@ excerpt: "ZK Rollups and Scroll"
 whatsnext: { "Guía de Usuario": "/es/user-guide/", "Construyendo en Scroll": "/es/developers/" }
 ---
 
-#### Bienvenido a la documentación de Scroll!
+#### ¡Bienvenido a la documentación de Scroll!
 
 Scroll es una solución de escalabilidad centrada en la seguridad de Ethereum, que utiliza innovaciones en el diseño de escalado y pruebas de “zero-knowledge” para construir una nueva capa en Ethereum. La red de Scroll es más accesible, más receptiva y puede soportar a más usuarios a la vez que Ethereum por sí solo, y si alguna vez has utilizado o desarrollado una aplicación en Ethereum, te sentirás como en casa.
 
@@ -18,7 +18,7 @@ Scroll es una solución de escalabilidad centrada en la seguridad de Ethereum, q
 
 Scroll está construyendo la tecnología para escalar Ethereum.
 
-Aunque Ethereum es la principal red blockchain para alimentar aplicaciones descentralizadas, su popularidad también conlleva costos más altos, lo que crea una barrera para la adopción de la próxima ola de usuarios y desarrolladores.
+Aunque Ethereum es la principal red de blockchain para alimentar aplicaciones descentralizadas, su popularidad también conlleva costos más altos, lo que crea una barrera para la adopción de la próxima ola de usuarios y desarrolladores.
 
 Aprovechando investigaciones punteras en pruebas de “zero-knowledge” ("zk"), Scroll está construyendo una red de segunda capa (Layer 2 rollup) en Ethereum. El equipo, en colaboración de código abierto con otros en la comunidad de Ethereum, ha creado un "zkEVM" que permite que toda la actividad en la red, que se comporta de manera similar a Ethereum, esté asegurada por smart contracts en Ethereum. La red publica todas las transacciones en Ethereum, y el zkEVM crea y publica "pruebas" criptográficas de que la red de Scroll sigue las reglas de Ethereum.
 
