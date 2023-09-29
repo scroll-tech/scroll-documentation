@@ -31,13 +31,13 @@ El proceso de rollup puede dividirse en tres fases: ejecución de transacciones,
 
 ### Fase 1. Ejecución de Transacciones
 
-1. Los usuarios envían transacciones al contrato bridge L1 o a los secuenciadores L2.
-2. El Sync Service del secuenciador L2 obtiene las últimas transacciones L1 adjuntas del contrato bridge.
-3. El secuenciador L2 procesa las transacciones tanto de la cola de mensajes L1 como del mempool L2 para construir bloques L2.
+1. Los usuarios envían transacciones al contrato bridge en L1 o a los secuenciadores en L2.
+2. El Sync Service del secuenciador en L2 obtiene las últimas transacciones en L1 adjuntas del contrato bridge.
+3. El secuenciador en L2 procesa las transacciones tanto de la cola de mensajes en L1 como del mempool en L2 para construir bloques en L2.
 
 ### Fase 2. Procesamiento por Lotes y Compromiso de Datos
 
-4. El nodo de rollup monitoriza los últimos bloques L2 y obtiene los datos de la transacción.
+4. El nodo de rollup monitoriza los últimos bloques en L2 y obtiene los datos de la transacción.
 5. Si se cumplen los criterios (descritos en [Lotes de Transacciones](/es/technology/chain/transactions#transaction-batching)), el nodo rollup propone un nuevo chunk o lote y lo escribe en la base de datos. En caso contrario, el nodo rollup seguirá esperando más bloques o chunks.
 6. Una vez creado un nuevo lote, el rollup relayer recopila los datos de la transacción en este lote y envía una Commit Transaction al contrato rollup para la disponibilidad de los datos.
 
@@ -84,7 +84,7 @@ chunk.dataHash := keccak(blockContext[0] || ... || blockContext[k-1] ||
 
 donde `block.l1TxHashes` son los hashes de transacción concatenados de las transacciones L1 en este bloque y `block.l2TxHashes` son los hashes de transacción concatenados de las transacciones L2 en este bloque. Nótese que los hashes de transacción de las transacciones L1 no son cargados por el nodo rollup, sino que se cargan directamente desde el contrato `L1MessageQueue` dado el rango de índices de los mensajes L1 incluidos en este bloque. Los hashes de transacciones L2 se calculan a partir de los bytes codificados en RLP en el campo `l2Transactions` del [`Chunk`](#Chunk-Codec).
 
-Además, la función `commitBatch` contiene un mapa de bits de los mensajes L1 omitidos. Lamentablemente, esto se debe al problema del sobreflujo de pruebas. Si la transacción L1 correspondiente a un mensaje L1 supera el límite de capacidad del circuito, no podremos generar una prueba válida para esta transacción y, por tanto, no podremos finalizarla en L1. Scroll está trabajando activamente para eliminar el problema del sobreflujo de pruebas mediante actualizaciones de nuestro sistema de pruebas.
+Además, la función `commitBatch` contiene un mapa de bits de los mensajes L1 omitidos. Lamentablemente, esto se debe al problema del sobreflujo de pruebas. Si la transacción en L1 correspondiente a un mensaje en L1 supera el límite de capacidad del circuito, no podremos generar una prueba válida para esta transacción y, por tanto, no podremos finalizarla en L1. Scroll está trabajando activamente para eliminar el problema del sobreflujo de pruebas mediante actualizaciones de nuestro sistema de pruebas.
 
 ## Finalización de la Transacción
 
@@ -106,7 +106,7 @@ La función `finalizeBatchWithProof` primero verifica si el lote ha sido comprom
 publicInputHash := keccak(chainId || prevStateRoot || postStateRoot || withdrawRoot || batch.dataHash)
 ```
 
-El hash de entrada público y la prueba de validez se envían al verificador de plonk solidity. Una vez superada la verificación, la nueva "state root" y la "withdraw root" se almacenan en el contrato `ScrollChain`.
+El hash de entrada público y la prueba de validez se envían al verificador de plonk en solidity. Una vez superada la verificación, la nueva "state root" y la "withdraw root" se almacenan en el contrato `ScrollChain`.
 
 ```solidity
 mapping(uint256 => bytes32) public override finalizedStateRoots;
@@ -147,9 +147,9 @@ Esta sección describe el codec de tres estructuras de datos del contrato Rollup
 
 | Campo             | Bytes | Tipo      | Offset | Descripción                                                                         |
 | ----------------- | ----- | --------- | ------ | ----------------------------------------------------------------------------------- |
-| `blockNumber`     | 8     | `uint64`  | 0      | El número del bloque.                                                                    |
-| `timestamp`       | 8     | `uint64`  | 8      | El tiempo del bloque.                                                                      |
+| `blockNumber`     | 8     | `uint64`  | 0      | El número del bloque.                                                                        |
+| `timestamp`       | 8     | `uint64`  | 8      | El tiempo del bloque.                                                                        |
 | `baseFee`         | 32    | `uint256` | 16     | La comisión base de este bloque. Actualmente, siempre es 0, porque desactivamos el EIP-1559. |
-| `gasLimit`        | 8     | `uint64`  | 48     | El límite de gas de este bloque.                                                         |
-| `numTransactions` | 2     | `uint16`  | 56     | El número de transacciones en este bloque, incluyendo L1 & L2 txs                |
-| `numL1Messages`   | 2     | `uint16`  | 58     | El número de mensajes L1 en este bloque                                             |
+| `gasLimit`        | 8     | `uint64`  | 48     | El límite de gas de este bloque.                                                             |
+| `numTransactions` | 2     | `uint16`  | 56     | El número de transacciones en este bloque, incluyendo las txns en L1 y L2                    |
+| `numL1Messages`   | 2     | `uint16`  | 58     | El número de mensajes L1 en este bloque                                                      |

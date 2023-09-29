@@ -9,12 +9,20 @@ excerpt: "Translation of English terms into Spanish"
 
 | English                                         | Spanish                                      |
 | ----------------------------------------------- | -------------------------------------------- |
+| Assembly                                        | Ensamblador                                  |
+| Key-value pair                                  | Par llave-valor                              |
+| Tree                                            | Árbol                                        |
+| Leaf node                                       | Nodo hoja                                    |
+| Branch node                                     | Nodo rama                                    |
+| Root node                                       | Nodo raíz                                    |
 | Mapping                                         | Mapeo                                        |
-| Bridge                                          | Bridge                                       |
+| Leaf node                                       | Nodo hoja                                    |
+| Bridge                                          | Bridge (masculino)                           |
 | Bridging                                        | Bridging, conexión                           |
 | Assets                                          | Activos                                      |
 | Fee                                             | Comisión                                     |
-| Gateway                                         | La Gateway                                   |
+| Gateway                                         | La Gateway (femenino)                        |
+| On-chain                                        | On-chain                                     |
 | Token                                           | Token                                        |
 | zero-knowledge Proof                            | Prueba Conocimiento Cero                     |
 | Rollup                                          | Rollup                                       |

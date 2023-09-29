@@ -55,7 +55,7 @@ Ambas funciones construyen una transacción iniciada por L1 con un nuevo tipo de
 - `appendCrossDomainMessage` sólo puede ser llamado por `L1ScrollMessenger` y utiliza la [Address Alias](#address-alias) de `msg.sender`, que será la dirección de `L1ScrollMessenger`, como remitente de la transacción.
 - La función `appendEnforcedTransaction` sólo puede ser llamada por `EnforcedTxGateway` y utiliza `sender` del parámetro de función como remitente de la transacción. Esto permite a los usuarios ejecutar una retirada o transferencia de ETH desde sus cuentas L2 directamente a través del bridge L1.
 
-Después de que la transacción se ejecuta con éxito en L1, el watcher en el secuenciador Scroll que monitoriza el contrato `L1MessageQueue` recoge los nuevos eventos `QueueTransaction` de los bloques L1. El secuenciador construye entonces una nueva transacción `L1MessageTx` por evento y las añade a su cola local de transacciones L1. Cuando construye un nuevo bloque L2, el secuenciador incluye las transacciones tanto de su cola de transacciones L1 como de su mempool L2. Ten en cuenta que las transacciones de mensajes L1 deben incluirse secuencialmente basándose en el orden de la cola de mensajes L1 en el contrato `L1MessageQueue`. Las transacciones `L1MessageTx` siempre van primero en los bloques L2 seguidas de las transacciones L2. Actualmente, limitamos el número de transacciones `L1MessageTx` en un bloque L2 a `NumL1MessagesPerBlock` (fijado actualmente en 10).
+Después de que la transacción se ejecuta con éxito en L1, el watcher en el secuenciador Scroll que monitoriza el contrato `L1MessageQueue` recoge los nuevos eventos `QueueTransaction` de los bloques en L1. El secuenciador construye entonces una nueva transacción `L1MessageTx` por evento y las añade a su cola local de transacciones en L1. Cuando construye un nuevo bloque en L2, el secuenciador incluye las transacciones tanto de su cola de transacciones en L1 como de su mempool en L2. Ten en cuenta que las transacciones de mensajes en L1 deben incluirse secuencialmente basándose en el orden de la cola de mensajes en L1 en el contrato `L1MessageQueue`. Las transacciones `L1MessageTx` siempre van primero en los bloques en L2 seguidas de las transacciones en L2. Actualmente, limitamos el número de transacciones `L1MessageTx` en un bloque en L2 a `NumL1MessagesPerBlock` (fijado actualmente en 10).
 
 A continuación, nos extenderemos más en el proceso específico de envío de mensajes arbitrarios a través de `L1ScrollMessenger` y el envío de transacciones forzadas a través de `EnforcedTxGateway`.
 
@@ -63,8 +63,8 @@ A continuación, nos extenderemos más en el proceso específico de envío de me
 
 El contrato `L1ScrollMessenger` proporciona dos funciones `sendMessage` para enviar mensajes arbitrarios. La única diferencia es que la segunda permite a los usuarios especificar una dirección de reembolso distinta de la del remitente para recibir el reembolso de la comisión.
 
-<ToggleElement anchor="sendMessage function signatures">
-<div slot="title"><code>sendMessage</code> function signatures</div>
+<ToggleElement anchor="sendMessage signatura de funciones">
+<div slot="title"><code>sendMessage</code> signatura de funciones</div>
 ```solidity
 /// @param target The target address on L2.
 /// @param value The value to deposit to L2 from `msg.value`.
@@ -95,7 +95,7 @@ function sendMessage(
 
 Ambas funciones requieren que los usuarios proporcionen un límite de gas para la transacción `L1MessageTx` correspondiente en L2 y paguen por adelantado el [Message Relay Fee](#message-relay-fee) en L1, que se calcula en función del importe del límite de gas. La comisión se recoge en un contrato `feeVault` en L1. En caso de que la transacción falle en L2 porque el usuario no ha establecido el límite de gas correcto para su mensaje en L1, el usuario puede repetir el mismo mensaje con un límite de gas más alto. Puedes encontrar más detalles en la sección [Reintento de Mensajes Fallidos](#reintentar-mensajes-fallidos).
 
-Las funciones `sendMessage` codifican los argumentos en un mensaje entre dominios (véase el fragmento de código siguiente), donde el nonce del mensaje es el siguiente índice de la cola de mensajes L1. Los datos codificados se utilizan como calldata en la transacción `L1MessageTx` ejecutada en L2. Tenga en cuenta que estos mensajes entre dominios siempre llaman a la función `relayMessage` del contrato `L2ScrollMessenger` en L2.
+Las funciones `sendMessage` codifican los argumentos en un mensaje entre dominios (véase el fragmento de código siguiente), donde el nonce del mensaje es el siguiente índice de la cola de mensajes en L1. Los datos codificados se utilizan como calldata en la transacción `L1MessageTx` ejecutada en L2. Ten en cuenta que estos mensajes entre dominios siempre llaman a la función `relayMessage` del contrato `L2ScrollMessenger` en L2.
 
 ```solidity
 abi.encodeWithSignature(
@@ -108,14 +108,14 @@ abi.encodeWithSignature(
 )
 ````
 
-La cantidad de ETH depositada de `value` se bloquea en el contrato `L1ScrollMessenger`. Si la cantidad de ETH en el mensaje no puede cubrir la Message Relay Fee y la cantidad depositada, la transacción se revertirá. El contrato `L1ScrollMessenger` reembolsará la cantidad sobrante a la `refundAddress` designada o al remitente de la transacción en caso contrario. Por último, `L1ScrollMessenger` añade el mensaje entre dominios a `L1MessageQueue` mediante el método `appendCrossDomainMessage`.
+La cantidad de ETH depositada como `value` se bloquea en el contrato `L1ScrollMessenger`. Si la cantidad de ETH en el mensaje no puede cubrir la Message Relay Fee y la cantidad depositada, la transacción se revertirá. El contrato `L1ScrollMessenger` reembolsará la cantidad sobrante a la `refundAddress` designada o al remitente de la transacción en caso contrario. Por último, `L1ScrollMessenger` añade el mensaje entre dominios a `L1MessageQueue` mediante el método `appendCrossDomainMessage`.
 
 ### Envío de Transacciones Forzadas
 
-El contrato `EnforcedTxGateway` proporciona dos funciones `sendTransaction` para enviar una transacción forzada. En la primera función, el remitente de la transacción generada `L1MessageTx` es el remitente de la transacción. Por otro lado, la segunda función utiliza la dirección del `sender` como remitente de la transacción `L1MessageTx`. Esto permite a un tercero enviar una transacción forzada en nombre del usuario y pagar la comisión de retransmisión. Tenga en cuenta que la segunda función requiere proporcionar una firma válida de la transacción `L1MessageTx` generada que coincida con la dirección del `sender`. Ambas funciones `sendTransaction` exigen que el remitente sea una cuenta EOA.
+El contrato `EnforcedTxGateway` proporciona dos funciones `sendTransaction` para enviar una transacción forzada. En la primera función, el remitente de la transacción generada `L1MessageTx` es el remitente de la transacción. Por otro lado, la segunda función utiliza la dirección del `sender` como remitente de la transacción `L1MessageTx`. Esto permite a un tercero enviar una transacción forzada en nombre del usuario y pagar la comisión de retransmisión. Ten en cuenta que la segunda función requiere proporcionar una firma válida de la transacción `L1MessageTx` generada que coincida con la dirección del `sender`. Ambas funciones `sendTransaction` exigen que el remitente sea una cuenta EOA.
 
-<ToggleElement anchor="sendTransaction function signatures">
-<div slot="title"><code>sendTransaction</code> function signatures</div>
+<ToggleElement anchor="sendTransaction signatura de funciones">
+<div slot="title"><code>sendTransaction</code> signatura de funciones</div>
 
 ```solidity
 /// @param target The target address on L2.
@@ -153,10 +153,10 @@ De forma similar a la retransmisión arbitraria de mensajes, `sendTransaction` d
 
 ### Reintento de Mensajes Fallidos
 
-Si una transacción `L1MessageTx` falla en L2 debido a gas insuficiente, los usuarios pueden reproducir el mensaje con un límite de gas más alto. Para ello, `L1ScrollMessenger` proporciona el método `replayMessage`, que permite a los usuarios enviar la misma información que el mensaje anterior fallido con un límite de gas superior. Este mensaje se convertirá en una nueva transacción `L1MessageTx` en L2. Tenga en cuenta que no se reembolsará la tarifa de gas de la transacción fallida anterior, ya que ésta ya se ha procesado en L2.
+Si una transacción de `L1MessageTx` falla en L2 debido a gas insuficiente, los usuarios pueden reproducir el mensaje con un límite de gas más alto. Para ello, `L1ScrollMessenger` proporciona el método `replayMessage`, que permite a los usuarios enviar la misma información que el mensaje anterior fallido con un límite de gas superior. Este mensaje se convertirá en una nueva transacción `L1MessageTx` en L2. Ten en cuenta que no se reembolsará la tarifa de gas de la transacción fallida anterior, ya que ésta ya se ha procesado en L2.
 
-<ToggleElement anchor="replayMessage function signature">
-<div slot="title"><code>replayMessage</code> function signature</div>
+<ToggleElement anchor="replayMessage signatura de función">
+<div slot="title"><code>replayMessage</code> signatura de función</div>
 
 ```solidity
 /// @param from The address of the sender of the message.
@@ -197,8 +197,8 @@ En L2, los usuarios pueden enviar mensajes arbitrarios a través de `L2ScrollMes
 
 El contrato `L2ScrollMessenger` también proporciona una función `sendMessage`. La diferencia con respecto a `L1ScrollMessenger.sendMessage` es que el parámetro `gasLimit` se ignora en la función porque la transacción de ejecución de retiro en L1 es enviada por los usuarios y la comisión de transacción se paga en L1 directamente. Así, la función `sendMessage` requiere que `msg.value` sea igual al parámetro `value`. La función codifica los argumentos en un mensaje entre dominios siguiendo el mismo esquema que en [`L1ScrollMessenger`](#sending-arbitrary-messages).
 
-<ToggleElement anchor="sendMessage function signatures">
-<div slot="title"><code>sendMessage</code> function signatures</div>
+<ToggleElement anchor="sendMessage signatura de función">
+<div slot="title"><code>sendMessage</code> signatura de función</div>
 
 ```solidity
 /// @param target The target address on L1.
@@ -221,12 +221,12 @@ Una vez finalizado el lote de transacciones que contiene los mensajes L2 a L1 de
 
 Para facilitar la construcción de un MIP de retiro, Scroll mantiene un servicio llamado Bridge History API. Bridge History API supervisa los eventos `SentMessage` emitidos por `L2ScrollMessenger` y mantiene internamente un Withdraw Trie. Genera continuamente Merkle proofs para cada mensaje de retirada. Los usuarios y los servicios de terceros pueden consultar las Merkle proofs desde la Bridge History API para incluirlas en las transacciones _Execute Withdrawal_.
 
-Tenga en cuenta que las transacciones de ejecución de retirada pueden ser enviadas por los propios usuarios o por un servicio de terceros.
+Ten en cuenta que las transacciones de ejecución de retirada pueden ser enviadas por los propios usuarios o por un servicio de terceros.
 
 ### Withdraw Trie
 
 <ClickToZoom src={WithdrawTrie} alt="Withdraw Trie structure" caption="Figure 3. Withdraw Trie structure" />
 
-El Withdraw Trie es un "Merkle tree" binario denso. El hash de un leaf node se hereda del hash del mensaje, mientras que el hash de un non-leaf node es el Keccak hash digest de los hashes concatenados de sus dos descendientes. La profundidad del Withdraw Trie crece dinámicamente en función del número de mensajes añadidos al trie.
+El Withdraw Trie es un "Merkle tree" binario denso. El hash de un nodo hoja se hereda del hash del mensaje, mientras que el hash de un nodo no-hoja es el Keccak hash digest de los hashes concatenados de sus dos descendientes. La profundidad del Withdraw Trie crece dinámicamente en función del número de mensajes añadidos al trie.
 
-La figura 3(a) muestra un ejemplo de un withdraw trie completo de 3 capas. Cuando el número de leaves no puede saturar un tree binario completo, rellenamos los nodos de las leaf con hash 0, como se muestra en las figuras 3(b) y 3(c). Cuando se añade un nuevo mensaje a un Withdraw Trie no completo, el nodo de relleno se sustituye por un nuevo leaf node con el hash del mensaje real.
+La figura 3(a) muestra un ejemplo de un withdraw trie completo de 3 capas. Cuando el número de hojas no puede saturar un tree binario completo, rellenamos los nodos de las hojas con hash 0, como se muestra en las figuras 3(b) y 3(c). Cuando se añade un nuevo mensaje a un Withdraw Trie no completo, el nodo de relleno se sustituye por un nuevo nodo hoja con el hash del mensaje real.

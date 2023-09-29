@@ -29,7 +29,7 @@ Antes de calcular cualquier compromiso KZG, se debe realizar una única trusted 
   - La trusted setup sólo permitirá compromisos con polinomios de grado $\leq l$
 - Se calcula $([\tau^0]_1,[\tau^1]_1,[\tau^{2}]_1\ldots,[\tau^{l}]_1)$ y $([\tau]_2)$, y se dan a conocer estos valores públicamente.
 
-Tenga en cuenta que $\tau$ no debe ser revelado - es un parámetro secreto de la configuración, y debe ser desechado después de la ceremonia haya sido completada para que nadie pueda averiguar su valor.
+Ten en cuenta que $\tau$ no debe ser revelado - es un parámetro secreto de la configuración, y debe ser desechado después de la ceremonia haya sido completada para que nadie pueda averiguar su valor.
 
 Existen métodos establecidos para llevar a cabo trusted setups con suposiciones de confianza débiles (suposición de confianza 1-de-N) utilizando [multi-party computation](https://en.wikipedia.org/wiki/Secure_multi-party_computation) (MPC). Para más información sobre cómo funcionan las trusted setups, véase este [post](https://vitalik.ca/general/2022/03/14/trustedsetup.html) de Vitalik.
 
