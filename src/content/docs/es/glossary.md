@@ -9,6 +9,7 @@ excerpt: "Translation of English terms into Spanish"
 
 | English                                         | Spanish                                      |
 | ----------------------------------------------- | -------------------------------------------- |
+| Assembly                                        | Ensamblador                                  |
 | Key-value pair                                  | Par llave-valor                              |
 | Tree                                            | Árbol                                        |
 | Leaf node                                       | Nodo hoja                                    |
