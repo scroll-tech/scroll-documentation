@@ -4,7 +4,7 @@ date: Last Modified
 title: "El Problema de la Escalabilidad"
 lang: "es"
 permalink: "learn/intro-to-rollups"
-excerpt: "La fuerte descentralización y seguridad de Ethereum se consigue a costa de sacrificar la escalabilidad: para garantizar que todos los nodos participantes puedan seguir el ritmo de la red, el rendimiento de ésta es limitado. Este límite se traduce en costes y latencias más elevados para los usuarios."
+excerpt: "La fuerte descentralización y seguridad de Ethereum se consigue a costa de sacrificar la escalabilidad: para garantizar que todos los nodos participantes puedan seguir el ritmo de la red, el rendimiento de ésta es limitado. Este límite se traduce en costos y latencias más elevados para los usuarios."
 whatsnext: { "Intro a los Rollups": "/es/learn/intro-to-rollups" }
 ---
 
@@ -14,7 +14,7 @@ whatsnext: { "Intro a los Rollups": "/es/learn/intro-to-rollups" }
 
 Una de las características que definen a Ethereum es su compromiso inquebrantable con la seguridad y la descentralización. Ethereum está diseñado para que ordenadores de todo el mundo (incluso los más baratos, como una [Raspberry Pi](https://ethereum-on-arm-documentation.readthedocs.io/)) puedan participar en la red, ejecutar copias locales de la blockchain y procesar nuevas transacciones.
 
-Sin embargo, la fuerte descentralización y seguridad de Ethereum se consigue a costa de sacrificar la escalabilidad: para garantizar que todos los nodos participantes puedan seguir el ritmo de la red, el rendimiento de ésta es limitado. En última instancia, este límite se traduce en mayores costes y latencias para los usuarios.
+Sin embargo, la fuerte descentralización y seguridad de Ethereum se consigue a costa de sacrificar la escalabilidad: para garantizar que todos los nodos participantes puedan seguir el ritmo de la red, el rendimiento de ésta es limitado. En última instancia, este límite se traduce en mayores costos y latencias para los usuarios.
 
 ## Soluciones de Escalabilidad
 

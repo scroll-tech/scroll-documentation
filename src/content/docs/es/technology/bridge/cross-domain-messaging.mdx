@@ -95,7 +95,7 @@ function sendMessage(
 
 Ambas funciones requieren que los usuarios proporcionen un límite de gas para la transacción `L1MessageTx` correspondiente en L2 y paguen por adelantado el [Message Relay Fee](#message-relay-fee) en L1, que se calcula en función del importe del límite de gas. La comisión se recoge en un contrato `feeVault` en L1. En caso de que la transacción falle en L2 porque el usuario no ha establecido el límite de gas correcto para su mensaje en L1, el usuario puede repetir el mismo mensaje con un límite de gas más alto. Puedes encontrar más detalles en la sección [Reintento de Mensajes Fallidos](#reintentar-mensajes-fallidos).
 
-Las funciones `sendMessage` codifican los argumentos en un mensaje entre dominios (véase el fragmento de código siguiente), donde el nonce del mensaje es el siguiente índice de la cola de mensajes L1. Los datos codificados se utilizan como calldata en la transacción `L1MessageTx` ejecutada en L2. Tenga en cuenta que estos mensajes entre dominios siempre llaman a la función `relayMessage` del contrato `L2ScrollMessenger` en L2.
+Las funciones `sendMessage` codifican los argumentos en un mensaje entre dominios (véase el fragmento de código siguiente), donde el nonce del mensaje es el siguiente índice de la cola de mensajes L1. Los datos codificados se utilizan como calldata en la transacción `L1MessageTx` ejecutada en L2. Ten en cuenta que estos mensajes entre dominios siempre llaman a la función `relayMessage` del contrato `L2ScrollMessenger` en L2.
 
 ```solidity
 abi.encodeWithSignature(
@@ -112,7 +112,7 @@ La cantidad de ETH depositada de `value` se bloquea en el contrato `L1ScrollMess
 
 ### Envío de Transacciones Forzadas
 
-El contrato `EnforcedTxGateway` proporciona dos funciones `sendTransaction` para enviar una transacción forzada. En la primera función, el remitente de la transacción generada `L1MessageTx` es el remitente de la transacción. Por otro lado, la segunda función utiliza la dirección del `sender` como remitente de la transacción `L1MessageTx`. Esto permite a un tercero enviar una transacción forzada en nombre del usuario y pagar la comisión de retransmisión. Tenga en cuenta que la segunda función requiere proporcionar una firma válida de la transacción `L1MessageTx` generada que coincida con la dirección del `sender`. Ambas funciones `sendTransaction` exigen que el remitente sea una cuenta EOA.
+El contrato `EnforcedTxGateway` proporciona dos funciones `sendTransaction` para enviar una transacción forzada. En la primera función, el remitente de la transacción generada `L1MessageTx` es el remitente de la transacción. Por otro lado, la segunda función utiliza la dirección del `sender` como remitente de la transacción `L1MessageTx`. Esto permite a un tercero enviar una transacción forzada en nombre del usuario y pagar la comisión de retransmisión. Ten en cuenta que la segunda función requiere proporcionar una firma válida de la transacción `L1MessageTx` generada que coincida con la dirección del `sender`. Ambas funciones `sendTransaction` exigen que el remitente sea una cuenta EOA.
 
 <ToggleElement anchor="sendTransaction function signatures">
 <div slot="title"><code>sendTransaction</code> function signatures</div>
@@ -153,7 +153,7 @@ De forma similar a la retransmisión arbitraria de mensajes, `sendTransaction` d
 
 ### Reintento de Mensajes Fallidos
 
-Si una transacción `L1MessageTx` falla en L2 debido a gas insuficiente, los usuarios pueden reproducir el mensaje con un límite de gas más alto. Para ello, `L1ScrollMessenger` proporciona el método `replayMessage`, que permite a los usuarios enviar la misma información que el mensaje anterior fallido con un límite de gas superior. Este mensaje se convertirá en una nueva transacción `L1MessageTx` en L2. Tenga en cuenta que no se reembolsará la tarifa de gas de la transacción fallida anterior, ya que ésta ya se ha procesado en L2.
+Si una transacción `L1MessageTx` falla en L2 debido a gas insuficiente, los usuarios pueden reproducir el mensaje con un límite de gas más alto. Para ello, `L1ScrollMessenger` proporciona el método `replayMessage`, que permite a los usuarios enviar la misma información que el mensaje anterior fallido con un límite de gas superior. Este mensaje se convertirá en una nueva transacción `L1MessageTx` en L2. Ten en cuenta que no se reembolsará la tarifa de gas de la transacción fallida anterior, ya que ésta ya se ha procesado en L2.
 
 <ToggleElement anchor="replayMessage function signature">
 <div slot="title"><code>replayMessage</code> function signature</div>
@@ -221,7 +221,7 @@ Una vez finalizado el lote de transacciones que contiene los mensajes L2 a L1 de
 
 Para facilitar la construcción de un MIP de retiro, Scroll mantiene un servicio llamado Bridge History API. Bridge History API supervisa los eventos `SentMessage` emitidos por `L2ScrollMessenger` y mantiene internamente un Withdraw Trie. Genera continuamente Merkle proofs para cada mensaje de retirada. Los usuarios y los servicios de terceros pueden consultar las Merkle proofs desde la Bridge History API para incluirlas en las transacciones _Execute Withdrawal_.
 
-Tenga en cuenta que las transacciones de ejecución de retirada pueden ser enviadas por los propios usuarios o por un servicio de terceros.
+Ten en cuenta que las transacciones de ejecución de retirada pueden ser enviadas por los propios usuarios o por un servicio de terceros.
 
 ### Withdraw Trie
 

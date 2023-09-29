@@ -77,7 +77,7 @@ El nodo de ejecución Scroll hereda la mayoría de los comportamientos de Ethere
 - **EVM**: Las modificaciones se describen en las [Diferencias de EVM respecto a Ethereum](/es/technology/chain/differences).
 - **Comisiones de transacción**
     - Todas las comisiones recaudadas en L2 se envían a un contrato vault de comisiones en L2 mantenido por Scroll.
-    - Comisión L1: Además de la tasa de gas L2 que cubre el espacio de bloque L2 y los costes de ejecución, también cobramos una tasa L1 que cubre los costes de comprometer la transacción en L1. Esta tasa es proporcional al tamaño de la transacción codificada en RLP. El coste real depende de la configuración actual almacenada en el contrato `L1GasOracle` en L2. Esta tarifa se deduce directamente del saldo del remitente (y no de la asignación de gas).
+    - Comisión L1: Además de la tasa de gas L2 que cubre el espacio de bloque L2 y los costos de ejecución, también cobramos una tasa L1 que cubre los costos de comprometer la transacción en L1. Esta tasa es proporcional al tamaño de la transacción codificada en RLP. El costo real depende de la configuración actual almacenada en el contrato `L1GasOracle` en L2. Esta tarifa se deduce directamente del saldo del remitente (y no de la asignación de gas).
 - **L1MessageTx**: Hemos introducido un nuevo tipo de transacción `L1MessageTx`. También hemos añadido interfaces de base de datos para almacenar dichas transacciones y los metadatos relacionados.
 - **SyncService**: supervisa los bloques finalizados en L1 y recoge los mensajes L1 de los mismos.
 - **Nueva API**: El `l2geth` ofrece una API de rastreo `scroll_traceBlockByNumberOrHash` para que los provers puedan consultar la información de rastreo para generar pruebas.
