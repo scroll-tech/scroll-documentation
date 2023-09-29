@@ -14,7 +14,7 @@ Este documento describe cómo los usuarios y desarrolladores pueden utilizar las
 
 | Gateway Contract         | Descripción                                                      |
 | ------------------------ | ---------------------------------------------------------------- |
-| `L1GatewayRouter`        | La gateway router admite el depósito de tokens ETH y ERC20. |
+| `L1GatewayRouter`        | La gateway router que admite el depósito de tokens ETH y ERC20. |
 | `L1ETHGateway`           | La gateway para depositar ETH.                                      |
 | `L1StandardERC20Gateway` | La gateway para depósitos de tokens ERC20 estándar.                   |
 | `L1CustomERC20Gateway`   | La gateway para depósitos de tokens ERC20 personalizados.                     |
@@ -87,22 +87,22 @@ El depósito de tokens ERC20 funciona de la siguiente manera.
 Los tokens ERC20 estándar son tokens que no requieren ninguna lógica personalizada. Para estos tokens, sus contratos de tokens L2 ERC20 se crean mediante `L2StandardERC20Gateway`. Los pasos restantes para el depósito de tokens ERC20 estándar son:
 
 3. El contrato `L1StandardERC20Gateway` bloquea los tokens ERC20 transfiriéndolos del emisor a sí mismo.
-4. Si este token ERC20 no se ha retirado antes a través de `L1StandardERC20Gateway`, `L1StandardERC20Gateway` calculará una dirección determinista de token ERC20 L2 y añadirá los metadatos del token (símbolo, nombre y decimales) al mensaje para el posible despliegue del contrato en L2. Si la dirección del token L2 ya está almacenada en el `tokenMapping`, `L1StandardERC20Gateway` cargará directamente la dirección del token L2 desde el mapeo.
+4. Si este token ERC20 no se ha retirado antes a través de `L1StandardERC20Gateway`, `L1StandardERC20Gateway` calculará una dirección determinista de token ERC20 en L2 y añadirá los metadatos del token (símbolo, nombre y decimales) al mensaje para el posible despliegue del contrato en L2. Si la dirección del token en L2 ya está almacenada en el `tokenMapping`, `L1StandardERC20Gateway` cargará directamente la dirección del token en L2 desde el mapeo.
 5. `L1StandardERC20Gateway` codifica el mensaje de depósito de tokens y llama a `L1ScrollMessenger` para enviar el mensaje.
-6. La transacción L2 correspondiente llama a la función `L2ScrollMessenger.relayMessage` para finalizar el depósito en L2. En el caso de depósitos de tokens ERC20 estándar, la transacción llama entonces a `L2StandardERC20Gateway.finalizeDepositERC20`.
+6. La transacción en L2 correspondiente llama a la función `L2ScrollMessenger.relayMessage` para finalizar el depósito en L2. En el caso de depósitos de tokens ERC20 estándar, la transacción llama entonces a `L2StandardERC20Gateway.finalizeDepositERC20`.
 7. Si este contrato de token ERC20 no se ha desplegado en L2, `L2StandardERC20Gateway` extraerá los metadatos del token del mensaje y llama a `ScrollStandardERC20Factory` para desplegar el token ERC20 estándar en L2.
-8. `L2StandardERC20Gateway` llama a la función mint en el contrato de token ERC20 L2 correspondiente.
-9. Si el usuario llama a `depositERC20AndCall` en L1, `L2StandardERC20Gateway` llamará al contrato L2 de destino con datos adicionales.
+8. `L2StandardERC20Gateway` llama a la función mint en el contrato de token ERC20 en L2 correspondiente.
+9. Si el usuario llama a `depositERC20AndCall` en L1, `L2StandardERC20Gateway` llamará al contrato en L2 de destino con datos adicionales.
 
 ### ERC20 Tokens Personalizados
 
 En comparación con los tokens ERC20 estándares, el contrato L2 de los tokens ERC20 personalizados es desplegado por el propietario del token. Los pasos restantes para el depósito de tokens ERC20 personalizados son:
 
 3. El contrato `L1CustomERC20Gateway` bloquea los tokens ERC20 en L1 transfiriéndolos del emisor a sí mismo.
-4. El contrato `L1CustomERC20Gateway` requiere una dirección de token ERC20 L2 presente en el `tokenMapping`. Recupera la dirección de token ERC20 correspondiente, codifica el mensaje de depósito de token y lo reenvía a `L1ScrollMessenger`.
-5. La transacción L2 correspondiente llama a la función `L2ScrollMessenger.relayMessage` para finalizar el depósito en L2. En el caso de depósitos de tokens ERC20 personalizados, la transacción llama a `L2CustomERC20Gateway.finalizeDepositERC20`.
-6. L2CustomERC20Gateway" llama a la función "mint" en el correspondiente contrato de tokens ERC20 de L2. Es necesario que el contrato de tokens L2 ERC20 conceda permisos de emisión al contrato `L2CustomERC20Gateway`.
-7. Si el usuario llama a `depositERC20AndCall` en L1, la `L2CustomERC20Gateway` llamará al contrato L2 de destino con datos adicionales.
+4. El contrato `L1CustomERC20Gateway` requiere una dirección de token ERC20 en L2 presente en el `tokenMapping`. Recupera la dirección de token ERC20 correspondiente, codifica el mensaje de depósito de token y lo reenvía a `L1ScrollMessenger`.
+5. La transacción en L2 correspondiente llama a la función `L2ScrollMessenger.relayMessage` para finalizar el depósito en L2. En el caso de depósitos de tokens ERC20 personalizados, la transacción llama a `L2CustomERC20Gateway.finalizeDepositERC20`.
+6. `L2CustomERC20Gateway` llama a la función "mint" en el correspondiente contrato de tokens ERC20 de L2. Es necesario que el contrato de tokens ERC20 en L2 conceda permisos de emisión al contrato `L2CustomERC20Gateway`.
+7. Si el usuario llama a `depositERC20AndCall` en L1, la `L2CustomERC20Gateway` llamará al contrato en L2 de destino con datos adicionales.
 
 ### WETH Token
 
@@ -110,7 +110,7 @@ Proporcionamos una gateway personalizada `L1WETHGateway` para Wrapped ETH token 
 
 3. `L1WETHGateway` bloquea los tokens WETH transfiriéndolos del remitente a sí mismo y desenvolviendo el token WETH a token ETH nativo. A continuación, el token ETH y `msg.value` (para pagar la comisión de retransmisión) se envían juntos al contrato `L1ScrollMessenger`.
 4. `L1WETHGateway` codifica el mensaje de depósito del token y lo reenvía a `L1ScrollMessenger`.
-5. La transacción L2 correspondiente llama a la función `L2ScrollMessenger.relayMessage` para finalizar el depósito en L2. En el caso del depósito de tokens WETH, la transacción llama a `L2WETHGateway.finalizeDepositERC20`.
+5. La transacción en L2 correspondiente llama a la función `L2ScrollMessenger.relayMessage` para finalizar el depósito en L2. En el caso del depósito de tokens WETH, la transacción llama a `L2WETHGateway.finalizeDepositERC20`.
 6. `L2WETHGateway` envuelve de nuevo el token ETH depositado en L2 WETH y lo transfiere a la dirección del destinatario en L2.
 7. Si el usuario llama a `depositERC20AndCall` en L1, `L2WETHGateway` llamará al contrato de destino en L2 con datos adicionales.
 

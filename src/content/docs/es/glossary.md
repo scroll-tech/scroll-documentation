@@ -9,7 +9,13 @@ excerpt: "Translation of English terms into Spanish"
 
 | English                                         | Spanish                                      |
 | ----------------------------------------------- | -------------------------------------------- |
+| Key-value pair                                  | Par llave-valor                              |
+| Tree                                            | Árbol                                        |
+| Leaf node                                       | Nodo hoja                                    |
+| Branch node                                     | Nodo rama                                    |
+| Root node                                       | Nodo raíz                                    |
 | Mapping                                         | Mapeo                                        |
+| Leaf node                                       | Nodo hoja                                    |
 | Bridge                                          | Bridge (masculino)                           |
 | Bridging                                        | Bridging, conexión                           |
 | Assets                                          | Activos                                      |

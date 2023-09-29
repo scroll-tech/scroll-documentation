@@ -9,7 +9,7 @@ whatsnext: { "Transacciones": "/es/technology/chain/transactions/" }
 
 ## Cuentas
 
-Al igual que Ethereum, Scroll tiene dos tipos de cuenta: Cuenta de propiedad externa (EOA) y cuenta de contrato que contiene el smart contract y almacenamientos adicionales.
+Al igual que Ethereum, Scroll tiene dos tipos de cuentas: Cuenta de propiedad externa (EOA) y cuenta de contrato que contiene el smart contract y almacenamientos adicionales.
 
 Scroll almacena información adicional en el bytecode del contrato en la cuenta para facilitar que el circuito zkEVM pruebe la transición de estado de forma más eficiente.
 
@@ -19,8 +19,8 @@ La cuenta en Scroll contiene los siguientes campos:
 - `balance`: El saldo del token `ETH` en el balance de la cuenta (unidad en wei).
 - `storageRoot`: El hash raíz del trie de almacenamiento. Dado que Scroll utiliza [zkTrie](/es/technology/sequencer/zktrie) para el trie de almacenamiento, `storageRoot` almacena el hash digest de Poseidon en un entero de 256 bits.
 - `codeHash`: El hash digest Keccak del bytecode del contrato.
-- PoseidonCodeHash` (**nuevo campo**): El hash digest Poseidon del bytecode del contrato en un entero de 256 bits.
-- CodeSize` (**nuevo campo**): El número de bytes en el bytecode del contrato.
+- `PoseidonCodeHash` (**nuevo campo**): El hash digest Poseidon del bytecode del contrato en un entero de 256 bits.
+- `CodeSize` (**nuevo campo**): El número de bytes en el bytecode del contrato.
 
 ## Estado
 
