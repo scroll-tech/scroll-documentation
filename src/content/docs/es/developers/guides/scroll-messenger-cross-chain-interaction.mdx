@@ -1,0 +1,120 @@
+---
+section: developers
+date: Last Modified
+title: "Interacción Cross-chain del Scroll Messenger"
+lang: "es"
+permalink: "developers/guides/scroll-messenger-cross-chain-interaction"
+excerpt: "En este ejemplo, lanzaremos un smart contract de ejemplo en Sepolia o en Scroll Sepolia testnet e interactuaremos con él desde la cadena opuesta."
+whatsnext: { "Bridging de un ERC20 a través de una Gateway Personalizada": "/es/developers/guides/bridge-erc20-through-the-custom-gateway" }
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+En este ejemplo, lanzaremos un smart contract de ejemplo en Sepolia o Scroll e interactuaremos con él desde la cadena opuesta. Utilizaremos el `ScrollMessenger` que está desplegado tanto en
+Sepolia como en Scroll.
+
+## Despliegue de los contratos
+
+### Smart Contract de Destino
+
+Empecemos por desplegar el smart contract de destino. Usaremos el contrato Greeter para este
+ejemplo, pero puedes usar cualquier otro contrato. Despliégalo en Sepolia o en Scroll. En Scroll, L1
+y L2 usan la misma API, así que depende de ti.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.16;
+
+// Este contrato Greeter interactuará con el ScrollMessenger a través del bridge
+contract Greeter {
+  string public greeting = "Hello World!";
+
+  // Esta función será llamada por executeFunctionCrosschain en el Operador de Smart Contract
+  function setGreeting(string memory greeting_) public {
+    greeting = greeting_;
+  }
+}
+```
+
+Ahora ejecutaremos `setGreeting` de forma cross-chain.
+
+### Operador de Smart Contract
+
+Cambia a la otra cadena y despliega el `GreeterOperator`. De modo que, si desplegaste el contrato `Greeter` en L1, despliega el `GreeterOperator` en L2 o viceversa.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.16;
+
+// La interfaz de Scroll Messenger es la misma tanto en L1 como en L2, permite enviar transacciones entre cadenas
+// Importémoslo directamente de la librería Scroll Contracts
+import "@scroll-tech/contracts@0.1.0/libraries/IScrollMessenger.sol";
+
+// El GreeterOperator es capaz de ejecutar la función Greeter a través del bridge
+contract GreeterOperator {
+  // Esta función ejecutará setGreeting en el contrato Greeter
+  function executeFunctionCrosschain(
+    address scrollMessengerAddress,
+    address targetAddress,
+    uint256 value,
+    string memory greeting,
+    uint32 gasLimit
+  ) public payable {
+    IScrollMessenger scrollMessenger = IScrollMessenger(scrollMessengerAddress);
+    // sendMessage es capaz de ejecutar cualquier función codificando el abi mediante la función encodeWithSignature
+    scrollMessenger.sendMessage{ value: msg.value }(
+      targetAddress,
+      value,
+      abi.encodeWithSignature("setGreeting(string)", greeting),
+      gasLimit,
+      msg.sender
+    );
+  }
+}
+```
+
+## Llamada a una función Cross-Chain
+
+Pasamos el mensaje ejecutando `executeFunctionCrosschain` y pasando los siguientes parámetros:
+
+- `scrollMessengerAddress`: Esto dependerá de dónde hayas desplegado el contrato `GreeterOperator`.
+  - Si lo desplegaste en Sepolia utiliza `0x50c7d3e7f7c656493D1D76aaa1a836CedfCBB16A`. Si lo has desplegado en Scroll utiliza `0xBa50f5340FB9F3Bd074bD638c9BE13eCB36E603d`.
+- `targetAddress`: La dirección del contrato `Greeter` en la cadena opuesta.
+- `value`: En este caso es `0` porque el `setGreeting` no es de tipo `payable`.
+- `greeting`: Es el parámetro que se enviará a través del mensaje. Prueba pasar `"¡Este mensaje fue ejecutado de manera crosschain!"`.
+- `gasLimit`:
+  - Si estás enviando el mensaje de L1 a L2, alrededor de un límite de gas de `5000` debería ser más que suficiente.
+  - Si estás enviando el mensaje de L2 a L1, pasa `0`, ya que la transacción se completará ejecutando una transacción adicional en L1.
+
+### Retransmisión del mensaje al enviar de L2 a L1
+
+Cuando se pasa una transacción de L2 a L1, se debe enviar un "ejecutar transacción de retirada" adicional en L1. Para ello, debe llamar a `relayMessageWithProof` en el contrato L1 Scroll Messenger
+desde un wallet EOA.
+
+Puedes hacerlo directamente en [Etherscan Sepolia](https://sepolia.etherscan.io/address/0x50c7d3e7f7c656493d1d76aaa1a836cedfcbb16a#writeProxyContract#F3).
+Para ello, necesitarás pasar una prueba de inclusión Merkle Tree para la transacción eviada a través del bridge al igual que otros parámetros que puedes obtener consultando la API del Scroll Bridge.
+
+{/* TODO: finish looking into API issues */}
+
+Estamos ultimando los detalles de la API, pero por ahora, pero puedes obtener estos datos consultándolos en el siguiente endpoint:
+
+```bash
+curl "https://sepolia-api-bridge.scroll.io/api/claimable?page_size=10&page=1&address=GREETER_OPERATOR_ADDRESS_ON_L2"
+```
+
+Sustituya `GREETER_OPERATOR_ADDRESS_ON_L2` por la dirección de su contrato GreeterOperator tal y como se lanzó en L2. Puedes leer más información sobre Ejecutar transacciones de retirada de fondos
+en el artículo [el Scroll Messenger](/es/developers/l1-and-l2-bridging/the-scroll-messenger).
+
+<Aside type="danger" title="API Experimental">
+  Esta API se ha creado para nuestra IU del Bridge. Aún no está finalizada y puede cambiar en el futuro. Actualizaremos esta guía
+  cuando la API esté finalizada.
+</Aside>
+
+<Aside type="caution" title="Cualquiera puede ejecutar su mensaje L2 → L1">
+  Puedes ejecutar `relayMessageWithProof` directamente y sin necesidad de permisos adicionales, por lo que cualquiera puede llamarlo en tu nombre en caso que alguien esté dispuesto a pagar el gas de L1. Esta característica permite una infraestructura de soporte adicional, incluidas herramientas para automatizar este proceso para
+  aplicaciones y usuarios.
+</Aside>
+
+Tras ejecutar y confirmar la transacción tanto en L1 como en L2, el nuevo estado de `greeting` en el contrato `Greeter` debería ser `"¡Este mensaje fue ejecutado de manera crosschain!"`. Enviar un mensaje de una cadena a la otra debería llevar unos 20 minutos después de que se confirmen las transacciones en la cadena de origen.
+
+Felicitaciones, ¡ya has ejecutado una transacción de una cadena a la otra utilizando nuestro bridge nativo!

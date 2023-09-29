@@ -1,0 +1,161 @@
+---
+section: developers
+date: Last Modified
+title: "ERC1155 Token Bridge"
+lang: "es"
+permalink: "developers/l1-and-l2-bridging/erc1155-token-bridge"
+whatsnext: { "El Scroll Messenger": "/es/developers/l1-and-l2-bridging/the-scroll-messenger" }
+excerpt: "El bridging de tokens ERC1155 de L1 a L2 se realiza a través del L1ERC1155Gateway."
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+## Depósito de tokens ERC1155 de L1
+
+El bridging de tokens ERC1155 de L1 a L2 se realiza a través de la `L1ERC1155Gateway`. Al igual que en el bridging de ERC721, no se utiliza un router, sino la función `depositERC1155` directamente en la Gateway.
+
+<Aside type="tip" title="">
+  **`depositERC1155`** es una función de tipo `payable`, y la cantidad de ETH enviada a esta función se utilizará para pagar las comisiones
+  en L2. Si la cantidad no es suficiente, la transacción no será enviada. Todo el exceso de ETH será enviado de vuelta al remitente.
+  Un importe de `0.00001 ETH` debería ser más que suficiente para procesar un depósito de tokens.
+</Aside>
+
+### Creación de un token ScrollERC1155 en L2
+
+De forma similar al bridging de ERC721, para realizar el bridging de tokens ERC1155 es necesario lanzar un contrato compatible con el estándar `IScrollERC1155` y asignarlo a una `L1ERC1155Gateway` y una `L2ERC1155Gateway` en L1 y L2 respectivamente. Este contrato tiene que conceder permiso a la Gateway en L2 para emitir cuando un token es depositado y quemar cuando el token es retirado.
+
+La siguiente interfaz es el `IScrollERC1155` necesario para desplegar tokens ERC1155 compatibles con el `L2ERC1155Gateway` en L2.
+
+```solidity
+interface IScrollERC1155 {
+  /// @notice Return the address of Gateway the token belongs to.
+  function gateway() external view returns (address);
+
+  /// @notice Return the address of counterpart token.
+  function counterpart() external view returns (address);
+
+  /// @notice Mint some token to recipient's account.
+  /// @dev Gateway Utilities, only gateway contract can call
+  /// @param _to The address of recipient.
+  /// @param _tokenId The token id to mint.
+  /// @param _amount The amount of token to mint.
+  /// @param _data The data passed to recipient
+  function mint(address _to, uint256 _tokenId, uint256 _amount, bytes memory _data) external;
+
+  /// @notice Burn some token from account.
+  /// @dev Gateway Utilities, only gateway contract can call
+  /// @param _from The address of account to burn token.
+  /// @param _tokenId The token id to burn.
+  /// @param _amount The amount of token to burn.
+  function burn(address _from, uint256 _tokenId, uint256 _amount) external;
+
+  /// @notice Batch mint some token to recipient's account.
+  /// @dev Gateway Utilities, only gateway contract can call
+  /// @param _to The address of recipient.
+  /// @param _tokenIds The token id to mint.
+  /// @param _amounts The list of corresponding amount of token to mint.
+  /// @param _data The data passed to recipient
+  function batchMint(
+    address _to,
+    uint256[] calldata _tokenIds,
+    uint256[] calldata _amounts,
+    bytes calldata _data
+  ) external;
+
+  /// @notice Batch burn some token from account.
+  /// @dev Gateway Utilities, only gateway contract can call
+  /// @param _from The address of account to burn token.
+  /// @param _tokenIds The list of token ids to burn.
+  /// @param _amounts The list of corresponding amount of token to burn.
+  function batchBurn(address _from, uint256[] calldata _tokenIds, uint256[] calldata _amounts) external;
+}
+```
+
+### Añadiendo un token ERC1155 al Scroll Bridge
+
+Todos los activos pueden ser transferidos de forma segura y sin intermediarios a través de contratos Gateway desplegados por cualquier desarrollador. Sin embargo, Scroll también gestiona un contrato Gateway ERC1155 en el que todos los NFTs creados por la comunidad son bienvenidos. Formar parte de la Gateway gestionada por Scroll significa que no necesitarás desplegar los contratos Gateway, y tu token aparecerá en el frontend de Scroll. Para formar parte de la Gateway de Scroll, debes ponerte en contacto con el equipo de Scroll para añadir el token a los contratos de la Gateway en L1 y L2. Para ello, sigue las instrucciones del repositorio [token lists](https://github.com/scroll-tech/token-list) para añadir tu token al frontend oficial de Scroll.
+
+## Retiro de tokens ERC1155 de L2
+
+El contrato `L2ERC1155Gateway` se utiliza para enviar tokens de L2 a L1. Antes de realizar el bridging, el contrato `L2ERC1155Gateway` tiene que ser aprobado por el contrato de tokens. Una vez hecho esto, se puede llamar a `withdrawERC1155` para realizar el bridging de activos.
+
+<Aside type="tip" title="">
+  **`withdrawERC1155`** es una función de tipo `payable`, y la cantidad de ETH enviada a esta función se utilizará para pagar las comisiones de L1. Si la cantidad no es suficiente, la transacción no será enviada. Todo el exceso de ETH será devuelto al remitente. Las tasas
+  dependen de la actividad de L1 pero `0.005 ETH` debería ser suficiente para procesar una retirada de tokens.
+</Aside>
+
+<Aside type="caution" title="">
+  **Asegúrate de que la transacción no se revertirá en L1** mientras envías desde L2. No hay forma de recuperar los tokens enviados por el bridge si
+  tu transacción revierte en L1. Todos los activos se queman en L2 cuando se envía la transacción, y es imposible recuperarlos
+  de nuevo.
+</Aside>
+
+## API de L1ERC1155Gateway
+
+Visita la [librería de npm](https://www.npmjs.com/package/@scroll-tech/contracts?activeTab=code) para consultar la documentación completa de la API de los contratos de Scroll.
+
+### depositERC1155
+
+```solidity
+function depositERC1155(
+  address _token,
+  address _to,
+  uint256 _tokenId,
+  uint256 _amount,
+  uint256 _gasLimit
+) external payable;
+```
+
+Deposita tokens ERC1155 desde L1 en la cuenta de un destinatario en L2.
+
+| Parámetro | Descripción                                       |
+| --------- | ------------------------------------------------- |
+| token     | Dirección del contrato de tokens ERC1155 en L1.      |
+| to        | Dirección de la cuenta del destinatario en L2.         |
+| tokenId   | Id del NFT a depositar.                            |
+| amount    | Cantidad de tokens a depositar.                  |
+| gasLimit  | Límite de gas necesario para completar el depósito en L2. |
+
+### updateTokenMapping
+
+```solidity
+function updateTokenMapping(address _l1Token, address _l2Token) external;
+```
+
+Actualiza el mapping que conecta un contrato de tokens ERC1155 de L1 a L2.
+
+| Parámetro | Descripción                                       |
+| --------- | ------------------------------------------------- |
+| \_l1Token | Dirección del token ERC1155 en L1.           |
+| \_l2Token | Dirección del token ERC1155 correspondiente en L2. |
+
+## API de L2ERC1155Gateway
+
+### withdrawERC1155
+
+```solidity
+function withdrawERC1155(address token, address to, uint256 tokenId, uint256 amount, uint256 gasLimit) external payable;
+```
+
+Envía tokens ERC1155 desde L2 a la cuenta de un destinatario en L1.
+
+| Parámetro | Descripción                                                              |
+| --------- | ------------------------------------------------------------------------ |
+| token     | Dirección del contrato de tokens ERC1155 en L2.                             |
+| to        | Dirección de la cuenta del destinatario en L1.                                |
+| tokenId   | Id del NFT a retirar.                                                  |
+| amount    | Cantidad de tokens a retirar.                                        |
+| gasLimit  | No se utiliza, pero se incluye por posibles consideraciones de compatibilidad futura. |
+
+### updateTokenMapping
+
+```solidity
+function updateTokenMapping(address _l1Token, address _l2Token) external;
+```
+
+Actualiza el mapping que conecta un contrato de tokens ERC1155 de L2 a L1.
+
+| Parámetro | Descripción                                       |
+| --------- | ------------------------------------------------- |
+| \_l1Token | Dirección del token ERC1155 en L1.            |
+| \_l2Token | Dirección del token ERC1155 correspondiente en L2. |

@@ -1,0 +1,94 @@
+---
+section: developers
+date: Last Modified
+title: "Construyendo en Scroll"
+lang: "es"
+permalink: "developers/"
+excerpt: "Construir en Scroll se siente igual que en Ethereum, y puedes llevar contigo tus herramientas y contratos favoritos."
+whatsnext: { "Inicio rápido para desarrolladores": "/es/developers/developer-quickstart" }
+---
+
+import Aside from "../../../../components/Aside.astro"
+import ToggleElement from "../../../../components/ToggleElement.astro"
+
+**¡Bienvenido a la documentación para desarrolladores de Scroll!**
+
+Scroll es su propia red de capa 2 construida sobre Ethereum (más concretamente, un "zero-knowledge rollup").
+
+Si tienes experiencia en el desarrollo en Ethereum, su código, dependencias y herramientas funcionarán con Scroll desde el primer momento. 
+
+Esto es posible porque nuestra red es compatible con el bytecode de la EVM y está diseñada para que se sienta igual que desarrollar en Ethereum.
+
+<Aside type="tip" title="¿Eres nuevo con los zero knowledge rollups?">
+Scroll obtiene su seguridad y velocidad ejecutando transacciones fuera de la cadena, y produciendo también una prueba criptográfica que demuestra que las transacciones 
+se ejecutaron correctamente. Esta prueba criptográfica se verifica en un smart contract en la Capa 1, asegurando que todo el código ejecutado en la Capa 2 de Scroll se 
+comporta como si fuera ejecutado en la Capa 1 de Ethereum.
+
+[Aprende más sobre la arquitectura de Scroll→](/es/technology)
+
+</Aside>
+
+## Primeros Pasos
+
+**¿Desea desarrollar en Scroll Sepolia Testnet?**
+
+- Para lo esencial: Consulta el [Inicio rápido para desarrolladores](/es/developers/developer-quickstart)
+- Para un tutorial sobre el despliegue de tu primer smart contract en Scroll, lee nuestro 
+[tutorial de despliegue de contratos](/es/developers/guides/contract-deployment-tutorial)
+- También tenemos varias [direcciones de contratos desplegados](/es/developers/scroll-contracts) para poder utilizar.
+
+## ¿Por qué Construir en Scroll?
+
+<ToggleElement anchor="throughput">
+  <div slot="title">Rendimiento - Scroll crea más espacio de bloques seguros para Ethereum.</div>
+  <p>
+    Los Rollups ZK permiten una mayor actividad en la red, minimizando la congestión. Al heredar la seguridad de Ethereum,
+    que verifica el comportamiento de la red utilizando zero-knowledge proofs, Scroll puede procesar más transacciones sin comprometer la descentralización.
+  </p>
+</ToggleElement>
+
+<ToggleElement anchor="cost">
+  <div slot="title">Costo - Scroll ahorra gastos de gas a los usuarios.</div>
+  <p>
+    En Ethereum, la competencia por el espacio de bloque se traduce en mayores costos por transacción, ya que cada
+    transacción hace una oferta para ser incluida en el siguiente bloque. Scroll aprovecha los recientes avances en
+    zero-knowledge proofs y aceleración de hardware para aumentar enormemente la seguridad del espacio de bloque y minimizar
+    los costos de transacción para los usuarios. 
+  </p>
+</ToggleElement>
+<ToggleElement anchor="speed">
+  <div slot="title">Velocidad - Scroll proporciona información a los usuarios con mayor rapidez.</div>
+  <p>
+    Tras el merge, los bloques de Ethereum se confirman de forma fiable cada 12 segundos. Los bloques de Scroll se mintean cada 3 segundos, y
+    en favor de las operaciones de menor riesgo, se puede suponer que las transacciones son definitivas una vez incluidas en un bloque. 
+    Esto abre nuevas posibilidades para la interacción en la cadena en aplicaciones sociales y de juegos.
+  </p>
+</ToggleElement>
+<ToggleElement anchor="alignment">
+  <div slot="title">Alineamiento - Scroll se basa en la visión de Ethereum.</div>
+  <p>
+    Scroll se basa en la visión de Ethereum. Nuestra filosofía es construir Ethereum, no fragmentarlo. La descentralización,
+    el ideal permissionless, la resistencia a la censura, y la autonomía de la comunidad son el núcleo de lo que hacemos y 
+    del roadmap que estamos construyendo. Creemos en el software de código abierto y colaboramos estrechamente con el 
+    equipo Privacy and Scaling Explorations de la Fundación Ethereum para apoyar su trabajo en un zkEVM que algún día podría ser el corazón de Ethereum.
+  </p>
+  <p>
+    También trabajamos con DAOs de gobernanza y otros protocolos de código abierto para asegurarnos de que, a medida que se despliegan las aplicaciones,
+    trabajamos para aumentar su impacto, ya sea en bienes públicos, infraestructura básica o la próxima generación de casos de uso de zero-knowledge.
+  </p>
+</ToggleElement>
+<ToggleElement anchor="community">
+  <div slot="title">Comunidad - Scroll reúne a usuarios y builders.</div>
+  <p>
+    Estamos conscientes de los retos de construir de manera abierta y conseguir la participación de los usuarios antes del lanzamiento de la mainnet. 
+    Scroll cuenta con una comunidad de Discord de más de 100.000 usuarios deseosos de probar aplicaciones en nuestra testnet.
+    Estamos contentos de conectar a creadores con usuarios que puedan aportar feedback del mundo real.
+  </p>
+</ToggleElement>
+
+## Gracias por construir con nosotros
+
+Estamos trabajando para traer más integraciones e infraestructura de apoyo a la red, y estamos trabajando con entusiasmo hacia el lanzamiento de nuestra Mainnet.
+
+Únete a nuestra creciente comunidad de desarrolladores. Puedes encontrarnos en [Discord](https://discord.gg/scroll), 
+unirte a nuestro [foro de debate](https://community.scroll.io/) o seguir nuestro progreso en [Twitter](https://twitter.com/Scroll_ZKP).

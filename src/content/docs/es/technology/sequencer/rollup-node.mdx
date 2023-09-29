@@ -1,0 +1,33 @@
+---
+section: technology
+date: Last Modified
+title: "Nodo Rollup"
+lang: "es"
+permalink: "technology/sequencer/rollup-node"
+whatsnext: { "zkTrie": "/es/technology/sequencer/zktrie/" }
+---
+
+El nodo de rollup es responsable de dividir el blockchain de Scroll en secciones que sean adecuadas para el proving y commitment en L1. Las dos unidades principales son los *chunks* y los *batches*.
+* Un chunk es simplemente una sección contigua del ledger L2, es una colección de bloques en L2, y los chunks son la unidad de prueba de zkEVM.
+* Por otro lado, un batch (o lote) es una colección de chunks que se envían a L1, junto con una prueba agregada.
+
+El nodo rollup tiene los siguientes submódulos:
+- Chunk Proposer: recopila bloques en L2 y propone chunks aplicando ciertos límites (véase más adelante).
+- Batch Proposer: recopila bloques y propone lotes aplicando ciertos límites (véase más adelante).
+- Relayer: envía datos de lotes y pruebas de lotes a L1.
+
+## Restricciones de chunks y batches
+
+Comparado con el nodo de ejecución, el nodo de rollup es un componente mucho más directo y sencillo.
+Recoge bloques en L2, crea chunks, batches y los envía a L1.
+En esta sección se describen los principales límites que debe cumplir el nodo de rollup durante la creación de "chunks" y "batches".
+
+Restricciones sobre los chunks:
+- **No proof overflow:** Utilizando el comprobador de capacidad de circuitos, nos aseguramos de incluir tantos bloques en un chunk como sea posible para que no se produzca un proof overflow.
+- **L1 payload:** Restricciones heredadas del batch proposer, el payload de la transacción no puede exceder los 128KB.
+
+Restricciones en los lotes:
+- **L1 payload:** Ethereum tiene un límite de 128 KB en el tamaño del payload de la transacción.
+- **L1 commit gas:** El costo de gas de confirmar un lote es proporcional al número de bloques y transacciones que contiene. Debemos asegurarnos de que este costo no excede el límite de gas de bloque L1.
+- **Número de chunks:** Un lote incluye un número de chunks que es óptimo para el prover de agregación.
+
