@@ -43,7 +43,7 @@ The rollup process can be broken down into three phases: transaction execution, 
 
 ### Phase 3. Proof Generation and Finalization
 
-7. Once the coordinator polls a new chunk or batch fromm the database:
+7. Once the coordinator polls a new chunk or batch from the database:
    - Upon a new chunk, the coordinator will query the execution traces of all blocks in this chunk from the L2 sequencer and then send a chunk proving task to a randomly selected zkEVM prover.
    - Upon a new batch, the coordinator will collect the chunk proofs of all chunks in this batch from the database and dispatch a batch proving task to a randomly selected aggregator prover.
 8. Upon the coordinator receives a chunk or batch proofs from a prover, it will write the proof to the database.
