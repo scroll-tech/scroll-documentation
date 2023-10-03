@@ -1,0 +1,126 @@
+---
+section: gettingStarted
+date: Last Modified
+title: "Bridge"
+lang: "es"
+permalink: "user-guide/bridge/"
+excerpt: "Para empezar a transferir activos desde Sepolia, navegue hasta el portal del bridge."
+---
+
+{/* // import ClickToZoom from "../../../../components/ClickToZoom.astro" */}
+{/* // import bridge1 from "./\_images/bridge1.png" */}
+{/* // import bridge2 from "./\_images/bridge2.png" */}
+{/* // import bridge3 from "./\_images/bridge3.png" */}
+{/* // import bridge4 from "./\_images/bridge4.png" */}
+{/* // import bridge5 from "./\_images/bridge5.png" */}
+{/* // import bridge6 from "./\_images/bridge6.png" */}
+{/* // import bridge7 from "./\_images/bridge7.png" */}
+{/* // import bridge8 from "./\_images/bridge8.png" */}
+
+{/* TODO: Update all instructions after being able to walk through the whole flow. */}
+
+Visita nuestro [Bridge](https://scroll.io/bridge) para empezar. [^thanks-hop] El Bridge admite operaciones de **depósito** y **retirada**, lo que permite a los usuarios mover activos de Sepolia Testnet a Scroll Sepolia Testnet con total confianza.
+[^thanks-hop]: Un fork de la IU de [Hop Exchange]('https://hop.exchange/') 🙌.
+
+Los depósitos pueden tardar hasta 15 minutos en estar disponibles en Scroll.
+
+Los retiros, que requieren una segunda interacción en Sepolia una vez finalizada la retirada, pueden tardar mucho más.
+
+:::caution[¿Esperando mucho tiempo para una transacción del bridge?]
+Las estimaciones de tiempo anteriores son típicas para el comportamiento normal de la red y los niveles de actividad. Dado que sólo procesamos un número determinado de transacciones de L1 en cola por bloque L2, los mensajes en el bridge pueden tardar más en incluirse en Scroll en momentos de uso excesivo de la red.
+:::
+
+## Depósito de Sepolia a Scroll Sepolia
+
+### Instrucciones
+
+1. En primer lugar, navegue hasta el [Scroll Bridge](https://scroll.io/bridge) y pulse el botón "Connect Wallet".
+1. En la app, asegúrate de que **Ethereum Sepolia** está arriba y **Scroll Sepolia** abajo. Puedes pulsar el botón "**↓**" para cambiar sus posiciones.
+1. Selecciona el token que quieres transferir de Sepolia a Scroll Sepolia. Si es la primera vez que usas el bridge, prueba con "ETH".
+1. Si es la primera vez que transfieres un token ERC20 específico, debes **Aprobar** el contrato Sepolia Bridge para acceder a tu token ERC20.
+1. A continuación, haz clic en el botón **Enviar a Scroll Sepolia** para realizar el ingreso. Tu billetera te pedirá que confirmes la transacción de transferencia.
+1. Una vez enviada y confirmada la operación de transferencia, el token se deducirá de tu billetera de Sepolia.
+1. Siempre puedes comprobar el estado de una transacción pulsando el icono "Historial" situado junto a la dirección de tu billetera en la esquina superior derecha.
+
+### ¿Cuándo llegarán los tokens a tu billetera de Scroll Sepolia?
+
+Puede tardar entre **8 y 14 minutos** (esperando a que el bloque se vuelva [_Seguro_](https://www.alchemy.com/overviews/ethereum-commitment-levels#what-are-ethereum-commitment-levels) en Sepolia) antes de que el token aparezca en tu billetera de Scroll Sepolia.
+
+{/* You can check the progress of deposit transactions as follows: */}
+
+{/* ##### 1. Click the "History" icon next to your billetera address in the top-right corner. */}
+
+{/* <ClickToZoom src={bridge1} /> */}
+
+{/* The pop-up panel lists the most recent transactions made in the Bridge app. There are two statuses: Sepolia status and Scroll Sepolia status. For deposit transactions (L1 -> L2), once your transaction becomes _Safe_ on Sepolia (**8 to 14 minutes**), you will see the **`success`** status shown. Your funds will be relayed to Scoll Sepolia after this. */}
+
+{/* The Recent Bridge Transactions window should give you an estimate of the time expected before your transaction is _Safe_ on Sepolia. */}
+
+{/* ##### 2. Click on the most recent transaction’s Sepolia transaction hash. */}
+
+{/* <ClickToZoom src={bridge2} /> */}
+
+{/* It will open the Transaction Details page in a new tab. You can see this transaction is confirmed on Sepolia. To check the Block's confirmation status, click the Block number and read the "Status" field. */}
+
+{/* <ClickToZoom src={bridge3} /> */}
+
+{/* ##### 3. Return to the Bridge app and wait! */}
+
+{/* Once your transaction status shows **`success`** on Scroll Sepolia, you should see the funds in your Scroll L2 wallet and a transaction hash: */}
+
+{/* <ClickToZoom src={bridge4} /> */}
+
+## Retiro de Scroll Sepolia a Sepolia
+
+### Instrucciones
+
+#### Envío de la primera transacción de retiro de fondos
+
+1. Primero, cambia a la red **Scroll Sepolia** en tu billetera.
+1. En la app, asegúrate de que **Scroll Sepolia** está arriba y **Ethereum Sepolia** abajo. Puedes pulsar el botón "**↓**" para cambiar las posiciones.
+1. Selecciona el token que quieres transferir de **Scroll Sepolia** a **Sepolia**. Si es la primera vez que usas el bridge, prueba con "ETH".
+1. Si es la primera vez que transfieres un token ERC20 específico, debes **Aprobar** el contrato Scroll Sepolia Bridge para acceder a tus tokens ERC20.
+1. A continuación, haz clic en el botón **Enviar a Ethereum Sepolia** para realizar la retirada. Tu billetera te pedirá que confirmes la transacción de transferencia.
+1. Una vez enviada y confirmada la operación de transferencia, el token se deducirá de tu billetera de Scroll Sepolia.
+
+#### Envío de una transacción de retiro de fondos
+
+{/* TODO: finish the additional instructions, better estimate "wait time" */}
+
+_Los pasos restantes tienen lugar en Scroll Sepolia, pero primero debes esperar a que tu transacción esté completamente probada ("finalizada") en Ethereum Sepolia. Este proceso puede durar hasta cuatro horas._
+
+1. Cuando tu transacción de retirada haya finalizado en Ethereum Sepolia, verá que el botón "Claim" en el área de Transacciones Recientes se vuelve sólido.
+1. Haz clic en el botón "Claim" para enviar la ejecución de la transacción de retiro de fondos.
+1. Una vez enviado, los fondos retirados deberían aparecer inmediatamente en tu billetera de Sepolia.
+
+### ¿Cuándo llegará el token a tu billetera Sepolia?
+
+El token transferido llegará a tu billetera de Sepolia inmediatamente después de que el bloque que contiene la ejecución de la transacción de retirada se confirme en Sepolia.
+
+{/* TODO: check architecture link is live */}
+
+:::tip[Estatus del Rollup]
+El estado de rollup `Finalizado` indica que se ha comprobado la correcta ejecución de las transacciones de este bloque mediante la verificación de una prueba de validez on-chain en Sepolia. Para más información sobre el estado de rollup, véase [Visión general de la arquitectura de Scroll](/es/technology).
+:::
+
+{/* You can check the progress of withdrawal transactions as follows: */}
+
+{/* 1. Click your wallet address at the top-right corner of the Bridge web app. */}
+
+{/* <ClickToZoom src={bridge5} /> */}
+
+{/* The pop-up panel lists the most recent transactions you made in the Bridge app (see the image below). There are two statuses: L1 status and L2 status. In this case, because we are bridging from L2 -> L1, we will quickly get a **`success`** status after submitting the transaction to the L2 Bridge. L1, on the other hand, takes **10 minutes to a few hours** to reach **`success`**. */}
+
+{/* 1. Click on the most recent transaction’s L2 transaction hash: */}
+
+{/* <ClickToZoom src={bridge6} /> */}
+
+{/* It will open the _Transaction Details_ page in a new tab. You can see this transaction is confirmed on L2. */}
+
+{/* <ClickToZoom src={bridge7} /> */}
+
+{/* The transaction is confirmed on L2, but still needs to be finalized on Goerli. */}
+
+{/* 1. Go back to the [Bridge](https://scroll.io/bridge) app. It takes about 10 minutes before the token shows up in your Goerli wallet. Once your transaction status shows success on L2, you should see the funds in your Goerli wallet and a transaction hash: */}
+
+{/* <ClickToZoom src={bridge8} /> */}

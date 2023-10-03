@@ -3,6 +3,8 @@ import { useStore } from "@nanostores/preact"
 import type { FunctionalComponent } from "preact"
 import { useState, useEffect, useRef } from "preact/hooks"
 import { shouldUpdateToc } from "./tocStore"
+import i18next, { t } from "i18next"
+
 export interface Heading {
   depth: number
   text: string
@@ -79,7 +81,7 @@ const TableOfContents: FunctionalComponent<{
 
   return (
     <>
-      <h2 className="heading">On this page</h2>
+      <h2 className="heading">{t("rightSidebar.onThisPage")}</h2>
       <ul ref={tableOfContents}>
         {headings
           .filter(({ depth }) => depth > 1 && depth < 4)

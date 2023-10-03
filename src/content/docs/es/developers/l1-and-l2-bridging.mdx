@@ -1,0 +1,35 @@
+---
+section: developers
+date: Last Modified
+title: "L1 y L2 Bridging"
+lang: "es"
+permalink: "developers/l1-and-l2-bridging"
+whatsnext: { "ETH y ERC20 Token Bridge": "/es/developers/l1-and-l2-bridging/eth-and-erc20-token-bridge" }
+excerpt: "Visión general de la arquitectura de puentes de Scroll"
+---
+
+import ClickToZoom from "../../../../components/ClickToZoom.astro"
+import L1GatewayWHITE from "../../../../assets/images/developers/L1GatewayWHITE.png"
+import withdrawWHITE from "../../../../assets/images/developers/withdrawWHITE.png"
+
+El bridge de Scroll permite la transferencia de ETH, tokens ERC20, NFTs y mensajes arbitrarios entre L1 y L2. Sirve como un mecanismo seguro para mover diversos activos entre L1 y L2.
+
+Para facilitar la transferencia de ETH y tokens ERC20, el bridge de Scroll utiliza el Gateway Router. Este contrato garantiza el paso fluido de estos activos entre L1 y L2, permitiendo a los usuarios transferir sus tokens nativos de Ethereum sin problemas.
+
+La Gateways de ERC721 y de ERC1155 permiten la transferencia de tokens no fungibles entre las dos redes, permitiendo a los usuarios mover sus NFTs entre L1 y L2.
+
+Además de las transferencias de tokens, el contrato Scroll Messenger permite la interacción de contratos cross-chain. Esto significa que los contratos de una red pueden interactuar con los contratos de la otra red a través del contrato Scroll Messenger. Esta funcionalidad amplía las posibilidades para las aplicaciones descentralizadas y los smart contracts al permitirles operar sin problemas en ambas redes.
+
+## Arquitectura de la Gateway L1
+
+<ClickToZoom src={L1GatewayWHITE} />
+
+Hay muchos puntos de entrada de los usuarios al bridge de Scroll. El que decidas usar dependerá de lo que quieras hacer y cómo quieras hacerlo. Si quieres enviar ETH o tokens ERC20, deberías usar el `GatewayRouter` . Si quieres enviar NFTs, deberías usar el `L1ERC721Gateway` o el `L1ERC1155Gateway`. Si deseas enviar datos arbitrarios, utiliza el `L1ScrollMessenger`. Todas las transferencias del Gateway utilizan el Scroll Messenger para enviar activos a de una cadena a la otra, cuyo trabajo consiste en anexar las transacciones a la cola de mensajes para su inclusión en L2.
+
+## Arquitectura de la Gateway L2
+
+<ClickToZoom src={withdrawWHITE} />
+
+En cuanto a los posibles puntos de entrada accesibles sin necesidad de permisos, la Arquitectura de la Gateway en L2 es muy similar a la de L1. La diferencia es que cuando se envía un mensaje desde L2, si se llama a la función `appendMessage`, el mensaje se almacenará en un merkle tree binario que únicamente permite añadir datos (también conocido como withdraw tree) en la `L2MessageQueue`. Cuando se envía un nuevo mensaje a la `L2MessageQueue`, el relayer lo detecta y lo almacena en la base de datos. Cuando el bloque finaliza, generará una prueba de el nuevo merkle path y la pasará al nodo L1geth para que la ejecute en el `L1ScrollMessenger` . Todas las raíces de retirada finalizadas se almacenarán en el contrato de rollup para que podamos verificar la prueba con ellas. En las próximas versiones de Scroll, el Relayer no será necesario, ya que todos los usuarios podrán finalizar la transacción en L1.
+
+En las próximas secciones, exploraremos los aspectos técnicos del puente, incluida la API de smart contract necesaria para utilizar sus capacidades. En la sección Guías para desarrolladores se ofrecen guías detalladas con ejemplos de código para ayudar a desarrolladores y usuarios a comprender e implementar estas funcionalidades.

@@ -1,0 +1,155 @@
+---
+section: technology
+date: Last Modified
+title: "Proceso del Rollup"
+lang: "es"
+permalink: "technology/chain/rollup"
+whatsnext: { "Diferencias de EVM respecto a Ethereum": "/es/technology/chain/differences/" }
+---
+
+import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import RollupProcess from "../_images/rollup.png"
+
+Este documneto describe el proceso del Rollup en Scroll
+
+## Flujo de Trabajo
+
+<ClickToZoom src={RollupProcess} alt="Rollup Process" />
+
+La figura ilustra el flujo de trabajo del rollup. El secuenciador L2 contiene tres módulos:
+
+- **Sync Service** se suscribe al evento emitido desde el contrato bridge L1. Una vez que detecta cualquier mensaje recién añadido a la inbox de L1, el Sync Service generará una nueva transacción `L1MessageTx` en consecuencia y la añadirá a la cola local de transacciones L1.
+- **Mempool** recoge las transacciones que se envían directamente al secuenciador L2.
+- El **Executor** extrae las transacciones tanto de la cola de transacciones L1 como de la mempool L2 y las ejecuta para construir un nuevo bloque L2.
+
+El nodo rollup contiene tres módulos:
+
+- **Relayer** envía las transacciones de confirmación y las transacciones de finalización al contrato de rollup para la disponibilidad y la finalidad de los datos.
+- Los módulos **Chunk Proposer** y **Batch Proposer** proponen nuevos chunks y nuevos lotes siguiendo las restricciones descritas en [Lotes de Transacciones](/es/technology/chain/transactions#lotes-de-transacciones).
+
+El proceso de rollup puede dividirse en tres fases: ejecución de transacciones, procesamiento por lotes y compromiso de datos, y generación y finalización de pruebas.
+
+### Fase 1. Ejecución de Transacciones
+
+1. Los usuarios envían transacciones al contrato bridge en L1 o a los secuenciadores en L2.
+2. El Sync Service del secuenciador en L2 obtiene las últimas transacciones en L1 adjuntas del contrato bridge.
+3. El secuenciador en L2 procesa las transacciones tanto de la cola de mensajes en L1 como del mempool en L2 para construir bloques en L2.
+
+### Fase 2. Procesamiento por Lotes y Compromiso de Datos
+
+4. El nodo de rollup monitoriza los últimos bloques en L2 y obtiene los datos de la transacción.
+5. Si se cumplen los criterios (descritos en [Lotes de Transacciones](/es/technology/chain/transactions#transaction-batching)), el nodo rollup propone un nuevo chunk o lote y lo escribe en la base de datos. En caso contrario, el nodo rollup seguirá esperando más bloques o chunks.
+6. Una vez creado un nuevo lote, el rollup relayer recopila los datos de la transacción en este lote y envía una Commit Transaction al contrato rollup para la disponibilidad de los datos.
+
+### Fase 3. Generación y Finalización de Pruebas.
+
+7. Una vez que el coordinador sondea un nuevo chunk o lote de la base de datos:
+   - Ante un nuevo chunk, el coordinador consultará las trazas de ejecución de todos los bloques de este chunk al secuenciador L2 y enviará una proving task de chunk a un prover zkEVM seleccionado al azar.
+   - Ante un nuevo lote, el coordinador recopilará todas las pruebas de todos de los chunks de este lote y enviará una proving task de lote a un prover agregador seleccionado aleatoriamente.
+8. Cuando el coordinador reciba una prueba de chunk o lote de un prover, escribirá la prueba en la base de datos.
+9. Una vez que el rollup relayer obtenga una nueva prueba de lote de la base de datos, enviará una transacción de finalización al contrato de rollup para verificar la prueba.
+
+## Commit Transaction
+
+La Commit Transaction envía la información del bloque y los datos de la transacción a L1 para la disponibilidad de los datos. La transacción incluye el batch header padre, los datos del chunk y un mapa de bits del mensaje L1 omitido. El batch header padre designa el lote anterior al que se vincula este lote. El lote padre debe confirmarse antes; de lo contrario, la transacción se revertirá. Véase la firma de la función `commitBatch` más abajo.
+
+```solidity
+function commitBatch(
+    uint8 version,
+    bytes calldata parentBatchHeader,
+    bytes[] memory chunks,
+    bytes calldata skippedL1MessageBitmap
+) external override OnlySequencer
+```
+
+Después de que la función `commitBatch` verifique que el lote padre se ha consignado antes, construye el batch header y almacena el hash del mismo en el contrato `ScrollChain`.
+
+```solidity
+mapping(uint256 => bytes32) public committedBatches;
+```
+
+La codificación del batch header y de los datos de los chunks se describen en la sección [Codec](#codec). La mayoría de los campos de la batch header son fáciles de derivar de los datos de los chunks. Un campo importante a tener en cuenta es `dataHash` que formará parte de la entrada pública para verificar la prueba de validez. Suponiendo que un lote contiene `n` chunks, su `dataHash` se calcula de la siguiente manera
+
+```
+batch.dataHash := keccak(chunk[0].dataHash || ... || chunk[n-1].dataHash)
+```
+
+Suponiendo que un chunk contenga `k` bloques, su `dataHash` se calcula del siguiente modo
+
+```
+chunk.dataHash := keccak(blockContext[0] || ... || blockContext[k-1] ||
+                         block[0].l1TxHashes || block[0].l2TxHashes || ... ||
+                         block[k-1].l1TxHashes || block[k-1].l2TxHashes)
+```
+
+donde `block.l1TxHashes` son los hashes de transacción concatenados de las transacciones L1 en este bloque y `block.l2TxHashes` son los hashes de transacción concatenados de las transacciones L2 en este bloque. Nótese que los hashes de transacción de las transacciones L1 no son cargados por el nodo rollup, sino que se cargan directamente desde el contrato `L1MessageQueue` dado el rango de índices de los mensajes L1 incluidos en este bloque. Los hashes de transacciones L2 se calculan a partir de los bytes codificados en RLP en el campo `l2Transactions` del [`Chunk`](#Chunk-Codec).
+
+Además, la función `commitBatch` contiene un mapa de bits de los mensajes L1 omitidos. Lamentablemente, esto se debe al problema del sobreflujo de pruebas. Si la transacción en L1 correspondiente a un mensaje en L1 supera el límite de capacidad del circuito, no podremos generar una prueba válida para esta transacción y, por tanto, no podremos finalizarla en L1. Scroll está trabajando activamente para eliminar el problema del sobreflujo de pruebas mediante actualizaciones de nuestro sistema de pruebas.
+
+## Finalización de la Transacción
+
+La Transacción finaliza con el lote previamente comprometido y su prueba de validez. La transacción también presenta la "state root" y la "withdraw root" después del lote. Esta es la firma de la función `finalizeBatchWithProof`:
+
+```solidity
+function finalizeBatchWithProof(
+    bytes calldata batchHeader,
+    bytes32 prevStateRoot,
+    bytes32 postStateRoot,
+    bytes32 withdrawRoot,
+    bytes calldata aggrProof
+) external override OnlyProver
+```
+
+La función `finalizeBatchWithProof` primero verifica si el lote ha sido comprometido en el contrato. A continuación, calcula el hash de entrada público de la siguiente manera
+
+```
+publicInputHash := keccak(chainId || prevStateRoot || postStateRoot || withdrawRoot || batch.dataHash)
+```
+
+El hash de entrada público y la prueba de validez se envían al verificador de plonk en solidity. Una vez superada la verificación, la nueva "state root" y la "withdraw root" se almacenan en el contrato `ScrollChain`.
+
+```solidity
+mapping(uint256 => bytes32) public override finalizedStateRoots;
+mapping(uint256 => bytes32) public override withdrawRoots;
+```
+
+En esta fase, la "state root" del último lote finalizado puede utilizarse de forma trustless y las transacciones de retirada de ese lote pueden ejecutarse en L1 utilizando la prueba de Merkle para la "withdraw root".
+
+## Codec
+
+Esta sección describe el codec de tres estructuras de datos del contrato Rollup: `BatchHeader`, `Chunk` y `BlockContext`.
+
+### Codec `BatchHeader` 
+
+| Campo                    | Bytes   | Tipo        | Offset | Descripción                                                     |
+| ------------------------ | ------- | ----------- | ------ | --------------------------------------------------------------- |
+| `version`                | 1       | `uint8`     | 0      | La versión del batch header.                                        |
+| `batchIndex`             | 8       | `uint64`    | 1      | El index del lote.                                          |
+| `l1MessagePopped`        | 8       | `uint64`    | 9      | El número de mensajes L1 emitidos en el lote.                    |
+| `totalL1MessagePopped`   | 8       | `uint64`    | 17     | El número total de mensajes L1 emitidos tras el lote.          |
+| `dataHash`               | 32      | `bytes32`   | 25     | El hash de datos del lote.                                      |
+| `parentBatchHash`        | 32      | `bytes32`   | 57     | El hash del lote padre.                                           |
+| `skippedL1MessageBitmap` | dynamic | `uint256[]` | 89     | Un mapa de bits para indicar qué mensajes L1 se omiten en el lote. |
+
+### Codec `Chunk`
+
+| Campo            | Bytes   | Tipo           | Offset    | Descripción                                                                                                                                       |
+| ---------------- | ------- | -------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `numBlocks`      | 1       | `uint8`        | 0         | El número de bloques del chunk.                                                                                                                 |
+| `block[0]`       | 60      | `BlockContext` | 1         | La información del bloque 1.                                                                                                            |
+| ...              | ...     | ...            | ...       | ...                                                                                                                                               |
+| `block[i]`       | 60      | `BlockContext` | `60*i+1`  | La información del bloque `i+1`-ésimo.                                                                                                           |
+| ...              | ...     | ...            | ...       | ...                                                                                                                                               |
+| `block[n-1]`     | 60      | `BlockContext` | `60*n-59` | La información del último bloque.                                                                                                           |
+| `l2Transactions` | dynamic | `bytes`        | `60*n+1`  | La codificación RLP concatenada de transacciones L2 con firmas. La longitud en bytes (`uint32`) de la codificación RLP se inserta antes de cada transacción. |
+
+### Codec `BlockContext`
+
+| Campo             | Bytes | Tipo      | Offset | Descripción                                                                         |
+| ----------------- | ----- | --------- | ------ | ----------------------------------------------------------------------------------- |
+| `blockNumber`     | 8     | `uint64`  | 0      | El número del bloque.                                                                        |
+| `timestamp`       | 8     | `uint64`  | 8      | El tiempo del bloque.                                                                        |
+| `baseFee`         | 32    | `uint256` | 16     | La comisión base de este bloque. Actualmente, siempre es 0, porque desactivamos el EIP-1559. |
+| `gasLimit`        | 8     | `uint64`  | 48     | El límite de gas de este bloque.                                                             |
+| `numTransactions` | 2     | `uint16`  | 56     | El número de transacciones en este bloque, incluyendo las txns en L1 y L2                    |
+| `numL1Messages`   | 2     | `uint16`  | 58     | El número de mensajes L1 en este bloque                                                      |

@@ -1,0 +1,165 @@
+---
+section: technology
+date: Last Modified
+title: "Gateways de Retiro"
+lang: "es"
+permalink: "technology/bridge/withdraw-gateways"
+whatsnext: { "Secuenciador": "/es/technology/sequencer/execution-node/" }
+---
+
+import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import WithdrawWorkflow from "../_images/withdraw.png"
+
+Este documento describe cómo los usuarios y desarrolladores pueden utilizar las gateways para retirar tokens de L2 a L1. Proporcionamos varias gateways para tokens estándares y un gateway router en L2, listados en la siguiente tabla.
+
+| Gateway Contract         | Descripción                                                         |
+| ------------------------ | ------------------------------------------------------------------- |
+| `L2GatewayRouter`        | La gateway router que admite el retiro de tokens ETH y ERC20. |
+| `L2ETHGateway`           | La gateway para los retiros de ETH.                                    |
+| `L2StandardERC20Gateway` | La gateway para los retiros de tokens ERC20 estándares.                   |
+| `L2CustomERC20Gateway`   | La gateway para los retiros de tokens ERC20 personalizados.                     |
+| `L2WETHGateway`          | La gateway para los retiros de Wrapped ETH.                            |
+| `L2ERC721Gateway`        | La gateway para los retiros de tokens ERC-721.                          |
+| `L2ERC1155Gateway`       | La gateway para los retiros de tokens ERC-1155.                         |
+
+## Vista General
+
+<ClickToZoom src={WithdrawWorkflow} alt="Withdraw Workflow" />
+
+La figura muestra el flujo de trabajo de retiro de L2 a L1. Los usuarios llaman a las gateways para iniciar el retiro de tokens. El retiro se codifica en un mensaje que se envía a `L2ScrollMessenger`, que luego se añade a `L2MessageQueue`. `L2MessageQueue` mantiene un Withdraw Trie y actualiza la "root" cada vez que se añade un nuevo mensaje. La root del Withdraw Trie se finaliza en el contrato de rollup L1 junto con la state root L2. Una vez finalizada la nueva root del Withdraw Trie en la L1, los usuarios o terceros pueden construir una Merkle Inclusion Proof válida para la root del Withdraw Trie y enviar una transacción _withdraw execution_ para finalizar el retiro en la L1. Encontrará más información sobre el flujo de trabajo de retransmisión de mensajes de L2 a L1 en [Cross-Domain Messaging](/es/technology/bridge/cross-domain-messaging#sending-messages-from-l2-to-l1).
+
+Las secciones siguientes describen los detalles de cómo se retiran las diferentes tokens.
+
+## Retiro de ETH
+
+El retiro del token ETH funciona de la siguiente manera.
+
+1. `L2GatewayRouter` ofrece tres funciones para retirar ETH de L2 a L1. La función `withdrawETHAndCall` puede retirar ETH y ejecutar una llamada de contrato al mismo tiempo.
+
+    ```solidity
+    function withdrawETH(uint256 _amount, uint256 _gasLimit) external payable;
+
+    function withdrawETH(address _to, uint256 _amount, uint256 _gasLimit) public payable;
+
+    function withdrawETHAndCall(
+        address _to,
+        uint256 _amount,
+        bytes calldata _data,
+        uint256 _gasLimit
+    ) external payable;
+    ```
+
+2. Las funciones `withdrawETHAndCall` llaman a `L2ETHGateway`. `L2ETHGateway` codifica el mensaje de retirada y lo envía al contrato `L2ScrollMessenger` junto con la ETH retirada.
+3. La ETH retirada se bloquea de nuevo en el contrato `L2ScrollMessenger`. L2ScrollMessenger añade el mensaje a la cola de mensajes del contrato L2MessageQueue.
+4. La transacción de ejecución de la retirada en L1 llama a la función `L1ScrollMessenger.relayMessageWithProof` para finalizar la retirada. En el caso de la retirada de ETH, la función `relayMessageWithProof` llama a `L1ETHGateway.finalizeWithdrawETH` para devolver ETH a la cuenta del destinatario en L1.
+5. Si el usuario llama a `withdrawETHAndCall` en L2, la función `finalizeWithdrawETH` del contrato `L1ETHGateway` reenviará los datos adicionales al contrato L1 de destino.
+
+## Retiro de tokens ERC20
+
+El retiro de tokens ERC20 funciona de la siguiente manera.
+
+1. Para retirar tokens ERC20 de L1 a L2, los usuarios pueden utilizar `L2GatewayRouter.withdrawERC20` y `L2GatewayRouter.withdrawERC20AndCall` como se muestra a continuación.
+
+    ```solidity
+    function withdrawERC20(address _token, uint256 _amount, uint256 _gasLimit) external payable;
+
+    function withdrawERC20(address _token, address _to, uint256 _amount, uint256 _gasLimit) external payable;
+
+    function withdrawERC20AndCall(
+        address _token,
+        address _to,
+        uint256 _amount,
+        bytes memory _data,
+        uint256 _gasLimit
+    ) public payable;
+    ```
+
+2. En función del mapping de los tokens ERC20 a la gateway, el `L2GatewayRouter` llama a la gateway correspondiente, `L2StandardERC20Gateway`, `L2CustomERC20Gateway`, o `L2WETHGateway`. El resto de pasos se describirán por separado.
+
+### Tokens ERC20 estándares y personalizados
+
+El retiro de tokens ERC20 estándar y personalizados funciona de la siguiente manera.
+
+3. El contrato `L2StandardERC20Gateway` o `L2CustomERC20Gateway` quema el token ERC20 retirado, codifica la retirada en un mensaje y lo envía a `L2ScrollMessenger`.
+4. La transacción de ejecución de retiro de L1 llama a la función `L1ScrollMessenger.relayMessageWithProof` para finalizar los retiros en L1. En caso de un retiro de tokens ERC20 estándar o personalizados, la transacción llama a la función `finalizeWithdrawERC20` en el contrato `L1StandardERC20Gateway` o `L1CustomERC20Gateway` respectivamente.
+   - En el contrato `L1StandardERC20Gateway`, si se trata de la primera transacción de retirada de un token ERC20, la función `finalizeWithdrawERC20` actualizará la asignación de la dirección del token L1 a su dirección del token L2 en el `tokenMapping`.
+5. La gateway de tokens ERC20 en L1 libera los tokens ERC20 bloqueados transfiriéndolos desde sí misma a la dirección del destinatario en L1.
+6. Si el usuario llama a `withdrawERC20AndCall` en L2, las gateways llamarán al contrato L1 de destino con datos adicionales.
+
+### WETH Token
+
+Proporcionamos una gateway personalizada `L2WETHGateway` para Wrapped ETH token en L2 y registramos la dirección de la gateway en el `L2GatewayRouter`. El retiro del token WETH funciona de la siguiente manera.
+
+1. `L2WETHGateway` transfiere el token WETH retirado a sí mismo y "desenvuelve" el token WETH a token ETH nativo. A continuación, el token ETH se devuelve al contrato `L2ScrollMessenger`.
+2. `L2WETHGateway` codifica el mensaje de retiro del token y lo reenvía a `L2ScrollMessenger`.
+3. La transacción de ejecución del retiro en L1 llama a la función `L1ScrollMessenger.relayMessageWithProof` para finalizarlo en L1. En el caso del retiro de tokens WETH, la transacción llama a `L1WETHGateway.finalizeWithdrawERC20` y envía el importe retirado en ETH a `L1WETHGateway`.
+4. `L1WETHGateway` vuelve a convertir el ETH retirado en un token WETH en L1 y lo transfiere a la dirección del destinatario en L1.
+5. Si el usuario llama a `withdrawERC20AndCall` en L2, `L1WETHGateway` llamará a la dirección en L1 de destino con datos adicionales.
+
+## Retiro de tokens ERC-721/ERC-1155
+
+El retiro de tokens ERC-721 o ERC-1155 funciona de forma muy similar a los tokens ERC20. Se puede utilizar la gateway `L2ERC721Gateway` o `L2ERC1155Gateway` para retirar tokens ERC-721 /ERC-1155 de L2.
+
+```solidity
+function withdrawERC721(
+    address _token,
+    uint256 _tokenId,
+    uint256 _gasLimit
+) external payable;
+
+function withdrawERC721(
+    address _token,
+    address _to,
+    uint256 _tokenId,
+    uint256 _gasLimit
+) external payable;
+
+function withdrawERC1155(
+    address _token,
+    uint256 _tokenId,
+    uint256 _amount,
+    uint256 _gasLimit
+) external payable;
+
+function withdrawERC1155(
+    address _token,
+    address _to,
+    uint256 _tokenId,
+    uint256 _amount,
+    uint256 _gasLimit
+) external payable;
+```
+
+Para facilitar el retiro de una gran cantidad de tokens ERC-721 o ERC-1155, también proporcionamos funciones de retiro por lotes en el contrato `L2ERC721Gateway` y `L2ERC1155Gateway` a través de las siguientes funciones:
+
+```solidity
+function batchWithdrawERC721(
+    address _token,
+    uint256[] calldata _tokenIds,
+    uint256 _gasLimit
+) external payable;
+
+function batchWithdrawERC721(
+    address _token,
+    address _to,
+    uint256[] calldata _tokenIds,
+    uint256 _gasLimit
+) external payable;
+
+function batchWithdrawERC1155(
+    address _token,
+    uint256[] calldata _tokenIds,
+    uint256[] calldata _amounts,
+    uint256 _gasLimit
+) external payable;
+
+function batchWithdrawERC1155(
+    address _token,
+    address _to,
+    uint256[] calldata _tokenIds,
+    uint256[] calldata _amounts,
+    uint256 _gasLimit
+) external payable;
+```
+
+Los contratos de contraparte en L1 para tokens ERC-721 o ERC-1155 son `L1ERC721Gateway` y `L1ERC1155Gateway` para finalizar los retiros en L1.
