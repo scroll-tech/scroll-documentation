@@ -129,7 +129,11 @@
       "bridgeOverview": "Bridge Overview",
       "prover": "Prover",
       "proofGeneration": "Proof Generation",
-      "cpuProverRepo": "CPU Prover Repo"
+      "cpuProverRepo": "CPU Prover Repo",
+
+      "security": "Security",
+      "auditsAndBugBounty": "Audits & Bug Bounty",
+      "l2BeatAssessment": "L2Beat Assessment"
     },
     "learn": {
       "ethereumAndProtocols": "Ethereum & Protocols",
