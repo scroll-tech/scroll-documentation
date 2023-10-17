@@ -1,0 +1,56 @@
+---
+section: technology
+date: Last Modified
+title: "Vista General de la zkEVM"
+lang: "es"
+permalink: "technology/zkevm-overview"
+excerpt: "Para entender cómo se construye una zkEVM, que prueba la ejecución del EVM, primero tenemos que ver la propia EVM."
+---
+
+import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import zkevm1 from "../_images/zkevm1.png"
+import zkevm2 from "../_images/zkevm2.png"
+import zkevm3 from "../_images/zkevm3.png"
+
+## La EVM
+
+Para entender cómo construir una zkEVM, que demuestre la ejecución del EVM, primero tenemos que ver la propia EVM.
+
+La EVM puede modelarse como una función de transición de estados. Esta especifica una función de transición `f` que, dado un estado inicial del sistema `S` y una transacción `T`, produce un nuevo estado del sistema `S'`: `f(S,T) = S'`.
+
+El "estado del sistema" se modela como un [Merkle-Patricia Trie modificado](https://ethereum.org/en/developers/docs/data-structures-and-encoding/patricia-merkle-trie/) (MPT). Este trie contiene todos los datos permanentes de la red. Esto incluye la información de todas las cuentas de propiedad externa (EOAs) y las cuentas de los smart contracts. Las cuentas de smart contracts tienen sub-tries que contienen el bytecode del smart contract y el almacenamiento permanente.
+
+La EVM procesa una nueva transacción ejecutando los cálculos resultantes y realizando los cambios correspondientes en el estado del sistema. Los cálculos de la EVM funcionan sobre almacenes de datos transitorios (pila y memoria), así como sobre almacenes de datos persistentes (bytecode y almacenamiento del contrato).
+
+<ClickToZoom src={zkevm1} />
+
+El cálculo activado por una transacción individual se descompone en pequeñas instrucciones de máquina denominadas "opcodes", que la EVM puede comprender y ejecutar directamente. El comportamiento de cada opcode se especifica en el [Ethereum Yellow Paper](https://ethereum.github.io/yellowpaper/paper.pdf). Por lo tanto, la ejecución de una transacción puede resumirse en una "traza de ejecución", que no es más que una lista ordenada de ejecuciones de opcodes. Los clientes de ejecución de Ethereum, como [Geth](https://geth.ethereum.org/), pueden mostrar explícitamente una traza de ejecución paso a paso del cálculo que han realizado.
+
+<ClickToZoom src={zkevm2} />
+
+A medida que se ejecutan los opcodes, se altera el trie de estado. El resultado es un nuevo trie de estado, con una nueva raíz de estado.
+
+## Prueba de la ejecución de una EVM
+
+El objetivo de una zkEVM es generar una prueba que certifique la validez de la ejecución de una transacción. En otras palabras, dado un estado inicial del sistema `S`, una transacción `T`, y un estado resultante del sistema `S'`, la zkEVM debe generar una prueba de que `f(S,T) = S'`, donde `f` es la función de transición de estado especificada en el Ethereum Yellow Paper.
+
+Para demostrar la validez de la ejecución de la función de transición, descomponemos la ejecución en su traza de ejecución paso a paso. La ejecución de `f(S,T)` se expande en una lista de sus ejecuciones secuenciales de opcodes. La traza de ejecución sirve como "testigo (o "witness")" de la corrección de la transición de estado `f(S,T) = S'` - la traza es en cierto sentido una explicación paso a paso de cómo el estado pasa de `S` a `S'`.
+
+El problema se reduce entonces a demostrar lo siguiente:
+
+- La traza de ejecución es _correcta_.
+  - Cada opcode individual se ejecuta correctamente según la especificación del Ethereum Yellow Paper.
+- Por ejemplo, el opcode `ADD` debe resultar en sacar dos valores de la pila, y colocar su suma en la pila.
+- Una prueba debe mostrar que cada opcode fue ejecutado con el comportamiento adecuado, incluyendo cualquier alteración a los almacenes de datos transitorios (pila y memoria) o almacenes de datos permanentes (bytecode del contrato y almacenamiento).
+  - La lista ordenada de opcodes que se ejecutan es de hecho la lista correcta de opcodes activados por la transacción.
+    - Esto incluye cargar correctamente el calldata inicial de la transacción, y el bytecode de cualquier contrato invocado.
+- La traza de ejecución comienza con el estado inicial `S` y termina en el estado `S'`.
+
+<ClickToZoom src={zkevm3} />
+
+En secciones posteriores, nos adentraremos en los detalles de cómo puede demostrarse la corrección de las trazas de ejecución de la EVM.
+
+## Aprende Más
+
+- "Cypherpunks" [capítulo de GitBook](https://cypherpunks-core.github.io/ethereumbook/13evm.html) sobre la EVM
+- [Visión general de zkEVM](https://youtu.be/NHwd-gJ8xg4) - Haichen Shen

@@ -6,7 +6,7 @@ const Footer = () => {
   return (
     <div className={styles.footerLayout}>
       <a className={styles.logo} href="/">
-        <img src="/scroll-white.svg" />
+        <img src="/scroll-white.svg" style={{ width: "80px" }} />
       </a>
       <div className={styles.about}>
         <p className={styles.title}>About Scroll</p>
@@ -33,10 +33,8 @@ const Footer = () => {
         <p className={styles.title}>Follow Us</p>
         <div>
           {mediaList.map((item) => (
-            <a external href={item.href} key={item.name}>
-              {
-                <item.icon />
-              }
+            <a external href={item.href} key={item.name} target="_blank">
+              {<item.icon />}
             </a>
           ))}
         </div>

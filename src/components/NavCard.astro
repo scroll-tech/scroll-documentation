@@ -1,4 +1,5 @@
 ---
+import i18next, { t } from "i18next"
 export type Props = {
   icon: string
   name: string
@@ -17,7 +18,7 @@ const { icon, name, content, link } = Astro.props as Props
   <span class="navs-item-title">{name}</span>
   <span class="navs-item-content">{content}</span>
   <a class="navs-item-link" href={link}>
-    Read more
+    {t("ui.readMore")}
     <span class="link-icon"></span>
   </a>
 </div>

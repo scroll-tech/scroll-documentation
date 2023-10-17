@@ -1,4 +1,15 @@
 {
+  "rightSidebar": {
+    "onThisPage": "On This Page",
+    "more": "More",
+    "editThisPage": "Edit this page",
+    "joinOurCommunity": "Join our community",
+    "feedback": "Feedback"
+  },
+  "ui": {
+    "whatsNext": "What's Next",
+    "readMore": "Read More"
+  },
   "landing": {
     "test": "test",
     "search": {

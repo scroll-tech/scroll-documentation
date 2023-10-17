@@ -1,0 +1,41 @@
+---
+section: gettingStarted
+date: Last Modified
+title: "Errores Comunes"
+lang: "es"
+permalink: "user-guide/common-errors/"
+excerpt: "¿Ve un error cuando intenta interactuar con Scroll Sepolia Testnet? Aquí hay algunos errores comunes de configuración y cómo solucionarlos rápidamente."
+---
+
+## Error de nonce incorrecto al enviar una transacción en MetaMask
+
+Encontrarás este error cuando el nonce local almacenado en tu wallet MetaMask sea diferente del nonce en el nodo Scroll testnet. Podría deberse a que hay una transacción pendiente reciente.
+
+Para solucionar este problema, es necesario restablecer su cuenta en MetaMask para el Scroll Sepolia Testnet. Los pasos para restablecer la cuenta son:
+
+1. Abre la extensión **MetaMask** en el navegador
+2. Selecciona **Scroll Sepolia Testnet** en el área superior
+3. Haz clic en el **icono de la cuenta** redondo en la esquina superior derecha
+4. Selecciona **Configuración**
+5. Vé a **Avanzado**.
+6. Haz clic en **Borrar datos de la pestaña de actividad**.
+
+No perderás ningún activo durante el reinicio de la cuenta MetaMask.
+
+:::caution[Precaución]
+Eliminar y volver a añadir una red NO es suficiente para solucionarlo, debes restablecer tu cuenta.
+:::
+
+## No ocurre nada al confirmar una transacción bridging/swapping
+
+Si no aparece ningún error o registro de consola, es probable que se deba a un problema de nonce, por favor, reinicie su cuenta MetaMask como se indica más [arriba](/es/user-guide/common-errors#error-de-nonce-incorrecto-al-enviar-una-transacción-en-metamask).
+
+## Block Explorer muestra "Internal server error".
+
+Utiliza una ventana de incógnito o abre la "Developer Console" de tu navegador y elimina la cookie `_explorer_key` (o todas las cookies). [Consulta esta guía para saber cómo eliminar las cookies](https://www.contentstack.com/docs/developers/how-to-guides/clear-caches-and-cookies-in-different-browsers/).
+
+## Al enviar la cantidad máxima de ETH en MetaMask se produce un error "Failed".
+
+Cuando envías ETH usando MetaMask, si intentas enviar la cantidad "Max", y resulta en un error "Failed". Esto se debe a que MetaMask no tiene en cuenta la "Comisión L1" adicional que tienen los rollups además de la comisión normal por el gas, por ello, se queda corto en una pequeña cantidad necesaria para pagar el gas de la transacción.
+
+Para solucionar esto, baje manualmente la cantidad de ETH para que sea un poco menor que la sugerida y la transacción se realizará.

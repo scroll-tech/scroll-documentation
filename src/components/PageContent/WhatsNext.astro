@@ -1,10 +1,11 @@
 ---
+import i18next, { t } from "i18next"
 export type Props = { content: Record<string, string> }
 const { content = {} } = Astro.props as Props
 ---
 
 <section>
-  <h4>Whats Next</h4>
+  <h4>{t("ui.whatsNext")}</h4>
   <ul class="whats-next">
     {
       Object.keys(content).map((key) => (

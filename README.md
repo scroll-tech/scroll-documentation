@@ -1,3 +1,8 @@
+![Contribute to Scroll](./src/assets/banner.png)
+
+[![Twitter Follow](https://img.shields.io/twitter/follow/Scroll_ZKP?style=social)](https://twitter.com/Scroll_ZKP)
+[![Discord](https://img.shields.io/discord/984015101017346058?color=%235865F2&label=Discord&logo=discord&logoColor=%23fff)](https://discord.gg/scroll)
+
 This is the open source project for the Scroll documentation.
 
 ## Developing
@@ -8,12 +13,8 @@ npm install && npm run dev
 
 ## Docs architecture
 
-- All docs are markdown and stored in `/src/pages`.
+- All articles are markdown and stored in `/src/content/docs/`.
 - Navigation is JSON in `/src/config/sidebar.ts`
-
-## Deployment
-
-Managed by Scroll using Netlify at https://app.netlify.com/sites/scroll-documentation/overview.
 
 ## Credits
 

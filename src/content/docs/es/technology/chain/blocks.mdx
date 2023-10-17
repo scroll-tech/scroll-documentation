@@ -1,0 +1,37 @@
+---
+section: technology
+date: Last Modified
+title: "Bloques"
+lang: "es"
+permalink: "technology/chain/blocks"
+whatsnext: { "Proceso del Rollup": "/es/technology/chain/rollup/" }
+---
+
+Un bloque es una recopilación de transacciones y enlaces con el bloque anterior al que amplía.
+
+## Block Header
+
+La block header en Scroll refleja la estructura de Ethereum. Sin embargo, algunos campos de la block header se han modificado para adaptarse al contexto de la capa 2, como se detalla en la siguiente tabla:
+
+| Campo               | Descripción                                                        |
+| ------------------- | ------------------------------------------------------------------ |
+| `parentHash`        | El hash del bloque padre.                                      |
+| `uncleHash`         | Siempre 0.                                                          |
+| `coinbase`          | Dirección del contrato de la vault de comisiones pre-desplegada `0x5300000000000000000000000000000000000005`.             |
+| `stateRoot`         | El hash root del state trie. Esto es Poseidon.                |
+| `transactionsRoot ` | El hash del trie de transacción.                                  |
+| `receiptsRoot `     | El hash del trie del comprobante de la transacción.                         |
+| `logsBloom`         | La estructura de datos que contiene los registros de eventos.                          |
+| `difficulty`        | Siempre 0.                                                          |
+| `number`            | El número del Bloque.                                                  |
+| `gasLimit`          | El gas máximo permitido en el bloque.                              |
+| `gasUsed`           | El gas utilizado en el bloque.                                         |
+| `timestamp`         | El tiempo del bloque.                                                    |
+| `extraData`         | Datos arbitrarios adicionales.                                         |
+| `mixHash`           | Siempre 0.                                                          |
+| `nonce`             | Siempre 0.                                                          |
+| `baseFee`           | Actualmente vacío en Scroll porque no hemos activado el EIP-1559. |
+
+## Tiempo de bloque
+
+El tiempo de bloque se refiere al intervalo entre dos bloques consecutivos. En Scroll, el tiempo de bloque está fijado en 3s. Un tiempo de bloque reducido mejora la experiencia del usuario y aumenta la escalabilidad de la cadena de Scroll.

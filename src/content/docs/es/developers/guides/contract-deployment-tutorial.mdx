@@ -1,0 +1,85 @@
+---
+section: developers
+date: Last Modified
+title: "Tutorial de Despliegue de Contratos"
+lang: "es"
+permalink: "developers/guides/contract-deployment-tutorial"
+excerpt: "La Testnet de Scroll Sepolia permite a la comunidad desplegar smart contracts en Scroll. En este tutorial, te enseñaremos a desplegar un contrato en Scroll Sepolia."
+whatsnext: { "Interacción Cross-chain del Scroll Messenger": "/es/developers/guides/scroll-messenger-cross-chain-interaction" }
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+La Testnet de Scroll Sepolia permite a cualquiera desplegar un smart contract en Scroll. En este tutorial, aprenderás a desplegar un contrato en Scroll Sepolia utilizando herramientas comunes para desarrollar en Ethereum. Este [demo repo](https://github.com/scroll-tech/scroll-guides/tree/main/contract-deploy-demo) ilustra el despliegue de contratos con [Hardhat](https://hardhat.org/) y [Foundry](https://github.com/foundry-rs/foundry).
+
+<Aside type="tip" title="¿Tienes Testnet ETH?">
+  Antes de empezar a desplegar el contrato, tienes que solicitar tokens de la testnet a través de un faucet de Sepolia y utilizar la función
+[bridge](https://scroll.io/bridge) para transferir algunos ETH de prueba de _Sepolia_ a _Scroll Sepolia_. Como alternativa puedes
+  adquirir directamente ETH de Scroll Sepolia. Consulta nuestras guías [Faucet](/es/user-guide/faucet/) y [Bridge](/es/user-guide/bridge/)
+  para obtener ayuda.
+</Aside>
+
+## Despliegue de contratos con Hardhat
+
+1. Si aún no lo has hecho, instala [nodejs](https://nodejs.org/en/download/) y [yarn](https://classic.yarnpkg.com/lang/en/docs/install).
+2. Clona el repositorio e instala las dependencias:
+
+   ```shell
+   git clone https://github.com/scroll-tech/scroll-guides.git
+   cd scroll-guides/contract-deploy-demo
+   yarn install
+   ```
+
+3. Crea un archivo `.env` siguiendo el ejemplo `.env.example` en el directorio raíz. Cambia `PRIVATE_KEY` por la clave privada de tu propia cuenta en el `.env`.
+
+4. Ejecuta `yarn compile` para compilar el contrato.
+
+5. Ejecuta `yarn deploy:scrollTestnet` para desplegar el contrato en la Scroll Sepolia Testnet.
+
+6. Ejecuta `yarn test` para realizar las pruebas hardhat.
+
+## Despliegue de contratos con Foundry
+
+1. Clona el repositorio:
+
+   ```shell
+   git clone https://github.com/scroll-tech/scroll-guides.git
+   cd scroll-guides/contract-deploy-demo
+   ```
+
+2. Instala el Foundry:
+
+   ```shell
+   curl -L https://foundry.paradigm.xyz | bash
+   foundryup
+   ```
+
+3. Ejecuta `forge build` para construir el proyecto.
+
+4. Despliega tu contrato con Foundry:
+
+   ```bash
+   forge create --rpc-url https://sepolia-rpc.scroll.io/ \
+     --value <lock_amount> \
+     --constructor-args <unlock_time> \
+     --private-key <your_private_key> \
+     --legacy \
+     contracts/Lock.sol:Lock
+   ```
+
+   - `<lock_amount>` es la cantidad de `ETH` de prueba que se bloqueará en el contrato. Intenta establecer una cantidad pequeña, como `0.0000001ether`.&#x20;
+   - `<unlock_time>` es la marca de tiempo Unix después de la cual los fondos bloqueados en el contrato estarán disponibles para su retirada. Intenta ponerlo en algún timestamp Unix en el futuro, como `1696118400` (este timestamp Unix corresponde al 1 de Octubre de 2023).
+
+   Por ejemplo:
+
+   ```bash
+   forge create --rpc-url https://sepolia-rpc.scroll.io/ \
+     --value 0.00000000002ether \
+     --constructor-args 1696118400 \
+     --private-key 0xabc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc1 \
+     --legacy contracts/Lock.sol:Lock
+   ```
+
+## Preguntas y Feedback
+
+Gracias por participar y desarrollar en la Scroll Sepolia Testnet. Si tienes algún problema, únete a nuestro [Discord](https://discord.gg/scroll) y pregúntanos en el canal `#testnet-devs`.

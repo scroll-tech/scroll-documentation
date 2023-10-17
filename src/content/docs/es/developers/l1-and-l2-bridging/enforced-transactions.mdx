@@ -1,0 +1,57 @@
+---
+section: developers
+date: Last Modified
+title: "Enforced transactions"
+lang: "en"
+permalink: "developers/l1-and-l2-bridging/enforced-transactions"
+excerpt: "The Enforced Transaction contract enables sending transactions between L1 and L2 the sendTransaction function."
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+The Enforced Transaction contract enables sending transactions between L1 and L2 the **`sendTransaction`** function. This contract shares similarities with the Scroll Messenger contract as it allows sending arbitrary data from one layer to the other. However, it distinguishes itself by enabling the relaying of signed transactions and the ability to set the sender (CALLER or msg.sender) on the receiving transaction on Scroll.
+
+## Enforced Transactions API
+
+Please visit the [npm library](https://www.npmjs.com/package/@scroll-tech/contracts?activeTab=code) for the complete Scroll contract API documentation.
+
+### sendTransaction
+
+```solidity
+function sendTransaction(address _target, uint256 _value, uint256 _gasLimit, bytes calldata _data) public payable;
+```
+
+Add an enforced transaction to L2 from an EOA account sender.
+
+| Parameter  | Description                                                |
+| ---------- | ---------------------------------------------------------- |
+| \_target   | The address of target contract to call in L2.              |
+| \_value    | The value passed.                                          |
+| \_gasLimit | The maximum gas should be used for this transaction in L2. |
+| \_data     | The calldata passed to target contract.                    |
+
+### sendTransaction
+
+```solidity
+function sendTransaction(
+  address _sender,
+  address _target,
+  uint256 _value,
+  uint256 _gasLimit,
+  bytes calldata _data,
+  bytes memory _signature,
+  address _refundAddress
+) public payable;
+```
+
+Add an enforced transaction to L2 by relaying a signature from the sender.
+
+| Parameter       | Description                                                     |
+| --------------- | --------------------------------------------------------------- |
+| \_sender        | The address of sender who will initiate this transaction in L2. |
+| \_target        | The address of target contract to call in L2.                   |
+| \_value         | The value passed                                                |
+| \_gasLimit      | The maximum gas should be used for this transaction in L2.      |
+| \_data          | The calldata passed to target contract.                         |
+| \_signature     | The signature for the transaction.                              |
+| \_refundAddress | The address to refund exceeded fee.                             |

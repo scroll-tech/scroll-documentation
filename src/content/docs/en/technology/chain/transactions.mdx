@@ -62,15 +62,15 @@ First, users can directly submit transactions to L2 sequencers. To do so, users 
 
 Second, deposit and enforced transactions are originated on L1. Scroll L1 bridge contract provides three entry points for users and smart contracts to send transactions from the L1. All messages sent through these three entry points will be appended to the `L1MessageQueue` contract.
 
-- The `ScrollGatewayRouter` contract and several standard token gateways allow users and contracts to deposit standard tokens to L2. See more details in the [Deposit Token Gateways](/-oscADc8SoKAOxjtpcEqKg).
-- The `L1ScrollMessenger` contract allows users and contracts to send arbitrary messages to L2. See more details in the [Sending Arbitrary Messages](/UPyw7afFQE6q-9CIdIRBag#Sending-Arbitrary-Messages).
-- The `EnforcedTxGateway` contract allows EOAs to initiate an enforced transaction from the same address to withdraw tokens or call other contracts on L2. See more details in the [Sending Enforced Transaction](/UPyw7afFQE6q-9CIdIRBag#Sending-Enforced-Transactions).
+- The `ScrollGatewayRouter` contract and several standard token gateways allow users and contracts to deposit standard tokens to L2. See more details in the [Deposit Token Gateways](/technology/bridge/deposit-gateways).
+- The `L1ScrollMessenger` contract allows users and contracts to send arbitrary messages to L2. See more details in the [Sending Arbitrary Messages](/technology/bridge/cross-domain-messaging#sending-arbitrary-messages).
+- The `EnforcedTxGateway` contract allows EOAs to initiate an enforced transaction from the same address to withdraw tokens or call other contracts on L2. See more details in the [Sending Enforced Transaction](/technology/bridge/cross-domain-messaging#sending-enforced-transactions).
 
 The Scroll sequencer periodically starts a new mining job. It pulls the L1 messages from the `L1MessageQueue` contract and transactions in the L2 mempool and seals a block. Once a transaction is included in a L2 block, its status becomes `Confirmed`.
 
 ### Commit Transaction Data
 
-The rollup node collects new L2 blocks and packs them into chunks and batches (see more details in [Transaction Batching](/RxRWLFtiQ7W_wbc0jMnQNA)). Periodically it sends a _Commit Transaction_ that posts the data of a batch of transactions to the L1 `ScrollChain` contract. After the Commit Transaction is finalized in a L1 block, the status of the transactions in this batch becomes `Committed`. At this time, users can reconstruct L2 state themselves completely based on the committed data from the L1 contract.
+The rollup node collects new L2 blocks and packs them into chunks and batches (see more details in [Transaction Batching](/technology/chain/transactions#transaction-batching)). Periodically it sends a _Commit Transaction_ that posts the data of a batch of transactions to the L1 `ScrollChain` contract. After the Commit Transaction is finalized in a L1 block, the status of the transactions in this batch becomes `Committed`. At this time, users can reconstruct L2 state themselves completely based on the committed data from the L1 contract.
 
 ### Finalize Transactions
 
