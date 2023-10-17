@@ -154,11 +154,17 @@ export const getSidebar = () => {
         ],
       },
       {
-        section: t("sidebar.developers.resources"),
+        section: t("sidebar.developers.mainnetResources"),
         contents: [
           { title: t("sidebar.developers.rollupExplorer"), url: "https://scroll.io/rollupscan" },
-          { title: t("sidebar.developers.scrollSepoliaBlockExplorer"), url: "https://sepolia-blockscout.scroll.io/" },
-          { title: t("sidebar.developers.sepoliaBlockExplorer"), url: "https://sepolia.etherscan.io/" },
+          { title: t("sidebar.developers.scrollBlockExplorer"), url: "https://scrollscan.com/" },
+        ],
+      },
+      {
+        section: t("sidebar.developers.sepoliaResources"),
+        contents: [
+          { title: t("sidebar.developers.sepoliaRollupExplorer"), url: "https://sepolia.scroll.io/rollupscan" },
+          { title: t("sidebar.developers.scrollSepoliaBlockExplorer"), url: "https://sepolia.scrollscan.dev/" },
         ],
       },
     ],
