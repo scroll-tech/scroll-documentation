@@ -252,6 +252,23 @@ export const getSidebar = () => {
           },
         ],
       },
+      {
+        section: t("sidebar.technology.security"),
+        contents: [
+          {
+            title: t("sidebar.technology.auditsAndBugBounty"),
+            url: formatUrl("technology/security/audits-and-bug-bounty"),
+          },
+          // {
+          //   title: t("sidebar.technology.risks"),
+          //   url: formatUrl("technology/security/risks"),
+          // },
+          // {
+          //   title: t("sidebar.technology.l2BeatAssessment"),
+          //   url: "https://l2beat.com/scaling/projects/scroll",
+          // },
+        ],
+      },
     ],
     learn: [
       {
