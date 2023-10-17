@@ -1,5 +1,148 @@
 {
+  "rightSidebar": {
+    "onThisPage": "En esta página",
+    "more": "Más",
+    "editThisPage": "Editar esta página",
+    "joinOurCommunity": "Únete a nuestro Discord",
+    "feedback": "Feedback"
+  },
+  "ui": {
+    "whatsNext": "¿Qué sigue?",
+    "readMore": "Leer Más"
+  },
+  "landing": {
+    "test": "test",
+    "search": {
+      "title": "Bienvenido a la Documentación de Scroll",
+      "placeholder": "Buscar Documentación de Scroll..."
+    },
+    "newUserCTA": {
+      "title": "Nuevo en Scroll y los ZK Rollups?",
+      "description": "Aprende lo básico en la Guía de Inicio"
+    },
+    "resourcesCTA": {
+      "title": "Recursos Útiles"
+    },
+    "nodesCTA": {
+      "title": "Necesitas correr tu propio Nodo de Scroll?",
+      "description": "Consulte la Guía del Operador de Nodos para obtener más información sobre la puesta en marcha y el mantenimiento de los Nodos de Scroll.",
+      "buttonText": "Guía del Operador de Nodos"
+    },
+    "TutorialsCTA": {
+      "title": "Ver tutoriales",
+      "description": "Obtenga más información sobre la tecnología que estamos construyendo. Subimos constantemente nuevos vídeos a nuestro canal de YouTube.",
+      "buttonText": "Ver tutoriales"
+    },
+    "LinksCTA": {
+      "card1": {
+        "title": "¿Necesita ayuda para integrarse?",
+        "description": "Talk to an expert once we TODO: a url"
+      },
+      "card2": {
+        "title": "Discord",
+        "description": "Únete a nuestra Comunidad"
+      },
+      "card3": {
+        "title": "TODO: Discourse",
+        "description": "Really, join the community"
+      }
+    },
+    "NewsletterCTA": {
+      "title": "Stay updated on the latest Scroll news",
+      "placeholder": "Enter your email address",
+      "buttonText": "Sign up"
+    }
+  },
+  "sidebar": {
+    "gettingStarted": {
+      "gettingStarted": "Primeros Pasos",
+      "overview": "Vista General",
+      "scrollSepoliaTestnet": "Scroll Sepolia Testnet",
+      "userGuide": "Guía de Usuario",
+      "setup": "Configuración",
+      "faucet": "Faucet",
+      "bridge": "Bridge",
+      "transferTokens": "Transferencia de Tokens",
+      "commonErrors": "Errores Comunes",
+      "rollupExplorer": "Rollup Explorer",
+      "scrollSepoliaBlockExplorer": "Scroll Sepolia Explorer",
+      "sepoliaBlockExplorer": "Sepolia Explorer",
+      "community": "Comunidad",
+      "discord": "Discord",
+      "communityForum": "Forum de la Comunidad"
+    },
+    "developers": {
+      "developers": "Desarrolladores",
+      "buildingOnScroll": "Construyendo en Scroll",
+      "developerQuickstart": "Inicio rápido para Desarrolladores",
+      "verifyingSmartContracts": "Verificando Smart Contracts",
+      "scrollContracts": "Contratos de Scroll",
+      "ethereumAndScrollDifferences": "Diferencias entre Scroll y Ethereum",
+      "l1AndL2Bridging": "L1 y L2 Bridging",
+      "ethAndErc20TokenBridge": "ETH y ERC20 Token Bridge",
+      "erc721NftBridge": "ERC721 NFT Bridge",
+      "erc1155TokenBridge": "ERC1155 Token Bridge",
+      "theScrollMessenger": "El Scroll Messenger",
+      "transactionFeesOnScroll": "Comisiones de Transacciones en Scroll",
+      "l2Fee": "Comisión L2",
+      "l1Fee": "Comisión L1",
+      "gasOracle": "Gas Oracle",
+      "future": "Futuro",
+      "guides": "Guías",
+      "contractDeploymentTutorial": "Tutorial de Despliegue de Contratos",
+      "crossChainInteraction": "Interacción Cross-chain del Scroll Messenger",
+      "bridgingERC20TokenThroughCustomGateway": "Bridging de un ERC20 a través de una Gateway Personalizada",
+      "bridgingERC721NftThroughCustomGateway": "Bridging de un ERC721 NFT a través de una Gateway Personalizada",
+      "bridgingERC1155ThroughCustomGateway": "Bridging de un ERC1155 a través de una Gateway Personalizada",
+      "estimatingGasAndTxFees": "Estimación de las Tarifas de Gas y Tx",
+      "resources": "Recursos",
+      "rollupExplorer": "Rollup Explorer",
+      "scrollSepoliaBlockExplorer": "Scroll Sepolia Explorer",
+      "sepoliaBlockExplorer": "Sepolia Explorer"
+    },
+    "technology": {
+      "introduction": "Introducción",
+      "principles": "Principios",
+      "scrollArchitecture": "Arquitectura de Scroll",
+      "overview": "Vista General",
+
+      "scrollChain": "Scroll Chain",
+      "accountsAndState": "Cuentas y Estado",
+      "blocks": "Bloques",
+      "transactions": "Transacciones",
+      "rollupProcess": "Proceso del Rollup",
+      "evmDifferencesFromEthereum": "Diferencias de EVM respecto a Ethereum",
+
+      "bridge": "Bridge",
+      "crossDomainMessaging": "Cross-Domain Messaging",
+      "depositGateways": "Gateways de Depósito",
+      "withdrawGateways": "Gateways de Retiro",
+
+      "sequencer": "Secuenciador",
+      "executionNode": "Nodo de Ejecución",
+      "rollupNode": "Nodo Rollup",
+      "zkTrie": "zkTrie",
+
+      "zkevm": "zkEVM",
+      "introToZkevm": "Intro a la zkEVM",
+      "zkevmOverview": "Vista General de la zkEVM",
+      "bridgeOverview": "Vista General del Bridge",
+      "prover": "Prover",
+      "proofGeneration": "Proof Generation",
+      "cpuProverRepo": "CPU Prover Repo"
+    },
+    "learn": {
+      "ethereumAndProtocols": "Ethereum y Protocolos",
+      "theScalabilityProblem": "El Problema de la Escalabilidad",
+      "introToRollups": "Intro a los Rollups",
+      "zeroKnowledge": "Zero Knowledge",
+      "introToZeroKnowledge": "Intro a la Zero Knowledge",
+      "polynomialCommitmentSchemes": "Esquemas de Compromiso Polinómicos",
+      "kzgCommitmentScheme": "Esquema de Compromiso KZG",
+      "additionalResources": "Recursos Adicionales"
+    }
+  },
   "notTranslated": {
-    "notTranslated": "Esta página aún no ha sido traducida."
+    "notTranslated": "Esta página no ha sido traducida aún."
   }
 }

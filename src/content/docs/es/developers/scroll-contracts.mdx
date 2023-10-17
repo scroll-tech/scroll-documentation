@@ -1,0 +1,100 @@
+---
+section: developers
+date: Last Modified
+title: "Contratos de Scroll Sepolia"
+lang: "es"
+permalink: "developers/scroll-contracts"
+whatsnext: { "Diferencias entre Scroll y Ethereum": "/es/developers/ethereum-and-scroll-differences" }
+excerpt: "The network info and contract addresses you need to start with Scroll Sepolia Testnet."
+---
+
+import Aside from "../../../../components/Aside.astro"
+
+## Información de la Red
+
+| Nombre de Red       | Scroll Sepolia Testnet                                                        | Sepolia Testnet                                                              |
+| ------------------ | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| RPC URL            | [https://sepolia-rpc.scroll.io/](https://sepolia-rpc.scroll.io/)              | [https://eth-sepolia-public.unifra.io](https://eth-sepolia-public.unifra.io) |
+| Chain ID           | 534351                                                                        | 11155111                                                                     |
+| Currency Symbol    | ETH                                                                           | ETH                                                                          |
+| Block Explorer URL | [https://sepolia-blockscout.scroll.io](https://sepolia-blockscout.scroll.io/) | [https://sepolia.etherscan.io](https://sepolia.etherscan.io)                 |
+
+## Contratos de Scroll Sepolia
+
+### Rollup
+
+- L1 Rollup (Scroll Chain): `0x2D567EcE699Eabe5afCd141eDB7A4f2D0D6ce8a0`
+
+### ETH y ERC20 Bridge
+
+- L1 ERC20 Gateway Router: `0x13FBE0D0e5552b8c9c4AE9e2435F38f37355998a`
+- L2 ERC20 Gateway Router: `0x9aD3c5617eCAa556d6E166787A97081907171230`
+
+### Contratos de Bridge Avanzados
+
+- Scroll Messenger
+  - L1 Messenger: `0x50c7d3e7f7c656493D1D76aaa1a836CedfCBB16A`
+  - L2 Messenger: `0xBa50f5340FB9F3Bd074bD638c9BE13eCB36E603d`
+- ETH Bridge
+  - L1 ETH Gateway: `0x8A54A2347Da2562917304141ab67324615e9866d`
+  - L2 ETH Gateway: `0x91e8ADDFe1358aCa5314c644312d38237fC1101C`
+  - L1 WETH Gateway: `0x3dA0BF44814cfC678376b3311838272158211695`
+  - L2 WETH Gateway: `0x481B20A927206aF7A754dB8b904B052e2781ea27`
+- ERC20 Bridge
+  - L1 ERC20 Standard Gateway: `0x65D123d6389b900d954677c26327bfc1C3e88A13`
+  - L2 ERC20 Standard Gateway: `0xaDcA915971A336EA2f5b567e662F5bd74AEf9582`
+  - L1 ERC20 Custom Gateway: `0x31C994F2017E71b82fd4D8118F140c81215bbb37`
+  - L2 ERC20 Custom Gateway: `0x058dec71E53079F9ED053F3a0bBca877F6f3eAcf`
+- ERC721 Bridge
+  - L1 ERC721 Gateway: `0xEF27A5E63aa3f1B8312f744b9b4DcEB910Ba77AC`
+  - L2 ERC721 Gateway: `0x179B9415194B67DC3c0b8760E075cD4415785c97`
+- ERC1155 Bridge
+  - L1 ERC1155 Gateway: `0xa5Df8530766A85936EE3E139dECE3bF081c83146`
+  - L2 ERC1155 Gateway: `0xe17C9b9C66FAF07753cdB04316D09f52144612A5`
+- Gas Oracle
+  - L2 Gas Oracle (Implementado en Sepolia): `0x247969F4fad93a33d4826046bc3eAE0D36BdE548`
+
+### L2 Predeploys
+
+- Message Queue: `0x5300000000000000000000000000000000000000`
+- Gas Price Oracle: `0x5300000000000000000000000000000000000002`
+- Whitelist: `0x5300000000000000000000000000000000000003`
+- WETH L2: `0x5300000000000000000000000000000000000004`
+- Transaction Fee Vault: `0x5300000000000000000000000000000000000005`
+
+## Protocolos en Sepolia
+
+### Uniswap v3
+
+- Frontend website: [https://uniswap-showcase.sepolia.scroll.xyz/](https://uniswap-showcase.sepolia.scroll.xyz/)
+- Main Contracts
+  - Core Factory: `0xB856587fe1cbA8600F75F1b1176E44250B11C788`
+  - NFT Position Manager: `0xbbAd0e891922A8A4a7e9c39d4cc0559117016fec`
+  - Router: `0x17AFD0263D6909Ba1F9a8EAC697f76532365Fb95`
+- Additional Contracts
+  - multicall2Address: `0x8c181f4B9040F1a2C941EfD3b608712cF86F1957`
+  - proxyAdminAddress: `0xD4A9910732b6f301F6F210Ebe7a3dBf16d9E9DD4`
+  - tickLensAddress: `0x9804Da978427a49929f2E6Ea32A9594F03f9296e`
+  - nftDescriptorLibraryAddressV1_3_0: `0x45Bd3B62B7A3aA53371c98049b0f7A9C1A4B5a6c`
+  - nonfungibleTokenPositionDescriptorAddressV1_3_0: `0x24d4E4a572Dc1e0dbF92a0d7768Ac80df516b2C2`
+  - descriptorProxyAddress: `0xa8986417d0EAe50607696b9b0cb7ec5aFBE67765`
+  - v3MigratorAddress: `0x38E33D067F03a5cDc02C301b2c306cb0414549Bf`
+  - v3StakerAddress: `0xe7b82794Cab21e665a3e6f8ea562d392AA6E0619`
+  - quoterV2Address: `0xd5dd33650Ef1DC6D23069aEDC8EAE87b0D3619B2`
+
+### Aave
+
+Observa este [Github gist](https://gist.github.com/dghelm/7fe68f0a524f30846e1142721c081d84).
+
+## Contratos Útiles Adicionales
+
+- Multicall3: `0xcA11bde05977b3631167028862bE2a173976CA11`
+
+## Tokens
+
+<Aside type="note" title="">
+  Los tokens transferidos desde Sepolia utilizando el bridge nativo pueden añadirse al repositorio
+  [token-list](https://github.com/scroll-tech/token-list).
+</Aside>
+
+- Gho Token: `0xD9692f1748aFEe00FACE2da35242417dd05a8615`

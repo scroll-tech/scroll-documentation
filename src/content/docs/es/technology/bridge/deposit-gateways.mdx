@@ -1,0 +1,183 @@
+---
+section: technology
+date: Last Modified
+title: "Gateways de Depósito"
+lang: "es"
+permalink: "technology/bridge/deposit-gateways"
+whatsnext: { "Gateways de Retiro": "/es/technology/bridge/withdraw-gateways/" }
+---
+
+import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import DepositWorkflow from "../_images/deposit.png"
+
+Este documento describe cómo los usuarios y desarrolladores pueden utilizar las gateways para depositar tokens de L1 a L2. Proporcionamos varias gateways para tokens estándares y un router gateway en L1, listados en la siguiente tabla.
+
+| Gateway Contract         | Descripción                                                      |
+| ------------------------ | ---------------------------------------------------------------- |
+| `L1GatewayRouter`        | La gateway router que admite el depósito de tokens ETH y ERC20. |
+| `L1ETHGateway`           | La gateway para depositar ETH.                                      |
+| `L1StandardERC20Gateway` | La gateway para depósitos de tokens ERC20 estándar.                   |
+| `L1CustomERC20Gateway`   | La gateway para depósitos de tokens ERC20 personalizados.                     |
+| `L1WETHGateway`          | La gateway para depósitos ETH envueltos.                            |
+| `L1ERC721Gateway`        | La gateway para depósitos de tokens ERC-721.                          |
+| `L1ERC1155Gateway`       | La gateway para depósitos de tokens ERC-1155.                         |
+
+## Vista Ampliada
+
+<ClickToZoom src={DepositWorkflow} alt="Deposit Workflow" />
+
+La figura muestra el flujo de trabajo de depósito de L1 a L2. Los usuarios llaman a las gateways para iniciar el depósito de tokens. A continuación, el depósito se codifica en un mensaje que se envía al contrato `L1ScrollMessenger` y se añade la correspondiente transacción iniciada en L1 a la `L1MessageQueue`. Para finalizar los depósitos en L2, el secuenciador de L2 recoge los nuevos eventos de transacción de L1 e incluye las transacciones correspondientes en los bloques de L2 que crea. Las secciones siguientes describen los detalles de cómo se depositan los distintos tokens. Puede encontrar más detalles sobre el flujo de trabajo de retransmisión de mensajes de L1 a L2 en [Cross-Domain Messaging](/es/technology/bridge/cross-domain-messaging#sending-messages-from-l1-to-l2).
+
+## Depósito de ETH
+
+Scroll utiliza ETH como su token nativo. Preasignamos una cantidad suficiente de ETH al contrato `L2ScrollMessenger` en el bloque génesis para que pueda transferir tokens ETH nativos a cuentas L2 sin necesidad de emitir. El depósito de ETH funciona de la siguiente manera.
+
+1. `L1GatewayRouter` ofrece tres funciones para depositar ETH de L1 a L2. La función `depositETHAndCall` puede transferir ETH y ejecutar una llamada de contrato al mismo tiempo.
+
+    ```solidity
+    function depositETH(uint256 _amount, uint256 _gasLimit) external payable;
+
+    function depositETH(address _to, uint256 _amount, uint256 _gasLimit) public payable;
+
+    function depositETHAndCall(
+        address _to,
+        uint256 _amount,
+        bytes calldata _data,
+        uint256 _gasLimit
+    ) external payable;
+    ```
+
+2. Las tres funciones `depositETH` llaman a `L1ETHGateway`. `L1ETHGateway` codifica el depósito en un mensaje que se envía al contrato `L1ScrollMessenger`.
+
+3. El ETH del importe del depósito se bloquea en el contrato `L1ScrollMessenger`. L1ScrollMessenger añade el mensaje a la cola de mensajes del contrato L1MessageQueue.
+
+4. Una vez finalizada la transacción de depósito en el L1, el secuenciador incluirá una transacción L2 correspondiente en el bloque L2 para finalizar el depósito y transferir ETH a la dirección del destinatario en el L2.
+
+5. La transacción L2 llama a la función `L2ScrollMessenger.relayMessage`, que ejecuta el mensaje retransmitido.
+   En el caso del depósito de ETH, la función `relayMessage` llama a `L2ETHGateway.finalizeDepositETH` para transferir ETH a la cuenta del destinatario en L2.
+
+6. Si el usuario llama a `depositETHAndCall` en L1, `finalizeDepositETH` en el contrato `L2ETHGateway` reenviará los datos adicionales al contrato L2 de destino.
+
+## Depósito de Tokens ERC20 
+
+Se proporcionan varios contratos de gateway ERC20 para conectar diferentes tipos de tokens ERC20, como tokens ERC20 estándar, tokens ERC20 personalizados y Wrapped ETH. El `L1GatewayRouter` registra la asignación canónica de tokens ERC20 a la correspondiente gateway ERC20 en la L1. El `L1GatewayRouter` utiliza `StandardERC20Gateway` como gateway ERC20 por defecto para los nuevos tokens ERC20 a menos que ya se haya configurado una gateway personalizada.
+
+El depósito de tokens ERC20 funciona de la siguiente manera.
+
+1. Para depositar tokens ERC20 de L1 a L2, los usuarios pueden utilizar `L1GatewayRouter.depositERC20` y `L1GatewayRouter.depositERC20AndCall` que se muestran a continuación.
+
+    ```solidity
+    function depositERC20(address _token, uint256 _amount, uint256 _gasLimit) external payable;
+
+    function depositERC20(address _token, address _to, uint256 _amount, uint256 _gasLimit) external payable;
+
+    function depositERC20AndCall(
+        address _token,
+        address _to,
+        uint256 _amount,
+        bytes memory _data,
+        uint256 _gasLimit
+    ) public payable;
+    ```
+
+2. En función del mapping entre los tokens ERC20 y la gateway, el `L1GatewayRouter` llama a la gateway correspondiente: `L1StandardERC20Gateway`, `L1CustomERC20Gateway`, o `L1WETHGateway`. El resto de pasos se describirán por separado.
+
+### ERC20 Tokens Estándares
+
+Los tokens ERC20 estándar son tokens que no requieren ninguna lógica personalizada. Para estos tokens, sus contratos de tokens L2 ERC20 se crean mediante `L2StandardERC20Gateway`. Los pasos restantes para el depósito de tokens ERC20 estándar son:
+
+3. El contrato `L1StandardERC20Gateway` bloquea los tokens ERC20 transfiriéndolos del emisor a sí mismo.
+4. Si este token ERC20 no se ha retirado antes a través de `L1StandardERC20Gateway`, `L1StandardERC20Gateway` calculará una dirección determinista de token ERC20 en L2 y añadirá los metadatos del token (símbolo, nombre y decimales) al mensaje para el posible despliegue del contrato en L2. Si la dirección del token en L2 ya está almacenada en el `tokenMapping`, `L1StandardERC20Gateway` cargará directamente la dirección del token en L2 desde el mapeo.
+5. `L1StandardERC20Gateway` codifica el mensaje de depósito de tokens y llama a `L1ScrollMessenger` para enviar el mensaje.
+6. La transacción en L2 correspondiente llama a la función `L2ScrollMessenger.relayMessage` para finalizar el depósito en L2. En el caso de depósitos de tokens ERC20 estándar, la transacción llama entonces a `L2StandardERC20Gateway.finalizeDepositERC20`.
+7. Si este contrato de token ERC20 no se ha desplegado en L2, `L2StandardERC20Gateway` extraerá los metadatos del token del mensaje y llama a `ScrollStandardERC20Factory` para desplegar el token ERC20 estándar en L2.
+8. `L2StandardERC20Gateway` llama a la función mint en el contrato de token ERC20 en L2 correspondiente.
+9. Si el usuario llama a `depositERC20AndCall` en L1, `L2StandardERC20Gateway` llamará al contrato en L2 de destino con datos adicionales.
+
+### ERC20 Tokens Personalizados
+
+En comparación con los tokens ERC20 estándares, el contrato L2 de los tokens ERC20 personalizados es desplegado por el propietario del token. Los pasos restantes para el depósito de tokens ERC20 personalizados son:
+
+3. El contrato `L1CustomERC20Gateway` bloquea los tokens ERC20 en L1 transfiriéndolos del emisor a sí mismo.
+4. El contrato `L1CustomERC20Gateway` requiere una dirección de token ERC20 en L2 presente en el `tokenMapping`. Recupera la dirección de token ERC20 correspondiente, codifica el mensaje de depósito de token y lo reenvía a `L1ScrollMessenger`.
+5. La transacción en L2 correspondiente llama a la función `L2ScrollMessenger.relayMessage` para finalizar el depósito en L2. En el caso de depósitos de tokens ERC20 personalizados, la transacción llama a `L2CustomERC20Gateway.finalizeDepositERC20`.
+6. `L2CustomERC20Gateway` llama a la función "mint" en el correspondiente contrato de tokens ERC20 de L2. Es necesario que el contrato de tokens ERC20 en L2 conceda permisos de emisión al contrato `L2CustomERC20Gateway`.
+7. Si el usuario llama a `depositERC20AndCall` en L1, la `L2CustomERC20Gateway` llamará al contrato en L2 de destino con datos adicionales.
+
+### WETH Token
+
+Proporcionamos una gateway personalizada `L1WETHGateway` para Wrapped ETH token en L1 y registramos la dirección de la gateway en el `L1GatewayRouter`. El depósito del token WETH funciona de la siguiente manera.
+
+3. `L1WETHGateway` bloquea los tokens WETH transfiriéndolos del remitente a sí mismo y desenvolviendo el token WETH a token ETH nativo. A continuación, el token ETH y `msg.value` (para pagar la comisión de retransmisión) se envían juntos al contrato `L1ScrollMessenger`.
+4. `L1WETHGateway` codifica el mensaje de depósito del token y lo reenvía a `L1ScrollMessenger`.
+5. La transacción en L2 correspondiente llama a la función `L2ScrollMessenger.relayMessage` para finalizar el depósito en L2. En el caso del depósito de tokens WETH, la transacción llama a `L2WETHGateway.finalizeDepositERC20`.
+6. `L2WETHGateway` envuelve de nuevo el token ETH depositado en L2 WETH y lo transfiere a la dirección del destinatario en L2.
+7. Si el usuario llama a `depositERC20AndCall` en L1, `L2WETHGateway` llamará al contrato de destino en L2 con datos adicionales.
+
+## Depósito de tokens ERC-721/ERC-1155
+
+El depósito de tokens ERC-721 o ERC-1155 funciona de forma muy similar a los tokens ERC20. Se pueden utilizar las gateways `L1ERC721Gateway` o `L1ERC1155Gateway` para depositar tokens ERC-721 /ERC-1155 desde L1.
+
+```solidity
+function depositERC721(
+    address _token,
+    uint256 _tokenId,
+    uint256 _gasLimit
+) external payable;
+
+function depositERC721(
+    address _token,
+    address _to,
+    uint256 _tokenId,
+    uint256 _gasLimit
+) external payable;
+
+function depositERC1155(
+    address _token,
+    uint256 _tokenId,
+    uint256 _amount,
+    uint256 _gasLimit
+) external payable;
+
+function depositERC1155(
+    address _token,
+    address _to,
+    uint256 _tokenId,
+    uint256 _amount,
+    uint256 _gasLimit
+) external payable;
+```
+
+Para facilitar una gran cantidad de depósitos de tokens ERC-721 o ERC-1155, también proporcionamos funciones de depósito por lotes en el contrato `L1ERC721Gateway` y `L1ERC1155Gateway` a través de las siguientes funciones:
+
+```solidity
+function batchDepositERC721(
+    address _token,
+    uint256[] calldata _tokenIds,
+    uint256 _gasLimit
+) external payable;
+
+function batchDepositERC721(
+    address _token,
+    address _to,
+    uint256[] calldata _tokenIds,
+    uint256 _gasLimit
+) external payable;
+
+function batchDepositERC1155(
+    address _token,
+    uint256[] calldata _tokenIds,
+    uint256[] calldata _amounts,
+    uint256 _gasLimit
+) external payable;
+
+function batchDepositERC1155(
+    address _token,
+    address _to,
+    uint256[] calldata _tokenIds,
+    uint256[] calldata _amounts,
+    uint256 _gasLimit
+) external payable;
+```
+
+Los contratos de contrapartida de L2 para los tokens ERC-721 o ERC-1155 son `L2ERC721Gateway` y `L2ERC1155Gateway`. Se utilizan para finalizar depósitos en L2.

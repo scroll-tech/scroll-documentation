@@ -1,0 +1,139 @@
+---
+section: developers
+date: Last Modified
+title: "El Scroll Messenger"
+lang: "es"
+permalink: "developers/l1-and-l2-bridging/the-scroll-messenger"
+whatsnext: { "Comisiones de Transacciones en Scroll": "/es/developers/transaction-fees-on-scroll/" }
+excerpt: "La documentación de Scroll Messenger para el paso arbitrario de mensajes entre L1 y L2."
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+Los contratos Scroll Messenger permiten enviar mensajes arbitrarios de L1 a L2 o viceversa. Esto permite ejecutar funciones en otra cadena de forma segura y sin tener que pedirle permisos a un intermediario. Para enviar un mensaje de L1 a L2, utiliza
+el smart contract  desplegado en L1, `L1ScrollMessenger`. Para enviar un mensaje de L2 a L1, utiliza el contrato desplegado en L2, `L2ScrollMessenger`.
+
+<Aside type="caution" title="">
+  Cuando se envía una transacción a través del **Scroll Messenger** desplegado en L1 y L2, el remitente de la transacción resultante
+  (`CALLER` o `msg.sender`) será la dirección del contrato de Messenger desplegado en la cadena receptora.
+  <br />
+  En futuras versiones de Scroll, las transacciones forzadas desde el L1 permitirán establecer el remitente en L2 como el EOA original
+  original en L1. También permitirá a terceros retransmitir transacciones firmadas de forma segura.
+</Aside>
+
+## Finalización de transacciones en L1
+
+Cualquier transacción procedente de L2 necesita ser finalizada usando la función `relayMessageWithProof` en el contrato Scroll Messenger. Llamamos a este proceso "ejecución de una transacción de tipo Retiro", y es necesario tanto para enviar mensajes arbitrarios como para transferir activos a través de una gateway o del router. Cuando utilices `relayMessageWithProof`, tendrás que proporcionar una prueba de inclusión del Merkle Tree que demuestre que tu transacción está incluida en el trie de mensajes de "retiro", junto con otros parámetros. La producción de esta prueba y estos valores se puede hacer localmente y sin permisos, pero por el momento, la forma más fácil de recuperar estos parámetros es a través de nuestra API backend alojada en https://sepolia-api-bridge.scroll.io/api/.
+
+<Aside type="danger" title="API Experimental">
+  Esta API se ha creado para nuestra IU del Bridge. Aún no está finalizada y puede cambiar en el futuro. Actualizaremos esta guía
+  cuando la API esté finalizada.
+</Aside>
+
+Proporciona la dirección de la EOA o del contrato responsable de iniciar la transacción original en L2 al endpoint `/claimable`. La API te proporcionará toda la información necesaria para concluir con éxito la transacción en L1.
+Echa un vistazo al siguiente ejemplo:
+
+```bash
+https://sepolia-api-bridge.scroll.io/api/claimable?address=0x031407eaaffFB4f1EC2c999bE4477E52C81de3c5&page_size=10&page=1
+```
+
+La API debería devolverte los datos de su transacción en el siguiente formato:
+
+```json
+{
+  "errcode": 0,
+  "errmsg": "",
+  "data": {
+    "result": [
+      {
+        "hash": "0xa476850306d6ee52b127628ded34dcf2343570873cce9c5383bd497db48d4f9b",
+        "amount": "",
+        "to": "",
+        "isL1": false,
+        "l1Token": "",
+        "l2Token": "",
+        "blockNumber": 748,
+        "blockTimestamp": null,
+        "finalizeTx": {
+          "hash": "",
+          "amount": "",
+          "to": "",
+          "isL1": false,
+          "blockNumber": 0,
+          "blockTimestamp": null
+        },
+        "claimInfo": {
+          "from": "0x031407eaaffFB4f1EC2c999bE4477E52C81de3c5",
+          "to": "0x1039057185CFe192d16c03F5656225821A193FD5",
+          "value": "0",
+          "nonce": "9",
+          "batch_hash": "0x49a18d72dbceeb957f918947b532db452c031f528e7e6bf329007066638c5e50",
+          "message": "0xa413686200000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000005686f6c6973000000000000000000000000000000000000000000000000000000",
+          "proof": "0x69b4ee6cf9a38bed79668ddd347fef2bdff44c3760c9309fa41decfd60202d22ad3228b676f7d3cd4284a5443f17f1962b36e491b30a40b2405849e597ba5fb5b4c11951957c6f8f642c4af61cd6b24640fec6dc7fc607ee8206a99e92410d3079f53171df5c0661d2afe86c4d97b6f34278daf6a0ea9baff5b4fc979d5629a5",
+          "batch_index": "93"
+        },
+        "createdTime": null
+      }
+    ],
+    "total": 1
+  }
+}
+```
+
+El objeto `claimInfo` bajo el json `result` devuelto tiene toda la información necesaria para ejecutar su transacción en L1. Los parámetros que necesita `relayMessageWithProof` son: `from`, `to`, `value`, `nonce`, `message` y `proof`. Introduzca estos datos en
+la función `relayMessageWithProof` en L1 para ejecutar y finalizar tu transacción en L1.
+
+<Aside type="tip" title="">
+  Todas las transacciones L2 se agrupan en lotes: debes esperar a que finalice el lote que incluye tu transacción antes de llamar a `relayMessageWithProof`. El índice del lote de tu transacción se devuelve en el valor `batch_index` en el endpoint `/claimable`, y puedes seguir el progreso en el [Scroll Rollup
+  Explorer](https://scroll.io/rollupscan?page=1&per_page=10).
+</Aside>
+
+## API del Messenger
+
+Visita la [librería de npm](https://www.npmjs.com/package/@scroll-tech/contracts?activeTab=code) para consultar la documentación completa de la API de los contratos de Scroll.
+
+### sendMessage
+
+```solidity
+function sendMessage(
+  address target,
+  uint256 value,
+  bytes calldata message,
+  uint256 gasLimit,
+  address refundAddress
+) external payable;
+```
+
+Envía datos arbitrarios de una cadena a otra. Nos permite ejecutar funciones entre cadenas.
+
+| Parámetros    | Descripción                                                                                                         |
+| ------------- | ------------------------------------------------------------------------------------------------------------------- |
+| target        | Dirección de la cuenta que recibe el mensaje. El receptor puede ser un smart contract o una EOA. |
+| value         | Cantidad de ETH pasado al llamar al contrato destino.                                                        |
+| message       | Contenido del mensaje. Este es el calldata arbitrario a ejecutar.                                          |
+| gasLimit      | Límite de gas necesario para completar la retransmisión del mensaje en la cadena correspondiente.                                        |
+| refundAddress | Dirección de la cuenta que recibirá la comisión reembolsada.                                                      |
+
+### relayMessageWithProof
+
+```solidity
+function relayMessageWithProof(
+  address from,
+  address to,
+  uint256 value,
+  uint256 nonce,
+  bytes memory message,
+  L2MessageProof memory proof
+) external;
+```
+
+Retransmite un mensaje L2 => L1 con prueba de mensaje.
+
+| Parámetros | Descripción                                                  |
+| --------- | ------------------------------------------------------------ |
+| from      | Dirección del remitente del mensaje.                    |
+| to        | Dirección del destinatario del mensaje.                 |
+| value     | El msg.value pasado a la llamada del mensaje.                    |
+| nonce     | Nonce del mensaje para evitar ataques de tipo replay.             |
+| message   | Contenido del mensaje.                                  |
+| proof     | Prueba utilizada para verificar la corrección de la transacción. |
