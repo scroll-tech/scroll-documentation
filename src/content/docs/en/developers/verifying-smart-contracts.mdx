@@ -91,5 +91,9 @@ npx hardhat verify --network scrollSepolia 0xD9880690bd717189cC3Fbe7B9020F27fae7
 When using Foundry, the `verify-contract` helps automate the process of verifying contracts.
 
 ```bash
-forge verify-contract <Contract Address> <Space separated params> <Solidity file>:<Contract name> --chain-id 534351 --verifier-url https://sepolia-blockscout.scroll.io/api --verifier blockscout
+forge verify-contract <Contract Address> <Space separated params> <Solidity file>:<Contract name> --chain-id 534351 --verifier-url https://sepolia-blockscout.scroll.io/api\? --verifier blockscout
 ```
+
+<Aside type="danger" title="Warning">
+  Notice we add `\?` at the end of the verifier URL or otherwise verification would fail. (Last tested on forge v0.2.0).
+</Aside>
