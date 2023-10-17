@@ -1,7 +1,7 @@
 ---
 section: developers
 date: Last Modified
-title: "Scroll Sepolia Contracts"
+title: "Scroll Contracts"
 lang: "en"
 permalink: "developers/scroll-contracts"
 whatsnext: { "Ethereum & Scroll Differences": "/developers/ethereum-and-scroll-differences" }
@@ -9,28 +9,149 @@ excerpt: "The network info and contract addresses you need to start with Scroll 
 ---
 
 import Aside from "../../../../components/Aside.astro"
+import ToggleElement from "../../../../components/ToggleElement.astro"
+
+In this article you'll find useful contract addresses for Scroll and commonly used protocols. See the section below for [Scroll Sepolia](#scroll-sepolia-testnet) info.
 
 ## Network Info
 
-| Network Name       | Scroll Sepolia Testnet                                                        | Sepolia Testnet                                                              |
-| ------------------ | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| RPC URL            | [https://sepolia-rpc.scroll.io/](https://sepolia-rpc.scroll.io/)              | [https://eth-sepolia-public.unifra.io](https://eth-sepolia-public.unifra.io) |
-| Chain ID           | 534351                                                                        | 11155111                                                                     |
-| Currency Symbol    | ETH                                                                           | ETH                                                                          |
-| Block Explorer URL | [https://sepolia-blockscout.scroll.io](https://sepolia-blockscout.scroll.io/) | [https://sepolia.etherscan.io](https://sepolia.etherscan.io)                 |
+Use the table below to configure your Ethereum tools to the Scroll mainnet.
 
-## Scroll Sepolia Contracts
+| Network Name       | Scroll                                             | Ethereum Mainnet                                     |
+| ------------------ | -------------------------------------------------- | ---------------------------------------------------- |
+| RPC URL            | [https://rpc.scroll.io/](https://rpc.scroll.io/)   | [https://eth.llamarpc.com](https://eth.llamarpc.com) |
+| Chain ID           | 534352                                             | 1                                                    |
+| Currency Symbol    | ETH                                                | ETH                                                  |
+| Block Explorer URL | [https://scrollscan.com/](https://scrollscan.com/) | [https://etherscan.io](https://etherscan.io)         |
+
+<ToggleElement anchor="mainnet-additional-infra">
+  <div slot="title">Additional Scroll Mainnet RPCs and Infra</div>
+  - [Scroll Native Bridge](https://scroll.io/bridge)
+  - [Scroll Rollup Scanner](https://scroll.io/rollupscan)
+  - [Scroll RPC Providers on ChainList.org](https://chainlist.org/chain/534352)
+  - [Ethereum RPC Providers on ChainList.org](https://chainlist.org/chain/1)
+  {/* - Additional Block Explorers:
+    - [Dora](https://www.ondora.xyz/network/scroll/interactions)
+    - [L2Scan](https://scroll.l2scan.co/) */}
+
+</ToggleElement>
+
+## Scroll Contracts
 
 ### Rollup
 
-- L1 Rollup (Scroll Chain): `0x2D567EcE699Eabe5afCd141eDB7A4f2D0D6ce8a0`
+- L1 Rollup (Scroll Chain): `0xa13BAF47339d63B743e7Da8741db5456DAc1E556`
 
 ### ETH and ERC20 Bridge
+
+- L1 ERC20 Gateway Router: `0xF8B1378579659D8F7EE5f3C929c2f3E332E41Fd6`
+- L2 ERC20 Gateway Router: `0x4C0926FF5252A435FD19e10ED15e5a249Ba19d79`
+
+### Advanced Bridge Contracts
+
+- Scroll Messenger
+  - L1 Messenger: `0x6774Bcbd5ceCeF1336b5300fb5186a12DDD8b367`
+  - L2 Messenger: `0x781e90f1c8Fc4611c9b7497C3B47F99Ef6969CbC`
+- ETH Bridge
+  - L1 ETH Gateway: `0x7F2b8C31F88B6006c382775eea88297Ec1e3E905`
+  - L2 ETH Gateway: `0x6EA73e05AdC79974B931123675ea8F78FfdacDF0`
+  - L1 WETH Gateway: `0x7AC440cAe8EB6328de4fA621163a792c1EA9D4fE`
+  - L2 WETH Gateway: `0x7003E7B7186f0E6601203b99F7B8DECBfA391cf9`
+- ERC20 Bridge
+  - L1 ERC20 Standard Gateway: `0xD8A791fE2bE73eb6E6cF1eb0cb3F36adC9B3F8f9`
+  - L2 ERC20 Standard Gateway: `0xE2b4795039517653c5Ae8C2A9BFdd783b48f447A`
+  - L1 ERC20 Custom Gateway: `0xb2b10a289A229415a124EFDeF310C10cb004B6ff`
+  - L2 ERC20 Custom Gateway: `0x64CCBE37c9A82D85A1F2E74649b7A42923067988`
+- ERC721 Bridge
+  - L1 ERC721 Gateway: `0x6260aF48e8948617b8FA17F4e5CEa2d21D21554B`
+  - L2 ERC721 Gateway: `0x7bC08E1c04fb41d75F1410363F0c5746Eae80582`
+- ERC1155 Bridge
+  - L1 ERC1155 Gateway: `0xb94f7F6ABcb811c5Ac709dE14E37590fcCd975B6`
+  - L2 ERC1155 Gateway: `0x62597Cc19703aF10B58feF87B0d5D29eFE263bcc`
+- Gas Oracle
+  - L2 Gas Oracle (deployed on Mainnet): `0x987e300fDfb06093859358522a79098848C33852`
+
+### L2 Predeploys
+
+- Message Queue: `0x5300000000000000000000000000000000000000`
+- Gas Price Oracle: `0x5300000000000000000000000000000000000002`
+- Whitelist: `0x5300000000000000000000000000000000000003`
+- WETH L2: `0x5300000000000000000000000000000000000004`
+- Transaction Fee Vault: `0x5300000000000000000000000000000000000005`
+
+## Protocols on Scroll Mainnet
+
+### Uniswap v3
+
+- Main Contracts
+  - Core Factory: `0x70C62C8b8e801124A4Aa81ce07b637A3e83cb919`
+  - NFT Position Manager: `0xB39002E4033b162fAc607fc3471E205FA2aE5967`
+  - Router: `0xfc30937f5cDe93Df8d48aCAF7e6f5D8D8A31F636`
+- Additional Contracts
+  - multicall2Address: `0xC1D2e074C38FdD5CA965000668420C80316F0915`
+  - proxyAdminAddress: `0x1E6dcAb806A42055098f23E2B3ac72D6E195F967`
+  - tickLensAddress: `0x85780e12e90D2a684eB8E7404c985b5B5c8ce7E9`
+  - nftDescriptorLibraryAddressV1_3_0: `0xAeE9c206ba89F3DA25EEe4636208519e0B86965B`
+  - nonfungibleTokenPositionDescriptorAddressV1_3_0: `0xACcf12204b7591B2ECCEFe737440B0f53748B191`
+  - descriptorProxyAddress: `0x675DD953225D296A44790dC1390a1E7eF378f464`
+  - v3MigratorAddress: `0xF00577B5Dd0DA227298E954Ed11356F264Cf93d4`
+  - v3StakerAddress: `0xFdFbE973c9ecB036Ecfb7af697FcACe789D3f928`
+  - quoterV2Address: `0x2566e082Cb1656d22BCbe5644F5b997D194b5299`
+
+## Additional Useful Contracts
+
+- Multicall3: `0xcA11bde05977b3631167028862bE2a173976CA11`
+
+## Tokens
+
+<Aside type="note" title="">
+  Bridged tokens from Ethereum Mainnet using the native bridge can be found on and added to the
+  [token-list](https://github.com/scroll-tech/token-list) repo.
+</Aside>
+
+{" "}
+
+<br />
+
+---
+
+## Scroll Sepolia Testnet
+
+### Network Info
+
+Use the table below to configure your Ethereum tools to the Scroll Sepolia Testnet.
+
+| Network Name       | Scroll Sepolia                                                    | Ethereum Sepolia                                             |
+| ------------------ | ----------------------------------------------------------------- | ------------------------------------------------------------ |
+| RPC URL            | [https://sepolia-rpc.scroll.io/](https://sepolia-rpc.scroll.io/)  | [https://rpc2.sepolia.org](https://rpc2.sepolia.org)         |
+| Chain ID           | 534351                                                            | 11155111                                                     |
+| Currency Symbol    | ETH                                                               | ETH                                                          |
+| Block Explorer URL | [https://sepolia.scrollscan.com](https://sepolia.scrollscan.com/) | [https://sepolia.etherscan.io](https://sepolia.etherscan.io) |
+
+<ToggleElement anchor="sepolia-additional-infra">
+  <div slot="title">Additional Scroll Sepolia RPCs and Infra</div>
+  - [Scroll Sepolia Native Bridge](https://sepolia.scroll.io/bridge)
+  - [Scroll Sepolia Rollup Scanner](https://sepolia.scroll.io/rollupscan)
+  - [Scroll Sepolia RPC Providers on ChainList.org](https://chainlist.org/chain/534351)
+  - [Ethereum Sepolia RPC Providers on ChainList.org](https://chainlist.org/chain/11155111)
+  - Additional Block Explorers:
+    - [Dora](https://www.ondora.xyz/network/scroll-sepolia/interactions)
+    - [L2Scan](https://scroll.l2scan.co/)
+
+</ToggleElement>
+
+### Scroll Sepolia Contracts
+
+#### Rollup
+
+- L1 Rollup (Scroll Chain): `0x2D567EcE699Eabe5afCd141eDB7A4f2D0D6ce8a0`
+
+#### ETH and ERC20 Bridge
 
 - L1 ERC20 Gateway Router: `0x13FBE0D0e5552b8c9c4AE9e2435F38f37355998a`
 - L2 ERC20 Gateway Router: `0x9aD3c5617eCAa556d6E166787A97081907171230`
 
-### Advanced Bridge Contracts
+#### Advanced Bridge Contracts
 
 - Scroll Messenger
   - L1 Messenger: `0x50c7d3e7f7c656493D1D76aaa1a836CedfCBB16A`
@@ -54,7 +175,7 @@ import Aside from "../../../../components/Aside.astro"
 - Gas Oracle
   - L2 Gas Oracle (deployed on Sepolia): `0x247969F4fad93a33d4826046bc3eAE0D36BdE548`
 
-### L2 Predeploys
+#### L2 Predeploys
 
 - Message Queue: `0x5300000000000000000000000000000000000000`
 - Gas Price Oracle: `0x5300000000000000000000000000000000000002`
@@ -62,9 +183,9 @@ import Aside from "../../../../components/Aside.astro"
 - WETH L2: `0x5300000000000000000000000000000000000004`
 - Transaction Fee Vault: `0x5300000000000000000000000000000000000005`
 
-## Protocols on Sepolia
+### Protocols
 
-### Uniswap v3
+#### Uniswap v3
 
 - Frontend website: [https://uniswap-showcase.sepolia.scroll.xyz/](https://uniswap-showcase.sepolia.scroll.xyz/)
 - Main Contracts
@@ -82,19 +203,19 @@ import Aside from "../../../../components/Aside.astro"
   - v3StakerAddress: `0xe7b82794Cab21e665a3e6f8ea562d392AA6E0619`
   - quoterV2Address: `0xd5dd33650Ef1DC6D23069aEDC8EAE87b0D3619B2`
 
-### Aave
+#### Aave
 
 See this [Github gist](https://gist.github.com/dghelm/7fe68f0a524f30846e1142721c081d84).
 
-## Additional Useful Contracts
+### Additional Useful Contracts
 
 - Multicall3: `0xcA11bde05977b3631167028862bE2a173976CA11`
 
-## Tokens
+### Tokens
 
 <Aside type="note" title="">
-  Bridged tokens from Sepolia using the native bridge can be added to the
-  [token-list](https://github.com/scroll-tech/token-list) repo.
+  Bridged tokens from Ethereum Sepolia using the native bridge can be added to the
+  [token-list](https://github.com/scroll-tech/token-list/tree/sepolia) repo's `sepolia` branch.
 </Aside>
 
 - Gho Token: `0xD9692f1748aFEe00FACE2da35242417dd05a8615`

@@ -13,12 +13,13 @@ import ClickToZoom from "../../../../components/ClickToZoom.astro"
 import verify1 from "./_images/verify1.png"
 import CodeSample from "../../../../components/CodeSample/CodeSample.astro"
 
-After deploying your smart contracts, it's important to verify your code on [our block explorer](https://sepolia-blockscout.scroll.io/). This can be done in an automated way using your developer tooling or using Blockscout's Web UI.
+After deploying your smart contracts, it's important to verify your code on [our block explorer](https://scrollscan.com/) or the [Sepolia block explorer](https://sepolia-blockscout.scroll.io).
 
-<Aside type="danger" title="Warning">
-  Our Blockscout instance currently has inconsistent behavior in verifying contracts with Foundry. We're working on a
-  fix, along with other stability improvements. Don't hesitate to come ask for help [on
-  Discord](https://discord.com/channels/853955156100907018/1028102371894624337) though.
+This can be done in an automated way using your developer tooling or using Blockscout's Web UI.
+
+<Aside type="tip" title="Blockscout vs Etherscan">
+  The below instructions for verifying on our Sepolia Blockscout instance will need to be altered to work with Etherscan
+  deployments. As additional services come online for mainnet, we'll update these instructions.
 </Aside>
 
 ## Using Developer Tools
@@ -80,6 +81,12 @@ npx hardhat verify --network scrollSepolia 0xD9880690bd717189cC3Fbe7B9020F27fae7
 </Aside>
 
 ### Foundry
+
+<Aside type="danger" title="Warning">
+  Our Blockscout instance currently has inconsistent behavior in verifying contracts with Foundry. We're working on a
+  fix, along with other stability improvements. Don't hesitate to come ask for help [on
+  Discord](https://discord.com/channels/853955156100907018/1028102371894624337) though.
+</Aside>
 
 When using Foundry, the `verify-contract` helps automate the process of verifying contracts.
 
