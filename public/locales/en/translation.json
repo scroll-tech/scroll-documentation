@@ -66,6 +66,8 @@
       "commonErrors": "Common Errors",
       "rollupExplorer": "Rollup Explorer",
       "scrollSepoliaBlockExplorer": "Scroll Sepolia Explorer",
+      "scrollMainnet": "Scroll Mainnet",
+      "scrollscan": "Scrollscan Block Explorer",
       "sepoliaBlockExplorer": "Sepolia Explorer",
       "community": "Community",
       "discord": "Discord",

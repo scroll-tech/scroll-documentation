@@ -40,9 +40,19 @@ export const getSidebar = () => {
           },
           {
             title: t("sidebar.gettingStarted.scrollSepoliaBlockExplorer"),
-            url: "https://sepolia-blockscout.scroll.io/",
+            url: "https://sepolia.scrollscan.com/",
           },
           { title: t("sidebar.gettingStarted.sepoliaBlockExplorer"), url: "https://sepolia.etherscan.io/" },
+          { title: t("sidebar.gettingStarted.rollupExplorer"), url: "https://sepolia.scroll.io/rollupscan" },
+        ],
+      },
+      {
+        section: t("sidebar.gettingStarted.scrollMainnet"),
+        contents: [
+          {
+            title: t("sidebar.gettingStarted.scrollscan"),
+            url: "https://scrollscan.com/",
+          },
           { title: t("sidebar.gettingStarted.rollupExplorer"), url: "https://scroll.io/rollupscan" },
         ],
       },
