@@ -38,4 +38,4 @@ Scroll mainnet on Ethereum is live! We also have a testnet running on Ethereum S
 
 ## Where is Scroll headed?
 
-We're released our mainnet on Ethereum, but there's still more work to do. Next up -- decentralizing each component of the stack. To stay up to date, check out [our blog](https://scroll.io/blog) or follow along in [our Discord](https://discord.gg/scroll) or on [Twitter](https://twitter.com/scroll_zkp).
+We've released our mainnet on Ethereum, but there's still more work to do. Next up -- decentralizing each component of the stack. To stay up to date, check out [our blog](https://scroll.io/blog) or follow along in [our Discord](https://discord.gg/scroll) or on [Twitter](https://twitter.com/scroll_zkp).
