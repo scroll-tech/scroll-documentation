@@ -10,7 +10,7 @@ excerpt: "There are a number of technical details that differ between Ethereum m
 
 import Aside from "../../../../components/Aside.astro"
 
-A number of technical details differ between Ethereum mainnet's EVM and Scroll's modified design for a zkEVM. Below you can see those differences as they exist on Scroll Sepolia.
+A number of technical details differ between Ethereum mainnet's EVM and Scroll's modified design for a zkEVM. Below you can see those differences as they exist on Scroll and Scroll Sepolia.
 
 For open-source contributors and infrastructure builders, please contact our team for additional support.
 
@@ -71,7 +71,7 @@ When verifying `EXTCODESIZE`, it is expensive to load the whole contract data in
 
 ## Block Time
 
-The Sepolia Testnet aims for a constant block time of 3 seconds. This is shorter and more consistent than the 12 seconds used in the Ethereum under ideal conditions.
+Scroll aims for a constant block time of 3 seconds. This is shorter and more consistent than the 12 seconds used in the Ethereum under ideal conditions.
 
 This was chosen for two reasons:
 
@@ -90,7 +90,7 @@ You can read in more detail on Shanghai hard fork differences from London on the
 
 ## Transaction Fees
 
-The fee charged to Scroll Sepolia transactions contains two parts:
+The fee charged to Scroll transactions contains two parts:
 
 - **L2 gas fee:** similar to L1, the amount of L2 execution fee equals to `L2_gas_price * L2_gas_used`, covering the following costs:
   - L2 sequencer execution & storage cost

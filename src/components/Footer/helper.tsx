@@ -23,6 +23,10 @@ const TwitterIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
 
 export const aboutList = [
   {
+    name: "Bug Bounty",
+    href: "https://immunefi.com/bounty/scroll/",
+  },
+  {
     name: "Join Us",
     href: "https://jobs.lever.co/ScrollFoundation",
   },
