@@ -1,0 +1,20 @@
+table.__ethereum-rpc-table > caption {
+  /* table's :before is some how on top of caption only in firefox */
+  position: relative;
+  z-index: 1;
+}
+
+table.__ethereum-rpc-table > caption,
+table.__ethereum-rpc-table > tbody tr:last-child td:first-child,
+table.__ethereum-rpc-table > tbody tr:last-child td:last-child {
+  border-width: 0;
+}
+
+table.__ethereum-rpc-table > thead > tr > th {
+  border-bottom-width: 0;
+}
+
+table.__ethereum-rpc-table > caption > span {
+  font-size: 1rem;
+  font-weight: bold;
+}
