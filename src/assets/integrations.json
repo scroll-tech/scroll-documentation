@@ -1,0 +1,16 @@
+{
+  "integrations": [
+    {
+      "name": "Safe",
+      "url": "https://safe.scroll.xyz/",
+      "network": ["sepolia", "mainnet"]
+    },
+    {
+      "name": "The Graph",
+      "url": "https://edgeandnode.notion.site/The-Graph-Subgraph-Studio-Non-Rate-Limited-Chain-Integration-889fe061ee6b4423a7f8e2c8070b9294?pvs=4",
+      "network": ["sepolia", "mainnet"],
+      "tags": ["indexer"],
+      "comment": "Use the latest version of The Graph's cli."
+    }
+  ]
+}

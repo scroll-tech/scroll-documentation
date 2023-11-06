@@ -85,6 +85,10 @@ export const getSidebar = () => {
             url: formatUrl("developers/scroll-contracts"),
           },
           {
+            title: t("sidebar.developers.deverlopTooling"),
+            url: formatUrl("developers/deployed-tooling"),
+          },
+          {
             title: t("sidebar.developers.ethereumAndScrollDifferences"),
             url: formatUrl("developers/ethereum-and-scroll-differences"),
           },
