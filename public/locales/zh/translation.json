@@ -45,58 +45,82 @@
   "sidebar": {
     "gettingStarted": {
       "gettingStarted": "入门",
-      "overview": "概述",
+      "overview": "概览",
+
+      "scrollSepoliaTestnet": "Scroll Sepolia 测试网",
       "userGuide": "用户指南",
       "setup": "设置",
       "faucet": "水龙头",
       "bridge": "跨链桥",
       "transferTokens": "转移代币",
       "commonErrors": "常见错误",
-      "rollupExplorer": "Rollup浏览器",
-      "community": "社区",
-      "communityForum": "社区论坛",
-      "scrollSepoliaTestnet": "Scroll Sepolia 测试网",
       "scrollSepoliaBlockExplorer": "Scroll Sepolia 浏览器",
-      "sepoliaBlockExplorer": "Sepolia 浏览器"
+      "sepoliaBlockExplorer": "Sepolia 浏览器",
+      "rollupExplorer": "Rollup 浏览器",
+
+      "community": "社区",
+      "communityForum": "社区论坛"
     },
     "developers": {
       "developers": "开发者",
-      "buildingOnScroll": "在Scroll上开发",
+      "buildingOnScroll": "在 Scroll 上开发",
       "verifyingSmartContracts": "验证智能合约",
       "developerQuickstart": "开发者快速入门",
-      "integrations": "集成",
       "scrollContracts": "Scroll 合约",
       "ethereumAndScrollDifferences": "Ethereum 和 Scroll 的区别",
-      "ethAndErc20TokenBridge": "ETH 和 ERC20 代币跨链桥",
       "l1AndL2Bridging": "L1 和 L2 跨链",
+      "ethAndErc20TokenBridge": "ETH 和 ERC20 代币跨链桥",
       "erc721NftBridge": "ERC721 NFT 跨链桥",
       "erc1155TokenBridge": "ERC1155 代币跨链桥",
-      "transactionFeesOnScroll": "Scroll上的交易手续费",
-      "l2Fee": "L2 费用",
-      "l1Fee": "L1 费用",
+      "transactionFeesOnScroll": "Scroll 上的交易手续费",
+
       "guides": "指南",
-      "gasOracle": "Gas 预言机",
-      "future": "未来",
       "contractDeploymentTutorial": "合约部署教程",
       "crossChainInteraction": "Scroll Messenger 跨链交互",
-      "bridgingERC20TokenThroughCustomGateway": "通过自定义Gateway跨链ERC20",
-      "bridgingERC721NftThroughCustomGateway": "通过自定义Gateway跨链ERC721 NFT",
-      "bridgingERC1155ThroughCustomGateway": "通过自定义Gateway跨链 ERC1155",
-      "estimatingGasAndTxFees": "预估Gas和交易手续费",
+      "bridgingERC20TokenThroughCustomGateway": "通过自定义 Gateway 跨链 ERC20",
+
       "resources": "资源",
-      "rollupExplorer": "Rollup浏览器",
+      "rollupExplorer": "Rollup 浏览器",
       "scrollSepoliaBlockExplorer": "Scroll Sepolia 浏览器",
       "sepoliaBlockExplorer": "Sepolia 浏览器"
     },
     "technology": {
-      "overview": "概述",
-      "scrollArchitecture": "Scroll架构"
+      "overview": "概览",
+      "scrollArchitecture": "Scroll 架构",
+
+      "scrollChain": "Scroll 链",
+      "accountsAndState": "账户和状态",
+      "blocks": "区块",
+      "transactions": "交易",
+      "rollupProcess": "Rollup 流程",
+      "evmDifferencesFromEthereum": "和以太坊 EVM 的区别",
+
+      "bridge": "跨链桥",
+      "crossDomainMessaging": "跨链消息传递",
+      "depositGateways": "存款网关",
+      "withdrawGateways": "提款网关",
+
+      "sequencer": "排序器",
+      "executionNode": "执行节点",
+      "rollupNode": "Rollup 节点",
+      "zkTrie": "zkTrie树",
+
+      "zkevm": "zkEVM",
+      "introToZkevm": "zkEVM 介绍",
+      "zkevmOverview": "zkEVM 概览",
+
+      "security": "安全",
+      "audits-and-bug-bounty": "审计和漏洞赏金"
     },
     "learn": {
-      "zkEVMOverview": "zkEVM概述"
-    },
-    "infrastructure": {
-      "introduction": "介绍"
+      "ethereumAndProtocols": "以太坊与协议",
+      "theScalabilityProblem": "扩容问题",
+      "introToRollups": "Rollups 介绍",
+      "zeroKnowledge": "零知识证明",
+      "introToZeroKnowledge": "零知识证明介绍",
+      "polynomialCommitmentSchemes": "多项式承诺方案",
+      "kzgCommitmentScheme": "KZG 承诺方案",
+      "additionalResources": "其他资源"
     }
   },
   "notTranslated": {

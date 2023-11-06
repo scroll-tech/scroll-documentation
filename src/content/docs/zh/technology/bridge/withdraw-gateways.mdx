@@ -1,40 +1,48 @@
 ---
 section: technology
 date: Last Modified
-title: "Withdraw Gateways"
-lang: "en"
+title: "提款网关"
+lang: "zh"
 permalink: "technology/bridge/withdraw-gateways"
-whatsnext: { "Sequencer": "/technology/sequencer/execution-node/" }
+whatsnext: { "排序器": "/technology/sequencer/execution-node/" }
 ---
 
 import ClickToZoom from "../../../../../components/ClickToZoom.astro"
 import WithdrawWorkflow from "../_images/withdraw.png"
 
 This document describes how users and developers can utilize gateways to withdraw tokens from L2 to L1. We provide several gateways for standard tokens and a gateway router on L2, listed in the table below.
+本文档介绍了用户和开发者如何使用网关将代币从 L2 提取至 L1。
+我们在 L2 上为标准代币提供了多个网关，并提供了一个网关路由器，如下表所示。
 
-| Gateway Contract         | Description                                                         |
+| 网关合约        | 描述                                                         |
 | ------------------------ | ------------------------------------------------------------------- |
-| `L2GatewayRouter`        | The gateway router supports the withdrawal of ETH and ERC20 tokens. |
-| `L2ETHGateway`           | The gateway for ETH withdrawals.                                    |
-| `L2StandardERC20Gateway` | The gateway for standard ERC20 token withdrawals.                   |
-| `L2CustomERC20Gateway`   | The gateway for custom ERC20 token withdrawals.                     |
-| `L2WETHGateway`          | The gateway for Wrapped ETH withdrawals.                            |
-| `L2ERC721Gateway`        | The gateway for ERC-721 token withdrawals.                          |
-| `L2ERC1155Gateway`       | The gateway for ERC-1155 token withdrawals.                         |
+| `L2GatewayRouter`        | 支持ETH和ERC20代币提款的网关路由器。 |
+| `L2ETHGateway`           | ETH 提款的网关。                                    |
+| `L2StandardERC20Gateway` | 标准 ERC20 代币提款的网关。                |
+| `L2CustomERC20Gateway`   | 自定义 ERC20 代币提款的网关。                     |
+| `L2WETHGateway`          | WETH 提款的网关。                             |
+| `L2ERC721Gateway`        | ERC721 代币提款的网关。                         |
+| `L2ERC1155Gateway`       | ERC1155 代币提款的网关。                        |
 
-## Overview
+## 概览
 
 <ClickToZoom src={WithdrawWorkflow} alt="Withdraw Workflow" />
 
-The figure depicts the withdrawal workflow from L2 to L1. Users call the gateways to initialize the token withdrawal. The withdrawal is encoded into a message sent to the `L2ScrollMessenger`, which is then appended to the `L2MessageQueue`. `L2MessageQueue` maintains a Withdraw Trie and updates the root every time a new message appended. The Withdraw Trie root is finalized on the L1 rollup contract along with the L2 state root. After the new Withdraw Trie root is finalized on the L1, users or third parties can then construct a valid Merkle Inclusion Proof to the Withdraw Trie root and send a _withdraw execution_ transaction to finalize the withdrawal on L1. You can find more details about the L2-to-L1 message relay workflow in the [Cross-Domain Messaging](/technology/bridge/cross-domain-messaging#sending-messages-from-l2-to-l1).
+上图描述了从 L2 提款至 L1 的工作流程。
+用户调用网关来发起代币提款。
+然后该笔提款将被编码为消息发送至 `L2ScrollMessenger` 合约，随后添加至 `L2MessageQueue`。
+`L2MessageQueue` 维护了一个提款树，在每次添加新消息时更新根哈希。
+提款树根会和 L2 状态树根在 L1 rollup 合约上最终确认。
+在新的提款树根在 L1 上最终确认后，用户或者第三方可以构建有效的默克尔包含证明（Merkle Inclusion Proof），并在 L1 上发送 *执行提款* 交易来最终确认提款。
+您可以在[跨链消息传递](/technology/bridge/cross-domain-messaging#sending-messages-from-l1-to-l2)中找到有关 L1 至 L2 消息中继工作流的更多详细信息。
 
-The subsequent sections describe the details of how different tokens are withdrawn.
+后续部分将详细介绍如何对不同的代币进行提款。
 
-## Withdrawing ETH
+## 提取 ETH
 
-The withdrawal of ETH token works as follows.
+提取 ETH 的工作原理如下。
 
-1. `L2GatewayRouter` provides three functions to withdraw ETH from L2 to L1. `withdrawETHAndCall` function can withdraw ETH and execute a contract call at the same time.
+1. `L2GatewayRouter` 合约提供了三个函数，将 ETH 从 L2 提取至 L1。其中 `withdrawETHAndCall` 函数可以同时提取 ETH 并执行合约调用。 
 
     ```solidity
     function withdrawETH(uint256 _amount, uint256 _gasLimit) external payable;
@@ -49,16 +57,16 @@ The withdrawal of ETH token works as follows.
     ) external payable;
     ```
 
-2. The `withdrawETHAndCall` functions call into `L2ETHGateway`. `L2ETHGateway` encodes the withdraw message and sends it to the `L2ScrollMessenger` contract along with the withdrawn ETH.
-3. The withdrawn ETH is again locked in the `L2ScrollMessenger` contract. `L2ScrollMessenger` appends the message to the message queue in the `L2MessageQueue` contract.
-4. The withdrawal execution transaction on L1 calls the `L1ScrollMessenger.relayMessageWithProof` function to finalize the withdrawal. In the case of ETH withdrawal, the `relayMessageWithProof` function calls `L1ETHGateway.finalizeWithdrawETH` to send back ETH to the recipient account on L1.
-5. If the user calls `withdrawETHAndCall` on L2, the `finalizeWithdrawETH` in the `L1ETHGateway` contract will forward the additional data to the target L1 contract.
+2. `withdrawETHAndCall` 函数调用 `L2ETHGateway` 合约。`L2ETHGateway` 合约编码提款消息并将其与要提取的 ETH 发送至 `L2ScrollMessenger` 合约。
+3. 提取的 ETH 再一次被锁定在 `L2ScrollMessenger` 合约中。 `L2ScrollMessenger` 合约将将消息添加至 `L2MessageQueue` 合约中的消息队列中.
+4. L1 的提款执行交易调用 `L1ScrollMessenger.relayMessageWithProof` 函数来最终确认提款。在提取 ETH 的情况下， 该 `relayMessageWithProof` 函数会调用 `L1ETHGateway.finalizeWithdrawETH`， 将 ETH 发送回 L1 的收款方账户。
+5. 如果用户调用 L2 的 `withdrawETHAndCall`，`L1ETHGateway` 合约的 `finalizeWithdrawETH` 函数会将附加数据转发至目标的 L1 合约。
 
-## Withdrawing ERC20 Tokens
+## 提取 ERC20 代币
 
-The withdraw of ERC20 tokens works as follows.
+ERC20 代币提款的工作原理如下。
 
-1. To withdraw ERC20 tokens from L1 to L2, users can use `L2GatewayRouter.withdrawERC20` and `L2GatewayRouter.withdrawERC20AndCall` showed below.
+1. 如下所示，要将 ERC20 代币从 L2 提取至 L1，用户可以使用 `L2GatewayRouter.withdrawERC20` 和 `L2GatewayRouter.withdrawERC20AndCall` 。
 
     ```solidity
     function withdrawERC20(address _token, uint256 _amount, uint256 _gasLimit) external payable;
@@ -74,29 +82,29 @@ The withdraw of ERC20 tokens works as follows.
     ) public payable;
     ```
 
-2. Based on the mapping from ERC20 tokens to gateway, the `L2GatewayRouter` calls to the corresponding gateway, `L2StandardERC20Gateway`, `L2CustomERC20Gateway`, or `L2WETHGateway`. The remaining of steps will be described separately.
+2. 根据 ERC20 代币到网关的映射，`L2GatewayRouter` 合约调用对应的网关：`L2StandardERC20Gateway`， `L2CustomERC20Gateway` 或是 `L2WETHGateway`。余下步骤将分别描述。
 
-### Standard and Custom ERC20 Tokens
+### 标准和自定义 ERC20 代币
 
-The withdrawal of standard and custom ERC20 tokens works in the same way as follows.
+如下所示，标准和自定义 ERC20 代币的提款原理一样。
 
-3. The `L2StandardERC20Gateway` or `L2CustomERC20Gateway` contract burns the withdrawn ERC20 token, encodes the withdrawal into a message, and sends it to `L2ScrollMessenger`.
-4. The L1 withdrawal execution transaction calls `L1ScrollMessenger.relayMessageWithProof` function to finalize the withdrawals on L1. In the case of standard or custome ERC20 token withdrawal, the transaction calls `finalizeWithdrawERC20` function on the `L1StandardERC20Gateway` or `L1CustomERC20Gateway` contract respectively.
-   - In the `L1StandardERC20Gateway` contract, if this is the first withdrawal transaction of a ERC20 token, `finalizeWithdrawERC20` function will update the mapping from L1 token address to its L2 token address in the `tokenMapping`.
-5. The L1 ERC20 token gateway releases the locked ERC20 tokens by transferring them from itself to the recipient address on L1.
-6. If the user calls `withdrawERC20AndCall` on L2, the gateways will call the target L1 contract with additional data.
+3. `L2StandardERC20Gateway` 或 `L2CustomERC20Gateway` 合约销毁要提取的 ERC20 代币，将提款编码至消息并发送给 `L2ScrollMessenger` 合约。
+4. L1 的提款执行交易调用 `L1ScrollMessenger.relayMessageWithProof` 函数来最终确认提款。 在标准和自定义 ERC20 代币的提款情况下，交易分别调用 `L1StandardERC20Gateway` 或是 `L1CustomERC20Gateway` 合约的 `finalizeWithdrawERC20` 函数。
+   - 在 `L1StandardERC20Gateway` 合约中，如果这是 ERC20 代币的第一次提款，`finalizeWithdrawERC20` 函数会更新 `tokenMapping` 中的 L1 代币地址与 L2 代币地址的映射关系。
+5. L1 的 ERC20 代币网关将释放锁定的 ERC20 代币，从自己的地址转账至 L1 上的收款方地址。
+6. 如果用户在 L2 上调用 `withdrawERC20AndCall`函数，网关会用附加数据调用目标的 L1 合约。
 
-### WETH Token
+### WETH 代币
 
-We provide a custom gateway `L2WETHGateway` for Wrapped ETH token on L2 and record the gateway address in the `L2GatewayRouter`. The withdrawal of WETH token works as follows.
+我们为 L2 上的 WETH 代币提供了一个自定义网关 `L2WETHGateway`，并将网关地址记录在 `L2GatewayRouter` 合约中。WETH 代币的提款工作原理如下。
 
-3. `L2WETHGateway` transfers the withdrawn WETH token to itself and unwraps WETH token to native ETH token. The ETH token is then sent back to the `L2ScrollMessenger` contract.
-4. `L2WETHGateway` encodes the token withdrawal message and forwards it to `L2ScrollMessenger`.
-5. The L1 withdrawal execution transaction calls `L1ScrollMessenger.relayMessageWithProof` function to finalize the withdrawal on L1. In the case of WETH token withdrawal, the transaction calls `L1WETHGateway.finalizeWithdrawERC20` and sends the withdrawn amount in ETH to `L1WETHGateway`.
-6. `L1WETHGateway` wraps the withdrawn ETH to L1 WETH token again and transfers to the recipient address on L1.
-7. If the user calls `withdrawERC20AndCall` on L2, the `L1WETHGateway` will call the target L1 address with additional data.
+3. `L2WETHGateway` 合约将要提款的 WETH 代币转账至自己，并解包 WETH 为原生的 ETH 代币。ETH 代币随后发送回 `L2ScrollMessenger` 合约。
+4. `L2WETHGateway` 合约将编码代币提款消息并转发给 `L2ScrollMessenger` 合约。
+5. L1 的提款执行交易调用 `L1ScrollMessenger.relayMessageWithProof` 函数来在 L1 上最终确认提款。 在 WETH 代币提款的情况下，交易调用 `L1WETHGateway.finalizeWithdrawERC20` 并发送提取的 ETH 至 `L1WETHGateway` 合约。
+6. `L1WETHGateway` 合约再次包装提取的 ETH 为 L1 的 WETH 代币，并发送至 L1 的收款方地址。
+7. 如果用户在 L2 上调用 `withdrawERC20AndCall`，`L1WETHGateway` 合约会用附加数据调用目标的 L1 合约。
 
-## Withdrawing ERC-721/ERC-1155 Tokens
+## 提取 ERC-721 / ERC-1155 代币
 
 The withdrawal of ERC-721 or ERC-1155 tokens works very similar to ERC20 tokens. One can use the gateway `L2ERC721Gateway` or `L2ERC1155Gateway` to withdraw ERC-721 /ERC-1155 tokens from L2.
 
@@ -130,7 +138,7 @@ function withdrawERC1155(
 ) external payable;
 ```
 
-To facilitate a large amount of ERC-721 or ERC-1155 token withdrawals, we also provide batch withdraw functions in the `L2ERC721Gateway` and `L2ERC1155Gateway` contract via the following functions:
+为了方便大额的 ERC-721 或 ERC-1155 代币提款，我们也在 `L2ERC721Gateway` 和 `L2ERC1155Gateway` 合约中提供通过如下函数，实现了批量提款功能：
 
 ```solidity
 function batchWithdrawERC721(
@@ -162,4 +170,4 @@ function batchWithdrawERC1155(
 ) external payable;
 ```
 
-The L1 counterpart contracts for ERC-721 or ERC-1155 tokens are `L1ERC721Gateway` and `L1ERC1155Gateway` to finalize withdrawals on L1.
+ERC-721 或 ERC-1155 代币在 L1 上对应的合约是 `L1ERC721Gateway` 和 `L1ERC1155Gateway`，用于在 L1 上最终确认提款。

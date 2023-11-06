@@ -1,51 +1,51 @@
 ---
 section: learn
 date: Last Modified
-title: "Intro to Rollups"
-lang: "en"
+title: "Rollups 介绍"
+lang: "zh"
 permalink: "learn/intro-to-rollups"
 excerpt: "Rollups are the most predominant layer 2 scaling solution in the Ethereum ecosystem."
 whatsnext: { "Scroll Rollup Process": "/technology/chain/rollup" }
 ---
 
-## What’s a rollup?
+## 什么是 rollup?
 
-Rollups are the most predominant layer 2 scaling solution in the Ethereum ecosystem, and are viewed as a [central part](https://ethereum-magicians.org/t/a-rollup-centric-ethereum-roadmap/4698) of the Ethereum roadmap.
+Rollups 是以太坊生态系统中最主要的 L2 扩容解决方案，被视为以太坊路线图的[核心部分](https://ethereum-magicians.org/t/a-rollup-centric-ethereum-roadmap/4698)。
 
-A rollup processes batches of transactions off-chain (i.e. not on layer 1), and then posts the resulting data on-chain (i.e. on layer 1).
+Rollup 在链下（即不在 L1 ）处理交易的批次，然后将结果数据发布到链上（即在 L1）。
 
-The execution of each transaction is performed off-chain, and does not need to be re-executed layer 1 nodes. This allows for high transaction throughput, without impacting the decentralization of layer 1.
+每笔交易的执行都是在链下执行的，不需要在 L1 节点上重新执行。这可以大幅提高交易的吞吐量，而不会影响 L1 的去中心化。
 
-In order for a rollup to be secure, it must prove that its off-chain computation (the processing of transactions) was performed correctly. There are predominantly two mechanisms to prove the validity of off-chain computation: validity proofs and fraud proofs.
+为了确保 rollup 的安全，它必须证明其链下计算（交易处理）已经正确执行。证明链下计算有效性的机制主要有两种：有效性证明和欺诈证明。
 
-## What’s an optimistic rollup?
+## 什么是 optimistic rollup?
 
-An optimistic rollup is a rollup that uses fraud proofs to assert the validity of its computation.
+Optimistic rollup 是使用欺诈证明来确保其计算有效性的 rollup。
 
-Fraud proofs are a mechanism that allow users to challenge and prove the invalidity of any computation performed on the L2. If a fraud proof is successfully submitted, the L2 can be rolled back to a previous state and the invalid computation can be corrected. Fraud proofs depend on at least one honest party checking that the L2 transactions have been correctly executed.
+欺诈证明机制下，允许用户挑战和证明在 L2 上执行的任何计算是无效的。如果成功提交欺诈证明，则可以将 L2 回滚到之前的状态，从而更正无效的计算。欺诈证明基于至少有一个诚实的一方在检查 L2 交易是否正确执行。
 
-## What’s a ZK rollup?
+## 什么是 ZK rollup?
 
-A ZK rollup is a rollup that uses validity proofs to assert the validity of its computation.
+ZK rollup 是使用有效性证明来确保其计算有效性的 rollup。
 
-When a ZK rollup executes a batch of transactions and posts the resulting state to L1, it also posts a validity proof. This mathematical proof proves that the resulting state is indeed the state which results from correctly executing the batch of transactions.
+当 ZK rollup 执行交易的批次并将结果状态发布到 L1 时，它还会发布有效性证明。这个数学证明，可以证明结果状态确实是正确执行一批交易后所生成的状态。
 
-Today, there are multiple types of ZK rollups, broadly defined as either zkVMs (zk Virtual Machines) or zkEVMs (zk Ethereum Virtual Machines).
+如今，有多种类型的 ZK rollup，广义上定义为 zkVM（零知识虚拟机）或 zkEVM（零知识以太坊虚拟机）。
 
-zkVMs are designed from the ground up to work well with ZK circuits and require different development workflows compared to a zkEVM. Some examples of these include Starkware and Aztec.
+zkVM 从头开始设计，可与 ZK 电路很好地配合使用，并且与 zkEVM 相比，需要完全不同的开发工作流程。其中的例子包括 Starkware 和 Aztec。
 
-zkEVMs are designed to emulate the EVM. There are two major types of zkEVMs: bytecode-compatible, and language-compatible. Bytecode-compatible zkEVMs emulate the EVM at a very low level, allowing for a near-identical development and user experience compared to Ethereum Layer 1. Language-compatible zkEVMs compile Solidity and other high-level languages down into different bytecode, which can result in changes to workflow. zkSync is the most popular language-compatible zkEVM.
+zkEVM 旨在模拟 EVM。zkEVM 主要有两种类型：字节码层面兼容和语言层面兼容。字节码兼容的 zkEVM 在非常低的水平上模拟 EVM，与以太坊 L1 相比，可实现几乎相同的开发和用户体验。语言层面兼容的 zkEVM 将 Solidity 和其他高级语言编译为不同的字节码，这可能会导致工作流程发生变化。zkSync 是最流行的语言层面兼容的 zkEVM。
 
-Scroll is bytecode-compatible. This approach was chosen because it brings certain benefits:
+Scroll 是字节码兼容的。之所以选择这种方案，是因为它带来了如下好处：
 
-- Solidity, Vyper, and Huff work out of the box
-- No re-auditing necessary
-- Most existing tooling is inherited
-- Near-identical UX and DevX as Ethereum
+- Solidity, Vyper 和 Huff 开箱即用
+- 无需重新进行合约审计
+- 继承大多数现有工具
+- 与以太坊几乎相同的用户体验和开发者体验
 
-More detail on Scroll’s approach is found in the Technology section.
+有关 Scroll 方案的更多详细信息，请参阅“技术”部分。
 
-## Further reading
+## 延伸阅读
 
-- [An Incomplete Guide to Rollups](https://vitalik.ca/general/2021/01/05/rollup.html) - Vitalik Buterin
-- [Scaling](https://ethereum.org/en/developers/docs/scaling/) - Ethereum Docs
+- [Rollups 的不完全指南](https://vitalik.ca/general/2021/01/05/rollup.html) - Vitalik Buterin
+- [扩容](https://ethereum.org/en/developers/docs/scaling/) - 以太坊文档
