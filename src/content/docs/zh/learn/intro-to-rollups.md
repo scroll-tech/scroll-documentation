@@ -10,7 +10,7 @@ whatsnext: { "Scroll Rollup Process": "/technology/chain/rollup" }
 
 ## 什么是 rollup?
 
-Rollups 是以太坊生态系统中最主要的 L2 扩容解决方案，被视为以太坊路线图的[核心部分](https://ethereum-magicians.org/t/a-rollup-centric-ethereum-roadmap/4698)。
+Rollups 是以太坊生态系统中最主要的 L2 扩容解决方案，被视为以太坊路线图的 [核心部分](https://ethereum-magicians.org/t/a-rollup-centric-ethereum-roadmap/4698)。
 
 Rollup 在链下（即不在 L1 ）处理交易的批次，然后将结果数据发布到链上（即在 L1）。
 
