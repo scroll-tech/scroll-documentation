@@ -4,17 +4,15 @@ date: Last Modified
 title: "Bridge ERC20 through the Custom Gateway"
 lang: "en"
 permalink: "developers/guides/bridge-erc20-through-the-custom-gateway"
-excerpt: "This guide will walk through how to use Scroll's bridge for ERC20s that need custom functionality using the Custom Gateway."
+excerpt: "This guide will walk through how to use Scroll's bridge for ERC20 tokens that need custom functionality by using the Custom Gateway."
 ---
 
 import Aside from "../../../../../components/Aside.astro"
 
-This guide will walk through how to use Scroll's bridge for ERC20s that need custom functionality by using the Custom Gateway.
+This guide will walk through how to use Scroll's bridge for ERC20 tokens that need custom functionality by using the Custom Gateway.
 
 <Aside type="tip" title="Do you need custom logic?">
-  Remember, for many contexts, you won't need to use the Custom Gateway to add additional features to your token or to
-  its bridging logic. See the article on [ETH and ERC20 Token
-  Bridge](/developers/l1-and-l2-bridging/eth-and-erc20-token-bridge#deposit-eth-and-erc20-tokens-from-l1) for more info.
+  Remember, for many contexts, you won't need to use the Custom Gateway to add additional features to your token or its bridging logic. See the article on [ETH and ERC20 Token Bridge](/developers/l1-and-l2-bridging/eth-and-erc20-token-bridge#deposit-eth-and-erc20-tokens-from-l1) for more info.
 </Aside>
 
 ## Step 1: Launch a token on Sepolia
@@ -53,11 +51,11 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@scroll-tech/contracts@0.1.0/libraries/token/IScrollERC20Extension.sol";
 
 contract L2Token is ERC20, IScrollERC20Extension {
-  // We store the gateway and the L1 token address to provide the gateway() and counterpart() functions which are needed from the Scroll Standard ERC20 interface
+  // We store the gateway and the L1 token address to provide the gateway() and counterpart() functions needed from the Scroll Standard ERC20 interface
   address _gateway;
   address _counterpart;
 
-  // In the constructor we pass as parameter the Custom L2 Gateway and the L1 token address as parameters
+  // In the constructor, we pass as parameter the Custom L2 Gateway and the L1 token address as parameters
   constructor(address gateway_, address counterpart_) ERC20("My Token L2", "MTL2") {
     _gateway = gateway_;
     _counterpart = counterpart_;

@@ -5,22 +5,18 @@ title: "Scroll Messenger Cross-chain Interaction"
 lang: "en"
 permalink: "developers/guides/scroll-messenger-cross-chain-interaction"
 whatsnext: { "Bridge ERC20 through the Custom Gateway": "/developers/guides/bridge-erc20-through-the-custom-gateway" }
-excerpt: "In this example, we will launch a dummy smart contract on either Sepolia or Scroll Sepolia testnet and interact with it from the opposite chain."
+excerpt: "In this example, we will launch a dummy smart contract on either Sepolia or Scroll and interact with it from the opposite chain. We will be using the `ScrollMessenger` that is deployed on both Sepolia and Scroll."
 ---
 
 import Aside from "../../../../../components/Aside.astro"
 
-In this example, we will launch a dummy smart contract on either Sepolia or Scroll and interact
-with it from the opposite chain. We will be using the `ScrollMessenger` that is deployed on both
-Sepolia and Scroll.
+In this example, we will launch a dummy smart contract on either Sepolia or Scroll and interact with it from the opposite chain. We will be using the `ScrollMessenger` that is deployed on both Sepolia and Scroll.
 
 ## Deploying the Contracts
 
 ### Target Smart Contract
 
-Let’s start by deploying the target smart contract. We will use the Greeter contract for this
-example, but you can use any other contract. Deploy it to either Sepolia or Scroll. On Scroll, L1
-and L2 use the same API, so it’s up to you.
+Let’s start by deploying the target smart contract. We will use the Greeter contract for this example, but you can use any other contract. Deploy it to either Sepolia or Scroll. On Scroll, L1 and L2 use the same API, so it’s up to you.
 
 ```solidity
 // SPDX-License-Identifier: MIT

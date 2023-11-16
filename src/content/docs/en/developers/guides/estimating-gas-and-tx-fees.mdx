@@ -4,7 +4,7 @@ date: Last Modified
 title: "Estimating Gas and Tx Fees"
 lang: "en"
 permalink: "developers/guides/estimating-gas-and-transaction-fees"
-excerpt: "Since Scroll is an L2 rollup, part of the transaction lifecycle is committing some data to L1 for security. To pay for this, all transaction incurs an additional fee called the L1 fee"
+excerpt: "Since Scroll is an L2 rollup, part of the transaction lifecycle is committing some data to L1 for security. To pay for this, all transactions incur an additional fee called the L1 fee."
 ---
 
 import Aside from "../../../../../components/Aside.astro"
@@ -17,9 +17,9 @@ import txFeesProjectStructure from "../../../../../assets/images/developers/txFe
 This page has not been updated and tested against the latest Scroll Sepolia release. Please use with caution.
 :::
 
-Since Scroll is an L2 rollup, part of the transaction lifecycle is committing some data to L1 for security. To pay for this, all transaction incurs an additional fee called the _L1 fee_.
+Since Scroll is an L2 rollup, part of the transaction lifecycle is committing some data to L1 for security. To pay for this, all transactions incur an additional fee called the _L1 fee_.
 
-In this guide, we will go over how to estimate the L1 fee on Scroll and calculate final transaction fee estimations through a hands-on code example you can find [here](https://github.com/scroll-tech/scroll-guides/tree/main/gas-estimation-demo).
+In this guide, we will go over how to estimate the L1 fee on Scroll and calculate final transaction fee estimations through a hands-on code example that you can find [here](https://github.com/scroll-tech/scroll-guides/tree/main/gas-estimation-demo).
 
 ## The formula
 
@@ -53,7 +53,7 @@ But it also exposes the `getL1Fee(bytes memory data)` function, which abstracts 
 
 First of all, let’s quickly go over the key folders inside our project structure.
 
-It’s a standard Hardhat project, but most of our work is inside the c*ontracts* and _scripts_ folders.
+It’s a standard Hardhat project, but most of our work is inside the *contracts* and _scripts_ folders.
 
 <ClickToZoom src={txFeesProjectStructure} />
 

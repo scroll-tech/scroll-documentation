@@ -35,7 +35,7 @@ git rebase origin/main
 git push -f
 ```
 
-It's okay to force push over your own PR branch. That's what we want so that the commits are clean.
+It's okay to force push over your PR branch. That's what we want so that the commits are clean.
 
 ## How to squash a PR
 
@@ -80,9 +80,9 @@ The main code samples are stored in the `/public/samples/` directory.
 
 ## Style Guide
 
-- **Bold** key terms or any terms the user must absolutely know when reading a doc.
+- **Bold** key terms or any terms the user must know when reading a doc.
 - _Italicize_ terms for emphasis but only when necessary.
 - When referring to dropdown menus or a sequence of dropdown events, bold the relevant entities. Example: Go to **Menu Name** > **Option**. Do not use quotes.
 - Use markdown over HTML wherever possible.
 - When writing an additional note, start it with **Note:**.
-- Use a consistent voice. When writing documentation, avoid first person plural "we" and opt for second person singular "you". Avoid passive voice.
+- Use a consistent voice. When writing documentation, avoid first person plural "we" and opt for the second person singular "you". Avoid passive voice.

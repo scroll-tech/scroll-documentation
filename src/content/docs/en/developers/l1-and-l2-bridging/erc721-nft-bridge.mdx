@@ -4,7 +4,7 @@ date: Last Modified
 title: "ERC721 NFT Bridge"
 lang: "en"
 permalink: "developers/l1-and-l2-bridging/erc721-nft-bridge"
-excerpt: "NFT bridging from L1 to L2 is done via the L1ERC721Gateway contract instead of using a router."
+excerpt: "NFT bridging from L1 to L2 is done via the `L1ERC721Gateway` contract instead of using a router."
 whatsnext: { "ERC1155 Token Bridge": "/developers/l1-and-l2-bridging/erc1155-token-bridge/" }
 ---
 
@@ -14,11 +14,11 @@ import Aside from "../../../../../components/Aside.astro"
 
 NFT bridging from L1 to L2 is done via the `L1ERC721Gateway` contract instead of using a router. Similarly to bridging ERC20 tokens, we use the `depositERC721` function to send tokens to L2, and we can later retrieve them back to L1 using `withdrawERC721` on the `L2ERC721Gateway` contract deployed on L2.
 
-NFT contracts on both L1 and l2 must be launched and connected through the Gateways to enable bridging. This means deposit and withdraw transactions will revert if a contract on either L1 or L2 is missing or not mapped through the `updateTokenMapping` function.
+NFT contracts on both L1 and L2 must be launched and connected through the Gateways to enable bridging. This means deposit and withdraw transactions will revert if a contract on either L1 or L2 is missing or not mapped through the `updateTokenMapping` function.
 
 <Aside type="tip" title="">
   **`depositERC721`** is a payable function. The amount of ETH sent to this function will be used to pay for L2 fees. If
-  the amount is not enough, the transaction will not be sent. All excess eth will be sent back to the sender. `0.00001
+  the amount is not enough, the transaction will not be sent. All excess ETH will be sent back to the sender. `0.00001
   ETH` should be more than enough to process a token deposit.
 </Aside>
 
