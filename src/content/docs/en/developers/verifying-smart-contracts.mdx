@@ -5,7 +5,7 @@ title: "Verifying Smart Contracts"
 lang: "en"
 permalink: "developers/verifying-smart-contracts"
 whatsnext: { "Scroll Contracts": "/developers/scroll-contracts" }
-excerpt: "Easily verify your smart contracts with Scroll-supported developer tooling or the Blockscout Web API"
+excerpt: "Easily verify your smart contracts with Scroll-supported developer tooling"
 ---
 
 import Aside from "../../../../components/Aside.astro"
@@ -13,18 +13,21 @@ import ClickToZoom from "../../../../components/ClickToZoom.astro"
 import verify1 from "./_images/verify1.png"
 import CodeSample from "../../../../components/CodeSample/CodeSample.astro"
 
-After deploying your smart contracts, it's important to verify your code on [our block explorer](https://scrollscan.com/) or the [Sepolia block explorer](https://sepolia-blockscout.scroll.io).
+After deploying your smart contracts, it's important to verify your code on our block explorers. This can be done in an automated way using your developer tooling or the Web UI.
 
-This can be done in an automated way using your developer tooling or using Blockscout's Web UI.
-
-<Aside type="tip" title="Blockscout vs Etherscan">
+{/* <Aside type="tip" title="Blockscout vs Etherscan">
   The below instructions for verifying on our Sepolia Blockscout instance will need to be altered to work with Etherscan
   deployments. As additional services come online for mainnet, we'll update these instructions.
-</Aside>
+</Aside> */}
 
 ## Using Developer Tools
 
-Most smart contract tooling has plugins for verifying your contracts easily on Etherscan. Blockscout supports Etherscan's contract verification APIs, and it's straightforward to use these tools with the Scroll Sepolia Testnet.
+Most smart contract tooling has plugins for verifying your contracts easily on Etherscan. Blockscout supports Etherscan's contract verification APIs, so it's straightforward to use these tools using the APIs of either of these block explorers.
+
+| Network    | Scroll Scroll                    | Sepolia                                  |
+| ---------- | -------------------------------- | ---------------------------------------- |
+| Scrollscan | https://api.scrollscan.com/api   | https://api-sepolia.scrollscan.com/api   |
+| Blockscout | https://blockscout.scroll.io/api | https://sepolia-blockscout.scroll.io/api |
 
 ### Hardhat
 
@@ -82,18 +85,54 @@ npx hardhat verify --network scrollSepolia 0xD9880690bd717189cC3Fbe7B9020F27fae7
 
 ### Foundry
 
-<Aside type="danger" title="Warning">
+When using Foundry, the `verify-contract` command helps automate the process of verifying contracts. If your contract has constructor arguments, you can specify these in ABI-encoded form with the `--constructor-args` option. For example, if your constructor takes two `uint256` variables:
+```bash
+ --constructor-args $(cast abi-encode "constructor(uint256,uint256)" 0 7)
+```
+
+Refer to the [Foundry documentation](https://book.getfoundry.sh/reference/forge/forge-verify-contract) for further options you can specify.
+
+
+#### Scrollscan
+
+You will need to [register an account](https://scrollscan.com/register) to create an API key. The same key can be used for both Scroll Sepolia and mainnet. After creating your API key, please wait a few minutes before it comes into effect.
+
+```bash
+forge verify-contract <contract address> <contract name> \
+  --verifier-url https://api-sepolia.scrollscan.com/api \
+  --etherscan-api-key <your Scrollscan API key> \
+  --constructor-args <your constructor arguments>
+```
+<Aside type="caution" title="Caution">
+  Do not specify the chain ID.
+</Aside>
+
+#### Blockscout
+
+{/* <Aside type="danger" title="Warning">
   Our Blockscout instance currently has inconsistent behavior in verifying contracts with Foundry. We're working on a
   fix, along with other stability improvements. Don't hesitate to come ask for help [on
   Discord](https://discord.com/channels/853955156100907018/1028102371894624337) though.
-</Aside>
+</Aside> */}
 
-When using Foundry, the `verify-contract` helps automate the process of verifying contracts.
+Specify the verification provider as `blockscout`.
 
+##### Scroll 
 ```bash
-forge verify-contract <Contract Address> <Space separated params> <Solidity file>:<Contract name> --chain-id 534351 --verifier-url https://sepolia-blockscout.scroll.io/api\? --verifier blockscout
+forge verify-contract <contract address> <contract name> \
+  --verifier-url https://blockscout.scroll.io/api\? \
+  --verifier blockscout \
+  --constructor-args <your constructor arguments>  
+```
+
+##### Scroll Sepolia
+```bash
+forge verify-contract <contract address> <contract name> \
+  --verifier-url https://sepolia-blockscout.scroll.io/api\? \
+  --verifier blockscout \
+  --constructor-args <your constructor arguments>
 ```
 
 <Aside type="danger" title="Warning">
-  Notice we add `\?` at the end of the verifier URL or otherwise verification would fail. (Last tested on forge v0.2.0).
+  Notice we add `\?` at the end of the verifier URL otherwise verification would fail. (Last tested on forge v0.2.0).
 </Aside>
