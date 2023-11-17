@@ -13,18 +13,13 @@ import ClickToZoom from "../../../../components/ClickToZoom.astro"
 import verify1 from "./_images/verify1.png"
 import CodeSample from "../../../../components/CodeSample/CodeSample.astro"
 
-After deploying your smart contracts, it's important to verify your code on our block explorers. This can be done in an automated way using your developer tooling or the Web UI.
-
-{/* <Aside type="tip" title="Blockscout vs Etherscan">
-  The below instructions for verifying on our Sepolia Blockscout instance will need to be altered to work with Etherscan
-  deployments. As additional services come online for mainnet, we'll update these instructions.
-</Aside> */}
+After deploying your smart contracts, it's important to verify your code on a block explorer. This can be done in an automated way using your developer tooling or the Web UI.
 
 ## Using Developer Tools
 
 Most smart contract tooling has plugins for verifying your contracts easily on Etherscan. Blockscout supports Etherscan's contract verification APIs, so it's straightforward to use these tools using the APIs of either of these block explorers.
 
-| Network    | Scroll Scroll                    | Sepolia                                  |
+| Network    | Scroll | Scroll Sepolia                                  |
 | ---------- | -------------------------------- | ---------------------------------------- |
 | Scrollscan | https://api.scrollscan.com/api   | https://api-sepolia.scrollscan.com/api   |
 | Blockscout | https://blockscout.scroll.io/api | https://sepolia-blockscout.scroll.io/api |
@@ -111,12 +106,6 @@ forge verify-contract <contract address> <contract name> \
 </Aside>
 
 #### Blockscout
-
-{/* <Aside type="danger" title="Warning">
-  Our Blockscout instance currently has inconsistent behavior in verifying contracts with Foundry. We're working on a
-  fix, along with other stability improvements. Don't hesitate to come ask for help [on
-  Discord](https://discord.com/channels/853955156100907018/1028102371894624337) though.
-</Aside> */}
 
 Specify the verification provider as `blockscout`.
 
