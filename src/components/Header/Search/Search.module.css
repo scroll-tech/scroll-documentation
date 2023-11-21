@@ -1,7 +1,6 @@
 /** Style Algolia */
 
 #searchModal.mini {
-  background: #ffffff;
   position: fixed;
   top: 65px;
   left: 0;
@@ -14,7 +13,6 @@
 #searchModal.large {
   top: 0;
   height: fit-content;
-  background: #fff;
   position: absolute;
   border-radius: 24px;
   padding-top: 0;
@@ -135,7 +133,7 @@
 .hit {
   line-height: 32px;
   display: block;
-  @apply text-primary mb-2;
+  @apply mb-2 text-black;
 }
 
 .queryResults {
@@ -174,6 +172,7 @@
 .hitList mark {
   background-color: transparent;
   font-weight: bold;
+  @apply text-inherit;
 }
 
 .hideSm {

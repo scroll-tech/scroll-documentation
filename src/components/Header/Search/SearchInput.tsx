@@ -24,9 +24,16 @@ export const SearchInput = ({ size, onClose }: { onClose: () => void }) => {
   }, [debouncedValue])
 
   return (
-    <div className={clsx(styles.wrapper, styles[size])}>
+    <div className={clsx(styles.wrapper, styles[size], "dark:!bg-dark-normal")}>
       <input
-        className={clsx(styles.input, styles[size], ".focus-visible")}
+        className={clsx(
+          styles.input,
+          styles[size],
+          ".focus-visible",
+          "dark:text-white",
+          "dark:border-white",
+          "dark:!bg-[url(/assets/search-white.svg)]"
+        )}
         onBlur={onClose}
         onChange={handleChange}
         ref={inputRef}
