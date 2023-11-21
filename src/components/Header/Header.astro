@@ -33,8 +33,8 @@ const section = frontmatter?.section ?? ""
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-56SBDN1LL2"></script>
 <script>
   window.dataLayer = window.dataLayer || []
-  function gtag() {
-    dataLayer.push(arguments)
+  function gtag(...args) {
+    window.dataLayer.push(args)
   }
   gtag("js", new Date())
 
@@ -95,6 +95,7 @@ const section = frontmatter?.section ?? ""
     align-items: center;
     background: var(--backgroundColor);
     @apply h-navbar;
+    /* @apply dark:bg-primary; */
   }
 
   .nav-link {

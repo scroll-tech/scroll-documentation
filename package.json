@@ -88,7 +88,8 @@
     "solhint-plugin-prettier": "^0.0.5",
     "tsconfig-paths": "^4.1.0",
     "typescript": "^4.8.4",
-    "unist-util-remove": "^3.1.0"
+    "unist-util-remove": "^3.1.0",
+    "vite-plugin-svgr": "^4.2.0"
   },
   "lint-staged": {
     "*.{css,md,yml,yaml,astro}": "prettier --write",

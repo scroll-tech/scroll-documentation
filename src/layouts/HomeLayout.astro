@@ -72,3 +72,14 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site)
   </main>
   <Footer client:idle />
 </body>
+
+<script>
+  if (
+    localStorage.theme === "dark" ||
+    (!("theme" in localStorage) && matchMedia("(prefers-color-scheme: dark)").matches)
+  ) {
+    document.documentElement.classList.add("dark")
+  } else {
+    document.documentElement.classList.remove("dark")
+  }
+</script>

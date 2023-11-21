@@ -45,7 +45,7 @@
 
 /* Paragraph  */
 :where(body, p) {
-  @apply leading-[1.5] font-normal font-text text-primary tracking-[0.09px];
+  @apply leading-[1.5] font-normal font-text text-black dark:text-white tracking-[0.09px];
 }
 
 :where(p) {
@@ -54,7 +54,7 @@
 
 /* Text  */
 :where(span, label) {
-  @apply font-text font-normal text-primary leading-[1rem] text-[0.875rem];
+  @apply font-text font-normal text-black dark:text-white leading-[1rem] text-[0.875rem];
 }
 
 :where(button, input, select, textarea) {

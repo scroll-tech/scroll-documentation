@@ -10,13 +10,13 @@ changeLanguage("en")
 ---
 
 <HomeLayout dark>
-  <div class="header">
+  <div class="header bg-black">
     <div class="inner">
-      <p class="header-title">Welcome to<br /> Scroll Documentation</p>
+      <p class="header-title text-white">Welcome to<br /> Scroll Documentation</p>
       <Search client:visible />
     </div>
   </div>
-  <div class="content">
+  <div class="content bg-normal dark:bg-black">
     <div class="inner">
       <QuickStart />
       <Navigate />
@@ -28,7 +28,6 @@ changeLanguage("en")
 <style>
   .header {
     height: 390px;
-    background-color: var(--color-text-primary);
     padding: 70px 60px 110px;
   }
   .inner {
@@ -36,7 +35,6 @@ changeLanguage("en")
     margin: 0 auto;
   }
   .header-title {
-    color: var(--white);
     font-size: 55px;
     font-weight: 600;
     line-height: 65px;
@@ -44,7 +42,6 @@ changeLanguage("en")
 
   .content {
     padding: 52px 60px 160px;
-    background-color: #fff8f3;
   }
 
   @media screen and (max-width: 50em) {

@@ -1,11 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
+  darkMode: "class",
   theme: {
     screens: {
       xs: "375px",
       sm: "480px",
-      md: "37.75em", //604px
+      md: "37.75em", // 604px
       lg: "50em", // 800px
       xl: "72em", // 1152px
     },
@@ -14,12 +15,18 @@ module.exports = {
         primary: "var(--border-radius-primary)" /* Inputs, Buttons */,
         secondary: "var(--border-radius-secondary)" /* Cards */,
         reset: "var(--border-radius-reset)" /* Border reset */,
-        round: "var(--border-radius-round)" /* Rounded icon buttons*/,
+        round: "var(--border-radius-round)" /* Rounded icon buttons */,
       },
       borderWidth: {
         "w-primary": "var(--border-width-primary)" /* Inputs */,
         "w-secondary": "var(--border-width-secondary)" /* Buttons */,
         "w-reset": "var(--border-width-reset)" /* Border reset */,
+      },
+      backgroundColor: {
+        normal: "#FFF0DD",
+        "dark-normal": "#262626",
+        highlight: "#FFDEB5",
+        "dark-highlight": "#3b3b3b",
       },
       colors: {
         blue: {
@@ -145,6 +152,13 @@ module.exports = {
         "interactive-hover": "var(--color-border-interactive-hover)",
         "interactive-pressed": "var(--color-border-interactive-pressed)",
         "interactive-error": "var(--color-border-interactive-error)",
+
+        // theme
+        black: "#101010",
+        white: "#FFF8F3",
+
+        "pure-black": "#000",
+        "pure-white": "#fff",
       },
       fontFamily: {
         text: "var(--font-family-text)",
