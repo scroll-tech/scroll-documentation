@@ -65,7 +65,7 @@
 
 /* Heading styles */
 :where(.heading, .heading-100, .heading-200, .heading-300, .heading-400, .heading-500, .heading-600) {
-  @apply font-text leading-[1.3] font-medium text-heading;
+  @apply font-text leading-[1.3] font-medium text-black dark:text-white;
 }
 
 :where(.heading-100) {

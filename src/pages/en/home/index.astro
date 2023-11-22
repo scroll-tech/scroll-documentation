@@ -9,14 +9,14 @@ import ConnectUs from "./ConnectUs.astro"
 changeLanguage("en")
 ---
 
-<HomeLayout dark>
+<HomeLayout>
   <div class="header bg-black">
     <div class="inner">
       <p class="header-title text-white">Welcome to<br /> Scroll Documentation</p>
       <Search client:visible />
     </div>
   </div>
-  <div class="content bg-normal dark:bg-black">
+  <div class="content bg-white dark:bg-black">
     <div class="inner">
       <QuickStart />
       <Navigate />

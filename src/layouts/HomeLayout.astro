@@ -6,7 +6,7 @@ import * as CONFIG from "../config"
 import Footer from "~/components/Footer/Footer"
 import LeftSidebar from "../components/LeftSidebar/LeftSidebar.astro"
 
-const { content = {}, dark } = Astro.props
+const { content = {} } = Astro.props
 const currentPage = new URL(Astro.request.url).pathname
 const formattedContentTitle = content.title
   ? `${content.title} | ${CONFIG.SITE.title}`
@@ -59,27 +59,24 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site)
         height: calc(100vh - 20px);
       }
     </style>
+    <script is:inline>
+      const themeMode = localStorage.getItem("THEME_MODE")
+
+      if (themeMode === "dark") {
+        document.documentElement.classList.add("dark")
+      } else {
+        document.documentElement.classList.remove("dark")
+      }
+    </script>
   </head>
+  <body>
+    <Header dark />
+    <aside id="grid-left" class="grid-sidebar" title="Site Navigation">
+      <LeftSidebar currentPage={currentPage} {content} />
+    </aside>
+    <main class="home-layout">
+      <slot />
+    </main>
+    <Footer client:idle />
+  </body>
 </html>
-
-<body>
-  <Header dark={dark} />
-  <aside id="grid-left" class="grid-sidebar" title="Site Navigation">
-    <LeftSidebar currentPage={currentPage} {content} />
-  </aside>
-  <main class="home-layout">
-    <slot />
-  </main>
-  <Footer client:idle />
-</body>
-
-<script>
-  if (
-    localStorage.theme === "dark" ||
-    (!("theme" in localStorage) && matchMedia("(prefers-color-scheme: dark)").matches)
-  ) {
-    document.documentElement.classList.add("dark")
-  } else {
-    document.documentElement.classList.remove("dark")
-  }
-</script>

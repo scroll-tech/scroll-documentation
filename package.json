@@ -47,6 +47,7 @@
     "rehype-mermaidjs": "^1.0.1",
     "remark-gfm": "^3.0.1",
     "remark-math": "^5.1.1",
+    "squirrel-gill": "^1.0.5",
     "tailwindcss": "^3.2.4",
     "to-querystring": "^1.1.1",
     "turndown": "^7.1.2"

@@ -213,9 +213,8 @@ table {
   padding: var(--padding-block) 0;
   margin: 0;
   border-collapse: collapse;
-  background: #fff;
   line-height: 2;
-  @apply text-primary font-text border-none;
+  @apply text-black dark:text-white font-text border-none bg-pure-white dark:bg-black;
   border-radius: 10px;
   position: relative;
   z-index: 1;
@@ -232,6 +231,7 @@ table::before {
   right: 0;
   border-radius: 27px;
   border: 1px solid #dadada;
+  @apply border-primary dark:border-dark-primary;
 }
 
 table thead tr {
@@ -240,7 +240,7 @@ table thead tr {
 }
 
 table tbody tr {
-  @apply border-0 border-t-[1px] border-solid border-[#dadada];
+  @apply border-0 border-t-[1px] border-solid border-primary dark:border-dark-primary;
 }
 
 table code {
@@ -248,9 +248,8 @@ table code {
 }
 
 th {
-  background: var(--color-black);
-  color: var(--theme-color);
   font-weight: bold;
+  @apply text-black dark:text-white;
 }
 td,
 th {
@@ -272,9 +271,12 @@ blockquote {
   padding: 20px 1.5rem 4px;
   border-radius: 0 0.25rem 0.25rem 0;
   line-height: 1.7;
-  @apply border-0 border-l-[29px] border-solid border-[#FFF0DD];
+  @apply border-0 border-l-[29px] border-solid border-[#FFF0DD] dark:border-[#3b3b3b] bg-white dark:bg-dark-normal;
   border-radius: 27px;
-  background: #fff8f3;
+}
+
+blockquote h4 {
+  margin-top: 0 !important;
 }
 
 img {
@@ -300,8 +302,9 @@ h2.heading {
   line-height: normal;
   padding: 4.5px 0 5.5px 1rem;
   /* margin-left: 1rem; */
-  border-color: var(--black-100);
-  @apply border-0 border-l-[4px] border-solid;
+  /* border-color: var(--black-100); */
+
+  @apply border-0 border-l-[4px] border-solid border-black dark:border-white;
 }
 
 .header-link.active,

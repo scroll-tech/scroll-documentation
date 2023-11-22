@@ -32,7 +32,8 @@ export const SearchInput = ({ size, onClose }: { onClose: () => void }) => {
           ".focus-visible",
           "dark:text-white",
           "dark:border-white",
-          "dark:!bg-[url(/assets/search-white.svg)]"
+          "dark:!bg-[url(/assets/search-white.svg)]",
+          "dark:bg-dark-normal"
         )}
         onBlur={onClose}
         onChange={handleChange}

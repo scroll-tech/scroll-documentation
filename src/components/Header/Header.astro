@@ -4,6 +4,8 @@ import { Frontmatter, MENU } from "../../config/index"
 import SkipToContent from "./SkipToContent.astro"
 import SidebarToggle from "./SidebarToggle.tsx"
 import Search from "./Search/Search.tsx"
+import ThemeModeToggle from "./ThemeModeToggle"
+import GithubSvg from "~/assets/svgs/header/github.svg?raw"
 // import LanguageSelector from "./LanguageSelector/index.tsx"
 import LanguageSelector from "./LanguageSelector/LanguageSelector.astro"
 
@@ -11,6 +13,7 @@ import { localizePath } from "astro-i18next"
 import i18next from "i18next"
 
 import NotificationBanner from "~/features/notifications/components/NotificationBanner.astro"
+import { clsx } from "~/lib"
 
 export type Props = {
   frontmatter?: Frontmatter
@@ -18,9 +21,9 @@ export type Props = {
 }
 const { frontmatter, dark } = Astro.props
 
-const backgroundColor = dark ? "#101010" : "#ffffff"
+const backgroundColor = dark ? "#101010" : ""
 
-const textColor = dark ? "#FFF8F3" : "#101010"
+const textColor = dark ? "#FFF8F3" : ""
 
 const section = frontmatter?.section ?? ""
 ---
@@ -40,16 +43,19 @@ const section = frontmatter?.section ?? ""
 
   gtag("config", "G-56SBDN1LL2")
 </script>
+
 <header>
   <SkipToContent />
   <nav class="nav-wrapper" title="Top Navigation">
+    <!-- <Logo></Logo> -->
+
     <div class="logo flex items-center">
       <a href={localizePath("/")}>
-        <img
-          src={dark ? "/scroll-docs-white.svg" : "/scroll-docs.svg"}
-          style={{ width: "144px" }}
-          alt={CONFIG.SITE.title ?? "Documentation"}
-        />
+        <span
+          class={clsx(
+            "inline-block w-[144px] h-[22px]  dark:bg-[url('/scroll-docs-white.svg')] bg-contain bg-no-repeat bg-center",
+            dark ? "bg-[url('/scroll-docs-white.svg')]" : "bg-[url('/scroll-docs.svg')]"
+          )}></span>
       </a>
     </div>
     <div class="right-box">
@@ -70,10 +76,14 @@ const section = frontmatter?.section ?? ""
             </div>
           )
         }
-
+        <ThemeModeToggle client:only="preact" dark={dark} />
         <LanguageSelector class="language-selector" />
         <a href="https://github.com/scroll-tech/scroll-documentation" class="github-url" target="_blank" rel="nofollow">
-          <img src={dark ? "/assets/github-white.svg" : "/assets/github.svg"} />
+          <span
+            class={clsx(
+              "inline-block w-[35px] h-[35px] dark:bg-[url('/assets/github-white.svg')] bg-contain bg-no-repeat bg-center",
+              dark ? "bg-[url('/assets/github-white.svg')]" : "bg-[url('/assets/github.svg')]"
+            )}></span>
         </a>
       </div>
       <div class="menu-toggle">
@@ -82,6 +92,7 @@ const section = frontmatter?.section ?? ""
     </div>
   </nav>
 </header>
+
 <NotificationBanner />
 
 <style define:vars={{ backgroundColor, textColor }}>
@@ -93,14 +104,14 @@ const section = frontmatter?.section ?? ""
     top: 0;
     display: flex;
     align-items: center;
-    background: var(--backgroundColor);
-    @apply h-navbar;
-    /* @apply dark:bg-primary; */
+    @apply h-navbar bg-pure-white dark:bg-black;
+    background-color: var(--backgroundColor);
   }
 
   .nav-link {
     line-height: 32px;
     padding-top: 7px;
+    @apply text-black dark:text-white;
     color: var(--textColor);
   }
   .nav-link:hover {
@@ -139,8 +150,8 @@ const section = frontmatter?.section ?? ""
     margin: 0;
   }
 
-  .logo img {
-    height: 38px;
+  .logo span {
+    /* height: 38px; */
   }
 
   .nav-wrapper {
@@ -165,7 +176,7 @@ const section = frontmatter?.section ?? ""
   .tools {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 8px;
     width: 100%;
     justify-content: space-between;
     flex-direction: row-reverse;

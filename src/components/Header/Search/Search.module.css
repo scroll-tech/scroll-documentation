@@ -41,8 +41,8 @@
   height: 35px;
   border-radius: 40px;
   font-style: italic;
-  background: #f6f6f6;
-  @apply border-divider text-placeholder gap-2;
+
+  @apply border-divider text-black gap-2 bg-[#f6f6f6];
 }
 
 .searchInputMobile {
@@ -58,7 +58,7 @@
 
 .searchInput:hover,
 .searchInput:focus {
-  @apply text-text border-light;
+  @apply text-black border-light;
 }
 
 .searchInput::placeholder,
@@ -116,7 +116,7 @@
 
 .closeButtonMobile {
   display: block;
-  background-color: #ffffff;
+  /* background-color: #ffffff; */
   border: 3px solid #ffffff;
   padding: 0;
   font-size: 16px;
@@ -124,6 +124,8 @@
   position: relative;
   right: -43px;
   box-sizing: content-box;
+
+  @apply bg-pure-white;
 }
 
 .hitWrapper ol {

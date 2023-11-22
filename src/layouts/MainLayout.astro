@@ -203,6 +203,15 @@ changeLanguage(content.lang)
         localStorage.setItem("recentArticles", JSON.stringify(recentArticles.slice(0, 5)))
       }
     </script>
+    <script is:inline>
+      const themeMode = localStorage.getItem("THEME_MODE")
+
+      if (themeMode === "dark") {
+        document.documentElement.classList.add("dark")
+      } else {
+        document.documentElement.classList.remove("dark")
+      }
+    </script>
   </head>
 
   <body>

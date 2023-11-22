@@ -27,6 +27,18 @@ module.exports = {
         "dark-normal": "#262626",
         highlight: "#FFDEB5",
         "dark-highlight": "#3b3b3b",
+        "callout-note": "#FFF8F3",
+        "callout-dark-note": "#262626",
+        "callout-caution": "#F8F5E0",
+        "callout-dark-caution": "#5D4C38",
+        "callout-danger": "#FFE4DF",
+        "callout-dark-danger": "#662A1E",
+        "callout-tip": "#EEEEEE",
+        "callout-dark-tip": "#3A635E",
+      },
+      borderColor: {
+        primary: "#dadada",
+        "dark-primary": "#FFF8F34D",
       },
       colors: {
         blue: {
