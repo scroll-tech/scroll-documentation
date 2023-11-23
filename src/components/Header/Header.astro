@@ -76,7 +76,7 @@ const section = frontmatter?.section ?? ""
             </div>
           )
         }
-        <!-- <ThemeModeToggle client:only="preact" dark={dark} /> -->
+        <ThemeModeToggle client:only="preact" dark={dark} />
         <LanguageSelector class="language-selector" />
         <a href="https://github.com/scroll-tech/scroll-documentation" class="github-url" target="_blank" rel="nofollow">
           <span
@@ -176,9 +176,8 @@ const section = frontmatter?.section ?? ""
   .tools {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 20px;
     width: 100%;
-    justify-content: space-between;
     flex-direction: row-reverse;
   }
 
@@ -218,9 +217,20 @@ const section = frontmatter?.section ?? ""
       font-weight: 600;
       @apply border-0 border-solid border-link;
     }
+
+    .right-box {
+      gap: 1.5em;
+    }
     .tools {
       width: unset;
       flex-direction: row;
+      flex: 1;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+    .search-item {
+      flex: 1;
+      max-width: 346px;
     }
     .github-url {
       width: 35px;

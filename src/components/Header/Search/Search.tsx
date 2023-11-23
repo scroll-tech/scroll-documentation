@@ -16,8 +16,14 @@ export default function Search() {
     const body = document.body
     if (isOpen) {
       body.classList.add("global-search-toggle")
+      if (window.matchMedia("(max-width: 50em)").matches) {
+        document.querySelector("#themeModeToggle").style.right = "-43px"
+      }
     } else {
       body.classList.remove("global-search-toggle")
+      if (window.matchMedia("(max-width: 50em)").matches) {
+        document.querySelector("#themeModeToggle").style.right = 0
+      }
     }
   }, [isOpen])
 
