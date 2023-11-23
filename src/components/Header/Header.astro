@@ -77,7 +77,7 @@ const section = frontmatter?.section ?? ""
           )
         }
         <ThemeModeToggle client:only="preact" dark={dark} />
-        <LanguageSelector class="language-selector" />
+        <LanguageSelector class="language-selector" dark={dark} />
         <a href="https://github.com/scroll-tech/scroll-documentation" class="github-url" target="_blank" rel="nofollow">
           <span
             class={clsx(
