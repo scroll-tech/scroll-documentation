@@ -116,7 +116,6 @@
 
 .closeButtonMobile {
   display: block;
-  /* background-color: #ffffff; */
   border: 3px solid #ffffff;
   padding: 0;
   font-size: 16px;
@@ -202,10 +201,10 @@
     top: 0;
     height: fit-content;
     max-height: 80vh;
-    background: #f6f6f6;
     position: absolute;
     border-radius: 17.5px;
     padding-top: 0;
+    @apply bg-[#f6f6f6];
   }
 
   #searchModal.large {

@@ -62,7 +62,7 @@ export default function Search() {
             height="18"
             viewBox="0 0 18 18"
             fill="none"
-            className={clsx(styles.closeButtonMobile, "dark:bg-dark-normal")}
+            className={clsx(styles.closeButtonMobile, "dark:border-black dark:bg-black")}
             onClick={onClose}
           >
             <path
@@ -76,7 +76,7 @@ export default function Search() {
         </>
       ) : (
         <button onClick={onOpen} className={styles.searchInputMobile}>
-          <img src="/assets/search.svg" alt="search" aria-label="Search" width={20} height={20} />
+          <span className="inline-block w-[22px] h-[22px] bg-[url(/assets/search.svg)] dark:bg-[url(/assets/search-white.svg)] bg-contain bg-no-repeat bg-center"></span>
         </button>
       )}
     </div>

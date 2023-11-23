@@ -76,7 +76,7 @@ const section = frontmatter?.section ?? ""
             </div>
           )
         }
-        <ThemeModeToggle client:only="preact" dark={dark} />
+        <!-- <ThemeModeToggle client:only="preact" dark={dark} /> -->
         <LanguageSelector class="language-selector" />
         <a href="https://github.com/scroll-tech/scroll-documentation" class="github-url" target="_blank" rel="nofollow">
           <span
@@ -156,7 +156,7 @@ const section = frontmatter?.section ?? ""
 
   .nav-wrapper {
     display: grid;
-    grid-template-columns: 4fr 5fr;
+    grid-template-columns: max-content 1fr;
     gap: 1.5em;
     width: 100%;
     margin: 0 1.25rem;

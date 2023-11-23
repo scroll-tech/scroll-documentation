@@ -44,7 +44,7 @@ const ThemeModeToggle = (props) => {
   return (
     <button
       className={clsx(
-        "w-[35px] h-[35px] rounded-[5px] bg-transparent border border-black dark:border-white text-black dark:text-white",
+        "w-[35px] h-[35px] rounded-[5px] border-solid bg-transparent border border-black dark:border-white text-black dark:text-white",
         dark && "border-white text-white"
       )}
       onClick={handleToggleThemeMode}

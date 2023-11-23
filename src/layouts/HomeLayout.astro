@@ -29,9 +29,9 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site)
 
       #grid-left {
         position: fixed;
-        background-color: var(--theme-bg);
         z-index: 10;
         display: none;
+        @apply bg-pure-white dark:bg-black;
       }
 
       @media (min-width: 50em) {

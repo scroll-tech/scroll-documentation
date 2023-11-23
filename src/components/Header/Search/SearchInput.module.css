@@ -9,7 +9,6 @@
   overflow: hidden;
   padding: 0 20px;
   border-radius: 0;
-  @apply bg-pure-white;
 }
 
 .wrapper.large {
@@ -78,7 +77,7 @@
   .input {
     font-size: 16px;
     line-height: 15px;
-    background: #f6f6f6 url(/assets/search.svg) left 12px top 50% / 17px no-repeat;
+    background: url(/assets/search.svg) left 12px top 50% / 17px no-repeat;
     border: none;
     height: 35px;
     line-height: 35px;

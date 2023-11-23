@@ -148,7 +148,14 @@ export function SearchModal({ size = "mini", isOpen, onClose }: { size: Size; is
   }
 
   return (
-    <div id={styles.searchModal} className={clsx(styles[size], "bg-pure-white", "dark:!bg-dark-normal")}>
+    <div
+      id={styles.searchModal}
+      className={clsx(
+        styles[size],
+        "bg-pure-white",
+        size === "mini" ? "dark:bg-black lg:dark:!bg-dark-normal" : "dark:bg-dark-normal"
+      )}
+    >
       <InstantSearch indexName={getIndexName()} searchClient={searchClient}>
         <SearchInput size={size} onClose={onClose} />
         <div className={styles.resultsWrapper}>
