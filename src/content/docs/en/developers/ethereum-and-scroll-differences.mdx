@@ -63,7 +63,7 @@ type StateAccount struct {
 
 Related to this, we maintain two types of codehash for each contract bytecode: Keccak hash and Poseidon hash.
 
-`KeccakCodeHash` is kept to maintain compatibility for `EXTCODEHASH`. `PoseidonCodeHash` is used for verifying correctness of bytecodes loaded in the zkEVM, where Poseidon hashing is far more efficient.
+`KeccakCodeHash` is kept to maintain compatibility for `EXTCODEHASH`. `PoseidonCodeHash` is used for verifying the correctness of bytecodes loaded in the zkEVM, where Poseidon hashing is far more efficient.
 
 ### CodeSize
 
