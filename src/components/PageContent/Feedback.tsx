@@ -36,6 +36,13 @@ export const Feedback = () => {
       return
     }
     setRating(selectedNumber + 1)
+    setTimeout(() => {
+      const scollElement = document.querySelector(".sidebar-nav-inner")
+      scollElement.scrollTo({
+        top: scollElement.scrollHeight,
+        behavior: "smooth",
+      })
+    }, 0)
     setIsSent(false)
     const path = "https://hviedclg.api.lncldglobal.com/1.1/classes/Feedback"
     const data = {
@@ -91,6 +98,7 @@ export const Feedback = () => {
             style={{
               cursor: "pointer",
               marginRight: "10px",
+              fontSize: 0,
             }}
           >
             {rating >= i + 1 ? star : starOutline}
@@ -99,41 +107,44 @@ export const Feedback = () => {
       </div>
       {!!rating && (
         <section
-          className="card"
           style={{
-            marginTop: "30px",
+            marginTop: "16px",
           }}
         >
           {isSent ? (
-            <div style={{ color: "#FFF8F3", fontSize: "1rem", lineHeight: "normal" }}>
+            <div className="text-dark dark:text-white" style={{ fontSize: "1rem", lineHeight: "normal" }}>
               We appreciate your feedback! 🤎
             </div>
           ) : (
             <form
+              className="feedback-form"
               onSubmit={handleSubmit}
-              style={{ display: "flex", flexDirection: "column", gap: "0.3rem", marginBottom: "6px" }}
+              style={{ display: "flex", flexDirection: "column" }}
             >
               <label
                 htmlFor="name"
-                style={{ color: "#FFF8F3", fontSize: "1rem", lineHeight: "normal", marginBottom: "20px" }}
+                className="text-dark dark:text-white"
+                style={{ fontSize: "1rem", lineHeight: "normal", marginBottom: "16px" }}
               >
                 Tell us more about your experience.
               </label>
-              <div style={{ borderRadius: "10px", overflow: "hidden", display: "flex", flexDirection: "column" }}>
+              <div style={{ display: "flex", flexDirection: "column" }}>
                 <textarea
                   name="msg"
                   rows="4"
+                  className="text-black dark:text-white border-black dark:border-white bg-pure-white dark:bg-black"
                   style={{
-                    borderWidth: " 0",
                     padding: "15px",
                     caretColor: "#C4C4C4",
                     outline: "none",
                     fontSize: "1rem",
+                    borderRadius: "10px",
+                    marginBottom: "16px",
                   }}
                 />
                 <button
                   className={button.primary}
-                  style={{ borderRadius: 0, borderWidth: " 0", background: "var(--orange-400)" }}
+                  style={{ borderRadius: "5px", borderWidth: " 0", background: "var(--orange-400)" }}
                   disabled={isSubmitting}
                 >
                   submit

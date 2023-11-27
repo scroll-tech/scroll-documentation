@@ -28,13 +28,17 @@ module.exports = {
         highlight: "#FFDEB5",
         "dark-highlight": "#3b3b3b",
         "callout-note": "#FFF8F3",
-        "callout-dark-note": "#262626",
+        "callout-dark-note": "#2E261C",
         "callout-caution": "#F8F5E0",
         "callout-dark-caution": "#5D4C38",
         "callout-danger": "#FFE4DF",
         "callout-dark-danger": "#662A1E",
         "callout-tip": "#EEEEEE",
-        "callout-dark-tip": "#3A635E",
+        "callout-dark-tip": "#3B3B3B",
+        "link-code": "#ffe7e2",
+        "link-dark-code": "#33150F",
+        code: "#dadada",
+        "dark-code": "#5B5B5B",
       },
       borderColor: {
         primary: "#dadada",
@@ -184,6 +188,13 @@ module.exports = {
       },
       fontSize: {
         base: ["16px", "28px"],
+      },
+      textColor: {
+        "link-code": "#ff684b",
+        code: "#101010",
+        "dark-code": "#fff",
+        marker: "#586474",
+        "dark-marker": "#FFF8F3",
       },
       height: {
         navbar: "var(--theme-navbar-height)",

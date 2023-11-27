@@ -100,7 +100,10 @@ article > section nav {
 
 article > section ::marker {
   font-weight: bold;
-  @apply text-light;
+  @apply text-marker;
+}
+.dark article > section ::marker {
+  @apply text-dark-marker;
 }
 
 article > section iframe {
@@ -171,15 +174,12 @@ strong {
   margin: 0.125em;
   border-radius: var(--border-radius);
   word-break: break-word;
-  background: var(--gray-200);
-  color: var(--black-100);
-  @apply font-mono;
+  @apply font-mono text-code bg-code dark:text-dark-code dark:bg-dark-code;
 }
 
 a > code {
   position: relative;
-  color: #ff684b;
-  background: #ffe7e2;
+  @apply text-link-code dark:text-link-code bg-link-code dark:bg-link-dark-code;
 }
 
 pre.astro-code > code {
@@ -293,7 +293,7 @@ h2.heading {
   font-weight: 700 !important;
   padding: 0.1rem 0rem;
   /* margin-top: 30px; */
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   font-family: var(--font-family-body-text);
 }
 
