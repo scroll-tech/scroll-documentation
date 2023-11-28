@@ -85,7 +85,7 @@ export const getSidebar = () => {
             url: formatUrl("developers/scroll-contracts"),
           },
           {
-            title: t("sidebar.developers.deverlopTooling"),
+            title: t("sidebar.developers.deployedTooling"),
             url: formatUrl("developers/deployed-tooling"),
           },
           {
