@@ -3,14 +3,21 @@
     {
       "name": "Safe",
       "url": "https://safe.scroll.xyz/",
-      "network": ["sepolia", "mainnet"]
+      "network": ["sepolia", "mainnet"],
+      "logo": "https://docs.attest.sh/img/eas-logo.png",
+      "tags": ["indexer", "test1", "test2", "Test3"]
     },
     {
       "name": "The Graph",
       "url": "https://edgeandnode.notion.site/The-Graph-Subgraph-Studio-Non-Rate-Limited-Chain-Integration-889fe061ee6b4423a7f8e2c8070b9294?pvs=4",
-      "network": ["sepolia", "mainnet"],
-      "tags": ["indexer"],
+      "network": ["mainnet", "sepolia"],
+      "tags": ["indexer", "test1", "test2"],
       "comment": "Use the latest version of The Graph's cli."
+    },
+    {
+      "name": "Wagmi",
+      "logo": "https://github.com/wevm/wagmi/blob/main/docs/public/favicons/light.png?raw=true",
+      "network": ["mainnet"]
     }
   ]
 }

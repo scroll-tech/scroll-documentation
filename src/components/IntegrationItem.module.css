@@ -1,0 +1,61 @@
+.container {
+  border-radius: 27px;
+  background: #fff8f3;
+  flex-direction: column;
+  width: 298px;
+  /* height: 404px; */
+  padding: 30px;
+}
+.flexRow {
+  display: flex;
+  flex-direction: row;
+}
+.logo {
+  height: 54px;
+  padding-right: 16px;
+}
+.name {
+  color: #101010;
+  /* font-family: Trans Sans Premium; */
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 30px; /* 125% */
+  letter-spacing: 0.24px;
+  align-self: center;
+}
+.url {
+  height: 15px;
+}
+.comment {
+  color: #101010;
+  font-family: Roboto Flex;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 25px; /* 156.25% */
+  margin-top: 24px;
+  margin-bottom: 31px;
+}
+.network {
+  color: #878787;
+  font-family: Roboto Flex;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 25px; /* 208.333% */
+  letter-spacing: 0.36px;
+}
+.tag {
+  border-radius: 5px;
+  background: #fff0dd;
+  padding: 5px 7px;
+  margin: 10px;
+  color: #84623a;
+  text-align: center;
+  font-family: Roboto Flex;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: 0.16px;
+}

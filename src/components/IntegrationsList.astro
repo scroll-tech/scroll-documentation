@@ -1,5 +1,6 @@
 ---
+import { IntegrationItem } from "./IntegrationItem"
 const { data } = Astro.props
 ---
 
-{data.map((item) => <p>{item["name"]}</p>)}
+{data.map((item) => <IntegrationItem data={item} />)}
