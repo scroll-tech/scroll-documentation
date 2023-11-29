@@ -1,0 +1,63 @@
+---
+import NewsCard from "~/components/NewsCard.astro"
+import SectionHeader from "~/components/SectionHeader/index.astro"
+
+const newsList = [
+  {
+    cover: "https://scroll.io/imgs/career/news/news-cover-1.png",
+    title: "Get introduced to zkRollups and zkEVMs",
+    domain: "youtube.com",
+    link: "https://www.youtube.com/watch?v=JdjRcW13LME",
+  },
+  {
+    cover: "https://scroll.io/imgs/career/news/news-cover-2.png",
+    title: "What it means to build in the open on the Zero Knowledge podcast",
+    domain: "zeroknowledge.fm",
+    link: "https://zeroknowledge.fm/275-2/",
+  },
+  {
+    cover: "https://scroll.io/imgs/career/news/news-cover-3.png",
+    title: "Diving Deep into ZK with Scroll’s Co-Founders",
+    domain: "blockworks.co",
+    link: "https://blockworks.co/podcast/empire/dc33c4f8-da5f-11ec-a5ac-27c2459d4600",
+  },
+]
+---
+
+<div class="motion">
+  <SectionHeader
+    title="Scroll in motion"
+    targetName="Explore playlist"
+    url="https://www.youtube.com/@Scroll_ZKP"
+    content="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ut urna iaculis quam mollis consequat."
+  />
+  <div class="videos">
+    {
+      newsList.map(({ cover, title, domain, link }) => (
+        <NewsCard cover={cover} title={title} domain={domain} link={link} />
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .motion {
+    margin-top: 146px;
+  }
+
+  .videos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3.2rem;
+    margin-top: 130px;
+  }
+
+  @media screen and (max-width: 50em) {
+    .motion {
+      margin-top: 106px;
+    }
+    .videos {
+      grid-template-columns: repeat(1, 1fr);
+    }
+  }
+</style>

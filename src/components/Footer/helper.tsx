@@ -28,7 +28,7 @@ export const aboutList = [
   },
   {
     name: "Join Us",
-    href: "https://jobs.lever.co/ScrollFoundation",
+    href: "https://scroll.io/join-us",
   },
   {
     name: "Health Status",
@@ -54,7 +54,7 @@ export const resourceList = [
     href: "https://docs.scroll.io/",
   },
   {
-    name: "Press Kit",
+    name: "Brand Kit",
     href: "https://scrollzkp.notion.site/Scroll-Rebrand-Assets-5bb83465f56f40989c4f772b39ed3a06",
   },
 ]
