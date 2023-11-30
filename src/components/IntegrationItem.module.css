@@ -6,6 +6,11 @@
   /* height: 404px; */
   padding: 30px;
 }
+/* If you want every element inside the container to apply the 'trans-sans' font, just use this style */
+.container * {
+  font-family: var(--font-family-text) !important;
+}
+
 .flexRow {
   display: flex;
   flex-direction: row;
@@ -16,7 +21,7 @@
 }
 .name {
   color: #101010;
-  font-family: "trans-sans" !important;
+  /* font-family: "trans-sans" !important; */
   /* recommended */
   /* font-family: var(--font-family-text) !important; */
   font-size: 24px;
