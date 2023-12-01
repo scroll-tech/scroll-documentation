@@ -66,6 +66,8 @@
       "commonErrors": "Common Errors",
       "rollupExplorer": "Rollup Explorer",
       "scrollSepoliaBlockExplorer": "Scroll Sepolia Explorer",
+      "scrollMainnet": "Scroll Mainnet",
+      "scrollscan": "Scrollscan Block Explorer",
       "sepoliaBlockExplorer": "Sepolia Explorer",
       "community": "Community",
       "discord": "Discord",
@@ -96,9 +98,13 @@
       "bridgingERC1155ThroughCustomGateway": "Bridging ERC1155 through Custom Gateway",
       "estimatingGasAndTxFees": "Estimating Gas & Tx Fees",
       "resources": "Resources",
+      "mainnetResources": "Mainnet Resources",
+      "sepoliaResources": "Sepolia Resources",
+      "scrollBlockExplorer": "Scrollscan Explorer",
       "rollupExplorer": "Rollup Explorer",
       "scrollSepoliaBlockExplorer": "Scroll Sepolia Explorer",
-      "sepoliaBlockExplorer": "Sepolia Explorer"
+      "sepoliaRollupExplorer": "Rollup Explorer",
+      "sepoliaBlockExplorer": "Scrollscan Explorer"
     },
     "technology": {
       "introduction": "Introduction",
@@ -129,7 +135,11 @@
       "bridgeOverview": "Bridge Overview",
       "prover": "Prover",
       "proofGeneration": "Proof Generation",
-      "cpuProverRepo": "CPU Prover Repo"
+      "cpuProverRepo": "CPU Prover Repo",
+
+      "security": "Security",
+      "auditsAndBugBounty": "Audits & Bug Bounty",
+      "l2BeatAssessment": "L2Beat Assessment"
     },
     "learn": {
       "ethereumAndProtocols": "Ethereum & Protocols",
