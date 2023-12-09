@@ -16,7 +16,6 @@ Scroll Sepolia测试网的费用明显低于其底层。对于用户和开发者
 
 由于 L2 rollups的设计，交易成本取决于 L1 的成本。为了利用以太坊的安全性，Scroll必须考虑必须在L1上存储和验证交易数据和证明的成本。
 
-Compared to Ethereum mainnet, Scroll Sepolia introduces some new dimensions to transaction fee calculation to do this. The final cost of a transaction is constructed from several parts:
 与以太坊主网相比，Scroll Sepolia为交易费用计算引入了一些新的维度。交易的最终成本由以下几个部分构成：
 
 - **L2 费用**
@@ -56,7 +55,6 @@ l2TransactionExecutionFee = l2TransactionGasUsed * l2TransactionGasPrice
 
 每笔交易的调用数据（calldata）必须提交到以太坊，这会产生额外的交易费用，称为“L1费用”。如果不这样做，则无法仅从 L1 数据重新恢复 Scroll。
 
-Transactions aren't committed 1-by-1 -- they are collected in batches of blocks (and blocks of transactions). The cost of an individual transaction is computed based on the zeros and non-zero bytes in its payload.
 交易不是逐一提交的 - 它们是区块（和交易的区块）的批次收集的。单个交易的成本是根据其负载（payload）中的零和非零字节计算的。
 
 ### 预估 L1 数据费用
@@ -69,7 +67,6 @@ function getL1Fee(bytes memory _data) external view override returns (uint256);
 
 <Aside type="note" title="如果 L1 gas 价格飙升会发生什么?">
 
-Once the sequencer has processed a transaction, a user's L1 fee is locked in, and any fluctuations will not affect what a user pays.
 一旦排序器处理了交易，用户的L1费用就会被锁定，任何波动都不会影响用户支付的费用。
 
 <br />

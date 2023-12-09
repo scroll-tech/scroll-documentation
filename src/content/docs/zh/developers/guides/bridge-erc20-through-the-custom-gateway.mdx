@@ -4,7 +4,7 @@ date: Last Modified
 title: "通过自定义 Gateway 跨链 ERC20"
 lang: "zh"
 permalink: "developers/guides/bridge-erc20-through-the-custom-gateway"
-excerpt: "This guide will walk through how to use Scroll's bridge for ERC20s that need custom functionality using the Custom Gateway."
+excerpt: "本指南将介绍如何通过自定义 Gateway 将 Scroll 的跨链桥用于需要自定义功能的 ERC20。"
 ---
 
 import Aside from "../../../../../components/Aside.astro"
@@ -12,12 +12,12 @@ import Aside from "../../../../../components/Aside.astro"
 本指南将介绍如何通过自定义 Gateway 将 Scroll 的跨链桥用于需要自定义功能的 ERC20。
 
 <Aside type="tip" title="您需要自定义逻辑吗？">
-  请记住，在许多场景下，您无需使用自定义Gateway向代币或其跨链桥逻辑添加其他功能。有关更多信息，请参阅有关[ETH和ERC20代币跨链桥](/developers/l1-and-l2-bridging/eth-and-erc20-token-bridge#deposit-eth-and-erc20-tokens-from-l1)的文章。
+  请记住，在许多场景下，您无需使用自定义 Gateway 向代币或其跨链桥逻辑添加其他功能。有关更多信息，请参阅有关[ETH和ERC20代币跨链桥](/developers/l1-and-l2-bridging/eth-and-erc20-token-bridge#deposit-eth-and-erc20-tokens-from-l1)的文章。
 </Aside>
 
 ## 第 1 步: 在 Sepolia 上发布一个代币
 
-首先，我们需要一个代币来桥接。无需特定的ERC20实现即可使代币与L2兼容。如果您已有代币，请随时跳过此步骤。如果要部署新代币，请使用以下简单的 ERC20 代币合约，该代币合约在启动时向部署者铸造 100 万个代币。
+首先，我们需要一个代币来桥接。无需特定的 ERC20 实现即可使代币与 L2 兼容。如果您已有代币，请随时跳过此步骤。如果要部署新代币，请使用以下简单的 ERC20 代币合约，该代币合约在启动时向部署者铸造 100 万个代币。
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -39,9 +39,9 @@ contract L1Token is ERC20 {
 为此，请执行以下操作：
 
 - 代币必须实现“IScrollStandardERC20”接口才能与跨链桥兼容。
-- 合约应有 `gateway()` 和 `counterpart()` 方法，可以提供gateway合约地址和对应的代币地址（我们刚刚发布的 L1 代币）。它还应该允许 L2 gateway在存入和提取代币事调用代币的 `mint()` 和 `burn()` 方法。
+- 合约应有 `gateway()` 和 `counterpart()` 方法，可以提供 gateway 合约地址和对应的代币地址（我们刚刚发布的 L1 代币）。它还应该允许 L2 gateway在存入和提取代币事调用代币的 `mint()` 和 `burn()` 方法。
 
-以下是与跨链桥兼容的代币的完整示例。对于构造函数，您将传递Scroll官方自定义Gateway地址 （ 0x31C994F2017E71b82fd4D8118F140c81215bbb37 ） 和在 Sepolia 上发布的代币地址。
+以下是与跨链桥兼容的代币的完整示例。对于构造函数，您将传递 Scroll 官方自定义 Gateway 地址 （ 0x31C994F2017E71b82fd4D8118F140c81215bbb37 ） 和在 Sepolia 上发布的代币地址。
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -110,7 +110,7 @@ contract L2Token is ERC20, IScrollERC20Extension {
 
 将您的代币添加到Scroll官方跨链桥（如上所述）是将代币与 Scroll 桥接的推荐方法。这种方法将使它们更容易被发现，对持有者来说更安全。但是，这需要Scroll团队的批准。如果您想在没有官方批准流程的情况下发布自定义代币，您可以自己发布自定义 Gateway合约。为此，您需要在 L1 上部署 `L1CustomERC20Gateway` 合约，在 L2 上部署 `L2CustomERC20Gateway` 合约。
 
-### 发布 L1 自定义 Gateway
+### 发布 L1 自定义 Gateway 合约
 
 让我们从在 Sepolia 上发布以下合约开始。
 
@@ -208,7 +208,7 @@ contract L1CustomERC20Gateway is L1ERC20Gateway, Ownable {
 }
 ```
 
-### 发布 L2 自定义 Gateway
+### 发布 L2 自定义 Gateway 合约
 
 现在让我们在 Scroll 上发布对应合约。
 
@@ -321,7 +321,7 @@ contract L2CustomERC20Gateway is L2ERC20Gateway, ScrollGatewayBase, Ownable {
 
 ### 在 Sepolia 上设置 Gateway 合约
 
-部署合约后，调用以下函数初始化合约，并将其绑定到相应的代币和跨链桥另一端的网关。
+部署合约后，调用以下函数初始化合约，并将其绑定到相应的代币和跨链桥另一端的 gateway 合约。
 
 首先，使用以下参数调用 `MyL1Gateway` 合约上的 `initialize` 方法：
 

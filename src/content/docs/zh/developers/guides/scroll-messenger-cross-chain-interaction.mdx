@@ -9,7 +9,7 @@ excerpt: "In this example, we will launch a dummy smart contract on either Sepol
 
 import Aside from "../../../../../components/Aside.astro"
 
-在这个例子中，我们将在Sepolia或Scroll上启动一个虚拟智能合约，并从对方的链上与之交互。我们将使用同时部署在Sepolia和Scroll上的 `ScrollMessenger` 合约。
+在这个例子中，我们将在 Sepolia 和 Scroll Sepolia 上启动一个虚拟智能合约，并从对方的链上与之交互。我们将使用同时部署在 Sepolia 和 Scroll Sepolia 上的 `ScrollMessenger` 合约。
 
 ## 部署合约
 
@@ -73,7 +73,6 @@ contract GreeterOperator {
 
 ## 调用跨链方法
 
-We pass the message by executing `executeFunctionCrosschain` and passing the following parameters:
 我们通过执行 `executeFunctionCrosschain` 并传入以下参数来传递消息：
 
 - `scrollMessengerAddress`: 这将取决于您部署 `GreeterOperator` 合约的位置。

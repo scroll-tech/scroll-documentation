@@ -24,12 +24,12 @@ import Aside from "../../../../components/Aside.astro"
 | --------------------------- | ------------------- | ---------------------------------------------------------------------------------------------------------- |
 | `BLOCKHASH`                 | `block.blockhash`   | 返回最新256个区块的 `keccak(chain_id \|\| block_number)`                                     |
 | `COINBASE`                  | `block.coinbase`    | 返回预部署的费用合约地址，查看 [Scroll 合约](/developers/scroll-contracts). |
-| `DIFFICULTY` / `PREVRANDAO` | `block.difficulty`  | 返回s 0.                                                                                                 |
+| `DIFFICULTY` / `PREVRANDAO` | `block.difficulty`  | 返回 0.                                                                                                 |
 | `BASEFEE`                   | `block.basefee`     | 禁用。[^eip1559] 如果引入该操作码，交易将被还原                       |
 | `SELFDESTRUCT`              | `selfdestruct`      | 禁用。如果引入该操作码，交易将被还原。[^willadpot]                      |
 
-[^eip1559]: We have currently disabled EIP-1559 on Scroll.
-[^willadpot]: Will change to adopt Ethereum’s solution in the future.
+[^eip1559]: 我们目前在 Scroll 上禁用了 EIP-1559。
+[^willadpot]: 我们未来会改用以太坊的方案。
 
 ## EVM 预编译合约
 
