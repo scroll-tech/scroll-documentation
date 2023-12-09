@@ -29,14 +29,15 @@ const recommendedArticles = [
   },
 ]
 
-function EmptyQueryBoundary({ children, fallback }) {
+function EmptyQueryBoundary({ children, size, fallback }) {
   const { indexUiState } = useInstantSearch()
 
   const recentArticles = JSON.parse(localStorage.getItem("recentArticles") || "[]")
 
+  console.log(indexUiState, "indexUiState")
   if (!indexUiState.query) {
     return (
-      <div className={styles.queryResults}>
+      <div className={clsx(styles.queryResults, styles[size])}>
         <div>
           <h6 style={{ paddingLeft: "var(--space-2x)", marginBottom: "1rem" }}>Recommended articles</h6>
           <div className={styles.hitWrapper}>
@@ -108,6 +109,7 @@ function NoResultsBoundary({ children }) {
 function CustomHits({ title, hitClassName, ...props }: UseHitsProps & { title: string; hitClassName?: string }) {
   const { hits, results } = useHits(props)
 
+  console.log(hits, "hits")
   if (hits.length === 0) return null
   return (
     <div>
@@ -150,9 +152,9 @@ export function SearchModal({ size = "mini", isOpen, onClose }: { size: Size; is
       <InstantSearch indexName={getIndexName()} searchClient={searchClient}>
         <SearchInput size={size} onClose={onClose} />
         <div className={styles.resultsWrapper}>
-          <EmptyQueryBoundary fallback={null}>
+          <EmptyQueryBoundary fallback={null} size={size}>
             <NoResultsBoundary>
-              <div className={styles.queryResults}>
+              <div className={clsx(styles.queryResults, styles[size])}>
                 <CustomHits
                   title="Title Matches"
                   escapeHTML={false}
