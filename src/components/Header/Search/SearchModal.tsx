@@ -47,7 +47,7 @@ function EmptyQueryBoundary({ children, size, fallback }) {
                   <a
                     style={{ padding: "var(--space-1x) var(--space-2x)" }}
                     href={article.url}
-                    className={clsx(styles.hit, "paragraph-200", "recommended-match-hit")}
+                    className={clsx(styles.hit, "paragraph-200", "recommended-match-hit", "dark:text-white")}
                   >
                     {article.title}
                   </a>
@@ -67,7 +67,7 @@ function EmptyQueryBoundary({ children, size, fallback }) {
                       <a
                         style={{ padding: "var(--space-1x) var(--space-2x)" }}
                         href={article.url}
-                        className={clsx(styles.hit, "paragraph-200", "recently-viewed-match-hit")}
+                        className={clsx(styles.hit, "paragraph-200", "recently-viewed-match-hit", "dark:text-white")}
                       >
                         {article.title}
                       </a>
@@ -121,7 +121,7 @@ function CustomHits({ title, hitClassName, ...props }: UseHitsProps & { title: s
               <a
                 // style={{ padding: "var(--space-1x) var(--space-2x)" }}
                 href={hit.url}
-                className={clsx(styles.hit, hitClassName, "paragraph-200")}
+                className={clsx(styles.hit, hitClassName, "paragraph-200 dark:text-white")}
                 dangerouslySetInnerHTML={{
                   __html: hit._highlightResult.title.value,
                 }}
@@ -148,7 +148,14 @@ export function SearchModal({ size = "mini", isOpen, onClose }: { size: Size; is
   }
 
   return (
-    <div id={styles.searchModal} className={styles[size]}>
+    <div
+      id={styles.searchModal}
+      className={clsx(
+        styles[size],
+        "bg-pure-white",
+        size === "mini" ? "dark:bg-black lg:dark:!bg-dark-normal" : "dark:bg-dark-normal"
+      )}
+    >
       <InstantSearch indexName={getIndexName()} searchClient={searchClient}>
         <SearchInput size={size} onClose={onClose} />
         <div className={styles.resultsWrapper}>

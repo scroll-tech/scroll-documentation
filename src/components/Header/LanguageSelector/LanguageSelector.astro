@@ -47,8 +47,6 @@ const { showFlag = false, languageMapping, ...attributes } = Astro.props
 
   .options-list {
     width: 83px;
-    background-color: white;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
     background-repeat: no-repeat;
     background-position: right 6px top 3px;
     background-size: 1em;
@@ -59,13 +57,15 @@ const { showFlag = false, languageMapping, ...attributes } = Astro.props
     height: 22px;
     letter-spacing: 0.14px;
     padding: 0px 15px;
-    border-radius: 18px;
+    border-radius: 5px;
     border: 1px solid var(--black-100);
     overflow: hidden;
     cursor: pointer;
     position: absolute;
     top: 0;
     transition: height 0.3s ease;
+    background-size: 8px;
+    @apply bg-white dark:bg-dark-normal border-black dark:border-white;
   }
 
   .options-list:hover {
@@ -83,7 +83,7 @@ const { showFlag = false, languageMapping, ...attributes } = Astro.props
     }
 
     .options-list {
-      background-position: right 4px top 8px;
+      background-position: right 8px top 14px;
 
       font-weight: 400;
       line-height: 35px;

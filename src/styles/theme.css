@@ -81,6 +81,6 @@
 }
 
 body {
-  background: #ffffff;
+  @apply bg-pure-white dark:bg-black;
   color: var(--color-text-primary);
 }

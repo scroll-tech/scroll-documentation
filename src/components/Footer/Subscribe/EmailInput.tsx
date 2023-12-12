@@ -1,5 +1,7 @@
-import React, { useState } from "react"
+import React from "react"
 import styles from "./EmailInput.module.css"
+import ArrowSvg from "~/assets/svgs/footer/arrow-right.svg?react"
+import { clsx } from "~/lib"
 
 const EmailInput = (props) => {
   const { end, onClick, onEnter, ...restProps } = props
@@ -13,21 +15,29 @@ const EmailInput = (props) => {
   return (
     <div className={styles.container}>
       <div
-        className={styles.mask}
+        className={clsx(styles.mask, "dark:bg-white")}
         style={{
           ...(end && { width: "100%" }),
         }}
       >
-        <button className={styles.iconButton} onClick={onClick} disabled={end}>
-          <img src="/images/footer/arrow-right.svg" alt="arrow-right" />
+        <button className={clsx(styles.iconButton, "dark:text-black")} onClick={onClick} disabled={end}>
+          <ArrowSvg></ArrowSvg>
         </button>
-        <div className={styles.success}>Thank you for subscribing!</div>
+        <div className={clsx(styles.success, "dark:text-black", "dark:bg-white")}>Thank you for subscribing!</div>
       </div>
       <input
         placeholder="your email address here"
         {...restProps}
         onKeyDown={handleEnter}
-        className={styles.inputBase}
+        className={clsx(
+          styles.inputBase,
+          "dark:text-white",
+          "dark:bg-black",
+          "dark:border-white",
+          "placeholder:text-[#dcdcdc]",
+          "placeholder:dark:text-[#FFF8F366]",
+          "focus:outline-none"
+        )}
       ></input>
     </div>
   )
