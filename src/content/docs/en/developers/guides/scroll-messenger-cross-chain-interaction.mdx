@@ -79,7 +79,7 @@ contract GreeterOperator {
 We pass the message by executing `executeFunctionCrosschain` and passing the following parameters:
 
 - `scrollMessengerAddress`: This will depend on where you deployed the `GreeterOperator` contract.
-  - If you deployed it on Sepolia use `0x50c7d3e7f7c656493D1D76aaa1a836CedfCBB16A`. If you deployed on Scroll use `0x781e90f1c8Fc4611c9b7497C3B47F99Ef6969CbC`.
+  - If you deployed it on Sepolia use `0x50c7d3e7f7c656493D1D76aaa1a836CedfCBB16A`. If you deployed on Scroll use `0xBa50f5340FB9F3Bd074bD638c9BE13eCB36E603d`.
 - `targetAddress`: The address of the `Greeter` contract on the opposite chain.
 - `value`: In this case, it is `0` because the `setGreeting`is not payable.
 - `greeting`: This is the parameter that will be sent through the message. Try passing `“This message was cross-chain!”`
