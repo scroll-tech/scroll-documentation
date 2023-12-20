@@ -40,4 +40,4 @@ Scroll 的 Sepolia 测试网已经上线。 虽然我们有一个 [完整指南]
 
 ## Scroll 的未来方向?
 
-Scroll 目前已经上线以太坊上的主网，接下来将去中心化堆栈的每个组件。查看 [我们的路线图](https://scroll.io) 或者关注 [我们的 Discord](https://discord.gg/scroll) 或者 [Twitter](https://twitter.com/scroll_zkp)。
+在以太坊上启动主网之前，我们目前处于最终测试网中.接下来将去中心化堆栈的每个组件。查看 [我们的路线图](https://scroll.io) 或者关注 [我们的 Discord](https://discord.gg/scroll) 或者 [Twitter](https://twitter.com/scroll_zkp)。
