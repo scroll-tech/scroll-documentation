@@ -9,7 +9,7 @@ const supportedLanguages = i18next.languages
 
 const { pathname } = Astro.url
 
-const { showFlag = false, languageMapping, ...attributes } = Astro.props
+const { showFlag = false, languageMapping } = Astro.props
 const { dark } = Astro.props
 
 const getLabel = (language) => {
@@ -67,10 +67,6 @@ const getLabel = (language) => {
     position: relative;
   }
 
-  .language-selector.dark {
-    --black-100: #fff;
-    --orange-500: #fff;
-  }
   .language-selector:hover .options-modal {
     display: flex;
   }
@@ -84,14 +80,15 @@ const getLabel = (language) => {
   .current-language {
     width: 100px;
     border-radius: 5px;
-    border: 1px solid var(--black-100);
+    border-width: 1px;
+    border-style: solid;
     display: flex;
     height: 36px;
     padding: 0 12px;
     justify-content: space-between;
     align-items: center;
     cursor: pointer;
-    color: var(--black-100);
+    @apply text-black dark:text-white border-black dark:border-white;
   }
 
   .options-list {
@@ -101,7 +98,8 @@ const getLabel = (language) => {
     letter-spacing: 0.14px;
     padding: 4px 12px;
     border-radius: 5px;
-    border: 1px solid var(--black-100);
+    border-width: 1px;
+    border-style: solid;
     overflow: hidden;
     cursor: pointer;
     transition: height 0.3s ease;
@@ -109,7 +107,7 @@ const getLabel = (language) => {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    background: var(--white-100);
+    @apply bg-pure-white dark:bg-black border-black dark:border-white;
   }
 
   .options-list li {
@@ -119,7 +117,7 @@ const getLabel = (language) => {
     align-items: center;
     flex-direction: row;
     padding: 8px 0px;
-    color: var(--black-100);
+    @apply text-black dark:text-white;
   }
 
   .options-list li svg,
