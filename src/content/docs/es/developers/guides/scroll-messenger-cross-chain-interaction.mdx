@@ -83,7 +83,7 @@ Pasamos el mensaje ejecutando `executeFunctionCrosschain` y pasando los siguient
 - `value`: En este caso es `0` porque el `setGreeting` no es de tipo `payable`.
 - `greeting`: Es el parámetro que se enviará a través del mensaje. Prueba pasar `"¡Este mensaje fue ejecutado de manera crosschain!"`.
 - `gasLimit`:
-  - Si estás enviando el mensaje de L1 a L2, alrededor de un límite de gas de `5000` debería ser más que suficiente.
+  - Si estás enviando el mensaje de L1 a L2, alrededor de un límite de gas de `1000000` debería ser más que suficiente.
   - Si estás enviando el mensaje de L2 a L1, pasa `0`, ya que la transacción se completará ejecutando una transacción adicional en L1.
 
 ### Retransmisión del mensaje al enviar de L2 a L1

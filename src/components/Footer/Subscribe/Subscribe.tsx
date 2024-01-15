@@ -1,5 +1,8 @@
+// import React from "react"
 import { useState, useEffect } from "preact/hooks"
 import MailchimpSubscribe from "react-mailchimp-subscribe"
+import SubscribeSvg from "~/assets/svgs/footer/subscribe.svg?react"
+import { clsx } from "~/lib"
 
 import EmailInput from "./EmailInput.tsx"
 import styles from "./Subscribe.module.css"
@@ -7,7 +10,7 @@ import styles from "./Subscribe.module.css"
 const url = "https://gmail.us14.list-manage.com/subscribe/post?u=3b1d822eb27b2fa64d82d430b&id=0b4603244e"
 
 const isValidEmail = (email: string): boolean => {
-  const emailRegex: RegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
   return emailRegex.test(email)
 }
 
@@ -37,12 +40,17 @@ export default function Subscribe() {
   }
 
   return (
-    <div className={styles.container}>
+    <div className={clsx(styles.container, "dark:bg-dark-highlight")}>
       <div className={styles.subscribeBox}>
-        <img className={styles.subscribeIcon} src="/images/footer/subscribe.svg" />
+        <span className="text-white dark:text-black bg-black dark:bg-white rounded-[50%]">
+          <SubscribeSvg></SubscribeSvg>
+        </span>
+
         <div className={styles.copyBox}>
           <div className={styles.subscribeTitle}>Stay up-to-date on the latest Scroll Developer news</div>
-          <div className={styles.subscribeText}>Roadmap updates, virtual and live events, ecosystem opportunities and more</div>
+          <div className={styles.subscribeText}>
+            Roadmap updates, virtual and live events, ecosystem opportunities and more
+          </div>
         </div>
         <MailchimpSubscribe
           url={url}

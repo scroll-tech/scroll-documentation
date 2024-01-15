@@ -1,6 +1,6 @@
 /**
  * These are the styles that will be applied for all buttons globally.
- * We want thse styles to be minimal, because our buttons can differ greatly,
+ * We want these styles to be minimal, because our buttons can differ greatly,
  * e.g. modal close button may not share styles with primary button.
  */
 button {

@@ -96,9 +96,9 @@ changeLanguage(content.lang)
 
       #grid-left {
         position: fixed;
-        background-color: var(--theme-bg);
         z-index: 10;
         display: none;
+        @apply bg-pure-white dark:bg-black;
       }
 
       #grid-main {
@@ -201,6 +201,15 @@ changeLanguage(content.lang)
       if (!recentArticles.some((article) => article.url === persistedArticle.url)) {
         recentArticles.unshift(persistedArticle)
         localStorage.setItem("recentArticles", JSON.stringify(recentArticles.slice(0, 5)))
+      }
+    </script>
+    <script is:inline>
+      const themeMode = localStorage.getItem("THEME_MODE")
+
+      if (themeMode === "dark") {
+        document.documentElement.classList.add("dark")
+      } else {
+        document.documentElement.classList.remove("dark")
       }
     </script>
   </head>
