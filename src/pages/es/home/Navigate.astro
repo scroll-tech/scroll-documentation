@@ -9,33 +9,33 @@ import SectionHeader from "~/components/SectionHeader/index.astro"
 const navList = [
   {
     icon: StartSvg,
-    name: "Getting started",
-    content: "Bridge into Scroll and explore our dApp Ecosystem.",
-    link: "/en/getting-started/overview",
+    name: "¿Cómo empezar?",
+    content: "Migra hacia Scroll usando el Bridge y explora el Ecosistema de dApps.",
+    link: "/es/getting-started/overview",
   },
   {
     icon: DevelopSvg,
-    name: "Developers",
-    content: "Dive into Scroll’s developer documentation.",
-    link: "/en/developers",
+    name: "Desarrolladores",
+    content: "Sumérgete en la documentación para desarrolladores de Scroll.",
+    link: "/es/developers",
   },
   {
     icon: TechnologySvg,
-    name: "Technology",
-    content: "An overview of Scroll’s zkEVM Architecture.",
-    link: "/en/technology",
+    name: "Tecnología",
+    content: "Un vistazo general a la arquitectura de la zkEVM de Scroll.",
+    link: "/es/technology",
   },
   {
     icon: LearnSvg,
-    name: "Learn",
-    content: "An introduction to the world of ZK and Scalability.",
-    link: "/en/learn",
+    name: "Aprende",
+    content: "Una introducción al mundo de ZK y de la escalabilidad.",
+    link: "/es/learn",
   },
 ]
 ---
 
 <div class="navigate">
-  <SectionHeader title="Navigate the Docs" content="Start developing on Scroll today." />
+  <SectionHeader title="Navega la Documentación" content="Inicia tu desarrollo en Scroll hoy." />
   <div class="navs">
     {navList.map(({ icon, name, content, link }) => <NavCard icon={icon} name={name} content={content} link={link} />)}
   </div>

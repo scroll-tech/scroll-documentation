@@ -3,6 +3,7 @@ import { useState, useEffect } from "preact/hooks"
 import MailchimpSubscribe from "react-mailchimp-subscribe"
 import SubscribeSvg from "~/assets/svgs/footer/subscribe.svg?react"
 import { clsx } from "~/lib"
+import { t } from "i18next"
 
 import EmailInput from "./EmailInput.tsx"
 import styles from "./Subscribe.module.css"
@@ -26,9 +27,9 @@ export default function Subscribe() {
 
   const handleSubmit = (subscribe) => {
     if (!email) {
-      setCustomMessage("Please insert your email.")
+      setCustomMessage(t("landing.NewsletterCTA.pleaseInsertEmail"))
     } else if (!emailValid) {
-      setCustomMessage("Please use a correct email address.")
+      setCustomMessage(t("landing.NewsletterCTA.correctEmail"))
     } else {
       subscribe({ EMAIL: email })
       setEmail("")
@@ -47,9 +48,9 @@ export default function Subscribe() {
         </span>
 
         <div className={styles.copyBox}>
-          <div className={styles.subscribeTitle}>Stay up-to-date on the latest Scroll Developer news</div>
+          <div className={styles.subscribeTitle}>{ t("landing.NewsletterCTA.title") }</div>
           <div className={styles.subscribeText}>
-            Roadmap updates, virtual and live events, ecosystem opportunities and more
+          { t("landing.NewsletterCTA.text") }
           </div>
         </div>
         <MailchimpSubscribe
@@ -62,7 +63,7 @@ export default function Subscribe() {
                 onChange={handleChangeEmail}
                 onClick={() => handleSubmit(subscribe)}
                 onEnter={() => handleSubmit(subscribe)}
-                placeholder="your email address here"
+                placeholder= { t("landing.NewsletterCTA.placeholder") }
                 end={status === "success"}
               />
               {customMessage && <div className={styles.errorMessage}>{customMessage}</div>}
