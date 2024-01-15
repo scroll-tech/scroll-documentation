@@ -9,7 +9,6 @@
   overflow: hidden;
   padding: 0 20px;
   border-radius: 0;
-  @apply bg-white;
 }
 
 .wrapper.large {
@@ -21,7 +20,6 @@
   margin: 0;
   font-size: 16px;
   width: 100%;
-  color: rgb(12, 22, 44);
   outline: none;
   display: block;
   appearance: none;
@@ -34,6 +32,8 @@
   border-radius: 0;
   height: 50px;
   line-height: 45px;
+
+  @apply text-black border-black;
 }
 .input.large {
   height: 48px;
@@ -77,7 +77,7 @@
   .input {
     font-size: 16px;
     line-height: 15px;
-    background: #f6f6f6 url(/assets/search.svg) left 12px top 50% / 17px no-repeat;
+    background: url(/assets/search.svg) left 12px top 50% / 17px no-repeat;
     border: none;
     height: 35px;
     line-height: 35px;
@@ -90,6 +90,7 @@
     background: transparent url(/svgs/search.svg) left 22px center no-repeat;
     padding-left: 60px;
     padding-right: 22px;
+    background-size: 22px auto;
   }
 
   .input:focus {

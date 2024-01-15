@@ -1,5 +1,6 @@
 ---
 import i18next, { t } from "i18next"
+import NextSvg from "~/assets/svgs/main/next.svg?raw"
 export type Props = { content: Record<string, string> }
 const { content = {} } = Astro.props as Props
 ---
@@ -11,22 +12,10 @@ const { content = {} } = Astro.props as Props
       Object.keys(content).map((key) => (
         <li>
           <a href={content[key]}>
-            <svg
-              style="margin-right: 26px"
-              xmlns="http://www.w3.org/2000/svg"
-              width="6"
-              height="10"
-              viewBox="0 0 6 10"
-              fill="none"
-            >
-              <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                d="M6 5.00024C6 5.2319 5.90774 5.44971 5.74019 5.61356L1.51387 9.74655C1.16802 10.0845 0.60566 10.0845 0.259811 9.74655C0.0922641 9.5827 -2.77618e-08 9.36488 -3.78877e-08 9.13323C-4.80137e-08 8.90157 0.0922641 8.68376 0.259811 8.51991L3.85925 4.99997L0.259811 1.4803C0.0922638 1.31645 -3.89091e-07 1.09863 -3.99217e-07 0.866979C-4.09343e-07 0.635323 0.0922637 0.417505 0.259811 0.253658C0.60566 -0.0845528 1.1683 -0.0845528 1.51387 0.253658L5.74019 4.38665C5.90774 4.55049 6 4.76831 6 4.99996L6 5.00024Z"
-                fill="black"
-              />
-            </svg>{" "}
-            {key}
+            <>
+              <Fragment set:html={NextSvg} />
+              {key}
+            </>
           </a>
         </li>
       ))
@@ -60,8 +49,8 @@ const { content = {} } = Astro.props as Props
 
   .whats-next {
     padding: 0;
-    @apply border-[1px] border-solid border-[#DADADA] overflow-hidden;
-    border-radius: 27px;
+    @apply border-[1px] border-solid border-primary dark:border-dark-primary overflow-hidden;
+    border-radius: 10px;
   }
   .whats-next li:first-child {
     border-top: 0;
@@ -69,14 +58,15 @@ const { content = {} } = Astro.props as Props
   .whats-next li {
     list-style: none;
     margin: 0;
-    @apply border-0 border-t-[1px] border-solid border-border-primary;
+    @apply border-0 border-t-[1px] border-solid border-primary dark:border-dark-primary;
   }
   .whats-next li a {
     width: 100%;
     display: inline-flex;
-    padding: 20px 30px;
+    padding: 16px 20px;
+    gap: 8px;
   }
   .whats-next li a:hover {
-    @apply bg-[#FFF8F3];
+    @apply bg-white dark:bg-dark-normal;
   }
 </style>
