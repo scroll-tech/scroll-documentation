@@ -23,38 +23,38 @@ const TwitterIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
 
 export const aboutList = [
   {
-    name: "Bug Bounty",
+    name: "footer.aboutScroll.bugBounty",
     href: "https://immunefi.com/bounty/scroll/",
   },
   {
-    name: "Join Us",
+    name: "footer.aboutScroll.joinUs",
     href: "https://scroll.io/join-us",
   },
   {
-    name: "Health Status",
+    name: "footer.aboutScroll.healthStatus",
     href: "https://status.scroll.io/",
   },
   {
-    name: "Privacy Policy",
+    name: "footer.aboutScroll.privacyPolicy",
     href: "https://scroll.io/privacy-policy",
   },
   {
-    name: "Terms and Conditions",
+    name: "footer.aboutScroll.termsAndConditions",
     href: "https://scroll.io/terms-and-conditions",
   },
 ]
 
 export const resourceList = [
   {
-    name: "Blog",
+    name: "footer.resources.blog",
     href: "https://scroll.io/blog",
   },
   {
-    name: "Documentation",
+    name: "footer.resources.documentation",
     href: "https://docs.scroll.io/",
   },
   {
-    name: "Brand Kit",
+    name: "footer.resources.brandKit",
     href: "https://scrollzkp.notion.site/Scroll-Rebrand-Assets-5bb83465f56f40989c4f772b39ed3a06",
   },
 ]

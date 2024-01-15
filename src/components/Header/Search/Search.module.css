@@ -244,9 +244,9 @@
 }
 
 @media (max-width: 72em) and (min-width: 50em) {
-  :global(.right-box .tools) {
+  /* :global(.right-box .tools) {
     display: none;
-  }
+  } */
 
   .queryResults {
     grid-template-columns: 1fr !important;
