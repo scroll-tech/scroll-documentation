@@ -40,8 +40,6 @@ const Footer = () => {
           ))}
         </div>
       </div>
-
-      <p className={styles.version}>© Version 1.0.0 Scroll Ltd 2023</p>
     </div>
   )
 }
