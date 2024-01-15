@@ -26,7 +26,7 @@ const toolList = [
   <div class="tools">
     {
       toolList.map(({ icon, name, quickstartAnchor, color }) => (
-        <a href={`/en/developers/developer-quickstart#${quickstartAnchor}`} class={`tools-item ${color}`}>
+        <a href={`/es/developers/developer-quickstart#${quickstartAnchor}`} class={`tools-item ${color}`}>
           <figure class={color ? "p-[18px]" : ""}>
             {color ? <Fragment set:html={icon} /> : <img src={icon} alt={name} />}
           </figure>

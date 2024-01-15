@@ -69,7 +69,7 @@ export default function Subscribe(props) {
                 end={status === "success"}
               />
               {customMessage && <div className={styles.errorMessage}>{customMessage}</div>}
-              {status === "error" && <div className={styles.errorMessage}>{message}</div>}
+              {status === "error" && <div className={styles.errorMessage}>{t(message)}</div>}
             </div>
           )}
         />

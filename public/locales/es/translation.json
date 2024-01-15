@@ -52,8 +52,8 @@
       "text": "Roadmap, actualizaciones, eventos virtuales y presenciales, oportunidades en el ecosistema y más",
       "placeholder": "tu correo electrónico aquí",
       "thankYouForSubscribing": "¡Gracias por suscribirte!",
-      "correctEmail": "Porfavor usa un correo electrónico válido.",
-      "pleaseInsertEmail": "Porfavor ingresa tu correo electrónico."
+      "correctEmail": "Por favor usa un correo electrónico válido.",
+      "pleaseInsertEmail": "Por favor ingresa tu correo electrónico."
     }
   },
   "sidebar": {
@@ -181,5 +181,6 @@
   },
   "notTranslated": {
     "notTranslated": "Esta página no ha sido traducida aún."
-  }
+  },
+  "This email cannot be added to this list. Please enter a different email address.": "Este correo electrónico no puede ser añadido a la lista. Por favor ingresa uno diferente."
 }

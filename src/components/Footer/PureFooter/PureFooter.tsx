@@ -14,7 +14,7 @@ const Footer = () => {
         <ul>
           {aboutList.map((item) => (
             <li key={item.name} className={styles.content}>
-              <a href={item.href}>{item.name}</a>
+              <a href={item.href}>{t(item.name)}</a>
             </li>
           ))}
         </ul>
@@ -24,7 +24,7 @@ const Footer = () => {
         <ul>
           {resourceList.map((item) => (
             <li key={item.name} className={styles.content}>
-              <a href={item.href}>{item.name}</a>
+              <a href={item.href}>{t(item.name)}</a>
             </li>
           ))}
         </ul>
