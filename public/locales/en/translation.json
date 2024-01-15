@@ -48,9 +48,12 @@
       }
     },
     "NewsletterCTA": {
-      "title": "Stay updated on the latest Scroll news",
-      "placeholder": "Enter your email address",
-      "buttonText": "Sign up"
+      "title": "Stay up-to-date on the latest Scroll Developer news",
+      "text": "Roadmap updates, virtual and live events, ecosystem opportunities and more",
+      "placeholder": "your email address here",
+      "thankYouForSubscribing": "Thank you for subscribing!",
+      "correctEmail": "Please use a correct email address.",
+      "pleaseInsertEmail": "Please insert your email."
     }
   },
   "sidebar": {
