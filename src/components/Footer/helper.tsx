@@ -28,7 +28,7 @@ export const aboutList = [
   },
   {
     name: "footer.aboutScroll.joinUs",
-    href: "https://jobs.lever.co/ScrollFoundation",
+    href: "https://scroll.io/join-us",
   },
   {
     name: "footer.aboutScroll.healthStatus",
