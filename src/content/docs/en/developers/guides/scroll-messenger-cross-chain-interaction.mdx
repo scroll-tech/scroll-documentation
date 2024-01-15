@@ -79,13 +79,13 @@ contract GreeterOperator {
 We pass the message by executing `executeFunctionCrosschain` and passing the following parameters:
 
 - `scrollMessengerAddress`: This will depend on where you deployed the `GreeterOperator` contract.
-  - If you deployed it on Sepolia use `0x50c7d3e7f7c656493D1D76aaa1a836CedfCBB16A`. If you deployed on Scroll use `0xBa50f5340FB9F3Bd074bD638c9BE13eCB36E603d`.
+  - If you deployed it on Sepolia use `0x50c7d3e7f7c656493D1D76aaa1a836CedfCBB16A`. If you deployed on Scroll Sepolia use `0xBa50f5340FB9F3Bd074bD638c9BE13eCB36E603d`.
 - `targetAddress`: The address of the `Greeter` contract on the opposite chain.
 - `value`: In this case, it is `0` because the `setGreeting`is not payable.
 - `greeting`: This is the parameter that will be sent through the message. Try passing `“This message was cross-chain!”`
 - `gasLimit`:
-  - If you are sending the message from L1 to L2, around `1000000` gas limit should be more than enough.
-  - If you are sending the message from L2 to L1, pass `0`, as the transaction to be completed by executing an additional transaction on L1.
+  - If you are sending the message from L1 to L2, around `1000000` gas limit should be more than enough. That said, if you set this too high, and `msg.value` doesn't cover `gasLimit` * `baseFee`, the transaction will revert. If `msg.value` is greater than the gas fee, the unused portion will be refunded.
+  - If you are sending the message from L2 to L1, pass `0`, as the transaction will be completed by executing an additional transaction on L1.
 
 ### Relay the Message when sending from L2 to L1
 
