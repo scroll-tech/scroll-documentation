@@ -1,6 +1,7 @@
 import { useState, useEffect } from "preact/hooks"
 import { aboutList, mediaList, resourceList } from "../helper.tsx"
 import styles from "./PureFooter.module.css"
+import { t } from "i18next"
 
 const Footer = () => {
   return (
@@ -9,7 +10,7 @@ const Footer = () => {
         <img src="/scroll-white.svg" style={{ width: "80px" }} />
       </a>
       <div className={styles.about}>
-        <p className={styles.title}>About Scroll</p>
+        <p className={styles.title}>{ t("footer.aboutScroll.title") }</p>
         <ul>
           {aboutList.map((item) => (
             <li key={item.name} className={styles.content}>
@@ -19,7 +20,7 @@ const Footer = () => {
         </ul>
       </div>
       <div className={styles.resource}>
-        <p className={styles.title}>Resources</p>
+        <p className={styles.title}>{ t("footer.resources.title") }</p>
         <ul>
           {resourceList.map((item) => (
             <li key={item.name} className={styles.content}>
@@ -30,7 +31,7 @@ const Footer = () => {
       </div>
 
       <div className={styles.follow}>
-        <p className={styles.title}>Follow Us</p>
+        <p className={styles.title}>{ t("footer.followUs.title") }</p>
         <div>
           {mediaList.map((item) => (
             <a external href={item.href} key={item.name} target="_blank">
