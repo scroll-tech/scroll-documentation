@@ -155,6 +155,25 @@
       "additionalResources": "Recursos Adicionales"
     }
   },
+  "footer": {
+    "aboutScroll": {
+      "title": "Acerca de Scroll",
+      "bugBounty": "Cazarecompensas de bugs",
+      "joinUs": "Únete a nosotros",
+      "healthStatus": "Estado de servicios",
+      "privacyPolicy": "Políticas de privacidad",
+      "termsAndConditions": "Terminos y condiciones"
+    },
+    "resources": {
+      "title": "Recursos",
+      "blog": "Blog",
+      "documentation": "Documentación",
+      "pressKit": "Kit de Prensa"
+    },
+    "followUs": {
+      "title": "Follow Us"
+    }
+  },
   "notTranslated": {
     "notTranslated": "Esta página no ha sido traducida aún."
   }

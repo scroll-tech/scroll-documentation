@@ -155,6 +155,25 @@
       "additionalResources": "Additional Resources"
     }
   },
+  "footer": {
+    "aboutScroll": {
+      "title": "About Scroll",
+      "bugBounty": "Bug Bounty",
+      "joinUs": "Join Us",
+      "healthStatus": "Health Status",
+      "privacyPolicy": "Privacy Policy",
+      "termsAndConditions": "Terms and Conditions"
+    },
+    "resources": {
+      "title": "Resources",
+      "blog": "Blog",
+      "documentation": "Documentation",
+      "pressKit": "Press Kit"
+    },
+    "followUs": {
+      "title": "Follow Us"
+    }
+  },
   "notTranslated": {
     "notTranslated": "This page has not been translated yet."
   }

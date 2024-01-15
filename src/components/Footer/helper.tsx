@@ -1,4 +1,5 @@
 import React from "react"
+import { t } from "i18next"
 
 const DiscordIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   <svg width="19" height="14" viewBox="0 0 19 14" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -23,38 +24,38 @@ const TwitterIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
 
 export const aboutList = [
   {
-    name: "Bug Bounty",
+    name: t("footer.aboutScroll.bugBounty"),
     href: "https://immunefi.com/bounty/scroll/",
   },
   {
-    name: "Join Us",
+    name: t("footer.aboutScroll.joinUs"),
     href: "https://jobs.lever.co/ScrollFoundation",
   },
   {
-    name: "Health Status",
+    name: t("footer.aboutScroll.healthStatus"),
     href: "https://status.scroll.io/",
   },
   {
-    name: "Privacy Policy",
+    name: t("footer.aboutScroll.privacyPolicy"),
     href: "https://scroll.io/privacy-policy",
   },
   {
-    name: "Terms and Conditions",
+    name: t("footer.aboutScroll.termsAndConditions"),
     href: "https://scroll.io/terms-and-conditions",
   },
 ]
 
 export const resourceList = [
   {
-    name: "Blog",
+    name: t("footer.resources.blog"),
     href: "https://scroll.io/blog",
   },
   {
-    name: "Documentation",
+    name: t("footer.resources.documentation"),
     href: "https://docs.scroll.io/",
   },
   {
-    name: "Press Kit",
+    name: t("footer.resources.pressKit"),
     href: "https://scrollzkp.notion.site/Scroll-Rebrand-Assets-5bb83465f56f40989c4f772b39ed3a06",
   },
 ]
