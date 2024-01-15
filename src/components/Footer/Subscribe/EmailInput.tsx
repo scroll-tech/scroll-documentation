@@ -2,6 +2,7 @@ import React from "react"
 import styles from "./EmailInput.module.css"
 import ArrowSvg from "~/assets/svgs/footer/arrow-right.svg?react"
 import { clsx } from "~/lib"
+import { t } from "i18next"
 
 const EmailInput = (props) => {
   const { end, onClick, onEnter, ...restProps } = props
@@ -23,7 +24,7 @@ const EmailInput = (props) => {
         <button className={clsx(styles.iconButton, "dark:text-black")} onClick={onClick} disabled={end}>
           <ArrowSvg></ArrowSvg>
         </button>
-        <div className={clsx(styles.success, "dark:text-black", "dark:bg-white")}>Thank you for subscribing!</div>
+        <div className={clsx(styles.success, "dark:text-black", "dark:bg-white")}>{ t("landing.NewsletterCTA.thankYouForSubscribing") }</div>
       </div>
       <input
         placeholder="your email address here"

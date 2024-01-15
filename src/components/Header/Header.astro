@@ -76,8 +76,10 @@ const section = frontmatter?.section ?? ""
             </div>
           )
         }
-        <ThemeModeToggle client:only="preact" dark={dark} />
-        <LanguageSelector class="language-selector" />
+        <span class="theme-item">
+          <ThemeModeToggle client:only="preact" dark={dark} />
+        </span>
+        <LanguageSelector class="language-selector" dark={dark} />
         <a href="https://github.com/scroll-tech/scroll-documentation" class="github-url" target="_blank" rel="nofollow">
           <span
             class={clsx(
@@ -113,6 +115,7 @@ const section = frontmatter?.section ?? ""
     padding-top: 7px;
     @apply text-black dark:text-white;
     color: var(--textColor);
+    white-space: nowrap;
   }
   .nav-link:hover {
     @apply text-link;
@@ -241,6 +244,35 @@ const section = frontmatter?.section ?? ""
   @media (min-width: 72em) {
     .nav-wrapper {
       grid-template-columns: minmax(230px, 1fr) 5fr;
+    }
+  }
+
+  /* Very Hacky way to make Spanish not break at narrow screens */
+
+  @media (max-width: 72em) and (min-width: 50em) {
+    .queryResults {
+      grid-template-columns: 1fr !important;
+    }
+
+    .search-item,
+    .github-url {
+      display: none;
+    }
+  }
+
+  @media (max-width: 62em) and (min-width: 50em) {
+    .theme-item {
+      display: none;
+    }
+  }
+
+  @media (max-width: 58em) and (min-width: 50em) {
+    .tools {
+      transform: scale(0.85);
+    }
+
+    .navbar {
+      gap: 25px;
     }
   }
 </style>

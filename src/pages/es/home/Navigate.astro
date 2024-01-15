@@ -1,0 +1,63 @@
+---
+import NavCard from "~/components/NavCard.astro"
+import StartSvg from "~/assets/svgs/home/home-start.svg?raw"
+import DevelopSvg from "~/assets/svgs/home/home-develop.svg?raw"
+import TechnologySvg from "~/assets/svgs/home/home-technology.svg?raw"
+import LearnSvg from "~/assets/svgs/home/home-learn.svg?raw"
+import SectionHeader from "~/components/SectionHeader/index.astro"
+
+const navList = [
+  {
+    icon: StartSvg,
+    name: "¿Cómo empezar?",
+    content: "Migra hacia Scroll usando el Bridge y explora el Ecosistema de dApps.",
+    link: "/es/getting-started/overview",
+  },
+  {
+    icon: DevelopSvg,
+    name: "Desarrolladores",
+    content: "Sumérgete en la documentación para desarrolladores de Scroll.",
+    link: "/es/developers",
+  },
+  {
+    icon: TechnologySvg,
+    name: "Tecnología",
+    content: "Un vistazo general a la arquitectura de la zkEVM de Scroll.",
+    link: "/es/technology",
+  },
+  {
+    icon: LearnSvg,
+    name: "Aprende",
+    content: "Una introducción al mundo de ZK y de la escalabilidad.",
+    link: "/es/learn",
+  },
+]
+---
+
+<div class="navigate">
+  <SectionHeader title="Navega la Documentación" content="Comienza a desarrollar en Scroll hoy." />
+  <div class="navs">
+    {navList.map(({ icon, name, content, link }) => <NavCard icon={icon} name={name} content={content} link={link} />)}
+  </div>
+</div>
+
+<style>
+  .navigate {
+    margin-top: 146px;
+  }
+
+  .navs {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  @media screen and (max-width: 50em) {
+    .navigate {
+      margin-top: 106px;
+    }
+    .navs {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+</style>

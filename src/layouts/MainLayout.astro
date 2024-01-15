@@ -7,8 +7,7 @@ import LeftSidebar from "../components/LeftSidebar/LeftSidebar.astro"
 import RightSidebar from "../components/RightSidebar/RightSidebar.astro"
 import * as CONFIG from "../config"
 // import { NewsletterCTA } from "../components/Footer/NewsletterCTA.tsx"
-// import Footer from "~/components/Footer/Footer.astro"
-import Footer from "~/components/Footer/Footer.tsx"
+import Footer from "~/components/Footer/Footer.astro"
 import { changeLanguage } from "i18next"
 
 const { content = {}, frontmatter } = Astro.props
@@ -230,8 +229,8 @@ changeLanguage(content.lang)
       </aside>
     </main>
     <!-- <NewsletterCTA client:visible />
-    <Footer /> -->
-    <Footer client:idle />
+    <Footer client:idle />  This seems to break i18next in some cases.-->
+    <Footer />
     <!-- TODO: Part 3 - Figure out if we need this footer script tag for linking to wallet. -->
 
     <!-- <script>
