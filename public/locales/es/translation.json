@@ -166,6 +166,7 @@
     },
     "resources": {
       "title": "Recursos",
+      "scrollDocsURL": "https://docs.scroll.io/es",
       "blog": "Blog",
       "documentation": "Documentación",
       "pressKit": "Kit de Prensa"

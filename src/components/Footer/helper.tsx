@@ -52,7 +52,7 @@ export const resourceList = [
   },
   {
     name: t("footer.resources.documentation"),
-    href: "https://docs.scroll.io/",
+    href: t("footer.resources.scrollDocsURL"),
   },
   {
     name: t("footer.resources.pressKit"),
