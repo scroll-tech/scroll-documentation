@@ -50,13 +50,8 @@ export const resourceList = [
     href: "https://scroll.io/blog",
   },
   {
-<<<<<<< Updated upstream
-    name: t("footer.resources.documentation"),
-    href: t("footer.resources.scrollDocsURL"),
-=======
     name: "footer.resources.documentation",
     href: "https://docs.scroll.io/",
->>>>>>> Stashed changes
   },
   {
     name: "footer.resources.pressKit",
