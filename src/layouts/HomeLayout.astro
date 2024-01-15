@@ -23,6 +23,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site)
       body {
         --doc-padding: 65px;
       }
+
       .home-layout {
         margin-bottom: 0;
       }
@@ -77,6 +78,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site)
     <main class="home-layout">
       <slot />
     </main>
-    <Footer client:idle />
+    <Footer />
   </body>
 </html>
