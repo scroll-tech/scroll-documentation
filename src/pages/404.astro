@@ -1,5 +1,5 @@
 ---
-import i18next, { changeLanguage } from "i18next"
+import i18next, { changeLanguage, t } from "i18next"
 import HomeLayout from "../layouts/HomeLayout.astro"
 
 // Should load last used language.
@@ -9,8 +9,8 @@ changeLanguage(i18next.language)
 <HomeLayout>
   <div class="wrapper">
     <h2 class="highlight">404</h2>
-    <h2 class="heading-600">Page not found</h2>
-    <p>We're sorry, but we couldn't find the page you were looking for.</p>
+    <h2 class="heading-600">{t("pageNotFound.title")}</h2>
+    <p>{t("pageNotFound.text")}</p>
   </div>
 </HomeLayout>
 

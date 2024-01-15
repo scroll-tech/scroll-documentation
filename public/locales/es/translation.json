@@ -175,6 +175,10 @@
       "title": "Síguenos"
     }
   },
+  "pageNotFound": {
+    "title": "Página no encontrada",
+    "text": "Lo sentimos, pero no pudimos encontrar la página que buscas."
+  },
   "notTranslated": {
     "notTranslated": "Esta página no ha sido traducida aún."
   }
