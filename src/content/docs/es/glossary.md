@@ -9,6 +9,8 @@ excerpt: "Translation of English terms into Spanish"
 
 | English                                         | Spanish                                      |
 | ----------------------------------------------- | -------------------------------------------- |
+| Bug bounties                                    | Cazarrecompensas de bugs                     |
+| Partners                                        | Proyectos aliados, proyectos participantes   |
 | Assembly                                        | Ensamblador                                  |
 | Key-value pair                                  | Par llave-valor                              |
 | Tree                                            | Árbol                                        |
