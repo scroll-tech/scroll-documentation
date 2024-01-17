@@ -63,7 +63,7 @@ type StateAccount struct {
 
 Related to this, we maintain two types of codehash for each contract bytecode: Keccak hash and Poseidon hash.
 
-`KeccakCodeHash` is kept to maintain compatibility for `EXTCODEHASH`. `PoseidonCodeHash` is used for verifying correctness of bytecodes loaded in the zkEVM, where Poseidon hashing is far more efficient.
+`KeccakCodeHash` is kept to maintain compatibility for `EXTCODEHASH`. `PoseidonCodeHash` is used for verifying the correctness of bytecodes loaded in the zkEVM, where Poseidon hashing is far more efficient.
 
 ### CodeSize
 
@@ -81,12 +81,6 @@ This was chosen for two reasons:
 ## Future EIPs
 
 We keep a close eye on all emerging EIPs adopted by Ethereum and adopt them when suitable. If you’re interested in more specifics, reach out in [our community forum](https://community.scroll.io) or on the [Scroll Discord](https://discord.gg/scroll).
-
-## EVM Target version
-
-To ensure no unexpected behavior happens in your contracts, we recommend using `london` as the target version when compiling your smart contracts.
-
-You can read in more detail on Shanghai hard fork differences from London on the [Ethereum Execution spec](https://github.com/ethereum/execution-specs/blob/master/network-upgrades/mainnet-upgrades/shanghai.md) and how the new `PUSH0` instruction [impacts the Solidity compiler](https://blog.soliditylang.org/2023/05/10/solidity-0.8.20-release-announcement/).
 
 ## Transaction Fees
 

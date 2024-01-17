@@ -10,7 +10,7 @@ whatsnext: { "User Guide": "/user-guide/", "Building on Scroll": "/developers/" 
 
 #### Welcome to the Scroll docs!
 
-Scroll is a security-focused scaling solution for Ethereum, using innovations in scaling design and zero knowledge proofs to build a new layer on Ethereum. The Scroll network is more accessible, more responsive, and can support more users at once than Ethereum alone, and if you've ever used or developed an application on Ethereum, you'll be right home on Scroll.
+Scroll is a security-focused scaling solution for Ethereum, using innovations in scaling design and zero knowledge proofs to build a new layer on Ethereum. The Scroll network is more accessible, more responsive, and can support more users at once than Ethereum alone, and if you've ever used or developed an application on Ethereum, you'll be right at home on Scroll.
 
 Want to try out the Scroll Sepolia testnet with free assets before using Scroll? Check out our [User Guide](/user-guide/).
 

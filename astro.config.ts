@@ -1,6 +1,7 @@
 import { defineConfig } from "astro/config"
 import preact from "@astrojs/preact"
 import react from "@astrojs/react"
+import svgr from "vite-plugin-svgr"
 import astroI18next from "astro-i18next"
 import { astroCallouts, asideAutoImport } from "./integrations/astro-callouts"
 import { solidityRemixCode, codeSampleAutoImport } from "./integrations/solidity-remix"
@@ -32,6 +33,7 @@ export default defineConfig({
     preact({
       compat: true,
     }),
+
     sitemap({
       changefreq: "daily",
     }),
@@ -47,6 +49,9 @@ export default defineConfig({
     }),
     astroI18next(),
   ],
+  vite: {
+    plugins: [svgr()],
+  },
   markdown: {
     drafts: true,
     remarkPlugins: [remarkMath, remarkGfm],

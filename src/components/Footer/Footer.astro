@@ -1,0 +1,10 @@
+---
+import Subscribe from "./Subscribe/Subscribe.tsx"
+import PureFooter from "./PureFooter/PureFooter.tsx"
+import i18next from "i18next"
+---
+
+<div>
+  <Subscribe client:idle lang={i18next.language} />
+  <PureFooter />
+</div>

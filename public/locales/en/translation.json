@@ -48,9 +48,12 @@
       }
     },
     "NewsletterCTA": {
-      "title": "Stay updated on the latest Scroll news",
-      "placeholder": "Enter your email address",
-      "buttonText": "Sign up"
+      "title": "Stay up-to-date on the latest Scroll Developer news",
+      "text": "Roadmap updates, virtual and live events, ecosystem opportunities and more",
+      "placeholder": "your email address here",
+      "thankYouForSubscribing": "Thank you for subscribing!",
+      "correctEmail": "Please use a correct email address.",
+      "pleaseInsertEmail": "Please insert your email."
     }
   },
   "sidebar": {
@@ -151,6 +154,30 @@
       "kzgCommitmentScheme": "KZG Commitment Scheme",
       "additionalResources": "Additional Resources"
     }
+  },
+  "footer": {
+    "aboutScroll": {
+      "title": "About Scroll",
+      "bugBounty": "Bug Bounty",
+      "joinUs": "Join Us",
+      "healthStatus": "Health Status",
+      "privacyPolicy": "Privacy Policy",
+      "termsAndConditions": "Terms and Conditions"
+    },
+    "resources": {
+      "title": "Resources",
+      "scrollDocsURL": "https://docs.scroll.io/",
+      "blog": "Blog",
+      "documentation": "Documentation",
+      "brandKit": "Brand Kit"
+    },
+    "followUs": {
+      "title": "Follow Us"
+    }
+  },
+  "pageNotFound": {
+    "title": "Page not found",
+    "text": "We're sorry, but we couldn't find the page you were looking for."
   },
   "notTranslated": {
     "notTranslated": "This page has not been translated yet."
