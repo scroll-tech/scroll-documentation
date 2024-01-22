@@ -5,6 +5,8 @@
   width: 298px;
   /* height: 404px; */
   padding: 30px;
+  margin-left: 22px;
+  margin-bottom: 22px;
 }
 /* If you want every element inside the container to apply the 'trans-sans' font, just use this style */
 .container * {
@@ -44,6 +46,13 @@
   margin-top: 24px;
   margin-bottom: 31px;
 }
+.tutorial {
+  padding-bottom: 15px;
+  color: var(--orange-300);
+}
+.tutorial:hover {
+  color: var(--orange-400);
+}
 .network {
   color: #878787;
   font-family: Roboto Flex;
@@ -57,7 +66,7 @@
   border-radius: 5px;
   background: #fff0dd;
   padding: 5px 7px;
-  margin: 10px;
+  margin: 10px 10px 10px 0px;
   color: #84623a;
   text-align: center;
   font-family: Roboto Flex;

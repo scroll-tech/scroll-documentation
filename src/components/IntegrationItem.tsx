@@ -6,9 +6,11 @@ import styles from "./IntegrationItem.module.css"
 type ToolingData = {
   name: string
   logo?: string
+  url: string
   network: string[]
   comment?: string
   tags?: string[]
+  guide?: string
 }
 
 enum Networks {
@@ -30,14 +32,25 @@ export function IntegrationItem({
     <div className={styles.container}>
       <div className={styles.flexRow} style={{justifyContent: "space-between"}}>
         <div className={styles.flexRow}>
-          <img src={data.logo} className={styles.logo}/>
+          {data.logo && (<img src={data.logo} className={styles.logo}/>)}
           <div className={styles.name}>{data.name}</div>
         </div>
-        <img src={"../../svgs/home-link-arrow.svg"} className={styles.url}/>
+        <a href={data.url}>
+          <img src={"../../svgs/home-link-arrow.svg"} className={styles.url}/>
+        </a>
       </div>
+
       <div className={styles.comment}>{data.comment}</div>
+
+      {data.guide && (
+        <a href={data.guide}>
+          <div className={styles.tutorial}>TUTORIAL</div>
+        </a>
+      )}
+
       <div className={styles.network}>NETWORK</div>
       <div>{networkList}</div>
+
       <div className={styles.flexRow} style={{marginTop: "25px", flexWrap:"wrap"}}>
         {data.tags && data.tags.map((tag) => <div className={styles.tag}>{tag}</div>)}
       </div>
