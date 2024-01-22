@@ -1,23 +1,50 @@
 {
   "integrations": [
     {
-      "name": "Safe",
-      "url": "https://safe.scroll.xyz/",
-      "network": ["sepolia", "mainnet"],
-      "logo": "https://docs.attest.sh/img/eas-logo.png",
-      "tags": ["indexer", "test1", "test2", "Test3"]
-    },
-    {
       "name": "The Graph",
-      "url": "https://edgeandnode.notion.site/The-Graph-Subgraph-Studio-Non-Rate-Limited-Chain-Integration-889fe061ee6b4423a7f8e2c8070b9294?pvs=4",
+      "url": "https://thegraph.com/studio/",
+      "guide": "https://edgeandnode.notion.site/The-Graph-Subgraph-Studio-Non-Rate-Limited-Chain-Integration-889fe061ee6b4423a7f8e2c8070b9294?pvs=4",
       "network": ["mainnet", "sepolia"],
-      "tags": ["indexer", "test1", "test2"],
+      "tags": ["indexer"],
       "comment": "Use the latest version of The Graph's cli."
     },
     {
       "name": "Wagmi",
-      "logo": "https://github.com/wevm/wagmi/blob/main/docs/public/favicons/light.png?raw=true",
-      "network": ["mainnet"]
+      "network": ["mainnet", "sepolia"],
+      "comment": "Upgrade your version of viem to 1.16.4 or later.",
+      "tags": ["frontend"]
+    },
+    {
+      "name": "DropX",
+      "logo": "https://app.stationx.network/_next/image?url=%2Fassets%2Fimages%2Fmonogram.png&w=48&q=75",
+      "url": "https://app.stationx.network/",
+      "comment": "A tool enabling anyone to create ERC20 drops/bulk distributions in less than 60 secs & share a unique claim link.",
+      "network": ["sepolia", "mainnet"]
+    },
+    {
+      "name": "OpenZeppelin Defender",
+      "url": "https://www.openzeppelin.com/defender",
+      "network": ["mainnet", "sepolia"],
+      "tags": ["security"]
+    },
+    {
+      "name": "Multicall3",
+      "url": "https://www.multicall3.com/",
+      "comment": "Batch contract calls on any chain.",
+      "network": ["mainnet", "sepolia"]
+    },
+    {
+      "name": "ethereum-multicall",
+      "url": "https://github.com/joshstevens19/ethereum-multicall",
+      "comment": "A lightweight library for interacting with the Multicall3 smart contract.",
+      "network": ["sepolia", "mainnet"]
+    },
+    {
+      "name": "EAS",
+      "url": "https://attest.sh/",
+      "logo": "https://attest.sh/logo2.png?v=3",
+      "network": ["mainnet", "sepolia"],
+      "tags": ["identity"]
     }
   ]
 }
