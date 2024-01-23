@@ -12,6 +12,7 @@
     "isolatedModules": true,
     "esModuleInterop": true,
     // Add type definitions for our Vite runtime.
+    "allowImportingTsExtensions": true,
     "types": ["vite/client"],
     "baseUrl": ".",
     "paths": {
