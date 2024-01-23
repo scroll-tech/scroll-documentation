@@ -45,6 +45,33 @@
       "logo": "https://attest.sh/logo2.png?v=3",
       "network": ["mainnet", "sepolia"],
       "tags": ["identity"]
+    },
+    {
+      "name": "Chainlink",
+      "logo": "https://crypto.marketswiki.com/images/e/e6/Chainlink_logo.png",
+      "network": ["mainnet", "sepolia"],
+      "url": "https://docs.chain.link/data-feeds/price-feeds/addresses?network=scroll&page=1",
+      "tags": ["oracle"]
+    },
+    {
+      "name": "Uniswap",
+      "url": "https://uniswap-showcase.sepolia.scroll.xyz/#/swap",
+      "network": ["sepolia"],
+      "logo": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Uniswap_Logo.svg",
+      "tags": ["dex"]
+    },
+    {
+      "name": "Safe",
+      "url": "https://safe.scroll.xyz/",
+      "network": ["sepolia", "mainnet"],
+      "logo": "https://docs.attest.sh/img/eas-logo.png",
+      "tags": ["multisig"]
+    },
+    {
+      "name": "Scroll library",
+      "url": "https://www.npmjs.com/package/@scroll-tech/contracts",
+      "comment": "A library for interacting with Scroll contracts.",
+      "network": ["mainnet", "sepolia"]
     }
   ]
 }
