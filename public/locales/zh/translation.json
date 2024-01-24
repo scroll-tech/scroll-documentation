@@ -141,7 +141,7 @@
       "cpuProverRepo": "CPU prover 代码仓库",
 
       "security": "安全",
-      "audits-and-bug-bounty": "审计和漏洞赏金",
+      "auditsAndBugBounty": "审计和漏洞赏金",
       "l2BeatAssessment": "L2Beat 评估"
     },
     "learn": {
