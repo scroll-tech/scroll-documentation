@@ -77,10 +77,10 @@ function depositERC721(address _token, address _to, uint256 _tokenId, uint256 _g
 
 | 参数 | 描述                                     |
 | --------- | ------------------------------------------------- |
-| token     | L1 上 ERC721 NFT 合约的地址。        |
-| to        | L2 上收款人账户的地址。      |
+| token     | L1 上 ERC721 NFT 合约的地址        |
+| to        | L2 上收款人账户的地址      |
 | tokenId   | 存入的 NFT ID                          |
-| gasLimit  | 在L2上完成存款所需的gas上限。 |
+| gasLimit  | 在L2上完成存款所需的gas上限 |
 
 ### updateTokenMapping
 
@@ -92,8 +92,8 @@ function updateTokenMapping(address _l1Token, address _l2Token) external;
 
 | 参数 | 描述                                   |
 | --------- | ------------------------------------------------ |
-| \_l1Token | L1 上 ERC721 NFT 合约的地址。            |
-| \_l2Token | L2 上对应 ERC721 NFT 合约的地址。  |
+| \_l1Token | L1 上 ERC721 NFT 合约的地址            |
+| \_l2Token | L2 上对应 ERC721 NFT 合约的地址  |
 
 ## L2ERC721Gateway API
 
@@ -107,10 +107,10 @@ function depositERC721(address _token, address _to, uint256 _tokenId, uint256 _g
 
 | 参数 | 描述                                                           |
 | --------- | ------------------------------------------------------------------------ |
-| token     | L2 ERC721 NFT 代币合约的地址。                          |
-| to        | L1 上收款人账户的地址。                             |
+| token     | L2 ERC721 NFT 代币合约的地址                          |
+| to        | L1 上收款人账户的地址                             |
 | tokenId   | 提取的 NFT ID                                                 |
-| gasLimit  | 未使用，但出于潜在的向前兼容性考虑而包括在内。 |
+| gasLimit  | 未使用，但出于潜在的向前兼容性考虑而包括在内 |
 
 ### updateTokenMapping
 
@@ -122,5 +122,5 @@ function updateTokenMapping(address _l1Token, address _l2Token) external;
 
 | 参数 | 描述                                     |
 | --------- | ------------------------------------------------ |
-| \_l2Token | L2 ERC721 NFT 代币合约的地址。              |
-| \_l1Token | L1中对应ERC721代币的地址。 |
+| \_l2Token | L2 ERC721 NFT 代币合约的地址              |
+| \_l1Token | L1中对应ERC721代币的地址 |

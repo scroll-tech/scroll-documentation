@@ -105,11 +105,11 @@ function depositERC1155(
 
 | 参数 | 描述                                  |
 | --------- | ------------------------------------------------- |
-| token     | L1 上ERC1155代币合约的地址。     |
-| to        | L2 上收款人账户的地址。        |
-| tokenId   | 要存入的 NFT ID。                           |
-| amount    | 要存入的代币数量。                 |
-| gasLimit  | 在L2上完成存款所需的gas上限。 |
+| token     | L1 上ERC1155代币合约的地址     |
+| to        | L2 上收款人账户的地址        |
+| tokenId   | 要存入的 NFT ID                           |
+| amount    | 要存入的代币数量                 |
+| gasLimit  | 在L2上完成存款所需的gas上限 |
 
 ### updateTokenMapping
 
@@ -122,7 +122,7 @@ function updateTokenMapping(address _l1Token, address _l2Token) external;
 | 参数 | 描述                                       |
 | --------- | ------------------------------------------------- |
 | \_l1Token | L1 中ERC1155代币的地址。       |
-| \_l2Token | L2 中对应ERC1155代币的地址。 |
+| \_l2Token | L2 中对应ERC1155代币的地址 |
 
 ## L2ERC1155Gateway API
 
@@ -136,11 +136,11 @@ function withdrawERC1155(address token, address to, uint256 tokenId, uint256 amo
 
 | 参数 | 描述                                                              |
 | --------- | ------------------------------------------------------------------------ |
-| token     | L2上ERC1155代币合约的地址。                             |
-| to        | L1 上收款人账户的地址。                               |
-| tokenId   | 要提取的 NFT ID。                                                 |
-| amount    | 要提取的代币数量。                                      |
-| gasLimit  | 未使用，但出于潜在的向前兼容性考虑而包括在内。 |
+| token     | L2上ERC1155代币合约的地址                             |
+| to        | L1 上收款人账户的地址                               |
+| tokenId   | 要提取的 NFT ID                                                 |
+| amount    | 要提取的代币数量                                      |
+| gasLimit  | 未使用，但出于潜在的向前兼容性考虑而包括在内 |
 
 ### updateTokenMapping
 
@@ -152,5 +152,5 @@ function updateTokenMapping(address _l1Token, address _l2Token) external;
 
 | Parameter | Description                                       |
 | --------- | ------------------------------------------------- |
-| \_l1Token | L1 中ERC1155代币的地址。            |
-| \_l2Token | L2 中对应ERC1155代币的地址。 |
+| \_l1Token | L1 中ERC1155代币的地址            |
+| \_l2Token | L2 中对应ERC1155代币的地址 |

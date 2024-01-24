@@ -23,8 +23,8 @@ import Aside from "../../../../components/Aside.astro"
 | Opcode                      | Solidity equivalent | Scroll Behavior                                                                                            |
 | --------------------------- | ------------------- | ---------------------------------------------------------------------------------------------------------- |
 | `BLOCKHASH`                 | `block.blockhash`   | 返回最新256个区块的 `keccak(chain_id \|\| block_number)`                                     |
-| `COINBASE`                  | `block.coinbase`    | 返回预部署的费用合约地址，查看 [Scroll 合约](/developers/scroll-contracts). |
-| `DIFFICULTY` / `PREVRANDAO` | `block.difficulty`  | 返回 0.                                                                                                 |
+| `COINBASE`                  | `block.coinbase`    | 返回预部署的费用合约地址，查看 [Scroll 合约](/developers/scroll-contracts) |
+| `DIFFICULTY` / `PREVRANDAO` | `block.difficulty`  | 返回 0                                                                                                 |
 | `BASEFEE`                   | `block.basefee`     | 禁用。[^eip1559] 如果引入该操作码，交易将被还原                       |
 | `SELFDESTRUCT`              | `selfdestruct`      | 禁用。如果引入该操作码，交易将被还原。[^willadpot]                      |
 
@@ -65,7 +65,7 @@ type StateAccount struct {
 
 保留 `KeccakCodeHash` 是为了保持`EXTCODEHASH` 的兼容性，`PoseidonCodeHash`用于验证 zkEVM 中加载的字节码的正确性，因为Poseiden 哈希效率更高。
 
-### CodeSize
+### **CodeSize**
 
 验证时 `EXTCODESIZE`，将整个合约数据加载到 zkEVM 中是代价很大。相反，我们在合约创建期间将合约大小存储在存储中。这样，我们就不需要加载代码——存储证明足以验证这个操作码。
 
@@ -84,7 +84,6 @@ Sepolia 测试网的目标是恒定的 3 秒出块时间。这比理想情况下
 
 ## EVM 目标版本
 
-To ensure no unexpected behavior happens in your contracts, we recommend using `london` as the target version when compiling your smart contracts.
 为了确保合约中不会发生意外行为，我们建议在编译智能合约时使用 `伦敦` 作为目标版本。
 
 您可以更详细地阅读有关上海硬分叉与伦敦在以太坊[执行规范](https://github.com/ethereum/execution-specs/blob/master/network-upgrades/mainnet-upgrades/shanghai.md)上的区别，以及新 `PUSH0` 指令如何影响[Solidity 编译器](https://blog.soliditylang.org/2023/05/10/solidity-0.8.20-release-announcement/).。

@@ -95,7 +95,7 @@ function depositETH(address _to, uint256 _amount, uint256 _gasLimit) public paya
 
 | 参数 | 描述                                                                                                                |
 | --------- | --------------------------------------------------------------------------------------------------------------------------- |
-| to        | L2 上收款人账户的地址。                                                                                   |
+| to        | L2 上收款人账户的地址                                                                                   |
 | amount    | 要转移的代币数量，以 wei 为单位。                                                                                 |
 | gasLimit  | 在L2上完成存款所需的gas上限。从4000到10000的gas上限应该足以处理交易。 |
 
@@ -110,7 +110,7 @@ function depositERC20(address _token, address _to, uint256 _amount, uint256 _gas
 | 参数 | 描述                                                                                                                 |
 | --------- | --------------------------------------------------------------------------------------------------------------------------- |
 | token     | L1 上的代币地址                                                                                                    |
-| to        | L2 上收款人账户的地址。                                                                                |
+| to        | L2 上收款人账户的地址                                                                                |
 | amount    | 要转移的代币数量，以 wei 为单位。                                                                                 |
 | gasLimit  | 在L2上完成存款所需的gas上限。从4000到10000的gas上限应该足以处理交易。 |
 
@@ -136,8 +136,8 @@ function updateTokenMapping(address _l1Token, address _l2Token) external;
 
 | 参数 | 描述                                    |
 | --------- | ----------------------------------------------- |
-| \_l1Token | L1 中 ERC20 代币的地址。          |
-| \_l2Token | L2 中相应 ERC20 代币的地址。 |
+| \_l1Token | L1 中 ERC20 代币的地址          |
+| \_l2Token | L2 中相应 ERC20 代币的地址 |
 
 ## L2 Gateway API
 
@@ -151,9 +151,9 @@ function withdrawETH(address to, uint256 amount, uint256 gasLimit) external paya
 
 | 参数 | 描述                                                                                             |
 | --------- | ------------------------------------------------------------------------------------------------------- |
-| to        | L1 上收款人账户的地址。                                                              |
-| amount    | 要转移的代币数量，以 wei 为单位。                                                               |
-| gasLimit  | 在L1上完成存款所需的gas上限。这是可选的，如果您不想设置它，请发送 0。 |
+| to        | L1 上收款人账户的地址                                                              |
+| amount    | 要转移的代币数量，以 wei 为单位                                                               |
+| gasLimit  | 在L1上完成存款所需的gas上限。这是可选的，如果您不想设置它，请发送 0 |
 
 ### withdrawERC20
 
@@ -165,10 +165,10 @@ function withdrawERC20(address token, address to, uint256 amount, uint256 gasLim
 
 | 参数 | 描述                                                                                            |
 | --------- | ------------------------------------------------------------------------------------------------------- |
-| token     | L2 上代币的地址。                                                                               |
-| to        | L1 上收款人账户的地址。                                                                |
-| amount    | 要转移的代币数量，以 wei 为单位。                                                               |
-| gasLimit  | 在L1上完成存款所需的gas上限。这是可选的，如果您不想设置它，请发送 0。 |
+| token     | L2 上代币的地址                                                                               |
+| to        | L1 上收款人账户的地址                                                                |
+| amount    | 要转移的代币数量，以 wei 为单位                                                               |
+| gasLimit  | 在L1上完成存款所需的gas上限。这是可选的，如果您不想设置它，请发送 0 |
 
 ### getL1ERC20Address
 
@@ -180,7 +180,7 @@ function getL1ERC20Address(address l2Token) external view returns (address);
 
 | 参数 | 描述                 |
 | --------- | ---------------------------- |
-| l2Token   | L2 上代币的地址。 |
+| l2Token   | L2 上代币的地址 |
 
 ### updateTokenMapping
 
@@ -192,5 +192,5 @@ function updateTokenMapping(address _l1Token, address _l2Token) external;
 
 | 参数 | 描述                                     |
 | --------- | ----------------------------------------------- |
-| \_l2Token | L2 中 ERC20 代币的地址。            |
-| \_l1Token | L1 中相应 ERC20 代币的地址。 |
+| \_l2Token | L2 中 ERC20 代币的地址            |
+| \_l1Token | L1 中相应 ERC20 代币的地址 |
