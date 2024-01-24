@@ -5,7 +5,7 @@ title: "Scroll概览"
 lang: "zh"
 permalink: "docs/conceptual-overview/"
 excerpt: "ZK Rollups and Scroll"
-whatsnext: { "用户指南": "/user-guide/", "在Scroll上开发": "/developers/" }
+whatsnext: { "用户指南": "/zh/user-guide/", "在Scroll上开发": "/zh/developers/" }
 ---
 
 #### 欢迎来到 Scroll 的文档

@@ -5,7 +5,7 @@ title: "Scroll Sepolia 测试网用户指南"
 lang: "zh"
 permalink: "user-guide/"
 excerpt: "Thank you for testing out our Sepolia Testnet. The Sepolia Testnet consists of Ethereum's Sepolia Testnet and the Scroll Sepolia test network."
-whatsnext: { "设置你的钱包": "/user-guide/setup" }
+whatsnext: { "设置你的钱包": "/zh/user-guide/setup" }
 ---
 
 感谢您测试 Scroll Sepolia 测试网。如果您有任何疑问或想提供反馈，请加入我们的 [Discord](https://discord.gg/scroll)！

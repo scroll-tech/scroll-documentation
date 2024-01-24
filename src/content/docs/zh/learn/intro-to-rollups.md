@@ -5,7 +5,7 @@ title: "Rollups 介绍"
 lang: "zh"
 permalink: "learn/intro-to-rollups"
 excerpt: "Rollups are the most predominant layer 2 scaling solution in the Ethereum ecosystem."
-whatsnext: { "Scroll Rollup Process": "/technology/chain/rollup" }
+whatsnext: { "Scroll Rollup Process": "/zh/technology/chain/rollup" }
 ---
 
 ## 什么是 rollup?

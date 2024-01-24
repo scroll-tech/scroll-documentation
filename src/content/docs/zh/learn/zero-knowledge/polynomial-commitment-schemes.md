@@ -5,7 +5,7 @@ title: "多项式承诺方案"
 lang: "zh"
 permalink: "learn/zero-knowledge/polynomial-commitment-schemes"
 excerpt: "多项式承诺方案是零知识证明系统（以及其他加密协议）的核心组成部分"
-whatsnext: { "KZG 承诺方案": "/learn/zero-knowledge/kzg-commitment-scheme" }
+whatsnext: { "KZG 承诺方案": "/zh/learn/zero-knowledge/kzg-commitment-scheme" }
 ---
 
 多项式承诺方案是零知识证明系统（以及其他加密协议）的核心组成部分。

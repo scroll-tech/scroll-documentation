@@ -5,7 +5,7 @@ title: "zkEVM 介绍"
 lang: "zh"
 permalink: "technology/intro-to-zkevm"
 excerpt: "ZK rollups 被广泛认同为以太坊的理想扩容方案。"
-whatsnext: { "zkEVM 概览": "/technology/zkevm/zkevm-overview" }
+whatsnext: { "zkEVM 概览": "/zh/technology/zkevm/zkevm-overview" }
 ---
 
 ## 入门介绍和出发点

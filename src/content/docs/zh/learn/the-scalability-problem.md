@@ -5,7 +5,7 @@ title: "扩容问题"
 lang: "zh"
 permalink: "learn/intro-to-rollups"
 excerpt: "以太坊强大的去中心化和安全性是以牺牲可扩展性为代价的：为了确保所有参与节点都能跟上网络的进度，网络的吞吐量是有限的。这样的限制最终会导致用户端的成本和延迟增加。"
-whatsnext: { "Rollups 介绍": "/learn/intro-to-rollups" }
+whatsnext: { "Rollups 介绍": "/zh/learn/intro-to-rollups" }
 ---
 
 ## 以太坊的扩容问题

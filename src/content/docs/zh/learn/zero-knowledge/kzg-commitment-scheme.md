@@ -5,7 +5,7 @@ title: "KZG 承诺方案"
 lang: "zh"
 permalink: "learn/zero-knowledge/kzg-commitment-scheme"
 excerpt: "KZG 用于以太坊的 Proto-Danksharding，也用于 Scroll 的证明系统。本节将概述 KZG 承诺方案。"
-whatsnext: { "其他资源": "/learn/zero-knowledge/additional-zk-learning-resources" }
+whatsnext: { "其他资源": "/zh/learn/zero-knowledge/additional-zk-learning-resources" }
 ---
 
 使用最广泛的多项式承诺方案之一是 KZG 承诺方案。该方案最早由 Kate、Zaverucha 和 Goldberg 于 2010 年[发布](https://www.iacr.org/archive/asiacrypt2010/6477178/6477178.pdf)。
