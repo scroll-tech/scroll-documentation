@@ -110,10 +110,10 @@
       "sepoliaBlockExplorer": "Sepolia 浏览器"
     },
     "technology": {
-      "overview": "概览",
-      "principles": "Principles",
+      "introduction": "介绍",
+      "principles": "原则",
       "scrollArchitecture": "Scroll 架构",
-      "overview": "Overview",
+      "overview": "概览",
 
       "scrollChain": "Scroll 链",
       "accountsAndState": "账户和状态",
