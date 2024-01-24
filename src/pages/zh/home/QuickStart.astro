@@ -20,13 +20,13 @@ const toolList = [
 
 <div>
   <SectionHeader
-    title="Developer Quickstart"
-    content="Start developing on Scroll with all of your favourite tools for building and testing smart contracts."
+    title="开发者快速入门"
+    content="开始使用您喜爱的工具在 Scroll 上进行智能合约的构建和测试。"
   />
   <div class="tools">
     {
       toolList.map(({ icon, name, quickstartAnchor, color }) => (
-        <a href={`/en/developers/developer-quickstart#${quickstartAnchor}`} class={`tools-item ${color}`}>
+        <a href={`/zh/developers/developer-quickstart#${quickstartAnchor}`} class={`tools-item ${color}`}>
           <figure class={color ? "p-[18px]" : ""}>
             {color ? <Fragment set:html={icon} /> : <img src={icon} alt={name} />}
           </figure>

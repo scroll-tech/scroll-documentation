@@ -1,12 +1,14 @@
 ---
 section: learn
 title: "Learn"
-lang: "en"
+lang: "zh"
 permalink: "learn/"
 excerpt: "Learn more about Ethereum scalability and zero knowledge cryptography."
 ---
 
 import NavCard from "../../../../components/NavCard.astro"
+import TechnologySvg from "../../../../assets/svgs/home/home-technology.svg?raw"
+import LearnSvg from "../../../../assets/svgs/home/home-learn.svg?raw"
 
 Scroll 汇集了区块链协议和零知识证明密码学的研究和工程资料。如果您想更深入地了解，请继续阅读并查看补充资料。
 
@@ -14,13 +16,13 @@ Scroll 汇集了区块链协议和零知识证明密码学的研究和工程资�
 
 <div class="navs" class="flex flex-col flex-wrap items-center md:flex-row md:gap-8 md:items-start">
   <NavCard
-    icon="/svgs/home-technology.svg"
+    icon={TechnologySvg}
     name="以太坊与协议"
     content="了解以太坊生态和 Scroll 如何参与其中."
     link="/zh/learn/the-scalability-problem"
   />
   <NavCard
-    icon="/svgs/home-learn.svg"
+    icon={LearnSvg}
     name="零知识证明"
     content="了解零知识证明密码学及其应用"
     link="/zh/learn/zero-knowledge/introduction-to-zero-knowledge"
