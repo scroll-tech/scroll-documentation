@@ -8,6 +8,16 @@ excerpt: "Thank you for testing out our Sepolia Testnet. The Sepolia Testnet con
 whatsnext: { "设置你的钱包": "/zh/user-guide/setup" }
 ---
 
+import Aside from "../../../../components/Aside.astro"
+
+<Aside type="tip" title="主网已经在线!">
+
+Scroll 的主网已上线，但我们为那些想尝试 Scroll 而不使用真实资金的用户提供了这个指南。
+
+如果您想尝试 Scroll 主网，请按照指南操作，然后使用侧边栏中的主网链接。
+
+</Aside>
+
 感谢您测试 Scroll Sepolia 测试网。如果您有任何疑问或想提供反馈，请加入我们的 [Discord](https://discord.gg/scroll)！
 
 Sepolia 测试网由 _以太坊的 Sepolia 测试网_ 和 _Scroll Sepolia 测试网络_ 组成。Sepolia 是以太坊的一个测试网络，而 Scroll Sepolia 是一个部署在前者之上的 zkRollup 测试网。有一些预先部署的演示程序: 一个 Sepolia 和 Scroll Sepolia 之间的[跨链桥](https://scroll.io/bridge),[^1] 一个 Scroll Sepolia 的[区块链浏览器](https://sepolia-blockscout.scroll.io/) ,[^2]和一个[rollup 浏览器](https://scroll.io/rollupscan).
@@ -24,8 +34,6 @@ Sepolia 测试网由 _以太坊的 Sepolia 测试网_ 和 _Scroll Sepolia 测试
 6. 通过 [跨链桥](https://scroll.io/bridge) 应用程序将测试代币从*Scroll Sepolia*提取到*Sepolia 网络*。
 
 您可以在本用户指南的其余部分找到每个应用的说明。
-
-<!-- TODO: Add Aave back in item number 5 once live. -->
 
 ## 问题与反馈
 

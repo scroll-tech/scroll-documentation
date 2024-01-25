@@ -12,7 +12,7 @@ whatsnext: { "用户指南": "/zh/user-guide/", "在Scroll上开发": "/zh/devel
 
 Scroll 是以安全为中心的以太坊扩容解决方案，通过设计上的创新和零知识证明在以太坊上构建 Layer2。与以太坊相比，Scroll 网络更易于访问，响应更快，并且可以同时支持更多用户，如果您曾经在以太坊上使用或开发过应用程序，那么您在 Scroll 上开发会和到家了一样感到熟悉和亲切。
 
-想试用 Scroll 的 Sepolia 测试网吗？请查看我们的 [用户指南](/user-guide/)。
+想试用 Scroll 的 Sepolia 测试网吗？请查看我们的 [用户指南](/zh/user-guide/)。
 
 ## Scroll 在构建什么?
 
@@ -26,18 +26,16 @@ Scroll 正在构建扩容以太坊的技术。
 
 <!-- TODO: Confirm Architecture page exists -->
 
-关于我们架构的详细信息，请参阅[Scroll 架构](/technology/).
+关于我们架构的详细信息，请参阅[Scroll 架构](/zh/technology/).
 
 ## 现在可以使用 Scroll 吗？
 
-Scroll 的 Sepolia 测试网已经上线。 虽然我们有一个 [完整指南](/user-guide/), 但如果您熟悉以太坊，您可以在几分钟内就开始使用：
+Scroll 在以太坊上的主网已经上线！我们还在以太坊 Sepolia 上运行了一个测试网，即 Scroll Sepolia 测试网。 虽然我们有一个 [完整指南](zh//user-guide/), 但如果您熟悉以太坊，您可以在几分钟内就开始使用：
 
-- 访问我们的 [跨链桥](https://scroll.io/bridge) 并连接您的钱包
-- 将代币从 Sepolia 发送到 Scroll Sepolia 测试网 (或者使用 [水龙头](/user-guide/faucet))
-- 测试我们的 [Uniswap 用例](http://uniswap-showcase.sepolia.scroll.xyz/) -- 只需要确保选择了 Scroll Sepolia 网络!
-
-<!-- TODO: Add Aave after Sepolia goes live -->
+- 访问我们的 [跨链桥](https://scroll.io/bridge) 或 [Scroll Sepolia 跨链桥](https://sepolia.scroll.io/bridge) 并连接您的钱包。
+- 从以太坊主网发送代币到 Scroll（或使用 Scroll Sepolia 的 [水龙头](/user-guide/faucet)）。
+- 尝试使用 Scroll Sepolia 测试网的 dApp，比如我们的 [Uniswap 展示](http://uniswap-showcase.sepolia.scroll.xyz/) 或者 [Aave](https://app.aave.com/)，只需确保选择了 Scroll Sepolia 网络！
 
 ## Scroll 的未来方向?
 
-在以太坊上启动主网之前，我们目前处于最终测试网中.接下来将去中心化堆栈的每个组件。查看 [我们的路线图](https://scroll.io) 或者关注 [我们的 Discord](https://discord.gg/scroll) 或者 [Twitter](https://twitter.com/scroll_zkp)。
+我们已经在以太坊上发布了我们的主网，但还有更多工作要做，接下来将去中心化堆栈的每个组件。查看 [我们的路线图](https://scroll.io) 或者关注 [我们的 Discord](https://discord.gg/scroll) 或者 [Twitter](https://twitter.com/scroll_zkp)。
