@@ -41,7 +41,7 @@ contract L1Token is ERC20 {
 - 代币必须实现“IScrollStandardERC20”接口才能与跨链桥兼容。
 - 合约应有 `gateway()` 和 `counterpart()` 方法，可以提供 gateway 合约地址和对应的代币地址（我们刚刚发布的 L1 代币）。它还应该允许 L2 gateway在存入和提取代币事调用代币的 `mint()` 和 `burn()` 方法。
 
-以下是与跨链桥兼容的代币的完整示例。对于构造函数，您将传递 Scroll 官方自定义 Gateway 地址 （ 0x31C994F2017E71b82fd4D8118F140c81215bbb37 ） 和在 Sepolia 上发布的代币地址。
+以下是与跨链桥兼容的代币的完整示例。对于构造函数，您将传递 Scroll 官方自定义 Gateway 地址 （ 0x058dec71E53079F9ED053F3a0bBca877F6f3eAcf ） 和在 Sepolia 上发布的代币地址。
 
 ```solidity
 // SPDX-License-Identifier: MIT
