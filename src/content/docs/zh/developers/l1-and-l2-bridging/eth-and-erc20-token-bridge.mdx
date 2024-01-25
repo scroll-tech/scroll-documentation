@@ -21,12 +21,12 @@ Gateway Router 合约允许 ETH 和 ERC20 代币分别使用 `depositETH` 和 `d
 桥接ERC20代币时，你不必担心如何选择正确的网关。这是因为 `L1GatewayRouter` 将选择正确的入口来发送消息：
 
 - **`L1StandardERC20Gateway`:** 此网关允许人任意 ERC20 存款，并且被 `L1GatewayRouter` 选作不需要在 L2 上自定义逻辑的 ERC20 代币的默认网关。在第一次代币桥接时，将在L2上创建一个实现了 ScrollStandardERC20 的新代币。要桥接代币，请调用 `L1GatewayRouter` 上的 `depositERC20` 方案。
-- **`L1CustomERC20Gateway`:** 此网关将被 `L1GatewayRouter` 选作需要在 L2 上自定义逻辑的 ERC20 代币. 要使 L1/L2 代币对在Scroll自定义的 ERC20 跨链桥上工作，L2 代币合约必须实现 `IScrollStandardERC20`。此外，代币应包含对 `L2CustomERC20Gateway` 的 `mint` 或 `burn` 功能。请访问 [通过自定义网关桥接 ERC20 指南](/developers/developer-guides/bridge-erc20-through-the-custom-gateway)，获取有关如何桥接自定义代币的分步示例。
+- **`L1CustomERC20Gateway`:** 此网关将被 `L1GatewayRouter` 选作需要在 L2 上自定义逻辑的 ERC20 代币. 要使 L1/L2 代币对在Scroll自定义的 ERC20 跨链桥上工作，L2 代币合约必须实现 `IScrollStandardERC20`。此外，代币应包含对 `L2CustomERC20Gateway` 的 `mint` 或 `burn` 功能。请访问 [通过自定义网关桥接 ERC20 指南](/zh/developers/guides/bridge-erc20-through-the-custom-gateway)，获取有关如何桥接自定义代币的分步示例。
 
 所有网关合约都将形成消息，并将其发送到可以向L2发送任意消息的网关合约 `L1ScrollMessenger` 。`L1ScrollMessenger` 合约将消息传递给 `L1MessageQueue` .任何用户都可以将消息直接发送到Message 合约，以在L2上执行任意数据。这意味着他们可以通过跨链桥从 L1 上的交易在 L2 上执行任何方法。尽管应用程序可以直接将消息传递到现有代币合约，但网关抽象了细节并简化了传输和调用过程。
 
 <Aside type="tip" title="">
-  用户还可以绕过 `L1ScrollMessenger` 合约并将消息直接发送到 `L1MessageQueue`.如果消息是通过 `L1MessageQueue` 发送，则交易的发送方将是发送交易的用户的地址，而不是 `L1ScrollMessenger` 地址。如需详细了解如何发送任意消息，请参阅[Scroll Messenger一文](/developers/l1-and-l2-bridging/the-scroll-messenger)。
+  在未来的升级中，用户将能够绕过 L1ScrollMessenger 直接向 L1MessageQueue 发送消息。如果通过 L1MessageQueue 发送消息，交易的发送者将是发送交易的用户地址，而不是 L1ScrollMessenger 的地址。
 </Aside>
 
 当在 L1 上创建新区块时，观察器（Watcher）将检测到 `L1MessageQueue` 的消息并将其传递给中继器（Relayer）服务，后者将通过 l2geth 节点将交易提交到 L2。最后，l2geth节点将交易传递给 `L2ScrollMessagner` 合约，以便在L2上执行。

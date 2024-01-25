@@ -24,10 +24,20 @@ import CodeSample from "../../../../components/CodeSample/CodeSample.astro"
 
 大多数智能合约工具都有插件，可以在Etherscan上轻松验证您的合约。Blockscout支持Etherscan的合约验证API，将这些工具与Scroll Sepolia测试网一起使用非常简单。
 
+| 网络    | Scroll | Scroll Sepolia                                  |
+| ---------- | -------------------------------- | ---------------------------------------- |
+| Scrollscan | https://api.scrollscan.com/api   | https://api-sepolia.scrollscan.com/api   |
+| Blockscout | https://blockscout.scroll.io/api | https://sepolia-blockscout.scroll.io/api |
+
+<Aside type="tip" title="使用 Scrollscan API">
+在使用 Scrollscan 时，您需要 [注册一个账户](https://scrollscan.com/register) 并创建一个 API 密钥。相同的密钥可以用于 Scroll Sepolia 和主网。创建 API 密钥后，请等待几分钟使其生效。
+</Aside>
+
 ### Hardhat
 
 首先，修改 `hardhat.config.ts` 以指向 Scroll 的 RPC 和 `sepolia-blockscout.scroll.io/api`. `apyKey` 设置为虚拟值是必需的，但任何内容都适合其 `apyKey` 值。
 
+例如，如果您在 Blockscout 上使用 Scroll Sepolia，您的配置将如下所示：
 ```javascript
 ...
 
@@ -80,8 +90,46 @@ npx hardhat verify --network scrollSepolia 0xD9880690bd717189cC3Fbe7B9020F27fae7
 
 ### Foundry
 
-使用Foundry时， `verify-contract` 有助于自动化验证合约。
+在使用 Foundry 时，`verify-contract` 命令有助于自动化合约验证的过程。如果您的合约具有构造函数参数，您可以使用 `--constructor-args` 选项以 ABI 编码形式指定这些参数。例如，如果您的构造函数接受两个 `uint256` 变量：
+```bash
+ --constructor-args $(cast abi-encode "constructor(uint256,uint256)" 0 7)
+```
+
+请参考 [Foundry 文档](https://book.getfoundry.sh/reference/forge/forge-verify-contract) 以获取您可以指定的更多选项。
+
+
+#### Scrollscan
 
 ```bash
-forge verify-contract <Contract Address> <Space separated params> <Solidity file>:<Contract name> --chain-id 534351 --verifier-url <https://sepolia-blockscout.scroll.io/api> --verifier blockscout
+forge verify-contract <contract address> <contract name> \
+  --verifier-url https://api-sepolia.scrollscan.com/api \
+  --etherscan-api-key <your Scrollscan API key> \
+  --constructor-args <your constructor arguments>
 ```
+<Aside type="caution" title="Caution">
+  不要指定链 ID
+</Aside>
+
+#### Blockscout
+
+将验证提供者指定为 `blockscout`。
+
+##### Scroll 
+```bash
+forge verify-contract <contract address> <contract name> \
+  --verifier-url https://blockscout.scroll.io/api\? \
+  --verifier blockscout \
+  --constructor-args <your constructor arguments>  
+```
+
+##### Scroll Sepolia
+```bash
+forge verify-contract <contract address> <contract name> \
+  --verifier-url https://sepolia-blockscout.scroll.io/api\? \
+  --verifier blockscout \
+  --constructor-args <your constructor arguments>
+```
+
+<Aside type="danger" title="Warning">
+  注意，在验证器 URL 的末尾添加 `\?`，否则验证将失败（在 forge v0.2.0 上测试通过）。
+</Aside>

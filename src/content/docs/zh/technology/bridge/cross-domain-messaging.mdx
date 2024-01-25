@@ -109,7 +109,7 @@ function sendMessage(
 这两个函数都需要用户在L2上为对应的 `L1MessageTx` 交易提供gas上限，并预付根据gas上限计算而来的 L1 的[消息中继费用](#message-relay-fee)。
 该费用通过 L1 上的 `feeVault` 合约收取。
 如果由于用户没有为其L1上的消息设置正确的 gas 上限而导致 L2 上的交易失败，则用户可以用更高的 gas 上限重放相同的消息。
-您可以在[重放失败消息](#retrying-failed-messages)部分，找到更多详细信息。
+您可以在[重放失败消息](#retrying-failed-messages)部分，找到更多详细信息。但由于这些费用的任何未使用部分都会退还给用户，因此高估 gas 限制不会有任何惩罚。
 
 `sendMessage` 函数将参数编码进跨链消息（请参考下面的代码片段），其中消息 nonce 是 L1 消息队列中下一条消息的索引值。然后，编码的数据将被用于在 L2 上执行的 `L1MessageTx` 交易中的调用数据（calldata）。
 请注意，此类跨链消息始终调用 L2 上 `L2ScrollMessenger` 合约的 `relayMessage` 函数。

@@ -4,6 +4,7 @@ date: Last Modified
 title: "Scroll Messenger 跨链交互"
 lang: "zh"
 permalink: "developers/guides/scroll-messenger-cross-chain-interaction"
+whatsnext: { "通过自定义 Gateway 跨链 ERC20": "/developers/guides/bridge-erc20-through-the-custom-gateway" }
 excerpt: "In this example, we will launch a dummy smart contract on either Sepolia or Scroll Sepolia testnet and interact with it from the opposite chain."
 ---
 
@@ -81,7 +82,7 @@ contract GreeterOperator {
 - `value`: 在此示例中，是 `0` ，因为 `setGreeting` 不是付款方法。
 - `greeting`: 这是将通过消息传递的参数，尝试传入 `“This message was crosschain!”`
 - `gasLimit`:
-  - 如果要将消息从 L1 发送到 L2，则gas上限为 5000 应该绰绰有余。
+  - 如果要将消息从 L1 发送到 L2，约 1000000 的 gas 上限应该足够了。话虽如此，如果您设置得太高，并且 `msg.value` 不足以支付 `gasLimit` * `baseFee`，交易将回滚。如果 `msg.value` 大于 gas 费用，多余的部分将被退还。
   - 如果要将消息从 L2 发送到 L1，请传递 0 ，因为交易通过在 L1 上执行其他交易来最终确认。
 
 ### 从 L2 向 L1 中继消息

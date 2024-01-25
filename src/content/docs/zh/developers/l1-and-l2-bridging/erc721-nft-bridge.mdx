@@ -80,7 +80,7 @@ function depositERC721(address _token, address _to, uint256 _tokenId, uint256 _g
 | token     | L1 上 ERC721 NFT 合约的地址        |
 | to        | L2 上收款人账户的地址      |
 | tokenId   | 存入的 NFT ID                          |
-| gasLimit  | 在L2上完成存款所需的gas上限 |
+| gasLimit  | 在L2上完成存款所需的gas上限，未使用的部分将会退回 |
 
 ### updateTokenMapping
 
@@ -100,7 +100,7 @@ function updateTokenMapping(address _l1Token, address _l2Token) external;
 ### withdrawERC721
 
 ```solidity
-function depositERC721(address _token, address _to, uint256 _tokenId, uint256 _gasLimit) external payable;
+function withdrawERC721(address _token, address _to, uint256 _tokenId, uint256 _gasLimit) external payable;
 ```
 
 将 ERC721 NFT 从 L2 发送到收款人在 L1 上的账户。
