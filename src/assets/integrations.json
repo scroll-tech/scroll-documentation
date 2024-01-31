@@ -64,7 +64,7 @@
       "name": "Safe",
       "url": "https://safe.scroll.xyz/",
       "network": ["sepolia", "mainnet"],
-      "logo": "https://docs.attest.sh/img/eas-logo.png",
+      "logo": "https://user-images.githubusercontent.com/3975770/212338977-5968eae5-bb1b-4e71-8f82-af5282564c66.png",
       "tags": ["multisig"]
     },
     {
@@ -72,6 +72,14 @@
       "url": "https://www.npmjs.com/package/@scroll-tech/contracts",
       "comment": "A library for interacting with Scroll contracts.",
       "network": ["mainnet", "sepolia"]
+    },
+    {
+      "name": "Aztec (Noir)",
+      "url": "https://noir-lang.org/",
+      "comment": "Noir supports generating EVM smart contract code for verifying zk proofs. These verifiers can be deployed on Scroll without modification.",
+      "network": ["sepolia", "mainnet"],
+      "guide": "https://dev.to/turupawn/votos-anonimos-usando-zk-39j",
+      "tags": ["privacy"]
     }
   ]
 }
