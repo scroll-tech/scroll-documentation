@@ -1,0 +1,76 @@
+---
+section: developers
+date: Last Modified
+title: "在Scroll上开发"
+lang: "zh"
+permalink: "developers/"
+excerpt: "Building on Scroll feels just like Ethereum, and you can bring your favorite tooling and contracts with you."
+whatsnext: { "开发者快速入门": "/zh/developers/developer-quickstart" }
+---
+
+import Aside from "../../../../components/Aside.astro"
+import ToggleElement from "../../../../components/ToggleElement.astro"
+
+**欢迎来到 Scroll 开发者文档!**
+
+Scroll 是构建在Ethereum上的Layer 2 网络 (更准确的说, 是一个 “zk rollup”).
+
+如果你有在以太坊上的开发经验，那你的代码、依赖项和工具都可以在Scroll上开箱即用。因为我们的网络与 EVM 字节码兼容，并且设计得就像在以太坊上开发一样，让这一切变得可能。
+
+<Aside type="tip" title="刚接触zk rollup?">
+Scroll通过执行链下交易以及生成交易正确执行的加密证明来获得安全性和速度。这种加密证明可以在Layer 1的智能合约中得到验证，确保在Scroll Layer 2 上执行的所有代码的行为就像在以太坊Layer 1上执行一样。
+
+[了解有关 Scroll 架构的更多信息 →](/technology)
+
+</Aside>
+
+## 开始
+
+**想要在 Scroll Sepolia 测试网上进行构建?**
+
+- 有关基础知识：查看[开发者快速入门](/developers/developer-quickstart)
+- 有关在 Scroll 上部署第一个智能合约的教程，请阅读我们的 [合约部署教程](/developers/guides/contract-deployment-tutorial)
+- 我们还有许多[已部署的合约地址](/developers/scroll-contracts)可供构建。
+
+## 为什么在 Scroll 上开发?
+
+<ToggleElement anchor="throughput">
+  <div slot="title">吞吐量 —— Scroll 为以太坊创造了更多的安全区块空间。</div>
+  <p>
+    ZK Rollups 允许网络容纳更多交易，从而最大限度地减少链上拥堵。Scroll 通过使用零知识证明验证网络状态转换，继承了以太坊的安全性，可以在不影响去中心化的情况下处理更多交易。
+  </p>
+</ToggleElement>
+
+<ToggleElement anchor="cost">
+  <div slot="title">成本 —— Scroll 为用户节省 gas 费用。</div>
+  <p>
+    在以太坊上，对区块空间的竞争导致每笔交易的成本更高，因为每笔交易都会竞价以包含在下一个区块中。Scroll 利用最近在零知识证明和硬件加速方面取得的突破，极大地增加了安全区块空间并最大限度地降低了用户的交易成本。
+  </p>
+</ToggleElement>
+<ToggleElement anchor="speed">
+  <div slot="title">速度 —— Scroll 更快地向用户提供反馈。</div>
+  <p>
+    合并后，以太坊每 12 秒确认一个区块。Scroll的区块每 3 秒生成一个，并且为了降低风险操作，交易一旦包含在块中就可以被认为是最终确认的。这为社交和游戏应用程序中的链上交互打开了新的可能性。
+  </p>
+</ToggleElement>
+<ToggleElement anchor="alignment">
+  <div slot="title">联盟——Scroll 建立在以太坊的愿景之上。</div>
+  <p>
+    Scroll 构建在以太坊的愿景之上。我们的宗旨是共建以太坊，而不是分裂它。去中心化、无需许可、抗审查和归属社区是我们工作和正在构建的路线图的核心。我们秉承开源精神，与以太坊基金会的隐私和扩容探索团队（PSE）密切合作，以支持他们在 zkEVM 上的工作，而zkEVM有朝一日可能会成为以太坊的核心。 
+  </p>
+  <p>
+    我们还与治理 DAOs 和其他开源协议合作，以确保在部署应用程序的同时，我们也在努力扩大它们的影响——无论是在公共产品、核心基础设施还是下一代零知识用例中。
+  </p>
+</ToggleElement>
+<ToggleElement anchor="community">
+  <div slot="title">社区——Scroll 将用户和开发者聚集在一起。</div>
+  <p>
+    我们知道在主网发布之前进行开源开发并获得用户参与的挑战！Scroll 拥有一个蓬勃发展的用户和开发者社区，并且拥有超过 100,000 名渴望在我们的测试网上试用应用程序的 Discord 社区，我们很高兴将开发者与可以提供真实世界反馈的用户联系起来。
+  </p>
+</ToggleElement>
+
+## 感谢你与我们一起构建开发
+
+我们正在努力为网络带来更多的集成和支持更多的基础设施，并为我们未来的主网版本感到兴奋。
+
+快来加入我们不断壮大的开发者社区。您可以在[Discord](https://discord.gg/scroll)上找到我们，加入我们的[论坛](https://community.scroll.io/)或在[Twitter](https://twitter.com/Scroll_ZKP)关注我们的进展。

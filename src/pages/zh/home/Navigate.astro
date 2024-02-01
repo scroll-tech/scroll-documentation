@@ -9,33 +9,33 @@ import SectionHeader from "~/components/SectionHeader/index.astro"
 const navList = [
   {
     icon: StartSvg,
-    name: "Getting started",
-    content: "Bridge into Scroll and explore our dApp Ecosystem.",
-    link: "/en/getting-started/overview",
+    name: "入门",
+    content: "通过跨链桥进入 Scroll 并探索我们的 dApp 生态系统",
+    link: "/zh/getting-started/overview",
   },
   {
     icon: DevelopSvg,
-    name: "Developers",
-    content: "Dive into Scroll’s developer documentation.",
-    link: "/en/developers",
+    name: "开发者",
+    content: "深入了解 Scroll 的开发者文档",
+    link: "/zh/developers",
   },
   {
     icon: TechnologySvg,
-    name: "Technology",
-    content: "An overview of Scroll’s zkEVM Architecture.",
-    link: "/en/technology",
+    name: "技术",
+    content: "Scroll 的 zkEVM 架构概述",
+    link: "/zh/technology",
   },
   {
     icon: LearnSvg,
-    name: "Learn",
-    content: "An introduction to the world of ZK and Scalability.",
-    link: "/en/learn",
+    name: "学习",
+    content: "介绍 ZK 和扩容的世界",
+    link: "/zh/learn",
   },
 ]
 ---
 
 <div class="navigate">
-  <SectionHeader title="Navigate the Docs" content="Start developing on Scroll today." />
+  <SectionHeader title="文档导航" content="今天开始在 Scroll 上进行开发" />
   <div class="navs">
     {navList.map(({ icon, name, content, link }) => <NavCard icon={icon} name={name} content={content} link={link} />)}
   </div>

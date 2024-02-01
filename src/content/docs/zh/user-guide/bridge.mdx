@@ -1,0 +1,126 @@
+---
+section: gettingStarted
+date: Last Modified
+title: "跨链桥"
+lang: "zh"
+permalink: "user-guide/bridge/"
+excerpt: "To start bridging assets from Sepolia, navigate to the portal bridge app."
+---
+
+{/* // import ClickToZoom from "../../../../components/ClickToZoom.astro" */}
+{/* // import bridge1 from "./\_images/bridge1.png" */}
+{/* // import bridge2 from "./\_images/bridge2.png" */}
+{/* // import bridge3 from "./\_images/bridge3.png" */}
+{/* // import bridge4 from "./\_images/bridge4.png" */}
+{/* // import bridge5 from "./\_images/bridge5.png" */}
+{/* // import bridge6 from "./\_images/bridge6.png" */}
+{/* // import bridge7 from "./\_images/bridge7.png" */}
+{/* // import bridge8 from "./\_images/bridge8.png" */}
+
+{/* TODO: Update all instructions after being able to walk through the whole flow. */}
+
+从访问我们的[跨链桥](https://scroll.io/bridge) 应用开始![^thanks-hop] 跨链桥同时支持 **存款** and **提款** 操作, 允许用户无需信任地将资产从Sepolia测试网转移到Scroll Sepolia测试网。
+[^thanks-hop]: 从[Hop Exchange]('https://hop.exchange/')的 UI 分叉而来 🙌
+
+存款最多可能需要 15 分钟才能在 Scroll 上可用。
+
+提款需要在提款完成后在 Sepolia 上进行第二次互动，可能需要更长的时间。
+
+:::caution[跨链交易需要等待很长时间?]
+上述时间预估是正常网络行为和活动时的值。由于我们每个 L2 区块仅处理队列中一定的 L1 交易，因此在网络异常拥堵时，跨链桥消息可能需要更长的时间才能包含在 Scroll 中
+:::
+
+## 从 Sepolia 存款到 Scroll Sepolia
+
+### 操作
+
+1. 首先，导航到[Scroll 跨链桥](https://scroll.io/bridge)，然后按“连接钱包”。
+1. 在应用程序中，确保以太坊 **Sepolia** 位于顶部，**Scroll Sepolia** 位于底部。您可以单击“↓”按钮切换其位置。
+1. 选择要从 **Sepolia** 转移到 **Scroll Sepolia** 的代币。如果您是第一次桥接，请尝试“ETH”。
+1. 如果这是您第一次转移特定的ERC20代币，您必须批准Sepolia 跨链桥合约才能访问您的ERC20代币
+1. 接下来，点击 **发送到Scroll Sepolia** 按钮进行存款。您的钱包将要求确认转账交易。
+1. 一旦发送并确认转账交易后，代币将从您的Sepolia钱包中扣除。
+1. 您可以随时通过按右上角钱包地址旁边的“历史记录”图标来检查交易状态。
+
+### 代币何时到达您的 Scroll Sepolia 钱包？
+
+可能需要 8 到 14 分钟（等待区块在 Sepolia 上变得[_安全_](https://www.alchemy.com/overviews/ethereum-commitment-levels#what-are-ethereum-commitment-levels)），代币才会显示在您的 Scroll Sepolia 钱包中。
+
+{/* You can check the progress of deposit transactions as follows: */}
+
+{/* ##### 1. Click the "History" icon next to your wallet address in the top-right corner. */}
+
+{/* <ClickToZoom src={bridge1} /> */}
+
+{/* The pop-up panel lists the most recent transactions made in the Bridge app. There are two statuses: Sepolia status and Scroll Sepolia status. For deposit transactions (L1 -> L2), once your transaction becomes _Safe_ on Sepolia (**8 to 14 minutes**), you will see the **`success`** status shown. Your funds will be relayed to Scoll Sepolia after this. */}
+
+{/* The Recent Bridge Transactions window should give you an estimate of the time expected before your transaction is _Safe_ on Sepolia. */}
+
+{/* ##### 2. Click on the most recent transaction’s Sepolia transaction hash. */}
+
+{/* <ClickToZoom src={bridge2} /> */}
+
+{/* It will open the Transaction Details page in a new tab. You can see this transaction is confirmed on Sepolia. To check the Block's confirmation status, click the Block number and read the "Status" field. */}
+
+{/* <ClickToZoom src={bridge3} /> */}
+
+{/* ##### 3. Return to the Bridge app and wait! */}
+
+{/* Once your transaction status shows **`success`** on Scroll Sepolia, you should see the funds in your Scroll L2 wallet and a transaction hash: */}
+
+{/* <ClickToZoom src={bridge4} /> */}
+
+## 从 Scroll Sepolia 往 Sepolia 提款
+
+### 操作
+
+#### 提交您的提款交易
+
+1. 首先，切换到钱包中的**Scroll Sepolia**网络。
+1. 在应用程序中，确保 **Scroll Sepolia** 位于顶部，以太坊 **Sepolia** 位于底部。您可以单击“↓”按钮切换位置。
+1. 选择要从 **Scroll Sepolia** 转移到 **Sepolia** 的代币。如果您是第一次桥接，请尝试“ETH”。
+1. 如果这是您第一次转移特定的ERC20代币，您必须**批准**Scroll Sepolia 跨链桥合约才能访问您的ERC20代币。
+1. 接下来，点击 **发送到以太坊 Sepolia** 按钮进行提款。您的钱包将要求确认转账交易。
+1. 一旦转账交易被发送并确认，代币将从您的Scroll Sepolia钱包中扣除。
+
+#### 提交执行提款交易
+
+{/* TODO: finish the additional instructions, better estimate "wait time" */}
+
+_其余步骤发生在Scroll Sepolia上，但您首先必须等待您的交易在以太坊Sepolia上得到完全证明（“最终确认”）。此过程最多可能需要四个小时。._
+
+1. 当您的提款交易在以太坊Sepolia上完成时，您将看到“最近交易”区域中的“认领”按钮。
+1. 点击“认领”按钮提交执行提款交易。
+1. 一旦提交后，您提取的资金应立即出现在您的Sepolia钱包中。
+
+### 代币什么时候会到达您的Sepolia钱包？
+
+转移的代币将在包含您的执行提款交易的区块在Sepolia上确认后，立即到达您的Sepolia钱包。
+
+{/* TODO: check architecture link is live */}
+
+:::tip[Rollup 状态]
+Rollup 状态 `最终确认` 表明，通过在Sepolia上验证链上的有效性证明，已经证明了该区块中交易的正确执行。有关Rollup状态的详细信息，请参阅 [Scroll 的架构概览](/technology)。
+:::
+
+{/* You can check the progress of withdrawal transactions as follows: */}
+
+{/* 1. Click your wallet address at the top-right corner of the Bridge web app. */}
+
+{/* <ClickToZoom src={bridge5} /> */}
+
+{/* The pop-up panel lists the most recent transactions you made in the Bridge app (see the image below). There are two statuses: L1 status and L2 status. In this case, because we are bridging from L2 -> L1, we will quickly get a **`success`** status after submitting the transaction to the L2 Bridge. L1, on the other hand, takes **10 minutes to a few hours** to reach **`success`**. */}
+
+{/* 1. Click on the most recent transaction’s L2 transaction hash: */}
+
+{/* <ClickToZoom src={bridge6} /> */}
+
+{/* It will open the _Transaction Details_ page in a new tab. You can see this transaction is confirmed on L2. */}
+
+{/* <ClickToZoom src={bridge7} /> */}
+
+{/* The transaction is confirmed on L2, but still needs to be finalized on Goerli. */}
+
+{/* 1. Go back to the [Bridge](https://scroll.io/bridge) app. It takes about 10 minutes before the token shows up in your Goerli wallet. Once your transaction status shows success on L2, you should see the funds in your Goerli wallet and a transaction hash: */}
+
+{/* <ClickToZoom src={bridge8} /> */}

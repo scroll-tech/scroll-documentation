@@ -1,0 +1,43 @@
+---
+section: gettingStarted
+date: Last Modified
+title: "Scroll Sepolia 测试网用户指南"
+lang: "zh"
+permalink: "user-guide/"
+excerpt: "Thank you for testing out our Sepolia Testnet. The Sepolia Testnet consists of Ethereum's Sepolia Testnet and the Scroll Sepolia test network."
+whatsnext: { "设置你的钱包": "/zh/user-guide/setup" }
+---
+
+import Aside from "../../../../components/Aside.astro"
+
+<Aside type="tip" title="主网已经在线!">
+
+Scroll 的主网已上线，但我们为那些想尝试 Scroll 而不使用真实资金的用户提供了这个指南。
+
+如果您想尝试 Scroll 主网，请按照指南操作，然后使用侧边栏中的主网链接。
+
+</Aside>
+
+感谢您测试 Scroll Sepolia 测试网。如果您有任何疑问或想提供反馈，请加入我们的 [Discord](https://discord.gg/scroll)！
+
+Sepolia 测试网由 _以太坊的 Sepolia 测试网_ 和 _Scroll Sepolia 测试网络_ 组成。Sepolia 是以太坊的一个测试网络，而 Scroll Sepolia 是一个部署在前者之上的 zkRollup 测试网。有一些预先部署的演示程序: 一个 Sepolia 和 Scroll Sepolia 之间的[跨链桥](https://scroll.io/bridge),[^1] 一个 Scroll Sepolia 的[区块链浏览器](https://sepolia-blockscout.scroll.io/) ,[^2]和一个[rollup 浏览器](https://scroll.io/rollupscan).
+
+要查看 L1 的交易，请查看 Etherscan 的[Sepolia 浏览器](https://sepolia.etherscan.io/)。要查看 L2 的交易，您可以使用 Scroll 的区块浏览器，但您可能也会想尝试[Dora](https://www.ondora.xyz/network/scroll-sepolia/interactions)或[L2Scan](https://scroll.l2scan.co/)提供的附加功能。
+
+以下是体验测试网的参考流程：
+
+1. 将[Sepolia 测试网](https://scroll.io/portal)配置添加到您的钱包中。
+2. 从任何以太坊水龙头应用程序请求*Sepolia 网络*中的测试代币（请参阅 [水龙头](/zh/user-guide/faucet) 文章）。
+3. 通过 [跨链桥](https://scroll.io/bridge) 应用程序将测试代币从*Sepolia 网络*转移到*Scroll Sepolia*。
+4. 使用您的钱包将代币转移到*Scroll Sepolia*上的其他钱包。
+5. 探索我们的生态系统，与 [Uniswap](http://uniswap-showcase.sepolia.scroll.xyz/) 等合约互动。
+6. 通过 [跨链桥](https://scroll.io/bridge) 应用程序将测试代币从*Scroll Sepolia*提取到*Sepolia 网络*。
+
+您可以在本用户指南的其余部分找到每个应用的说明。
+
+## 问题与反馈
+
+如果您遇到任何问题，请加入我们的 [Discord](https://discord.gg/scroll) 并在频道 #general-support 中与我们交流。我们也很乐意听到您对如何改善您的体验的想法或反馈。
+
+[^1]: 从 [Hop Exchange](https://hop.exchange/) UI 分叉而来 🐇🙌
+[^2]: 使用 [Blockscout](https://blockscout.com/) 出色的开源区块链浏览器

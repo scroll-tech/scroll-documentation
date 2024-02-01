@@ -1,0 +1,192 @@
+---
+section: technology
+date: Last Modified
+title: "存款网关"
+lang: "zh"
+permalink: "technology/bridge/deposit-gateways"
+whatsnext: { "提款网关": "/zh/technology/bridge/withdraw-gateways/" }
+---
+
+import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import DepositWorkflow from "../_images/deposit.png"
+
+本文档介绍了用户和开发者如何使用网关将代币从 L1 存入 L2。
+我们在 L2 上为标准代币提供了多个网关，并提供了一个网关路由器，如下表所示。
+
+| 网关合约         | 描述                                                      |
+| ------------------------ | ---------------------------------------------------------------- |
+| `L1GatewayRouter`        | 支持ETH和ERC20代币存款的网关路由器 |
+| `L1ETHGateway`           | ETH 存款的网关                                    |
+| `L1StandardERC20Gateway` | 标准 ERC20 代币存款的网关                   |
+| `L1CustomERC20Gateway`   | 自定义 ERC20 代币存款的网关                    |
+| `L1WETHGateway`          | WETH 存款的网关                           |
+| `L1ERC721Gateway`        | ERC721 代币存款的网关                        |
+| `L1ERC1155Gateway`       | ERC1155 代币存款的网关                        |
+
+## 概览
+
+<ClickToZoom src={DepositWorkflow} alt="Deposit Workflow" />
+
+上图描述了从 L1 存款至 L2 的工作流程。
+用户调用网关来发起代币存款。
+然后该笔存款将被编码为消息发送至 `L1ScrollMessenger` 合约，相应的 L1 发起的交易将被添加至 `L1MessageQueue`。
+为了在 L2 上最终确认存款，L2 排序器会收集新的 L1 交易事件，并将相应的交易包含在它创建的 L2 区块中。
+后续部分将详细介绍如何进行不同代币的存款。您可以在[跨链消息传递](/technology/bridge/cross-domain-messaging#sending-messages-from-l1-to-l2)中找到有关 L1 至 L2 消息中继工作流的更多详细信息。
+
+## 存入 ETH
+
+Scroll将 ETH 视为原生代币。
+我们在创世区块中为 `L2ScrollMessenger` 合约预先分配了足够数量的 ETH，以便它可以将原生的 ETH 代币转账到 L2 账户而无需铸造。
+存入ETH的工作原理如下。
+
+1. `L1GatewayRouter` 合约提供了三个函数，将 ETH 从 L1 存入 L2。其中 `depositETHAndCall` 函数可以同时转账 ETH 并执行合约调用。
+
+    ```solidity
+    function depositETH(uint256 _amount, uint256 _gasLimit) external payable;
+
+    function depositETH(address _to, uint256 _amount, uint256 _gasLimit) public payable;
+
+    function depositETHAndCall(
+        address _to,
+        uint256 _amount,
+        bytes calldata _data,
+        uint256 _gasLimit
+    ) external payable;
+    ```
+
+2. 所有三个 `depositETH` 函数都调用 `L1ETHGateway` 合约。`L1ETHGateway` 将存款编码为发送至 `L1ETHGateway` 合约的消息。
+
+3. 存入的 ETH 将被锁定在 `L1ScrollMessenger` 合约中。 `L1ScrollMessenger` 合约将消息添加至 `L1MessageQueue` 合约的消息队列中。
+
+4. 存款交易在 L1 上最终确认后，排序器将在 L2 区块中包含相应的 L2 交易，来最终确认存款并将 ETH 转账至 L2 上的收款方地址。
+
+5. L2 交易将调用 `L2ScrollMessenger.relayMessage` 函数，来执行被中继的消息。在存入 ETH 的情况下，该 `relayMessage` 函数会调用 `L2ETHGateway.finalizeDepositETH`，将 ETH 转账至 L2 的收款方账户。 
+
+6. 如果用户调用 L1 的 `depositETHAndCall` 函数，`L2ETHGateway` 合约的 `finalizeDepositETH` 函数会将附加数据转发至目标的 L2 合约。
+
+## 存入 ERC20 代币
+
+我们提供了几种 ERC20 网关合约来桥接不同类型的 ERC20 代币，例如标准 ERC20 代币、自定义 ERC20 代币和 WETH 代币。
+`L1GatewayRouter` 合约记录了 ERC20 代币至 L1 相应 ERC20 代币网关的规范映射。
+除非已经设置自定义网关。`L1GatewayRouter` 合约使用 `standardERC20Gateway` 作为新的 ERC20 代币的默认网关
+
+ERC20 代币存款的工作原理如下。
+
+1. 如下所示，要将 ERC20 代币从 L1 存入 L2 ，用户可以使用 `L1GatewayRouter.depositERC20` 和 `L1GatewayRouter.depositERC20AndCall` 。
+
+    ```solidity
+    function depositERC20(address _token, uint256 _amount, uint256 _gasLimit) external payable;
+
+    function depositERC20(address _token, address _to, uint256 _amount, uint256 _gasLimit) external payable;
+
+    function depositERC20AndCall(
+        address _token,
+        address _to,
+        uint256 _amount,
+        bytes memory _data,
+        uint256 _gasLimit
+    ) public payable;
+    ```
+
+2. 根据 ERC20 代币到网关的映射，`L1GatewayRouter` 合约调用对应的网关： `L1StandardERC20Gateway`，`L1CustomERC20Gateway` 或是 `L1WETHGateway`。余下步骤将分别描述。
+
+### 标准 ERC20 代币
+
+标准 ERC20 代币是不需要任何自定义逻辑的代币。对于此类代币，其 L2 的 ERC20 代币合约由 `L2StandardERC20Gateway` 创建。标准 ERC20 代币的存款的余下步骤为：
+
+3. `L1StandardERC20Gateway` 合约通过将 ERC20 代币从发送方转账给自己来锁定它们。
+4. 如果此 ERC20 代币之前未通过 `L1StandardERC20Gateway` 合约进行过提款，`L1StandardERC20Gateway` 合约将在 L2 上计算一个确定的 ERC20 代币地址，并将代币元数据（符号、名称和小数位）添加至消息以进行合约部署。如果 L2 代币地址已经存储在 `tokenMapping` 合约中，`L1StandardERC20Gateway` 合约将直接从映射中加载 L2 代币地址。 
+5. `L1StandardERC20Gateway` 合约将编码代币存款消息，并调用 `L1ScrollMessenger` 合约来发送消息。
+6. 对应的 L2 交易调用 `L2ScrollMessenger.relayMessage` 函数来最终确认 L2 上的存款。在标准 ERC20 代币存款的情况下，交易随后调用 `L2StandardERC20Gateway.finalizeDepositERC20`。
+7. 如果此 ERC20 代币合约尚未在 L2 上部署，`L2StandardERC20Gateway` 合约则将从消息中提取代币元数据，并调用 `ScrollStandardERC20Factory` 合约以在 L2 上部署标准 ERC20 代币。
+8. `L2StandardERC20Gateway` 合约调用 L2 上相应的 ERC20 代币合约的铸造（Mint）函数。
+9. 如果用户在 L1 上调用 `depositERC20AndCall`，`L2StandardERC20Gateway` 合约将使用附加数据调用目标 L2 合约。
+
+### 自定义 ERC20 代币
+
+与标准 ERC20 代币相比，L2 上的自定义 ERC20 代币合约由代币所有者部署。自定义 ERC20 代币存款的余下步骤为：
+
+3. `L1CustomERC20Gateway` 合约通过将 ERC20 代币从发送方转账给自己来锁定它们。
+4. `L1CustomERC20Gateway` 合约需要 `tokenMapping` 合约中存在的 L2 ERC20 代币地址。它将检索相应的 ERC20 代币地址，对代币存款消息进行编码，并将其转发给 `L1ScrollMessenger` 合约。
+5. 对应的 L2 交易调用 `L2ScrollMessenger.relayMessage` 函数来最终确认 L2 上的存款。在自定义 ERC20 代币存款的情况下，交易随后调用 `L2CustomERC20Gateway.finalizeDepositERC20`。
+6. `L2CustomERC20Gateway` 合约调用 L2 上相应的 ERC20 代币合约的铸造（Mint）函数。L2 的 ERC20 代币合约需要授予 `L2CustomERC20Gateway` 合约铸造权限。
+7. 如果用户在 L1 上调用 `depositERC20AndCall`，`L2CustomERC20Gateway` 合约将使用附加数据调用目标 L2 合约。
+
+### WETH 代币
+
+我们为 L1 上的 WETH 代币提供了一个自定义网关 `L1WETHGateway`，并将网关地址记录在 `L1GatewayRouter` 合约中。WETH 代币存款的工作原理如下。
+
+3. `L1WETHGateway` 合约通过将 WETH 代币从发送方转账给自己并将 WETH 代币解包为原生 ETH 代币，来锁定 WETH 代币。然后将 ETH 代币和 `msg.value` （用于支付中继费）一起发送至 `L1ScrollMessenger` 合约。
+4. `L1WETHGateway` 合约对代币存款消息进行编码并将其转发至 `L1ScrollMessenger` 合约。
+5. 对应的 L2 交易调用 `L2ScrollMessenger.relayMessage` 函数来最终确认 L2 上的存款。在 WETH 代币存款的情况下，交易随后调用 `L2WETHGateway.finalizeDepositERC20`。
+6. `L2WETHGateway` 再次将存入的 ETH 包装为 L2 上的 WETH 代币，并将其转账至 L2 上的接收地址。
+7. 如果用户在 L1 上调用 `depositERC20AndCall`，`L2WETHGateway` 合约将使用附加数据调用目标 L2 合约。
+
+## 存入 ERC-721 / ERC-1155 代币
+
+ERC-721 或 ERC-1155 代币的存款与 ERC20 代币非常相似。
+可以使用网关 `L1ERC721Gateway` 或 `L1ERC1155Gateway` 从 L1 存入 ERC-721 / ERC-1155代币。
+
+```solidity
+function depositERC721(
+    address _token,
+    uint256 _tokenId,
+    uint256 _gasLimit
+) external payable;
+
+function depositERC721(
+    address _token,
+    address _to,
+    uint256 _tokenId,
+    uint256 _gasLimit
+) external payable;
+
+function depositERC1155(
+    address _token,
+    uint256 _tokenId,
+    uint256 _amount,
+    uint256 _gasLimit
+) external payable;
+
+function depositERC1155(
+    address _token,
+    address _to,
+    uint256 _tokenId,
+    uint256 _amount,
+    uint256 _gasLimit
+) external payable;
+```
+
+为了方便大额的 ERC-721 或 ERC-1155 代币存款，我们在 `L1ERC721Gateway` 和 `L1ERC1155Gateway` 合约中提供通过如下函数，实现了批量存款功能：
+
+```solidity
+function batchDepositERC721(
+    address _token,
+    uint256[] calldata _tokenIds,
+    uint256 _gasLimit
+) external payable;
+
+function batchDepositERC721(
+    address _token,
+    address _to,
+    uint256[] calldata _tokenIds,
+    uint256 _gasLimit
+) external payable;
+
+function batchDepositERC1155(
+    address _token,
+    uint256[] calldata _tokenIds,
+    uint256[] calldata _amounts,
+    uint256 _gasLimit
+) external payable;
+
+function batchDepositERC1155(
+    address _token,
+    address _to,
+    uint256[] calldata _tokenIds,
+    uint256[] calldata _amounts,
+    uint256 _gasLimit
+) external payable;
+```
+
+ERC-721 或 ERC-1155 代币在 L2 上对应的合约是 `L2ERC721Gateway` 和 `L2ERC1155Gateway`，用于在 L2 上最终确认存款。
