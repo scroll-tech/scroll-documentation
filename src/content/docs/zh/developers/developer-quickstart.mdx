@@ -1,0 +1,220 @@
+---
+section: developers
+date: Last Modified
+title: "开发者快速入门"
+lang: "zh"
+permalink: "developers/developer-quickstart"
+excerpt: "Scroll Developer Quickstart helps you acquire testnet Ether, configure your network, and access all of your favorite tooling"
+whatsnext: { "验证智能合约": "/zh/developers/verifying-smart-contracts" }
+---
+
+import Aside from "../../../../components/Aside.astro"
+import ClickToZoom from "../../../../components/ClickToZoom.astro"
+import networkSelection from "./_images/mmNetworkSelection.png"
+import injectedProviderMM from "./_images/injectedProviderMM.png"
+
+在 Scroll 上，你最喜欢的智能合约开发测试工具都可以正常使用。
+
+由于 Scroll 是字节码层面的 EVM 等效，你只需将你的开发工具指向 Scroll Sepolia Testnet RPC Provider。
+
+如果你遇到任何问题，请联系[我们的 Discord](https://discord.gg/scroll)。
+
+## 获取测试网ETH
+
+在Scroll上构建之前，您需要一些测试代币。查看我们的 [水龙头](/user-guide/faucet) 页面，在Sepolia上获得 ETH 测试代币。 然后，使用我们的 [跨链桥](/user-guide/bridge) 将 ETH 测试代币桥接到 Scroll Sepolia  测试网（Layer 2）。
+
+如需详细指引，可以从用​​户指南的[设置](/user-guide/setup) 页面开始。
+
+## 网络配置
+
+使用下表将您的以太坊工具配置到 Scroll Sepolia 测试网。
+
+| 网络名称       | Scroll Sepolia 测试网                                                       | Sepolia 测试网                                                             |
+| ------------------ | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| RPC URL            | [https://sepolia-rpc.scroll.io/](https://sepolia-rpc.scroll.io/)              | [https://eth-sepolia-public.unifra.io](https://eth-sepolia-public.unifra.io) |
+| 链 ID           | 534351                                                                        | 11155111                                                                     |
+| 代币符号    | ETH                                                                           | ETH                                                                          |
+| 区块链浏览器链接 | [https://sepolia-blockscout.scroll.io](https://sepolia-blockscout.scroll.io/) | [https://sepolia.etherscan.io](https://sepolia.etherscan.io)                 |
+
+## 配置工具
+
+<Aside type="tip" title="">
+  有关设置工具来验证智能合约部署的信息，请参阅[智能合约验证](/developers/verifying-smart-contracts)。
+</Aside>
+
+### Hardhat
+
+修改你的 Hardhat 配置文件 `hardhat.config.ts` 以指向 Scroll Sepolia 测试网公共 RPC.
+
+```jsx
+...
+
+const config: HardhatUserConfig = {
+  ...
+  networks: {
+    scrollSepolia: {
+      url: "https://sepolia-rpc.scroll.io/" || "",
+      accounts:
+        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    },
+  },
+};
+
+...
+```
+
+### Foundry
+
+要使用 Scroll Sepolia 测试网公共 RPC, 运行:
+
+```bash
+forge create ... --rpc-url=https://sepolia-rpc.scroll.io/ --legacy
+```
+
+### Remix Web IDE
+
+编译合约后，使用 Remix 进行部署的最简单方法是 [设置 Metamask](/user-guide/setup#metamask), 然后选择 **Scroll Sepolia 测试网** 。
+
+<ClickToZoom src={networkSelection} />
+
+现在，在“Deploy and Run Transactions”选项卡中，点击“Environment”下拉菜单并选择“Injected Provider - MetaMask”。
+
+<ClickToZoom src={injectedProviderMM} />
+
+连接你的钱包并选择  Scroll Sepolia Testnet。Remix 中会自动选择帐户，然后你单击“部署”即可。
+
+### Truffle
+
+假设你已经设置了 truffle 环境，请到  Truffle [配置文件](https://trufflesuite.com/docs/truffle/reference/configuration/)，`truffle.js`，并确保已经安装了 HDWalletProvider： `npm install @truffle/hdwallet-provider@1.4.0`
+
+```js
+const HDWalletProvider = require("@truffle/hdwallet-provider")
+...
+module.exports = {
+  networks: {
+    scrollSepolia: {
+      provider: () =>
+        new HDWalletProvider(process.env.PRIVATE_KEY, "https://sepolia-rpc.scroll.io/"),
+      network_id: '*',
+    },
+  }
+}
+```
+
+### Brownie
+
+要添加 Scroll Sepolia 测试网，请运行以下命令:
+
+```bash
+brownie networks add Ethereum scrollSepolia host=https://sepolia-rpc.scroll.io/ chainid=534351
+```
+
+要将其设置为默认网络，请在项目配置文件中添加以下内容：
+
+```yaml
+networks:
+  default: scrollSepolia
+```
+
+添加 Scroll Sepolia 测试网的另一种方法是创建一个 `yaml` 文件并运行命令来添加它。
+
+这是一个名为 `network-config.yaml` 的 `yaml` 文件的示例
+
+```yaml
+live:
+- name: Ethereum
+ networks:
+ - chainid: 534351
+   explorer: https://sepolia-blockscout.scroll.io/
+   host: https://sepolia-rpc.scroll.io
+   id: scrollSepolia
+   name: Scroll Sepolia Testnet
+```
+
+要将 Scroll Sepolia 测试网添加到网络列表，请运行以下命令：
+
+```bash
+brownie networks import ./network-config.yaml
+```
+
+若要在Scroll上部署，请运行以下命令。在此示例中， `token.py` 是用于部署智能合约的脚本。将其替换为脚本的名称：
+
+```bash
+brownie run token.py --network scrollSepolia
+```
+
+### ethers.js
+
+在`ethers`脚本中设置 Scroll Sepolia Testnet provider ：
+
+```jsx
+import { ethers } from "ethers"
+
+const provider = new ethers.providers.JsonRpcProvider("https://sepolia-rpc.scroll.io/")
+```
+
+### scaffold-eth
+
+要使用 Scaffold-eth 进行部署，你需要将 Hardhat 和 React 设置指向 Scroll Alpha 测试网。 Scroll Sepolia 测试网。
+
+#### 配置Hardhat
+
+在`packages/hardhat/hardhat.config.js`文件中，你需要添加网络并选择其为默认网络。
+
+```jsx
+...
+//
+// Select the network you want to deploy to here:
+//
+const defaultNetwork = "scrollSepolia";
+...
+module.exports = {
+...
+	networks: {
+...
+          scrollSepolia: {
+            url: "https://sepolia-rpc.scroll.io/",
+            accounts: {
+              mnemonic: mnemonic(),
+            },
+          },
+	}
+...
+}
+```
+
+确保为部署钱包提供了资金！运行 `yarn generate` 以创建钱包并 `yarn account` 检查其资金。资金到位后，运行 `yarn deploy --network scrollSepolia` 以在Scroll Sepolia测试网上部署。
+
+<Aside type="danger" title="警告">
+  在某些项目分支上，您需要禁用依赖于Etherscan的合约验证。这可以 `packages/hardhat/deploy/00_deploy_your_contract.js` 上注释掉 
+</Aside>
+
+#### 配置前端
+
+要配置你的前端，你需要添加 Scroll Sepolia Testnet 作为网络，然后选择它为默认设置。
+
+添加网络，请修改 `packages/react-app/src/constants.js` .
+
+```jsx
+...
+export const NETWORKS = {
+...
+  scrollSepolia: {
+    name: "scrollSepolia",
+    color: "#e9d0b8",
+    chainId: 534351,
+    rpcUrl: "https://sepolia-rpc.scroll.io/",
+    blockExplorer: "https://sepolia-blockscout.scroll.io",
+  },
+...
+}
+```
+
+接下来，修改 `packages/react-app/src/App.jsx`
+
+```jsx
+...
+/// 📡 What chain are your contracts deployed to?
+const initialNetwork = NETWORKS.scrollSepolia;
+...
+```

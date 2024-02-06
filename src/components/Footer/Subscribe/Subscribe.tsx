@@ -3,7 +3,7 @@ import { useState, useEffect } from "preact/hooks"
 import MailchimpSubscribe from "react-mailchimp-subscribe"
 import SubscribeSvg from "~/assets/svgs/footer/subscribe.svg?react"
 import { clsx } from "~/lib"
-import { t } from "i18next"
+import i18next, { changeLanguage, t } from "i18next"
 
 import EmailInput from "./EmailInput.tsx"
 import styles from "./Subscribe.module.css"
@@ -15,10 +15,12 @@ const isValidEmail = (email: string): boolean => {
   return emailRegex.test(email)
 }
 
-export default function Subscribe() {
+export default function Subscribe(props) {
   const [email, setEmail] = useState("")
   const [customMessage, setCustomMessage] = useState("")
   const [emailValid, setEmailValid] = useState(false)
+
+  i18next.changeLanguage(props.lang)
 
   useEffect(() => {
     setCustomMessage("")
@@ -67,7 +69,7 @@ export default function Subscribe() {
                 end={status === "success"}
               />
               {customMessage && <div className={styles.errorMessage}>{customMessage}</div>}
-              {status === "error" && <div className={styles.errorMessage}>{message}</div>}
+              {status === "error" && <div className={styles.errorMessage}>{t(message)}</div>}
             </div>
           )}
         />

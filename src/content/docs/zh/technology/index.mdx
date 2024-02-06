@@ -1,0 +1,24 @@
+---
+section: technology
+date: Last Modified
+title: "Scroll 架构"
+lang: "zh"
+permalink: "technology"
+whatsnext:
+  { "Scroll 链": "/zh/technology/chain/accounts", "跨链桥": "/zh/technology/bridge/cross-domain-messaging", "排序器": "/zh/technology/sequencer/execution-node", "zkEVM": "/zh/technology/zkevm/zkevm-overview" }
+---
+
+import ClickToZoom from "../../../../components/ClickToZoom.astro"
+import Architecture from "./_images/arch.png"
+
+<ClickToZoom src={Architecture} alt="Architecture" />
+
+如上图所示，Scroll 链由三层组成：
+
+- **结算层**: 为的 Scroll 链提供数据可用性和排序，验证有效性证明，并允许用户和去中心化应用程序在以太坊和Scroll之间发送消息和资产。我们使用以太坊作为结算层，并将跨链桥和Rollup合约部署到以太坊上。
+- **排序器**: 包含一个*执行节点*，用于执行提交到 Scroll 排序器的交易和提交给 L1 跨链桥合约的交易并生成 L2 区块，以及一个*Rollup节点*，用于批处理交易，将交易数据和区块信息发布到以太坊以获得数据可用性，并将有效性证明提交给以太坊以进行最终确认。
+- **证明层**: 由一个证明器池组成，这些证明器负责生成验证 L2 交易正确性的 zkEVM 有效性证明，以及一个协调器，将证明任务分配给证明器并将证明中继到Rollup节点以在以太坊上最终确认。
+
+文档的这一部分提供有关Scroll协议规范、跨链桥协议、排序器和 zkEVM 电路的全面信息。
+
+*在本节的剩下部分，L1 将指代以太坊，而 L2 将指代Scroll。*

@@ -166,13 +166,18 @@
     },
     "resources": {
       "title": "Resources",
+      "scrollDocsURL": "https://docs.scroll.io/",
       "blog": "Blog",
       "documentation": "Documentation",
-      "pressKit": "Press Kit"
+      "brandKit": "Brand Kit"
     },
     "followUs": {
       "title": "Follow Us"
     }
+  },
+  "pageNotFound": {
+    "title": "Page not found",
+    "text": "We're sorry, but we couldn't find the page you were looking for."
   },
   "notTranslated": {
     "notTranslated": "This page has not been translated yet."
