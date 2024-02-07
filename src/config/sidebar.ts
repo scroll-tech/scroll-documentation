@@ -181,7 +181,13 @@ export const getSidebar = () => {
     technology: [
       {
         section: t("sidebar.technology.overview"),
-        contents: [{ title: t("sidebar.technology.scrollArchitecture"), url: formatUrl("technology") }],
+        contents: [
+          { title: t("sidebar.technology.scrollArchitecture"), url: formatUrl("technology") },
+          {
+            title: t("sidebar.technology.scrollUpgrades"),
+            url: "technology/overview/scroll-upgrades",
+          },
+        ],
       },
       {
         section: t("sidebar.technology.scrollChain"),
