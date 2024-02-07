@@ -167,7 +167,9 @@ Computes the amount of L1 gas used for a transaction. Adds the overhead which re
 
 ## L1 Originated Transactions
 
-When messaging from L1 to L2, the user does not pay the L1 fee but may need to know how much L2 gas to pay. Contracts on L1 can use an L2 Gas Price Oracle deployed to the L1 to get the gas fee for a given transaction. The oracle also exposes the current l2BaseFee and estimated cross-domain message fee for a given gas limit.
+When messaging from L1 to L2, the user pays all transaction fees on L1. The user pays L1 gas fees, but because of this, doesn't need to pay Scroll an L1 Data Fee. They will need to account for L2 Execution Fees in their L1 transaction though, and will need to know how much L2 gas to pay.
+
+Contracts on L1 can use an L2 Gas Price Oracle deployed to the L1 to get the gas fee for a given transaction. The oracle also exposes the current l2BaseFee and estimated cross-domain message fee for a given gas limit.
 
 On mainnet, the `L2GasPriceOracle` is deployed at [`0x987e300fDfb06093859358522a79098848C33852`](https://etherscan.io/address/0x987e300fDfb06093859358522a79098848C33852).
 
@@ -176,7 +178,7 @@ On Sepolia, an upgraded `L1MessageQueueWithGasPriceOracle` should be used, deplo
 <Aside type="danger" title="Upgrade Notice">
 After the February 2024 Bridge Upgrade, `L1GasPriceOracle` will be deprecated in favor of `L1MessageQueueWithGasPriceOracle`, which will be available at [`0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B`](https://etherscan.io/address/0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B).
 
-The upgrade is expected to be finalized on February 19th, 2024 after a two-week timelock. Scroll Sepolia has already undergone this upgrade. Read more [here](https://scroll.io/blog/to-do-slug).
+The upgrade is expected to be finalized on February 21, 2024 after a two-week timelock. Scroll Sepolia has already undergone this upgrade. Read more [here](https://scroll.io/blog/protocol-upgrade-bridging-cost-reduction).
 
 </Aside>
 {/* TODO: Add full documentation of key methods */}

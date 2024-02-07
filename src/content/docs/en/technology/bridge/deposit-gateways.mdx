@@ -23,13 +23,6 @@ This document describes how users and developers can utilize gateways to deposit
 | `L1ERC721Gateway`        | The gateway for ERC-721 token deposits.                          |
 | `L1ERC1155Gateway`       | The gateway for ERC-1155 token deposits.                         |
 
-<Aside type="tip" title="Upgrade Notice">
-With the February 2024 Bridge Upgrade, `L1GatewayRouter` will now bypass `L1ETHGateway` when bridging ETH to improve gas efficiency.
-
-The upgrade is expected to be finalized on February 19th, 2024 after a two-week timelock. Scroll Sepolia has already undergone this upgrade. Read more [here](https://scroll.io/blog/to-do-slug).
-
-</Aside>
-
 ## Overview
 
 <ClickToZoom src={DepositWorkflow} alt="Deposit Workflow" />
@@ -65,11 +58,6 @@ Scroll treats ETH as its native token. We pre-allocate a sufficient amount of ET
    In the case of ETH deposit, the `relayMessage` function calls `L2ETHGateway.finalizeDepositETH` to transfer ETH to the recipient account on L2.
 
 6. If the user calls `depositETHAndCall` on L1, `finalizeDepositETH` in the `L2ETHGateway` contract will forward the additional data to the target L2 contract.
-
-<Aside type="tip" title="Upgrade Notice">
-With the February 2024 Bridge Upgrade, step 3 will change. `L1GatewayRouter` will now bypass `L1ETHGateway` when depositing ETH to improve gas efficiency.
-</Aside>
-
 
 ## Depositing ERC20 Tokens
 

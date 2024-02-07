@@ -21,11 +21,10 @@ The following contracts are used to initiate upgrades and execute upgrades after
 
 ### Overview
 
-To reduce bridging costs, we implemented a number of gas optimizations on our bridge and rollup contract suite. The optimization techniques used include the following:
+To reduce bridging costs, we implemented several gas optimizations on our bridge and rollup contract suite. The optimization techniques used include the following:
 
 - We will now use constants to store some companion contract addresses, instead of using storage variables. This is possible since these values should (almost) never change. With this change we can save on a few storage load operations.
 - We updated the intrinsic gas estimation in `L1MessageQueue` to use a simple upper bound instead of an exact calculation. The two results will be similar for most bridge transactions but the new implementation is significantly cheaper.
-- The gateway router contracts will now bridge ETH directly through the messenger contracts, skipping `ETHGateway`.
 - We merged two contracts `L1MessageQueue` and `L2GasPriceOracle` to save on call costs from one contract to the other.
 
 ### Timeline
@@ -34,15 +33,15 @@ To reduce bridging costs, we implemented a number of gas optimizations on our br
 - **Scroll Sepolia:**
 	- Network Upgrade: January 19, 2024
 - **Scroll Mainnet:**
-	- Upgrade Initiation: February 5, 2024
-	- Timelock Completion & Upgrade: February 19, 2024
+	- Upgrade Initiation: February 7, 2024
+	- Timelock Completion & Upgrade: February 21, 2024
 
 
 ### Technical Details
 
 #### Code Changes
 - [Bridge Cost Optimization](https://github.com/scroll-tech/scroll/pull/1011)
-- [Audit Fixes](https://github.com/scroll-tech/scroll/pulls?q=is%3Apr+created%3A%3E2024-01-27+created%3A%3C2024-02-19+state%3Aopen+OZ+)
+- [Audit Fixes](https://github.com/scroll-tech/scroll/pulls?q=OZ+is%3Apr+created%3A2024-01-27..2024-02-10)
 - [Previously deployed version](https://github.com/scroll-tech/scroll/tree/ff380141a8cbcc214dc65f17ffa44faf4be646b6) (commit `ff380141a8cbcc214dc65f17ffa44faf4be646b6`)
 - [Version deployed](https://github.com/scroll-tech/scroll/tree/) (commit `TBA`)
 {/* TODO: add commit and link for deployed version */}
@@ -62,14 +61,12 @@ To reduce bridging costs, we implemented a number of gas optimizations on our br
 - In `ScrollChain`, change `messageQueue` and `verifier` to `immutable`.
 - In `L1ScrollMessenger`, change `counterpart`, `rollup`, and `messageQueue` to `immutable`.
 - In all token gateways, change `counterpart`, `router`, and `messenger` to `immutable`.
-- In `L1GatewayRouter`, skip `L1ETHGateway` and bridge directly through `L1ScrollMessenger` for ETH deposits.
 - Merge `L1MessageQueue` and `L2GasPriceOracle` into a single contract `L1MessageQueueWithGasPriceOracle` (deployed on the same address as the previous `L1MessageQueue`). In this contract we also change `messenger` and `scrollChain` to `immutable`, and simplify `calculateIntrinsicGasFee`.
 
 **Changes to L2 contracts:**
 
 - In `L2ScrollMessenger`, change `counterpart` to `immutable`.
 - In all token gateways, change `counterpart`, `router`, and `messenger` to `immutable`.
-- In `L2GatewayRouter`, skip `L2ETHGateway` and bridge directly through `L2ScrollMessenger` for ETH withdrawals.
 
 **Contracts affected:**
 

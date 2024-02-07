@@ -23,13 +23,6 @@ This document describes how users and developers can utilize gateways to withdra
 | `L2ERC721Gateway`        | The gateway for ERC-721 token withdrawals.                          |
 | `L2ERC1155Gateway`       | The gateway for ERC-1155 token withdrawals.                         |
 
-<Aside type="tip" title="Upgrade Notice">
-With the February 2024 Bridge Upgrade, `L2GatewayRouter` will now bypass `L2ETHGateway` when bridging ETH to improve gas efficiency.
-
-The upgrade is expected to be finalized on February 19th, 2024 after a two-week timelock. Scroll Sepolia has already undergone this upgrade. Read more [here](https://scroll.io/blog/to-do-slug).
-
-</Aside>
-
 ## Overview
 
 <ClickToZoom src={WithdrawWorkflow} alt="Withdraw Workflow" />
@@ -61,10 +54,6 @@ The withdrawal of ETH token works as follows.
 3. The withdrawn ETH is again locked in the `L2ScrollMessenger` contract. `L2ScrollMessenger` appends the message to the message queue in the `L2MessageQueue` contract.
 4. The withdrawal execution transaction on L1 calls the `L1ScrollMessenger.relayMessageWithProof` function to finalize the withdrawal. In the case of ETH withdrawal, the `relayMessageWithProof` function calls `L1ETHGateway.finalizeWithdrawETH` to send back ETH to the recipient account on L1.
 5. If the user calls `withdrawETHAndCall` on L2, the `finalizeWithdrawETH` in the `L1ETHGateway` contract will forward the additional data to the target L1 contract.
-
-<Aside type="tip" title="Upgrade Notice">
-With the February 2024 Bridge Upgrade, step 2 will change. `L2GatewayRouter` will now bypass `L2ETHGateway` when depositing ETH to improve gas efficiency.
-</Aside>
 
 ## Withdrawing ERC20 Tokens
 
