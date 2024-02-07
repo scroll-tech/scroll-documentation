@@ -1,0 +1,156 @@
+---
+section: developers
+date: Last Modified
+title: "ERC1155 代币跨链桥"
+lang: "zh"
+permalink: "developers/l1-and-l2-bridging/erc1155-token-bridge"
+whatsnext: { "The Scroll Messenger": "/zh/developers/l1-and-l2-bridging/the-scroll-messenger/" }
+excerpt: "ERC1155 bridging from L1 to L2 is done via the L1ERC1155Gateway."
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+## 从 L1 存款 ERC1155 代币
+
+从 L1 到 L2 的ERC1155桥接是通过 `L1ERC1155Gateway` 合约完成的。与ERC721桥接类似，我们不使用路由器，而是直接使用  `Gateway` 合约上的 `depositERC1155` 方法。
+
+<Aside type="tip" title="">
+  **`depositERC1155`** 是付款交易， 发送的ETH金额将用于支付L2费用。如果金额不够，交易将不会发送。所有多余的ETH将被发还给发件人。 `0.00001 ETH` 应该足以处理代币存款。
+</Aside>
+
+### 在 L2 上创建 ERC1155 代币
+
+与ERC721桥接类似，为了桥接ERC1155代币，必须分别在L1和L2上的 `L1ERC1155Gateway` 和 `L2ERC1155Gateway` 发布和映射与 `IScrollERC1155` 标准兼容的合约。该合约必须授予L2上的 Gateway 合约在存入代币时铸造，在代币提取时销毁的权限。
+
+以下是与 L2 兼容的 `L2ERC1155Gateway` ERC115 代币所需的 `IScrollERC1155` 接口
+
+```solidity
+interface IScrollERC1155 {
+  /// @notice Return the address of Gateway the token belongs to.
+  function gateway() external view returns (address);
+
+  /// @notice Return the address of counterpart token.
+  function counterpart() external view returns (address);
+
+  /// @notice Mint some token to recipient's account.
+  /// @dev Gateway Utilities, only gateway contract can call
+  /// @param _to The address of recipient.
+  /// @param _tokenId The token id to mint.
+  /// @param _amount The amount of token to mint.
+  /// @param _data The data passed to recipient
+  function mint(address _to, uint256 _tokenId, uint256 _amount, bytes memory _data) external;
+
+  /// @notice Burn some token from account.
+  /// @dev Gateway Utilities, only gateway contract can call
+  /// @param _from The address of account to burn token.
+  /// @param _tokenId The token id to burn.
+  /// @param _amount The amount of token to burn.
+  function burn(address _from, uint256 _tokenId, uint256 _amount) external;
+
+  /// @notice Batch mint some token to recipient's account.
+  /// @dev Gateway Utilities, only gateway contract can call
+  /// @param _to The address of recipient.
+  /// @param _tokenIds The token id to mint.
+  /// @param _amounts The list of corresponding amount of token to mint.
+  /// @param _data The data passed to recipient
+  function batchMint(
+    address _to,
+    uint256[] calldata _tokenIds,
+    uint256[] calldata _amounts,
+    bytes calldata _data
+  ) external;
+
+  /// @notice Batch burn some token from account.
+  /// @dev Gateway Utilities, only gateway contract can call
+  /// @param _from The address of account to burn token.
+  /// @param _tokenIds The list of token ids to burn.
+  /// @param _amounts The list of corresponding amount of token to burn.
+  function batchBurn(address _from, uint256[] calldata _tokenIds, uint256[] calldata _amounts) external;
+}
+```
+
+### 将ERC1155代币添加到Scroll跨链桥
+
+所有资产都可以通过任何开发者部署的Gateway合约安全且无需许可地桥接。但是，Scroll还管理着 ERC1155 Gateway合约，欢迎社区创建的所有 NFTs。成为 Scroll 托管网关的一部分意味着无需部署 Gateway 合约，代币将显示在 Scroll 前端中。要成为Scroll Gateway的一部分，您必须联系 Scroll 团队，将 NFT 添加到 L1 和 L2 Gateway 合约中。为此，请按照[代币列表](https://github.com/scroll-tech/token-list) 仓库内的说明将新代币添加到Scroll官方前端。
+
+## 从 L2 提取 ERC1155 代币
+
+`L2ERC1155Gateway` 合约用于将代币从 L2 发送到 L1。在桥接之前，合约必须得到代币 `L2ERC1155Gateway` 合约的批准。完成此操作后， `withdrawERC1155` 可以调用以执行资产桥接。
+
+<Aside type="tip" title="">
+  **`withdrawERC1155`** 是付款交易，发送的ETH金额将用于支付L1费用。如果金额不够，交易将不会发送。所有多余的 eth 将被发送回发件人。交易费用取决于L1活动程度，`0.005 ETH` 应该足以处理代币提取。
+</Aside>
+
+<Aside type="caution" title="">
+  从L2发送交易时**确保其不会在 L1 上回退**。如果交易在L1上回退，将没有办法恢复跨链的NFT。当交易发送时，所有的资产在 Scroll 上被销毁，并且无法再次铸造它们
+</Aside>
+
+## L1ERC1155Gateway API
+
+请访问 [npm 库](https://www.npmjs.com/package/@scroll-tech/contracts?activeTab=code) 来获取完整的 Scroll 合约 API 文档。
+
+### depositERC1155
+
+```solidity
+function depositERC1155(
+  address _token,
+  address _to,
+  uint256 _tokenId,
+  uint256 _amount,
+  uint256 _gasLimit
+) external payable;
+```
+
+将 L1 的ERC1155代币存入 L2 上的收款人账户。
+
+| 参数 | 描述                                  |
+| --------- | ------------------------------------------------- |
+| token     | L1 上ERC1155代币合约的地址     |
+| to        | L2 上收款人账户的地址        |
+| tokenId   | 要存入的 NFT ID                           |
+| amount    | 要存入的代币数量                 |
+| gasLimit  | 在L2上完成存款所需的gas上限，未使用的部分将会退回 |
+
+### updateTokenMapping
+
+```solidity
+function updateTokenMapping(address _l1Token, address _l2Token) external;
+```
+
+更新将ERC1155代币合约从 L1 到 L2 的映射。
+
+| 参数 | 描述                                       |
+| --------- | ------------------------------------------------- |
+| \_l1Token | L1 中ERC1155代币的地址。       |
+| \_l2Token | L2 中对应ERC1155代币的地址 |
+
+## L2ERC1155Gateway API
+
+### withdrawERC1155
+
+```solidity
+function withdrawERC1155(address token, address to, uint256 tokenId, uint256 amount, uint256 gasLimit) external payable;
+```
+
+将ERC1155代币从 L2 发送到 L1 上的收款人账户。
+
+| 参数 | 描述                                                              |
+| --------- | ------------------------------------------------------------------------ |
+| token     | L2上ERC1155代币合约的地址                             |
+| to        | L1 上收款人账户的地址                               |
+| tokenId   | 要提取的 NFT ID                                                 |
+| amount    | 要提取的代币数量                                      |
+| gasLimit  | 未使用，但出于潜在的向前兼容性考虑而包括在内 |
+
+### updateTokenMapping
+
+```solidity
+function updateTokenMapping(address _l1Token, address _l2Token) external;
+```
+
+更新将ERC1155代币合约从 L2 到 L1 的映射。
+
+| Parameter | Description                                       |
+| --------- | ------------------------------------------------- |
+| \_l1Token | L1 中ERC1155代币的地址            |
+| \_l2Token | L2 中对应ERC1155代币的地址 |
