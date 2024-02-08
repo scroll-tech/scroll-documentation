@@ -149,6 +149,10 @@ export const getSidebar = () => {
             title: t("sidebar.developers.bridgingERC20TokenThroughCustomGateway"),
             url: formatUrl("developers/guides/bridge-erc20-through-the-custom-gateway"),
           },
+          {
+            title: t("sidebar.developers.runningNode"),
+            url: formatUrl("developers/guides/running-a-scroll-node"),
+          },
           // {
           //   title: t("sidebar.developers.bridgingERC721NftThroughCustomGateway"),
           //   url: formatUrl("developers/guides/"),
