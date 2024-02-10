@@ -1,6 +1,6 @@
 ---
 section: gettingStarted
-date: 01.27.2024
+date: Last Modified
 title: "Transfer Tokens"
 lang: "en"
 permalink: "user-guide/transfer-tokens/"
