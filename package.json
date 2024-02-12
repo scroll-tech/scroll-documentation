@@ -54,7 +54,7 @@
   },
   "devDependencies": {
     "@astrojs/mdx": "^0.19.7",
-    "@astrojs/preact": "^1.2.0",
+    "@astrojs/preact": "^3.0.1",
     "@astrojs/react": "^2.2.0",
     "@astrojs/sitemap": "^1.0.0",
     "@nomicfoundation/hardhat-toolbox": "^2.0.0",

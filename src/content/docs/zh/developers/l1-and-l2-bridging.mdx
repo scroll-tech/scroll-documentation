@@ -1,0 +1,35 @@
+---
+section: developers
+date: Last Modified
+title: "L1 和 L2 跨链"
+lang: "zh"
+permalink: "developers/l1-and-l2-bridging"
+whatsnext: { "ETH 和 ERC20 代币跨链桥": "/zh/developers/l1-and-l2-bridging/eth-and-erc20-token-bridge/" }
+excerpt: "Scroll 跨链桥架构概览"
+---
+
+import ClickToZoom from "../../../../components/ClickToZoom.astro"
+import L1GatewayWHITE from "../../../../assets/images/developers/L1GatewayWHITE.png"
+import withdrawWHITE from "../../../../assets/images/developers/withdrawWHITE.png"
+
+Scroll跨链桥可以在 L1 和 L2 之间传输 ETH、ERC20 代币、NFT 和任意消息。它充当 L1 和 L2 间移动各种数字资产的安全机制。
+
+为了方便ETH和ERC20代币的转移，Scroll跨链桥利用 Gateway Router合约，其确保这些资产在L1和L2之间顺利通过，允许用户无缝转移其基于以太坊的代币。
+
+ERC721 和 ERC1155 Gateway合约支持在两个网络之间转移非同质化资产，允许用户在 L1 和 L2 之间移动他们的 NFT。
+
+除了代币转移之外，Scroll Messenger合约还支持跨链合约交互。这意味着一个网络上的合约可以通过 Scroll Messenger 合约与另一个网络上的合约进行交互。此功能扩展了去中心化应用程序和智能合约在两个网络中无缝运行的可能性。
+
+## L1 Gateway 架构
+
+<ClickToZoom src={L1GatewayWHITE} />
+
+从用户到Scroll跨链桥有许多入口点。这将取决于你想做什么以及你想怎么做。如果要发送 ETH 或 ERC20 代币，则应使用 GatewayRouter .如果要发送 NFT，则应使用 L1ERC721Gateway 或 L1ERC1155Gateway .如果要发送任意数据，则应使用 L1ScrollMessenger .所有Gateway转账都使用Scroll Messenger 跨链发送资产，其工作是将交易附加到消息队列以纳入 L2 。
+
+## L2 Gateway 架构
+
+<ClickToZoom src={withdrawWHITE} />
+
+至于无需许可调用的入口点，L2 Gateway架构与L1非常相似。不同之处在于，当从 L2 发送消息时，调用 `appendMessage` 函数会将消息存储在仅支持增加的默克尔二叉树 `L2MessageQueue`（又名提款树）中。当一条新消息被发送到`L2MessageQueue`时，中继器将检测到它并将其存储在数据库中。当区块被最终确认时，它将生成新的默克尔路径的证明，并将其传递给L1geth节点执行 `L1ScrollMessenger `。所有最终的提款根都将存储在rollup合同中，以便我们可以验证关于它们的证明。在Scroll下一个版本中，将不需要中继器，因为所有用户都可以在L1上完成交易。
+
+在接下来的部分中，我们将探讨跨链桥的技术方面，包括其功能所需的智能合约API。开发者指南部分提供了带有代码示例的详细指南，以帮助开发者和用户理解和实现这些功能。

@@ -1,0 +1,41 @@
+---
+section: gettingStarted
+date: Last Modified
+title: "常见错误"
+lang: "zh"
+permalink: "user-guide/common-errors/"
+excerpt: "Seeing an error when trying to interact with Scroll Sepolia Testnet? Here are some common configuration errors and how to quickly fix them."
+---
+
+## 在小狐狸钱包中发送交易时使用不正确的nonce
+
+当存储在小狐狸钱包中的本地nonce与Scroll 测试网节点中的nonce不同时，您会遇到此错误。这可能是因为最近有一个待处理的交易。
+
+要解决此问题，您需要在小狐狸钱包中重置您的帐户以使用Scroll Sepolia 测试网。重置帐户的步骤如下
+
+1. 在浏览器中打开**小狐狸钱包**扩展插件
+2. 选择顶部区域中的**Scroll Sepolia测试网**
+3. 点击右上角的**账户图标**
+4. 选择 **设置**
+5. 前往 **高级**
+6. 点击 **重置账户**
+
+在小狐狸钱包账户重置期间，您不会丢失任何资产。
+
+:::caution[提醒]
+删除和重新添加网络不足以解决此问题 - 您必须重置您的帐户。
+:::
+
+## 确认跨链桥/Swap交易时没有任何反应
+
+如果没有出现错误或控制台日志，这可能是由于nonce问题，请按照上述[#在小狐狸钱包中发送交易时使用不正确的nonce](#incorrect-nonce-error-when-sending-a-transaction-in-metamask)中所述，重置您的小狐狸钱包帐户。
+
+## 区块链浏览器显示 "内部服务器错误"
+
+使用隐身窗口，或打开浏览器开发者控制台并移除 Cookie（或所有 `_explorer_key` Cookie）。[请参阅本指南](https://www.contentstack.com/docs/developers/how-to-guides/clear-caches-and-cookies-in-different-browsers/)，了解如何删除 Cookie。
+
+## 在小狐狸钱包中发送最大数量的ETH导致“失败”错误
+
+使用小狐狸钱包发送ETH时，如果您尝试发送“最大”金额，将导致“失败”错误。这是因为小狐狸钱包没有考虑Rollup在常规Gas费外的额外“L1 费用”，并且不足以支付交易Gas所需的费用。
+
+要解决此问题，请手动将ETH的数量降低到比建议的要小一点，交易就可以完成。

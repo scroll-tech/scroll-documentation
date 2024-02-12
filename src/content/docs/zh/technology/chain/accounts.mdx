@@ -1,0 +1,29 @@
+---
+section: technology
+date: Last Modified
+title: "账户和状态"
+lang: "zh"
+permalink: "technology/chain/accounts-and-state"
+whatsnext: { "交易": "/zh/technology/chain/transactions/" }
+---
+
+## 账户
+
+与以太坊相同，Scroll有两种账户类型：外部所有者账户（EOA）和存储智能合约和额外存储的合约账户。
+
+Scroll 将合约字节码的其他信息存储在账户中，方便zkEVM电路更高效地证明状态转换。
+
+Scroll 的帐户包含以下字段：
+
+- `nonce`: 已发送交易数量的计数器
+- `balance`: 账户余额中的 `ETH` 代币余额（单位为wei）
+- `storageRoot`: 存储树的根哈希。由于 Scroll 使用 [zkTrie](/technology/sequencer/zktrie) 树进行存储，因此 `storageRoot` 将波塞冬哈希（Poseidon hash）摘要存储在 256 位整数中。
+- `codeHash`: 合约字节码的 Keccak 哈希摘要。
+- `PoseidonCodeHash` (**新字段**): 256 位整数的合约字节码的波塞冬哈希摘要。
+- `CodeSize` (**新字段**): 合约字节码中的字节数。
+
+## 状态
+
+区块链的状态是帐户数据的集合。状态树将帐户数据及其相应的地址编码为[默克尔树](https://en.wikipedia.org/wiki/Merkle_tree)数据结构。状态树的根或区块链的状态是树中包含的所有帐户数据的加密摘要。
+
+以太坊使用一种名为[Patricia Merkle Trie](https://ethereum.org/en/developers/docs/data-structures-and-encoding/patricia-merkle-trie/) 的数据结构，用于状态树和存储树中存储智能合约中的键值条目。在 Scroll 中，我们将 Patricia Merkle Trie 替换为一种对 zk 更友好的数据结构，称为 zkTrie，用于状态树和存储树。从更高的视角上，zkTrie数据结构是一个稀疏的二元默克尔树，使用zk友好的哈希函数 — [Poseidon哈希](https://eprint.iacr.org/2019/458.pdf)。[zkTrie](/technology/sequencer/zktrie) 文档描述了有关此数据结构的更多详细信息。
