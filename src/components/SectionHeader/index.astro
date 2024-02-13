@@ -2,16 +2,34 @@
 interface Props {
   title: string
   content: string
+  url?: string
+  targetName?: string
 }
-const { title, content } = Astro.props as Props
+const { title, content, url, targetName } = Astro.props as Props
 ---
 
-<>
-  <p class="title">{title}</p>
-  <p class="content">{content}</p>
-</>
+<div class="box">
+  <div>
+    <p class="title">{title}</p>
+    <p class="content">{content}</p>
+  </div>
+  {
+    targetName && (
+      <div class="remix-callout">
+        <a href={url}>{targetName}</a>
+      </div>
+    )
+  }
+</div>
 
 <style>
+  .box {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+    gap: 1rem;
+  }
   p {
     margin-bottom: 0;
   }
@@ -27,6 +45,10 @@ const { title, content } = Astro.props as Props
   }
 
   @media screen and (max-width: 600px) {
+    .box {
+      flex-direction: column;
+      align-items: flex-start;
+    }
     .title {
       font-size: 32px;
       line-height: 34px;

@@ -1,0 +1,129 @@
+---
+import LinkSvg from "~/assets/svgs/home/home-link.svg?raw"
+export type Props = {
+  title: string
+  avatar: string
+  author: string
+  date: string
+  publishedTo: string
+  url: string
+  category?: string
+}
+const { title, avatar, author, date, publishedTo, url, category } = Astro.props as Props
+---
+
+<a class="docs-item" href={url} data-category={category}>
+  <div class="docs-item-title">
+    <span class="link-icon inline-block w-[1.5rem] h-[1.5rem] text-black dark:text-white">
+      <Fragment set:html={LinkSvg} />
+    </span>
+    {title}
+  </div>
+  <div class="docs-info-box">
+    <div class="left-side">
+      <img class="author-avator" src={avatar} alt={title} />
+      <div>
+        <div class="author">{author}</div>
+        <div>{date}</div>
+      </div>
+    </div>
+    <div class="right-side">
+      Published to <br />
+      {publishedTo}
+    </div>
+  </div>
+</a>
+
+<style>
+  .docs-item {
+    padding: 23px 30px 30px 30px;
+    width: 100%;
+    max-width: 430px;
+    height: 182px;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+  }
+
+  .docs-item:hover {
+    /* transform: scale(1.01); */
+    @apply bg-normal dark:bg-dark-highlight;
+  }
+
+  .docs-item-title {
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 30px;
+    letter-spacing: 0.22px;
+    width: 100%;
+    @apply text-black dark:text-white;
+  }
+  .docs-info-box {
+    display: flex;
+    justify-content: space-between;
+    color: #756a67;
+    text-align: right;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px; /* 125% */
+    letter-spacing: 0.16px;
+    width: 100%;
+  }
+
+  .left-side {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  .author-avator {
+    width: 36px;
+    height: 36px;
+    margin-right: 12px;
+    border-radius: 50%;
+  }
+  .author {
+    @apply text-black dark:text-white;
+  }
+
+  .link-icon {
+    display: inline-flex;
+    margin-left: 33px;
+    margin-top: 10px;
+    float: right;
+  }
+
+  .link-icon :global(svg) {
+    width: 15px;
+    height: 15px;
+    font-size: 20px;
+  }
+
+  @media screen and (max-width: 50em) {
+    .docs-item {
+      padding: 12px 16px 16px 16px;
+    }
+    .docs-item {
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      max-width: 360px;
+      margin: 0 auto;
+    }
+    .docs-item-title {
+      font-size: 20px;
+      line-height: normal;
+      margin-top: 13px;
+      margin-bottom: 8px;
+    }
+    .docs-info-box {
+      font-size: 14px;
+    }
+  }
+</style>

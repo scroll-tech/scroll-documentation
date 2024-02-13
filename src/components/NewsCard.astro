@@ -1,0 +1,80 @@
+---
+import LinkSvg from "~/assets/svgs/home/home-link.svg?raw"
+export type Props = {
+  cover: string
+  title: string
+  domain: string
+  link: string
+}
+const { cover, title, domain, link } = Astro.props as Props
+
+/**
+ * This component adds the classNames required by the scripts/click-to-zoom.ts script.
+ */
+---
+
+<div class="news-item" onclick={`window.location.href = "${link}"`}>
+  <img class="news-item-cover" src={cover} />
+  <p class="news-item-title">{title}</p>
+  <a class="news-item-link" href={link}>
+    {domain}
+    <span class="link-icon">
+      <Fragment set:html={LinkSvg} />
+    </span>
+  </a>
+</div>
+
+<style>
+  .news-item {
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+  }
+
+  .news-item:hover {
+    transform: scale(1.01);
+  }
+
+  .news-item-cover {
+    width: 100%;
+  }
+
+  .news-item-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-top: 18px;
+    margin-bottom: 20px;
+  }
+  .news-item-link {
+    font-size: 20px;
+    @apply text-black dark:text-white;
+  }
+
+  .link-icon {
+    display: inline-flex;
+
+    margin-left: 2px;
+  }
+
+  .link-icon :global(svg) {
+    width: 11px;
+    height: 11px;
+  }
+
+  @media screen and (max-width: 50em) {
+    .news-item {
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      max-width: 360px;
+      margin: 0 auto;
+    }
+    .news-item-title {
+      font-size: 20px;
+      line-height: normal;
+      margin-top: 13px;
+      margin-bottom: 8px;
+    }
+    .news-item-link {
+    }
+  }
+</style>

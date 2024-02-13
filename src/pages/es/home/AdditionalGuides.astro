@@ -1,0 +1,157 @@
+---
+import DocsCard from "~/components/DocsCard.astro"
+import SectionHeader from "~/components/SectionHeader/index.astro"
+
+const docsList = {
+  featured: [
+    {
+      title: "How to Earn on Aave from Solidity",
+      avatar: "",
+      author: "Filosofia Codigo",
+      date: "Oct 4th",
+      publish: "docsListFilosofía Código EN",
+      link: "",
+    },
+    {
+      title: "5 Ways to Deploy Your Smart Contract",
+      avatar: "",
+      author: "Filosofia Codigo",
+      date: "Oct 4th",
+      publish: "docsListFilosofía Código EN",
+      link: "",
+    },
+    {
+      title: "Trustless Attestation",
+      avatar: "",
+      author: "Filosofia Codigo",
+      date: "Oct 4th",
+      publish: "docsListFilosofía Código EN",
+      link: "",
+    },
+    {
+      title: "Additional Guide With Max Topic Line Can Go Lorem Ipsum ",
+      avatar: "",
+      author: "Filosofia Codigo",
+      date: "Oct 4th",
+      publish: "docsListFilosofía Código EN",
+      link: "",
+    },
+  ],
+  latest: [
+    {
+      title: "How to Earn on Aave from Solidity",
+      avatar: "",
+      author: "Filosofia Codigo",
+      date: "Oct 4th",
+      publish: "docsListFilosofía Código EN",
+      link: "",
+    },
+    {
+      title: "5 Ways to Deploy Your Smart Contract",
+      avatar: "",
+      author: "Filosofia Codigo",
+      date: "Oct 4th",
+      publish: "docsListFilosofía Código EN",
+      link: "",
+    },
+  ],
+}
+---
+
+<div class="guide">
+  <SectionHeader
+    title="Beyond the docs"
+    targetName="Explore guides"
+    url="/getting-started/additional-guides"
+    content="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ut urna iaculis quam mollis consequat."
+  />
+
+  <div class="docs">
+    <div>
+      <p class="category">Featured</p>
+      <div class="featured-list">
+        {
+          docsList.featured.map(({ title, avatar, author, date, publish, url }) => (
+            <DocsCard title={title} avatar={avatar} author={author} date={date} publishedTo={publish} url={url} />
+          ))
+        }
+      </div>
+    </div>
+    <hr class="bg-neutral-100 mt-[100px] mx-[20px] opacity-100 dark:opacity-50" />
+    <div>
+      <p class="category">Latest</p>
+      <div class="latest-list">
+        {
+          docsList.latest.map(({ title, avatar, author, date, publish, url }) => (
+            <DocsCard title={title} avatar={avatar} author={author} date={date} publishedTo={publish} url={url} />
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .guide {
+    margin-top: 120px;
+  }
+
+  .category {
+    font-size: 26px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 50px;
+    margin-top: 24px;
+    @apply text-black dark:text-white;
+  }
+
+  .featured-list,
+  .latest-list {
+    display: grid;
+    gap: 20px;
+  }
+
+  .featured-list {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .docs {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 100px;
+  }
+
+  .docs :global(.docs-item) {
+    background: #fff;
+  }
+
+  :global(.dark .docs .docs-item) {
+    @apply bg-dark-normal;
+  }
+
+  @media screen and (max-width: 1300px) {
+    .docs {
+      flex-direction: column;
+    }
+    .docs :global(hr) {
+      margin-top: 50px;
+    }
+    .latest-list {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media screen and (max-width: 50em) {
+    .guide {
+      margin-top: 106px;
+    }
+    .docs {
+      flex-direction: column;
+      align-items: center;
+    }
+    .featured-list,
+    .latest-list {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

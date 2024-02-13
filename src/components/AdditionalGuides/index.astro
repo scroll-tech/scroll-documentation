@@ -1,0 +1,111 @@
+---
+import guides from "./guides.json"
+// import DocsCard from "../../components/DocsCard.astro"
+import DocsCard from "~/components/DocsCard.astro"
+const categories = ["All", ...new Set(guides.map((guide) => guide.category))]
+---
+
+<div>
+  <ul class="category-picker">
+    {
+      categories.map((category) => (
+        <li class={`item ${category === "All" ? "active" : ""}`} data-category={category} onclick="filterGuides(event)">
+          {category}
+        </li>
+      ))
+    }
+  </ul>
+  <div class="guides-list" id="guides-list">
+    {
+      guides.map(({ title, avatar, author, date, publishedTo, url, category }) => (
+        <DocsCard
+          title={title}
+          avatar={avatar}
+          author={author}
+          date={date}
+          publishedTo={publishedTo}
+          url={url}
+          category={category}
+        />
+      ))
+    }
+  </div>
+</div>
+
+<script type="module">
+  window.filterGuides = function (event) {
+    const selectedCategory = event.target.getAttribute("data-category")
+    const guidesList = document.getElementById("guides-list")
+    const guideItems = Array.from(guidesList.children)
+
+    document.querySelectorAll(".category-picker .item").forEach((item) => {
+      item.classList.remove("active")
+    })
+    event.target.classList.add("active")
+
+    guideItems.forEach((guide) => {
+      const category = guide.getAttribute("data-category")
+      if (selectedCategory === "All" || category === selectedCategory) {
+        guide.style.display = ""
+      } else {
+        guide.style.display = "none"
+      }
+    })
+  }
+</script>
+
+<style>
+  .category-picker {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .category-picker .item {
+    display: inline-flex;
+    height: 44px;
+    padding: 0px 30px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    border-radius: 100px;
+    margin-top: 0;
+    cursor: pointer;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    border-width: 1px;
+    border-style: solid;
+    @apply border-black dark:border-white;
+  }
+  .category-picker .item.active {
+    @apply text-white bg-black dark:text-black dark:bg-white;
+  }
+  .guides-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-top: 30px;
+  }
+
+  .guides-list :global(.docs-item) {
+    background: rgba(237, 237, 237, 0.6);
+  }
+
+  :global(.dark .guides-list .docs-item) {
+    @apply bg-dark-normal;
+  }
+
+  @media screen and (max-width: 1300px) {
+    .guides-list {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media screen and (max-width: 50em) {
+    .category-picker .item {
+      height: 36px;
+      padding: 0px 20px;
+      margin-right: 12px;
+      margin-bottom: 12px;
+    }
+  }
+</style>
