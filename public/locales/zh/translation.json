@@ -179,6 +179,16 @@
     "title": "页面未找到",
     "text": "很抱歉，我们找不到您正在寻找的页面"
   },
+  "rpcTable": {
+    "rpcServerAddress": "RPC 服务地址",
+    "height": "区块高度",
+    "latency": "延迟",
+    "score": "评分",
+    "privacy": "隐私",
+    "addNetwork": "添加网络",
+    "connect": "连接钱包",
+    "sorting": "自动更新"
+  },
   "notTranslated": {
     "notTranslated": "此页面尚未翻译。"
   }

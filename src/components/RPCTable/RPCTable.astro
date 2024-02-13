@@ -1,0 +1,86 @@
+---
+import { RPCTable } from "ethereum-rpc-table"
+import "ethereum-rpc-table/lib/default.css"
+import i18next, { t } from "i18next"
+import "./RPCTable.css"
+
+let { chainData, copy, title } = Astro.props
+
+title = title || "Scroll Mainnet RPC URL List"
+
+chainData = chainData || {
+  name: "Scroll",
+  chain: "ETH",
+  status: "active",
+  rpc: [
+    {
+      url: "https://rpc.scroll.io",
+    },
+    {
+      url: "https://rpc-scroll.icecreamswap.com",
+    },
+    {
+      url: "https://scroll.blockpi.network/v1/rpc/public",
+      tracking: "limited",
+      trackingDetails:
+        "We do not collect request data or request origin. We only temporarily record the request method names and IP addresses for 7 days to ensure our service functionality such as load balancing and DDoS protection. All the data is automatically deleted after 7 days and we do not store any user information for longer periods of time. https://blockpi.io/privacy-policy",
+    },
+    {
+      url: "https://1rpc.io/scroll",
+      tracking: "none",
+      trackingDetails:
+        "With the exception of data that will be public on chain, all the other metadata / data should remain private to users and other parties should not be able to access or collect it. 1RPC uses many different techniques to prevent the unnecessary collection of user privacy, which prevents tracking from RPC providers. https://docs.1rpc.io/technology/zero-tracking",
+    },
+    {
+      url: "https://rpc.ankr.com/scroll",
+    },
+    {
+      url: "https://scroll-mainnet.chainstacklabs.com",
+    },
+  ],
+  faucets: [],
+  nativeCurrency: {
+    name: "Ether",
+    symbol: "ETH",
+    decimals: 18,
+  },
+  infoURL: "https://scroll.io",
+  shortName: "scr",
+  chainId: 534352,
+  networkId: 534352,
+  explorers: [
+    {
+      name: "Scrollscan",
+      url: "https://scrollscan.com",
+      standard: "EIP3091",
+    },
+    {
+      name: "Blockscout",
+      url: "https://blockscout.scroll.io",
+      standard: "EIP3091",
+    },
+  ],
+  parent: {
+    type: "L2",
+    chain: "eip155-1",
+    bridges: [
+      {
+        url: "https://scroll.io/bridge",
+      },
+    ],
+  },
+}
+
+copy = copy || {
+  "RPC Server Address": t("rpcTable.rpcServerAddress"),
+  Height: t("rpcTable.height"),
+  Latency: t("rpcTable.latency"),
+  Score: t("rpcTable.score"),
+  Privacy: t("rpcTable.privacy"),
+  "Add Network": t("rpcTable.addNetwork"),
+  Connect: t("rpcTable.connect"),
+  Sorting: t("rpcTable.sorting"),
+}
+---
+
+<RPCTable client:only="preact" title={title} rpcData={chainData} copy={copy} />
