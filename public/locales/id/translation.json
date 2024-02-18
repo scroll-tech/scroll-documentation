@@ -1,0 +1,195 @@
+{
+  "rightSidebar": {
+    "onThisPage": "Di Halaman Ini",
+    "more": "Lebih Banyak",
+    "editThisPage": "Edit halaman ini",
+    "joinOurCommunity": "Bergabung dengan komunitas kami",
+    "feedback": "Umpan Balik"
+  },
+  "ui": {
+    "whatsNext": "Apa Selanjutnya",
+    "readMore": "Baca Lebih Lanjut"
+  },
+  "landing": {
+    "test": "uji",
+    "search": {
+      "title": "Selamat datang di Dokumentasi Scroll",
+      "placeholder": "Cari dokumentasi Scroll..."
+    },
+    "newUserCTA": {
+      "title": "Baru menggunakan Scroll dan ZK Rollups?",
+      "description": "Pelajari dasarnya dalam Panduan Memulai."
+    },
+    "resourcesCTA": {
+      "title": "Sumber daya berguna"
+    },
+    "nodesCTA": {
+      "title": "Perlu menjalankan Node Scroll Anda sendiri?",
+      "description": "Lihat Panduan Operator Node untuk mempelajari cara memulai dan memelihara Node Scroll.",
+      "buttonText": "Panduan Operator Node"
+    },
+    "TutorialsCTA": {
+      "title": "Tonton tutorial",
+      "description": "Pelajari lebih lanjut tentang teknologi yang kami bangun. Kami terus mengunggah video baru ke saluran YouTube kami.",
+      "buttonText": "Tonton tutorial"
+    },
+    "LinksCTA": {
+      "card1": {
+        "title": "Butuh dukungan integrasi?",
+        "description": "Bicaralah dengan pakar setelah kami TODO: sebuah url"
+      },
+      "card2": {
+        "title": "Discord",
+        "description": "Bergabung dengan komunitas"
+      },
+      "card3": {
+        "title": "TODO: Discourse",
+        "description": "Benar, bergabung dengan komunitas"
+      }
+    },
+    "NewsletterCTA": {
+      "title": "Tetap terkini dengan berita terbaru Pengembang Scroll",
+      "text": "Pembaruan roadmap, acara virtual dan live, peluang ekosistem, dan lainnya",
+      "placeholder": "alamat email Anda di sini",
+      "thankYouForSubscribing": "Terima kasih telah berlangganan!",
+      "correctEmail": "Harap gunakan alamat email yang benar.",
+      "pleaseInsertEmail": "Harap masukkan email Anda."
+    }
+  },
+  "sidebar": {
+    "gettingStarted": {
+      "gettingStarted": "Memulai",
+      "overview": "Ikhtisar",
+      "scrollSepoliaTestnet": "Scroll Sepolia Testnet",
+      "userGuide": "Panduan Pengguna",
+      "setup": "Persiapan",
+      "faucet": "Faucet",
+      "bridge": "Bridge",
+      "transferTokens": "Transfer Token",
+      "commonErrors": "Error Umum",
+      "rollupExplorer": "Penjelajah Rollup",
+      "scrollSepoliaBlockExplorer": "Penjelajah Blok Scroll Sepolia",
+      "scrollMainnet": "Scroll Mainnet",
+      "scrollscan": "Penjelajah Blok Scrollscan",
+      "sepoliaBlockExplorer": "Penjelajah Sepolia",
+      "community": "Komunitas",
+      "discord": "Discord",
+      "communityForum": "Forum Komunitas"
+    },
+    "developers": {
+      "developers": "Pengembang",
+      "buildingOnScroll": "Membangun di Scroll",
+      "developerQuickstart": "Developer Quickstart",
+      "verifyingSmartContracts": "Memverifikasi Smart Contract",
+      "scrollContracts": "Kontrak Scroll",
+      "ethereumAndScrollDifferences": "Perbedaan Ethereum & Scroll",
+      "l1AndL2Bridging": "Bridge L1 & L2",
+      "ethAndErc20TokenBridge": "Bridge ETH & ERC20 Token",
+      "erc721NftBridge": "Bridge ERC721 NFT",
+      "erc1155TokenBridge": "Bridge Token ERC1155",
+      "theScrollMessenger": "Scroll Messenger",
+      "transactionFeesOnScroll": "Biaya Transaksi pada Scroll",
+      "l2Fee": "Biaya L2",
+      "l1Fee": "Biaya L1",
+      "gasOracle": "Oracle Gas",
+      "future": "Masa Depan",
+      "guides": "Panduan",
+      "contractDeploymentTutorial": "Tutorial Deploy Kontrak",
+      "crossChainInteraction": "Interaksi Scroll Messenger Cross-chain",
+      "bridgingERC20TokenThroughCustomGateway": "Menghubungkan ERC20 melalui Gateway Kustom",
+      "bridgingERC721NftThroughCustomGateway": "Menghubungkan ERC721 NFT melalui Gateway Kustom",
+      "bridgingERC1155ThroughCustomGateway": "Menghubungkan ERC1155 melalui Gateway Kustom",
+      "estimatingGasAndTxFees": "Mengestimasi Gas & Biaya Tx",
+      "resources": "Sumber daya",
+      "mainnetResources": "Sumber daya Mainnet",
+      "sepoliaResources": "Sumber daya Sepolia",
+      "scrollBlockExplorer": "Penjelajah Blok Scrollscan",
+      "rollupExplorer": "Penjelajah Rollup",
+      "scrollSepoliaBlockExplorer": "Penjelajah Blok Scroll Sepolia",
+      "sepoliaRollupExplorer": "Penjelajah Rollup Sepolia",
+      "sepoliaBlockExplorer": "Penjelajah Blok Scrollscan"
+    },
+    "technology": {
+      "introduction": "Pengantar",
+      "principles": "Prinsip",
+      "scrollArchitecture": "Arsitektur Scroll",
+      "scrollUpgrades": "Peningkatan Scroll",
+      "overview": "Ikhtisar",
+
+      "scrollChain": "Scroll Chain",
+      "accountsAndState": "Akun dan Status",
+      "blocks": "Blok",
+      "transactions": "Transaksi",
+      "rollupProcess": "Proses Rollup",
+      "evmDifferencesFromEthereum": "Perbedaan EVM dari Ethereum",
+
+      "bridge": "Bridge",
+      "crossDomainMessaging": "Pesan Cross-Domain",
+      "depositGateways": "Gateway Deposit",
+      "withdrawGateways": "Gateway Penarikan",
+
+      "sequencer": "PenySequencerusun",
+      "executionNode": "Node Eksekusi",
+      "rollupNode": "Node Rollup",
+      "zkTrie": "zkTrie",
+      "zkevm": "zkEVM",
+      "introToZkevm": "Pengantar zkEVM",
+      "zkevmOverview": "Ikhtisar zkEVM",
+      "bridgeOverview": "Ikhtisar Bridge",
+      "prover": "Prover",
+      "proofGeneration": "Proof Generation",
+      "cpuProverRepo": "Repositori Prover Repo",
+
+      "security": "Keamanan",
+      "auditsAndBugBounty": "Audit & Hadiah Bug",
+      "l2BeatAssessment": "Penilaian L2Beat"
+    },
+    "learn": {
+      "ethereumAndProtocols": "Ethereum & Protokol",
+      "theScalabilityProblem": "Masalah Skalabilitas",
+      "introToRollups": "Pengantar Rollups",
+      "zeroKnowledge": "Zero Knowledge",
+      "introToZeroKnowledge": "Pengantar Zero Knowledge",
+      "polynomialCommitmentSchemes": "Skema Komitmen Polinomial",
+      "kzgCommitmentScheme": "Skema Komitmen KZG",
+      "additionalResources": "Sumber Daya Tambahan"
+    }
+  },
+  "footer": {
+    "aboutScroll": {
+      "title": "Tentang Scroll",
+      "bugBounty": "Hadiah Bug",
+      "joinUs": "Bergabunglah",
+      "healthStatus": "Status Kesehatan",
+      "privacyPolicy": "Kebijakan Privasi",
+      "termsAndConditions": "Syarat dan Ketentuan"
+    },
+    "resources": {
+      "title": "Sumber daya",
+      "scrollDocsURL": "https://docs.scroll.io/",
+      "blog": "Blog",
+      "documentation": "Dokumentasi",
+      "brandKit": "Brand Kit"
+    },
+    "followUs": {
+      "title": "Ikuti Kami"
+    }
+  },
+  "pageNotFound": {
+    "title": "Halaman tidak ditemukan",
+    "text": "Maaf, kami tidak dapat menemukan halaman yang Anda cari."
+  },
+  "rpcTable": {
+    "rpcServerAddress": "Alamat Server RPC",
+    "height": "Tinggi",
+    "latency": "Latensi",
+    "score": "Skor",
+    "privacy": "Privasi",
+    "addNetwork": "Tambahkan Jaringan",
+    "connect": "Hubungkan",
+    "sorting": "Pengurutan"
+  },
+  "notTranslated": {
+    "notTranslated": "Halaman ini belum diterjemahkan."
+  }
+}

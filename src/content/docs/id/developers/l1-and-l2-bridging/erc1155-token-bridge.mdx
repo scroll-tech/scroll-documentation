@@ -1,0 +1,156 @@
+---
+section: developers
+date: Last Modified
+title: "ERC1155 Token Bridge"
+lang: "id"
+permalink: "developers/l1-and-l2-bridging/erc1155-token-bridge"
+whatsnext: { "Scroll Messenger": "/id/developers/l1-and-l2-bridging/the-scroll-messenger/" }
+excerpt: "ERC1155 bridging from L1 to L2 is done via the L1ERC1155Gateway."
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+## Deposit ERC1155 token dari L1
+
+Pembuatan ERC1155 bridging dari L1 ke L2 dilakukan melalui L1ERC1155Gateway. Sama seperti bridging ERC721, kita tidak menggunakan router tetapi langsung menggunakan fungsi `depositERC1155` pada Gateway.
+
+<Aside type="tip" title="">
+  **`depositERC1155`** adalah fungsi yang dapat menerima pembayaran, dan jumlah ETH yang dikirim ke fungsi ini akan digunakan untuk membayar biaya L2. Jika jumlahnya tidak mencukupi, transaksi tidak akan dikirim. Semua ETH yang berlebih akan dikirim kembali ke pengirim. `0.00001 ETH` seharusnya cukup untuk memproses deposit token.
+</Aside>
+
+### Membuat token ERC1155 di L2
+
+Mirip dengan bridging ERC721, untuk bisa melakukan bridging token ERC1155, sebuah kontrak yang kompatibel dengan standar `IScrollERC1155` harus diluncurkan dan dipetakan pada `L1ERC1155Gateway` dan `L2ERC1155Gateway` di L1 dan L2 secara berurutan. Kontrak ini harus memberikan izin kepada Gateway di L2 untuk melakukan pembuatan token saat token disetorkan dan pembakaran saat token ditarik.
+
+Berikut adalah antarmuka `IScrollERC1155` yang diperlukan untuk mendeploy token ERC1155 yang kompatibel dengan `L2ERC1155Gateway` di L2.
+
+```solidity
+interface IScrollERC1155 {
+  /// @notice Return the address of Gateway the token belongs to.
+  function gateway() external view returns (address);
+
+  /// @notice Return the address of counterpart token.
+  function counterpart() external view returns (address);
+
+  /// @notice Mint some token to recipient's account.
+  /// @dev Gateway Utilities, only gateway contract can call
+  /// @param _to The address of recipient.
+  /// @param _tokenId The token id to mint.
+  /// @param _amount The amount of token to mint.
+  /// @param _data The data passed to recipient
+  function mint(address _to, uint256 _tokenId, uint256 _amount, bytes memory _data) external;
+
+  /// @notice Burn some token from account.
+  /// @dev Gateway Utilities, only gateway contract can call
+  /// @param _from The address of account to burn token.
+  /// @param _tokenId The token id to burn.
+  /// @param _amount The amount of token to burn.
+  function burn(address _from, uint256 _tokenId, uint256 _amount) external;
+
+  /// @notice Batch mint some token to recipient's account.
+  /// @dev Gateway Utilities, only gateway contract can call
+  /// @param _to The address of recipient.
+  /// @param _tokenIds The token id to mint.
+  /// @param _amounts The list of corresponding amount of token to mint.
+  /// @param _data The data passed to recipient
+  function batchMint(
+    address _to,
+    uint256[] calldata _tokenIds,
+    uint256[] calldata _amounts,
+    bytes calldata _data
+  ) external;
+
+  /// @notice Batch burn some token from account.
+  /// @dev Gateway Utilities, only gateway contract can call
+  /// @param _from The address of account to burn token.
+  /// @param _tokenIds The list of token ids to burn.
+  /// @param _amounts The list of corresponding amount of token to burn.
+  function batchBurn(address _from, uint256[] calldata _tokenIds, uint256[] calldata _amounts) external;
+}
+```
+
+### Menambahkan token ERC1155 ke Scroll Bridge
+
+Semua aset dapat di-bridge secara aman dan tanpa izin melalui kontrak Gateway yang didaftarkan oleh pengembang mana pun. Namun, Scroll juga mengelola kontrak Gateway ERC1155 di mana semua token NFT yang dibuat oleh komunitas dipersilakan. Menjadi bagian dari Gateway yang dikelola oleh Scroll berarti Anda tidak perlu mendeploy kontrak Gateway sendiri, dan token Anda akan muncul di frontend resmi Scroll. Untuk menjadi bagian dari Scroll Gateway, Anda harus menghubungi tim Scroll untuk menambahkan token ke kontrak Gateway baik di L1 maupun L2. Untuk melakukannya, ikuti petunjuk di repositori [token lists](https://github.com/scroll-tech/token-list) untuk menambahkan token Anda ke frontend resmi Scroll.
+
+## Menarik token ERC1155 dari L2
+
+Kontrak `L2ERC1155Gateway` digunakan untuk mengirim token dari L2 ke L1. Sebelum dilakukan bridging, kontrak `L2ERC1155Gateway` harus disetujui oleh kontrak token. Setelah itu dilakukan, `withdrawERC1155` dapat dipanggil untuk melakukan bridging aset.
+
+<Aside type="tip" title="">
+  **`withdrawERC1155`** adalah fungsi yang dapat menerima pembayaran, dan jumlah ETH yang dikirim ke fungsi ini akan digunakan untuk membayar biaya L1. Jika jumlahnya tidak mencukupi, transaksi tidak akan dikirim. Semua ETH yang berlebih akan dikirim kembali ke pengirim. Biaya tergantung pada aktivitas L1 tetapi `0.005 ETH` seharusnya cukup untuk memproses penarikan token.
+</Aside>
+
+<Aside type="caution" title="">
+  **Pastikan transaksi tidak akan mengalami revert di L1** saat mengirim dari L2. Tidak ada cara untuk memulihkan token yang di-bridge jika transaksi Anda kembali pada L1. Semua aset dibakar di L2 saat transaksi dikirim, dan tidak mungkin untuk membuatnya lagi.
+</Aside>
+
+## API L1ERC1155Gateway
+
+Silakan kunjungi [npm library](https://www.npmjs.com/package/@scroll-tech/contracts?activeTab=code) untuk dokumentasi API lengkap kontrak Scroll.
+
+### depositERC1155
+
+```solidity
+function depositERC1155(
+  address _token,
+  address _to,
+  uint256 _tokenId,
+  uint256 _amount,
+  uint256 _gasLimit
+) external payable;
+```
+
+Menyetorkan token ERC1155 dari L1 ke akun penerima di L2.
+
+| Parameter | Deskripsi                                         |
+| --------- | ------------------------------------------------- |
+| token     | Alamat kontrak token ERC1155 di L1.              |
+| to        | Alamat akun penerima di L2.                      |
+| tokenId   | ID NFT yang akan disetorkan.                     |
+| amount    | Jumlah token yang akan disetorkan.               |
+| gasLimit  | Batas gas yang diperlukan untuk menyelesaikan setoran di L2. Bagian yang tidak terpakai dari biaya akan dikembalikan. |
+
+### updateTokenMapping
+
+```solidity
+function updateTokenMapping(address _l1Token, address _l2Token) external;
+```
+
+Memperbarui pemetaan yang menghubungkan kontrak token ERC1155 dari L1 ke L2.
+
+| Parameter | Deskripsi                                       |
+| --------- | ----------------------------------------------- |
+| \_l1Token | Alamat token ERC1155 di L1.                    |
+| \_l2Token | Alamat token ERC1155 yang sesuai di L2.         |
+
+## L2ERC1155Gateway API
+
+### withdrawERC1155
+
+```solidity
+function withdrawERC1155(address token, address to, uint256 tokenId, uint256 amount, uint256 gasLimit) external payable;
+```
+
+Mengirimkan token ERC1155 dari L2 ke akun penerima di L1.
+
+| Parameter | Deskripsi                                                              |
+| --------- | ---------------------------------------------------------------------- |
+| token     | Alamat kontrak token ERC1155 di L2.                                   |
+| to        | Alamat akun penerima di L1.                                            |
+| tokenId   | ID NFT yang akan ditarik.                                              |
+| jumlah    | Jumlah token yang akan ditarik.                                        |
+| gasLimit  | Tidak digunakan, tetapi disertakan untuk pertimbangan kompatibilitas ke depan. |
+
+### updateTokenMapping
+
+```solidity
+function updateTokenMapping(address _l1Token, address _l2Token) external;
+```
+
+Memperbarui pemetaan yang menghubungkan kontrak token ERC1155 dari L2 ke L1.
+
+| Parameter | Deskripsi                                       |
+| --------- | ----------------------------------------------- |
+| \_l1Token | Alamat token ERC1155 di L1.                    |
+| \_l2Token | Alamat token ERC1155 yang sesuai di L2.         |
