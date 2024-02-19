@@ -1,29 +1,29 @@
 ---
 section: technology
 date: Last Modified
-title: "Accounts and State"
-lang: "en"
+title: "Accounts dan State"
+lang: "id"
 permalink: "technology/chain/accounts-and-state"
-whatsnext: { "Transactions": "/technology/chain/transactions/" }
+whatsnext: { "Transaksi": "/id/technology/chain/transactions/" }
 ---
 
-## Accounts
+## Akun
 
-Same as Ethereum, Scroll has two account types: Externally-owned account (EOA) and contract account that holds the smart contract and additional storages.
+Sama seperti Ethereum, Scroll memiliki dua jenis akun: akun yang dimiliki secara eksternal (EOA) dan akun kontrak yang menyimpan kontrak pintar dan penyimpanan tambahan.
 
-Scroll stores additional information of the contract bytecode in the account to facilitate the zkEVM circuit to prove the state transition more efficiently.
+Scroll menyimpan informasi tambahan bytecode kontrak di akun untuk memfasilitasi sirkuit zkEVM untuk membuktikan transisi status lebih efisien.
 
-The account in Scroll contains the following fields:
+Akun dalam Scroll berisi bidang-bidang berikut:
 
-- `nonce`: A counter that indicates the number of transactions sent by the sender.
-- `balance`: The balance of `ETH` token in the account (unit in wei).
-- `storageRoot`: The root hash of the storage trie. Since Scroll uses the [zkTrie](/technology/sequencer/zktrie) for the storage trie, the `storageRoot` stores the Poseidon hash digest in a 256-bit integer.
-- `codeHash`: The Keccak hash digest of the contract bytecode.
-- `PoseidonCodeHash` (**new field**): The Poseidon hash digest of the contract bytecode in a 256-bit integer.
-- `CodeSize` (**new field**): The size of the contract bytecode in bytes.
+- `nonce`: Penghitung yang menunjukkan jumlah transaksi yang dikirim oleh pengirim.
+- `balance`: Saldo token `ETH` di akun (dalam satuan wei).
+- `storageRoot`: Hash root trie penyimpanan. Karena Scroll menggunakan [zkTrie](/id/technology/sequencer/zktrie) untuk trie penyimpanan, `storageRoot` menyimpan hash Poseidon digest dalam bilangan bulat 256-bit.
+- `codeHash`: Digest hash Keccak dari bytecode kontrak.
+- `PoseidonCodeHash` (**bidang baru**): Digest hash Poseidon dari bytecode kontrak dalam bilangan bulat 256-bit.
+- `CodeSize` (**bidang baru**): Ukuran bytecode kontrak dalam byte.
 
-## State
+## Status
 
-The state of a blockchain is a collection of account data. The _state trie_ encodes account data and their corresponding addresses to a [Merkle tree](https://en.wikipedia.org/wiki/Merkle_tree) data structure. The root of tree, or the state of the blockchain, is a cryptographic digest of all the account data contained in the tree.
+Status dari sebuah blockchain adalah kumpulan data akun. _Trie status_ mengkodekan data akun dan alamat mereka yang sesuai ke struktur data [Merkle tree](https://en.wikipedia.org/wiki/Merkle_tree). Akar pohon, atau status dari blockchain, adalah digest kriptografis dari semua data akun yang terdapat dalam pohon.
 
-Ethereum uses a data structure called [Patricia Merkle Trie](https://ethereum.org/en/developers/docs/data-structures-and-encoding/patricia-merkle-trie/) for both the state trie and the storage trie that stores the key-value entries stored in a smart contract. In Scroll, we replace the Patricia Merkle Trie by a more zk-friendly data structure, called zkTrie, for both state trie and storage trie. At a high level, the zkTrie data structure is a sparse binary Merkle tree with the [Poseidon hash](https://eprint.iacr.org/2019/458.pdf), a zk-friendly hash function. The [zkTrie](/technology/sequencer/zktrie) document describes more details about this data structure.
+Ethereum menggunakan struktur data yang disebut [Patricia Merkle Trie](https://ethereum.org/en/developers/docs/data-structures-and-encoding/patricia-merkle-trie/) untuk trie status dan trie penyimpanan yang menyimpan entri kunci-nilai yang disimpan dalam kontrak pintar. Di Scroll, kami mengganti Patricia Merkle Trie dengan struktur data yang lebih ramah zk, yang disebut zkTrie, untuk trie status dan trie penyimpanan. Secara umum, struktur data zkTrie adalah pohon Merkle biner yang jarang dengan [hash Poseidon](https://eprint.iacr.org/2019/458.pdf), fungsi hash yang ramah zk. Dokumen [zkTrie](/id/technology/sequencer/zktrie) menjelaskan lebih detail tentang struktur data ini.

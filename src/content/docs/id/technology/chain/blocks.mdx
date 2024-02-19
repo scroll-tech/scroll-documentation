@@ -1,39 +1,39 @@
 ---
 section: technology
 date: Last Modified
-title: "Blocks"
-lang: "en"
+title: "Blok"
+lang: "id"
 permalink: "technology/chain/blocks"
-whatsnext: { "Rollup Process": "/technology/chain/rollup/" }
+whatsnext: { "Proses Rollup": "/id/technology/chain/rollup/" }
 ---
 
-A block is a collection of transactions and links to the previous block it extends.
+Sebuah blok adalah kumpulan transaksi dan tautan ke blok sebelumnya yang diperluas.
 
-## Block Header
+## Header Blok
 
-The block header in Scroll mirrors the structure of Ethereum's. However, certain fields in the block header have been modified to accommodate the Layer 2 context, as detailed in the following table:
+Header blok di Scroll mencerminkan struktur Ethereum. Namun, beberapa bidang dalam header blok telah dimodifikasi untuk menyesuaikan konteks Layer 2, seperti yang dijelaskan dalam tabel berikut:
 
-| Field               | Description                                                        |
+| Bidang               | Deskripsi                                                        |
 | ------------------- | ------------------------------------------------------------------ |
-| `parentHash`        | The hash of the parent block.                                      |
-| `uncleHash`         | Always `keccak256(rlp([]))`.                                       |
-| `coinbase`          | Fees are collected to the pre-deployed fee vault contract address `0x5300000000000000000000000000000000000005`. In most cases, the RPC return field `"miner"` is the zero-address `0x0000000000000000000000000000000000000000`. |
-| `stateRoot`         | The root hash of the state trie. It is the Poseidon                |
-| `transactionsRoot ` | The root hash of the transaction trie.                             |
-| `receiptsRoot `     | The root hash of the transaction receipts trie.                    |
-| `logsBloom`         | The data structure containing event logs.                          |
-| `difficulty`        | Always 1 or 2.                                                     |
-| `number`            | The block number.                                                  |
-| `gasLimit`          | The maximum gas allowed in the block.                              |
-| `gasUsed`           | The gas used in the block.                                         |
-| `timestamp`         | The block time.                                                    |
-| `extraData`         | Signature by the block's signer, followd by arbitrary additional data. |
-| `mixHash`           | Always 0.                                                          |
-| `nonce`             | Always 0.                                                          |
-| `baseFee`           | Currently empty in Scroll because we haven't enabled the EIP-1559. |
+| `parentHash`        | Hash dari blok induk.                                      |
+| `uncleHash`         | Selalu `keccak256(rlp([]))`.                                       |
+| `coinbase`          | Biaya dikumpulkan ke alamat kontrak gudang biaya pra-didirikan `0x5300000000000000000000000000000000000005`. Dalam kebanyakan kasus, bidang return RPC `"miner"` adalah alamat nol `0x0000000000000000000000000000000000000000`. |
+| `stateRoot`         | Hash root trie status. Ini adalah Poseidon                |
+| `transactionsRoot ` | Hash root trie transaksi.                             |
+| `receiptsRoot `     | Hash root trie kwitansi transaksi.                    |
+| `logsBloom`         | Struktur data yang berisi log acara.                          |
+| `difficulty`        | Selalu 1 atau 2.                                                     |
+| `number`            | Nomor blok.                                                  |
+| `gasLimit`          | Gas maksimum yang diizinkan dalam blok.                              |
+| `gasUsed`           | Gas yang digunakan dalam blok.                                         |
+| `timestamp`         | Waktu blok.                                                    |
+| `extraData`         | Tanda tangan oleh penandatangan blok, diikuti oleh data tambahan sembarang. |
+| `mixHash`           | Selalu 0.                                                          |
+| `nonce`             | Selalu 0.                                                          |
+| `baseFee`           | Saat ini kosong dalam Scroll karena kami belum mengaktifkan EIP-1559. |
 
-## Block Time
+## Waktu Blok
 
-Block time refers to the interval between two consecutive blocks. In Scroll, the block time is set at 3s. A reduced block time elevates the user experience and augments the Scroll chain's scalability.
+Waktu blok mengacu pada interval antara dua blok berturut-turut. Di Scroll, waktu blok diatur pada 3 detik. Waktu blok yang lebih singkat meningkatkan pengalaman pengguna dan meningkatkan skalabilitas rantai Scroll.
 
-The 3 second block time is maintained on a best effort basis, it is not guaranteed or enforced by the protocol.
+Waktu blok 3 detik dipertahankan berdasarkan usaha terbaik, tidak dijamin atau ditegakkan oleh protokol.

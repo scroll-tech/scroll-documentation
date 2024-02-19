@@ -1,30 +1,30 @@
 ---
 section: technology
 date: Last Modified
-title: "Intro to zkEVM"
-lang: "en"
+title: "Pengantar zkEVM"
+lang: "id"
 permalink: "technology/intro-to-zkevm"
 excerpt: "ZK rollups are widely recognized as the ideal scaling solution for Ethereum."
-whatsnext: { "zkEVM Overview": "/technology/zkevm/zkevm-overview" }
+whatsnext: { "Ikhtisar zkEVM": "/id/technology/zkevm/zkevm-overview" }
 ---
 
-## Introduction and motivation
+## Pengenalan dan Motivasi
 
-ZK rollups are widely recognized as the ideal scaling solution for Ethereum. They inherit the strong security of Ethereum Layer 1 and offer the fastest transaction finality compared to other Layer 2 solutions.
+ZK rollup secara luas diakui sebagai solusi penskalaan ideal untuk Ethereum. Mereka mewarisi keamanan yang kuat dari Ethereum Layer 1 dan menawarkan penyelesaian transaksi yang paling cepat dibandingkan dengan solusi Layer 2 lainnya.
 
-The basic idea of a ZK rollup is to execute transactions off-chain and to generate succinct proofs of the execution’s validity. These succinct proofs can then be posted and verified on Ethereum Layer 1. ZK rollups improve scalability since verifying the proof for a batch of transactions is much cheaper than re-executing the batch of transactions.
+Ide dasar dari ZK rollup adalah untuk menjalankan transaksi di luar rantai (off-chain) dan menghasilkan bukti ringkas tentang kevalidan eksekusi tersebut. Bukti-bukti ringkas ini kemudian dapat diposting dan diverifikasi di Ethereum Layer 1. ZK rollup meningkatkan skalabilitas karena memverifikasi bukti untuk sekelompok transaksi jauh lebih murah daripada mengeksekusi kembali sekelompok transaksi tersebut.
 
-ZK rollups can be categorized into application-specific and general-purpose rollups, based on the types of transactions they support. Application-specific ZK rollups are designed for particular transaction sets, such as payments and swaps, or a player’s action set for an on-chain game. In these cases, rollups only need to generate proofs attesting to the correctness of the supported primitives, such as valid state transitions for game players.
+ZK rollup dapat dikategorikan menjadi rollup berbasis aplikasi dan rollup berbasis umum, berdasarkan jenis transaksi yang mereka dukung. ZK rollup berbasis aplikasi dirancang untuk set transaksi tertentu, seperti pembayaran dan pertukaran, atau set tindakan pemain untuk permainan on-chain. Dalam kasus-kasus ini, rollup hanya perlu menghasilkan bukti yang menunjukkan kebenaran dari primitif yang didukung, seperti transisi state yang valid untuk pemain game.
 
-On the other hand, general-purpose ZK rollups support a wider range of transactions and computations. These rollups use a virtual machine (VM) to execute assembly code, and then generate a proof to show that the execution was done correctly according to the VM's specifications. The particular VM that a ZK rollup uses for its computation differs across the many ZK rollup projects. Some projects elect to build their own VM, optimized for fast proof generation. Other projects elect to use the EVM, for optimal compatibility with the Ethereum ecosystem.
+Di sisi lain, ZK rollup berbasis umum mendukung berbagai transaksi dan komputasi. Rollup ini menggunakan mesin virtual (VM) untuk menjalankan kode assembly, dan kemudian menghasilkan bukti untuk menunjukkan bahwa eksekusi dilakukan dengan benar sesuai dengan spesifikasi VM. VM tertentu yang digunakan oleh ZK rollup untuk komputasinya berbeda di antara banyak proyek ZK rollup. Beberapa proyek memilih untuk membangun VM mereka sendiri, dioptimalkan untuk generasi bukti yang cepat. Proyek lain memilih untuk menggunakan EVM, untuk kompatibilitas optimal dengan ekosistem Ethereum.
 
-Scroll is a general-purpose ZK rollup that uses the EVM for off-chain computations. Scroll’s execution layer functions similarly to Ethereum’s - transactions are batched into blocks, and then the blocks are executed according to the [EVM](https://ethereum.org/en/developers/docs/evm/) specs (we actually use a slightly [modified version](https://github.com/scroll-tech/go-ethereum) of [Geth](https://geth.ethereum.org/)). This means that users can interact with Scroll in the same way that they would interact with Ethereum. It also means that developers can develop on top of Scroll just as they would develop on top of Ethereum.
+Scroll adalah ZK rollup berbasis umum yang menggunakan EVM untuk komputasi di luar rantai. Lapisan eksekusi Scroll berfungsi secara mirip dengan Ethereum - transaksi dibatching menjadi blok, dan kemudian blok-blok tersebut dieksekusi sesuai dengan [spesifikasi EVM](https://ethereum.org/en/developers/docs/evm/) (kami sebenarnya menggunakan [versi yang sedikit dimodifikasi](https://github.com/scroll-tech/go-ethereum) dari [Geth](https://geth.ethereum.org/)). Ini berarti bahwa pengguna dapat berinteraksi dengan Scroll dengan cara yang sama seperti mereka berinteraksi dengan Ethereum. Ini juga berarti bahwa pengembang dapat mengembangkan di atas Scroll seperti yang mereka lakukan di atas Ethereum.
 
-However, achieving Ethereum compatibility with a ZK rollup poses a large challenge - the rollup must be able to generate a proof proving that an off-chain EVM computation was executed correctly. This is essentially what a “zkEVM” is: **a zkEVM is a system that proves the correct execution of the EVM**.
+Namun, mencapai kompatibilitas Ethereum dengan ZK rollup menimbulkan tantangan besar - rollup harus mampu menghasilkan bukti yang membuktikan bahwa komputasi EVM di luar rantai dieksekusi dengan benar. Ini pada dasarnya adalah apa yang disebut sebagai "zkEVM": **zkEVM adalah sistem yang membuktikan eksekusi EVM yang benar**.
 
-The EVM was originally designed without ZK rollups in mind, and it turns out that it is quite challenging build a zkEVM. However, we at Scroll are undeterred by the challenge, and have been working hard in collaboration with the [Ethereum Privacy and Scaling Explorations](https://appliedzkp.org/) team to make the zkEVM a reality.
+EVM awalnya dirancang tanpa mempertimbangkan ZK rollup, dan ternyata cukup sulit untuk membangun zkEVM. Namun, kami di Scroll tidak gentar oleh tantangan ini, dan telah bekerja keras dalam kolaborasi dengan tim [Ethereum Privacy and Scaling Explorations](https://appliedzkp.org/) untuk menjadikan zkEVM sebuah kenyataan.
 
-## Learn more
+## Lebih lanjut
 
-- [Blog post](https://scroll.io/blog/zkEVM) introducing zkEVM
+- [Blog post](https://scroll.io/blog/zkEVM) Pengenalan zkEVM
 - [zkEVM overview](https://youtu.be/NHwd-gJ8xg4) - Haichen Shen

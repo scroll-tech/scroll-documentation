@@ -1,10 +1,10 @@
 ---
 section: technology
 date: Last Modified
-title: "Cross-Domain Messaging"
-lang: "en"
+title: "Pesan Cross-Domain"
+lang: "id"
 permalink: "technology/bridge/cross-domain-messaging"
-whatsnext: { "Deposit Gateways": "/technology/bridge/deposit-gateways/" }
+whatsnext: { "Deposit Gateway": "/id/technology/bridge/deposit-gateways/" }
 ---
 
 import ClickToZoom from "../../../../../components/ClickToZoom.astro"
@@ -15,19 +15,19 @@ import L1ToL2 from "../_images/L1-to-L2.png"
 import L2ToL1 from "../_images/L2-to-L1.png"
 import WithdrawTrie from "../_images/withdraw-trie.png"
 
-Scroll has an arbitrary message passing bridge that enables token transfers and allows dapps to communicate between layer 1 and layer 2. This means that dapps on layer 1 can trigger contract functions on layer 2, and vice versa. Next, we will explain how the messages are relayed between layer 1 and layer 2.
+Scroll memiliki jembatan pengiriman pesan sembarang yang memungkinkan transfer token dan memungkinkan dapp untuk berkomunikasi antara lapisan 1 dan lapisan 2. Ini berarti bahwa dapp pada lapisan 1 dapat memicu fungsi kontrak pada lapisan 2, dan sebaliknya. Selanjutnya, kami akan menjelaskan bagaimana pesan disampaikan antara lapisan 1 dan lapisan 2.
 
-## Sending Messages from L1 to L2
+## Mengirim Pesan dari L1 ke L2
 
-<ClickToZoom src={L1ToL2} alt="L1 to L2 workflow" caption="Figure 1. L1 to L2 message relay workflow" />
+<ClickToZoom src={L1ToL2} alt="Alur kerja pengiriman pesan dari L1 ke L2" caption="Gambar 1. Alur kerja pengiriman pesan dari L1 ke L2" />
 
-There are two primary approaches to sending a message from L1 to L2: sending arbitrary messages via `L1ScrollMessenger` and sending enforced transactions via `EnforcedTxGateway`. Both approaches allow users to initiate a L2 transaction on L1 and call arbitrary contracts on L2. For arbitrary messages, the sender of the L2 transactions is the aliased `L1ScrollMessenger` address. For enforced transactions, the L2 sender is an externally-owned account (EOA). In addition, we provide several standard token gateways to make it easier for users to deposit ETH and other standard tokens including ERC-20, ERC-677, ERC-721, and ERC-1155. In essence, these gateways encode token deposits into a message and send it to their counterparts on L2 through the `L1ScrollMessenger` contract. You can find more details about the L1 token gateways in the [Deposit Gateways](/technology/bridge/deposit-gateways).
+Ada dua pendekatan utama untuk mengirim pesan dari L1 ke L2: mengirim pesan sembarang melalui `L1ScrollMessenger` dan mengirim transaksi Enforced melalui `EnforcedTxGateway`. Kedua pendekatan ini memungkinkan pengguna untuk memulai transaksi L2 pada L1 dan memanggil kontrak sembarang pada L2. Untuk pesan sembarang, pengirim transaksi L2 adalah alamat `L1ScrollMessenger` yang di-alias. Untuk transaksi Enforced, pengirim L2 adalah akun milik eksternal (EOA). Selain itu, kami menyediakan beberapa gateway token standar untuk memudahkan pengguna dalam mendepositkan ETH dan token standar lainnya termasuk ERC-20, ERC-677, ERC-721, dan ERC-1155. Pada dasarnya, gateway-gateway ini mengkodekan deposit token ke dalam pesan dan mengirimkannya ke mitra mereka pada L2 melalui kontrak `L1ScrollMessenger`. Anda dapat menemukan lebih banyak detail tentang gateway token L1 di [Gateway Deposit](/id/technology/bridge/deposit-gateways).
 
 <Aside type="danger" title="">
-Enforced Transactions are not yet enabled on Scroll. In future upgrades, users will be able to use this functionality to bypass the `L1ScrollMessenger` and send messages directly to the `L1MessageQueue`.
+Transaksi Enforced belum diaktifkan di Scroll. Pada peningkatan masa depan, pengguna akan dapat menggunakan fungsionalitas ini untuk melewati `L1ScrollMessenger` dan mengirim pesan langsung ke `L1MessageQueue`.
 </Aside>
 
-As depicted in Figure 1, both arbitrary messages and enforced transactions are appended to the message queue stored in the `L1MessageQueue` contract. The `L1MessageQueue` contract provides two functions `appendCrossDomainMessage` and `appendEnforcedTransaction` for appending arbitrary messages and enforced transactions respectively.
+Seperti yang digambarkan dalam Gambar 1, baik pesan sembarang maupun transaksi Enforced ditambahkan ke antrian pesan yang disimpan dalam kontrak `L1MessageQueue`. Kontrak `L1MessageQueue` menyediakan dua fungsi `appendCrossDomainMessage` dan `appendEnforcedTransaction` untuk menambahkan pesan sembarang dan transaksi Enforced secara berturut-turut.
 
 ```solidity
 /// @notice Append an arbitrary L1-to-L2 message into this contract.
@@ -55,18 +55,18 @@ function appendEnforcedTransaction(
 ) external;
 ```
 
-Both functions construct an L1-initiated transaction with a new transaction type `L1MessageTx` introduced in the Scroll chain and compute the transaction hash (see more details in the [L1 Message Transaction](/technology/chain/transactions#l1-message-transaction)). `L1MessageQueue` then appends the transaction hash to the message queue, and emits the event `QueueTransaction(sender, target, value, queueIndex, gasLimit, calldata)`. The difference between `appendCrossDomainMessage` and `appendEnforcedTransaction` when constructing L1 message transactions is:
+Kedua fungsi tersebut membuat transaksi yang diinisiasi oleh L1 dengan jenis transaksi baru `L1MessageTx` yang diperkenalkan dalam rantai Scroll dan menghitung hash transaksi (lihat lebih banyak detail di [Transaksi Pesan L1](/id/technology/chain/transactions#transaksi-pesan-l1)). `L1MessageQueue` kemudian menambahkan hash transaksi ke dalam antrian pesan, dan memancarkan acara `QueueTransaction(sender, target, value, queueIndex, gasLimit, calldata)`. Perbedaan antara `appendCrossDomainMessage` dan `appendEnforcedTransaction` saat membuat transaksi pesan L1 adalah:
 
-- `appendCrossDomainMessage` can be only called by `L1ScrollMessenger` and it uses the [aliased address](#address-alias) of `msg.sender`, which will be the address of `L1ScrollMessenger`, as the transaction sender.
-- `appendEnforcedTransaction` can be only called by `EnforcedTxGateway` and it uses `sender` from the function parameter as the transaction sender. This allows users to enforce a withdrawal or transfer of ETH from their L2 accounts directly through the L1 bridge.
+- `appendCrossDomainMessage` hanya dapat dipanggil oleh `L1ScrollMessenger` dan menggunakan [address alias](#address-alias) dari `msg.sender`, yang akan menjadi alamat `L1ScrollMessenger`, sebagai pengirim transaksi.
+- `appendEnforcedTransaction` hanya dapat dipanggil oleh `EnforcedTxGateway` dan menggunakan `sender` dari parameter fungsi sebagai pengirim transaksi. Ini memungkinkan pengguna untuk menegakkan penarikan atau transfer ETH dari akun L2 mereka secara langsung melalui jembatan L1.
 
-After the transaction is successfully executed on L1, the watcher in the Scroll sequencer that monitors the `L1MessageQueue` contract collects the new `QueueTransaction` events from L1 blocks. The sequencer then constructs a new `L1MessageTx` transaction per event and appends them to its local L1 transaction queue. When constructing a new L2 block, the sequencer includes the transactions from both its L1 transaction queue and its L2 mempool. Note that the L1 message transactions must be included sequentially based on the L1 message queue order in the `L1MessageQueue` contract. `L1MessageTx` transactions always come first in the L2 blocks followed by L2 transactions. Currently, we limit the number of `L1MessageTx` transactions in a L2 block to `NumL1MessagesPerBlock` (currently set to 10).
+Setelah transaksi berhasil dieksekusi di L1, pengamat dalam penyeleksi Scroll yang memantau kontrak `L1MessageQueue` mengumpulkan acara `QueueTransaction` baru dari blok-blok L1. Penyeleksi kemudian membuat transaksi `L1MessageTx` baru per acara dan menambahkannya ke dalam antrian transaksi L1 lokalnya. Saat membuat blok L2 baru, penyeleksi menyertakan transaksi dari kedua antrian transaksi L1 dan memori L2-nya. Perhatikan bahwa transaksi pesan L1 harus disertakan secara berurutan berdasarkan urutan antrian pesan L1 di kontrak `L1MessageQueue`. Transaksi `L1MessageTx` selalu datang pertama dalam blok L2 diikuti oleh transaksi L2. Saat ini, kami membatasi jumlah transaksi `L1MessageTx` dalam blok L2 menjadi `NumL1MessagesPerBlock` (saat ini diatur menjadi 10).
 
-Next, we will expand more on the specific process of sending arbitrary messages via `L1ScrollMessenger` and sending enforced transactions via `EnforcedTxGateway`.
+Selanjutnya, kami akan menjelaskan lebih detail tentang proses khusus mengirim pesan sembarang melalui `L1ScrollMessenger` dan mengirim transaksi Enforced melalui `EnforcedTxGateway`.
 
-### Sending Arbitrary Messages
+### Mengirim Pesan Arbitrary
 
-The `L1ScrollMessenger` contract provides two `sendMessage` functions to send arbitrary messages. The only difference is that the second one allows users to specify a refund address other than the sender address to receive a fee refund.
+Kontrak `L1ScrollMessenger` menyediakan dua fungsi `sendMessage` untuk mengirim pesan sembarang. Satu-satunya perbedaan adalah bahwa yang kedua memungkinkan pengguna untuk menentukan alamat pengembalian yang berbeda dengan alamat pengirim untuk menerima pengembalian biaya.
 
 <ToggleElement anchor="sendMessage function signatures">
 <div slot="title"><code>sendMessage</code> function signatures</div>
@@ -98,9 +98,9 @@ function sendMessage(
 </ToggleElement>
 
 
-Both functions require users to provide a gas limit for the corresponding `L1MessageTx` transaction on L2 and prepay the [message relay fee](#message-relay-fee) on L1, which is calculated based on the gas limit amount. The fee is collected to a `feeVault` contract on L1. In case the transaction fails on L2 because the user did not set the correct gas limit for their message on L1, the user can replay the same message with a higher gas limit. You can find more details in the [Retrying failed messages](#retrying-failed-messages) section, but since any unused portion of these fees is refunded to the user, there is no penalty for overestimating the gas limit.
+Kedua fungsi tersebut memerlukan pengguna untuk menyediakan batas gas untuk transaksi `L1MessageTx` yang sesuai di L2 dan membayar [biaya relay pesan](#biaya-relay-pesan) di L1, yang dihitung berdasarkan jumlah batas gas. Biaya tersebut dikumpulkan ke kontrak `feeVault` di L1. Jika transaksi gagal di L2 karena pengguna tidak mengatur batas gas yang benar untuk pesan mereka di L1, pengguna dapat memainkan kembali pesan yang sama dengan batas gas yang lebih tinggi. Anda dapat menemukan lebih banyak detail di bagian [Percobaan pesan yang gagal](#mencoba-ulang-pesan-yang-gagal), tetapi karena bagian yang tidak digunakan dari biaya ini dikembalikan kepada pengguna, tidak ada hukuman untuk memperkirakan batas gas.
 
-The `sendMessage` functions encode the arguments into a cross-domain message (see the code snippet below), where the message nonce is the next queue index of the L1 message queue. The encoded data is then used as calldata in the `L1MessageTx` transaction executed on L2. Note that such cross-domain messages always call the `relayMessage` function of the `L2ScrollMessenger` contract on L2.
+Fungsi `sendMessage` mengkodekan argumen ke dalam pesan cross-domain (lihat potongan kode di bawah ini), di mana nonce pesan adalah indeks antrian berikutnya dari antrian pesan L1. Data yang dikodekan kemudian digunakan sebagai calldata dalam transaksi `L1MessageTx` yang dieksekusi di L2. Perhatikan bahwa pesan cross-domain seperti itu selalu memanggil fungsi `relayMessage` dari kontrak `L2ScrollMessenger` di L2.
 
 ```solidity
 abi.encodeWithSignature(
@@ -113,15 +113,15 @@ abi.encodeWithSignature(
 )
 ````
 
-The deposited ETH of `value` amount is locked in the `L1ScrollMessenger` contract. If the amount of ETH in the message cannot cover the message relay fee and the deposited amount, the transaction will be reverted. The `L1ScrollMessenger` contract will refund the excess amount to the designated `refundAddress` or the transaction sender otherwise. Finally, `L1ScrollMessenger` appends the cross-domain message to `L1MessageQueue` via the `appendCrossDomainMessage` method.
+ETH yang disetor sebesar nilai `value` dikunci di kontrak `L1ScrollMessenger`. Jika jumlah ETH dalam pesan tidak mencukupi untuk menutupi biaya relay pesan dan jumlah yang disetorkan, transaksi akan dibatalkan. Kontrak `L1ScrollMessenger` akan mengembalikan jumlah yang berlebih ke `refundAddress` yang ditunjuk atau pengirim transaksi sebaliknya. Akhirnya, `L1ScrollMessenger` menambahkan pesan cross-domain ke `L1MessageQueue` melalui metode `appendCrossDomainMessage`.
 
-### Sending Enforced Transactions
+### Mengirim Transaksi Enforced
 
 <Aside type="danger" title="">
-Enforced Transactions are not yet enabled on Scroll. In future upgrades, users will be able to use this functionality to bypass the `L1ScrollMessenger` and send messages directly to the `L1MessageQueue`.
+Transaksi Enforced belum diaktifkan di Scroll. Pada peningkatan masa depan, pengguna akan dapat menggunakan fungsionalitas ini untuk melewati `L1ScrollMessenger` dan mengirim pesan langsung ke `L1MessageQueue`.
 </Aside>
 
-The `EnforcedTxGateway` contract provides two `sendTransaction` functions to send an enforced transaction. In the first function, the sender of the generated `L1MessageTx` transaction is the transaction sender. On the other hand, the second function uses the passed `sender` address as the sender of the `L1MessageTx` transaction. This allows a third party to send an enforced transaction on behalf of the user and pay the relay fee. Note that the second function requires providing a valid signature of the generated `L1MessageTx` transaction that matches the `sender` address. Both `sendTransaction` functions enforce the sender to be an EOA account.
+Kontrak `EnforcedTxGateway` menyediakan dua fungsi `sendTransaction` untuk mengirim transaksi Enforced. Pada fungsi pertama, pengirim transaksi `L1MessageTx` yang dihasilkan adalah pengirim transaksi. Di sisi lain, fungsi kedua menggunakan alamat `sender` yang dilewatkan sebagai pengirim transaksi `L1MessageTx`. Ini memungkinkan pihak ketiga untuk mengirimkan transaksi Enforced atas nama pengguna dan membayar biaya relay. Perhatikan bahwa fungsi kedua memerlukan penyediaan tanda tangan valid dari transaksi `L1MessageTx` yang dihasilkan yang sesuai dengan alamat `sender`. Kedua fungsi `sendTransaction` mewajibkan pengirim untuk menjadi akun EOA.
 
 <ToggleElement anchor="sendTransaction function signatures">
 <div slot="title"><code>sendTransaction</code> function signatures</div>
@@ -158,11 +158,11 @@ function sendTransaction(
 
 </ToggleElement>
 
-Similar to arbitrary message relaying, `sendTransaction` deducts the message relay fee and transfers it to the L1 `feeVault` account. But a key difference is that the `value` passed to the function indicates the amount of ETH to be transferred from the sender account on L2, not on L1. Hence, the `msg.value` only needs to cover the [message relay fee](#message-relay-fee). If the amount of ETH in the message cannot cover the fee, the transaction will fail. Any excess fee is refunded to the transaction sender in the first function and to the `refundAddress` in the second function. Lastly, `EnforcedTxGateway` calls `L1MessageQueue.appendEnforcedTransaction` to append the transaction to the message queue.
+Mirip dengan relai pesan arbitrary, `sendTransaction` mengurangi biaya relay pesan dan mentransfernya ke akun `feeVault` di L1. Tetapi perbedaan kunci adalah bahwa nilai yang dilewatkan ke fungsi menunjukkan jumlah ETH yang akan ditransfer dari akun pengirim di L2, bukan di L1. Oleh karena itu, `msg.value` hanya perlu mencakup [biaya relay pesan](#biaya-relay-pesan). Jika jumlah ETH dalam pesan tidak mencukupi untuk menutupi biaya, transaksi akan gagal. Setiap kelebihan biaya akan dikembalikan kepada pengirim transaksi dalam fungsi pertama dan kepada `refundAddress` dalam fungsi kedua. Terakhir, `EnforcedTxGateway` memanggil `L1MessageQueue.appendEnforcedTransaction` untuk menambahkan transaksi ke antrian pesan.
 
-### Retrying Failed Messages
+### Mencoba Ulang Pesan yang Gagal
 
-If a `L1MessageTx` transaction fails on L2 due to insufficient gas, users can replay the message with a higher gas limit. `L1ScrollMessenger` provides the method `replayMessage` that allows users to send the same information as the previous failed message with a higher gas limit. This message will become a new `L1MessageTx` transaction on L2. Note that we won't refund the gas fee for the previous failed transaction as it is already processed on L2.
+Jika transaksi `L1MessageTx` gagal di L2 karena gas yang tidak mencukupi, pengguna dapat memainkan kembali pesan dengan batas gas yang lebih tinggi. `L1ScrollMessenger` menyediakan metode `replayMessage` yang memungkinkan pengguna untuk mengirim informasi yang sama seperti pesan yang gagal sebelumnya dengan batas gas yang lebih tinggi. Pesan ini akan menjadi transaksi `L1MessageTx` baru di L2. Perhatikan bahwa kami tidak akan mengembalikan biaya gas untuk transaksi gagal sebelumnya karena sudah diproses di L2.
 
 <ToggleElement anchor="replayMessage function signature">
 <div slot="title"><code>replayMessage</code> function signature</div>
@@ -188,30 +188,30 @@ function replayMessage(
 
 </ToggleElement>
 
-Because the `L2ScrollMessenger` contract records all L1 messages that were successfully relayed to L2, the transaction of the replayed message will be reverted on L2 if the original message succeeds.
+Karena kontrak `L2ScrollMessenger` mencatat semua pesan L1 yang berhasil disampaikan ke L2, transaksi pesan yang diputar ulang akan dibatalkan di L2 jika pesan asli berhasil.
 
-### Message Relay Fee
+### Biaya Relay Pesan
 
-The contract `L2GasPriceOracle` deployed on L1 computes the relay fee of a message given its gas limit. This contract stores the `l2BaseFee` in its storage, which is updated by a dedicated relayer run by Scroll currently. The relay fee of L1-to-L2 messages is `gasLimit * l2BaseFee`.
+Kontrak `L2GasPriceOracle` yang diimplementasikan di L1 menghitung biaya relay dari sebuah pesan berdasarkan batas gasnya. Kontrak ini menyimpan `l2BaseFee` di penyimpanannya, yang diperbarui oleh relayer yang didedikasikan yang dijalankan oleh Scroll saat ini. Biaya relay pesan dari L1 ke L2 adalah `gasLimit * l2BaseFee`.
 
-<Aside type="tip" title="Upgrade Notice">
-During the February 2024 Bridge Upgrade, `L2GasPriceOracle` will be deprecated, with its functionality moved into the `L1MessageQueueWithGasPriceOracle` contract.
+<Aside type="tip" title="Pemberitahuan Upgrade">
+Selama Pembaruan Jembatan Februari 2024, `L2GasPriceOracle` akan ditinggalkan, dengan fungsionalitasnya dipindahkan ke kontrak `L1MessageQueueWithGasPriceOracle`.
 
-The upgrade is expected to be finalized on February 21, 2024, after a two-week timelock. Scroll Sepolia has already undergone this upgrade. Read more [here](https://scroll.io/blog/protocol-upgrade-bridging-cost-reduction).
+Upgrade ini diharapkan selesai pada 21 Februari 2024, setelah masa timelock dua minggu. Scroll Sepolia sudah menjalani upgrade ini. Baca lebih lanjut [di sini](https://scroll.io/blog/protocol-upgrade-bridging-cost-reduction).
 
 </Aside>
 
 ### Address Alias
 
-Due to the behavior of the `CREATE` opcode, it is possible that someone deploys a contract at the same address on L1 and L2 but with different bytecode. To avoid malicious users taking advantage of this, the bridge applies an address alias when the message sender is a contract on L1. The aliased sender address of the L1 message transaction is `l1_contract_address + offset` where the `offset` is `0x1111000000000000000000000000000000001111`.
+Karena perilaku opcode `CREATE`, mungkin seseorang mendeploy sebuah kontrak di alamat yang sama di L1 dan L2 tetapi dengan bytecode yang berbeda. Untuk menghindari pengguna jahat memanfaatkan hal ini, jembatan menerapkan alamat alias ketika pengirim pesan adalah kontrak di L1. Alamat pengirim yang di-alias dari transaksi pesan L1 adalah `l1_contract_address + offset` di mana `offset` adalah `0x1111000000000000000000000000000000001111`.
 
-## Sending Messages from L2 to L1
+## Mengirim Pesan dari L2 ke L1
 
-<ClickToZoom src={L2ToL1} alt="L2 to L1 workflow" caption="Figure 2. L2 to L1 message relay workflow" />
+<ClickToZoom src={L2ToL1} alt="Alur kerja relai pesan dari L2 ke L1" caption="Gambar 2. Alur kerja relai pesan dari L2 ke L1" />
 
-On L2, users can send arbitrary messages through `L2ScrollMessenger` to withdraw tokens and call L1 contracts. Similar to L1, we have built several standard token gateways to make it easier to initialize token withdrawals. For more details about L2 token gateways, please refer to the [Withdraw Gateways](/technology/bridge/withdraw-gateways).
+Di L2, pengguna dapat mengirim pesan sembarang melalui `L2ScrollMessenger` untuk menarik token dan memanggil kontrak L1. Seperti di L1, kami telah membangun beberapa gateway token standar untuk memudahkan penarikan token. Untuk lebih jelasnya tentang gateway token L2, silakan lihat [Withdraw Gateway](/id/technology/bridge/withdraw-gateways).
 
-The `L2ScrollMessenger` contract also provides a `sendMessage` function. The difference from the `L1ScrollMessenger.sendMessage` is that the `gasLimit` parameter is ignored in the function because the withdrawal execution transaction on L1 is submitted by users and the transaction fee is paid on L1 directly. Thus, the `sendMessage` function requires `msg.value` to be equal to the parameter `value`. The function encodes the arguments into a cross-domain message following the same schema as in [`L1ScrollMessenger`](#sending-arbitrary-messages).
+Kontrak `L2ScrollMessenger` juga menyediakan fungsi `sendMessage`. Perbedaannya dari `L1ScrollMessenger.sendMessage` adalah bahwa parameter `gasLimit` diabaikan dalam fungsi karena transaksi eksekusi penarikan di L1 diajukan oleh pengguna dan biaya transaksi dibayarkan langsung di L1. Dengan demikian, fungsi `sendMessage` memerlukan `msg.value` untuk sama dengan parameter `value`. Fungsi ini mengkodekan argumen ke dalam pesan lintas domain mengikuti skema yang sama seperti di [`L1ScrollMessenger`](#mengirim-pesan-arbitrary).
 
 <ToggleElement anchor="sendMessage function signatures">
 <div slot="title"><code>sendMessage</code> function signatures</div>
@@ -231,18 +231,18 @@ function sendMessage(
 
 </ToggleElement>
 
-Next, the cross-domain message hash is appended to `L2MessageQueue` by calling its `appendMessage` function. The `L2MessageQueue` contract maintains the [Withdraw Trie](#withdraw-trie), an append-only Merkle tree. Every time a new message is appended to the queue, the contract inserts it into the Withdraw Trie and updates the trie's root hash.
+Selanjutnya, hash pesan lintas domain ditambahkan ke `L2MessageQueue` dengan memanggil fungsi `appendMessage`-nya. Kontrak `L2MessageQueue` memelihara [Withdraw Trie](#withdraw-trie), sebuah pohon Merkle yang hanya dapat ditambahkan. Setiap kali pesan baru ditambahkan ke antrian, kontrak memasukkannya ke dalam Withdraw Trie dan memperbarui hash root trie.
 
-After the transaction batch containing users' L2-to-L1 messages is finalized on the L1 rollup contract, users need to submit corresponding _Execute Withdrawal_ transactions to call `relayMessageWithProof` method in the `L1ScrollMessenger` contract that executes the withdrawal on L1. Thanks to the Merkle proofs, the finalization of withdrawal transactions on L1 is trustless and can be submitted by user themselves or by a third party on behalf of users.
+Setelah kumpulan transaksi yang berisi pesan L2 ke L1 pengguna difinalisasi pada kontrak rollup L1, pengguna perlu mengirimkan transaksi _Execute Withdrawal_ yang sesuai untuk memanggil metode `relayMessageWithProof` di kontrak `L1ScrollMessenger` yang mengeksekusi penarikan di L1. Berkat bukti Merkle, finalisasi transaksi penarikan di L1 adalah tanpa kepercayaan dan dapat diajukan oleh pengguna sendiri atau oleh pihak ketiga atas nama pengguna.
 
-To make it easier to construct a withdraw MIP, Scroll maintains a service called Bridge History API. Bridge History API monitors `SentMessage` events emitted from `L2ScrollMessenger` and maintains a Withdraw Trie internally. It continuously generates Merkle proofs for every withdrawal messages. Users and third-party services can query Merkle proofs from the Bridge History API to include in the _Execute Withdrawal_ transactions.
+Untuk memudahkan dalam membangun MIP penarikan, Scroll memelihara layanan yang disebut Bridge History API. Bridge History API memantau acara `SentMessage` yang dipancarkan dari `L2ScrollMessenger` dan memelihara Withdraw Trie secara internal. Ini terus-menerus menghasilkan bukti Merkle untuk setiap pesan penarikan. Pengguna dan layanan pihak ketiga dapat mengambil bukti Merkle dari Bridge History API untuk disertakan dalam transaksi _Execute Withdrawal_.
 
-Note that the execute withdrawal transactions can be submitted by the users themselves or by a third-party service.
+Perlu diperhatikan bahwa transaksi eksekusi penarikan dapat diajukan oleh pengguna sendiri atau oleh layanan pihak ketiga.
 
 ### Withdraw Trie
 
-<ClickToZoom src={WithdrawTrie} alt="Withdraw Trie structure" caption="Figure 3. Withdraw Trie structure" />
+<ClickToZoom src={WithdrawTrie} alt="Struktur Withdraw Trie" caption="Gambar 3. Struktur Withdraw Trie" />
 
-The Withdraw Trie is a dense binary Merkle tree. The hash of a leaf node is inherited from the message hash, while the hash of a non-leaf node is the Keccak hash digest of the concatenated hashes of its two children. The depth of the Withdraw Trie grows dynamically depending on the number of messages appended to the trie.
+Withdraw Trie adalah pohon Merkle biner padat. Hash dari node daun diwarisi dari hash pesan, sedangkan hash dari node non-daun adalah hasil hash Keccak dari hash yang dihubungkan dari kedua anaknya. Kedalaman Withdraw Trie tumbuh secara dinamis tergantung pada jumlah pesan yang ditambahkan ke trie.
 
-Figure 3(a) shows an example of a complete 3-layer withdraw trie. When the number of leaves cannot saturate a complete binary tree, we pad leaf nodes with hash 0, as depicted in Figure 3(b) and 3(c). When appending a new message to a non-complete Withdraw Trie, the padding node will be then replaced by a new leaf node with the actual message hash.
+Gambar 3(a) menunjukkan contoh dari Withdraw Trie 3 lapisan yang lengkap. Ketika jumlah daun tidak dapat menjangkau pohon biner lengkap, kami akan melengkapi node daun dengan hash 0, seperti yang digambarkan di Gambar 3(b) dan 3(c). Ketika menambahkan pesan baru ke Withdraw Trie yang tidak lengkap, node pelengkap akan digantikan oleh node daun baru dengan hash pesan yang sebenarnya.

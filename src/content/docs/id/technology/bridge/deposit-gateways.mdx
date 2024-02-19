@@ -1,38 +1,38 @@
 ---
 section: technology
 date: Last Modified
-title: "Deposit Gateways"
-lang: "en"
+title: "Gateway Deposit"
+lang: "id"
 permalink: "technology/bridge/deposit-gateways"
-whatsnext: { "Withdraw Gateways": "/technology/bridge/withdraw-gateways/" }
+whatsnext: { "Withdraw Gateway": "/id/technology/bridge/withdraw-gateways/" }
 ---
 
 import ClickToZoom from "../../../../../components/ClickToZoom.astro"
 import DepositWorkflow from "../_images/deposit.png"
 
-This document describes how users and developers can utilize gateways to deposit tokens from L1 to L2. We provide several gateways for standard tokens and a gateway router on L1, listed in the table below.
+Dokumen ini menjelaskan bagaimana pengguna dan pengembang dapat memanfaatkan gerbang untuk melakukan deposit token dari L1 ke L2. Kami menyediakan beberapa gerbang untuk token standar dan sebuah router gerbang di L1, yang terdaftar dalam tabel di bawah ini.
 
-| Gateway Contract         | Description                                                      |
-| ------------------------ | ---------------------------------------------------------------- |
-| `L1GatewayRouter`        | The gateway router supports the deposit of ETH and ERC20 tokens. |
-| `L1ETHGateway`           | The gateway to deposit ETH.                                      |
-| `L1StandardERC20Gateway` | The gateway for standard ERC20 token deposits.                   |
-| `L1CustomERC20Gateway`   | The gateway for custom ERC20 token deposits.                     |
-| `L1WETHGateway`          | The gateway for Wrapped ETH deposits.                            |
-| `L1ERC721Gateway`        | The gateway for ERC-721 token deposits.                          |
-| `L1ERC1155Gateway`       | The gateway for ERC-1155 token deposits.                         |
+| Kontrak Gateway         | Deskripsi                                                      |
+| ------------------------ | -------------------------------------------------------------- |
+| `L1GatewayRouter`        | Router gerbang mendukung deposit ETH dan token ERC20.          |
+| `L1ETHGateway`           | Gerbang untuk melakukan deposit ETH.                           |
+| `L1StandardERC20Gateway` | Gerbang untuk deposit token ERC20 standar.                     |
+| `L1CustomERC20Gateway`   | Gerbang untuk deposit token ERC20 kustom.                      |
+| `L1WETHGateway`          | Gerbang untuk deposit Wrapped ETH.                             |
+| `L1ERC721Gateway`        | Gerbang untuk deposit token ERC-721.                           |
+| `L1ERC1155Gateway`       | Gerbang untuk deposit token ERC-1155.                          |
 
-## Overview
+## Gambaran Umum
 
-<ClickToZoom src={DepositWorkflow} alt="Deposit Workflow" />
+<ClickToZoom src={DepositWorkflow} alt="Alur Deposit" />
 
-The figure depicts the deposit workflow from L1 to L2. Users call the gateways to initialize the token deposit. The deposit is then encoded into a message sent to the `L1ScrollMessenger` contract and a corresponding L1-initiated transaction is appended to the `L1MessageQueue`. To finalize the deposits on L2, the L2 sequencer collects the new L1 transaction events and includes the corresponding transactions in the L2 blocks it creates. The subsequent sections describe the details of how different tokens are deposited. You can find more details about the L1-to-L2 message relay workflow in the [Cross-Domain Messaging](/technology/bridge/cross-domain-messaging#sending-messages-from-l1-to-l2).
+Gambar tersebut menggambarkan alur deposit dari L1 ke L2. Pengguna memanggil gerbang untuk memulai deposit token. Deposit tersebut kemudian dienkripsi ke dalam sebuah pesan yang dikirim ke kontrak `L1ScrollMessenger` dan transaksi yang diinisiasi oleh L1 sesuai dengan itu ditambahkan ke `L1MessageQueue`. Untuk menyelesaikan deposit di L2, sekuen L2 mengumpulkan peristiwa transaksi L1 baru dan menyertakan transaksi yang sesuai di blok-blok L2 yang dibuatnya. Bagian-bagian berikut menjelaskan detail bagaimana berbagai token di depositkan. Anda dapat menemukan lebih banyak detail tentang alur pesan dari L1 ke L2 di [Pesan Cross-Domain](/technology/bridge/cross-domain-messaging#mengirim-pesan-dari-l1-ke-l2).
 
-## Depositing ETH
+## Deposit ETH
 
-Scroll treats ETH as its native token. We pre-allocate a sufficient amount of ETH to the `L2ScrollMessenger` contract in the genesis block so that it can transfer native ETH token to L2 accounts without minting. Depositing ETH works as follows.
+Scroll memperlakukan ETH sebagai token aslinya. Kami mengalokasikan jumlah ETH yang cukup ke kontrak `L2ScrollMessenger` dalam blok genesis sehingga dapat mentransfer token ETH asli ke akun L2 tanpa pencetakan. Berikut cara melakukan deposit ETH.
 
-1. `L1GatewayRouter` provides three functions to deposit ETH from L1 to L2. The `depositETHAndCall` function can transfer ETH and execute a contract call at the same time.
+1. `L1GatewayRouter` menyediakan tiga fungsi untuk melakukan deposit ETH dari L1 ke L2. Fungsi `depositETHAndCall` dapat mentransfer ETH dan mengeksekusi panggilan kontrak pada saat bersamaan.
 
     ```solidity
     function depositETH(uint256 _amount, uint256 _gasLimit) external payable;
@@ -80,43 +80,43 @@ The deposit of ERC20 tokens works as follows.
     ) public payable;
     ```
 
-2. Based on the mapping from ERC20 tokens to gateway, the `L1GatewayRouter` calls to the corresponding gateway: `L1StandardERC20Gateway`, `L1CustomERC20Gateway`, or `L1WETHGateway`. The remaining of steps will be described separately.
+2. Berdasarkan pemetaan dari token ERC20 ke gerbang, `L1GatewayRouter` memanggil gerbang yang sesuai: `L1StandardERC20Gateway`, `L1CustomERC20Gateway`, atau `L1WETHGateway`. Langkah-langkah selanjutnya akan dijelaskan secara terpisah.
 
-### Standard ERC20 Tokens
+### Token ERC20 Standar
 
-Standard ERC20 tokens are tokens that do not require any custom logic. For such tokens, their L2 ERC20 token contracts are created by `L2StandardERC20Gateway`. The remaining steps for standard ERC20 token deposit are:
+Token ERC20 standar adalah token yang tidak memerlukan logika kustom apa pun. Untuk token seperti itu, kontrak token ERC20 L2 mereka dibuat oleh `L2StandardERC20Gateway`. Langkah-langkah tersisa untuk deposit token ERC20 standar adalah:
 
-3. The `L1StandardERC20Gateway` contract locks the ERC20 tokens by transferring them from the sender to itself.
-4. If this ERC20 token hasn't been withdrawn through `L1StandardERC20Gateway` before, `L1StandardERC20Gateway` will compute a deterministic L2 ERC20 token address and appends the token metadata (symbol, name, and decimals) to the message for the potential contract deployment on L2. If the L2 token address is already stored in the `tokenMapping`, `L1StandardERC20Gateway` will directly load the L2 token address from the mapping.
-5. `L1StandardERC20Gateway` encodes the token deposit message and calls `L1ScrollMessenger` to send the message.
-6. The corresponding L2 transaction calls the `L2ScrollMessenger.relayMessage` function to finalize the deposit on L2. In the case of standard ERC20 token deposits, the transaction then calls `L2StandardERC20Gateway.finalizeDepositERC20`.
-7. If this ERC20 token contract hasn't been deployed on L2, `L2StandardERC20Gateway` will extract the token metadata from the message and calls `ScrollStandardERC20Factory` to deploy the standard ERC20 token on L2.
-8. `L2StandardERC20Gateway` calls the mint function on the corresponding L2 ERC20 token contract.
-9. If the user calls `depositERC20AndCall` on L1, the `L2StandardERC20Gateway` will call the target L2 contract with additional data.
+3. Kontrak `L1StandardERC20Gateway` mengunci token ERC20 dengan mentransfernya dari pengirim ke kontrak itu sendiri.
+4. Jika token ERC20 ini belum ditarik melalui `L1StandardERC20Gateway` sebelumnya, `L1StandardERC20Gateway` akan menghitung alamat token ERC20 L2 yang deterministik dan menambahkan metadata token (simbol, nama, dan desimal) ke pesan untuk kemungkinan penyebaran kontrak di L2. Jika alamat token L2 sudah disimpan dalam `tokenMapping`, `L1StandardERC20Gateway` akan langsung memuat alamat token L2 dari pemetaan.
+5. `L1StandardERC20Gateway` mengkodekan pesan deposit token dan memanggil `L1ScrollMessenger` untuk mengirim pesan.
+6. Transaksi L2 yang sesuai memanggil fungsi `L2ScrollMessenger.relayMessage` untuk menyelesaikan deposit di L2. Dalam hal deposit token ERC20 standar, transaksi kemudian memanggil `L2StandardERC20Gateway.finalizeDepositERC20`.
+7. Jika kontrak token ERC20 ini belum diimplementasikan di L2, `L2StandardERC20Gateway` akan mengekstrak metadata token dari pesan dan memanggil `ScrollStandardERC20Factory` untuk mendeploy token ERC20 standar di L2.
+8. `L2StandardERC20Gateway` memanggil fungsi mint pada kontrak token ERC20 L2 yang sesuai.
+9. Jika pengguna memanggil `depositERC20AndCall` di L1, `L2StandardERC20Gateway` akan memanggil kontrak L2 target dengan data tambahan.
 
-### Custom ERC20 Tokens
+### Token ERC20 Kustom
 
-In comparison to standard ERC20 tokens, the L2 contract of custom ERC20 tokens are deployed by the token owner. The remaining steps for custom ERC20 token deposit are:
+Dibandingkan dengan token ERC20 standar, kontrak L2 untuk token ERC20 kustom didaftarkan oleh pemilik token. Langkah-langkah tersisa untuk deposit token ERC20 kustom adalah:
 
-3. The `L1CustomERC20Gateway` contract locks the ERC20 tokens on L1 by transferring them from the sender to itself.
-4. `L1CustomERC20Gateway` requires a L2 ERC20 token address present in the `tokenMapping`. It retrieves the corresponding ERC20 token address, encodes the token deposit message, and forwards it to `L1ScrollMessenger`.
-5. The corresponding L2 transaction calls the `L2ScrollMessenger.relayMessage` function to finalize the deposit on L2. In the case of custom ERC20 token deposits, the transaction calls `L2CustomERC20Gateway.finalizeDepositERC20`.
-6. `L2CustomERC20Gateway` calls the mint function on the corresponding L2 ERC20 token contract. It is required that the L2 ERC20 token contract grants mint permissions to the `L2CustomERC20Gateway` contract.
-7. If the user calls `depositERC20AndCall` on L1, the `L2CustomERC20Gateway` will call the target L2 contract with additional data.
+3. Kontrak `L1CustomERC20Gateway` mengunci token ERC20 di L1 dengan mentransfernya dari pengirim ke kontrak itu sendiri.
+4. `L1CustomERC20Gateway` membutuhkan alamat token ERC20 L2 yang ada dalam `tokenMapping`. Ini mengambil alamat token ERC20 yang sesuai, mengkodekan pesan deposit token, dan meneruskannya ke `L1ScrollMessenger`.
+5. Transaksi L2 yang sesuai memanggil fungsi `L2ScrollMessenger.relayMessage` untuk menyelesaikan deposit di L2. Dalam hal deposit token ERC20 kustom, transaksi memanggil `L2CustomERC20Gateway.finalizeDepositERC20`.
+6. `L2CustomERC20Gateway` memanggil fungsi mint pada kontrak token ERC20 L2 yang sesuai. Diperlukan bahwa kontrak token ERC20 L2 memberikan izin mint kepada kontrak `L2CustomERC20Gateway`.
+7. Jika pengguna memanggil `depositERC20AndCall` di L1, `L2CustomERC20Gateway` akan memanggil kontrak L2 target dengan data tambahan.
 
-### WETH Token
+### Token WETH
 
-We provide a custom gateway `L1WETHGateway` for Wrapped ETH token on L1 and record the gateway address in the `L1GatewayRouter`. The deposit of WETH token works as follows.
+Kami menyediakan gateway kustom `L1WETHGateway` untuk token Wrapped ETH di L1 dan mencatat alamat gateway dalam `L1GatewayRouter`. Deposit token WETH berfungsi sebagai berikut.
 
-3. `L1WETHGateway` locks the WETH tokens by transferring them from the sender to itself and unwrapping the WETH token to native ETH token. The ETH token and `msg.value` (for paying the relay fee) are then sent to the `L1ScrollMessenger` contract together.
-4. `L1WETHGateway` encodes the token deposit message and forwards it to `L1ScrollMessenger`.
-5. The corresponding L2 transaction calls the `L2ScrollMessenger.relayMessage` function to finalize the deposit on L2. In the case of WETH token deposit, the transaction calls `L2WETHGateway.finalizeDepositERC20`.
-6. `L2WETHGateway` wraps the deposited ETH to L2 WETH token again and transfers it to the recipient address on L2.
-7. If the user calls `depositERC20AndCall` on L1, the `L2WETHGateway` will call the target L2 contract with additional data.
+3. `L1WETHGateway` mengunci token WETH dengan mentransfernya dari pengirim ke kontrak itu sendiri dan membuka token WETH menjadi token ETH asli. Token ETH dan `msg.value` (untuk membayar biaya relay) kemudian dikirimkan ke kontrak `L1ScrollMessenger` bersama-sama.
+4. `L1WETHGateway` mengkodekan pesan deposit token dan meneruskannya ke `L1ScrollMessenger`.
+5. Transaksi L2 yang sesuai memanggil fungsi `L2ScrollMessenger.relayMessage` untuk menyelesaikan deposit di L2. Dalam hal deposit token WETH, transaksi memanggil `L2WETHGateway.finalizeDepositERC20`.
+6. `L2WETHGateway` membungkus ETH yang didapatkan kembali menjadi token WETH L2 dan mentransfernya ke alamat penerima di L2.
+7. Jika pengguna memanggil `depositERC20AndCall` di L1, `L2WETHGateway` akan memanggil kontrak L2 target dengan data tambahan.
 
-## Depositing ERC-721/ERC-1155 Tokens
+## Deposito Token ERC-721/ERC-1155
 
-The deposit of ERC-721 or ERC-1155 tokens works very similar to ERC20 tokens. One can use the gateways `L1ERC721Gateway` or `L1ERC1155Gateway` to deposit ERC-721 /ERC-1155 tokens from L1.
+Deposit token ERC-721 atau ERC-1155 bekerja sangat mirip dengan token ERC20. Seseorang dapat menggunakan gerbang `L1ERC721Gateway` atau `L1ERC1155Gateway` untuk melakukan deposit token ERC-721/ERC-1155 dari L1.
 
 ```solidity
 function depositERC721(
@@ -148,7 +148,7 @@ function depositERC1155(
 ) external payable;
 ```
 
-To facilitate a large amount of ERC-721 or ERC-1155 token deposits, we also provide batch deposit functions in the `L1ERC721Gateway` and `L1ERC1155Gateway` contract via the following functions:
+Untuk memfasilitasi deposit token ERC-721 atau ERC-1155 dalam jumlah besar, kami juga menyediakan fungsi deposit batch dalam kontrak `L1ERC721Gateway` dan `L1ERC1155Gateway` melalui fungsi-fungsi berikut:
 
 ```solidity
 function batchDepositERC721(
@@ -180,4 +180,4 @@ function batchDepositERC1155(
 ) external payable;
 ```
 
-The L2 counterpart contracts for ERC-721 or ERC-1155 tokens are `L2ERC721Gateway` and `L2ERC1155Gateway`. These are used to finalize deposits on L2.
+Kontrak pendamping L2 untuk token ERC-721 atau ERC-1155 adalah `L2ERC721Gateway` dan `L2ERC1155Gateway`. Ini digunakan untuk menyelesaikan deposit di L2.

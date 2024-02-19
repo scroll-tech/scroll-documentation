@@ -1,57 +1,57 @@
 ---
 section: technology
 date: Last Modified
-title: "Rollup Process"
-lang: "en"
+title: "Proses Rollup"
+lang: "id"
 permalink: "technology/chain/rollup"
-whatsnext: { "EVM Differences from Ethereum": "/technology/chain/differences/" }
+whatsnext: { "Perbedaan EVM dari Ethereum": "/id/technology/chain/differences/" }
 ---
 
 import ClickToZoom from "../../../../../components/ClickToZoom.astro"
 import RollupProcess from "../_images/rollup.png"
 
-This document describes the rollup process in Scroll.
+This document menjelaskan proses rollup di Scroll.
 
-## Workflow
+## Alur Kerja
 
 <ClickToZoom src={RollupProcess} alt="Rollup Process" />
 
-The figure illustrates the rollup workflow. The L2 sequencer contains three modules:
+Gambar menggambarkan alur kerja rollup. Sequencer L2 terdiri dari tiga modul:
 
-- **Sync service** subscribes to the event issued from the L1 bridge contract. Once it detects any newly appended messages to the L1 inbox, the Sync Service will generate a new `L1MessageTx` transaction accordingly and add it to the local L1 transaction queue.
-- **Mempool** collects the transactions that are directly submitted to the L2 sequencer.
-- **Executor** pulls the transactions from both the L1 transaction queue and L2 mempool, executes them to construct a new L2 block.
+- **Layanan Sinkronisasi** berlangganan acara yang diterbitkan dari kontrak jembatan L1. Begitu mendeteksi adanya pesan yang baru ditambahkan ke kotak masuk L1, Layanan Sinkronisasi akan menghasilkan transaksi `L1MessageTx` baru sesuai dan menambahkannya ke antrian transaksi lokal L1.
+- **Mempool** mengumpulkan transaksi yang langsung dikirimkan ke sequencer L2.
+- **Eksekutor** menarik transaksi dari kedua antrian transaksi L1 dan mempool L2, menjalankannya untuk membuat blok L2 baru.
 
-The rollup node contains three modules:
+Node rollup mengandung tiga modul:
 
-- **Relayer** submits the commit transactions and finalize transactions to the rollup contract for data availability and finality.
-- **Chunk Proposer** and **Batch Proposer** proposes new chunks and new batches following the constraints described in the [Transaction Batching](/technology/chain/transactions#transaction-batching).
+- **Pemungut** mengirimkan transaksi komit dan transaksi finalisasi ke kontrak rollup untuk ketersediaan dan kefinalan data.
+- **Penyaji Chunk** dan **Penyaji Batch** mengusulkan chunk baru dan batch baru mengikuti batasan yang dijelaskan dalam [Penggabungan Transaksi](/technology/chain/transactions#transaction-batching).
 
-The rollup process can be broken down into three phases: transaction execution, batching and data commitment, and proof generation and finalization.
+Proses rollup dapat dibagi menjadi tiga fase: eksekusi transaksi, penggabungan dan komit data, dan pembuatan bukti dan finalisasi.
 
-### Phase 1. Transaction Execution
+### Fase 1. Eksekusi Transaksi
 
-1. Users submit transactions to L1 bridge contract or L2 sequencers.
-2. The Sync Service in the L2 sequencer fetches the latest appended L1 transactions from the bridge contract.
-3. The L2 sequencer processes the transactions from both the L1 message queue and the L2 mempool to construct L2 blocks.
+1. Pengguna mengirimkan transaksi ke kontrak jembatan L1 atau sequencer L2.
+2. Layanan Sinkronisasi di sequencer L2 mengambil transaksi L1 yang baru ditambahkan dari kontrak jembatan.
+3. Sequencer L2 memproses transaksi dari antrian pesan L1 dan mempool L2 untuk membuat blok L2.
 
-### Phase 2. Batching and Data Commitment
+### Fase 2. Penggabungan dan Komit Data
 
-4. The rollup node monitors the latest L2 blocks and fetches the transaction data.
-5. If the criterion (described in the [Transaction Batching](/technology/chain/transactions#transaction-batching)) are met, the rollup node proposes a new chunk or a batch and writes it to the database. Otherwise, the rollup node keeps waiting for more blocks or chunks.
-6. Once a new batch is created, the rollup relayer collects the transaction data in this batch and submits a Commit Transaction to the rollup contract for data availability.
+4. Node rollup memantau blok L2 terbaru dan mengambil data transaksi.
+5. Jika kriteria (dijelaskan dalam [Penggabungan Transaksi](/technology/chain/transactions#transaction-batching)) terpenuhi, node rollup mengusulkan chunk atau batch baru dan menuliskannya ke database. Jika tidak, node rollup terus menunggu lebih banyak blok atau chunk.
+6. Begitu batch baru dibuat, pengumpul rollup mengumpulkan data transaksi dalam batch ini dan mengirimkan Transaksi Komit ke kontrak rollup untuk ketersediaan data.
 
-### Phase 3. Proof Generation and Finalization
+### Fase 3. Pembuatan Bukti dan Finalisasi
 
-7. Once the coordinator polls a new chunk or batch from the database:
-   - Upon a new chunk, the coordinator will query the execution traces of all blocks in this chunk from the L2 sequencer and then send a chunk proving task to a randomly selected zkEVM prover.
-   - Upon a new batch, the coordinator will collect the chunk proofs of all chunks in this batch from the database and dispatch a batch proving task to a randomly selected aggregator prover.
-8. Upon the coordinator receives a chunk or batch proofs from a prover, it will write the proof to the database.
-9. Once the rollup relayer polls a new batch proof from the database, it will submit a Finalize Transaction to the rollup contract to verify the proof.
+7. Begitu koordinator meminta chunk atau batch baru dari database:
+   - Ketika ada chunk baru, koordinator akan mengambil jejak eksekusi dari semua blok dalam chunk ini dari sequencer L2 dan kemudian mengirimkan tugas pembuktian chunk ke pembuktikan zkEVM yang dipilih secara acak.
+   - Ketika ada batch baru, koordinator akan mengumpulkan bukti chunk dari semua chunk dalam batch ini dari database dan mengirimkan tugas pembuktian batch ke pembuktikan pengumpul yang dipilih secara acak.
+8. Begitu koordinator menerima bukti chunk atau batch dari pembuktikan, ia akan menuliskan bukti ke database.
+9. Begitu pengumpul rollup meminta bukti batch baru dari database, ia akan mengirimkan Transaksi Finalisasi ke kontrak rollup untuk memverifikasi bukti.
 
-## Commit Transaction
+## Transaksi Komit
 
-The Commit Transaction submits the block information and transaction data to L1 for data availability. The transaction includes the parent batch header, chunk data, and a bitmap of skipped L1 message. The parent batch header designates the previous batch that this batch links to. The parent batch must be committed before; otherwise the transaction will be reverted. See the `commitBatch` function signature below.
+Transaksi Komit mengirimkan informasi blok dan data transaksi ke L1 untuk ketersediaan data. Transaksi tersebut mencakup header batch induk, data chunk, dan bitmap pesan L1 yang dilewati. Header batch induk menunjuk batch sebelumnya yang batch ini terhubung. Batch induk harus di-commit sebelumnya; jika tidak, transaksi akan dibatalkan. Lihat tanda fungsi `commitBatch` di bawah ini.
 
 ```solidity
 function commitBatch(
@@ -62,19 +62,19 @@ function commitBatch(
 ) external override OnlySequencer
 ```
 
-After the `commitBatch` function verifies the parent batch is committed before, it constructs the batch header of the batch and stores the hash of the batch header in the `ScrollChain` contract.
+Setelah fungsi `commitBatch` memverifikasi bahwa batch induk sudah di-commit sebelumnya, ia membangun header batch dari batch tersebut dan menyimpan hash dari header batch di kontrak `ScrollChain`.
 
 ```solidity
 mapping(uint256 => bytes32) public committedBatches;
 ```
 
-The encoding of batch header and chunk data are described in the [Codec](#codec) section. Most fields in the batch header are straight-forward to derive from the chunk data. One important field to note is `dataHash` that will become part of the public input to verify the validity proof. Assuming that a batch contains `n` chunks, its `dataHash` is computed as follows
+Enkoding header batch dan data chunk dijelaskan dalam bagian [Codec](#codec). Sebagian besar bidang dalam header batch dapat dihasilkan langsung dari data chunk. Salah satu bidang penting yang perlu dicatat adalah `dataHash` yang akan menjadi bagian dari input publik untuk memverifikasi bukti kebenaran. Dengan asumsi bahwa sebuah batch berisi `n` chunk, `dataHash`-nya dihitung sebagai berikut
 
 ```
 batch.dataHash := keccak(chunk[0].dataHash || ... || chunk[n-1].dataHash)
 ```
 
-Assuming that a chunk contains `k` blocks, its `dataHash` is computed as follows
+Dengan asumsi bahwa sebuah chunk mengandung `k` blok, `dataHash`-nya dihitung sebagai berikut:
 
 ```
 chunk.dataHash := keccak(blockContext[0] || ... || blockContext[k-1] ||
@@ -82,13 +82,13 @@ chunk.dataHash := keccak(blockContext[0] || ... || blockContext[k-1] ||
                          block[k-1].l1TxHashes || block[k-1].l2TxHashes)
 ```
 
-, where `block.l1TxHashes` are the concatenated transaction hashes of the L1 transactions in this block and `block.l2TxHashes` are the concatenated transaction hashes of the L2 transactions in this block. Note that the transaction hashes of L1 transactions are not uploaded by the rollup node, but instead directly loaded from the `L1MessageQueue` contract given the index range of included L1 messages in this block. The L2 transaction hashes are calculated from the RLP-encoded bytes in the `l2Transactions` field in the [`Chunk`](#Chunk-Codec).
+di mana `block.l1TxHashes` adalah hasil gabungan hash transaksi-transaksi L1 dalam blok ini dan `block.l2TxHashes` adalah hasil gabungan hash transaksi-transaksi L2 dalam blok ini. Perlu dicatat bahwa hash transaksi dari transaksi-transaksi L1 tidak diunggah oleh node rollup, melainkan langsung dimuat dari kontrak `L1MessageQueue` dengan memberikan rentang indeks pesan L1 yang disertakan dalam blok ini. Hash transaksi L2 dihitung dari byte yang dienkripsi dengan RLP dalam bidang `l2Transactions` dalam [`Chunk`](#Chunk-Codec).
 
-In addition, the `commitBatch` function contains a bitmap of skipped L1 messages. Unfortunately, this is due to the problem of proof overflow. If the L1 transaction corresponding to a L1 message exceeds the circuit capacity limit, we won't be able to generate a valid proof for this transaction and thus cannot finalize it on L1. Scroll is working actively to eliminate the proof overflow problem through upgrades to our proving system.
+Selain itu, fungsi `commitBatch` berisi bitmap dari pesan L1 yang dilewati. Sayangnya, hal ini disebabkan oleh masalah overflow bukti. Jika transaksi L1 yang sesuai dengan pesan L1 melebihi batas kapasitas sirkuit, kami tidak akan dapat menghasilkan bukti yang valid untuk transaksi ini dan oleh karena itu tidak dapat memfinalisasikannya di L1. Scroll sedang aktif bekerja untuk menghilangkan masalah overflow bukti melalui peningkatan pada sistem pembuktian kami.
 
-## Finalize Transaction
+## Transaksi Finalisasi
 
-The Finalize Transaction finalizes the previously-committed batch with a validity proof. The transaction also submits the state root and the withdraw root after the batch. Here is the function signature of `finalizeBatchWithProof`:
+Transaksi Finalisasi mengakhiri batch yang telah di-commit sebelumnya dengan bukti validitas. Transaksi juga mengirimkan root state dan root penarikan setelah batch. Berikut adalah tanda fungsi `finalizeBatchWithProof`:
 
 ```solidity
 function finalizeBatchWithProof(
@@ -100,56 +100,56 @@ function finalizeBatchWithProof(
 ) external override OnlyProver
 ```
 
-The `finalizeBatchWithProof` function first verifies if the batch has been committed in the contract. It then calculates the public input hash as follows
+Fungsi `finalizeBatchWithProof` pertama-tama memverifikasi apakah batch telah di-commit di kontrak. Kemudian menghitung hash input publik sebagai berikut:
 
 ```
 publicInputHash := keccak(chainId || prevStateRoot || postStateRoot || withdrawRoot || batch.dataHash)
 ```
 
-The public input hash and the validity proof are sent to the plonk solidity verifier. Once the verification passes, the new state root and withdraw root are stored in the `ScrollChain` contract.
+Hash input publik dan bukti kebenaran dikirim ke verifikator Plonk Solidity. Setelah verifikasi berhasil, root state baru dan root penarikan disimpan di kontrak `ScrollChain`.
 
 ```solidity
 mapping(uint256 => bytes32) public override finalizedStateRoots;
 mapping(uint256 => bytes32) public override withdrawRoots;
 ```
 
-At this stage, the state root of the latest finalized batch can be used trustlessly and the withdrawal transactions in that batch can be executed on L1 using the Merkle proof to the withdraw root.
+Pada tahap ini, root state dari batch terakhir yang difinalisasi dapat digunakan secara terpercaya dan transaksi penarikan dalam batch tersebut dapat dieksekusi di L1 menggunakan bukti Merkle ke root penarikan.
 
 ## Codec
 
-This section describes the codec of three data structures in the Rollup contract: `BatchHeader`, `Chunk`, and `BlockContext`.
+Bagian ini menjelaskan codec dari tiga struktur data dalam kontrak Rollup: `BatchHeader`, `Chunk`, dan `BlockContext`.
 
 ### `BatchHeader` Codec
 
-| Field                    | Bytes   | Type        | Offset | Description                                                     |
+| Field                    | Bytes   | Tipe        | Offset | Deskripsi                                                       |
 | ------------------------ | ------- | ----------- | ------ | --------------------------------------------------------------- |
-| `version`                | 1       | `uint8`     | 0      | The batch header version                                        |
-| `batchIndex`             | 8       | `uint64`    | 1      | The index of the batch                                          |
-| `l1MessagePopped`        | 8       | `uint64`    | 9      | The number of L1 messages poped in the batch                    |
-| `totalL1MessagePopped`   | 8       | `uint64`    | 17     | The number of total L1 messages popped after the batch          |
-| `dataHash`               | 32      | `bytes32`   | 25     | The data hash of the batch                                      |
-| `parentBatchHash`        | 32      | `bytes32`   | 57     | The parent batch hash                                           |
-| `skippedL1MessageBitmap` | dynamic | `uint256[]` | 89     | A bitmap to indicate which L1 messages are skipped in the batch |
+| `version`                | 1       | `uint8`     | 0      | Versi header batch                                              |
+| `batchIndex`             | 8       | `uint64`    | 1      | Indeks dari batch                                               |
+| `l1MessagePopped`        | 8       | `uint64`    | 9      | Jumlah pesan L1 yang dipop dalam batch                          |
+| `totalL1MessagePopped`   | 8       | `uint64`    | 17     | Jumlah total pesan L1 yang dipop setelah batch                  |
+| `dataHash`               | 32      | `bytes32`   | 25     | Hash data dari batch                                             |
+| `parentBatchHash`        | 32      | `bytes32`   | 57     | Hash batch induk                                                 |
+| `skippedL1MessageBitmap` | dinamis | `uint256[]` | 89     | Bitmap untuk menunjukkan pesan-pesan L1 mana yang dilewati dalam batch |
 
 ### `Chunk` Codec
 
-| Field            | Bytes   | Type           | Offset    | Description                                                                                                                                       |
+| Field            | Bytes   | Tipe           | Offset    | Deskripsi                                                                                                                                         |
 | ---------------- | ------- | -------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `numBlocks`      | 1       | `uint8`        | 0         | The number of blocks in the chunk                                                                                                                 |
-| `block[0]`       | 60      | `BlockContext` | 1         | The block information of the 1st block                                                                                                            |
+| `numBlocks`      | 1       | `uint8`        | 0         | Jumlah blok dalam chunk                                                                                                                           |
+| `block[0]`       | 60      | `BlockContext` | 1         | Informasi blok dari blok ke-1                                                                                                                     |
 | ...              | ...     | ...            | ...       | ...                                                                                                                                               |
-| `block[i]`       | 60      | `BlockContext` | `60*i+1`  | The block information of `i+1`-th block                                                                                                           |
+| `block[i]`       | 60      | `BlockContext` | `60*i+1`  | Informasi blok dari blok ke-`i+1`                                                                                                                 |
 | ...              | ...     | ...            | ...       | ...                                                                                                                                               |
-| `block[n-1]`     | 60      | `BlockContext` | `60*n-59` | The block information of the last block                                                                                                           |
-| `l2Transactions` | dynamic | `bytes`        | `60*n+1`  | The concatenated RLP encoding of L2 transactions with signatures. The byte length (`uint32`) of RLP encoding is inserted before each transaction. |
+| `block[n-1]`     | 60      | `BlockContext` | `60*n-59` | Informasi blok dari blok terakhir                                                                                                                 |
+| `l2Transactions` | dinamis | `bytes`        | `60*n+1`  | Penggabungan enkoding RLP dari transaksi L2 dengan tanda tangan. Panjang byte (`uint32`) dari enkoding RLP dimasukkan sebelum setiap transaksi. |
 
 ### `BlockContext` Codec
 
-| Field             | Bytes | Type      | Offset | Description                                                                         |
-| ----------------- | ----- | --------- | ------ | ----------------------------------------------------------------------------------- |
-| `blockNumber`     | 8     | `uint64`  | 0      | The block number                                                                    |
-| `timestamp`       | 8     | `uint64`  | 8      | The block time                                                                      |
-| `baseFee`         | 32    | `uint256` | 16     | The base fee of this block. Currently, it is always 0, because we disable EIP-1559. |
-| `gasLimit`        | 8     | `uint64`  | 48     | The gas limit of this block                                                         |
-| `numTransactions` | 2     | `uint16`  | 56     | The number of transactions in this block, including both L1 & L2 txs                |
-| `numL1Messages`   | 2     | `uint16`  | 58     | The number of L1 messages in this block                                             |
+| Field             | Bytes | Tipe       | Offset | Deskripsi                                                                              |
+| ----------------- | ----- | ---------- | ------ | -------------------------------------------------------------------------------------- |
+| `blockNumber`     | 8     | `uint64`   | 0      | Nomor blok                                                                            |
+| `timestamp`       | 8     | `uint64`   | 8      | Waktu blok                                                                            |
+| `baseFee`         | 32    | `uint256`  | 16     | Biaya dasar dari blok ini. Saat ini, selalu 0, karena kami menonaktifkan EIP-1559.    |
+| `gasLimit`        | 8     | `uint64`   | 48     | Batas gas dari blok ini                                                              |
+| `numTransactions` | 2     | `uint16`   | 56     | Jumlah transaksi dalam blok ini, termasuk transaksi L1 & L2                            |
+| `numL1Messages`   | 2     | `uint16`   | 58     | Jumlah pesan L1 dalam blok ini                                                      |

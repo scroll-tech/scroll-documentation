@@ -128,7 +128,7 @@
       "depositGateways": "Gateway Deposit",
       "withdrawGateways": "Gateway Penarikan",
 
-      "sequencer": "PenySequencerusun",
+      "sequencer": "Sequencer",
       "executionNode": "Node Eksekusi",
       "rollupNode": "Node Rollup",
       "zkTrie": "zkTrie",
@@ -141,7 +141,7 @@
       "cpuProverRepo": "Repositori Prover Repo",
 
       "security": "Keamanan",
-      "auditsAndBugBounty": "Audit & Hadiah Bug",
+      "auditsAndBugBounty": "Audit & Bug Bounty",
       "l2BeatAssessment": "Penilaian L2Beat"
     },
     "learn": {
@@ -158,7 +158,7 @@
   "footer": {
     "aboutScroll": {
       "title": "Tentang Scroll",
-      "bugBounty": "Hadiah Bug",
+      "bugBounty": "Bug Bounty",
       "joinUs": "Bergabunglah",
       "healthStatus": "Status Kesehatan",
       "privacyPolicy": "Kebijakan Privasi",

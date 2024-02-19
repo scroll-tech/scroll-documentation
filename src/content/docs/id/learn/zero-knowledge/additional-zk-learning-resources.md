@@ -1,8 +1,8 @@
 ---
 section: learn
 date: Last Modified
-title: "Additional ZK Learning Resources"
-lang: "en"
+title: "Sumber Daya Tambahan"
+lang: "id"
 permalink: "learn/zero-knowledge/additional-zk-learning-resources"
 excerpt: "Looking to dive deeper into ZK? Here are some of our favorite resources."
 ---

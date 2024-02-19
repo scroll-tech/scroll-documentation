@@ -1,33 +1,33 @@
 ---
 section: technology
 date: Last Modified
-title: "Rollup Node"
-lang: "en"
+title: "Node Rollup"
+lang: "id"
 permalink: "technology/sequencer/rollup-node"
-whatsnext: { "zkTrie": "/technology/sequencer/zktrie/" }
+whatsnext: { "zkTrie": "/id/technology/sequencer/zktrie/" }
 ---
 
-The rollup node is responsible for splitting up the Scroll blockchain into sections that are suitable for proving and commitment on L1. The two main units of this are *chunks* and *batches*.
-* A chunk is simply a contiguous section of the L2 ledger, it is a collection of L2 blocks, and chunks are the unit of zkEVM proving.
-* A batch, on the other hand, is a collection of chunks that are submitted to L1, along with an aggregate proof.
+Node rollup bertanggung jawab membagi blockchain Scroll menjadi bagian yang sesuai untuk pembuktian dan komitmen di L1. Dua unit utamanya adalah *chunk* dan *batch*.
+* Sebuah chunk adalah sekumpulan bagian berurutan dari ledger L2, itu adalah kumpulan blok L2, dan chunk adalah unit pembuktian zkEVM.
+* Sebaliknya, sebuah batch adalah kumpulan chunk yang diserahkan ke L1, bersama dengan bukti agregat.
 
-The rollup node has the following submodules:
-- Chunk Proposer: collects L2 blocks and proposes chunks while enforcing certain limits (see below).
-- Batch Proposer: collect chunks and propose batches while enforcing certain limits (see below).
-- Relayer: submits batch data and batch proofs to L1.
+Node rollup memiliki submodule berikut:
+- Pengusul Chunk: mengumpulkan blok L2 dan mengusulkan chunk sambil menegakkan batasan tertentu (lihat di bawah).
+- Pengusul Batch: mengumpulkan chunk dan mengusulkan batch sambil menegakkan batasan tertentu (lihat di bawah).
+- Relayer: mengirimkan data batch dan bukti batch ke L1.
 
-## Chunk and batch constraints
+## Kendala chunk dan batch
 
-Compared to the execution node, the rollup node is a much more straightforward and simple component.
-It collects L2 blocks, creates chunks and batches, and submits these to L1.
-In this section we outline the main limits that the rollup node must enforce during chunk and batch creation.
+Dibandingkan dengan node eksekusi, node rollup adalah komponen yang jauh lebih langsung dan sederhana.
+Ini mengumpulkan blok L2, membuat chunk dan batch, dan mengirimkannya ke L1.
+Dalam bagian ini kami menjabarkan batasan utama yang harus ditegakkan oleh node rollup selama pembuatan chunk dan batch.
 
-Constraints on chunks:
-- **No proof overflow:** Using the circuit capacity checker, we make sure to include as many blocks in a chunk that it would still not lead to proof overflow.
-- **L1 payload**: Inherited constraints from batch proposer, transaction payload cannot exceed 128KB.
+Kendala pada chunk:
+- **Tidak ada overflow bukti:** Dengan menggunakan pemeriksa kapasitas sirkuit, kami memastikan untuk menyertakan sebanyak mungkin blok dalam sebuah chunk sehingga tidak akan menghasilkan overflow bukti.
+- **Payload L1**: Kendala yang diwarisi dari pengusul batch, payload transaksi tidak boleh melebihi 128KB.
 
-Constraints on batches:
-- **L1 payload:** Ethereum has a hardcoded 128KB limit on transaction payload size.
-- **L1 commit gas:** The gas cost of committing a batch is proportional to the number of blocks and transactions in it. We must make sure that this cost does not exceed the L1 block gas limit.
-- **Number of chunks:** A batch includes a number of chunks that is optimal for the aggregation prover.
+Kendala pada batch:
+- **Payload L1:** Ethereum memiliki batasan 128KB yang diprogram keras pada ukuran payload transaksi.
+- **Gas komitmen L1:** Biaya gas dari memcommitkan sebuah batch sebanding dengan jumlah blok dan transaksi di dalamnya. Kami harus memastikan bahwa biaya ini tidak melebihi batas gas blok L1.
+- **Jumlah chunk:** Sebuah batch termasuk sejumlah chunk yang optimal untuk prover agregasi.
 
