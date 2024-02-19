@@ -60,11 +60,11 @@ excerpt: "Translation of English terms into Spanish"
 | Router                                          | Router                                          |
 | Scroll                                          | Scroll                                          |
 | Ethereum                                        | Ethereum                                        |
-| Zero-knowledge                                  | Pengetahuan Nol                                 |
+| Zero-knowledge                                  | Zero Knowledge                                  |
 | Layer 2 rollup                                  | Rollup Layer 2                                  |
 | Smart contracts                                 | Smart Contract                                  |
 | Mainnet                                         | Mainnet                                         |
-| Polynomial commitment scheme                    | Skema komitmen polinomial                       |
+| Polynomial commitment scheme                    | Skema komitmen Polynomial                       |
 | Commitment                                      | Komitmen, penyimpanan                           |
 | Proof of validity                               | Proof of validity                               |
 | Proof of fraud                                  | Proof of fraud                                  |

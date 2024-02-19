@@ -2,50 +2,50 @@
 section: learn
 date: Last Modified
 title: "Intro to Rollups"
-lang: "en"
+lang: "id"
 permalink: "learn/intro-to-rollups"
-excerpt: "Rollups are the most predominant layer 2 scaling solution in the Ethereum ecosystem."
-whatsnext: { "Scroll Rollup Process": "/technology/chain/rollup" }
+excerpt: "Rollups adalah solusi skalabilitas layer 2 yang paling dominan dalam ekosistem Ethereum."
+whatsnext: { "Scroll Rollup Process": "/id/technology/chain/rollup" }
 ---
 
-## What’s a rollup?
+## Apa itu rollup?
 
-Rollups are the most predominant layer 2 scaling solution in the Ethereum ecosystem, and are viewed as a [central part](https://ethereum-magicians.org/t/a-rollup-centric-ethereum-roadmap/4698) of the Ethereum roadmap.
+Rollup adalah solusi skalabilitas layer 2 yang paling dominan dalam ekosistem Ethereum, dan dianggap sebagai [bagian sentral](https://ethereum-magicians.org/t/a-rollup-centric-ethereum-roadmap/4698) dari peta jalan Ethereum.
 
-A rollup processes batches of transactions off-chain (i.e. not on layer 1), and then posts the resulting data on-chain (i.e. on layer 1).
+Rollup memproses batch transaksi di luar rantai (off-chain), dan kemudian memposting data hasilnya di rantai (on-chain).
 
-The execution of each transaction is performed off-chain, and does not need to be re-executed layer 1 nodes. This allows for high transaction throughput, without impacting the decentralization of layer 1.
+Eksekusi setiap transaksi dilakukan di luar rantai, dan tidak perlu dieksekusi ulang oleh node layer 1. Ini memungkinkan throughput transaksi yang tinggi, tanpa mempengaruhi desentralisasi layer 1.
 
-In order for a rollup to be secure, it must prove that its off-chain computation (the processing of transactions) was performed correctly. There are predominantly two mechanisms to prove the validity of off-chain computation: validity proofs and fraud proofs.
+Agar rollup aman, harus membuktikan bahwa komputasinya di luar rantai (pemrosesan transaksi) dilakukan dengan benar. Ada dua mekanisme utama untuk membuktikan validitas komputasi di luar rantai: bukti keabsahan dan bukti penipuan.
 
-## What’s an optimistic rollup?
+## Apa itu optimistic rollup?
 
-An optimistic rollup is a rollup that uses fraud proofs to assert the validity of its computation.
+Optimistic rollup adalah rollup yang menggunakan bukti penipuan untuk menegaskan validitas komputasinya.
 
-Fraud proofs are a mechanism that allow users to challenge and prove the invalidity of any computation performed on the L2. If a fraud proof is successfully submitted, the L2 can be rolled back to a previous state and the invalid computation can be corrected. Fraud proofs depend on at least one honest party checking that the L2 transactions have been correctly executed.
+Bukti penipuan adalah mekanisme yang memungkinkan pengguna menantang dan membuktikan ketidakvalidan setiap komputasi yang dilakukan di L2. Jika bukti penipuan berhasil diajukan, L2 dapat digulirkan kembali ke keadaan sebelumnya dan komputasi yang tidak valid dapat diperbaiki. Bukti penipuan bergantung pada setidaknya satu pihak jujur yang memeriksa bahwa transaksi L2 telah dieksekusi dengan benar.
 
-## What’s a ZK rollup?
+## Apa itu ZK rollup?
 
-A ZK rollup is a rollup that uses validity proofs to assert the validity of its computation.
+ZK rollup adalah rollup yang menggunakan bukti keabsahan untuk menegaskan validitas komputasinya.
 
-When a ZK rollup executes a batch of transactions and posts the resulting state to L1, it also posts a validity proof. This mathematical proof proves that the resulting state is indeed the state which results from correctly executing the batch of transactions.
+Ketika ZK rollup mengeksekusi batch transaksi dan memposting keadaan hasilnya ke L1, ia juga memposting bukti keabsahan. Bukti matematika ini membuktikan bahwa keadaan hasilnya memang keadaan yang dihasilkan dari mengeksekusi batch transaksi dengan benar.
 
-Today, there are multiple types of ZK rollups, broadly defined as either zkVMs (zk Virtual Machines) or zkEVMs (zk Ethereum Virtual Machines).
+Saats ini, ada beberapa jenis ZK rollup, secara luas didefinisikan sebagai zkVMs (zk Virtual Machines) atau zkEVMs (zk Ethereum Virtual Machines).
 
-zkVMs are designed from the ground up to work well with ZK circuits and require different development workflows compared to a zkEVM. Some examples of these include Starkware and Aztec.
+zkVMs dirancang dari awal untuk bekerja dengan baik dengan sirkuit ZK dan memerlukan alur kerja pengembangan yang berbeda dibandingkan dengan zkEVM. Beberapa contohnya termasuk Starkware dan Aztec.
 
-zkEVMs are designed to emulate the EVM. There are two major types of zkEVMs: bytecode-compatible, and language-compatible. Bytecode-compatible zkEVMs emulate the EVM at a very low level, allowing for a near-identical development and user experience compared to Ethereum Layer 1. Language-compatible zkEVMs compile Solidity and other high-level languages down into different bytecode, which can result in changes to workflow. zkSync is the most popular language-compatible zkEVM.
+zkEVMs dirancang untuk meniru EVM. Ada dua jenis utama zkEVMs: yang kompatibel dengan bytecode, dan yang kompatibel dengan bahasa. Bytecode-compatible zkEVMs meniru EVM pada tingkat yang sangat rendah, memungkinkan pengalaman pengembangan dan pengguna yang hampir identik dengan Ethereum Layer 1. Language-compatible zkEVMs mengkompilasi Solidity dan bahasa tingkat tinggi lainnya ke bytecode yang berbeda, yang dapat menghasilkan perubahan dalam alur kerja. zkSync adalah zkEVM yang paling populer yang kompatibel dengan bahasa.
 
-Scroll is bytecode-compatible. This approach was chosen because it brings certain benefits:
+Scroll adalah kompatibel dengan bytecode. Pendekatan ini dipilih karena membawa beberapa manfaat:
 
-- Solidity, Vyper, and Huff work out of the box
-- No re-auditing necessary
-- Most existing tooling is inherited
-- Near-identical UX and DevX as Ethereum
+- Solidity, Vyper, dan Huff bekerja tanpa masalah
+- Tidak perlu audit ulang
+- Sebagian besar alat yang ada diwarisi
+- Pengalaman pengguna dan pengembangan yang hampir identik dengan Ethereum
 
-More detail on Scroll’s approach is found in the Technology section.
+Detail lebih lanjut tentang pendekatan Scroll dapat ditemukan di bagian Teknologi.
 
-## Further reading
+## Bacaan lebih lanjut
 
 - [An Incomplete Guide to Rollups](https://vitalik.ca/general/2021/01/05/rollup.html) - Vitalik Buterin
 - [Scaling](https://ethereum.org/en/developers/docs/scaling/) - Ethereum Docs

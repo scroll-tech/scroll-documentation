@@ -2,26 +2,26 @@
 section: learn
 date: Last Modified
 title: "The Scalability Problem"
-lang: "en"
+lang: "id"
 permalink: "learn/intro-to-rollups"
-excerpt: "Ethereum’s strong decentralization and security come at the cost of sacrificing scalability: to ensure that all the participating nodes can keep up with the network, the network’s throughput is limited. This limit ultimately results in higher costs and latencies for users."
-whatsnext: { "Intro to Rollups": "/learn/intro-to-rollups" }
+excerpt: "Desentralisasi dan keamanan yang kuat pada Ethereum datang dengan biaya pengorbanan skalabilitas: untuk memastikan bahwa semua node yang berpartisipasi dapat mengikuti jaringan, throughput jaringan dibatasi. Batasan ini pada akhirnya menghasilkan biaya dan latensi yang lebih tinggi bagi pengguna."
+whatsnext: { "Intro to Rollups": "/id/learn/intro-to-rollups" }
 ---
 
-## Ethereum’s scaling problem
+## Masalah skalabilitas Ethereum
 
-[Ethereum](https://ethereum.org/en/developers/docs/intro-to-ethereum/#what-is-ethereum) is a general-purpose blockchain that supports the deployment and execution of [smart contracts](https://ethereum.org/en/developers/docs/intro-to-ethereum/#what-are-smart-contracts).
+[Ethereum](https://ethereum.org/en/developers/docs/intro-to-ethereum/#what-is-ethereum) adalah blockchain tujuan umum yang mendukung penyebaran dan pelaksanaan [kontrak pintar](https://ethereum.org/en/developers/docs/intro-to-ethereum/#what-are-smart-contracts).
 
-One of the defining features of Ethereum is its unwavering commitment to security and decentralization. Ethereum is designed such that computers all across the world (even cheap ones, like a [Raspberry Pi](https://ethereum-on-arm-documentation.readthedocs.io/)) can participate in the network, running local copies of the blockchain and processing new transactions.
+Salah satu fitur yang menonjol dari Ethereum adalah komitmennya yang teguh terhadap keamanan dan desentralisasi. Ethereum dirancang sedemikian rupa sehingga komputer di seluruh dunia (bahkan yang murah, seperti [Raspberry Pi](https://ethereum-on-arm-documentation.readthedocs.io/)) dapat berpartisipasi dalam jaringan, menjalankan salinan lokal dari blockchain dan memproses transaksi baru.
 
-However, Ethereum’s strong decentralization and security come at the cost of sacrificing scalability: to ensure that all the participating nodes can keep up with the network, the network’s throughput is limited. This limit ultimately results in higher costs and latencies for users.
+Namun, desentralisasi dan keamanan yang kuat pada Ethereum datang dengan biaya pengorbanan skalabilitas: untuk memastikan bahwa semua node yang berpartisipasi dapat mengikuti jaringan, throughput jaringan dibatasi. Batasan ini pada akhirnya menghasilkan biaya dan latensi yang lebih tinggi bagi pengguna.
 
-## Scaling solutions
+## Solusi skalabilitas
 
-Ethereum’s scaling solutions aim to increase the throughput of the network without sacrificing decentralization or security.
+Solusi skalabilitas Ethereum bertujuan untuk meningkatkan throughput jaringan tanpa mengorbankan desentralisasi atau keamanan.
 
-There are primarily two types of scaling solutions: layer 1 scaling solutions and layer 2 scaling solutions.
+Secara umum, ada dua jenis solusi skalabilitas: solusi skalabilitas layer 1 dan solusi skalabilitas layer 2.
 
-**Layer 1** (or **L1**) scaling solutions attempt to scale the network by making modifications to the Ethereum blockchain directly. The term “layer 1” here refers to the main Ethereum blockchain. In general, it is very difficult to design layer 1 scaling solutions that increase throughput and at the same time preserve high levels of security and decentralization. Thus, recent scaling efforts have shifted away from layer 1 solutions and towards layer 2 solutions.
+**Layer 1** (atau **L1**) adalah solusi skalabilitas yang mencoba meningkatkan throughput jaringan dengan melakukan modifikasi langsung pada blockchain Ethereum. Istilah "layer 1" di sini mengacu pada blockchain Ethereum utama. Secara umum, sangat sulit untuk merancang solusi skalabilitas layer 1 yang meningkatkan throughput dan pada saat yang sama mempertahankan tingkat keamanan dan desentralisasi yang tinggi. Oleh karena itu, upaya skalabilitas terbaru telah beralih dari solusi layer 1 ke solusi layer 2.
 
-**Layer 2** (or **L2**) scaling solutions are networks that live **on top** of Ethereum layer 1 - they are essentially separate blockchains which are “anchored” to the underlying Ethereum blockchain in some way. These layer 2 networks can generally process transactions at a higher rate than the underlying layer 1 network, as they are not subject to the same limitations. The “anchoring” mechanism, the specifics of which differ across various layer 2s, enables the layer 2 network to inherit the strong security and decentralization properties of Ethereum layer 1.
+**Layer 2** (atau **L2**) adalah jaringan yang berada **di atas** layer 1 Ethereum - mereka pada dasarnya adalah blockchain terpisah yang "diikat" ke blockchain Ethereum dasar dengan cara tertentu. Jaringan layer 2 ini umumnya dapat memproses transaksi dengan laju yang lebih tinggi daripada jaringan layer 1 yang mendasarinya, karena mereka tidak tunduk pada batasan yang sama. Mekanisme "pengikatan", yang detailnya berbeda-beda di berbagai layer 2, memungkinkan jaringan layer 2 untuk mewarisi sifat keamanan dan desentralisasi yang kuat dari layer 1 Ethereum.

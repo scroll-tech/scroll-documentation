@@ -1,35 +1,35 @@
 ---
 section: learn
 date: Last Modified
-title: "Skema Komitmen Polinomial"
+title: "Skema Komitmen Polynomial"
 lang: "en"
 permalink: "learn/zero-knowledge/polynomial-commitment-schemes"
-excerpt: "Polynomial commitment schemes are a core building block of zero knowledge proof system"
+excerpt: "Skema komitmen Polynomial adalah blok bangunan inti dari sistem bukti Zero Knowledge."
 whatsnext: { "Skema Komitmen KZG": "/id/learn/zero-knowledge/kzg-commitment-scheme" }
 ---
 
-Polynomial commitment schemes are a core building block of zero knowledge proof systems (as well as other cryptographic protocols).
+Skema komitmen Polynomial adalah blok bangunan inti dari sistem bukti Zero Knowledge (zero knowledge proof) (serta protokol kriptografi lainnya).
 
-As the name suggests, polynomial commitment schemes are commitment schemes where the object to be committed is a polynomial. These schemes also have a special property where an evaluation of the polynomial can be verified with access only to the polynomial’s commitment.
+Seperti namanya, skema komitmen Polynomial adalah skema komitmen di mana objek yang akan dikomitmennya adalah sebuah Polynomial. Skema-skema ini juga memiliki properti khusus di mana evaluasi dari Polynomial dapat diverifikasi hanya dengan akses ke komitmen Polynomialnya.
 
-## Commitment schemes
+## Skema komitmen
 
-A **[commitment scheme](https://en.wikipedia.org/wiki/Commitment_scheme)** is a cryptographic primitive involving two parties: a _committer_ and a _verifier_. The committer commits to a value $v$ by computing a commitment $c$ and revealing it to the verifier. At a later point in time, the committer can reveal the original value, and the verifier can verify that the commitment corresponds to this revealed value.
+Sebuah **[skema komitmen](https://en.wikipedia.org/wiki/Commitment_scheme)** adalah primitif kriptografi yang melibatkan dua pihak: seorang _komiter_ dan seorang _verifier_. Komiter mengkomitkan suatu nilai $v$ dengan menghitung sebuah komitmen $c$ dan mengungkapkannya kepada verifier. Kemudian, pada waktu yang kemudian, komiter dapat mengungkapkan nilai aslinya, dan verifier dapat memverifikasi bahwa komitmen tersebut sesuai dengan nilai yang diungkapkan.
 
-Secure commitment schemes have two properties:
+Skema komitmen yang aman memiliki dua properti:
 
-1. **Binding**: once publishing the commitment $c$, the committer should not be able to find some other value $v’$ distinct from $v$ that also corresponds to $c$. I.e., the commitment $c$ binds the committer to the original value $v$.
-2. **Hiding**: the verifier should not be able to learn any information about the original value $v$ from the commitment $c$. I.e., the commitment $c$ hides all information about the original value $v$.
+1. **Binding**: setelah mempublikasikan komitmen $c$, komiter seharusnya tidak dapat menemukan nilai lain $v’$ yang berbeda dari $v$ yang juga sesuai dengan $c$. Artinya, komitmen $c$ mengikat komiter pada nilai aslinya $v$.
+2. **Hiding**: verifier seharusnya tidak dapat mempelajari informasi apapun tentang nilai asli $v$ dari komitmen $c$. Artinya, komitmen $c$ menyembunyikan semua informasi tentang nilai asli $v$.
 
-## Polynomial commitment schemes
+## Skema komitmen Polynomial
 
-A **polynomial commitment scheme** is a commitment scheme where the committer commits to a polynomial $P(x)$ by computing a commitment $c$. As in normal commitment schemes, the committer can later reveal the original polynomial, and the verifier can check that the commitment corresponds to the revealed polynomial. However, polynomial commitment schemes have an additional property: the committer can prove particular evaluations of the committed polynomial without revealing the polynomial itself. For example, the committer can prove that $P(a) = b$, and the verifier can verify such a proof using just the commitment $c$.
+Sebuah **skema komitmen Polynomial** adalah sebuah skema komitmen di mana komiter mengkomitkan sebuah Polynomial $P(x)$ dengan menghitung sebuah komitmen $c$. Seperti dalam skema komitmen biasa, komiter kemudian dapat mengungkapkan Polynomial aslinya, dan verifier dapat memeriksa bahwa komitmen tersebut sesuai dengan Polynomial yang diungkapkan. Namun, skema komitmen Polynomial memiliki properti tambahan: komiter dapat membuktikan evaluasi-evaluasi tertentu dari Polynomial yang dikomitmenya tanpa mengungkapkan Polynomial itu sendiri. Sebagai contoh, komiter dapat membuktikan bahwa $P(a) = b$, dan verifier dapat memverifikasi bukti semacam itu hanya dengan menggunakan komitmen $c$.
 
-Polynomial commitment schemes are extremely useful for zero knowledge applications. A prover can use such a scheme to prove that he knows some polynomial which satisfies certain properties (e.g. that it passes through a certain point $(a,b)$), without revealing the underlying polynomial.
+Skema komitmen Polynomial sangat berguna untuk aplikasi bukti Zero Knowledge. Seorang pembuktikan dapat menggunakan skema tersebut untuk membuktikan bahwa dia mengetahui suatu Polynomial yang memenuhi properti tertentu (misalnya, bahwa Polynomial tersebut melewati suatu titik tertentu $(a,b)$), tanpa mengungkapkan Polynomial yang mendasarinya.
 
-Another reason why polynomial schemes are useful is that the commitment $c$ is generally much smaller than the polynomial it represents, and can thus be thought of as a **compression** of the polynomial $P(x)$. The magnitude of compression depends on the particular scheme. For example, in the KZG polynomial commitment scheme, a polynomial of arbitrarily large degree can be compressed down to a commitment consisting of a single group element.
+Alasan lain mengapa skema Polynomial bermanfaat adalah bahwa komitmen $c$ umumnya jauh lebih kecil dari Polynomial yang direpresentasikannya, dan dengan demikian dapat dianggap sebagai **kompresi** dari Polynomial $P(x)$. Besarnya kompresi bergantung pada skema tertentu. Sebagai contoh, dalam skema komitmen Polynomial KZG, sebuah Polynomial dengan derajat sembarang besar dapat dikompresi menjadi sebuah komitmen yang terdiri dari sebuah elemen grup tunggal.
 
-## Learn more
+## Pelajari lebih lanjut
 
 - [https://en.wikipedia.org/wiki/Commitment_scheme](https://en.wikipedia.org/wiki/Commitment_scheme)
 - [https://learn.0xparc.org/materials/halo2/miscellaneous/polynomial-commitment](https://learn.0xparc.org/materials/halo2/miscellaneous/polynomial-commitment)

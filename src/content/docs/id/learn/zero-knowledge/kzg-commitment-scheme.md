@@ -4,54 +4,56 @@ date: Last Modified
 title: "Skema Komitmen KZG"
 lang: "id"
 permalink: "learn/zero-knowledge/kzg-commitment-scheme"
-excerpt: "KZG is used Ethereum’s Proto-Danksharding, and is also used in Scroll’s proof system. This article will give an overview of the KZG commitment scheme."
+excerpt: "KZG digunakan dalam Proto-Danksharding Ethereum, dan juga digunakan dalam sistem bukti Scroll. Artikel ini akan memberikan gambaran singkat tentang skema komitmen KZG."
 whatsnext: { "Sumber Daya Tambahan": "/id/learn/zero-knowledge/additional-zk-learning-resources" }
 ---
 
-One of the most widely used polynomial commitment schemes is the KZG commitment scheme. The scheme was originally [published](https://www.iacr.org/archive/asiacrypt2010/6477178/6477178.pdf) in 2010 by Kate, Zaverucha, and Goldberg.
+Salah satu skema komitmen polinomial yang paling banyak digunakan adalah skema komitmen KZG. Skema ini awalnya [dipublikasikan](https://www.iacr.org/archive/asiacrypt2010/6477178/6477178.pdf) pada tahun 2010 oleh Kate, Zaverucha, dan Goldberg.
 
-KZG is used in Ethereum’s [Proto-Danksharding](https://notes.ethereum.org/@vbuterin/proto_danksharding_faq), and is also used in Scroll's proof system.
+KZG digunakan dalam [Proto-Danksharding](https://notes.ethereum.org/@vbuterin/proto_danksharding_faq) Ethereum, dan juga digunakan dalam sistem bukti Scroll.
 
-This article will give an overview of the KZG commitment scheme.
+Artikel ini akan memberikan gambaran singkat tentang skema komitmen KZG.
 
-## Preliminaries and notation
+## Pendahuluan dan notasi
 
-Recall the premise of polynomial commitment schemes. We have some polynomial $P(x)$ that we would like to commit to. We’ll assume the polynomial has a degree less than $l$.
+Ingat premis dari skema komitmen polinomial. Kami memiliki suatu polinomial $P(x)$ yang ingin kami komitkan. Kami akan mengasumsikan bahwa polinomial memiliki derajat kurang dari $l$.
 
-KZG commitments rely on [elliptic curve pairings](https://vitalik.ca/general/2017/01/14/exploring_ecp.html). Let $\mathbb{G}_1$ and $\mathbb{G}_2$ be two elliptic curve groups of order $p$, with a non-trivial [bilinear mapping](https://en.wikipedia.org/wiki/Bilinear_map) $e: \mathbb{G}_1 \times \mathbb{G}_2 \rightarrow \mathbb{G}_T$. Let $g$ be a generator of $\mathbb{G}_1$, and $h$ a generator of $\mathbb{G}_2$. We will use the notation $[x]_1 := x \cdot g$ and $[x]_2 := x \cdot h$, where $x \in \mathbb{F}_p$.
+Komitmen KZG bergantung pada [pasangan kurva eliptik](https://vitalik.ca/general/2017/01/14/exploring_ecp.html). Biarkan $\mathbb{G}_1$ dan $\mathbb{G}_2$ menjadi dua grup kurva eliptik dari orde $p$, dengan pemetaan [bilinear](https://en.wikipedia.org/wiki/Bilinear_map) non-trivial $e: \mathbb{G}_1 \times \mathbb{G}_2 \rightarrow \mathbb{G}_T$. Biarkan $g$ menjadi generator dari $\mathbb{G}_1$, dan $h$ menjadi generator dari $\mathbb{G}_2$. Kami akan menggunakan notasi $[x]_1 := x \cdot g$ dan $[x]_2 := x \cdot h$, di mana $x \in \mathbb{F}_p$.
 
-## 1. Trusted setup
+## 1. Setup terpercaya
 
-Before computing any KZG commitments, a one-time trusted setup must be performed. Once the trusted setup is completed, it can be reused to commit and reveal as many different polynomials as desired. The trusted setup works as follows:
+Sebelum menghitung komitmen KZG apa pun, setup terpercaya satu kali harus dilakukan. Setelah setup terpercaya selesai, itu dapat digunakan kembali untuk mengkomitkan dan mengungkapkan sebanyak mungkin polinomial yang berbeda seperti yang diinginkan. Setup terpercaya bekerja sebagai berikut:
 
-- Pick some random field element $\tau \in \mathbb{F}_p$
-- Let $l \in \mathbb{Z}$ be the maximum degree of the polynomials we want to commit to
-  - The trusted setup will only enable commitments to polynomials of degree $\leq l$
-- Compute $([\tau^0]_1,[\tau^1]_1,[\tau^{2}]_1\ldots,[\tau^{l}]_1)$ and $([\tau]_2)$, and release these values publicly.
+- Pilih beberapa elemen medan acak $\tau \in \mathbb{F}_p$
+- Biarkan $l \in \mathbb{Z}$ menjadi derajat maksimum dari polinomial yang ingin kami komitkan
+  - Setup terpercaya hanya akan memungkinkan komitmen terhadap polinomial derajat $\leq l$
+- Hitung $([\tau^0]_1,[\tau^1]_1,[\tau^{2}]_1\ldots,[\tau^{l}]_1)$ dan $([\tau]_2)$, dan rilis nilai-nilai ini secara publik.
 
-Note that $\tau$ should not be revealed - it is a secret parameter of the setup, and should be discarded after the trusted setup ceremony is completed so that nobody can figure out its value.
+Perhatikan bahwa $\tau$ seharusnya tidak diungkapkan - itu adalah parameter rahasia dari setup, dan seharusnya dibuang setelah upacara setup terpercaya selesai sehingga tidak ada yang dapat mengetahui nilainya.
 
-There are established methods of conducting trusted setup ceremonies with weak trust assumptions (1-out-of-N trust assumption) using [multi-party computation](https://en.wikipedia.org/wiki/Secure_multi-party_computation) (MPC). For more on how trusted setups work, see this [post](https://vitalik.ca/general/2022/03/14/trustedsetup.html) by Vitalik.
+Ada metode yang sudah mapan untuk melakukan upacara setup terpercaya dengan asumsi kepercayaan yang lemah (asumsi kepercayaan 1-out-of-N) menggunakan [komputasi multi-pihak](https://en.wikipedia.org/wiki/Secure_multi-party_computation) (MPC). Untuk informasi lebih lanjut tentang cara kerja setup terpercaya, lihat [pos ini](https://vitalik.ca/general/2022/03/14/trustedsetup.html) oleh Vitalik.
 
-## 2. Committing to a polynomial
+## 2. Mengkomitkan suatu polinomial
 
-- Given a polynomial $P(x) = \sum_{i=0}^{l} p_i x^i$
-- Compute and output the commitment $c = [P(\tau)]_1$
-  - Although the committer cannot compute $P(\tau)$ directly (since he doesn’t know $\tau$), he can compute it using the output of the trusted setup:
+- Diberikan suatu polinomial $P(x) = \sum_{i=0}^{l} p_i x^i$
+- Hitung dan keluarkan komitmen $c = [P(\tau)]_1$
+  - Meskipun komiter tidak dapat menghitung $P(\tau)$ secara langsung (karena dia tidak tahu $\tau$), dia dapat menghitungnya menggunakan output dari setup terpercaya:
     - $[P(\tau)]_1 = [\sum_{i=0}^{l} p_i \tau^i]_1 = \sum_{i=0}^{l} p_i [\tau^i]_1$
 
-## 3. Prove an evaluation
+## 3. Membuktikan suatu evaluasi
 
-- Given an evaluation $P(a) = b$
-- Compute and output the proof $\pi = [Q(\tau)]_1$
-  - Where $Q(x) := \frac{P(x)-b}{x-a}$
-    - This is called the “quotient polynomial.”Note that such a $Q(x)$ exists if and only if $P(a) = b$. The existence of this quotient polynomial therefore serves as a proof of the evaluation.
+- Diberikan sebuah evaluasi $P(a) = b$
+- Hitung dan keluarkan bukti $\pi = [Q(\tau)]_1$
+  - Di mana $Q(x) := \frac{P(x)-b}{x-a}$
+    - Ini disebut sebagai "polinomial hasil bagi." Perlu dicatat bahwa $Q(x)$ seperti ini ada jika dan hanya jika $P(a) = b$. Kehadiran polinomial hasil bagi ini oleh karena itu berfungsi sebagai bukti dari evaluasi tersebut.
 
-## 4. Verify an evaluation proof
+##
 
-- Given a commitment $c = [P(\tau)]_1$, an evaluation $P(a) = b$, and a proof $\pi = [Q(\tau)]_1$
-- Verify that $e(\pi, [\tau - a]_2) = e(c - [b]_1, h)$
-  - Some algebra shows that this is equivalent to checking that that the quotient polynomial is correctly formed at $\tau$: $Q(\tau) = \frac{P(\tau) -b}{\tau-a}$
+4.  Memverifikasi bukti evaluasi
+
+- Diberikan sebuah komitmen $c = [P(\tau)]_1$, sebuah evaluasi $P(a) = b$, dan sebuah bukti $\pi = [Q(\tau)]_1$
+- Verifikasi bahwa $e(\pi, [\tau - a]_2) = e(c - [b]_1, h)$
+  - Beberapa aljabar menunjukkan bahwa ini setara dengan memeriksa bahwa polinomial hasil bagi telah dibentuk dengan benar pada $\tau$: $Q(\tau) = \frac{P(\tau) -b}{\tau-a}$
     $$
     \begin{align*}
     & e(\pi, [\tau - a]_2) = e(c - [b]_1, h) \\ \iff
@@ -60,10 +62,10 @@ There are established methods of conducting trusted setup ceremonies with weak t
     & Q(\tau) \cdot (\tau -a) = P(\tau) - b
     \end{align*}
     $$
-  - The bilinear mapping $e$ enables us to check this property without knowing the secret setup parameter $\tau$
-- Once this verification is complete, we can conclude that (with overwhelmingly high probability) the quotient polynomial is correctly formed, and therefore that the evaluation is correct.
+  - Pemetaan bilinear $e$ memungkinkan kami untuk memeriksa properti ini tanpa mengetahui parameter setup rahasia $\tau$
+- Begitu verifikasi ini selesai, kami dapat menyimpulkan bahwa (dengan probabilitas yang sangat tinggi) polinomial hasil bagi telah dibentuk dengan benar, dan oleh karena itu evaluasinya benar.
 
-## Learn more
+## Pelajari lebih lanjut
 
 - [https://dankradfeist.de/ethereum/2020/06/16/kate-polynomial-commitments.html](https://dankradfeist.de/ethereum/2020/06/16/kate-polynomial-commitments.html)
 - [https://alinush.github.io/2020/05/06/kzg-polynomial-commitments.html](https://alinush.github.io/2020/05/06/kzg-polynomial-commitments.html)

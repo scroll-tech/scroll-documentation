@@ -10,7 +10,7 @@ whatsnext: { "Panduan Pengguna": "/id/user-guide/", "Membangun di Scroll": "/id/
 
 #### Selamat datang di dokumen Scroll!
 
-Scroll adalah solusi skalabilitas berorientasi keamanan untuk Ethereum, menggunakan inovasi dalam desain skalabilitas dan bukti pengetahuan nol untuk membangun lapisan baru di Ethereum. Jaringan Scroll lebih mudah diakses, lebih responsif, dan dapat mendukung lebih banyak pengguna secara bersamaan dibandingkan dengan Ethereum saja, dan jika Anda pernah menggunakan atau mengembangkan aplikasi di Ethereum, Anda akan merasa seperti di rumah di Scroll.
+Scroll adalah solusi skalabilitas berorientasi keamanan untuk Ethereum, menggunakan inovasi dalam desain skalabilitas dan bukti Zero Knowledge untuk membangun lapisan baru di Ethereum. Jaringan Scroll lebih mudah diakses, lebih responsif, dan dapat mendukung lebih banyak pengguna secara bersamaan dibandingkan dengan Ethereum saja, dan jika Anda pernah menggunakan atau mengembangkan aplikasi di Ethereum, Anda akan merasa seperti di rumah di Scroll.
 
 Ingin mencoba testnet Scroll Sepolia dengan aset gratis sebelum menggunakan Scroll? Lihat [Panduan Pengguna](/id/user-guide/) kami.
 
@@ -20,9 +20,9 @@ Scroll sedang membangun teknologi untuk meningkatkan skala Ethereum.
 
 Meskipun Ethereum adalah jaringan blockchain terkemuka untuk menggerakkan aplikasi terdesentralisasi, popularitasnya juga membawa biaya yang lebih tinggi, menciptakan hambatan untuk adopsi bagi gelombang pengguna dan pengembang berikutnya.
 
-Dengan memanfaatkan penelitian terkini dalam bukti pengetahuan nol ("zk"), Scroll sedang membangun jaringan rollup Lapisan 2 di Ethereum. Tim, dalam kolaborasi sumber terbuka dengan orang lain di komunitas Ethereum, telah membuat "zkEVM" yang memungkinkan semua aktivitas di jaringan, yang berperilaku seperti Ethereum, untuk diamankan oleh Smart Contract _di_ Ethereum. Jaringan menerbitkan semua transaksi ke Ethereum, dan zkEVM menciptakan dan menerbitkan "bukti" kriptografis bahwa jaringan Scroll mengikuti aturan Ethereum.
+Dengan memanfaatkan penelitian terkini dalam bukti Zero Knowledge ("zk"), Scroll sedang membangun jaringan rollup Lapisan 2 di Ethereum. Tim, dalam kolaborasi sumber terbuka dengan orang lain di komunitas Ethereum, telah membuat "zkEVM" yang memungkinkan semua aktivitas di jaringan, yang berperilaku seperti Ethereum, untuk diamankan oleh Smart Contract _di_ Ethereum. Jaringan menerbitkan semua transaksi ke Ethereum, dan zkEVM menciptakan dan menerbitkan "bukti" kriptografis bahwa jaringan Scroll mengikuti aturan Ethereum.
 
-Pada akhirnya, Smart Contract Ethereum memverifikasi bahwa setiap transaksi di Scroll valid untuk bukti-bukti ini, memberikan jaringan keamanan, desentralisasi, dan ketahanan sensor yang luar biasa. Tingkat keamanan dan skalabilitas Ethereum ini hanya mungkin dengan terobosan terbaru dalam kriptografi pengetahuan nol, desain protokol blockchain, dan akselerasi perangkat keras.
+Pada akhirnya, Smart Contract Ethereum memverifikasi bahwa setiap transaksi di Scroll valid untuk bukti-bukti ini, memberikan jaringan keamanan, desentralisasi, dan ketahanan sensor yang luar biasa. Tingkat keamanan dan skalabilitas Ethereum ini hanya mungkin dengan terobosan terbaru dalam kriptografi Zero Knowledge, desain protokol blockchain, dan akselerasi perangkat keras.
 
 <!-- TODO: Konfirmasikan halaman Arsitektur ada -->
 
