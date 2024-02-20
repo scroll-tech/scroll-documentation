@@ -26,7 +26,7 @@ Sonuç olarak, Ethereum'daki akıllı sözleşmeler, Scroll'daki her işlemin bu
 
 Daha fazla bilgi için mimarimiz hakkında bilgi almak için [Scroll Mimarisi](/tr/technology/) sayfasına bakın.
 
-## Scroll'u bugün kullanabilir miyim?
+## Scroll'u şu anda kullanabilir miyim?
 
 Scroll mainnet Ethereum üzerinde canlı! Ayrıca, Ethereum Sepolia üzerinde çalışan Scroll Sepolia test ağımız da mevcut. [Kapsamlı bir kılavuzumuz](/tr/user-guide/) olsa da, Ethereum'u kullanmaya aşina iseniz, birkaç dakika içinde başlayabilirsiniz:
 
@@ -35,7 +35,5 @@ Scroll mainnet Ethereum üzerinde canlı! Ayrıca, Ethereum Sepolia üzerinde ç
 - Scroll Sepolia testnet dapp'lerini deneyin, örneğin [Uniswap Vitrini](http://uniswap-showcase.sepolia.scroll.xyz/) veya [Aave](https://app.aave.com/) -- Scroll Sepolia ağını seçtiğinizden emin olun!
 
 ## Scroll nereye gidiyor?
-
-We've released our mainnet on Ethereum, but there's still more work to do. Next up -- decentralizing each component of the stack. To stay up to date, check out [our blog](https://scroll.io/blog) or follow along in [our Discord](https://discord.gg/scroll) or on [Twitter](https://twitter.com/scroll_zkp).
 
 Ethereum üzerinde mainnet'imizi yayınladık, ancak daha yapılacak çok iş var. Sırada -- yığının her bileşenini merkeziyetsizleştirmek var. Güncel kalmak için [bloğumuza](https://scroll.io/blog) göz atın, [Discord](https://discord.gg/scroll) veya [Twitter](https://twitter.com/scroll_zkp) hesaplarımızı takip edin.
