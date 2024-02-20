@@ -1,0 +1,42 @@
+---
+section: gettingStarted
+date: Last Modified
+title: "Yaygın Hatalar"
+lang: "tr"
+permalink: "user-guide/common-errors/"
+excerpt: "Scroll Sepolia Testnet ile etkileşim kurmaya çalışırken bir hata mı görüyorsunuz? İşte bazı yaygın yapılandırma hataları ve bunları hızlıca nasıl düzeltebileceğiniz."
+---
+
+## MetaMask işlem gönderirken yanlış nonce hatası
+
+Bu hatayla karşılaşırsınız, çünkü MetaMask cüzdanınızda saklanan yerel nonce, Scroll testnet düğümündeki nonce ile farklıdır. Bu, son zamanlarda bekleyen bir işlem olabileceğinden kaynaklanabilir.
+
+Bu sorunu düzeltmek için, MetaMask hesabınızı Scroll Sepolia Testnet için sıfırlamanız gerekir. Hesabı sıfırlamak için izlenmesi gereken adımlar şunlardır:
+
+1. Tarayıcıda **MetaMask** uzantısını açın
+2. Üst bölgede **Scroll Sepolia Testnet**'i seçin
+3. Sağ üst köşedeki yuvarlak **hesap simgesine** tıklayın
+4. **Ayarlar**'ı seçin
+5. **Gelişmiş** bölümüne gidin
+6. **Hesabı sıfırla**'ya tıklayın
+
+MetaMask hesabını sıfırlarken hiçbir varlık kaybolmaz.
+
+:::caution[Caution]
+Bir ağı kaldırmak ve yeniden eklemek bu sorunu düzeltmek için YETERLİ DEĞİLDİR - hesabınızı sıfırlamanız gerekir.
+:::
+
+## Köprüleme/değiştirme işlemi onaylandığında hiçbir şey olmuyorsa
+
+If no error or console logs appear, this is likely due to a nonce issue, please reset your MetaMask account as outlined above at [#incorrect-nonce-error-when-sending-a-transaction-in-metamask](#incorrect-nonce-error-when-sending-a-transaction-in-metamask).
+Eğer hata veya konsol kayıtları görünmüyorsa, muhtemelen bir nonce sorunu vardır, lütfen MetaMask hesabınızı yukarıda belirtilen şekilde [sıfırlayın](/tr/user-guide/common-errors#metamask-işlem-gönderirken-yanlış-nonce-hatası).
+
+## Blok Gezgini "Dahili sunucu hatası" gösteriyor
+
+Bir gizli pencere kullanın veya tarayıcı geliştirici konsolunu açın ve `_explorer_key` çerezini (veya tüm çerezleri) kaldırın. [Çerezlerin nasıl kaldırılacağı hakkında bu kılavuzu inceleyin.](https://www.contentstack.com/docs/developers/how-to-guides/clear-caches-and-cookies-in-different-browsers/).
+
+## MetaMask'te maksimum Ether gönderme "Başarısız" hatası veriyor
+
+MetaMask kullanarak Ether gönderirken, "Maksimum" miktarını göndermeye çalışırsanız, "Başarısız" hatası alırsınız. Bu, MetaMask'ın düzenli gaz ücretlerine ek olarak rollup'ların "L1 Ücreti"ni hesaba katmamasından kaynaklanır ve işlem için gaz ücretini ödemek için gereken küçük bir miktarı karşılayamaz.
+
+Bu sorunu çözmek için, Ether miktarını el ile önerilenden biraz daha küçük bir miktar olarak ayarlayın ve işlem gerçekleştirilecektir.
