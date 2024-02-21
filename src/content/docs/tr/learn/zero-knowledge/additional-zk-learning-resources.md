@@ -1,26 +1,26 @@
 ---
 section: learn
 date: Last Modified
-title: "Additional ZK Learning Resources"
-lang: "en"
+title: "Ek ZK Öğrenme Kaynakları"
+lang: "tr"
 permalink: "learn/zero-knowledge/additional-zk-learning-resources"
-excerpt: "Looking to dive deeper into ZK? Here are some of our favorite resources."
+excerpt: "ZK'nin derinliklerine dalmak mı istiyorsunuz? İşte favori kaynaklarımızdan bazıları."
 ---
 
-Looking to dive deeper into ZK? Here are some of our favorite resources.
+ZK'nin derinliklerine dalmak mı istiyorsunuz? İşte favori kaynaklarımızdan bazıları.
 
 ## Video
 
-- [ZK Whiteboard Sessions](https://youtube.com/playlist?list=PLj80z0cJm8QErn3akRcqvxUsyXWC81OGq)
-  - These whiteboard sessions are a fantastic way to learn about ZK. The first three lectures by Dan Boneh provide a great foundational understanding, on which the following lectures build, discussing more recent developments.
-- [Zero Knowledge Proofs MOOC](https://youtube.com/playlist?list=PLS01nW3Rtgor_yJmQsGBZAg5XM4TSGpPs)
-  - A MOOC that covers zero knowledge proofs from first principles, all the way to modern industry topics.
-- [The 9th BIU Winter School on Cryptography - Zero Knowledge](https://youtube.com/playlist?list=PL8Vt-7cSFnw29cLUVqAIuMlg1QJ-szV0K)
-  - These lectures lay the theoretical foundations for zero knowledge - they are targeted towards academics and audiences with mathematical maturity.
-- [ZK Symposium](https://www.youtube.com/playlist?list=PLrzRr7okCcmbAlgYpuFjzUJv8tAyowDQY)
-  - A mix of applied and theoretical presentations from some of the top researchers and product builders in the zero knowledge space.
+- [ZK Beyaz Tahta Oturumları](https://youtube.com/playlist?list=PLj80z0cJm8QErn3akRcqvxUsyXWC81OGq)
+  - Bu beyaz tahta oturumları ZK hakkında bilgi edinmek için harika bir yoldur. Dan Boneh'in ilk üç dersi, sonraki derslerin üzerine inşa edildiği, daha yeni gelişmeleri tartışan harika bir temel anlayış sağlıyor.
+- [Sıfır Bilgi Kanıtı MOOC](https://youtube.com/playlist?list=PLS01nW3Rtgor_yJmQsGBZAg5XM4TSGpPs)
+  - İlk prensiplerden modern endüstri konularına kadar sıfır bilgi kanıtlarını kapsayan bir MOOC(Massive Open Online Courses).
+- [9. BIU Kriptografi Kış Okulu - Sıfır Bilgi](https://youtube.com/playlist?list=PL8Vt-7cSFnw29cLUVqAIuMlg1QJ-szV0K)
+  - Bu dersler sıfır bilginin teorik temellerini oluşturur; akademisyenleri ve matematiksel olgunluğa sahip izleyicileri hedefler.
+- [ZK Sempozyumu](https://www.youtube.com/playlist?list=PLrzRr7okCcmbAlgYpuFjzUJv8tAyowDQY)
+  - Sıfır bilgi alanındaki en iyi araştırmacıların ve ürün geliştiricilerin bazılarının uygulamalı ve teorik sunumlarının bir karışımı.
 
-## Text
+## Yazı
 
-- [Proofs, Arguments, and Zero Knowledge](https://people.cs.georgetown.edu/jthaler/ProofsArgsAndZK.html) - Justin Thaler
-  - A comprehensive textbook on the theory of zero knowledge.
+- [Kanıtlar, Argümanlar ve Sıfır Bilgi](https://people.cs.georgetown.edu/jthaler/ProofsArgsAndZK.html) - Justin Thaler
+  - Sıfır bilgi teorisi üzerine kapsamlı bir ders kitabı.

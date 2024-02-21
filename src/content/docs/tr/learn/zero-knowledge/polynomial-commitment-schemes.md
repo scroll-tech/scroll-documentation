@@ -1,35 +1,35 @@
 ---
 section: learn
 date: Last Modified
-title: "Polynomial Commitment Schemes"
-lang: "en"
+title: "Polinom Taahhüt Şemaları"
+lang: "tr"
 permalink: "learn/zero-knowledge/polynomial-commitment-schemes"
-excerpt: "Polynomial commitment schemes are a core building block of zero knowledge proof system"
-whatsnext: { "KZG Commitment Scheme": "/learn/zero-knowledge/kzg-commitment-scheme" }
+excerpt: "Polinom taahhüt şemaları sıfır bilgi kanıt sisteminin temel yapı taşıdır"
+whatsnext: { "KZG Taahhüt Şeması": "/tr/learn/zero-knowledge/kzg-commitment-scheme" }
 ---
 
-Polynomial commitment schemes are a core building block of zero knowledge proof systems (as well as other cryptographic protocols).
+Polinom taahhüt şemaları, sıfır bilgi kanıtlama sistemlerinin (ve diğer şifreleme protokollerinin) temel yapı taşıdır.
 
-As the name suggests, polynomial commitment schemes are commitment schemes where the object to be committed is a polynomial. These schemes also have a special property where an evaluation of the polynomial can be verified with access only to the polynomial’s commitment.
+Adından da anlaşılacağı gibi polinom taahhüt şemaları, taahhüt edilecek nesnenin bir polinom olduğu taahhüt şemalarıdır. Bu şemaların ayrıca polinomun değerlendirmesinin yalnızca polinomun taahhüdüne erişimle doğrulanabileceği özel bir özelliği vardır.
 
-## Commitment schemes
+## Taahhüt planları
 
-A **[commitment scheme](https://en.wikipedia.org/wiki/Commitment_scheme)** is a cryptographic primitive involving two parties: a _committer_ and a _verifier_. The committer commits to a value $v$ by computing a commitment $c$ and revealing it to the verifier. At a later point in time, the committer can reveal the original value, and the verifier can verify that the commitment corresponds to this revealed value.
+**[taahhüt şeması](https://en.wikipedia.org/wiki/Commitment_scheme)** iki tarafı içeren bir kriptografik ilkeldir: _committer_ ve _verifier_. Taahhüt eden kişi, $c$ taahhüdünü hesaplayıp bunu doğrulayıcıya açıklayarak $v$ değerini taahhüt eder. Daha sonraki bir zamanda taahhüt eden kişi orijinal değeri ortaya çıkarabilir ve doğrulayıcı da taahhüdün bu açıklanan değere karşılık geldiğini doğrulayabilir.
 
-Secure commitment schemes have two properties:
+Güvenli taahhüt planlarının iki özelliği vardır:
 
-1. **Binding**: once publishing the commitment $c$, the committer should not be able to find some other value $v’$ distinct from $v$ that also corresponds to $c$. I.e., the commitment $c$ binds the committer to the original value $v$.
-2. **Hiding**: the verifier should not be able to learn any information about the original value $v$ from the commitment $c$. I.e., the commitment $c$ hides all information about the original value $v$.
+1. **Bağlayıcı**: $c$ taahhüdünü yayınladıktan sonra, taahhüt eden kişi $v$'den farklı olan ve aynı zamanda $c$'a karşılık gelen başka bir $v'$ değeri bulamamalıdır. Yani, $c$ taahhüdü, taahhüt edeni orijinal $v$ değerine bağlar.
+2. **Gizleme**: Doğrulayıcı, $c$ taahhüdünden orijinal $v$ değeri hakkında herhangi bir bilgi öğrenememelidir. Yani, $c$ taahhüdü, orijinal $v$ değeri hakkındaki tüm bilgileri gizler.
 
-## Polynomial commitment schemes
+## Polinom taahhüt şemaları
 
-A **polynomial commitment scheme** is a commitment scheme where the committer commits to a polynomial $P(x)$ by computing a commitment $c$. As in normal commitment schemes, the committer can later reveal the original polynomial, and the verifier can check that the commitment corresponds to the revealed polynomial. However, polynomial commitment schemes have an additional property: the committer can prove particular evaluations of the committed polynomial without revealing the polynomial itself. For example, the committer can prove that $P(a) = b$, and the verifier can verify such a proof using just the commitment $c$.
+**Polinom taahhüt şeması**, taahhüt eden kişinin $c$ taahhüdünü hesaplayarak $P(x)$ polinomunu taahhüt ettiği bir taahhüt şemasıdır. Normal taahhüt planlarında olduğu gibi, taahhüt eden kişi daha sonra orijinal polinomu ortaya çıkarabilir ve doğrulayıcı, taahhüdün ortaya çıkan polinoma karşılık gelip gelmediğini kontrol edebilir. Bununla birlikte, polinom taahhüt şemalarının ek bir özelliği vardır: taahhüt eden, polinomun kendisini açıklamadan taahhüt edilen polinomun belirli değerlendirmelerini kanıtlayabilir. Örneğin, taahhüt eden $P(a) = b$ olduğunu kanıtlayabilir ve doğrulayıcı böyle bir kanıtı yalnızca $c$ taahhüdünü kullanarak doğrulayabilir.
 
-Polynomial commitment schemes are extremely useful for zero knowledge applications. A prover can use such a scheme to prove that he knows some polynomial which satisfies certain properties (e.g. that it passes through a certain point $(a,b)$), without revealing the underlying polynomial.
+Polinom taahhüt şemaları sıfır bilgi uygulamaları için son derece faydalıdır. Bir kanıtlayıcı, temeldeki polinomu açıklamadan, belirli özellikleri (örneğin, belirli bir $(a,b)$ noktasından geçtiğini) karşılayan bazı polinomları bildiğini kanıtlamak için böyle bir şema kullanabilir.
 
-Another reason why polynomial schemes are useful is that the commitment $c$ is generally much smaller than the polynomial it represents, and can thus be thought of as a **compression** of the polynomial $P(x)$. The magnitude of compression depends on the particular scheme. For example, in the KZG polynomial commitment scheme, a polynomial of arbitrarily large degree can be compressed down to a commitment consisting of a single group element.
+Polinom şemalarının faydalı olmasının bir başka nedeni de, $c$ taahhüdünün genellikle temsil ettiği polinomdan çok daha küçük olmasıdır ve dolayısıyla $P(x)$ polinomunun **sıkıştırılması** olarak düşünülebilir. Sıkıştırmanın büyüklüğü özel şemaya bağlıdır. Örneğin, KZG polinom taahhüt şemasında, keyfi derecede büyük dereceli bir polinom, tek bir grup elemanından oluşan bir taahhüt halinde sıkıştırılabilir.
 
-## Learn more
+## Daha fazla bilgi edin
 
 - [https://en.wikipedia.org/wiki/Commitment_scheme](https://en.wikipedia.org/wiki/Commitment_scheme)
 - [https://learn.0xparc.org/materials/halo2/miscellaneous/polynomial-commitment](https://learn.0xparc.org/materials/halo2/miscellaneous/polynomial-commitment)

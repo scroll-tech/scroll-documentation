@@ -10,66 +10,64 @@ excerpt: 'Over the past decade, a field of cryptography called "zero knowledge" 
 
 import Aside from "../../../../../components/Aside.astro"
 
-Over the past decade, a field of cryptography called "zero knowledge" has been rapidly advancing. It promises new ways to build applications and enables protocols to increase efficiency, security, and privacy.
+Son on yılda, "sıfır bilgi" olarak adlandırılan kriptografi alanı hızla ilerlemektedir. Uygulama oluşturmanın yeni yollarını vaat ediyor ve protokollerin verimliliği, güvenliği ve gizliliği artırmasını sağlıyor.
 
-Let's look at what makes the field of zero knowledge proofs so exciting and what problems it helps engineers solve.
+Sıfır bilgi kanıtları alanını bu kadar heyecan verici kılan şeyin ne olduğuna ve mühendislerin hangi sorunları çözmesine yardımcı olduğuna bakalım.
 
-## Trustless Blockchains & Verifiability
+## Güvensiz Blok Zincirleri ve Doğrulanabilirlik
 
-Blockchains generally work by processing transactions submitted by users. These transactions usually trigger some computation for the blockchain to perform.
+Blok zincirleri genellikle kullanıcılar tarafından gönderilen işlemleri işleyerek çalışır. Bu işlemler genellikle blok zincirinin gerçekleştirmesi için bazı hesaplamaları tetikler.
 
-For the blockchain to be trustless (i.e. not reliant on trusting some individual party), participants in the network must verify that transactions are valid and that their resulting computations were performed correctly.
+Blockchain'in güvensiz olması (yani bireysel bir tarafa güvenmeye bağlı olmaması) için ağdaki katılımcıların işlemlerin geçerli olduğunu ve sonuçta ortaya çıkan hesaplamaların doğru şekilde yapıldığını doğrulaması gerekir.
 
-Verifying that the transaction is valid generally requires digital signature verification - this verifies that the transaction’s reported sender is indeed the author of the transaction. Verifying that a transaction’s computation was performed correctly generally requires re-executing the transaction locally.
+İşlemin geçerli olduğunu doğrulamak için genellikle dijital imza doğrulaması gerekir; bu, işlemin bildirilen göndericisinin gerçekten işlemin yazarı olduğunu doğrular. Bir işlemin hesaplamasının doğru bir şekilde gerçekleştirildiğinin doğrulanması genellikle işlemin yerel olarak yeniden yürütülmesini gerektirir.
 
-## Limitations to Verifiability
+## Doğrulanabilirliğe İlişkin Sınırlamalar
 
-This methodology of verifying each transaction breaks down in situations where a participant can’t rerun the computation. A participant may not be able to re-execute the computation for a couple of reasons: (1) it could be that certain data shouldn’t be made available (for privacy reasons), or (2) it may be too expensive for a participating computer to re-execute all the transactions - this second reason is especially relevant when considering high-throughput blockchains with a large number of transactions per second.
+Her bir işlemi doğrulamaya yönelik bu metodoloji, bir katılımcının hesaplamayı yeniden çalıştıramadığı durumlarda bozulur. Bir katılımcı birkaç nedenden dolayı hesaplamayı yeniden gerçekleştiremeyebilir: (1) belirli verilerin kullanıma sunulmaması gerekebilir (gizlilik nedenleriyle) veya (2) belirli bir veri için çok pahalı olabilir. Katılımcı bilgisayarın tüm işlemleri yeniden yürütmesi - bu ikinci neden, özellikle saniyede çok sayıda işlem gerçekleştiren yüksek verimli blok zincirleri söz konusu olduğunda geçerlidir.
 
-## The Power of Zero Knowledge Proofs
+## Sıfır Bilginin Gücü Kanıtlar
 
-Zero knowledge proofs (ZKPs) have the power to overcome these limitations.
+Sıfır bilgi kanıtları (ZKP'ler) bu sınırlamaların üstesinden gelme gücüne sahiptir.
 
-ZKPs allow participants to verify the results of a computation while (1) preserving the privacy of any sensitive data used in the computation, and (2) having the verification be significantly cheaper than re-executing the computation. These two properties of ZKPs are called **zero knowledge** and **succinctness**, respectively.
+ZKP'ler, (1) hesaplamada kullanılan hassas verilerin gizliliğini korurken ve (2) doğrulamanın, hesaplamanın yeniden yürütülmesinden önemli ölçüde daha ucuz olmasını sağlayarak katılımcıların bir hesaplamanın sonuçlarını doğrulamasına olanak tanır. ZKP'lerin bu iki özelliğine sırasıyla **sıfır bilgi** ve **özlülük** denir.
 
-The above properties of ZKPs are extremely useful in the context of verifiability for trustless blockchains. Without ZKPs, participants need to re-execute every transaction’s resulting computation. This requires all participants to see all the (potentially sensitive) data used in each computation, and it also limits the throughput of the entire system. With ZKPs, one party can perform the computation, and then generate a proof that the computation was performed correctly. Other participants can verify that the computation was performed correctly by _verifying that the proof is valid_, rather than re-executing the computation themselves. Verifying the proof (1) does not leak information about sensitive data used in the original computation, and (2) is significantly computationally cheaper than re-executing the original computation. These two properties have the potential to enable privacy and scalability for trustless blockchains.
+ZKP'lerin yukarıdaki özellikleri, güvenilir olmayan blok zincirlerin doğrulanabilirliği bağlamında son derece faydalıdır. ZKP'ler olmadan katılımcıların her işlemin sonuç hesaplamasını yeniden yürütmesi gerekir. Bu, tüm katılımcıların her hesaplamada kullanılan tüm (potansiyel olarak hassas) verileri görmesini gerektirir ve aynı zamanda tüm sistemin verimini de sınırlar. ZKP'lerle bir taraf hesaplamayı gerçekleştirebilir ve ardından hesaplamanın doğru yapıldığına dair bir kanıt oluşturabilir. Diğer katılımcılar, hesaplamayı kendileri yeniden yürütmek yerine, _kanıtın geçerli olduğunu doğrulayarak_ hesaplamanın doğru şekilde yapıldığını doğrulayabilirler. Kanıtın doğrulanması (1) orijinal hesaplamada kullanılan hassas veriler hakkında bilgi sızdırmaz ve (2) orijinal hesaplamanın yeniden yürütülmesinden önemli ölçüde hesaplama açısından daha ucuzdur. Bu iki özellik, güvenilir olmayan blok zincirler için gizlilik ve ölçeklenebilirlik sağlama potansiyeline sahiptir.
 
-## Circuits, Proofs, and Verifiers
+## Devreler, Kanıtlar ve Doğrulayıcılar
 
-In practice, ZKPs can be quite complex to implement into a system, but at a high level, you’ll want to understand that zero knowledge proofs have a few components: a circuit, a proof, and a verifier.
+Pratikte ZKP'lerin bir sisteme uygulanması oldukça karmaşık olabilir, ancak yüksek düzeyde sıfır bilgi kanıtlarının birkaç bileşene sahip olduğunu anlamak isteyeceksiniz: bir devre, bir kanıt ve bir doğrulayıcı.
 
-The circuit is a program that takes in input data, and asserts that the input data is valid according to some “constraints” that the input data must satisfy. The input data can be public (known to everyone), private (know to only the prover), or mixed (some inputs are public and some are private).
+Devre, giriş verilerini alan ve giriş verilerinin karşılaması gereken bazı "kısıtlamalara" göre giriş verilerinin geçerli olduğunu ileri süren bir programdır. Giriş verileri genel (herkes tarafından bilinir), özel (yalnızca kanıtlayan tarafından bilinir) veya karışık (bazı girişler genel, bazıları özel) olabilir.
 
-A proof can be generated, claiming that an input satisfies the circuit. The proof reveals no information about the private inputs, and is quite small in size.
+Bir girişin devreyi karşıladığını iddia eden bir kanıt üretilebilir. Kanıt, özel girdiler hakkında hiçbir bilgi ortaya çıkarmaz ve boyutu oldukça küçüktür.
 
-The verifier can check (1) that the proof is valid, (2) that the proof matches the constraints laid out by the circuit (and isn’t just a phony proof), and (3) that the public inputs used to generate the proof match those being used by the verifier. Note that this check performed by the verifier is generally a cheap computation.
+Doğrulayıcı, (1) kanıtın geçerli olup olmadığını, (2) kanıtın devre tarafından ortaya konan kısıtlamalarla eşleştiğini (ve sadece sahte bir kanıt olmadığını) ve (3) genel girdilerin bunu oluşturmak için kullanıldığını kontrol edebilir. kanıt, doğrulayıcı tarafından kullanılanlarla eşleşir. Doğrulayıcı tarafından gerçekleştirilen bu kontrolün genellikle ucuz bir hesaplama olduğunu unutmayın.
 
 <Aside type="tip" title="">
-  You might notice that the verifier doesn’t have an output beyond “valid proof” or “invalid proof.” Remember, the
-  verifier just confirms other computations — in practice, the “outputs” of a function might actually end up being
-  additional inputs to a circuit and verifier.
+  Doğrulayıcının "geçerli kanıt" veya "geçersiz kanıt" dışında bir çıktısı olmadığını fark edebilirsiniz. Doğrulayıcının yalnızca diğer hesaplamaları doğruladığını unutmayın; pratikte bir fonksiyonun "çıkışları" aslında bir devreye ve doğrulayıcıya ek girdiler haline gelebilir.
 </Aside>
 
-### Circuits, Proof, and Verifiers — an example
+### Devreler, Kanıt ve Doğrulayıcılar — bir örnek
 
-Let’s take Sudoku as an example. Suppose that there’s a Sudoku puzzle, and Alice wants to prove to Bob that she knows a solution to the puzzle, but does not want to reveal what the solution is.
+Örnek olarak Sudoku'yu ele alalım. Diyelim ki bir Sudoku bulmacası var ve Alice Bob'a bulmacanın çözümünü bildiğini kanıtlamak istiyor ancak çözümün ne olduğunu açıklamak istemiyor.
 
-In this case, the particular puzzle will be a public input (both Alice and Bob know about it), and the solution is a private input (Alice knows it, but will keep it private from Bob). The **circuit** would take both these inputs and assert that the solution is correct by checking it in the standard way, row-by-row, column-by-column, etc. The circuit in this way “constrains” that the private input solution really is a valid solution for the public input puzzle, and is “satisfied” only when the solution check passes.
+Bu durumda, söz konusu bulmaca genel bir girdi olacaktır (hem Alice hem de Bob bunu biliyor) ve çözüm de özel bir girdi olacaktır (Alice bunu biliyor ancak bunu Bob'tan gizli tutacak). **Devre** bu girdilerin her ikisini de alır ve çözümü standart yöntemle, satır satır, sütun sütun vb. kontrol ederek çözümün doğru olduğunu iddia eder. Devre bu şekilde çözümün doğru olduğunu "kısıtlar". özel girdi çözümü, genel girdi bulmacası için gerçekten geçerli bir çözümdür ve yalnızca çözüm kontrolü başarılı olduğunda "tatmin olur".
 
-A **proof** can then be generated that states that Alice knows an input that satisfies the circuit for the particular puzzle (the public input).
+Daha sonra Alice'in belirli bir bulmaca için devreyi karşılayan bir girdiyi (genel girdi) bildiğini belirten bir **kanıt** oluşturulabilir.
 
-The proof, along with the puzzle, could be passed to Bob, who could then use a **verifier** corresponding to the Sudoku-checking circuit to assess if the proof is valid, and thereby that Alice indeed knows a solution to the puzzle. Critically, Bob doesn’t gain any knowledge of Alice’s solution, but he can still verify that she knows a valid solution!
+Kanıt, bulmacayla birlikte Bob'a iletilebilir; o da daha sonra kanıtın geçerli olup olmadığını değerlendirmek için Sudoku kontrol devresine karşılık gelen bir **doğrulayıcı** kullanabilir ve böylece Alice gerçekten bulmacanın çözümünü bilir. . İşin kritik tarafı Bob, Alice'in çözümü hakkında herhangi bir bilgi sahibi değil ama yine de Alice'in geçerli bir çözüm bildiğini doğrulayabiliyor!
 
-## Zero Knowledge Proofs and Blockchains
+## Sıfır Bilgi Kanıtları ve Blok Zincirleri
 
-One of the primary motivations for recent advances in ZKPs is its application to blockchains. Two of the key challenges that decentralized blockchains face are privacy and scalability - all the data is public, and every node in the network has to re-run every computation on the network. ZKPs can help solve both these challenges.
+ZKP'lerdeki son gelişmelerin temel motivasyonlarından biri, bunun blok zincirlere uygulanmasıdır. Merkezi olmayan blok zincirlerinin karşılaştığı en önemli zorluklardan ikisi gizlilik ve ölçeklenebilirliktir; tüm veriler halka açıktır ve ağdaki her düğüm, ağdaki her hesaplamayı yeniden çalıştırmak zorundadır. ZKP'ler bu iki zorluğun da çözülmesine yardımcı olabilir.
 
-While there are several projects utilizing the zero knowledge property of ZKPs to build privacy-preserving applications, we at Scroll use only the succinctness property of ZKPs to scale Ethereum.
+Gizliliği koruyan uygulamalar oluşturmak için ZKP'lerin sıfır bilgi özelliğini kullanan çeşitli projeler olsa da, biz Scroll olarak Ethereum'u ölçeklendirmek için ZKP'lerin yalnızca kısa ve öz özelliğini kullanıyoruz.
 
-## Scroll & Zero Knowledge Proofs
+## Scroll ve Sıfır Bilgi Kanıtları
 
-The idea that powers Scroll is quite simple. What if we could use an Ethereum smart contract to verify all of the computation of another version of Ethereum? We could run another network that provides faster and cheaper access to an Ethereum Virtual Machine (”EVM”), and Ethereum itself would provide the security needed for validating all the computation and making sure this other network isn’t breaking the EVM rules.
+Scroll'a güç veren fikir oldukça basit. Peki ya Ethereum'un başka bir versiyonunun tüm hesaplamalarını doğrulamak için bir Ethereum akıllı sözleşmesi kullanabilseydik? Ethereum Sanal Makinesine ("EVM") daha hızlı ve daha ucuz erişim sağlayan başka bir ağ çalıştırabiliriz ve Ethereum'un kendisi de tüm hesaplamaların doğrulanması ve bu diğer ağın EVM kurallarını ihlal etmediğinden emin olmak için gereken güvenliği sağlayacaktır.
 
-The rest of the Learn and Technology sections break down how this works in greater detail, but at a simple level, remember that zero knowledge relies on having a circuit, proof, and verifier.
+Öğrenme ve Teknoloji bölümlerinin geri kalanı bunun nasıl çalıştığını daha ayrıntılı olarak ele alıyor ancak basit bir düzeyde, sıfır bilginin bir devre, kanıt ve doğrulayıcıya sahip olmaya bağlı olduğunu unutmayın.
 
-In our construction, the circuit (actually a set of circuits) encodes the rules of the EVM to “constrain” acceptable behavior for processing input transactions relative to the chain state. Using this “zkEVM”, a network of GPUs takes the transactions for a set of blocks and generates a proof. And back on Ethereum, a smart contract verifies that, for a set of transactions, this proof matches the circuit enshrined in the smart contract. If it does, those transactions can be considered “finalized,” the network moves forward, and we’ve created fast, secure, and affordable blockspace for growing Ethereum.
+Bizim yapımızda, devre (aslında bir devreler kümesi), zincir durumuna göre girdi işlemlerinin işlenmesi için kabul edilebilir davranışı "kısıtlamak" amacıyla EVM kurallarını kodlar. Bu "zkEVM"yi kullanan bir GPU ağı, işlemleri bir dizi blok için alır ve bir kanıt oluşturur. Ethereum'a dönersek, akıllı bir sözleşme, bir dizi işlem için bu kanıtın akıllı sözleşmede yer alan devreyle eşleştiğini doğrular. Eğer öyleyse, bu işlemler "kesinleşmiş" olarak değerlendirilebilir, ağ ileriye doğru hareket eder ve biz de Ethereum'u büyütmek için hızlı, güvenli ve uygun fiyatlı blok alanı yarattık.

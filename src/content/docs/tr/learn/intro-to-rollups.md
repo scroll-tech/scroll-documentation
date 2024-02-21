@@ -1,51 +1,53 @@
 ---
 section: learn
 date: Last Modified
-title: "Intro to Rollups"
-lang: "en"
+title: "Rollup'lara Giriş"
+lang: "tr"
 permalink: "learn/intro-to-rollups"
-excerpt: "Rollups are the most predominant layer 2 scaling solution in the Ethereum ecosystem."
-whatsnext: { "Scroll Rollup Process": "/technology/chain/rollup" }
+excerpt: "Rolluplar, Ethereum ekosistemindeki en yaygın ikinci katman ölçekleme çözümüdür."
+whatsnext: { "Scroll Rollup Süreci": "/tr/technology/chain/rollup" }
 ---
 
-## What’s a rollup?
+## Rollup nedir?
 
-Rollups are the most predominant layer 2 scaling solution in the Ethereum ecosystem, and are viewed as a [central part](https://ethereum-magicians.org/t/a-rollup-centric-ethereum-roadmap/4698) of the Ethereum roadmap.
+Rolluplar, Ethereum ekosistemindeki en yaygın ikinci kat ölçeklendirme çözümüdür ve Ethereum yol haritasının [merkezi bir parçası](https://ethereum-magicians.org/t/a-rollup-centric-ethereum-roadmap/4698) olarak görülmektedir.
 
-A rollup processes batches of transactions off-chain (i.e. not on layer 1), and then posts the resulting data on-chain (i.e. on layer 1).
+Bir rollup, işlem gruplarını zincir dışında işler (yani katman 1'de değil) ve ardından ortaya çıkan verileri zincir üstünde yayınlar (yani katman 1'de).
 
-The execution of each transaction is performed off-chain, and does not need to be re-executed layer 1 nodes. This allows for high transaction throughput, without impacting the decentralization of layer 1.
+Tüm işlemlerin yürütülmesi zincir-dışında gerçekleştirilir ve katman 1 düğümleri tarafından yeniden yürütülmesine gerek yoktur. Bu da, katman 1'in merkeziyetsizini etkilemeden yüksek işlem hızına olanak tanır.
 
-In order for a rollup to be secure, it must prove that its off-chain computation (the processing of transactions) was performed correctly. There are predominantly two mechanisms to prove the validity of off-chain computation: validity proofs and fraud proofs.
+Bir rollup'un güvenli olması için, zincir dışı hesaplamanın (işlemlerin işlenmesi) doğru bir şekilde gerçekleştirildiğini kanıtlaması gerekir. Zincir dışı hesaplamanın geçerliliğini kanıtlamanın iki temel mekanizması vardır: geçerlilik kanıtları(validity proofs) ve hile kanıtları(fraud proofs).
 
-## What’s an optimistic rollup?
+## Optimistic rollup nedir?
 
-An optimistic rollup is a rollup that uses fraud proofs to assert the validity of its computation.
+Bir optimistic rollup, yaptığı hesaplamaların geçerliliğini savunmak için hile kanıtlarını kullanan bir rollup'tır.
 
-Fraud proofs are a mechanism that allow users to challenge and prove the invalidity of any computation performed on the L2. If a fraud proof is successfully submitted, the L2 can be rolled back to a previous state and the invalid computation can be corrected. Fraud proofs depend on at least one honest party checking that the L2 transactions have been correctly executed.
+Hile kanıtları, kullanıcıların L2'de gerçekleştirilen herhangi bir hesaplamanın geçersizliğini sorgulamasına ve kanıtlamasına olanak tanıyan bir mekanizmadır. Bir hile kanıtı başarıyla gönderildiğinde, L2 bir önceki bir duruma geri döndürülebilir ve geçersiz hesaplama düzeltilebilir. Hile kanıtları, en az bir dürüst tarafın L2 işlemlerinin doğru bir şekilde yürütüldüğünü kontrol etmesine dayanır.
 
-## What’s a ZK rollup?
+## ZK rollup nedir?
 
-A ZK rollup is a rollup that uses validity proofs to assert the validity of its computation.
+Bir ZK rollup, yaptığı hesaplamaların geçerliliğini savunmak için geçerlilik kanıtlarını kullanan bir rollup'tır.
 
 When a ZK rollup executes a batch of transactions and posts the resulting state to L1, it also posts a validity proof. This mathematical proof proves that the resulting state is indeed the state which results from correctly executing the batch of transactions.
+Bir ZK rollup bir işlem grubunu yürüttüğünde ve sonucu L1'e gönderdiğinde, aynı zamanda bir geçerlilik kanıtı da gönderir. Bu matematiksel kanıt, sonucun işlem grubunun doğru bir şekilde yürütülmesiyle ortaya çıkan durum ile gerçekten aynı olduğunu kanıtlar.
 
 Today, there are multiple types of ZK rollups, broadly defined as either zkVMs (zk Virtual Machines) or zkEVMs (zk Ethereum Virtual Machines).
+Bugünlerde birden çok türde ZK rollup bulunuyor, bunlar genel olarak zkVM'ler (zk Sanal Makineler) veya zkEVM'ler (zk Ethereum Sanal Makineleri) olarak tanımlanıyor.
 
-zkVMs are designed from the ground up to work well with ZK circuits and require different development workflows compared to a zkEVM. Some examples of these include Starkware and Aztec.
+zkVM'ler, ZK devreleriyle iyi çalışacak şekilde temelden tasarlanmıştır ve bir zkEVM'e kıyasla farklı geliştirme iş akışları gerektirir. Bunlara örnek olarak Starkware ve Aztec verilebilir.
 
-zkEVMs are designed to emulate the EVM. There are two major types of zkEVMs: bytecode-compatible, and language-compatible. Bytecode-compatible zkEVMs emulate the EVM at a very low level, allowing for a near-identical development and user experience compared to Ethereum Layer 1. Language-compatible zkEVMs compile Solidity and other high-level languages down into different bytecode, which can result in changes to workflow. zkSync is the most popular language-compatible zkEVM.
+zkEVM'ler, EVM'i taklit etmek üzere tasarlanmıştır. İki ana türü vardır: bytecode uyumlu ve dil uyumlu. Bytecode uyumlu zkEVM'ler, EVM'i çok düşük seviyede taklit eder ve Ethereum Katman 1'e kıyasla neredeyse aynı geliştirme ve kullanıcı deneyimi sağlar. Dil uyumlu zkEVM'ler, Solidity ve diğer yüksek seviye dilleri farklı bytecode'lere derler; bu da iş akışında değişikliklere neden olabilir. zkSync, en popüler dil uyumlu zkEVM'dir.
 
-Scroll is bytecode-compatible. This approach was chosen because it brings certain benefits:
+Scroll, bytecode uyumlu bir yapıya sahiptir. Bu yaklaşımın seçilmesinin bazı faydaları vardır:
 
-- Solidity, Vyper, and Huff work out of the box
-- No re-auditing necessary
-- Most existing tooling is inherited
-- Near-identical UX and DevX as Ethereum
+- Solidity, Vyper ve Huff kutudan çıktığı gibi çalışıyor
+- Yeniden kod denetimine gerek yok
+- Varolan geliştirme araçlarının çoğu devralınır
+- Ethereum ile neredeyse aynı kullanıcı deneyimi ve geliştirici deneyimi sağlar
 
-More detail on Scroll’s approach is found in the Technology section.
+Scroll'un yaklaşımına ilişkin daha fazla ayrıntı Teknoloji bölümünde bulunabilir.
 
-## Further reading
+## Daha fazla okumak için
 
-- [An Incomplete Guide to Rollups](https://vitalik.ca/general/2021/01/05/rollup.html) - Vitalik Buterin
-- [Scaling](https://ethereum.org/en/developers/docs/scaling/) - Ethereum Docs
+- [Rollup'lar Hakkında Eksik Bir Kılavuz](https://vitalik.ca/general/2021/01/05/rollup.html) - Vitalik Buterin
+- [Ölçeklenme](https://ethereum.org/en/developers/docs/scaling/) - Ethereum Dokümanları

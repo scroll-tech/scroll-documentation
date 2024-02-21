@@ -1,69 +1,69 @@
 ---
 section: learn
 date: Last Modified
-title: "KZG Commitment Scheme"
-lang: "en"
+title: "KZG Taahhüt Şeması"
+lang: "tr"
 permalink: "learn/zero-knowledge/kzg-commitment-scheme"
-excerpt: "KZG is used Ethereum’s Proto-Danksharding, and is also used in Scroll’s proof system. This article will give an overview of the KZG commitment scheme."
-whatsnext: { "Additional Resources": "/learn/zero-knowledge/additional-zk-learning-resources" }
+excerpt: "KZG, Ethereum'un Proto-Danksharding'inde kullanılır ve ayrıca Scroll'un kanıt sisteminde de kullanılır. Bu makale KZG taahhüt planına genel bir bakış sunacaktır."
+whatsnext: { "Ek Kaynaklar": "/tr/learn/zero-knowledge/additional-zk-learning-resources" }
 ---
 
-One of the most widely used polynomial commitment schemes is the KZG commitment scheme. The scheme was originally [published](https://www.iacr.org/archive/asiacrypt2010/6477178/6477178.pdf) in 2010 by Kate, Zaverucha, and Goldberg.
+En yaygın kullanılan polinom taahhüt planlarından biri KZG taahhüt şemasıdır. Plan ilk olarak 2010 yılında Kate, Zaverucha ve Goldberg tarafından [yayınlandı](https://www.iacr.org/archive/asiacrypt2010/6477178/6477178.pdf).
 
-KZG is used in Ethereum’s [Proto-Danksharding](https://notes.ethereum.org/@vbuterin/proto_danksharding_faq), and is also used in Scroll's proof system.
+KZG, Ethereum'un [Proto-Danksharding'inde](https://notes.ethereum.org/@vbuterin/proto_danksharding_faq) kullanılır ve ayrıca Scroll'un kanıt sisteminde de kullanılır.
 
-This article will give an overview of the KZG commitment scheme.
+Bu makale KZG taahhüt planına genel bir bakış sunacaktır.
 
-## Preliminaries and notation
+## Ön bilgiler ve notasyon
 
-Recall the premise of polynomial commitment schemes. We have some polynomial $P(x)$ that we would like to commit to. We’ll assume the polynomial has a degree less than $l$.
+Polinom taahhüt şemalarının önermesini hatırlayın. Taahhüt etmek istediğimiz bazı $P(x)$ polinomumuz var. Polinomun derecesinin $l$'dan küçük olduğunu varsayacağız.
 
-KZG commitments rely on [elliptic curve pairings](https://vitalik.ca/general/2017/01/14/exploring_ecp.html). Let $\mathbb{G}_1$ and $\mathbb{G}_2$ be two elliptic curve groups of order $p$, with a non-trivial [bilinear mapping](https://en.wikipedia.org/wiki/Bilinear_map) $e: \mathbb{G}_1 \times \mathbb{G}_2 \rightarrow \mathbb{G}_T$. Let $g$ be a generator of $\mathbb{G}_1$, and $h$ a generator of $\mathbb{G}_2$. We will use the notation $[x]_1 := x \cdot g$ and $[x]_2 := x \cdot h$, where $x \in \mathbb{F}_p$.
+KZG taahhütleri [eliptik eğri eşleştirmelerine](https://vitalik.ca/general/2017/01/14/exploring_ecp.html) dayanmaktadır. $\mathbb{G}$ ve $\mathbb{G}$ $p$ düzeyinde iki eliptik eğri grubu olsun ve önemsiz olmayan bir [çift doğrusal eşleme](https://en.wikipedia.org/wiki) olsun /Bilinear_map) $e: \mathbb{G}1 \times \mathbb{G}2 \rightarrow \mathbb{G}T$. $g$, $\mathbb{G__1$ oluşturucusu olsun ve $h$, $\mathbb{G__2$ oluşturucusu olsun. $[x]_1 := x \cdot g$ ve $[x]_2 := x \cdot h$ gösterimini kullanacağız, burada $x \in \mathbb{F__p$.
 
-## 1. Trusted setup
+## 1. Güvenilir kurulum
 
-Before computing any KZG commitments, a one-time trusted setup must be performed. Once the trusted setup is completed, it can be reused to commit and reveal as many different polynomials as desired. The trusted setup works as follows:
+Herhangi bir KZG taahhüdünü hesaplamadan önce tek seferlik güvenilir kurulum gerçekleştirilmelidir. Güvenilir kurulum tamamlandıktan sonra, istenildiği kadar farklı polinomun kaydedilmesi ve ortaya çıkarılması için yeniden kullanılabilir. Güvenilir kurulum şu şekilde çalışır:
 
-- Pick some random field element $\tau \in \mathbb{F}_p$
-- Let $l \in \mathbb{Z}$ be the maximum degree of the polynomials we want to commit to
-  - The trusted setup will only enable commitments to polynomials of degree $\leq l$
-- Compute $([\tau^0]_1,[\tau^1]_1,[\tau^{2}]_1\ldots,[\tau^{l}]_1)$ and $([\tau]_2)$, and release these values publicly.
+- Rastgele bir alan öğesi seçin $\tau \in \mathbb{F__p$
+- $l \in \mathbb{Z}$ taahhüt etmek istediğimiz polinomların maksimum derecesi olsun
+  - Güvenilir kurulum yalnızca $\leq l$ derecesindeki polinomlara yönelik taahhütleri etkinleştirir
+- $([\tau^0]_1,[\tau^1]_1,[\tau^{2}]_1\ldots,[\tau^{l}]_1)$ ve $([\tau] hesaplayın _2)$ ve bu değerleri herkese açık olarak yayınlayın.
 
-Note that $\tau$ should not be revealed - it is a secret parameter of the setup, and should be discarded after the trusted setup ceremony is completed so that nobody can figure out its value.
+$\tau$'ın açıklanmaması gerektiğini unutmayın; bu, kurulumun gizli bir parametresidir ve güvenilir kurulum töreni tamamlandıktan sonra kimsenin değerini anlayamaması için atılmalıdır.
 
-There are established methods of conducting trusted setup ceremonies with weak trust assumptions (1-out-of-N trust assumption) using [multi-party computation](https://en.wikipedia.org/wiki/Secure_multi-party_computation) (MPC). For more on how trusted setups work, see this [post](https://vitalik.ca/general/2022/03/14/trustedsetup.html) by Vitalik.
+[Çok taraflı hesaplamayı](https://en.wikipedia.org/wiki/Secure_multi-party_computation) (MPC) kullanarak, zayıf güven varsayımlarıyla (N'den 1'i güven varsayımı) güvenilir kurulum törenleri yürütmenin yerleşik yöntemleri vardır. Güvenilir kurulumların nasıl çalıştığı hakkında daha fazla bilgi için Vitalik'in bu [yazısına](https://vitalik.ca/general/2022/03/14/trustedsetup.html) bakın.
 
-## 2. Committing to a polynomial
+## 2. Bir polinoma bağlı kalmak
 
-- Given a polynomial $P(x) = \sum_{i=0}^{l} p_i x^i$
-- Compute and output the commitment $c = [P(\tau)]_1$
-  - Although the committer cannot compute $P(\tau)$ directly (since he doesn’t know $\tau$), he can compute it using the output of the trusted setup:
-    - $[P(\tau)]_1 = [\sum_{i=0}^{l} p_i \tau^i]_1 = \sum_{i=0}^{l} p_i [\tau^i]_1$
+- Bir $P(x) = \sum_{i=0}^{l} p_i x^i$ polinomu verildiğinde
+- Taahhüdü hesaplayın ve çıktısını alın $c = [P(\tau)]_1$
+  - Her ne kadar taahhüt eden $P(\tau)$'ı doğrudan hesaplayamasa da ($\tau$'ı bilmediğinden), güvenilir kurulumun çıktısını kullanarak bunu hesaplayabilir:
+    - $[P(\tau)]_1 = [\sum_{i=0}^{l} p*i \tau^i]\_1 = \sum*{i=0}^{l} p_i [\tau^i]\_1 $
 
-## 3. Prove an evaluation
+## 3. Bir değerlendirmeyi kanıtlayın
 
-- Given an evaluation $P(a) = b$
-- Compute and output the proof $\pi = [Q(\tau)]_1$
-  - Where $Q(x) := \frac{P(x)-b}{x-a}$
-    - This is called the “quotient polynomial.”Note that such a $Q(x)$ exists if and only if $P(a) = b$. The existence of this quotient polynomial therefore serves as a proof of the evaluation.
+- Bir değerlendirme verildiğinde $P(a) = b$
+- $\pi = [Q(\tau)]_1$ kanıtını hesaplayın ve çıktısını alın
+  - Burada $Q(x) := \frac{P(x)-b}{x-a}$
+    - Buna “bölüm polinomu” denir. Böyle bir $Q(x)$'ın ancak ve ancak $P(a) = b$ olması durumunda var olduğuna dikkat edin. Dolayısıyla bu bölüm polinomunun varlığı değerlendirmenin bir kanıtıdır.
 
-## 4. Verify an evaluation proof
+## 4. Değerlendirme kanıtını doğrulayın
 
-- Given a commitment $c = [P(\tau)]_1$, an evaluation $P(a) = b$, and a proof $\pi = [Q(\tau)]_1$
-- Verify that $e(\pi, [\tau - a]_2) = e(c - [b]_1, h)$
-  - Some algebra shows that this is equivalent to checking that that the quotient polynomial is correctly formed at $\tau$: $Q(\tau) = \frac{P(\tau) -b}{\tau-a}$
+- $c = [P(\tau)]_1$ taahhüdü, $P(a) = b$ değerlendirmesi ve $\pi = [Q(\tau)]_1$ kanıtı verildiğinde
+- $e(\pi, [\tau - a]_2) = e(c - [b]_1, h)$ olduğunu doğrulayın
+  - Bazı cebir çalışmaları bunun, bölüm polinomunun $\tau$'da doğru şekilde oluşturulduğunu kontrol etmeye eşdeğer olduğunu gösterir: $Q(\tau) = \frac{P(\tau) -b}{\tau-a}$
     $$
     \begin{align*}
     & e(\pi, [\tau - a]_2) = e(c - [b]_1, h) \\ \iff
     & e([Q(\tau)]_1, [\tau -a]_2) = e([P(\tau)]_1 - [b]_1, h) \\ \iff
-    &  Q(\tau) \cdot (\tau - a) \cdot e(g, h) = (P(\tau)-b) \cdot e(g,h) \\ \iff
+    & Q(\tau) \cdot (\tau - a) \cdot e(g, h) = (P(\tau)-b) \cdot e(g,h) \\ \iff
     & Q(\tau) \cdot (\tau -a) = P(\tau) - b
     \end{align*}
     $$
-  - The bilinear mapping $e$ enables us to check this property without knowing the secret setup parameter $\tau$
-- Once this verification is complete, we can conclude that (with overwhelmingly high probability) the quotient polynomial is correctly formed, and therefore that the evaluation is correct.
+  - Çift doğrusal eşleme $e$, gizli kurulum parametresi $\tau$'ı bilmeden bu özelliği kontrol etmemizi sağlar.
+- Bu doğrulama tamamlandıktan sonra, bölüm polinomunun doğru şekilde oluşturulduğu ve dolayısıyla değerlendirmenin doğru olduğu sonucuna varabiliriz (çok yüksek olasılıkla).
 
-## Learn more
+## Daha fazla bilgi edin
 
 - [https://dankradfeist.de/ethereum/2020/06/16/kate-polynomial-commitments.html](https://dankradfeist.de/ethereum/2020/06/16/kate-polynomial-commitments.html)
 - [https://alinush.github.io/2020/05/06/kzg-polynomial-commitments.html](https://alinush.github.io/2020/05/06/kzg-polynomial-commitments.html)

@@ -1,27 +1,27 @@
 ---
 section: learn
 date: Last Modified
-title: "The Scalability Problem"
-lang: "en"
+title: "Ölçeklenebilirlik Sorunu"
+lang: "tr"
 permalink: "learn/intro-to-rollups"
-excerpt: "Ethereum’s strong decentralization and security come at the cost of sacrificing scalability: to ensure that all the participating nodes can keep up with the network, the network’s throughput is limited. This limit ultimately results in higher costs and latencies for users."
-whatsnext: { "Intro to Rollups": "/learn/intro-to-rollups" }
+excerpt: "Ethereum'ın güçlü merkeziyetsizliği ve güvenliği, ölçeklenebilirliğini feda etmesiyle sağlanır: Katılan tüm düğümlerin ağa ayak uydurabilmesini sağlamak için ağın işlem kapasitesi sınırlıdır. Bu sınır sonuçta kullanıcılar için daha yüksek maliyetlere ve gecikmelere neden olur."
+whatsnext: { "Rollup'lara Giriş": "/tr/learn/intro-to-rollups" }
 ---
 
-## Ethereum’s scaling problem
+## Ethereum’un ölçeklenme sorunu
 
-[Ethereum](https://ethereum.org/en/developers/docs/intro-to-ethereum/#what-is-ethereum) is a general-purpose blockchain that supports the deployment and execution of [smart contracts](https://ethereum.org/en/developers/docs/intro-to-ethereum/#what-are-smart-contracts).
+[Ethereum](https://ethereum.org/en/developers/docs/intro-to-ethereum/#what-is-ethereum) genel amaçlı bir blok zinciridir ve [akıllı kontratların](https://ethereum.org/en/developers/docs/intro-to-ethereum/#what-are-smart-contracts) dağıtımını ve yürütülmesini destekler.
 
-One of the defining features of Ethereum is its unwavering commitment to security and decentralization. Ethereum is designed such that computers all across the world (even cheap ones, like a [Raspberry Pi](https://ethereum-on-arm-documentation.readthedocs.io/)) can participate in the network, running local copies of the blockchain and processing new transactions.
+Ethereum'un tanımlayıcı özelliklerinden biri, güvenliğe ve merkeziyetsizliğe olan sarsılmaz bağlılığıdır. Ethereum, dünyanın her yerindeki bilgisayarların ([Raspberry Pi](https://ethereum-on-arm-documentation.readthedocs.io/) gibi ucuz bilgisayarların bile) yerel kopyalarını çalıştırarak ağa katılabileceği şekilde tasarlanmıştır.
 
-However, Ethereum’s strong decentralization and security come at the cost of sacrificing scalability: to ensure that all the participating nodes can keep up with the network, the network’s throughput is limited. This limit ultimately results in higher costs and latencies for users.
+Ancak Ethereum'un güçlü merkeziyetsizliği ve güvenliği, ölçeklenebilirlikten ödün verme pahasına gelir: katılan tüm düğümlerin ağa ayak uydurabilmesini sağlamak için ağın verimi sınırlıdır. Bu sınır sonuçta kullanıcılar için daha yüksek maliyetlere ve gecikmelere neden olur.
 
-## Scaling solutions
+## Ölçeklendirme çözümleri
 
-Ethereum’s scaling solutions aim to increase the throughput of the network without sacrificing decentralization or security.
+Ethereum'un ölçeklendirme çözümleri, merkeziyetsizlikten veya güvenlikten ödün vermeden ağın verimini artırmayı amaçlıyor.
 
-There are primarily two types of scaling solutions: layer 1 scaling solutions and layer 2 scaling solutions.
+Ana olarak iki tür ölçeklendirme çözümü vardır: katman 1 ölçeklendirme çözümleri ve katman 2 ölçeklendirme çözümleri.
 
-**Layer 1** (or **L1**) scaling solutions attempt to scale the network by making modifications to the Ethereum blockchain directly. The term “layer 1” here refers to the main Ethereum blockchain. In general, it is very difficult to design layer 1 scaling solutions that increase throughput and at the same time preserve high levels of security and decentralization. Thus, recent scaling efforts have shifted away from layer 1 solutions and towards layer 2 solutions.
+**Katman 1** (veya **L1**) ölçeklendirme çözümleri, doğrudan Ethereum blok zincirinde değişiklikler yaparak ağı ölçeklendirmeye çalışır. Buradaki “katman 1” terimi ana Ethereum blok zincirini ifade etmektedir. Genel olarak, verimi artıran ve aynı zamanda yüksek düzeyde güvenlik ve merkeziyetsizliği koruyan katman 1 ölçeklendirme çözümlerini tasarlamak çok zordur. Bu nedenle son zamanlardaki ölçeklendirme çabaları 1. katman çözümlerinden 2. katman çözümlerine doğru kaymıştır.
 
-**Layer 2** (or **L2**) scaling solutions are networks that live **on top** of Ethereum layer 1 - they are essentially separate blockchains which are “anchored” to the underlying Ethereum blockchain in some way. These layer 2 networks can generally process transactions at a higher rate than the underlying layer 1 network, as they are not subject to the same limitations. The “anchoring” mechanism, the specifics of which differ across various layer 2s, enables the layer 2 network to inherit the strong security and decentralization properties of Ethereum layer 1.
+**Katman 2** (veya **L2**) ölçeklendirme çözümleri, Ethereum katman 1'in **üstünde** yaşayan ağlardır; bunlar esasen, temeldeki Ethereum blok zincirine bir şekilde "sabitlenmiş" ayrı blok zincirlerdir. Bu katman 2 ağları, aynı sınırlamalara tabi olmadıkları için genellikle işlemleri temel katman 1 ağından daha yüksek bir hızda işleyebilir. Özellikleri çeşitli katman 2'ler arasında farklılık gösteren "sabitleme" mekanizması, katman 2 ağının, Ethereum katman 1'in güçlü güvenlik ve merkezi olmayan yönetim özelliklerini miras almasını sağlar.
