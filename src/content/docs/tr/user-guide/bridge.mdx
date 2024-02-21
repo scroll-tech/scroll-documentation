@@ -4,7 +4,7 @@ date: Last Modified
 title: "Köprü"
 lang: "tr"
 permalink: "user-guide/bridge/"
-excerpt: "Sepolia'dan varlıkları köprülemeye başlamak için portal köprü uygulamasına gidin."
+excerpt: "Sepolia'dan varlıkları köprülemeye başlamak için Portal Bridge uygulamasına gidin."
 ---
 
 {/* // import ClickToZoom from "../../../../components/ClickToZoom.astro" */}
@@ -22,21 +22,21 @@ excerpt: "Sepolia'dan varlıkları köprülemeye başlamak için portal köprü 
 Başlamak için [Köprü](https://sepolia.scroll.io/bridge) uygulamamızı ziyaret edin![^thanks-hop] Köprü, **Yatırım** ve **Çekim** işlemlerini destekler ve kullanıcılara Sepolia Testnet'ten Scroll Sepolia Testnet'e varlıkları güvenle taşıma imkanı sunar.
 [^thanks-hop]: [Hop Exchange](https://hop.exchange/)’in kullanıcı arayüzünden forklanmıştır 🙌
 
-Yatırımların Scroll üzerinde kullanılabilir hale gelmesi için en fazla 15 dakika sürebilir.
+Yatırımların Scroll üzerinde kullanılabilir hale gelmesi 15 dakikaya kadar sürebilir.
 
-Çekimler, çekimin tamamlanmasından sonra Sepolia'da ikinci bir etkileşim gerektirdiğinden, çok daha uzun sürebilir.
+Çekimler, çekimin tamamlanmasından sonra Sepolia'da ikinci bir etkileşim gerektirmesinden dolayı daha uzun sürebilir.
 
 :::caution[Köprü işlemi için uzun süredir bekliyor musunuz?]
-Yukarıdaki zaman tahminleri, normal ağ davranışı ve etkinlik seviyeleri için tipiktir. Çünkü L2 bloğunda sıralı L1 işlemlerini sınırlı sayıda işlediğimizden, köprülenen mesajların, olağanüstü ağ kullanımı zamanlarında Scroll'de dahil edilmesi daha uzun sürebilir.
+Yukarıdaki zaman tahminleri, normal ağ davranışı ve etkinlik seviyeleri içindir. L2 bloğunda sıralı L1 işlemlerini sınırlı sayıda işlediğimizden, köprülenen mesajların olağanüstü ağ kullanımı zamanlarında Scroll'de dahil edilmesi daha uzun sürebilir.
 :::
 
 ## Sepolia'dan Scroll Sepolia'ya Yatırım
 
 ### Talimatlar
 
-1. İlk olarak, [Scroll Bridge](https://sepolia.scroll.io/bridge)'ne gidin ve "Cüzdanı Bağla" düğmesine basın.
+1. İlk olarak, [Scroll Bridge](https://sepolia.scroll.io/bridge)'e gidin ve "Cüzdanı Bağla" düğmesine basın.
 1. Uygulamada, **Ethereum Sepolia**'nın en üstte ve **Scroll Sepolia**'nın en altta olduğundan emin olun. Pozisyonlarını değiştirmek için "**↓**" düğmesine tıklayabilirsiniz.
-1. Sepolia'dan Scroll Sepolia'ya transfer etmek istediğiniz tokeni seçin. İlk kez köprü kuruyorsanız, "ETH"yi deneyin.
+1. Sepolia'dan Scroll Sepolia'ya transfer etmek istediğiniz tokeni seçin. İlk kez köprü kullanıyorsanız, "ETH"yi deneyin.
 1. Eğer belirli bir ERC20 tokenini ilk kez transfer ediyorsanız, Sepolia Köprü sözleşmesine ERC20 tokeninize erişim izni vermek için **Onayla**'yı seçmelisiniz.
 1. Ardından, yatırım yapmak için **Scroll Sepolia'ya Gönder** düğmesine tıklayın. Cüzdanınız transfer işlemini onaylamanızı isteyecektir.
 1. Transfer işlemi gönderildikten ve onaylandıktan sonra, token Sepolia cüzdanınızdan düşecektir.
@@ -77,15 +77,13 @@ Tokenlarınızın Scroll Sepolia cüzdanınıza gelmesi **8 ile 14 dakika** aras
 #### İlk Çekim İşleminizi Gönderme
 
 1. İlk olarak, cüzdanınızda **Scroll Sepolia** ağına geçin.
-1. Uygulamada, **Scroll Sepolia**'nın en üstte ve **Ethereum Sepolia**'nın en altta olduğundan emin olun. Pozisyonlarını değiştirmek için "**↓**" düğmesine tıklayabilirsiniz.
-1. **Scroll Sepolia**'dan **Sepolia**'ya aktarmak istediğiniz tokeni seçin. İlk kez köprü kuruyorsanız, "ETH"yi deneyin.
+1. Uygulamada, **Scroll Sepolia**'nın en üstte ve **Ethereum Sepolia**'nın en altta olduğundan emin olun. Pozisyonlarını değiştirmek için "**↓**" butonuna tıklayabilirsiniz.
+1. **Scroll Sepolia**'dan **Sepolia**'ya aktarmak istediğiniz tokeni seçin. İlk kez köprü kullanıyorsanız, "ETH"yi deneyin.
 1. Eğer belirli bir ERC20 tokenini ilk kez transfer ediyorsanız, Scroll Sepolia Köprü sözleşmesine ERC20 tokeninize erişim izni vermek için **Onayla**'yı seçmelisiniz.
 1. Ardından, çekim yapmak için **Ethereum Sepolia'ya Gönder** düğmesine tıklayın. Cüzdanınız transfer işlemini onaylamanızı isteyecektir.
 1. Transfer işlemi gönderildikten ve onaylandıktan sonra, token Scroll Sepolia cüzdanınızdan düşecektir.
 
 #### Çekim Gerçekleştirme İşlemi Göndermek
-
-{/* TODO: finish the additional instructions, better estimate "wait time" */}
 
 _Kalan adımlar Scroll Sepolia'da gerçekleşiyor, ama işleminizin Ethereum Sepolia'da tamamen kanıtlanması ("kesinleşmesi") beklenmelidir. Bu süreç en fazla dört saat sürebilir._
 
@@ -100,7 +98,7 @@ Transfer edilen token, Çekim Gerçekleştirme işlemi Sepolia'da onaylandıktan
 {/* TODO: check architecture link is live */}
 
 :::tip[Rollup Durumu]
-Rollup durumu `Kesinleştirildi`, bu bloktaki işlemlerin doğru bir şekilde yürütülmesinin Sepolia üzerinde bir geçerlilik kanıtının doğrulanmasıyla kanıtlandığını belirtir. Rollup durumu hakkında daha fazla bilgi için [Scroll Mimarisi Genel Bakış](/tr/technology)'a bakın.
+Rollup durumu `Kesinleştirildi`, bu bloktaki işlemlerin doğru bir şekilde yürütülmesinin Sepolia üzerinde bir geçerlilik kanıtının doğrulanmasıyla kanıtlandığını belirtir. Rollup durumu hakkında daha fazla bilgi için [Scroll Mimarisine Genel Bakış](/tr/technology)'a bakın.
 :::
 
 {/* You can check the progress of withdrawal transactions as follows: */}

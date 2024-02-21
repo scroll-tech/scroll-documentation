@@ -4,14 +4,14 @@ date: Last Modified
 title: "Yaygın Hatalar"
 lang: "tr"
 permalink: "user-guide/common-errors/"
-excerpt: "Scroll Sepolia Testnet ile etkileşim kurmaya çalışırken bir hata mı görüyorsunuz? İşte bazı yaygın yapılandırma hataları ve bunları hızlıca nasıl düzeltebileceğiniz."
+excerpt: "Scroll Sepolia Test Ağı ile etkileşim kurmaya çalışırken bir hata mı görüyorsunuz? İşte bazı yaygın yapılandırma hataları ve bunları hızlıca nasıl düzeltebileceğiniz hakkında bilgiler."
 ---
 
 ## MetaMask işlem gönderirken yanlış nonce hatası
 
-Bu hatayla karşılaşırsınız, çünkü MetaMask cüzdanınızda saklanan yerel nonce, Scroll testnet düğümündeki nonce ile farklıdır. Bu, son zamanlarda bekleyen bir işlem olabileceğinden kaynaklanabilir.
+Bu hatayla karşılaşma sebebiniz MetaMask cüzdanınızda saklanan yerel nonce ile Scroll testnet düğümündeki nonce'ın farklı olmasıdır. Bu, son zamanlarda bekleyen bir işleminiz olabileceğinden kaynaklanabilir.
 
-Bu sorunu düzeltmek için, MetaMask hesabınızı Scroll Sepolia Testnet için sıfırlamanız gerekir. Hesabı sıfırlamak için izlenmesi gereken adımlar şunlardır:
+Bu sorunu düzeltmek için MetaMask hesabınızı Scroll Sepolia Testnet için sıfırlamanız gerekir. Hesabı sıfırlamak için izlenmesi gereken adımlar şunlardır:
 
 1. Tarayıcıda **MetaMask** uzantısını açın
 2. Üst bölgede **Scroll Sepolia Testnet**'i seçin
@@ -26,10 +26,9 @@ MetaMask hesabını sıfırlarken hiçbir varlık kaybolmaz.
 Bir ağı kaldırmak ve yeniden eklemek bu sorunu düzeltmek için YETERLİ DEĞİLDİR - hesabınızı sıfırlamanız gerekir.
 :::
 
-## Köprüleme/değiştirme işlemi onaylandığında hiçbir şey olmuyorsa
+## Köprüleme/değiştirme işlemi onaylandığında hiçbir şey olmuyor ise
 
-If no error or console logs appear, this is likely due to a nonce issue, please reset your MetaMask account as outlined above at [#incorrect-nonce-error-when-sending-a-transaction-in-metamask](#incorrect-nonce-error-when-sending-a-transaction-in-metamask).
-Eğer hata veya konsol kayıtları görünmüyorsa, muhtemelen bir nonce sorunu vardır, lütfen MetaMask hesabınızı yukarıda belirtilen şekilde [sıfırlayın](/tr/user-guide/common-errors#metamask-işlem-gönderirken-yanlış-nonce-hatası).
+Eğer hata veya konsol kayıtları görünmüyorsa, büyük ihtimalle bir nonce sorunu vardır. Lütfen MetaMask hesabınızı yukarıda belirtilen şekilde [sıfırlayın](/tr/user-guide/common-errors#metamask-işlem-gönderirken-yanlış-nonce-hatası).
 
 ## Blok Gezgini "Dahili sunucu hatası" gösteriyor
 
@@ -39,4 +38,4 @@ Bir gizli pencere kullanın veya tarayıcı geliştirici konsolunu açın ve `_e
 
 MetaMask kullanarak Ether gönderirken, "Maksimum" miktarını göndermeye çalışırsanız, "Başarısız" hatası alırsınız. Bu, MetaMask'ın düzenli gaz ücretlerine ek olarak rollup'ların "L1 Ücreti"ni hesaba katmamasından kaynaklanır ve işlem için gaz ücretini ödemek için gereken küçük bir miktarı karşılayamaz.
 
-Bu sorunu çözmek için, Ether miktarını el ile önerilenden biraz daha küçük bir miktar olarak ayarlayın ve işlem gerçekleştirilecektir.
+Bu sorunu çözmek için Ether miktarını el ile önerilenden biraz daha az bir miktar olarak ayarlayın, işlem gerçekleştirilecektir.

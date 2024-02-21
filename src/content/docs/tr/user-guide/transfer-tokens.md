@@ -7,7 +7,7 @@ permalink: "user-guide/transfer-tokens/"
 excerpt: "Scroll Sepolia Testneti içinde tokenları transfer etmek için cüzdanınızı normal şekilde kullanabilirsiniz."
 ---
 
-Scroll Sepolia Testneti içinde tokenları transfer etmek için cüzdanınızın normal işlevini kullanabilirsiniz -- ek yapılandırmalara gerek yoktur.
+Scroll Sepolia Testnet'i içinde tokenları transfer etmek için cüzdanınızın normal işlevini kullanabilirsiniz -- ek yapılandırmalara gerek yoktur.
 
 ## MetaMask'te bir token gönderme
 
