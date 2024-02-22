@@ -1,95 +1,95 @@
 ---
 section: developers
 date: Last Modified
-title: "Scroll Contracts"
-lang: "en"
+title: "Scroll Sözleşmeleri"
+lang: "tr"
 permalink: "developers/scroll-contracts"
-whatsnext: { "Ethereum & Scroll Differences": "/developers/ethereum-and-scroll-differences" }
-excerpt: "The network info and contract addresses you need to start with Scroll Sepolia Testnet."
+whatsnext: { "Ethereum ve Scroll Farkları": "/tr/developers/ethereum-and-scroll-differences" }
+excerpt: "Scroll Sepolia Testnet kullanmaya başlayabilmeniz gereken ağ bilgileri ve sözleşme adresleri."
 ---
 
 import Aside from "../../../../components/Aside.astro"
 import ToggleElement from "../../../../components/ToggleElement.astro"
 
-In this article you'll find useful contract addresses for Scroll and commonly used protocols. See the section below for [Scroll Sepolia](#scroll-sepolia-testnet) info.
+Bu makalede Scroll'ün ve yaygın olarak kullanılan faydalı protokollerin sözleşme adreslerini bulacaksınız. [Scroll Sepolia](#scroll-sepolia-testnet) bilgisi için aşağıdaki bölüme bakın.
 
-## Network Info
+## Ağ Bilgisi
 
-Use the table below to configure your Ethereum tools to the Scroll mainnet.
+Ethereum araçlarınızı Scroll ana ağına yapılandırmak için aşağıdaki tabloyu kullanın.
 
-| Network Name       | Scroll                                             | Ethereum Mainnet                                     |
+| Ağ Adı             | Scroll                                             | Ethereum Mainnet                                     |
 | ------------------ | -------------------------------------------------- | ---------------------------------------------------- |
-| RPC URL            | [https://rpc.scroll.io/](https://rpc.scroll.io/)   | [https://eth.llamarpc.com](https://eth.llamarpc.com) |
-| Chain ID           | 534352                                             | 1                                                    |
-| Currency Symbol    | ETH                                                | ETH                                                  |
-| Block Explorer URL | [https://scrollscan.com/](https://scrollscan.com/) | [https://etherscan.io](https://etherscan.io)         |
+| RPC URL'si         | [https://rpc.scroll.io/](https://rpc.scroll.io/)   | [https://eth.llamarpc.com](https://eth.llamarpc.com) |
+| Zincir Kimliği     | 534352                                             | 1                                                    |
+| Para Birimi Sembolü| ETH                                                | ETH                                                  |
+| Blok Gezgini URL'si| [https://scrollscan.com/](https://scrollscan.com/) | [https://etherscan.io](https://etherscan.io)         |
 
 <ToggleElement anchor="mainnet-additional-infra">
-  <div slot="title">Additional Scroll Mainnet RPCs and Infra</div>
-  - [Scroll Native Bridge](https://scroll.io/bridge)
-  - [Scroll Rollup Scanner](https://scroll.io/rollupscan)
-  - [Scroll RPC Providers on ChainList.org](https://chainlist.org/chain/534352)
-  - [Ethereum RPC Providers on ChainList.org](https://chainlist.org/chain/1)
-  {/* - Additional Block Explorers:
+  <div slot="title">Ek Scroll Ana Ağ RPC'leri ve Altyapısı</div>
+  - [Scroll Yerel Köprüsü](https://scroll.io/bridge)
+  - [Scroll Rollup Tarayıcısı](https://scroll.io/rollupscan)
+  - [ChainList.org'daki Scroll RPC Sağlayıcıları](https://chainlist.org/chain/534352)
+  - [ChainList.org'daki Ethereum RPC Sağlayıcıları](https://chainlist.org/chain/1)
+  {/* - Ek Blok Gezginleri:
     - [Dora](https://www.ondora.xyz/network/scroll/interactions)
     - [L2Scan](https://scroll.l2scan.co/) */}
 
 </ToggleElement>
 
-## Scroll Contracts
+## Scroll Sözleşmeleri
 
 ### Rollup
 
-- L1 Rollup (Scroll Chain): [`0xa13BAF47339d63B743e7Da8741db5456DAc1E556`](https://etherscan.io/address/0xa13BAF47339d63B743e7Da8741db5456DAc1E556)
+- L1 Rollup (Scroll Ağı): [`0xa13BAF47339d63B743e7Da8741db5456DAc1E556`](https://etherscan.io/address/0xa13BAF47339d63B743e7Da8741db5456DAc1E556)
 
-### ETH and ERC20 Bridge
+### ETH and ERC20 Köprüsü
 
-- L1 Gateway Router: [`0xF8B1378579659D8F7EE5f3C929c2f3E332E41Fd6`](https://etherscan.io/address/0xF8B1378579659D8F7EE5f3C929c2f3E332E41Fd6)
-- L2 Gateway Router: [`0x4C0926FF5252A435FD19e10ED15e5a249Ba19d79`](https://scrollscan.com/address/0x4C0926FF5252A435FD19e10ED15e5a249Ba19d79)
+- L1 Ağ Geçidi Yönlendiricisi: [`0xF8B1378579659D8F7EE5f3C929c2f3E332E41Fd6`](https://etherscan.io/address/0xF8B1378579659D8F7EE5f3C929c2f3E332E41Fd6)
+- L2 Ağ Geçidi Yönlendiricisi: [`0x4C0926FF5252A435FD19e10ED15e5a249Ba19d79`](https://scrollscan.com/address/0x4C0926FF5252A435FD19e10ED15e5a249Ba19d79)
 
-### Advanced Bridge Contracts
+### Gelişmiş Köprü Sözleşmeleri
 
 - Scroll Messenger
   - L1 Messenger: [`0x6774Bcbd5ceCeF1336b5300fb5186a12DDD8b367`](https://etherscan.io/address/0x6774Bcbd5ceCeF1336b5300fb5186a12DDD8b367)
   - L2 Messenger: [`0x781e90f1c8Fc4611c9b7497C3B47F99Ef6969CbC`](https://scrollscan.com/address/0x781e90f1c8Fc4611c9b7497C3B47F99Ef6969CbC)
-- ETH Bridge
-  - L1 ETH Gateway: [`0x7F2b8C31F88B6006c382775eea88297Ec1e3E905`](https://etherscan.io/address/0x7F2b8C31F88B6006c382775eea88297Ec1e3E905)
-  - L2 ETH Gateway: [`0x6EA73e05AdC79974B931123675ea8F78FfdacDF0`](https://scrollscan.com/address/0x6EA73e05AdC79974B931123675ea8F78FfdacDF0)
-  - L1 WETH Gateway: [`0x7AC440cAe8EB6328de4fA621163a792c1EA9D4fE`](https://etherscan.io/address/0x7AC440cAe8EB6328de4fA621163a792c1EA9D4fE)
-  - L2 WETH Gateway: [`0x7003E7B7186f0E6601203b99F7B8DECBfA391cf9`](https://scrollscan.com/address/0x7003E7B7186f0E6601203b99F7B8DECBfA391cf9)
-- ERC20 Bridge
-  - L1 ERC20 Standard Gateway: [`0xD8A791fE2bE73eb6E6cF1eb0cb3F36adC9B3F8f9`](https://etherscan.io/address/0xD8A791fE2bE73eb6E6cF1eb0cb3F36adC9B3F8f9)
-  - L2 ERC20 Standard Gateway: [`0xE2b4795039517653c5Ae8C2A9BFdd783b48f447A`](https://scrollscan.com/address/0xE2b4795039517653c5Ae8C2A9BFdd783b48f447A)
-  - L1 ERC20 Custom Gateway: [`0xb2b10a289A229415a124EFDeF310C10cb004B6ff`](https://etherscan.io/address/0xb2b10a289A229415a124EFDeF310C10cb004B6ff)
-  - L2 ERC20 Custom Gateway: [`0x64CCBE37c9A82D85A1F2E74649b7A42923067988`](https://scrollscan.com/address/0x64CCBE37c9A82D85A1F2E74649b7A42923067988)
-- ERC721 Bridge
-  - L1 ERC721 Gateway: [`0x6260aF48e8948617b8FA17F4e5CEa2d21D21554B`](https://etherscan.io/address/0x6260aF48e8948617b8FA17F4e5CEa2d21D21554B)
-  - L2 ERC721 Gateway: [`0x7bC08E1c04fb41d75F1410363F0c5746Eae80582`](https://scrollscan.com/address/0x7bC08E1c04fb41d75F1410363F0c5746Eae80582)
-- ERC1155 Bridge
-  - L1 ERC1155 Gateway: [`0xb94f7F6ABcb811c5Ac709dE14E37590fcCd975B6`](https://etherscan.io/address/0xb94f7F6ABcb811c5Ac709dE14E37590fcCd975B6)
-  - L2 ERC1155 Gateway: [`0x62597Cc19703aF10B58feF87B0d5D29eFE263bcc`](https://scrollscan.com/address/0x62597Cc19703aF10B58feF87B0d5D29eFE263bcc)
-- Gas Oracle (deployed on Mainnet)
-  - L2 Gas Oracle (*soon to be deprecated*): [`0x987e300fDfb06093859358522a79098848C33852`](https://etherscan.io/address/0x987e300fDfb06093859358522a79098848C33852)
-  - *after [Feb '24 Bridge Upgrade](https://scroll.io/blog/protocol-upgrade-bridging-cost-reduction)*
+- ETH Köprüsü
+  - L1 ETH Ağ Geçidi: [`0x7F2b8C31F88B6006c382775eea88297Ec1e3E905`](https://etherscan.io/address/0x7F2b8C31F88B6006c382775eea88297Ec1e3E905)
+  - L2 ETH Ağ Geçidi: [`0x6EA73e05AdC79974B931123675ea8F78FfdacDF0`](https://scrollscan.com/address/0x6EA73e05AdC79974B931123675ea8F78FfdacDF0)
+  - L1 WETH Ağ Geçidi: [`0x7AC440cAe8EB6328de4fA621163a792c1EA9D4fE`](https://etherscan.io/address/0x7AC440cAe8EB6328de4fA621163a792c1EA9D4fE)
+  - L2 WETH Ağ Geçidi: [`0x7003E7B7186f0E6601203b99F7B8DECBfA391cf9`](https://scrollscan.com/address/0x7003E7B7186f0E6601203b99F7B8DECBfA391cf9)
+- ERC20 Köprüsü
+  - L1 ERC20 Standard Ağ Geçidi: [`0xD8A791fE2bE73eb6E6cF1eb0cb3F36adC9B3F8f9`](https://etherscan.io/address/0xD8A791fE2bE73eb6E6cF1eb0cb3F36adC9B3F8f9)
+  - L2 ERC20 Standard Ağ Geçidi: [`0xE2b4795039517653c5Ae8C2A9BFdd783b48f447A`](https://scrollscan.com/address/0xE2b4795039517653c5Ae8C2A9BFdd783b48f447A)
+  - L1 ERC20 Custom Ağ Geçidi: [`0xb2b10a289A229415a124EFDeF310C10cb004B6ff`](https://etherscan.io/address/0xb2b10a289A229415a124EFDeF310C10cb004B6ff)
+  - L2 ERC20 Custom Ağ Geçidi: [`0x64CCBE37c9A82D85A1F2E74649b7A42923067988`](https://scrollscan.com/address/0x64CCBE37c9A82D85A1F2E74649b7A42923067988)
+- ERC721 Köprüsü
+  - L1 ERC721 Ağ Geçidi: [`0x6260aF48e8948617b8FA17F4e5CEa2d21D21554B`](https://etherscan.io/address/0x6260aF48e8948617b8FA17F4e5CEa2d21D21554B)
+  - L2 ERC721 Ağ Geçidi: [`0x7bC08E1c04fb41d75F1410363F0c5746Eae80582`](https://scrollscan.com/address/0x7bC08E1c04fb41d75F1410363F0c5746Eae80582)
+- ERC1155 Köprüsü
+  - L1 ERC1155 Ağ Geçidi: [`0xb94f7F6ABcb811c5Ac709dE14E37590fcCd975B6`](https://etherscan.io/address/0xb94f7F6ABcb811c5Ac709dE14E37590fcCd975B6)
+  - L2 ERC1155 Ağ Geçidi: [`0x62597Cc19703aF10B58feF87B0d5D29eFE263bcc`](https://scrollscan.com/address/0x62597Cc19703aF10B58feF87B0d5D29eFE263bcc)
+- Gas Oracle (Mainnet'te konuşlandırıldı)
+  - L2 Gas Oracle (*yakında kullanımdan kaldırılacak*): [`0x987e300fDfb06093859358522a79098848C33852`](https://etherscan.io/address/0x987e300fDfb06093859358522a79098848C33852)
+  - *[Şubat '24 Köprü Yükseltmesi] sonrasında(https://scroll.io/blog/protocol-upgrade-bridging-cost-reduction)*
     - L2 Message Queue With Gas Price Oracle: [`0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B`](https://etherscan.io/address/0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B)
 
 ### L2 Predeploys
 
 - Message Queue: [`0x5300000000000000000000000000000000000000`](https://scrollscan.com/address/0x5300000000000000000000000000000000000000)
 - Gas Price Oracle: [`0x5300000000000000000000000000000000000002`](https://scrollscan.com/address/0x5300000000000000000000000000000000000002)
-- Whitelist: [`0x5300000000000000000000000000000000000003`](https://scrollscan.com/address/0x5300000000000000000000000000000000000003)
+- Beyaz Liste: [`0x5300000000000000000000000000000000000003`](https://scrollscan.com/address/0x5300000000000000000000000000000000000003)
 - WETH L2: [`0x5300000000000000000000000000000000000004`](https://scrollscan.com/address/0x5300000000000000000000000000000000000004)
-- Transaction Fee Vault: [`0x5300000000000000000000000000000000000005`](https://scrollscan.com/address/0x5300000000000000000000000000000000000005)
+- İşlem Ücreti Kasası: [`0x5300000000000000000000000000000000000005`](https://scrollscan.com/address/0x5300000000000000000000000000000000000005)
 
-## Protocols on Scroll Mainnet
+## Scroll Mainnet'teki Protokoller
 
 ### Uniswap v3
 
-- Main Contracts
+- Ana Sözleşmeler
   - Core Factory: [`0x70C62C8b8e801124A4Aa81ce07b637A3e83cb919`](https://scrollscan.com/address/0x70C62C8b8e801124A4Aa81ce07b637A3e83cb919)
   - NFT Position Manager: [`0xB39002E4033b162fAc607fc3471E205FA2aE5967`](https://scrollscan.com/address/0xB39002E4033b162fAc607fc3471E205FA2aE5967)
   - Router: [`0xfc30937f5cDe93Df8d48aCAF7e6f5D8D8A31F636`](https://scrollscan.com/address/0xfc30937f5cDe93Df8d48aCAF7e6f5D8D8A31F636)
-- Additional Contracts
+- Ek Sözleşmeler
   - multicall2Address: [`0xC1D2e074C38FdD5CA965000668420C80316F0915`](https://scrollscan.com/address/0xC1D2e074C38FdD5CA965000668420C80316F0915)
   - proxyAdminAddress: [`0x1E6dcAb806A42055098f23E2B3ac72D6E195F967`](https://scrollscan.com/address/0x1E6dcAb806A42055098f23E2B3ac72D6E195F967)
   - tickLensAddress: [`0x85780e12e90D2a684eB8E7404c985b5B5c8ce7E9`](https://scrollscan.com/address/0x85780e12e90D2a684eB8E7404c985b5B5c8ce7E9)
@@ -107,15 +107,14 @@ Use the table below to configure your Ethereum tools to the Scroll mainnet.
 - EIP712Proxy: [`0x77b7DA1c40762Cd8AFfE2069b575328EfD4D9801`](https://scrollscan.com/address/0x77b7DA1c40762Cd8AFfE2069b575328EfD4D9801)
 - Indexer: `Not deployed yet`
 
-## Additional Useful Contracts
+## Ek Yararlı Sözleşmeler
 
 - Multicall3: [`0xcA11bde05977b3631167028862bE2a173976CA11`](https://scrollscan.com/address/0xcA11bde05977b3631167028862bE2a173976CA11)
 
-## Tokens
+## Token'ler
 
 <Aside type="note" title="">
-  Bridged tokens from Ethereum Mainnet using the native bridge can be found on and added to the
-  [token-list](https://github.com/scroll-tech/token-list) repo.
+  Yerel köprüyü kullanan Ethereum Mainnet'ten köprülenmiş tokenler, [token-list](https://github.com/scroll-tech/token-list) deposunda bulunabilir ve buraya eklenebilir.
 </Aside>
 
 {" "}
@@ -124,64 +123,64 @@ Use the table below to configure your Ethereum tools to the Scroll mainnet.
 
 ---
 
-## Scroll Sepolia Testnet
+## Scroll Sepolia Test Ağı
 
-### Network Info
+### Ağ Bilgisi
 
-Use the table below to configure your Ethereum tools to the Scroll Sepolia Testnet.
+Ethereum araçlarınızı Scroll Sepolia Testnet'e yapılandırmak için aşağıdaki tabloyu kullanın.
 
-| Network Name       | Scroll Sepolia                                                    | Ethereum Sepolia                                             |
+| Ağ Adı             | Scroll Sepolia                                                    | Ethereum Sepolia                                             |
 | ------------------ | ----------------------------------------------------------------- | ------------------------------------------------------------ |
-| RPC URL            | [https://sepolia-rpc.scroll.io/](https://sepolia-rpc.scroll.io/)  | [https://rpc2.sepolia.org](https://rpc2.sepolia.org)         |
-| Chain ID           | 534351                                                            | 11155111                                                     |
-| Currency Symbol    | ETH                                                               | ETH                                                          |
-| Block Explorer URL | [https://sepolia.scrollscan.com](https://sepolia.scrollscan.com/) | [https://sepolia.etherscan.io](https://sepolia.etherscan.io) |
+| RPC URL'si         | [https://sepolia-rpc.scroll.io/](https://sepolia-rpc.scroll.io/)  | [https://rpc2.sepolia.org](https://rpc2.sepolia.org)         |
+| Zincir Kimliği     | 534351                                                            | 11155111                                                     |
+| Para Birimi Sembolü| ETH                                                               | ETH                                                          |
+| Blok Gezgini URL'si| [https://sepolia.scrollscan.com](https://sepolia.scrollscan.com/) | [https://sepolia.etherscan.io](https://sepolia.etherscan.io) |
 
 <ToggleElement anchor="sepolia-additional-infra">
-  <div slot="title">Additional Scroll Sepolia RPCs and Infra</div>
-  - [Scroll Sepolia Native Bridge](https://sepolia.scroll.io/bridge)
-  - [Scroll Sepolia Rollup Scanner](https://sepolia.scroll.io/rollupscan)
-  - [Scroll Sepolia RPC Providers on ChainList.org](https://chainlist.org/chain/534351)
-  - [Ethereum Sepolia RPC Providers on ChainList.org](https://chainlist.org/chain/11155111)
-  - Additional Block Explorers:
+  <div slot="title">Ek Scroll Sepolia RPC'leri ve Altyapısı</div>
+  - [Scroll Sepolia Yerel Köprüsü](https://sepolia.scroll.io/bridge)
+  - [Scroll Sepolia Rollup Tarayıcısı](https://sepolia.scroll.io/rollupscan)
+  - [ChainList.org'daki Sepolia RPC Sağlayıcıları](https://chainlist.org/chain/534351)
+  - [ChainList.org'daki Ethereum Sepolia RPC Sağlayıcıları](https://chainlist.org/chain/11155111)
+  - Ek Blok Gezginleri:
     - [Dora](https://www.ondora.xyz/network/scroll-sepolia/interactions)
     - [L2Scan](https://scroll.l2scan.co/)
 
 </ToggleElement>
 
-### Scroll Sepolia Contracts
+### Scroll Sepolia Sözleşmeleri
 
 #### Rollup
 
-- L1 Rollup (Scroll Chain): [`0x2D567EcE699Eabe5afCd141eDB7A4f2D0D6ce8a0`](https://sepolia.etherscan.io/address/0x2D567EcE699Eabe5afCd141eDB7A4f2D0D6ce8a0)
+- L1 Rollup (Scroll Ağı): [`0x2D567EcE699Eabe5afCd141eDB7A4f2D0D6ce8a0`](https://sepolia.etherscan.io/address/0x2D567EcE699Eabe5afCd141eDB7A4f2D0D6ce8a0)
 
-#### ETH and ERC20 Bridge
+#### ETH and ERC20 Köprüsü
 
 - L1 Gateway Router: [`0x13FBE0D0e5552b8c9c4AE9e2435F38f37355998a`](https://sepolia.etherscan.io/address/0x13FBE0D0e5552b8c9c4AE9e2435F38f37355998a)
 - L2 Gateway Router: [`0x9aD3c5617eCAa556d6E166787A97081907171230`](https://sepolia.scrollscan.com/address/0x9aD3c5617eCAa556d6E166787A97081907171230)
 
-#### Advanced Bridge Contracts
+#### Gelişmiş Köprü Sözleşmeleri
 
 - Scroll Messenger
   - L1 Messenger: [`0x50c7d3e7f7c656493D1D76aaa1a836CedfCBB16A`](https://sepolia.etherscan.io/address/0x50c7d3e7f7c656493D1D76aaa1a836CedfCBB16A)
   - L2 Messenger: [`0xBa50f5340FB9F3Bd074bD638c9BE13eCB36E603d`](https://sepolia.scrollscan.com/address/0xBa50f5340FB9F3Bd074bD638c9BE13eCB36E603d)
-- ETH Bridge
-  - L1 ETH Gateway: [`0x8A54A2347Da2562917304141ab67324615e9866d`](https://sepolia.etherscan.io/address/0x8A54A2347Da2562917304141ab67324615e9866d)
-  - L2 ETH Gateway: [`0x91e8ADDFe1358aCa5314c644312d38237fC1101C`](https://sepolia.scrollscan.com/address/0x91e8ADDFe1358aCa5314c644312d38237fC1101C)
-  - L1 WETH Gateway: [`0x3dA0BF44814cfC678376b3311838272158211695`](https://sepolia.etherscan.io/address/0x3dA0BF44814cfC678376b3311838272158211695)
-  - L2 WETH Gateway: [`0x481B20A927206aF7A754dB8b904B052e2781ea27`](https://sepolia.scrollscan.com/address/0x481B20A927206aF7A754dB8b904B052e2781ea27)
-- ERC20 Bridge
-  - L1 ERC20 Standard Gateway: [`0x65D123d6389b900d954677c26327bfc1C3e88A13`](https://sepolia.etherscan.io/address/0x65D123d6389b900d954677c26327bfc1C3e88A13)
-  - L2 ERC20 Standard Gateway: [`0xaDcA915971A336EA2f5b567e662F5bd74AEf9582`](https://sepolia.scrollscan.com/address/0xaDcA915971A336EA2f5b567e662F5bd74AEf9582)
-  - L1 ERC20 Custom Gateway: [`0x31C994F2017E71b82fd4D8118F140c81215bbb37`](https://sepolia.etherscan.io/address/0x31C994F2017E71b82fd4D8118F140c81215bbb37)
-  - L2 ERC20 Custom Gateway: [`0x058dec71E53079F9ED053F3a0bBca877F6f3eAcf`](https://sepolia.scrollscan.com/address/0x058dec71E53079F9ED053F3a0bBca877F6f3eAcf)
-- ERC721 Bridge
-  - L1 ERC721 Gateway: [`0xEF27A5E63aa3f1B8312f744b9b4DcEB910Ba77AC`](https://sepolia.etherscan.io/address/0xEF27A5E63aa3f1B8312f744b9b4DcEB910Ba77AC)
-  - L2 ERC721 Gateway: [`0x179B9415194B67DC3c0b8760E075cD4415785c97`](https://sepolia.scrollscan.com/address/0x179B9415194B67DC3c0b8760E075cD4415785c97)
-- ERC1155 Bridge
-  - L1 ERC1155 Gateway: [`0xa5Df8530766A85936EE3E139dECE3bF081c83146`](https://sepolia.etherscan.io/address/0xa5Df8530766A85936EE3E139dECE3bF081c83146)
-  - L2 ERC1155 Gateway: [`0xe17C9b9C66FAF07753cdB04316D09f52144612A5`](https://sepolia.scrollscan.com/address/0xe17C9b9C66FAF07753cdB04316D09f52144612A5)
-- Gas Oracle (deployed on Sepolia)
+- ETH Köprüsü
+  - L1 ETH Ağ Geçidi: [`0x8A54A2347Da2562917304141ab67324615e9866d`](https://sepolia.etherscan.io/address/0x8A54A2347Da2562917304141ab67324615e9866d)
+  - L2 ETH Ağ Geçidi: [`0x91e8ADDFe1358aCa5314c644312d38237fC1101C`](https://sepolia.scrollscan.com/address/0x91e8ADDFe1358aCa5314c644312d38237fC1101C)
+  - L1 WETH Ağ Geçidi: [`0x3dA0BF44814cfC678376b3311838272158211695`](https://sepolia.etherscan.io/address/0x3dA0BF44814cfC678376b3311838272158211695)
+  - L2 WETH Ağ Geçidi: [`0x481B20A927206aF7A754dB8b904B052e2781ea27`](https://sepolia.scrollscan.com/address/0x481B20A927206aF7A754dB8b904B052e2781ea27)
+- ERC20 Köprüsü
+  - L1 ERC20 Standard Ağ Geçidi: [`0x65D123d6389b900d954677c26327bfc1C3e88A13`](https://sepolia.etherscan.io/address/0x65D123d6389b900d954677c26327bfc1C3e88A13)
+  - L2 ERC20 Standard Ağ Geçidi: [`0xaDcA915971A336EA2f5b567e662F5bd74AEf9582`](https://sepolia.scrollscan.com/address/0xaDcA915971A336EA2f5b567e662F5bd74AEf9582)
+  - L1 ERC20 Custom Ağ Geçidi: [`0x31C994F2017E71b82fd4D8118F140c81215bbb37`](https://sepolia.etherscan.io/address/0x31C994F2017E71b82fd4D8118F140c81215bbb37)
+  - L2 ERC20 Custom Ağ Geçidi: [`0x058dec71E53079F9ED053F3a0bBca877F6f3eAcf`](https://sepolia.scrollscan.com/address/0x058dec71E53079F9ED053F3a0bBca877F6f3eAcf)
+- ERC721 Köprüsü
+  - L1 ERC721 Ağ Geçidi: [`0xEF27A5E63aa3f1B8312f744b9b4DcEB910Ba77AC`](https://sepolia.etherscan.io/address/0xEF27A5E63aa3f1B8312f744b9b4DcEB910Ba77AC)
+  - L2 ERC721 Ağ Geçidi: [`0x179B9415194B67DC3c0b8760E075cD4415785c97`](https://sepolia.scrollscan.com/address/0x179B9415194B67DC3c0b8760E075cD4415785c97)
+- ERC1155 Köprüsü
+  - L1 ERC1155 Ağ Geçidi: [`0xa5Df8530766A85936EE3E139dECE3bF081c83146`](https://sepolia.etherscan.io/address/0xa5Df8530766A85936EE3E139dECE3bF081c83146)
+  - L2 ERC1155 Ağ Geçidi: [`0xe17C9b9C66FAF07753cdB04316D09f52144612A5`](https://sepolia.scrollscan.com/address/0xe17C9b9C66FAF07753cdB04316D09f52144612A5)
+- Gas Oracle (Sepolia'da konuşlandırıldı)
   - L1 Message Queue With Gas Price Oracle: [`0xF0B2293F5D834eAe920c6974D50957A1732de763`](https://sepolia.etherscan.io/address/0xF0B2293F5D834eAe920c6974D50957A1732de763)
   - L2 Gas Oracle (*deprecated*): [`0x247969F4fad93a33d4826046bc3eAE0D36BdE548`](https://sepolia.etherscan.io/address/0x247969F4fad93a33d4826046bc3eAE0D36BdE548)
 
@@ -193,7 +192,7 @@ Use the table below to configure your Ethereum tools to the Scroll Sepolia Testn
 - WETH L2: [`0x5300000000000000000000000000000000000004`](https://sepolia.scrollscan.com/address/0x5300000000000000000000000000000000000004)
 - Transaction Fee Vault: [`0x5300000000000000000000000000000000000005`](https://sepolia.scrollscan.com/address/0x5300000000000000000000000000000000000005)
 
-### Protocols
+### Protokoller
 
 #### Uniswap v3
 
@@ -215,7 +214,7 @@ Use the table below to configure your Ethereum tools to the Scroll Sepolia Testn
 
 #### Aave
 
-See this [Github gist](https://gist.github.com/dghelm/7fe68f0a524f30846e1142721c081d84).
+Göz atın [Github gist](https://gist.github.com/dghelm/7fe68f0a524f30846e1142721c081d84).
 
 #### Ethereum Attestation Service (EAS)
 
@@ -224,15 +223,14 @@ See this [Github gist](https://gist.github.com/dghelm/7fe68f0a524f30846e1142721c
 - EIP712Proxy: [`0xB3574f76b1720E61FdA98702c7016674CD6Eaa7b`](https://sepolia.scrollscan.com/address/0xB3574f76b1720E61FdA98702c7016674CD6Eaa7b)
 - Indexer: [`0x7C2cb1eDC328491da52de2a0afc44D3B0Ae7ee17`](https://sepolia.scrollscan.com/address/0x7C2cb1eDC328491da52de2a0afc44D3B0Ae7ee17)
 
-### Additional Useful Contracts
+### Ek Faydalı Sözleşmeler
 
 - Multicall3: [`0xcA11bde05977b3631167028862bE2a173976CA11`](https://sepolia.scrollscan.com/address/0xcA11bde05977b3631167028862bE2a173976CA11)
 
-### Tokens
+### Token'ler
 
 <Aside type="note" title="">
-  Bridged tokens from Ethereum Sepolia using the native bridge can be added to the
-  [token-list](https://github.com/scroll-tech/token-list/tree/sepolia) repo's `sepolia` branch.
+  Ethereum Sepolia'dan yerel köprü ile köprülenmiş token'lar, [token-list](https://github.com/scroll-tech/token-list/tree/sepolia) deposunun `sepolia` branch'ine eklenebilir.
 </Aside>
 
 - Gho Token: [`0xD9692f1748aFEe00FACE2da35242417dd05a8615`](https://sepolia.scrollscan.com/address/0xD9692f1748aFEe00FACE2da35242417dd05a8615)

@@ -1,11 +1,11 @@
 ---
 section: developers
 date: Last Modified
-title: "Verifying Smart Contracts"
-lang: "en"
+title: "Akıllı Sözleşmeleri Doğrulama"
+lang: "tr"
 permalink: "developers/verifying-smart-contracts"
-whatsnext: { "Scroll Contracts": "/developers/scroll-contracts" }
-excerpt: "Easily verify your smart contracts with Scroll-supported developer tooling"
+whatsnext: { "Scroll Sözleşmeleri": "/tr/developers/scroll-contracts" }
+excerpt: "Scroll destekli geliştirici araçlarıyla akıllı sözleşmelerinizi kolayca doğrulayın"
 ---
 
 import Aside from "../../../../components/Aside.astro"
@@ -13,26 +13,26 @@ import ClickToZoom from "../../../../components/ClickToZoom.astro"
 import verify1 from "./_images/verify1.png"
 import CodeSample from "../../../../components/CodeSample/CodeSample.astro"
 
-After deploying your smart contracts, it's important to verify your code on a block explorer. This can be done in an automated way using your developer tooling or the Web UI.
+Akıllı sözleşmelerinizi dağıttıktan sonra kodunuzu bir blok gezgininde doğrulamanız önemlidir. Bu, geliştirici araçlarını veya web kullanıcı arayüzlerini kullanarak otomatik bir şekilde yapılabilir.
 
-## Using Developer Tools
+## Geliştirici Araçlarını Kullanma
 
-Most smart contract tooling has plugins for verifying your contracts easily on Etherscan. Blockscout supports Etherscan's contract verification APIs, so it's straightforward to use these tools using the APIs of either of these block explorers.
+Çoğu akıllı sözleşme aracı, sözleşmelerinizi Etherscan'de kolayca doğrulamak için eklentilere sahiptir. Blockscout, Etherscan'in sözleşme doğrulama API'lerini destekler; dolayısıyla bu araçları, bu blok kaşiflerinden herhangi birinin API'lerini kullanarak kullanmak kolaydır.
 
-| Network    | Scroll | Scroll Sepolia                                  |
+| Ağ         | Scroll | Scroll Sepolia                                  |
 | ---------- | -------------------------------- | ---------------------------------------- |
 | Scrollscan | https://api.scrollscan.com/api   | https://api-sepolia.scrollscan.com/api   |
 | Blockscout | https://blockscout.scroll.io/api | https://sepolia-blockscout.scroll.io/api |
 
 <Aside type="tip" title="Using the Scrollscan API">
-  When using Scrollscan, you will need to [register an account](https://scrollscan.com/register) and create an API key. The same key can be used for both Scroll Sepolia and mainnet. After creating your API key, please wait a few minutes before it comes into effect.
+  Scrollscan'i kullanırken [bir hesap oluşturmanız](https://scrollscan.com/register) ve sonrasında bir API anahtarı oluşturmanız gerekecektir. Aynı anahtar hem Scroll Sepolia hem de ana ağ için kullanılabilir. API anahtarınızı oluşturduktan sonra yürürlüğe girmesi için lütfen birkaç dakika bekleyin.
 </Aside>
 
 ### Hardhat
 
-Modify `hardhat.config.ts` to point to Scroll's RPC and block explorer API. For Blockscout, a dummy `apiKey` value is required, but anything works for its value. For Scrollscan, use your own API key.
+'hardhat.config.ts'yi Scroll'un RPC'sine ve blok gezgini API'sine işaret edecek şekilde değiştirin. Blockscout için sahte bir "apiKey" değeri gereklidir, ancak bu değer için herhangi bir değer işe yarar. Scrollscan için kendi API anahtarınızı kullanın.
 
-For example, if you are using Scroll Sepolia on Blockscout, your config will look like this:
+Örneğin Blockscout'ta Scroll Sepolia kullanıyorsanız yapılandırmanız şu şekilde görünecektir:
 ```javascript
 ...
 
@@ -65,32 +65,30 @@ const config: HardhatUserConfig = {
 ...
 ```
 
-Now you can verify the smart contract by running the following command.
+Artık aşağıdaki komutu çalıştırarak akıllı sözleşmeyi doğrulayabilirsiniz.
 
 ```solidity
 npx hardhat verify --network scrollSepolia <contract address> <space separated constructor parameters>
 ```
 
-For example, this is how a smart contract that receives two uint parameters in the constructor should look:
+Örneğin, yapıcıda iki uint parametresi alan bir akıllı sözleşme şu şekilde görünmelidir:
 
 ```solidity
 npx hardhat verify --network scrollSepolia 0xD9880690bd717189cC3Fbe7B9020F27fae7Ac76F 123 456
 ```
 
 <Aside type="danger" title="Warning">
-  You may receive an error stating `etherscan.apiKey.trim is not a function` . If so, you need to update
-  `@nomiclabs/hardhat-etherscan` to be able to support custom chains. Try running `npm update
-  @nomiclabs/hardhat-etherscan`
+  'etherscan.apiKey.trim is not a function' şeklinde bir hata alabilirsiniz. Öyleyse, özel zincirleri destekleyebilmek için `@nomiclabs/hardhat-etherscan`ı güncellemeniz gerekir. 'npm update @nomiclabs/hardhat-etherscan' komutunu çalıştırmayı deneyin
 </Aside>
 
 ### Foundry
 
-When using Foundry, the `verify-contract` command helps automate the process of verifying contracts. If your contract has constructor arguments, you can specify these in ABI-encoded form with the `--constructor-args` option. For example, if your constructor takes two `uint256` variables:
+Foundry'yi kullanırken "verify-contract" komutu sözleşmelerin doğrulanması sürecinin otomatikleştirilmesine yardımcı olur. Sözleşmenizde yapıcı argümanlar varsa, bunları ABI kodlu biçimde `--constructor-args` seçeneğiyle belirtebilirsiniz. Örneğin, kurucunuz iki "uint256" değişkeni alıyorsa:
 ```bash
  --constructor-args $(cast abi-encode "constructor(uint256,uint256)" 0 7)
 ```
 
-Refer to the [Foundry documentation](https://book.getfoundry.sh/reference/forge/forge-verify-contract) for further options you can specify.
+Belirleyebileceğiniz diğer seçenekler için [Foundry belgelerine](https://book.getfoundry.sh/reference/forge/forge-verify-contract) bakın.
 
 
 #### Scrollscan
@@ -102,12 +100,12 @@ forge verify-contract <contract address> <contract name> \
   --constructor-args <your constructor arguments>
 ```
 <Aside type="caution" title="Caution">
-  Do not specify the chain ID.
+  Zincir kimliğini belirtmeyin.
 </Aside>
 
 #### Blockscout
 
-Specify the verification provider as `blockscout`.
+Doğrulama sağlayıcısını "blockscout" olarak belirtin.
 
 ##### Scroll 
 ```bash
@@ -126,5 +124,5 @@ forge verify-contract <contract address> <contract name> \
 ```
 
 <Aside type="danger" title="Warning">
-  Notice we add `\?` at the end of the verifier URL otherwise verification would fail. (Last tested on forge v0.2.0).
+  Doğrulayıcı URL'sinin sonuna `\?' eklemiş olmamıza dikkat edin, aksi takdirde doğrulama başarısız olur. (En son forge v0.2.0'da test edildi).
 </Aside>
