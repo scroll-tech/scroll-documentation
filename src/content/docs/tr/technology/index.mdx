@@ -1,11 +1,11 @@
 ---
 section: technology
 date: Last Modified
-title: "Scroll Architecture"
-lang: "en"
+title: "Scroll Mimarisi"
+lang: "tr"
 permalink: "technology"
 whatsnext:
-  { "Scroll Chain": "/technology/chain/accounts", "Bridge": "/technology/bridge/cross-domain-messaging", "Sequencer": "/technology/sequencer/execution-node", "zkEVM": "/technology/zkevm/zkevm-overview" }
+  { "Scroll Zinciri": "/tr/technology/chain/accounts", "Köprü": "/tr/technology/bridge/cross-domain-messaging", "Sıralayıcı": "/tr/technology/sequencer/execution-node", "zkEVM": "/tr/technology/zkevm/zkevm-overview" }
 ---
 
 import ClickToZoom from "../../../../components/ClickToZoom.astro"
@@ -13,12 +13,12 @@ import Architecture from "./_images/arch.png"
 
 <ClickToZoom src={Architecture} alt="Architecture" />
 
-As illustrated in the figure above, Scroll chain consists of three layers:
+Yukarıdaki şekilde gösterildiği gibi Scroll zinciri üç katmandan oluşur:
 
-- **Settlement Layer**: provides data availability and ordering for the canonical Scroll chain, verifies  validity proofs, and allows users and dapps to send messages and assets between Ethereum and Scroll. We use Ethereum as the Settlement Layer and deploy the bridge and rollup contract onto the Ethereum.
-- **Sequencing Layer**: contains a *Execution Node* that executes the transactions submitted to the Scroll sequencer and the transactions submitted to the L1 bridge contract and produces L2 blocks, and a *Rollup Node* that batches transactions, posts transaction data and block information to Ethereum for data availability, and submits validity proofs to Ethereum for finality.
-- **Proving Layer**: consists of a pool of provers that are responsible for generating the zkEVM validity proofs that verify the correctness of L2 transactions, and a coordinator that dispatches the proving tasks to provers and relays the proofs to the Rollup Node to finalize on the Ethereum.
+- **Yerleşim Katmanı**: Kanonik Scroll zinciri için veri kullanılabilirliği ve sıralama sağlar, geçerlilik kanıtlarını doğrular ve kullanıcıların ve dapp'lerin Ethereum ile Scroll arasında mesaj ve varlık göndermesine olanak tanır. Uzlaşma Katmanı olarak Ethereum'u kullanıyoruz ve köprü ve toplama sözleşmesini Ethereum'a dağıtıyoruz.
+- **Sıralama Katmanı**: Scroll sıralayıcısına gönderilen işlemleri ve L1 köprü sözleşmesine gönderilen işlemleri yürüten ve L2 blokları üreten bir Yürütme Düğümü, ve işlemleri gruplandırıp veri kullanılabilirliği için işlem verileri ve blok bilgisini Ethereum'a gönderen ve kesinlik için geçerlilik kanıtlarını Ethereum'a gönderen bir Toplama Düğümü içerir.
+- **Kanıtlama Katmanı**: L2 işlemlerinin doğruluğunu doğrulayan zkEVM geçerlilik kanıtlarını oluşturmaktan sorumlu olan kanıtlayıcılardan oluşan bir havuzdan ve kanıtlayıcılara kanıtlayıcı görevleri gönderen ve kanıtları Toplama Düğümüne ileterek Ethereum'da finalize edecek bir koordinatörden oluşur.
 
-This section of the documentation provides comprehensive information on the Scroll protocol specification, bridging protocol, sequencer, and zkEVM circuit.
+Belgelerin bu bölümü, Scroll protokolü spesifikasyonu, köprüleme protokolü, sıralayıcı ve zkEVM devresi hakkında kapsamlı bilgi sağlar.
 
-*In the remainder of this section, L1 will refer to Ethereum, while L2 will refer to Scroll.*
+*Bu bölümün geri kalanında L1 Ethereum'u, L2 ise Scroll'u ifade edecektir.*

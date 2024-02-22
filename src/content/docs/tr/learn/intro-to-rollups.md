@@ -28,10 +28,8 @@ Hile kanıtları, kullanıcıların L2'de gerçekleştirilen herhangi bir hesapl
 
 Bir ZK rollup, yaptığı hesaplamaların geçerliliğini savunmak için geçerlilik kanıtlarını kullanan bir rollup'tır.
 
-When a ZK rollup executes a batch of transactions and posts the resulting state to L1, it also posts a validity proof. This mathematical proof proves that the resulting state is indeed the state which results from correctly executing the batch of transactions.
 Bir ZK rollup bir işlem grubunu yürüttüğünde ve sonucu L1'e gönderdiğinde, aynı zamanda bir geçerlilik kanıtı da gönderir. Bu matematiksel kanıt, sonucun işlem grubunun doğru bir şekilde yürütülmesiyle ortaya çıkan durum ile gerçekten aynı olduğunu kanıtlar.
 
-Today, there are multiple types of ZK rollups, broadly defined as either zkVMs (zk Virtual Machines) or zkEVMs (zk Ethereum Virtual Machines).
 Bugünlerde birden çok türde ZK rollup bulunuyor, bunlar genel olarak zkVM'ler (zk Sanal Makineler) veya zkEVM'ler (zk Ethereum Sanal Makineleri) olarak tanımlanıyor.
 
 zkVM'ler, ZK devreleriyle iyi çalışacak şekilde temelden tasarlanmıştır ve bir zkEVM'e kıyasla farklı geliştirme iş akışları gerektirir. Bunlara örnek olarak Starkware ve Aztec verilebilir.
