@@ -1,91 +1,91 @@
 ---
 section: technology
 date: Last Modified
-title: "Transactions"
-lang: "en"
+title: "İşlemler"
+lang: "tr"
 permalink: "technology/chain/transactions"
-whatsnext: { "Blocks": "/technology/chain/blocks/" }
+whatsnext: { "Bloklar": "/tr/technology/chain/blocks/" }
 ---
 
 import ClickToZoom from "../../../../../components/ClickToZoom.astro"
 import TransactionBatching from "../_images/batching.png"
 
-A transaction is a cryptographically signed message that initiates a state transition to the chain state. It can be a simple balance transfer or invoking a smart contract, which in turn executes a program to alter the state.
+İşlem, zincir durumuna bir durum geçişini başlatan kriptografik olarak imzalanmış bir mesajdır. Bu, basit bir bakiye transferi veya akıllı bir sözleşmenin başlatılması olabilir ve bu da durumu değiştirmek için bir program yürütür.
 
-## Transaction Type
+## İşlem tipi
 
-Currently, Scroll supports three types of transactions.
+Şu anda Scroll üç tür işlemi desteklemektedir.
 
-- Pre-EIP-155 Transaction: This is to support the [Singleton Factory](https://eips.ethereum.org/EIPS/eip-2470) contract.
-- Legacy Transaction (refer to [EIP-155](https://eips.ethereum.org/EIPS/eip-155))
-- `L1MessageTx` Typed Transaction (Type: `0x7E`): This is a new [EIP-2718](https://eips.ethereum.org/EIPS/eip-2718) transaction introduced in Scroll as described below. This transaction type is for transactions initiated on L1.
+- EIP-155 Öncesi İşlem: Bu, [Singleton Factory](https://eips.ethereum.org/EIPS/eip-2470) sözleşmesini desteklemek içindir.
+- Eski İşlem (bkz. [EIP-155](https://eips.ethereum.org/EIPS/eip-155))
+- `L1MessageTx` Türlü İşlem (Tür: `0x7E`): Bu, aşağıda açıklandığı gibi Scroll'da tanıtılan yeni bir [EIP-2718](https://eips.ethereum.org/EIPS/eip-2718) işlemidir. Bu işlem türü L1'de başlatılan işlemler içindir.
 
-Note that [EIP-2930](https://eips.ethereum.org/EIPS/eip-2930) and [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559) transaction type are not supported in Scroll currently. Scroll will bring back these two transaction types in the future.
+[EIP-2930](https://eips.ethereum.org/EIPS/eip-2930) ve [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559) işlem türlerinin şu anda Scroll'da desteklenmiyor olduğunu unutmayın. Scroll gelecekte bu iki işlem türünü geri getirecek.
 
-### L1 Message Transaction
+### L1 Mesaj İşlemi
 
-We introduce a new type of transactions `L1MessageTx` for L1 initiated transactions. This type of transaction is initiated on the L1 bridge contract. Every time a new message is appended to the `L1MessageQueue` contract on L1, the L2 sequeuncer will create a corresponding `L1MessageTx` transaction to be included in the L2 blocks. Because the signature was already implicitly verified when users submitted the transaction on L1, `L1MessageTx` transactions don't have signature.
+L1 tarafından başlatılan işlemler için yeni bir tür işlem olan 'L1MessageTx'i sunuyoruz. Bu tür işlemler L1 köprü sözleşmesinde başlatılır. L1'deki 'L1MessageQueue' sözleşmesine her yeni mesaj eklendiğinde, L2 sıralayıcı, L2 bloklarına dahil edilecek karşılık gelen bir 'L1MessageTx' işlemi yaratacaktır. Kullanıcılar L1'de işlemi gönderdiğinde imza zaten örtülü olarak doğrulanmış olduğundan, "L1MessageTx" işlemlerinin imzası yoktur.
 
-The `L1MessageTx` transaction type is `0x7E` and its payload is defined as follows.
+`L1MessageTx` işlem türü `0x7E` olup, yükü aşağıdaki gibi tanımlanmıştır.
 
 ```go
 type L1MessageTx struct {
-	QueueIndex uint64          // The queue index of the message queue in L1 contract
-	Gas        uint64          // Gas limit
-	To         *common.Address // Cannot be nil, we do not allow contract creation from L1
+	QueueIndex uint64          // L1 sözleşmesindeki mesaj kuyruğunun kuyruk indeksi
+	Gas        uint64          // Gaz sınırı
+	To         *common.Address // Sıfır olamaz, L1'den sözleşme oluşturulmasına izin vermiyoruz
 	Value      *big.Int
 	Data       []byte
 	Sender     common.Address
 }
 ```
 
-The RLP encoding of `L1MessageTx` transactions follows the [EIP-2718](https://eips.ethereum.org/EIPS/eip-2718) rule `TransactionType || TransactionPayload`, where `TransactionType` is `0x7E` and `TransactionPayload = RLP(L1MessageTx)`.
+'L1MessageTx' işlemlerinin RLP kodlaması, [EIP-2718](https://eips.ethereum.org/EIPS/eip-2718) 'TransactionType || TransactionPayload`; burada 'TransactionType', '0x7E' ve 'TransactionPayload = RLP(L1MessageTx)'dir.
 
-Two noticeable behaviors of the `L1MessageTx` transactions:
+'L1MessageTx' işlemlerinin dikkat çeken iki davranışı:
 
-- The `QueueIndex` in the transaction is the queue index in the L1 message queue, different from the `Nonce` of the `Sender` account. But the sender's `Nonce` will still increases by 1 after the transaction.
-- This type of transactions doesn't pay [L2 fee](/developers/transaction-fees-on-scroll#l2-fee) or [L1 fee](/developers/transaction-fees-on-scroll#l1-fee). The L2 fee is already paid when users submit transactions on L1. The L1 Fee isn't charged because the data of `L1MessageTx` transactions is already available in the L1 bridge contract.
+- İşlemdeki "QueueIndex", "Gönderen" hesabının "Nonce"inden farklı olarak L1 mesaj kuyruğundaki kuyruk indeksidir. Ancak gönderenin "Nonce" değeri işlem sonrasında yine 1 artacaktır.
+- Bu tür işlemlerde [L2 ücreti](/tr/developers/transaction-fees-on-scroll#l2-fee) veya [L1 ücreti](/tr/developers/transaction-fees-on-scroll#l1-fee) ödenmez . Kullanıcılar L1'de işlem gönderdiğinde L2 ücreti zaten ödenir. L1MessageTx işlemlerine ait veriler L1 köprü sözleşmesinde zaten mevcut olduğundan L1 Ücreti alınmaz.
 
-## Transaction Life Cycle
+## İşlem Yaşam Döngüsü
 
-The transaction life cycle in the Scroll contains the following three phases:
+Scroll'deki işlem yaşam döngüsü aşağıdaki üç aşamayı içerir:
 
-1. **Confirmed**: Users submits a transaction to either the L1 bridge contract or L2 sequencer. The transaction becomes `Confirmed` after it gets executed and included in a L2 block.
-2. **Committed**: The transactions are included in a batch and a _commit transaction_ that contains the data of this batch is submitted to L1. After the commit transaction is finalized in the L1 blocks, the transactions in this batch becomes `Committed`.
-3. **Finalized**: The validity proof of this batch is generated and verified on the L1. After the _finalize transaction_ is finalized on L1, the status of the transaction is `Finalized` and becomes a canonical part of the Scroll L2 chain.
+1. **Onaylandı**: Kullanıcılar L1 köprü sözleşmesine veya L2 sıralayıcıya bir işlem gönderir. İşlem yürütülüp L2 bloğuna dahil edildikten sonra 'Onaylandı' olur.
+2. **Kaydedildi**: İşlemler bir gruba dahil edilir ve bu grubun verilerini içeren bir _commit işlemi_ L1'e gönderilir. L1 bloklarında commit işlemi tamamlandıktan sonra bu partideki işlemler 'Kaydedildi' olur.
+3. **Sonlandırılmış**: Bu serinin geçerlilik kanıtı L1'de oluşturulur ve doğrulanır. _finalize transaction_ L1'de sonlandırıldıktan sonra, işlemin durumu 'Sonlandırıldı' olur ve Scroll L2 zincirinin kanonik bir parçası haline gelir.
 
-### Submit Transactions
+### İşlemlerin Gönderilmesi
 
-There are two entry points where users can submit transactions to Scroll.
+Kullanıcıların Scroll'a işlem gönderebilecekleri iki giriş noktası vardır.
 
-First, users can directly submit transactions to L2 sequencers. To do so, users just need to configure their wallets and connect to the Scroll RPC endpoint. The sequencer validates the transaction and stores it in its local transaction pool.
+İlk olarak kullanıcılar, işlemlerini doğrudan L2 sıralayıcılara gönderebilir. Bunu yapmak için kullanıcıların cüzdanlarını yapılandırmaları ve Scroll RPC uç noktasına bağlanmaları yeterlidir. Sıralayıcı işlemi doğrular ve yerel işlem havuzunda saklar.
 
-Second, deposit and enforced transactions are originated on L1. Scroll L1 bridge contract provides three entry points for users and smart contracts to send transactions from the L1. All messages sent through these three entry points will be appended to the `L1MessageQueue` contract.
+İkincisi, mevduat ve icra edilen işlemler L1'den kaynaklanmaktadır. Scroll L1 köprü sözleşmesi, kullanıcılara ve akıllı sözleşmelere L1'den işlem göndermeleri için üç giriş noktası sağlar. Bu üç giriş noktası üzerinden gönderilen tüm mesajlar 'L1MessageQueue' sözleşmesine eklenecektir.
 
-- The `ScrollGatewayRouter` contract and several standard token gateways allow users and contracts to deposit standard tokens to L2. See more details in the [Deposit Token Gateways](/technology/bridge/deposit-gateways).
-- The `L1ScrollMessenger` contract allows users and contracts to send arbitrary messages to L2. See more details in the [Sending Arbitrary Messages](/technology/bridge/cross-domain-messaging#sending-arbitrary-messages).
-- The `EnforcedTxGateway` contract allows EOAs to initiate an enforced transaction from the same address to withdraw tokens or call other contracts on L2. See more details in the [Sending Enforced Transaction](/technology/bridge/cross-domain-messaging#sending-enforced-transactions).
+- 'ScrollGatewayRouter' sözleşmesi ve çeşitli standart jeton ağ geçitleri, kullanıcıların ve sözleşmelerin standart jetonları L2'ye yatırmasına olanak tanır. Daha fazla ayrıntıyı [Para Yatırma Jetonu Ağ Geçitleri](/tr/technology/bridge/deposit-gateways) bölümünde bulabilirsiniz.
+- 'L1ScrollMessenger' sözleşmesi, kullanıcıların ve sözleşmelerin L2'ye isteğe bağlı mesajlar göndermesine olanak tanır. Daha fazla ayrıntıyı [Rastgele Mesaj Gönderme](/tr/technology/bridge/cross-domain-messaging#sending-arbitrary-messages) bölümünde bulabilirsiniz.
+- 'EnforcedTxGateway' sözleşmesi, EOA'ların aynı adresten zorunlu bir işlem başlatmasına, tokenleri çekmesine veya L2'deki diğer sözleşmeleri çağırmasına olanak tanır. Daha fazla ayrıntıyı [Zorunlu İşlem Gönderme](/tr/technology/bridge/cross-domain-messaging#sending-enforced-transactions) bölümünde bulabilirsiniz.
 
-The Scroll sequencer periodically starts a new mining job. It pulls the L1 messages from the `L1MessageQueue` contract and transactions in the L2 mempool and seals a block. Once a transaction is included in a L2 block, its status becomes `Confirmed`.
+Scroll sıralayıcısı periyodik olarak yeni bir madencilik işi başlatır. L1 mesajlarını 'L1MessageQueue' sözleşmesinden ve L2 bellek havuzundaki işlemlerden çeker ve bir bloğu mühürler. Bir işlem L2 bloğuna dahil edildiğinde durumu 'Onaylandı' olur.
 
-### Commit Transaction Data
+### İşlem Verilerinin Taahhüdü
 
-The rollup node collects new L2 blocks and packs them into chunks and batches (see more details in [Transaction Batching](/technology/chain/transactions#transaction-batching)). Periodically it sends a _Commit Transaction_ that posts the data of a batch of transactions to the L1 `ScrollChain` contract. After the Commit Transaction is finalized in a L1 block, the status of the transactions in this batch becomes `Committed`. At this time, users can reconstruct L2 state themselves completely based on the committed data from the L1 contract.
+Rollup düğümü, yeni L2 bloklarını toplar ve bunları parçalar ve gruplar halinde paketler (daha fazla ayrıntı için [Transaction Batching](/tr/technology/chain/transactions#transaction-batching) bölümüne bakın). Periyodik olarak, bir işlem grubunun verilerini L1 "ScrollChain" sözleşmesine gönderen bir _Commit Transaction_ gönderir. Commit İşlemi L1 bloğunda sonlandırıldıktan sonra bu partideki işlemlerin durumu 'Comtained' olur. Şu anda kullanıcılar, L1 sözleşmesindeki taahhüt edilen verilere dayanarak L2 durumunu kendileri tamamen yeniden yapılandırabilirler.
 
-### Finalize Transactions
+### İşlemlerin Sonlandırılması
 
-After the validity proof is generated, the rollup node sends a _Finalize Transaction_ including the validity proof and the new state root after this batch for onchain verification. Once the Finalize Transaction succeeds and confirmed in a L1 block, the status of the L2 transactions in this batch becomes `Finalized`. The new state root can be used by third parties trustlessly.
+Geçerlilik kanıtı oluşturulduktan sonra rollup düğümü, zincir içi doğrulama için bu gruptan sonra geçerlilik kanıtını ve yeni durum kökünü içeren bir _Sonlandırma İşlemi_ gönderir. Sonlandırma İşlemi başarılı olduğunda ve bir L1 bloğunda onaylandığında, bu gruptaki L2 işlemlerinin durumu 'Sonlandırılmış' olur. Yeni durum kökü üçüncü taraflarca güvenle kullanılabilir.
 
-## Transaction Batching
+## İşlem Yığınları
 
 <ClickToZoom src={TransactionBatching} alt="Transaction Batching" />
 
-In Scroll, the transactions are batched in multiple tiers.
+Scroll'da işlemler birden fazla katman halinde yığın hale getirilir.
 
-1. A group of ordered transactions are packed into a block.
-2. A series of contiguous blocks are grouped into a chunk. The chunk is the base unit for proof generation of the zkEVM circuit.
-3. A series of contiguous chunks are grouped into a batch. The batch is the base unit for data commitment and proof verification on the L1. The proof for a batch, or a _batch proof_, is an aggregated proof of the chunk proofs in this batch.
+1. Bir grup sıralı işlem bir blok halinde paketlenir.
+2. Bir dizi bitişik blok, bir parça halinde gruplandırılır. Parça, zkEVM devresinin kanıt üretimi için temel birimdir.
+3. Bir dizi bitişik parça bir yığın halinde gruplandırılır. Yığın, L1'de veri taahhüdü ve kanıt doğrulama için temel birimdir. Bir grubun kanıtı veya _toplu kanıt_, bu gruptaki yığın kanıtlarının toplu kanıtıdır.
 
-The goal for this multi-layer batching schema is to reduce the gas cost of onchain data commitment and proof verification. This approach increases the granularity of the rollup units on L1 while takes the fixed circuit capacity into consideration. As a result, batching reduces the data to be stored in the contract and amortizes the proof verification cost to more L2 transactions.
+Bu çok katmanlı gruplandırma şemasının amacı, zincir üstü veri taahhüdü ve kanıt doğrulamanın gaz maliyetini azaltmaktır. Bu yaklaşım, sabit devre kapasitesini dikkate alırken L1'deki toplama birimlerinin ayrıntı düzeyini artırır. Sonuç olarak, toplu işlem sözleşmede saklanacak verileri azaltır ve kanıt doğrulama maliyetini daha fazla L2 işlemine göre amorti eder.
 
-Once a chunk is created, a corresponding chunk proving task will be generated and sent to a zkEVM prover. Upon the creation of a new batch, two subsequent actions occur: (a) the rollup node commits the transaction data and block information from this batch to the L1 contract, and (b) a batch proving task to aggregate chunk proofs is dispatched to an aggregator prover. The standards for proposing a chunk and a batch are detailed in the [Rollup Node](/technology/sequencer/rollup-node).
+Bir parça oluşturulduktan sonra karşılık gelen bir parça kanıtlama görevi oluşturulacak ve bir zkEVM kanıtlayıcıya gönderilecektir. Yeni bir yığın oluşturulduktan sonra birbirini takip eden iki eylem gerçekleşir: (a) rollup düğümü bu yığın işlem verilerini ve blok bilgilerini L1 sözleşmesine gönderir ve (b) yığın kanıtlarını bir araya getirmek için bir parça kanıtlama görevi bir L1 kanıtlama toplayıcısı sözleşmesine gönderilir. Bir parça ve yığın önermeye yönelik standartlar [Rollup Düğümü](/tr/technology/sequencer/rollup-node) belgesinde ayrıntılı olarak açıklanmıştır.

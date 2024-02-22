@@ -1,57 +1,57 @@
 ---
 section: technology
 date: Last Modified
-title: "Rollup Process"
-lang: "en"
+title: "Rollup Süreci"
+lang: "tr"
 permalink: "technology/chain/rollup"
-whatsnext: { "EVM Differences from Ethereum": "/technology/chain/differences/" }
+whatsnext: { "Ethereum EVM'inden Farklar": "/tr/technology/chain/differences/" }
 ---
 
 import ClickToZoom from "../../../../../components/ClickToZoom.astro"
 import RollupProcess from "../_images/rollup.png"
 
-This document describes the rollup process in Scroll.
+Bu belgede Scroll'daki rollup işlemi açıklanmaktadır.
 
-## Workflow
+## İş Akışı
 
 <ClickToZoom src={RollupProcess} alt="Rollup Process" />
 
-The figure illustrates the rollup workflow. The L2 sequencer contains three modules:
+Şekilde rollup iş akışı gösterilmektedir. L2 sıralayıcısı üç modül içerir:
 
-- **Sync service** subscribes to the event issued from the L1 bridge contract. Once it detects any newly appended messages to the L1 inbox, the Sync Service will generate a new `L1MessageTx` transaction accordingly and add it to the local L1 transaction queue.
-- **Mempool** collects the transactions that are directly submitted to the L2 sequencer.
-- **Executor** pulls the transactions from both the L1 transaction queue and L2 mempool, executes them to construct a new L2 block.
+- **Senkronizasyon hizmeti** L1 köprü sözleşmesinden düzenlenen etkinliğe abone olur. L1 gelen kutusuna yeni eklenen mesajları tespit ettiğinde, Senkronizasyon Hizmeti buna göre yeni bir "L1MessageTx" işlemi oluşturacak ve bunu yerel L1 işlem kuyruğuna ekleyecektir.
+- **Mempool** doğrudan L2 sıralayıcısına gönderilen işlemleri toplar.
+- **Yürütücü** hem L1 işlem kuyruğundan hem de L2 bellek havuzundan işlemleri çeker ve yeni bir L2 bloğu oluşturmak için bunları yürütür.
 
-The rollup node contains three modules:
+Rollup düğümü üç modül içerir:
 
-- **Relayer** submits the commit transactions and finalize transactions to the rollup contract for data availability and finality.
-- **Chunk Proposer** and **Batch Proposer** proposes new chunks and new batches following the constraints described in the [Transaction Batching](/technology/chain/transactions#transaction-batching).
+- **Relayer**, veri kullanılabilirliği ve kesinliği için taahhüt işlemlerini ve sonlandırma işlemlerini rollup sözleşmesine gönderir.
+- **Parça Teklif Edici** ve **Toplu Teklif Oluşturucu**, [İşlem Toplu İşleme](/tr/technology/chain/transactions#transaction-batching) bölümünde açıklanan kısıtlamalara uygun olarak yeni parçalar ve yeni gruplar önerir.
 
-The rollup process can be broken down into three phases: transaction execution, batching and data commitment, and proof generation and finalization.
+Rollup süreci üç aşamaya ayrılabilir: işlemin yürütülmesi, toplu işlem ve veri taahhüdü, kanıt oluşturma ve sonuçlandırma.
 
-### Phase 1. Transaction Execution
+### Aşama 1. İşlemin Yürütülmesi
 
-1. Users submit transactions to L1 bridge contract or L2 sequencers.
-2. The Sync Service in the L2 sequencer fetches the latest appended L1 transactions from the bridge contract.
-3. The L2 sequencer processes the transactions from both the L1 message queue and the L2 mempool to construct L2 blocks.
+1. Kullanıcılar işlemleri L1 köprü sözleşmesine veya L2 sıralayıcılara gönderir.
+2. L2 sıralayıcıdaki Senkronizasyon Hizmeti, köprü sözleşmesinden en son eklenen L1 işlemlerini getirir.
+3. L2 sıralayıcı, L2 blokları oluşturmak için hem L1 mesaj kuyruğundan hem de L2 bellek havuzundan gelen işlemleri işler.
 
-### Phase 2. Batching and Data Commitment
+### Aşama 2. Gruplama ve Veri Taahhüdü
 
-4. The rollup node monitors the latest L2 blocks and fetches the transaction data.
-5. If the criterion (described in the [Transaction Batching](/technology/chain/transactions#transaction-batching)) are met, the rollup node proposes a new chunk or a batch and writes it to the database. Otherwise, the rollup node keeps waiting for more blocks or chunks.
-6. Once a new batch is created, the rollup relayer collects the transaction data in this batch and submits a Commit Transaction to the rollup contract for data availability.
+4. Toplama düğümü en son L2 bloklarını izler ve işlem verilerini getirir.
+5. Kriter ([İşlem Toplu İşleme](/tr/technology/chain/transactions#transaction-batching) bölümünde açıklanan) karşılanırsa, rollup düğümü yeni bir yığın veya toplu iş önerir ve bunu veritabanına yazar. Aksi halde rollup düğümü daha fazla blok veya parça beklemeye devam eder.
+6. Yeni bir toplu iş oluşturulduktan sonra, rollup aktarıcısı bu toplu işteki işlem verilerini toplar ve verilerin kullanılabilirliği için rollup sözleşmesine bir Taahhüt İşlemi gönderir.
 
-### Phase 3. Proof Generation and Finalization
+### Aşama 3. Kanıt Oluşturma ve Sonlandırma
 
-7. Once the coordinator polls a new chunk or batch from the database:
-   - Upon a new chunk, the coordinator will query the execution traces of all blocks in this chunk from the L2 sequencer and then send a chunk proving task to a randomly selected zkEVM prover.
-   - Upon a new batch, the coordinator will collect the chunk proofs of all chunks in this batch from the database and dispatch a batch proving task to a randomly selected aggregator prover.
-8. Upon the coordinator receives a chunk or batch proofs from a prover, it will write the proof to the database.
-9. Once the rollup relayer polls a new batch proof from the database, it will submit a Finalize Transaction to the rollup contract to verify the proof.
+7. Koordinatör veri tabanından yeni bir parça veya partiyi yokladığında:
+    - Yeni bir yığın üzerine koordinatör, L2 sıralayıcıdan bu yığındaki tüm blokların yürütme izlerini sorgulayacak ve ardından rastgele seçilen bir zkEVM kanıtlayıcıya bir yığın kanıtlama görevi gönderecektir.
+    - Yeni bir parti üzerine, koordinatör bu partideki tüm parçaların parça kanıtlarını veri tabanından toplayacak ve rastgele seçilen bir toplayıcı kanıtlayıcıya bir toplu kanıtlama görevi gönderecektir.
+8. Koordinatör kanıtlayıcıdan yığın veya toplu kanıt aldığında, kanıtı veri tabanına yazacaktır.
+9. Rollup aktarıcısı veri tabanından yeni bir toplu kanıt topladığında, kanıtı doğrulamak için rollup sözleşmesine bir Sonlandırma İşlemi gönderecektir.
 
-## Commit Transaction
+## Taahhüt İşlemi
 
-The Commit Transaction submits the block information and transaction data to L1 for data availability. The transaction includes the parent batch header, chunk data, and a bitmap of skipped L1 message. The parent batch header designates the previous batch that this batch links to. The parent batch must be committed before; otherwise the transaction will be reverted. See the `commitBatch` function signature below.
+Taahhüt İşlemi, veri kullanılabilirliği için blok bilgilerini ve işlem verilerini L1'e gönderir. İşlem, ana grup başlığını, öbek verilerini ve atlanan L1 mesajının bir bit eşlemini içerir. Ana toplu iş başlığı, bu toplu işin bağlandığı önceki toplu işi belirtir. Ana grup daha önce işlenmelidir; aksi takdirde işlem geri alınacaktır. Aşağıdaki `commitBatch` işlev imzasına bakın.
 
 ```solidity
 function commitBatch(
@@ -62,19 +62,19 @@ function commitBatch(
 ) external override OnlySequencer
 ```
 
-After the `commitBatch` function verifies the parent batch is committed before, it constructs the batch header of the batch and stores the hash of the batch header in the `ScrollChain` contract.
+'commitBatch' işlevi ana grubun daha önce taahhüt edildiğini doğruladıktan sonra, grubun toplu iş başlığını oluşturur ve toplu iş başlığının karmasını 'ScrollChain' sözleşmesine kaydeder.
 
 ```solidity
 mapping(uint256 => bytes32) public committedBatches;
 ```
 
-The encoding of batch header and chunk data are described in the [Codec](#codec) section. Most fields in the batch header are straight-forward to derive from the chunk data. One important field to note is `dataHash` that will become part of the public input to verify the validity proof. Assuming that a batch contains `n` chunks, its `dataHash` is computed as follows
+Toplu başlık ve yığın verilerinin kodlanması [Codec](#codec) bölümünde açıklanmaktadır. Toplu iş başlığındaki alanların çoğu, yığın verilerinden türetilecek şekilde basittir. Dikkat edilmesi gereken önemli alanlardan biri, geçerlilik kanıtını doğrulamak için kamuya açık girdinin bir parçası haline gelecek olan 'dataHash'tır. Bir grubun "n" parça içerdiğini varsayarsak, "dataHash" aşağıdaki şekilde hesaplanır
 
 ```
 batch.dataHash := keccak(chunk[0].dataHash || ... || chunk[n-1].dataHash)
 ```
 
-Assuming that a chunk contains `k` blocks, its `dataHash` is computed as follows
+Bir yığının 'k' blok içerdiğini varsayarsak, onun 'dataHash'ı aşağıdaki şekilde hesaplanır
 
 ```
 chunk.dataHash := keccak(blockContext[0] || ... || blockContext[k-1] ||
@@ -82,13 +82,13 @@ chunk.dataHash := keccak(blockContext[0] || ... || blockContext[k-1] ||
                          block[k-1].l1TxHashes || block[k-1].l2TxHashes)
 ```
 
-, where `block.l1TxHashes` are the concatenated transaction hashes of the L1 transactions in this block and `block.l2TxHashes` are the concatenated transaction hashes of the L2 transactions in this block. Note that the transaction hashes of L1 transactions are not uploaded by the rollup node, but instead directly loaded from the `L1MessageQueue` contract given the index range of included L1 messages in this block. The L2 transaction hashes are calculated from the RLP-encoded bytes in the `l2Transactions` field in the [`Chunk`](#Chunk-Codec).
+burada "block.l1TxHashes" bu bloktaki L1 işlemlerinin birleştirilmiş işlem hash'leridir ve "block.l2TxHashes" bu bloktaki L2 işlemlerinin birleştirilmiş işlem hash'leridir. L1 işlemlerinin işlem hash'lerinin toplama düğümü tarafından yüklenmediğini, bunun yerine bu blokta yer alan L1 mesajlarının indeks aralığı göz önüne alındığında doğrudan "L1MessageQueue" sözleşmesinden yüklendiğini unutmayın. L2 işlem hash'leri, [`Chunk`](#Chunk-Codec) içindeki 'l2Transactions' alanındaki RLP kodlu baytlardan hesaplanır.
 
-In addition, the `commitBatch` function contains a bitmap of skipped L1 messages. Unfortunately, this is due to the problem of proof overflow. If the L1 transaction corresponding to a L1 message exceeds the circuit capacity limit, we won't be able to generate a valid proof for this transaction and thus cannot finalize it on L1. Scroll is working actively to eliminate the proof overflow problem through upgrades to our proving system.
+Ek olarak, 'commitBatch' işlevi atlanan L1 mesajlarının bir bit eşlemini içerir. Ne yazık ki bunun nedeni kanıt taşması sorunudur. Bir L1 mesajına karşılık gelen L1 işlemi devre kapasitesi sınırını aşarsa, bu işlem için geçerli bir kanıt oluşturamayacağız ve dolayısıyla L1'de sonlandıramayız. Scroll, kanıtlama sistemimizde yapılan yükseltmeler yoluyla kanıt taşması sorununu ortadan kaldırmak için aktif olarak çalışıyor.
 
-## Finalize Transaction
+## Sonlandırma İşlemi
 
-The Finalize Transaction finalizes the previously-committed batch with a validity proof. The transaction also submits the state root and the withdraw root after the batch. Here is the function signature of `finalizeBatchWithProof`:
+Sonlandırma İşlemi, daha önce taahhüt edilen partiyi geçerlilik kanıtıyla sonlandırır. İşlem ayrıca toplu işlemden sonra durum kökünü ve çekilme kökünü de gönderir. İşte `finalizeBatchWithProof`un işlev imzası:
 
 ```solidity
 function finalizeBatchWithProof(
@@ -100,24 +100,24 @@ function finalizeBatchWithProof(
 ) external override OnlyProver
 ```
 
-The `finalizeBatchWithProof` function first verifies if the batch has been committed in the contract. It then calculates the public input hash as follows
+'finalizeBatchWithProof' işlevi ilk olarak toplu işin sözleşmede taahhüt edilip edilmediğini doğrular. Daha sonra genel giriş karmasını aşağıdaki gibi hesaplar
 
 ```
 publicInputHash := keccak(chainId || prevStateRoot || postStateRoot || withdrawRoot || batch.dataHash)
 ```
 
-The public input hash and the validity proof are sent to the plonk solidity verifier. Once the verification passes, the new state root and withdraw root are stored in the `ScrollChain` contract.
+Genel giriş hash'i ve geçerlilik kanıtı, plonk sağlamlık doğrulayıcıya gönderilir. Doğrulama başarılı olduktan sonra yeni durum kökü ve çekim kökü 'ScrollChain' sözleşmesinde saklanır.
 
 ```solidity
 mapping(uint256 => bytes32) public override finalizedStateRoots;
 mapping(uint256 => bytes32) public override withdrawRoots;
 ```
 
-At this stage, the state root of the latest finalized batch can be used trustlessly and the withdrawal transactions in that batch can be executed on L1 using the Merkle proof to the withdraw root.
+Bu aşamada en son sonuçlanan partinin durum kökü güvenilir bir şekilde kullanılabilir ve o partideki para çekme işlemleri, para çekme köküne Merkle kanıtı kullanılarak L1 üzerinden gerçekleştirilebilir.
 
 ## Codec
 
-This section describes the codec of three data structures in the Rollup contract: `BatchHeader`, `Chunk`, and `BlockContext`.
+Bu bölümde Toplama sözleşmesindeki üç veri yapısının codec'i açıklanmaktadır: 'BatchHeader', 'Chunk' ve 'BlockContext'.
 
 ### `BatchHeader` Codec
 
