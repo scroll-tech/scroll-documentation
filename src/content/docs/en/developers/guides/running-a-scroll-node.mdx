@@ -10,7 +10,7 @@ excerpt: "This guide contains instructions on how to to run your own node on the
 import Aside from "../../../../../components/Aside.astro"
 import ToggleElement from "../../../../../components/ToggleElement.astro"
 
-Scroll implements a fork of geth, with clique for consensus, which we call l2geth. 
+For most developers, using [our official RPC endpoint](../developer-quickstart#network-configuration) or one offered by other RPC providers in the ecosystem is the easiest way to get started on Scroll. For those looking to maintain their own node, this guide provides instructions on how to run a "follower node" that participates in the public mempool of transactions, but does not participate in consensus or block building. Scroll nodes are a fork of geth, using the clique protocol for consensus, which we call l2geth.
 
 ## Prerequisites
 
@@ -49,14 +49,10 @@ You will need access to a fully-synced **Ethereum Mainnet** or **Ethereum Sepoli
     $ cd l2geth-source
     $ git checkout VERSION
     ```    
-2. Ensure that you are using version 1.18 of `go`.
+2. Ensure that you are using version 1.20 of `go`.
 3. Install the gcc compiler: `sudo apt install build-essential`.
 4. Build `l2geth`: `make nccc_geth`. The binary is now in `build/bin/geth`.
 5. Define a command alias: `alias l2geth=./build/bin/geth`.
-
-{/* <Aside>
-`nccc` stands for “*no circuit capacity checker*”. This feature disables an expensive block validation rule that is not crucial on follower nodes. We recommend that you do not enable it. **If you do, please let us know so that we can notify you in case of breaking ccc upgrades.**
-</Aside> */}
 
 ### Run L2geth
 
@@ -68,8 +64,8 @@ Please consider opening port `30303`(UDP & TCP) and enabling discovery so that o
     
     ```bash
     $ l2geth --scroll \
-    		--datadir "./l2geth-datadir" \
-    		--gcmode archive --cache.noprefetch \
+        --datadir "./l2geth-datadir" \
+        --gcmode archive --cache.noprefetch \
         --http --http.addr "0.0.0.0" --http.port 8545 --http.api "eth,net,web3,debug,scroll" \
         --l1.endpoint "$L2GETH_L1_ENDPOINT" --rollup.verify
     ```
@@ -103,9 +99,9 @@ Please consider opening port `30303`(UDP & TCP) and enabling discovery so that o
 Running the node in Docker might have a significant impact on node performance.
 </Aside>
 
-### Download L2geth
+### Build L2geth Image
 
-1. Build the container using `make mockccc_docker`. This will produce the image `scrolltech/l2geth:latest`.
+1. Build the image using `make mockccc_docker`. This will produce the image `scrolltech/l2geth:latest`.
     
     Alternatively, you can download the `l2geth` Docker image using `docker pull scrolltech/l2geth:VERSION`. In this case, substitute this image name in the commands below.
     
@@ -117,8 +113,8 @@ Running the node in Docker might have a significant impact on node performance.
     ```bash
     $ docker run --rm --name l2geth-docker -v $(pwd):/volume -p 8545:8545 -e RUST_LOG="info" -e CHAIN_ID="534352" scrolltech/l2geth:latest \
         --scroll \
-    		--datadir "/volume/l2geth-datadir" \
-    		--gcmode archive --cache.noprefetch \
+        --datadir "/volume/l2geth-datadir" \
+        --gcmode archive --cache.noprefetch \
         --http --http.addr "0.0.0.0" --http.port 8545 --http.api "eth,net,web3,debug,scroll" \
         --l1.endpoint "$L2GETH_L1_ENDPOINT" --rollup.verify
     ```
@@ -372,34 +368,3 @@ enode://dd1ac5433c5c2b04ca3166f4cb726f8ff6d2da83dbc16d9b68b1ea83b7079b371eb16ef4
     }
   ```
 </ToggleElement>
-
----
-## Troubleshooting
-
-<Aside type="danger">
-`Fatal: Failed to create the protocol stack: mkdir /volume/l2geth-datadir: operation not permitted`
-</Aside>
-
-If you run `l2geth` in Docker and get this error on MacOS, you need to add the **`/volume`** directory to the list of shared paths in Docker Desktop settings.
-
-1. Click the Docker icon in the macOS menu bar, then click **Settings**.
-2. Go to the **Resources** tab.
-3. Click on **File Sharing**.
-4. Click the "+" (plus) button to add a new shared folder.
-5. Navigate to the root directory, select the **`volume`** folder, and click **Open**.
-6. Click **Apply & Restart** for the changes to take effect.
-
-<Aside type="danger">
-`Fatal: Failed to register the Ethereum service: database contains incompatible genesis (have a4fc62b9b0643e345bdcebe457b3ae898bef59c7203c3db269200055e037afda, new abf4a84278164e166e17c33a64e1e6fea407afd52226b8d1db0878f8774991e8)`
-</Aside>
-
-The genesis config format changed starting at version **`scroll-v3.1.3`**. You can fix this error in two ways:
-
-- Run `l2geth` with the `--scroll` flag. This will automatically import the up-to-date genesis config.
-- Alternatively, you can download the latest [genesis.json](#configuration-reference) , and run `l2geth --datadir "./l2geth-datadir" init "./genesis.json"` before running the node. This command will import the updated genesis config. Note: Your local database will remain intact.
-
-<Aside type="danger">
-`no matching manifest for linux/arm64/v8 in the manifest list entries`
-</Aside>
-
-If DockerHub does not have the container version required by your system, you can pass `--platform linux/amd64` to each Docker command. For better performance, we recommend that you build the image for your platform or [Build and Run From Source](#build-and-run-from-source).
