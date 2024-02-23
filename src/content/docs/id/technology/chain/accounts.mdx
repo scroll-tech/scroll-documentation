@@ -1,0 +1,29 @@
+---
+section: technology
+date: Last Modified
+title: "Accounts dan State"
+lang: "id"
+permalink: "technology/chain/accounts-and-state"
+whatsnext: { "Transaksi": "/id/technology/chain/transactions/" }
+---
+
+## Akun
+
+Sama seperti Ethereum, Scroll memiliki dua jenis akun: akun yang dimiliki secara eksternal (EOA) dan akun kontrak yang menyimpan kontrak pintar dan penyimpanan tambahan.
+
+Scroll menyimpan informasi tambahan bytecode kontrak di akun untuk memfasilitasi sirkuit zkEVM untuk membuktikan transisi status lebih efisien.
+
+Akun dalam Scroll berisi bidang-bidang berikut:
+
+- `nonce`: Penghitung yang menunjukkan jumlah transaksi yang dikirim oleh pengirim.
+- `balance`: Saldo token `ETH` di akun (dalam satuan wei).
+- `storageRoot`: Hash root trie penyimpanan. Karena Scroll menggunakan [zkTrie](/id/technology/sequencer/zktrie) untuk trie penyimpanan, `storageRoot` menyimpan hash Poseidon digest dalam bilangan bulat 256-bit.
+- `codeHash`: Digest hash Keccak dari bytecode kontrak.
+- `PoseidonCodeHash` (**bidang baru**): Digest hash Poseidon dari bytecode kontrak dalam bilangan bulat 256-bit.
+- `CodeSize` (**bidang baru**): Ukuran bytecode kontrak dalam byte.
+
+## Status
+
+Status dari sebuah blockchain adalah kumpulan data akun. _Trie status_ mengkodekan data akun dan alamat mereka yang sesuai ke struktur data [Merkle tree](https://en.wikipedia.org/wiki/Merkle_tree). Akar pohon, atau status dari blockchain, adalah digest kriptografis dari semua data akun yang terdapat dalam pohon.
+
+Ethereum menggunakan struktur data yang disebut [Patricia Merkle Trie](https://ethereum.org/en/developers/docs/data-structures-and-encoding/patricia-merkle-trie/) untuk trie status dan trie penyimpanan yang menyimpan entri kunci-nilai yang disimpan dalam kontrak pintar. Di Scroll, kami mengganti Patricia Merkle Trie dengan struktur data yang lebih ramah zk, yang disebut zkTrie, untuk trie status dan trie penyimpanan. Secara umum, struktur data zkTrie adalah pohon Merkle biner yang jarang dengan [hash Poseidon](https://eprint.iacr.org/2019/458.pdf), fungsi hash yang ramah zk. Dokumen [zkTrie](/id/technology/sequencer/zktrie) menjelaskan lebih detail tentang struktur data ini.

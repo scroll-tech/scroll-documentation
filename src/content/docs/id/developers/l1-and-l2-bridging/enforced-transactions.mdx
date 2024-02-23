@@ -1,0 +1,57 @@
+---
+section: developers
+date: Last Modified
+title: "Transaksi Enforced"
+lang: "id"
+permalink: "developers/l1-and-l2-bridging/enforced-transactions"
+excerpt: "Kontrak Enforced Transaction memungkinkan pengiriman transaksi antara L1 dan L2 melalui fungsi `sendTransaction`."
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+Pada upgrade masa depan Scroll, kontrak Enforced Transaction akan memungkinkan pengiriman transaksi antara L1 dan L2 dengan fungsi **`sendTransaction`**. Kontrak ini memiliki kesamaan dengan kontrak Scroll Messenger karena memungkinkan pengiriman data sembarang dari satu lapisan ke lapisan lainnya. Namun, kontrak ini membedakan dirinya dengan kemampuan untuk merelay transaksi yang ditandatangani dan kemampuan untuk menetapkan pengirim (CALLER atau msg.sender) pada transaksi penerima di Scroll.
+
+## API Transaksi Enforced
+
+Silakan kunjungi [pustaka npm](https://www.npmjs.com/package/@scroll-tech/contracts?activeTab=code) untuk dokumentasi lengkap API kontrak Scroll.
+
+### sendTransaction
+
+```solidity
+function sendTransaction(address _target, uint256 _value, uint256 _gasLimit, bytes calldata _data) public payable;
+```
+
+Tambahkan Transaksi Enforced ke L2 dari pengirim akun EOA.
+
+| Parameter  | Deskripsi                                                 |
+| ---------- | ----------------------------------------------------------- |
+| \_target   | Alamat kontrak target yang akan dipanggil di L2.            |
+| \_value    | Nilai yang dilewatkan.                                      |
+| \_gasLimit | Gas maksimum yang harus digunakan untuk transaksi ini di L2.|
+| \_data     | Data panggilan yang dilewatkan ke kontrak sasaran.          |
+
+### sendTransaction
+
+```solidity
+function sendTransaction(
+  address _sender,
+  address _target,
+  uint256 _value,
+  uint256 _gasLimit,
+  bytes calldata _data,
+  bytes memory _signature,
+  address _refundAddress
+) public payable;
+```
+
+Tambahkan Transaksi Enforced ke L2 dengan meneruskan tanda tangan dari pengirim.
+
+| Parameter       | Deskripsi                                                      |
+| --------------- | ---------------------------------------------------------------|
+| \_sender        | Alamat pengirim yang akan memulai transaksi ini di L2.         |
+| \_target        | Alamat kontrak target yang akan dipanggil di L2.               |
+| \_value         | Nilai yang dilewatkan                                          |
+| \_gasLimit      | Gas maksimum yang harus digunakan untuk transaksi ini di L2.   |
+| \_data          | Data yang dilewatkan ke kontrak target.                        |
+| \_signature     | Tanda tangan untuk transaksi.                                  |
+| \_refundAddress | Alamat untuk mengembalikan biaya yang melebihi batas.          |

@@ -1,0 +1,129 @@
+---
+section: developers
+date: Last Modified
+title: "Verifikasi Smart Contract"
+lang: "id"
+permalink: "developers/verifying-smart-contracts"
+whatsnext: { "Kontrak Scroll": "/id/developers/scroll-contracts" }
+excerpt: "Easily verify your smart contracts with Scroll-supported developer tooling"
+---
+
+import Aside from "../../../../components/Aside.astro"
+import ClickToZoom from "../../../../components/ClickToZoom.astro"
+import verify1 from "./_images/verify1.png"
+import CodeSample from "../../../../components/CodeSample/CodeSample.astro"
+
+Setelah mendeploy kontrak pintar Anda, penting untuk memverifikasi kode Anda di eksplorer blok. Ini dapat dilakukan secara otomatis menggunakan perangkat pengembangan Anda atau antarmuka web.
+
+## Menggunakan Alat Pengembang
+
+Sebagian besar alat pengembangan kontrak pintar memiliki plugin untuk memverifikasi kontrak Anda dengan mudah di Etherscan. Blockscout mendukung API verifikasi kontrak Etherscan, jadi mudah untuk menggunakan alat-alat ini menggunakan API dari salah satu eksplorer blok tersebut.
+
+| Network    | Scroll | Scroll Sepolia                                  |
+| ---------- | -------------------------------- | ---------------------------------------- |
+| Scrollscan | https://api.scrollscan.com/api   | https://api-sepolia.scrollscan.com/api   |
+| Blockscout | https://blockscout.scroll.io/api | https://sepolia-blockscout.scroll.io/api |
+
+<Aside type="tip" title="Menggunakan API Scrollscan">
+  Saat menggunakan Scrollscan, Anda perlu [mendaftar akun](https://scrollscan.com/register) dan membuat kunci API. Kunci yang sama dapat digunakan untuk Scroll Sepolia dan mainnet. Setelah membuat kunci API Anda, harap tunggu beberapa menit sebelum mulai berlaku.
+</Aside>
+
+### Hardhat
+
+Modifikasi `hardhat.config.ts` untuk menunjuk ke RPC dan API eksplorer blok Scroll. Untuk Blockscout, diperlukan nilai `apiKey` dummy, tetapi apa pun dapat digunakan untuk nilainya. Untuk Scrollscan, gunakan kunci API Anda sendiri.
+
+Sebagai contoh, jika Anda menggunakan Scroll Sepolia di Blockscout, konfigurasi Anda akan terlihat seperti ini:
+```javascript
+...
+
+const config: HardhatUserConfig = {
+  ...
+  networks: {
+    scrollSepolia: {
+      url: 'https://sepolia-rpc.scroll.io' || '',
+      accounts:
+        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    },
+  },
+  etherscan: {
+    apiKey: {
+      scrollSepolia: 'abc',
+    },
+    customChains: [
+      {
+        network: 'scrollSepolia',
+        chainId: 534351,
+        urls: {
+          apiURL: 'https://sepolia-blockscout.scroll.io/api',
+          browserURL: 'https://sepolia-blockscout.scroll.io/',
+        },
+      },
+    ],
+  },
+}
+
+...
+```
+
+Sekarang Anda dapat memverifikasi smart contract dengan menjalankan perintah berikut.
+
+```solidity
+npx hardhat verify --network scrollSepolia <contract address> <space separated constructor parameters>
+```
+
+Sebagai contoh, beginilah tampilan smart contract yang menerima dua parameter uint dalam konstrukturnya:
+
+```solidity
+npx hardhat verify --network scrollSepolia 0xD9880690bd717189cC3Fbe7B9020F27fae7Ac76F 123 456
+```
+
+<Aside type="danger" title="Peringatan">
+  Anda mungkin mendapatkan pesan kesalahan yang menyatakan `etherscan.apiKey.trim is not a function`. Jika demikian, Anda perlu memperbarui `@nomiclabs/hardhat-etherscan` untuk dapat mendukung jaringan kustom. Coba jalankan `npm update @nomiclabs/hardhat-etherscan`.
+</Aside>
+
+### Foundry
+
+Ketika menggunakan Foundry, perintah `verify-contract` membantu otomatisasi proses verifikasi kontrak. Jika kontrak Anda memiliki argumen konstruktor, Anda dapat menentukan ini dalam bentuk ABI-encoded dengan opsi `--constructor-args`. Sebagai contoh, jika konstruktor Anda mengambil dua variabel `uint256`:
+
+```bash
+ --constructor-args $(cast abi-encode "constructor(uint256,uint256)" 0 7)
+```
+
+Anda dapat merujuk ke [dokumentasi Foundry](https://book.getfoundry.sh/reference/forge/forge-verify-contract) untuk opsi tambahan yang dapat Anda tentukan.
+
+
+#### Scrollscan
+
+```bash
+forge verify-contract <contract address> <contract name> \
+  --verifier-url https://api-sepolia.scrollscan.com/api \
+  --etherscan-api-key <your Scrollscan API key> \
+  --constructor-args <your constructor arguments>
+```
+<Aside type="caution" title="Caution">
+  Do not specify the chain ID.
+</Aside>
+
+#### Blockscout
+
+Anda dapat menentukan penyedia verifikasi sebagai `blockscout`.
+
+##### Scroll 
+
+```bash
+forge verify-contract <contract address> <contract name> \
+  --verifier-url https://blockscout.scroll.io/api\? \
+  --verifier blockscout \
+  --constructor-args <your constructor arguments>  
+```
+
+##### Scroll Sepolia
+
+```bash
+forge verify-contract <contract address> <contract name> \
+  --verifier-url https://sepolia-blockscout.scroll.io/api\? \
+  --verifier blockscout \
+  --constructor-args <your constructor arguments>
+```
+
+Penting untuk dicatat bahwa kita menambahkan `\?` di akhir URL verifikator agar verifikasi tidak gagal. (Terakhir diuji pada forge v0.2.0).

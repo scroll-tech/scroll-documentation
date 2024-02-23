@@ -1,0 +1,93 @@
+---
+section: developers
+date: Last Modified
+title: "Membangun di Scroll"
+lang: "id"
+permalink: "developers/"
+excerpt: "Membangun di Scroll terasa sama seperti di Ethereum, dan Anda dapat membawa peralatan dan kontrak favorit Anda bersama Anda."
+whatsnext: { "Developer Quickstart": "/id/developers/developer-quickstart" }
+---
+
+import Aside from "../../../../components/Aside.astro"
+import ToggleElement from "../../../../components/ToggleElement.astro"
+
+**Selamat datang di dokumentasi pengembang Scroll!**
+
+Scroll adalah jaringan Layer 2 yang dibangun di atas Ethereum (secara lebih spesifik, "zero knowledge rollup").
+
+Jika Anda berpengalaman dalam membangun di Ethereum, kode, dependensi, dan peralatan Anda dapat langsung digunakan dengan Scroll. Ini memungkinkan karena jaringan kami kompatibel dengan bytecode EVM dan dirancang untuk terasa seperti mengembangkan di Ethereum.
+
+<Aside type="tip" title="Baru dengan zero knowledge rollups?">
+Scroll mendapatkan keamanan dan kecepatannya dengan menjalankan transaksi di luar rantai, dan juga menghasilkan bukti kriptografis bahwa transaksi tersebut dieksekusi dengan benar. Bukti kriptografis ini diverifikasi dalam kontrak pintar di Layer 1, memastikan bahwa semua kode yang dieksekusi pada Layer 2 Scroll berperilaku seperti jika dieksekusi pada Layer 1 Ethereum.
+
+[Pelajari lebih lanjut tentang arsitektur Scroll →](/id/technology)
+
+</Aside>
+
+## Memulai
+
+**Ingin membangun di Scroll?**
+
+- Untuk hal-hal penting: Lihat [Panduan Cepat Pengembang](/id/developers/developer-quickstart)
+- Untuk tutorial langkah demi langkah dalam melakukan deploy kontrak pintar pertama Anda di Scroll, baca [tutorial deploy kontrak kami](/id/developers/guides/contract-deployment-tutorial)
+- Kami juga memiliki sejumlah [alamat kontrak yang telah dideploy](/id/developers/scroll-contracts) untuk dibangun.
+
+## Mengapa Membangun di Scroll?
+
+<ToggleElement anchor="throughput">
+  <div slot="title">Throughput — Scroll menciptakan ruang blok yang lebih aman untuk Ethereum.</div>
+  <p>
+    ZK Rollups memungkinkan lebih banyak aktivitas di jaringan, meminimalkan kemacetan. Dengan mewarisi keamanan Ethereum,
+    yang memverifikasi perilaku jaringan menggunakan bukti zero knowledge, Scroll dapat memproses lebih banyak transaksi tanpa
+    mengorbankan desentralisasi.
+  </p>
+</ToggleElement>
+
+<ToggleElement anchor="cost">
+  <div slot="title">Biaya — Scroll menghemat biaya gas pengguna.</div>
+  <p>
+    Di Ethereum, persaingan untuk ruang blok menghasilkan biaya yang lebih tinggi per transaksi, karena setiap transaksi
+    membuat penawaran untuk disertakan dalam blok berikutnya. Scroll memanfaatkan terobosan terbaru dalam bukti zero
+    knowledge dan akselerasi perangkat keras untuk secara drastis meningkatkan ruang blok yang aman dan meminimalkan
+    biaya transaksi bagi pengguna.
+  </p>
+</ToggleElement>
+<ToggleElement anchor="speed">
+  <div slot="title">Kecepatan — Scroll memberikan umpan balik kepada pengguna, lebih cepat.</div>
+  <p>
+    Setelah merger, blok Ethereum dapat dikonfirmasi setiap 12 detik. Blok Scroll diproduksi setiap 3 detik, dan untuk
+    operasi dengan risiko lebih rendah, transaksi dapat diasumsikan final begitu disertakan dalam blok. Ini membuka
+    kemungkinan baru untuk interaksi on-chain dalam aplikasi sosial dan game.
+  </p>
+</ToggleElement>
+<ToggleElement anchor="alignment">
+  <div slot="title">Kesesuaian — Scroll membangun pada visi Ethereum.</div>
+  <p>
+    Scroll membangun pada visi Ethereum. Etos kami adalah membangun Ethereum, bukan memecahkannya. Desentralisasi,
+    tanpa izin, tahan sensor, dan kepemilikan komunitas adalah inti dari apa yang kami lakukan dan peta jalan yang kami
+    bangun. Kami percaya pada perangkat lunak open-source, dan kami bekerja sama dengan tim Explorasi Privasi dan
+    Skalabilitas Ethereum Foundation untuk mendukung karya mereka pada zkEVM yang suatu hari nanti mungkin menjadi
+    jantung Ethereum.
+  </p>
+  <p>
+    Kami juga bekerja dengan DAO pemerintahan dan protokol open-source lainnya untuk memastikan bahwa saat aplikasi
+    diterapkan, kami berusaha untuk memperluas dampaknya — baik itu dalam barang publik, infrastruktur inti, atau
+    generasi berikutnya dari kasus penggunaan bukti zero knowledge.
+  </p>
+</ToggleElement>
+<ToggleElement anchor="community">
+  <div slot="title">Komunitas — Scroll menyatukan pengguna dan pembangun.</div>
+  <p>
+    Kami mengerti tantangan membangun secara terbuka dan mendapatkan keterlibatan pengguna! Scroll memiliki komunitas
+    pengguna dan pembangun yang berkembang, dan dengan komunitas Discord lebih dari 500.000 anggota yang siap mencoba
+    aplikasi di testnet atau mainnet kami, kami senang dapat menghubungkan pembangun dengan pengguna yang dapat memberikan
+    umpan balik dunia nyata.
+  </p>
+</ToggleElement>
+
+## Terima kasih telah membangun bersama kami.
+
+Kami sedang bekerja untuk membawa lebih banyak integrasi dan infrastruktur dukungan ke jaringan, dan sedang bersemangat
+untuk menuju rilis Mainnet kami.
+
+Bergabunglah dengan komunitas pengembang kami yang berkembang. Anda dapat menemukan kami di [Discord](https://discord.gg/scroll), bergabung dengan [forum diskusi](https://community.scroll.io/) kami, atau ikuti kemajuan kami di [Twitter](https://twitter.com/Scroll_ZKP).

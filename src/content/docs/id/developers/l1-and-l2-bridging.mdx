@@ -1,0 +1,32 @@
+---
+section: developers
+date: Last Modified
+title: "L1 dan L2 Bridging"
+lang: "id"
+permalink: "developers/l1-and-l2-bridging"
+whatsnext: { "ETH & ERC20 Token Bridge": "/id/developers/l1-and-l2-bridging/eth-and-erc20-token-bridge/" }
+excerpt: "An overview of Scroll's Bridging architecture"
+---
+
+import ClickToZoom from "../../../../components/ClickToZoom.astro"
+import Aside from "../../../../components/Aside.astro"
+import L1GatewayWHITE from "../../../../assets/images/developers/L1GatewayWHITE.png"
+import withdrawWHITE from "../../../../assets/images/developers/withdrawWHITE.png"
+
+Scroll Bridge memungkinkan transfer ETH, token ERC20, NFT, dan pesan arbitrer antara L1 dan L2. Ini berfungsi sebagai mekanisme yang aman untuk memindahkan berbagai aset digital di antara L1 dan L2.
+
+Untuk memfasilitasi transfer ETH dan token ERC20, Scroll Bridge menggunakan Router Gateway. Kontrak ini memastikan kelancaran pergerakan aset-aset ini antara L1 dan L2, memungkinkan pengguna untuk mentransfer token-tokens berbasis Ethereum mereka dengan lancar.
+
+Gateway ERC721 dan ERC1155 memungkinkan transfer aset non-fungible antara kedua jaringan, memungkinkan pengguna untuk memindahkan NFT mereka di antara L1 dan L2.
+
+Selain transfer token, kontrak Scroll Messenger memungkinkan interaksi kontrak lintas rantai. Ini berarti bahwa kontrak di satu jaringan dapat berinteraksi dengan kontrak di jaringan lain melalui kontrak Scroll Messenger. Fungsionalitas ini memperluas kemungkinan untuk aplikasi terdesentralisasi dan kontrak pintar untuk beroperasi dengan lancar di kedua jaringan.
+
+## Arsitektur Gateway L1
+
+Ada banyak titik masuk dari pengguna ke Scroll Bridge. Ini akan bergantung pada apa yang ingin Anda lakukan dan bagaimana Anda ingin melakukannya. Jika Anda ingin mengirim ETH atau token ERC20, Anda harus menggunakan `GatewayRouter`. Jika Anda ingin mengirim NFT, Anda harus menggunakan `L1ERC721Gateway` atau `L1ERC1155Gateway`. Jika Anda ingin mengirim data arbitrer, Anda harus menggunakan `L1ScrollMessenger`. Semua transfer Gateway menggunakan Scroll Messenger untuk mengirim aset lintas rantai, yang tugasnya adalah menambahkan transaksi ke Antrian Pesan untuk inklusi L2.
+
+## Arsitektur Gateway L2
+
+Mengenai titik masuk yang dapat dipanggil tanpa izin yang mungkin, Arsitektur Gateway L2 sangat mirip dengan L1. Perbedaannya adalah bahwa ketika mengirim pesan dari L2, memanggil fungsi `appendMessage` akan menyimpan pesan dalam pohon merkle biner (disebut juga pohon tarik) yang hanya dapat ditambahkan di `L2MessageQueue`. Ketika pesan baru dikirim ke `L2MessageQueue`, relayer akan mendeteksinya dan menyimpannya dalam database. Ketika blok sudah difinalisasi, ia akan menghasilkan bukti jalur merkle baru dan meneruskannya ke node L1geth untuk dieksekusi pada `L1ScrollMessenger`. Semua akar tarik yang sudah difinalisasikan akan disimpan dalam kontrak rollup sehingga kita dapat memverifikasi bukti terhadap mereka. Pada versi Scroll mendatang, Relayer tidak akan diperlukan karena semua pengguna akan dapat menyelesaikan transaksi di L1.
+
+Dalam bagian-bagian mendatang, kita akan menjelajahi aspek teknis dari jembatan, termasuk API kontrak pintar yang diperlukan untuk memanfaatkan kemampuannya. Panduan terperinci dengan contoh kode disediakan di bagian Panduan Pengembang untuk membantu pengembang dan pengguna memahami dan menerapkan fungsionalitas ini.

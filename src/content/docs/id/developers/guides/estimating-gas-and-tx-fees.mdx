@@ -1,0 +1,227 @@
+---
+section: developers
+date: Last Modified
+title: "Estimasi Gas dan biaya Tx"
+lang: "id"
+permalink: "developers/guides/estimating-gas-and-transaction-fees"
+excerpt: "Karena Scroll adalah L2 rollup, bagian dari siklus transaksi adalah mengkomit beberapa data ke L1 untuk keamanan. Untuk membayar ini, semua transaksi menimbulkan biaya tambahan yang disebut sebagai biaya L1."
+---
+
+import Aside from "../../../../../components/Aside.astro"
+import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import txFeesProjectStructure from "../../../../../assets/images/developers/txFeesProjectStructure.png"
+
+{/* TODO: Update for Sepolia, test and publish to sidebar. */}
+
+:::caution[This article is out of date.]
+Halaman ini belum diperbarui dan diuji terhadap rilis terbaru Scroll Sepolia. Harap gunakan dengan hati-hati.
+:::
+
+Sejak Scroll adalah L2 rollup, bagian dari siklus transaksi adalah mengkomit beberapa data ke L1 untuk keamanan. Untuk membayar ini, semua transaksi menimbulkan biaya tambahan yang disebut sebagai _biaya L1_.
+
+Dalam panduan ini, kami akan membahas cara memperkirakan biaya L1 di Scroll dan menghitung estimasi biaya transaksi akhir melalui contoh kode praktis yang dapat Anda temukan [di sini](https://github.com/scroll-tech/scroll-guides/tree/main/gas-estimation-demo).
+
+## Rumus
+
+Singkatnya, biaya transaksi di Scroll, pada setiap saat tertentu, dapat dihitung sebagai
+
+```
+totalBiaya = (l2GasPrice * l2GasUsed) + l1Fee
+```
+
+Sebuah perbedaan penting yang perlu kami buat adalah bahwa `l1Fee` dipisahkan dari `l2Fee`.
+
+Untuk penjelasan yang lebih komprehensif dan detail tentang rumus ini, periksa dokumentasi tentang [Bagaimana Biaya Transaksi Bekerja di Scroll](../developers/transaction-fees-on-scroll-l2/).
+
+## Berinteraksi dengan Nilai
+
+Untuk mengambil nilai-nilai ini dan menghitung biaya akhir, kami akan berinteraksi dengan RPC publik Scroll dan Smart Contract yang telah dideploy sebelumnya `L1GasOracle.sol`, yang dideploy di [`0x5300000000000000000000000000000000000002`](https://scrollscan.com/address/0x5300000000000000000000000000000000000002).
+
+Untuk basis kode contoh kami, kami membuat proyek Hardhat dan mengambil nilai menggunakan pustaka [Ethers.js](https://docs.ethers.org/v6/).
+
+`l2GasUsed` - Kami mendapatkannya menggunakan metode [estimateGas](https://docs.ethers.org/v6/api/providers/#Provider-estimateGas), yang mengirim kueri ke RPC kami dengan data TX untuk mendapatkan perkiraan gas yang akan digunakan.
+
+`l2GasPrice` - Untuk ini, kami akan menggunakan metode [getFeeData](https://docs.ethers.org/v6/api/providers/#Provider-getFeeData), yang akan mendapatkan kondisi pasar saat ini di L2.
+
+Kontrak cerdas Gas Oracle mengekspos beberapa bidang kunci yang kami butuhkan untuk mencari tahu biaya transaksi. `overhead()`, `scalar()`, `l1BaseFee()` dan `getL1GasUsed(bytes memory data)`
+
+Namun, kontrak juga mengekspos fungsi `getL1Fee(bytes memory data)`, yang mengabstraksi semua kompleksitas ini dan memungkinkan kami untuk mendapatkan biaya hanya dalam satu panggilan fungsi.
+
+## Contoh Praktis
+
+### Struktur Proyek
+
+Pertama-tama, mari kita cepat melihat folder kunci di dalam struktur proyek kami.
+
+Ini adalah proyek Hardhat standar, tetapi sebagian besar pekerjaan kami ada di dalam folder *contracts* dan _scripts_.
+
+<ClickToZoom src={txFeesProjectStructure} />
+
+<Aside type="tip" title="">
+  Tutorial ini akan meninjau bagian-bagian penting dari kode, menggunakan contoh kode sebagai cara mudah untuk mendapatkan gambaran
+  tentang apa yang dilakukan dalam proyek. Beberapa kode, seperti penanganan kesalahan, akan dikecualikan untuk kesederhanaan.
+</Aside>
+
+### Kontrak cerdas
+
+Pertama, kami membutuhkan Smart Contract untuk berinteraksi dengan untuk memperlihatkan estimasi gas. Untuk itu, kami akan membuat `ExampleContract.sol`.
+
+```solidity
+pragma solidity ^0.8.17;
+
+contract ExampleContract {
+  uint public exampleVariable;
+
+  function setExampleVariable(uint _exampleVariable) external {
+    exampleVariable = _exampleVariable;
+  }
+}
+```
+
+<Aside type="tip" title="">
+  Ingatlah tanda tangan metode `setExampleVariable` karena kami akan menggunakannya nanti sebagai contoh
+</Aside>
+
+Setelah dideploy, kami mengisi nilai `EXAMPLE_CONTRACT_ADDRESS` di file `.env` kami. Untuk proyek contoh, sudah dideploy di `TODO: 0xc37ee92c73753B46eB865Ee156d89741ad0a8777` dan telah diisi sebelumnya, sehingga tidak ada yang perlu dilakukan di sini.
+
+### Memperkirakan biaya
+
+Bagian pusat contoh ini berada di dalam file `/scripts/gasEstimation.ts`.
+
+Kami hanya akan melakukan empat hal:
+
+1. Membuat transaksi palsu menggunakan ExampleContract
+2. Memperkirakan biaya L2 dari transaksi tersebut
+3. Memperkirakan biaya L1 dari transaksi tersebut
+4. Memancarkan transaksi aktual ke Scroll dan membandingkan nilai-nilai tersebut
+
+#### Membuat transaksi palsu
+
+Tujuan dari langkah ini adalah membuat **(RLP) Serialized Unsigned Transaction** yang akan digunakan nanti sebagai parameter untuk memanggil metode estimasi gas orakel.
+
+1. Mari kita isi transaksi kami dengan nilai yang diperlukan untuk memperkirakan biayanya dengan memanggil `buildPopulatedExampleContractTransaction`. Ini akan mengisi bidang `data`, `to`, `gasPrice`, `type` dan `gasLimit`:
+
+```typescript
+export async function buildPopulatedExampleContractTransaction(
+  exampleContractAddress: string,
+  newValueToSet: number
+): Promise<ContractTransaction> {
+  const exampleContract = await ethers.getContractAt("ExampleContract", exampleContractAddress)
+
+  return exampleContract.setExampleVariable.populateTransaction(newValueToSet)
+}
+```
+
+2. Sekarang, mari kita memangkasnya menjadi bidang-bidang dasar menggunakan `buildUnsignedTransaction`. Kami tidak akan menandatanganinya.
+
+```typescript
+export async function buildUnsignedTransaction(signer: HardhatEthersSigner, populatedTransaction: ContractTransaction): Promise<UnsignedTransaction> {
+  const nonce = await signer.getNonce();
+
+  return {
+    data: populatedTransaction.data,
+    to: populatedTransaction.to,
+    gasPrice: populatedTransaction.gasPrice,
+    type: populatedTransaction.type,
+    gasLimit: populatedTransaction.gasLimit,
+    nonce,
+  };
+```
+
+<Aside type="tip" title="">
+  Make sure that the nonce is a valid one!
+</Aside>
+
+3. Dengan keluaran dari fungsi sebelumnya, kita melakukan serialisasi menggunakan `getSerializedTransaction`.
+
+```typescript
+export function getSerializedTransaction(tx: UnsignedTransaction) {
+  return serialize(tx)
+}
+```
+
+#### Memperkirakan Biaya L2
+
+Langkah ini cukup standar dan sama seperti di Ethereum. Kami akan menggunakan fungsi `estimateL2Fee` yang mengambil transaksi yang dipenuhi sebagai input dan mengembalikan perkiraan total gas yang akan digunakan dengan mengalikan harga gas saat ini dan gas yang perlu digunakan.
+
+```typescript
+export async function estimateL2Fee(tx: ContractTransaction): Promise<bigint> {
+  const gasToUse = await ethers.provider.estimateGas(tx)
+  const feeData = await ethers.provider.getFeeData()
+  const gasPrice = feeData.gasPrice
+
+  return gasToUse * gasPrice
+}
+```
+
+#### Memperkirakan Biaya L1 dari transaksi tersebut
+
+Langkah ini sangat mudah. Dengan menggunakan keluaran dari fungsi `getSerializedTransaction`, kita mengirimkan permintaan ke orakel dan mendapatkan perkiraan biaya sebagai balasan.
+
+```typescript
+export async function estimateL1Fee(
+  gasOraclePrecompileAddress: string,
+  unsignedSerializedTransaction: string
+): Promise<bigint> {
+  const l1GasOracle = await ethers.getContractAt("IL1GasPriceOracle", gasOraclePrecompileAddress)
+
+  return l1GasOracle.getL1Fee(unsignedSerializedTransaction)
+}
+```
+
+#### Mengirimkan transaksi dan membandingkan nilai perkiraan vs nilai aktual
+
+**Mengirimkan transaksi**
+
+Kita akan membuat panggilan ke kontrak kami menggunakan nilai yang sama yang digunakan untuk transaksi palsu.
+
+```typescript
+const tx = await exampleContract.setExampleVariable(newValueToSetOnExampleContract)
+const txReceipt = await tx.wait(5)
+```
+
+**Menghitung biaya L2**
+
+Dengan menggunakan tanda terima transaksi, kita dapat melihat jumlah gas yang digunakan oleh transaksi.
+
+```typescript
+const l2Fee = txReceipt.gasUsed * txReceipt.gasPrice
+```
+
+**Getting the amount used to pay for the L1 fee**
+
+To do this, we’ll compare the _balance of the account before_ the transaction execution, the _account balance after_ the execution and then subtract the L2 fee.
+
+```typescript
+const totalFee = signerBalanceBefore - signerBalanceAfter
+const l1Fee = totalFee - l2Fee
+```
+
+**Membandingkan nilai**
+
+Pasar biaya terus bergerak dan tidak terduga. Karena nilai yang diperkirakan mungkin berbeda dari eksekusi aktual, mari kita periksa seberapa besar perbedaannya.
+
+Kita dapat menjalankan semua kode yang sudah kita tulis sebelumnya dengan mengetik perintah `yarn gas:estimate` di [projek](https://github.com/scroll-tech/scroll-guides/tree/main/gas-estimation-demo) kita yang akan menjalankan skrip [`gasEstimation.ts`](https://github.com/scroll-tech/scroll-guides/blob/main/gas-estimation-demo/scripts/gasEstimation.ts) dan memberikan kita keluaran di bawah ini:
+
+```bash
+Estimated L1 fee (wei): 208705598167252
+Estimated L2 fee (wei): 26416000000
+Estimated total fee (wei):  208732014167252
+
+Actual L1 fee (wei): 210830909757550
+Actual L2 fee (wei): 26416000000
+Actual total fee (wei):  210857325757550
+
+(actual fee - estimated fee)
+Difference L1 fee (wei): 2125311590298 (1.0183299389002531%)
+Difference L2 fee (wei): 0 (0%)
+Difference total fee (wei): 2125311590298 (1.0182010645453987%)
+```
+
+Kita bisa melihat di atas bahwa nilai-nilai yang diperkirakan (dalam wei) berbeda sekitar 1%, namun perlu diingat bahwa selama lonjakan harga gas, perbedaan ini bisa bertambah. Pastikan untuk memperhitungkan hal ini di frontend Anda untuk pengguna!
+
+<Aside type="tip" title="">
+  Untuk informasi lebih lanjut tentang apa yang terjadi ketika gas fluktuatif di L1 dan tentang batasan yang ditetapkan di sana, periksa [siklus
+  sebuah transaksi pada Gas
+  Biaya](../developers/transaction-fees-on-scroll-l2/l1-fee.md#what-happens-if-gas-fluctuates-on-l1).
+</Aside>

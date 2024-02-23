@@ -1,0 +1,192 @@
+---
+section: developers
+date: Last Modified
+title: "Biaya Transaksi pada Scroll"
+lang: "id"
+permalink: "developers/transaction-fees-on-scroll"
+whatsnext: { "Tutorial Deploy Kontrak": "/id/developers/guides/contract-deployment-tutorial/" }
+excerpt: "Pemahaman tentang bagaimana biaya transaksi L1 dan L2 berfungsi di Scroll"
+---
+
+import Aside from "../../../../components/Aside.astro"
+
+## Ikhtisar
+
+Biaya Scroll secara mencolok lebih rendah daripada di lapisan pendukungnya. Bagi pengguna dan pengembang, biaya transaksi di Scroll tampaknya bekerja secara mirip dengan yang di Ethereum mainnet, dan alat, dompet, dan kode yang ada kemungkinan besar akan berfungsi seolah-olah mereka berada di Ethereum. Namun, biaya transaksi yang ditampilkan di dompet bukanlah gambaran keseluruhan kecuali jika perangkat lunak secara khusus menyadari perhitungan biaya Scroll.
+
+Karena desain L2 rollups, biaya transaksi tergantung pada biaya L1. Untuk memanfaatkan keamanan Ethereum, Scroll harus memperhitungkan biaya data transaksi dan bukti yang harus disimpan dan diverifikasi di L1.
+
+Dibandingkan dengan Ethereum mainnet, Scroll memperkenalkan beberapa dimensi baru dalam perhitungan biaya transaksi untuk melakukan ini. Biaya akhir suatu transaksi dibangun dari beberapa bagian:
+
+- **Biaya L2**
+  - Dihitung dengan cara yang sama seperti di L1, sama dengan `gas_price * gas_used`
+- **Biaya L1**
+  - Biaya tambahan ini mencakup pengiriman data ke L1 untuk ketersediaan data. Transaksi yang diinisiasi di L1 tidak membayar biaya ini.
+  - Dihitung berdasarkan ukuran calldata transaksi
+  - ETH secara otomatis dikurangkan dari saldo pengguna di Scroll untuk biaya ini
+
+Secara umum, **Biaya L2** adalah biaya eksekusi transaksi Anda pada urutan L2, dan **Biaya L1** adalah biaya memasukkan transaksi tersebut ke L1.
+
+Singkatnya, `totalTxFee = l2Fee + l1Fee`, semuanya dinyatakan dalam ETH, token gas asli untuk jaringan Scroll.
+
+<Aside type="note" title="Ke mana biaya transaksi dikirim?">
+Semua biaya tx dikumpulkan ke saldo kontrak `L2ScrollFeeVault`. Kontrak ini juga melacak jumlah yang historis kami tarik ke L1 menggunakan `totalProcessed()(uint256)`.
+
+Produser blok tidak menerima imbalan langsung, dan opcode `COINBASE` mengembalikan alamat vault biaya.
+
+</Aside>
+
+## L2 Fee
+
+Transaksi di Scroll, seperti di Ethereum, harus membayar biaya untuk menjalankan komputasi mereka dan menyimpan data yang dihasilkan.
+
+### Menghitung Biaya Eksekusi
+
+Biaya eksekusi L2 cukup sederhana:
+
+```javascript
+l2TransactionExecutionFee = l2TransactionGasUsed * l2TransactionGasPrice
+```
+
+Biaya total bergantung pada apa yang dilakukan transaksi (`l2TransactionGasUsed`) serta kondisi pasar saat ini (`l2TransactionGasPrice`). Pengguna menetapkan harga gas, dan "gas yang digunakan" dinilai dengan memanggil titik akhir `estimateGas` pada node Scroll.
+
+Dengan kata lain, biaya eksekusi dihitung persis seperti pada Ethereum sebelum [EIP1559](https://eips.ethereum.org/EIPS/eip-1559).
+
+## Biaya L1
+
+Setiap data calldata transaksi harus di-commit ke Ethereum, yang menimbulkan biaya transaksi tambahan, disebut "Biaya L1". Tanpa melakukan ini, Scroll tidak dapat direkonstruksi hanya dari data L1.
+
+Transaksi tidak di-commit satu per satu - mereka dikumpulkan dalam blok-blok (dan blok-blok transaksi). Biaya transaksi individual dihitung berdasarkan byte nol dan non-nol dalam payload-nya.
+
+### Mengestimasi Biaya Data L1
+
+Scroll memiliki `L1GasPriceOracle` yang telah di-deploy sebelumnya, dapat diakses baik di Scroll maupun Scroll Sepolia di ([`0x5300000000000000000000000000000000000002`](https://sepolia-blockscout.scroll.io/address/0x5300000000000000000000000000000000000002)). Ini menyediakan metode `getL1Fee` untuk memperkirakan biaya data L1 untuk data mentah transaksi tertentu.
+
+```solidity
+function getL1Fee(bytes memory _data) external view override returns (uint256);
+```
+
+<Aside type="note" title="Apa yang terjadi jika harga gas melonjak di L1?">
+
+Setelah sequencer memproses suatu transaksi, biaya L1 pengguna dikunci, dan fluktuasi apa pun tidak akan memengaruhi apa yang dibayar pengguna.
+
+<br />
+Karena waktu blok pendek di Scroll, perubahan gas L1 antara pengiriman transaksi dan inklusinya dalam blok harus minimal. Sequencer akan menyerap setiap perubahan biaya gas L1 antara inklusi transaksi dalam blok dan saat sequencer mengirimkan data ke L1.
+
+</Aside>
+
+### Menghitung Biaya Data L1 dengan Gas Oracle
+
+Seperti yang disebutkan, `L1GasPriceOracle` digunakan untuk memperkirakan biaya gas L1 yang diberikan data transaksi mentah. Ini adalah **oracle dorong**, diperbarui oleh relayer yang dijalankan oleh Scroll.
+
+Biaya data didasarkan pada beberapa faktor:
+
+- Byte yang merupakan `nol` dan `non-zero` dari transaksi yang dienkripsi RLP dengan Tanda Tangan
+- `l1BaseFee` - Biaya dasar saat ini di L1
+- `overhead` - Overhead gas tambahan dari transaksi komitmen data
+- `scalingFactor` - Faktor penskalaan yang digunakan untuk memperhitungkan lonjakan harga
+- `PRECISION` - Konstan yang digunakan untuk menyusun biaya akhir
+
+Langkah-langkah berikut diambil untuk menghitung biaya data L1:
+
+1. Baca tiga bidang `l1BaseFee`, `overhead`, `scalar` dari kontrak `L1GasPriceOracle`. Slot untuk bidang-bidang ini dalam kontrak adalah:
+
+   | Bidang     | Slot |
+   | --------- | ---- |
+   | l1BaseFee | 1    |
+   | overhead  | 2    |
+   | scalar    | 3    |
+
+2. Hitung jumlah byte nol dan byte non-nol dari transaksi.
+3. Hitung biaya data L1, diberikan `TX_DATA_ZERO_GAS = 4` dan `TX_DATA_NON_ZERO_GAS = 16`[^eip-2028] dan `PRECISION = 1e9`:
+
+   ```javascript
+   l1Gas = zeros * TX_DATA_ZERO_GAS + (nonzeros + 4) * TX_DATA_NON_ZERO_GAS
+   l1GasFee = ((l1Gas + overhead) * l1BaseFee * scalar) / PRECISION
+   ```
+
+   We reserve an additional 4 bytes in the non-zero bytes to store the number of bytes in the RLP-encoded transaction.
+
+[^eip-2028]: Kunjungi [EIP-2028](https://eips.ethereum.org/EIPS/eip-2028) untuk lebih lanjut.
+
+### API L1GasPriceOracle
+
+#### overhead
+
+```solidity
+function overhead() external view returns (uint256);
+```
+
+Mengembalikan biaya L1 `overhead` saat ini 
+
+#### scalar
+
+```solidity
+function scalar() external view returns (uint256);
+```
+
+Mengembalikan biaya L1 `scalar` saat ini 
+
+#### l1BaseFee
+
+```solidity
+function l1BaseFee() external view returns (uint256);
+```
+
+Mengembalikan biaya L1 `base` saat ini
+
+#### getL1Fee
+
+```solidity
+function getL1Fee(bytes memory data) external view returns (uint256);
+```
+
+Menghitung bagian biaya L1 berdasarkan ukuran transaksi input yang dienkripsi RLP, biaya dasar L1 saat ini, dan berbagai parameter dinamis lainnya.
+
+**Kembali:** Biaya L1 yang harus dibayar untuk transaksi tersebut.
+
+| Parameter | Deskripsi                                                 |
+| --------- | -------------------------------------------------------- |
+| data      | Transaksi yang sepenuhnya dienkripsi RLP yang ditandatangani untuk mendapatkan biaya L1. |
+
+#### getL1GasUsed
+
+```solidity
+function getL1GasUsed(bytes memory data) external view returns (uint256);
+```
+
+Menghitung jumlah gas L1 yang digunakan untuk sebuah transaksi. Menambahkan overhead yang mewakili overhead gas per transaksi dari memposting transaksi dan state roots ke L1. Menambahkan 74 byte padding untuk memperhitungkan bahwa input tidak memiliki tanda tangan.
+
+**Kembali:** Jumlah gas L1 yang digunakan untuk mempublikasikan transaksi.
+
+| Parameter | Deskripsi                                                 |
+| --------- | -------------------------------------------------------- |
+| data      | Transaksi yang sepenuhnya dienkripsi RLP yang ditandatangani untuk mendapatkan biaya L1. |
+
+## Transaksi Berasal dari L1
+
+Ketika mengirim pesan dari L1 ke L2, pengguna membayar semua biaya transaksi di L1. Pengguna membayar biaya gas L1, tetapi karena ini, tidak perlu membayar Scroll biaya Data L1. Namun, mereka perlu memperhitungkan Biaya Eksekusi L2 dalam transaksi L1 mereka, dan perlu mengetahui berapa banyak gas L2 yang harus dibayarkan.
+
+Kontrak di L1 dapat menggunakan Oracle Harga Gas L2 yang dideploy ke L1 untuk mendapatkan biaya gas untuk transaksi tertentu. Oracle juga mengekspos l2BaseFee saat ini dan estimasi biaya pesan antar domain untuk batas gas tertentu.
+
+Di mainnet, `L2GasPriceOracle` dideploy di [`0x987e300fDfb06093859358522a79098848C33852`](https://etherscan.io/address/0x987e300fDfb06093859358522a79098848C33852).
+
+Di Sepolia, `L1MessageQueueWithGasPriceOracle` yang ditingkatkan harus digunakan, dideploy ke [`0xF0B2293F5D834eAe920c6974D50957A1732de763`](https://sepolia.etherscan.io/address/0xF0B2293F5D834eAe920c6974D50957A1732de763).
+
+Jika sistem Anda mendukung mekanisme di luar rantai, Anda juga dapat memanggil `eth_estimateGas` dan `eth_gasPrice` pada node RPC Scroll mana pun untuk mendapatkan perkiraan gas yang diperlukan untuk transaksi tertentu.
+
+<Aside type="danger" title="Pemberitahuan Pembaruan">
+Setelah Upgrade Jembatan Februari 2024, `L1GasPriceOracle` akan digantikan oleh `L1MessageQueueWithGasPriceOracle`, yang akan tersedia di [`0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B`](https://etherscan.io/address/0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B).
+
+Upgrade ini diharapkan selesai pada tanggal 21 Februari 2024, setelah masa kunci dua minggu. Scroll Sepolia sudah menjalani upgrade ini. Baca lebih lanjut [di sini](https://scroll.io/blog/protocol-upgrade-bridging-cost-reduction).
+
+</Aside>
+{/* TODO: Add full documentation of key methods */}
+
+## Roadmap Mendatang
+
+Saat ini, komputasi yang diperlukan untuk pembangkitan bukti dan gas untuk verifikasi bukti di L1 disubsidi oleh Scroll dan berbagai mitra pembuktian. Ini sebagian ditutupi dengan menetapkan batas harga gas L2.
+
+Ketika jaringan pembuktian menjadi terdesentralisasi, insentif untuk pembangkitan bukti akan perlu dimasukkan ke dalam protokol agar sistem menjadi berkelanjutan dan dapat diskalakan.
+
+Kami berharap biaya gas akhir akan secara eksplisit mencakup biaya pembangkitan bukti ini. Dengan optimalisasi protokol lebih lanjut, biaya ini bagi pengguna seharusnya minimal, karena setiap bukti mencakup banyak transaksi.

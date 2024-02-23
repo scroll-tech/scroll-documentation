@@ -1,0 +1,41 @@
+---
+section: gettingStarted
+date: Last Modified
+title: "Error Umum"
+lang: "id"
+permalink: "user-guide/common-errors/"
+excerpt: "Mengalami error saat mencoba berinteraksi dengan Scroll Sepolia Testnet? Berikut adalah beberapa kesalahan konfigurasi umum dan cara memperbaikinya dengan cepat."
+---
+
+## Error nonce yang salah ketika mengirim transaksi di MetaMask
+
+Anda akan mengalami error ini ketika nonce lokal yang disimpan di dompet MetaMask Anda berbeda dari nonce di node testnet Scroll. Ini bisa terjadi karena adanya transaksi tertunda baru-baru ini.
+
+Untuk memperbaiki masalah ini, Anda perlu mereset akun Anda di MetaMask untuk Scroll Sepolia Testnet. Langkah-langkah untuk mereset akun adalah sebagai berikut:
+
+1. Buka ekstensi **MetaMask** di peramban
+2. Pilih **Scroll Sepolia Testnet** di area atas
+3. Klik **ikon akun bulat** di sudut kanan atas
+4. Pilih **Pengaturan**
+5. Buka **Lanjutan**
+6. Klik **Reset akun**
+
+Anda tidak akan kehilangan aset apa pun selama reset akun MetaMask.
+
+:::caution[Peringatan]
+Menghapus dan menambahkan kembali jaringan TIDAK cukup untuk memperbaiki ini - Anda harus mereset akun Anda.
+:::
+
+## Tidak ada yang terjadi saat mengonfirmasi transaksi bridging/penukaran
+
+Jika tidak ada error atau log konsol yang muncul, ini kemungkinan disebabkan oleh masalah nonce, silakan reset akun MetaMask Anda seperti yang dijelaskan di atas pada bagian [error-nonce-yang-salah-ketika-mengirim-transaksi-di-metamask](#error-nonce-yang-salah-ketika-mengirim-transaksi-di-metamask).
+
+## Penjelajah blok menampilkan "Internal server error"
+
+Gunakan jendela incognito, atau buka konsol pengembang peramban Anda dan hapus cookie `_explorer_key` (atau semua cookie). [Lihat panduan ini untuk cara menghapus cookie.](https://www.contentstack.com/docs/developers/how-to-guides/clear-caches-and-cookies-in-different-browsers/).
+
+## Mengirim jumlah Ether maksimum di MetaMask menghasilkan error "Gagal"
+
+Ketika mengirim Ether menggunakan MetaMask, jika Anda mencoba mengirim jumlah "Maksimum", itu akan menghasilkan error "Gagal". Hal ini disebabkan karena MetaMask tidak memperhitungkan "Biaya L1" tambahan yang dimiliki oleh rollup di atas biaya gas reguler dan kurang untuk jumlah kecil yang diperlukan untuk membayar gas transaksi.
+
+Untuk memecahkan ini, secara manual kurangi jumlah ether menjadi sedikit lebih kecil dari yang disarankan dan transaksi akan berhasil.

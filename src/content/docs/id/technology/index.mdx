@@ -1,0 +1,24 @@
+---
+section: technology
+date: Last Modified
+title: "Arsitektur Scroll"
+lang: "id"
+permalink: "technology"
+whatsnext:
+  { "Scroll Chain": "/id/technology/chain/accounts", "Bridge": "/id/technology/bridge/cross-domain-messaging", "Sequencer": "/id/technology/sequencer/execution-node", "zkEVM": "/id/technology/zkevm/zkevm-overview" }
+---
+
+import ClickToZoom from "../../../../components/ClickToZoom.astro"
+import Architecture from "./_images/arch.png"
+
+<ClickToZoom src={Architecture} alt="Architecture" />
+
+Seperti yang diilustrasikan dalam gambar di atas, rantai Scroll terdiri dari tiga lapisan:
+
+- **Settlement Layer**: menyediakan ketersediaan data dan pengurutan untuk rantai Scroll kanonikal, memverifikasi bukti kebenaran, dan memungkinkan pengguna dan dapp untuk mengirim pesan dan aset antara Ethereum dan Scroll. Kami menggunakan Ethereum sebagai Lapisan Penyelesaian dan mendeploy kontrak jembatan dan rollup ke Ethereum.
+- **Sequencing Layer**: berisi *Node Eksekusi* yang menjalankan transaksi yang dikirimkan ke penyeleksi Scroll dan transaksi yang dikirimkan ke kontrak jembatan L1 dan menghasilkan blok L2, dan *Node Rollup* yang menggabungkan transaksi, memposting data transaksi dan informasi blok ke Ethereum untuk ketersediaan data, dan mengirimkan bukti kebenaran ke Ethereum untuk finalitas.
+- **Proving Layer**: terdiri dari sekumpulan pembuktian yang bertanggung jawab untuk menghasilkan bukti kebenaran zkEVM yang memverifikasi kebenaran transaksi L2, dan koordinator yang mendispatch tugas pembuktian ke pembuktian dan meneruskan bukti ke Node Rollup untuk penyelesaian di Ethereum.
+
+Bagian dokumentasi ini menyediakan informasi komprehensif tentang spesifikasi protokol Scroll, protokol penyeberangan, penyeleksi, dan sirkuit zkEVM.
+
+*Dalam sisa bagian ini, L1 akan mengacu pada Ethereum, sementara L2 akan mengacu pada Scroll.*

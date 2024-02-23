@@ -27,6 +27,16 @@ export const MENU: MenuItems = {
     { text: "技术", link: "/zh/technology", section: "technology" },
     { text: "学习", link: "/zh/learn", section: "learn" },
   ],
+  id: [
+    {
+      text: "Ikhtisar",
+      link: "/id/getting-started/overview",
+      section: "gettingStarted",
+    },
+    { text: "Developer", link: "/id/developers", section: "developers" },
+    { text: "Teknologi", link: "/id/technology", section: "technology" },
+    { text: "Belajar", link: "/id/learn", section: "learn" },
+  ],
   es: [
     {
       text: "¿Cómo empezar?",

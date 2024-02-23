@@ -1,0 +1,248 @@
+---
+section: technology
+date: Last Modified
+title: "Pesan Cross-Domain"
+lang: "id"
+permalink: "technology/bridge/cross-domain-messaging"
+whatsnext: { "Deposit Gateway": "/id/technology/bridge/deposit-gateways/" }
+---
+
+import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import Aside from "../../../../../components/Aside.astro"
+import ToggleElement from "../../../../../components/ToggleElement.astro"
+
+import L1ToL2 from "../_images/L1-to-L2.png"
+import L2ToL1 from "../_images/L2-to-L1.png"
+import WithdrawTrie from "../_images/withdraw-trie.png"
+
+Scroll memiliki jembatan pengiriman pesan sembarang yang memungkinkan transfer token dan memungkinkan dapp untuk berkomunikasi antara lapisan 1 dan lapisan 2. Ini berarti bahwa dapp pada lapisan 1 dapat memicu fungsi kontrak pada lapisan 2, dan sebaliknya. Selanjutnya, kami akan menjelaskan bagaimana pesan disampaikan antara lapisan 1 dan lapisan 2.
+
+## Mengirim Pesan dari L1 ke L2
+
+<ClickToZoom src={L1ToL2} alt="Alur kerja pengiriman pesan dari L1 ke L2" caption="Gambar 1. Alur kerja pengiriman pesan dari L1 ke L2" />
+
+Ada dua pendekatan utama untuk mengirim pesan dari L1 ke L2: mengirim pesan sembarang melalui `L1ScrollMessenger` dan mengirim transaksi Enforced melalui `EnforcedTxGateway`. Kedua pendekatan ini memungkinkan pengguna untuk memulai transaksi L2 pada L1 dan memanggil kontrak sembarang pada L2. Untuk pesan sembarang, pengirim transaksi L2 adalah alamat `L1ScrollMessenger` yang di-alias. Untuk transaksi Enforced, pengirim L2 adalah akun milik eksternal (EOA). Selain itu, kami menyediakan beberapa gateway token standar untuk memudahkan pengguna dalam mendepositkan ETH dan token standar lainnya termasuk ERC-20, ERC-677, ERC-721, dan ERC-1155. Pada dasarnya, gateway-gateway ini mengkodekan deposit token ke dalam pesan dan mengirimkannya ke mitra mereka pada L2 melalui kontrak `L1ScrollMessenger`. Anda dapat menemukan lebih banyak detail tentang gateway token L1 di [Gateway Deposit](/id/technology/bridge/deposit-gateways).
+
+<Aside type="danger" title="">
+Transaksi Enforced belum diaktifkan di Scroll. Pada peningkatan masa depan, pengguna akan dapat menggunakan fungsionalitas ini untuk melewati `L1ScrollMessenger` dan mengirim pesan langsung ke `L1MessageQueue`.
+</Aside>
+
+Seperti yang digambarkan dalam Gambar 1, baik pesan sembarang maupun transaksi Enforced ditambahkan ke antrian pesan yang disimpan dalam kontrak `L1MessageQueue`. Kontrak `L1MessageQueue` menyediakan dua fungsi `appendCrossDomainMessage` dan `appendEnforcedTransaction` untuk menambahkan pesan sembarang dan transaksi Enforced secara berturut-turut.
+
+```solidity
+/// @notice Append an arbitrary L1-to-L2 message into this contract.
+/// @param target The target address on L2.
+/// @param gasLimit The maximum gas can be used for this transaction on L2.
+/// @param data The calldata of the L1-initiated transaction.
+function appendCrossDomainMessage(
+    address target,
+    uint256 gasLimit,
+    bytes calldata data
+) external;
+
+/// @notice Append an enforced transaction to this contract.
+/// @param sender The sender address of this transaction.
+/// @param target The target address of this transaction.
+/// @param value The value to be transferred on L2.
+/// @param gasLimit The maximum gas should be used for this transaction on L2.
+/// @param data The calldata of the L1-initiated transaction.
+function appendEnforcedTransaction(
+    address sender,
+    address target,
+    uint256 value,
+    uint256 gasLimit,
+    bytes calldata data
+) external;
+```
+
+Kedua fungsi tersebut membuat transaksi yang diinisiasi oleh L1 dengan jenis transaksi baru `L1MessageTx` yang diperkenalkan dalam rantai Scroll dan menghitung hash transaksi (lihat lebih banyak detail di [Transaksi Pesan L1](/id/technology/chain/transactions#transaksi-pesan-l1)). `L1MessageQueue` kemudian menambahkan hash transaksi ke dalam antrian pesan, dan memancarkan acara `QueueTransaction(sender, target, value, queueIndex, gasLimit, calldata)`. Perbedaan antara `appendCrossDomainMessage` dan `appendEnforcedTransaction` saat membuat transaksi pesan L1 adalah:
+
+- `appendCrossDomainMessage` hanya dapat dipanggil oleh `L1ScrollMessenger` dan menggunakan [address alias](#address-alias) dari `msg.sender`, yang akan menjadi alamat `L1ScrollMessenger`, sebagai pengirim transaksi.
+- `appendEnforcedTransaction` hanya dapat dipanggil oleh `EnforcedTxGateway` dan menggunakan `sender` dari parameter fungsi sebagai pengirim transaksi. Ini memungkinkan pengguna untuk menegakkan penarikan atau transfer ETH dari akun L2 mereka secara langsung melalui jembatan L1.
+
+Setelah transaksi berhasil dieksekusi di L1, pengamat dalam penyeleksi Scroll yang memantau kontrak `L1MessageQueue` mengumpulkan acara `QueueTransaction` baru dari blok-blok L1. Penyeleksi kemudian membuat transaksi `L1MessageTx` baru per acara dan menambahkannya ke dalam antrian transaksi L1 lokalnya. Saat membuat blok L2 baru, penyeleksi menyertakan transaksi dari kedua antrian transaksi L1 dan memori L2-nya. Perhatikan bahwa transaksi pesan L1 harus disertakan secara berurutan berdasarkan urutan antrian pesan L1 di kontrak `L1MessageQueue`. Transaksi `L1MessageTx` selalu datang pertama dalam blok L2 diikuti oleh transaksi L2. Saat ini, kami membatasi jumlah transaksi `L1MessageTx` dalam blok L2 menjadi `NumL1MessagesPerBlock` (saat ini diatur menjadi 10).
+
+Selanjutnya, kami akan menjelaskan lebih detail tentang proses khusus mengirim pesan sembarang melalui `L1ScrollMessenger` dan mengirim transaksi Enforced melalui `EnforcedTxGateway`.
+
+### Mengirim Pesan Arbitrary
+
+Kontrak `L1ScrollMessenger` menyediakan dua fungsi `sendMessage` untuk mengirim pesan sembarang. Satu-satunya perbedaan adalah bahwa yang kedua memungkinkan pengguna untuk menentukan alamat pengembalian yang berbeda dengan alamat pengirim untuk menerima pengembalian biaya.
+
+<ToggleElement anchor="sendMessage function signatures">
+<div slot="title"><code>sendMessage</code> function signatures</div>
+```solidity
+/// @param target The target address on L2.
+/// @param value The value to deposit to L2 from `msg.value`.
+/// @param message The message passed to target contract.
+/// @param gasLimit The maximum gas can be used for this transaction on L2.
+function sendMessage(
+    address target,
+    uint256 value,
+    bytes memory message,
+    uint256 gasLimit
+) external payable;
+
+/// @param target The target address on L2.
+/// @param value The value to deposit to L2 from `msg.value`.
+/// @param message The message passed to target contract.
+/// @param gasLimit The maximum gas can be used for this transaction on L2.
+/// @param refundAddress The address to refund excessive fee on L1.
+function sendMessage(
+    address target,
+    uint256 value,
+    bytes calldata message,
+    uint256 gasLimit,
+    address refundAddress
+) external payable;
+````
+</ToggleElement>
+
+
+Kedua fungsi tersebut memerlukan pengguna untuk menyediakan batas gas untuk transaksi `L1MessageTx` yang sesuai di L2 dan membayar [biaya relay pesan](#biaya-relay-pesan) di L1, yang dihitung berdasarkan jumlah batas gas. Biaya tersebut dikumpulkan ke kontrak `feeVault` di L1. Jika transaksi gagal di L2 karena pengguna tidak mengatur batas gas yang benar untuk pesan mereka di L1, pengguna dapat memainkan kembali pesan yang sama dengan batas gas yang lebih tinggi. Anda dapat menemukan lebih banyak detail di bagian [Percobaan pesan yang gagal](#mencoba-ulang-pesan-yang-gagal), tetapi karena bagian yang tidak digunakan dari biaya ini dikembalikan kepada pengguna, tidak ada hukuman untuk memperkirakan batas gas.
+
+Fungsi `sendMessage` mengkodekan argumen ke dalam pesan cross-domain (lihat potongan kode di bawah ini), di mana nonce pesan adalah indeks antrian berikutnya dari antrian pesan L1. Data yang dikodekan kemudian digunakan sebagai calldata dalam transaksi `L1MessageTx` yang dieksekusi di L2. Perhatikan bahwa pesan cross-domain seperti itu selalu memanggil fungsi `relayMessage` dari kontrak `L2ScrollMessenger` di L2.
+
+```solidity
+abi.encodeWithSignature(
+    "relayMessage(address,address,uint256,uint256,bytes)",
+    _sender,
+    _target,
+    _value,
+    _messageNonce,
+    _message
+)
+````
+
+ETH yang disetor sebesar nilai `value` dikunci di kontrak `L1ScrollMessenger`. Jika jumlah ETH dalam pesan tidak mencukupi untuk menutupi biaya relay pesan dan jumlah yang disetorkan, transaksi akan dibatalkan. Kontrak `L1ScrollMessenger` akan mengembalikan jumlah yang berlebih ke `refundAddress` yang ditunjuk atau pengirim transaksi sebaliknya. Akhirnya, `L1ScrollMessenger` menambahkan pesan cross-domain ke `L1MessageQueue` melalui metode `appendCrossDomainMessage`.
+
+### Mengirim Transaksi Enforced
+
+<Aside type="danger" title="">
+Transaksi Enforced belum diaktifkan di Scroll. Pada peningkatan masa depan, pengguna akan dapat menggunakan fungsionalitas ini untuk melewati `L1ScrollMessenger` dan mengirim pesan langsung ke `L1MessageQueue`.
+</Aside>
+
+Kontrak `EnforcedTxGateway` menyediakan dua fungsi `sendTransaction` untuk mengirim transaksi Enforced. Pada fungsi pertama, pengirim transaksi `L1MessageTx` yang dihasilkan adalah pengirim transaksi. Di sisi lain, fungsi kedua menggunakan alamat `sender` yang dilewatkan sebagai pengirim transaksi `L1MessageTx`. Ini memungkinkan pihak ketiga untuk mengirimkan transaksi Enforced atas nama pengguna dan membayar biaya relay. Perhatikan bahwa fungsi kedua memerlukan penyediaan tanda tangan valid dari transaksi `L1MessageTx` yang dihasilkan yang sesuai dengan alamat `sender`. Kedua fungsi `sendTransaction` mewajibkan pengirim untuk menjadi akun EOA.
+
+<ToggleElement anchor="sendTransaction function signatures">
+<div slot="title"><code>sendTransaction</code> function signatures</div>
+
+```solidity
+/// @param target The target address on L2.
+/// @param value The value to withdraw from the `tx.origin` address on L2.
+/// @param gasLimit The maximum gas can be used for this transaction on L2.
+/// @param data The calldata passed to target contract.
+function sendTransaction(
+    address target,
+    uint256 value,
+    uint256 gasLimit,
+    bytes calldata data
+) external payable;
+
+/// @param sender The sender address who will initiate this transaction on L2.
+/// @param target The target address on L2.
+/// @param value The value to withdraw from the `sender` address on L2.
+/// @param gasLimit The maximum gas can be used for this transaction on L2.
+/// @param data The calldata passed to target contract.
+/// @param signature The signature for the corresponding `L1MessageTx` transaction.
+/// @param refundAddress The address to refund excessive fee on L1.
+function sendTransaction(
+    address sender,
+    address target,
+    uint256 value,
+    uint256 gasLimit,
+    bytes calldata data,
+    bytes memory signature,
+    address refundAddress
+) external payable;
+```
+
+</ToggleElement>
+
+Mirip dengan relai pesan arbitrary, `sendTransaction` mengurangi biaya relay pesan dan mentransfernya ke akun `feeVault` di L1. Tetapi perbedaan kunci adalah bahwa nilai yang dilewatkan ke fungsi menunjukkan jumlah ETH yang akan ditransfer dari akun pengirim di L2, bukan di L1. Oleh karena itu, `msg.value` hanya perlu mencakup [biaya relay pesan](#biaya-relay-pesan). Jika jumlah ETH dalam pesan tidak mencukupi untuk menutupi biaya, transaksi akan gagal. Setiap kelebihan biaya akan dikembalikan kepada pengirim transaksi dalam fungsi pertama dan kepada `refundAddress` dalam fungsi kedua. Terakhir, `EnforcedTxGateway` memanggil `L1MessageQueue.appendEnforcedTransaction` untuk menambahkan transaksi ke antrian pesan.
+
+### Mencoba Ulang Pesan yang Gagal
+
+Jika transaksi `L1MessageTx` gagal di L2 karena gas yang tidak mencukupi, pengguna dapat memainkan kembali pesan dengan batas gas yang lebih tinggi. `L1ScrollMessenger` menyediakan metode `replayMessage` yang memungkinkan pengguna untuk mengirim informasi yang sama seperti pesan yang gagal sebelumnya dengan batas gas yang lebih tinggi. Pesan ini akan menjadi transaksi `L1MessageTx` baru di L2. Perhatikan bahwa kami tidak akan mengembalikan biaya gas untuk transaksi gagal sebelumnya karena sudah diproses di L2.
+
+<ToggleElement anchor="replayMessage function signature">
+<div slot="title"><code>replayMessage</code> function signature</div>
+
+```solidity
+/// @param from The address of the sender of the message.
+/// @param to The address of the recipient of the message.
+/// @param value The msg.value passed to the message call.
+/// @param queueIndex The queue index for the message to replay.
+/// @param message The content of the message.
+/// @param newGasLimit New gas limit to be used for this message.
+/// @param refundAddress The address of account who will receive the refunded fee.
+function replayMessage(
+    address from,
+    address to,
+    uint256 value,
+    uint256 queueIndex,
+    bytes memory message,
+    uint32 newGasLimit,
+    address refundAddress
+) external payable;
+```
+
+</ToggleElement>
+
+Karena kontrak `L2ScrollMessenger` mencatat semua pesan L1 yang berhasil disampaikan ke L2, transaksi pesan yang diputar ulang akan dibatalkan di L2 jika pesan asli berhasil.
+
+### Biaya Relay Pesan
+
+Kontrak `L2GasPriceOracle` yang diimplementasikan di L1 menghitung biaya relay dari sebuah pesan berdasarkan batas gasnya. Kontrak ini menyimpan `l2BaseFee` di penyimpanannya, yang diperbarui oleh relayer yang didedikasikan yang dijalankan oleh Scroll saat ini. Biaya relay pesan dari L1 ke L2 adalah `gasLimit * l2BaseFee`.
+
+<Aside type="tip" title="Pemberitahuan Upgrade">
+Selama Pembaruan Jembatan Februari 2024, `L2GasPriceOracle` akan ditinggalkan, dengan fungsionalitasnya dipindahkan ke kontrak `L1MessageQueueWithGasPriceOracle`.
+
+Upgrade ini diharapkan selesai pada 21 Februari 2024, setelah masa timelock dua minggu. Scroll Sepolia sudah menjalani upgrade ini. Baca lebih lanjut [di sini](https://scroll.io/blog/protocol-upgrade-bridging-cost-reduction).
+
+</Aside>
+
+### Address Alias
+
+Karena perilaku opcode `CREATE`, mungkin seseorang mendeploy sebuah kontrak di alamat yang sama di L1 dan L2 tetapi dengan bytecode yang berbeda. Untuk menghindari pengguna jahat memanfaatkan hal ini, jembatan menerapkan alamat alias ketika pengirim pesan adalah kontrak di L1. Alamat pengirim yang di-alias dari transaksi pesan L1 adalah `l1_contract_address + offset` di mana `offset` adalah `0x1111000000000000000000000000000000001111`.
+
+## Mengirim Pesan dari L2 ke L1
+
+<ClickToZoom src={L2ToL1} alt="Alur kerja relai pesan dari L2 ke L1" caption="Gambar 2. Alur kerja relai pesan dari L2 ke L1" />
+
+Di L2, pengguna dapat mengirim pesan sembarang melalui `L2ScrollMessenger` untuk menarik token dan memanggil kontrak L1. Seperti di L1, kami telah membangun beberapa gateway token standar untuk memudahkan penarikan token. Untuk lebih jelasnya tentang gateway token L2, silakan lihat [Withdraw Gateway](/id/technology/bridge/withdraw-gateways).
+
+Kontrak `L2ScrollMessenger` juga menyediakan fungsi `sendMessage`. Perbedaannya dari `L1ScrollMessenger.sendMessage` adalah bahwa parameter `gasLimit` diabaikan dalam fungsi karena transaksi eksekusi penarikan di L1 diajukan oleh pengguna dan biaya transaksi dibayarkan langsung di L1. Dengan demikian, fungsi `sendMessage` memerlukan `msg.value` untuk sama dengan parameter `value`. Fungsi ini mengkodekan argumen ke dalam pesan lintas domain mengikuti skema yang sama seperti di [`L1ScrollMessenger`](#mengirim-pesan-arbitrary).
+
+<ToggleElement anchor="sendMessage function signatures">
+<div slot="title"><code>sendMessage</code> function signatures</div>
+
+```solidity
+/// @param target The target address on L1.
+/// @param value The value to withdraw to L1 from `msg.value`.
+/// @param message The message passed to target contract.
+/// @param _gasLimit Ignored in the L2ScrollMessenger because the withdrawal execution on L1 is done by the user.
+function sendMessage(
+    address target,
+    uint256 value,
+    bytes memory message,
+    uint256 _gasLimit
+) external payable;
+```
+
+</ToggleElement>
+
+Selanjutnya, hash pesan lintas domain ditambahkan ke `L2MessageQueue` dengan memanggil fungsi `appendMessage`-nya. Kontrak `L2MessageQueue` memelihara [Withdraw Trie](#withdraw-trie), sebuah pohon Merkle yang hanya dapat ditambahkan. Setiap kali pesan baru ditambahkan ke antrian, kontrak memasukkannya ke dalam Withdraw Trie dan memperbarui hash root trie.
+
+Setelah kumpulan transaksi yang berisi pesan L2 ke L1 pengguna difinalisasi pada kontrak rollup L1, pengguna perlu mengirimkan transaksi _Execute Withdrawal_ yang sesuai untuk memanggil metode `relayMessageWithProof` di kontrak `L1ScrollMessenger` yang mengeksekusi penarikan di L1. Berkat bukti Merkle, finalisasi transaksi penarikan di L1 adalah tanpa kepercayaan dan dapat diajukan oleh pengguna sendiri atau oleh pihak ketiga atas nama pengguna.
+
+Untuk memudahkan dalam membangun MIP penarikan, Scroll memelihara layanan yang disebut Bridge History API. Bridge History API memantau acara `SentMessage` yang dipancarkan dari `L2ScrollMessenger` dan memelihara Withdraw Trie secara internal. Ini terus-menerus menghasilkan bukti Merkle untuk setiap pesan penarikan. Pengguna dan layanan pihak ketiga dapat mengambil bukti Merkle dari Bridge History API untuk disertakan dalam transaksi _Execute Withdrawal_.
+
+Perlu diperhatikan bahwa transaksi eksekusi penarikan dapat diajukan oleh pengguna sendiri atau oleh layanan pihak ketiga.
+
+### Withdraw Trie
+
+<ClickToZoom src={WithdrawTrie} alt="Struktur Withdraw Trie" caption="Gambar 3. Struktur Withdraw Trie" />
+
+Withdraw Trie adalah pohon Merkle biner padat. Hash dari node daun diwarisi dari hash pesan, sedangkan hash dari node non-daun adalah hasil hash Keccak dari hash yang dihubungkan dari kedua anaknya. Kedalaman Withdraw Trie tumbuh secara dinamis tergantung pada jumlah pesan yang ditambahkan ke trie.
+
+Gambar 3(a) menunjukkan contoh dari Withdraw Trie 3 lapisan yang lengkap. Ketika jumlah daun tidak dapat menjangkau pohon biner lengkap, kami akan melengkapi node daun dengan hash 0, seperti yang digambarkan di Gambar 3(b) dan 3(c). Ketika menambahkan pesan baru ke Withdraw Trie yang tidak lengkap, node pelengkap akan digantikan oleh node daun baru dengan hash pesan yang sebenarnya.

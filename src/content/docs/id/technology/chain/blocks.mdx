@@ -1,0 +1,39 @@
+---
+section: technology
+date: Last Modified
+title: "Blok"
+lang: "id"
+permalink: "technology/chain/blocks"
+whatsnext: { "Proses Rollup": "/id/technology/chain/rollup/" }
+---
+
+Sebuah blok adalah kumpulan transaksi dan tautan ke blok sebelumnya yang diperluas.
+
+## Header Blok
+
+Header blok di Scroll mencerminkan struktur Ethereum. Namun, beberapa bidang dalam header blok telah dimodifikasi untuk menyesuaikan konteks Layer 2, seperti yang dijelaskan dalam tabel berikut:
+
+| Bidang               | Deskripsi                                                        |
+| ------------------- | ------------------------------------------------------------------ |
+| `parentHash`        | Hash dari blok induk.                                      |
+| `uncleHash`         | Selalu `keccak256(rlp([]))`.                                       |
+| `coinbase`          | Biaya dikumpulkan ke alamat kontrak gudang biaya pra-didirikan `0x5300000000000000000000000000000000000005`. Dalam kebanyakan kasus, bidang return RPC `"miner"` adalah alamat nol `0x0000000000000000000000000000000000000000`. |
+| `stateRoot`         | Hash root trie status. Ini adalah Poseidon                |
+| `transactionsRoot ` | Hash root trie transaksi.                             |
+| `receiptsRoot `     | Hash root trie kwitansi transaksi.                    |
+| `logsBloom`         | Struktur data yang berisi log acara.                          |
+| `difficulty`        | Selalu 1 atau 2.                                                     |
+| `number`            | Nomor blok.                                                  |
+| `gasLimit`          | Gas maksimum yang diizinkan dalam blok.                              |
+| `gasUsed`           | Gas yang digunakan dalam blok.                                         |
+| `timestamp`         | Waktu blok.                                                    |
+| `extraData`         | Tanda tangan oleh penandatangan blok, diikuti oleh data tambahan sembarang. |
+| `mixHash`           | Selalu 0.                                                          |
+| `nonce`             | Selalu 0.                                                          |
+| `baseFee`           | Saat ini kosong dalam Scroll karena kami belum mengaktifkan EIP-1559. |
+
+## Waktu Blok
+
+Waktu blok mengacu pada interval antara dua blok berturut-turut. Di Scroll, waktu blok diatur pada 3 detik. Waktu blok yang lebih singkat meningkatkan pengalaman pengguna dan meningkatkan skalabilitas rantai Scroll.
+
+Waktu blok 3 detik dipertahankan berdasarkan usaha terbaik, tidak dijamin atau ditegakkan oleh protokol.

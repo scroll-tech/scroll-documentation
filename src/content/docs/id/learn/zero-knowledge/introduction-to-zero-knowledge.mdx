@@ -1,0 +1,73 @@
+---
+section: learn
+date: Last Modified
+title: "Pengantar Zero Knowledge"
+lang: "id"
+permalink: "learn/zero-knowledge/introduction-to-zero-knowledge"
+whatsnext: { "Skema Komitmen Polynomial": "/id/learn/zero-knowledge/polynomial-commitment-schemes" }
+excerpt: 'Selama dekade terakhir, bidang kriptografi yang disebut "Zero Knowledge" telah berkembang pesat. Ini menjanjikan cara baru untuk membangun aplikasi dan memungkinkan protokol untuk meningkatkan efisiensi, keamanan, dan privasi.'
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+Selama dekade terakhir, bidang kriptografi yang disebut "Zero Knowledge" telah berkembang pesat. Ini menjanjikan cara baru untuk membangun aplikasi dan memungkinkan protokol untuk meningkatkan efisiensi, keamanan, dan privasi.
+
+Mari kita lihat apa yang membuat bidang bukti Zero Knowledge begitu menarik dan masalah apa yang membantu para insinyur selesaikan.
+
+## Blockchain Tanpa Kepercayaan & Verifikasi
+
+Secara umum, blockchain bekerja dengan memproses transaksi yang diajukan oleh pengguna. Transaksi-transaksi ini biasanya memicu beberapa komputasi yang harus dilakukan oleh blockchain.
+
+Untuk membuat blockchain tanpa kepercayaan (trustless), peserta dalam jaringan harus memverifikasi bahwa transaksi-transaksi tersebut valid dan bahwa komputasi yang dihasilkan telah dilakukan dengan benar.
+
+Memverifikasi bahwa transaksi tersebut valid umumnya memerlukan verifikasi tanda tangan digital - hal ini memverifikasi bahwa pengirim yang dilaporkan dalam transaksi tersebut memang penulis transaksi tersebut. Memverifikasi bahwa komputasi transaksi telah dilakukan dengan benar umumnya memerlukan re-eksekusi transaksi secara lokal.
+
+## Batasan-batasan pada Verifikasi
+
+Metodologi ini untuk memverifikasi setiap transaksi gagal dalam situasi di mana seorang peserta tidak dapat menjalankan kembali komputasi tersebut. Seorang peserta mungkin tidak dapat mengeksekusi kembali komputasi itu karena beberapa alasan: (1) bisa jadi bahwa beberapa data tidak boleh dibuat tersedia (untuk alasan privasi), atau (2) mungkin terlalu mahal bagi sebuah komputer yang berpartisipasi untuk mengeksekusi kembali semua transaksi - alasan kedua ini terutama relevan ketika mempertimbangkan blockchain berkecepatan tinggi dengan jumlah transaksi per detik yang besar.
+
+## Keunggulan dari Bukti Zero Knowledge
+
+Bukti Zero Knowledge (ZKPs) memiliki keunggulan untuk mengatasi batasan-batasan ini.
+
+ZKPs memungkinkan peserta untuk memverifikasi hasil komputasi sambil (1) menjaga privasi dari data sensitif yang digunakan dalam komputasi tersebut, dan (2) memungkinkan verifikasi menjadi jauh lebih murah daripada mengeksekusi kembali komputasi tersebut. Dua properti ini dari ZKPs disebut **Zero Knowledge** dan **keringkasan**, secara berturut-turut.
+
+Properti-properti di atas dari ZKPs sangat berguna dalam konteks verifikasi untuk blockchain tanpa kepercayaan. Tanpa ZKPs, peserta perlu mengeksekusi kembali komputasi hasil setiap transaksi. Hal ini membutuhkan semua peserta untuk melihat semua data (yang mungkin sensitif) yang digunakan dalam setiap komputasi, dan juga membatasi jumlah transaksi yang dapat diproses oleh sistem secara keseluruhan. Dengan ZKPs, satu pihak dapat melakukan komputasi, dan kemudian menghasilkan bukti bahwa komputasi tersebut telah dilakukan dengan benar. Peserta lain dapat memverifikasi bahwa komputasi tersebut telah dilakukan dengan benar dengan _memverifikasi bahwa bukti tersebut valid_, daripada mengeksekusi kembali komputasi tersebut sendiri. Memverifikasi bukti (1) tidak membocorkan informasi tentang data sensitif yang digunakan dalam komputasi asli, dan (2) jauh lebih murah secara komputasi daripada mengeksekusi kembali komputasi asli. Dua properti ini memiliki potensi untuk memungkinkan privasi dan skalabilitas bagi blockchain tanpa kepercayaan.
+
+## Sirkuit, Bukti, dan Verifier
+
+Secara praktis, ZKPs bisa cukup kompleks untuk diimplementasikan dalam suatu sistem, tetapi pada tingkat tinggi, Anda perlu memahami bahwa bukti Zero Knowledge memiliki beberapa komponen: sebuah sirkuit, sebuah bukti, dan sebuah verifier.
+
+Sirkuit adalah program yang mengambil data input, dan mengasumsikan bahwa data input tersebut valid sesuai dengan beberapa "batasan" yang harus dipenuhi oleh data input tersebut. Data input bisa bersifat publik (diketahui oleh semua orang), privat (diketahui hanya oleh pembuktikan), atau campuran (beberapa input bersifat publik dan beberapa bersifat privat).
+
+Sebuah bukti dapat dihasilkan, yang menyatakan bahwa suatu input memenuhi sirkuit. Bukti ini tidak memberikan informasi tentang input-input privat, dan ukurannya cukup kecil.
+
+Verifier dapat memeriksa (1) bahwa bukti tersebut valid, (2) bahwa bukti tersebut sesuai dengan batasan-batasan yang ditetapkan oleh sirkuit (dan bukan hanya sebuah bukti palsu), dan (3) bahwa input-input publik yang digunakan untuk menghasilkan bukti tersebut sesuai dengan input-input yang digunakan oleh verifier. Perlu dicatat bahwa pemeriksaan yang dilakukan oleh verifier umumnya adalah komputasi yang murah.
+
+<Aside type="tip" title="">
+  Anda mungkin perhatikan bahwa verifier tidak memiliki output selain "bukti valid" atau "bukti tidak valid." Ingatlah, verifier hanya mengkonfirmasi komputasi-komputasi lain — dalam praktiknya, "output" dari sebuah fungsi mungkin benar-benar menjadi input tambahan untuk sebuah sirkuit dan verifier.
+</Aside>
+
+### Sirkuit, Bukti, dan Verifier — sebuah contoh
+
+Mari kita ambil Sudoku sebagai contoh. Misalkan ada teka-teki Sudoku, dan Alice ingin membuktikan kepada Bob bahwa dia mengetahui sebuah solusi untuk teka-teki tersebut, tetapi tidak ingin mengungkapkan apa solusinya.
+
+Dalam hal ini, teka-teki tertentu akan menjadi input publik (baik Alice maupun Bob mengetahuinya), dan solusi adalah input privat (Alice mengetahuinya, tetapi akan menjaganya agar tetap privat dari Bob). **Sirkuit** akan mengambil kedua input ini dan mengasumsikan bahwa solusi tersebut benar dengan cara memeriksanya secara standar, baris per baris, kolom per kolom, dll. Sirkuit dengan cara ini "memuat" bahwa input privat solusi benar-benar merupakan solusi yang valid untuk input publik teka-teki, dan "puas" hanya ketika pemeriksaan solusi berhasil.
+
+Sebuah **bukti** kemudiandapat dihasilkan yang menyatakan bahwa Alice mengetahui sebuah input yang memenuhi sirkuit untuk teka-teki tertentu (input publik).
+
+Bukti, bersama dengan teka-teki, dapat diberikan kepada Bob, yang kemudian dapat menggunakan **verifier** yang sesuai dengan sirkuit pemeriksaan Sudoku untuk menilai apakah bukti tersebut valid, dan dengan demikian Alice memang mengetahui solusi untuk teka-teki tersebut. Kritisnya, Bob tidak memperoleh pengetahuan apa pun tentang solusi Alice, tetapi dia masih dapat memverifikasi bahwa dia mengetahui sebuah solusi yang valid!
+
+## Bukti Zero Knowledge dan Blockchain
+
+Salah satu motivasi utama untuk kemajuan terbaru dalam ZKPs adalah aplikasinya pada blockchain. Dua tantangan utama yang dihadapi blockchain terdesentralisasi adalah privasi dan skalabilitas - semua data bersifat publik, dan setiap node dalam jaringan harus mengeksekusi kembali setiap komputasi dalam jaringan tersebut. ZKPs dapat membantu mengatasi kedua tantangan ini.
+
+Meskipun ada beberapa proyek yang memanfaatkan sifat Zero Knowledge ZKPs untuk membangun aplikasi yang menjaga privasi, kami di Scroll hanya menggunakan sifat keringkasan ZKPs untuk meningkatkan Ethereum.
+
+## Scroll & Bukti Zero Knowledge
+
+Idea yang mendasari Scroll sangat sederhana. Bagaimana jika kita dapat menggunakan kontrak pintar Ethereum untuk memverifikasi semua komputasi dari versi lain dari Ethereum? Kita bisa menjalankan jaringan lain yang memberikan akses lebih cepat dan lebih murah ke Mesin Virtual Ethereum (EVM), dan Ethereum itu sendiri akan memberikan keamanan yang dibutuhkan untuk memvalidasi semua komputasi dan memastikan jaringan lain ini tidak melanggar aturan EVM.
+
+Bagian-bagian selanjutnya dari bagian Belajar dan Teknologi menjelaskan bagaimana ini bekerja secara lebih detail, tetapi pada tingkat yang sederhana, ingatlah bahwa Zero Knowledge bergantung pada memiliki sirkuit, bukti, dan verifier.
+
+Dalam konstruksi kami, sirkuit (sebenarnya serangkaian sirkuit) mengkodekan aturan-aturan EVM untuk "memuat" perilaku yang dapat diterima untuk memproses transaksi input terkait dengan status rantai. Dengan menggunakan "zkEVM" ini, sebuah jaringan GPU mengambil transaksi-transaksi untuk serangkaian blok dan menghasilkan sebuah bukti. Dan kembali di Ethereum, sebuah kontrak pintar memverifikasi bahwa, untuk serangkaian transaksi, bukti ini cocok dengan sirkuit yang tercantum dalam kontrak pintar. Jika iya, transaksi-transaksi tersebut dapat dianggap "terfinalisasi," jaringan bergerak maju, dan kami telah menciptakan ruang blok yang cepat, aman, dan terjangkau untuk Ethereum yang terus berkembang.

@@ -1,0 +1,114 @@
+---
+section: developers
+date: Last Modified
+title: "Interaksi Scroll Messenger Cross-chain"
+lang: "id"
+permalink: "developers/guides/scroll-messenger-cross-chain-interaction"
+whatsnext: { "Bridge ERC20 menggunakan Gateway Kustom": "/id/developers/guides/bridge-erc20-through-the-custom-gateway" }
+excerpt: "Dalam contoh ini, kita akan meluncurkan sebuah Smart Contract palsu di salah satu dari Sepolia atau Scroll Sepolia testnet dan berinteraksi dengannya dari chain yang berlawanan."
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+Dalam contoh ini, kita akan meluncurkan Smart Contract palsu di salah satu dari Sepolia atau Scroll dan berinteraksi dengan kontrak tersebut dari rantai yang berlawanan. Kita akan menggunakan `ScrollMessenger` yang telah dideploy pada kedua Sepolia dan Scroll.
+
+## Meluncurkan Kontrak
+
+### Smart Contract Target
+
+Mari kita mulai dengan meluncurkan Smart Contract target. Kita akan menggunakan kontrak Greeter untuk contoh ini, tetapi Anda bisa menggunakan kontrak lain. Deploy kontrak tersebut ke Sepolia atau Scroll. Pada Scroll, L1 dan L2 menggunakan API yang sama, jadi terserah Anda.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.16;
+
+// This Greeter contract will be interacted with through the ScrollMessenger across the bridge
+contract Greeter {
+  string public greeting = "Hello World!";
+
+  // This function will be called by executeFunctionCrosschain on the Operator Smart Contract
+  function setGreeting(string memory greeting_) public {
+    greeting = greeting_;
+  }
+}
+```
+
+Sekarang kita akan menjalankan `setGreeting` secara Cross-Chain.
+
+### Smart Contract Operator
+
+Beralih ke rantai lain dan luncurkan `GreeterOperator`. Jadi, jika Anda telah mendeploy kontrak `Greeter` di L1, luncurkan `GreeterOperator` di L2 atau sebaliknya.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.16;
+
+// The Scroll Messenger interface is the same on both L1 and L2, it allows sending cross-chain transactions
+// Let's import it directly from the Scroll Contracts library
+import "@scroll-tech/contracts@0.1.0/libraries/IScrollMessenger.sol";
+
+// The GreeterOperator is capable of executing the Greeter function through the bridge
+contract GreeterOperator {
+  // This function will execute setGreeting on the Greeter contract
+  function executeFunctionCrosschain(
+    address scrollMessengerAddress,
+    address targetAddress,
+    uint256 value,
+    string memory greeting,
+    uint32 gasLimit
+  ) public payable {
+    IScrollMessenger scrollMessenger = IScrollMessenger(scrollMessengerAddress);
+    // sendMessage is able to execute any function by encoding the abi using the encodeWithSignature function
+    scrollMessenger.sendMessage{ value: msg.value }(
+      targetAddress,
+      value,
+      abi.encodeWithSignature("setGreeting(string)", greeting),
+      gasLimit,
+      msg.sender
+    );
+  }
+}
+```
+
+## Memanggil Fungsi Cross-Chain
+
+Kami meneruskan pesan dengan menjalankan `executeFunctionCrosschain` dan meneruskan parameter-parameter berikut:
+
+- `scrollMessengerAddress`: Ini akan tergantung di mana Anda mendeploy kontrak `GreeterOperator`.
+  - Jika Anda mendeploynya di Sepolia, gunakan `0x50c7d3e7f7c656493D1D76aaa1a836CedfCBB16A`. Jika Anda mendeploy di Scroll Sepolia, gunakan `0xBa50f5340FB9F3Bd074bD638c9BE13eCB36E603d`.
+- `targetAddress`: Alamat kontrak `Greeter` di rantai yang berlawanan.
+- `value`: Dalam kasus ini, nilainya adalah `0` karena `setGreeting` tidak dapat membayar.
+- `greeting`: Ini adalah parameter yang akan dikirim melalui pesan. Cobalah meneruskan `“Pesan ini Cross-Chain!”`
+- `gasLimit`:
+  - Jika Anda mengirim pesan dari L1 ke L2, sekitar `1000000` batas gas harus cukup. Meskipun demikian, jika Anda mengatur ini terlalu tinggi, dan `msg.value` tidak mencakup `gasLimit` * `baseFee`, transaksi akan mengembalikan. Jika `msg.value` lebih besar dari biaya gas, bagian yang tidak terpakai akan dikembalikan.
+  - Jika Anda mengirim pesan dari L2 ke L1, lewati `0`, karena transaksi akan diselesaikan dengan menjalankan transaksi tambahan di L1.
+
+### Meneruskan Pesan saat mengirim dari L2 ke L1
+
+Ketika transaksi diteruskan dari L2 ke L1, transaksi "menjalankan transaksi penarikan" tambahan harus dikirimkan di L1. Untuk melakukan ini, Anda harus memanggil `relayMessageWithProof` pada kontrak Pesan Scroll L1 dari dompet EOA.
+
+Anda dapat melakukannya langsung di [Etherscan Sepolia](https://sepolia.etherscan.io/address/0x50c7d3e7f7c656493d1d76aaa1a836cedfcbb16a#writeProxyContract#F3).
+Untuk melakukannya, Anda harus meneruskan bukti inklusi Merkle untuk transaksi yang dibridging dan parameter lainnya. Anda akan mengambilnya menggunakan API Bridge Scroll.
+
+{/* TODO: finish looking into API issues */}
+
+Kami sedang menyelesaikan detail API, tetapi untuk saat ini, ambil atau gunakan curl pada endpoint berikut:
+
+```bash
+curl "https://sepolia-api-bridge.scroll.io/api/claimable?page_size=10&page=1&address=GREETER_OPERATOR_ADDRESS_ON_L2"
+```
+
+Ganti `GREETER_OPERATOR_ADDRESS_ON_L2` dengan alamat kontrak GreeterOperator yang diluncurkan di L2. Baca lebih lanjut tentang transaksi Withdraw Execute di artikel [Scroll Messenger](/developers/l1-and-l2-bridging/the-scroll-messenger).
+
+<Aside type="danger" title="API Eksperimental">
+  API ini dibuat untuk Bridge UI kami. Ini belum final dan mungkin berubah di masa depan. Kami akan memperbarui panduan ini
+  ketika API tersebut final.
+</Aside>
+
+<Aside type="caution" title="Siapa pun bisa menjalankan Pesan L2 → L1 Anda">
+  `relayMessageWithProof` sepenuhnya bersifat tanpa izin, sehingga siapa pun dapat memanggilnya atas nama Anda jika mereka bersedia membayar biaya gas L1. Fitur ini memungkinkan untuk infrastruktur dukungan tambahan, termasuk alat untuk mengotomatisasi proses ini untuk aplikasi dan pengguna.
+</Aside>
+
+Setelah menjalankan dan mengonfirmasi transaksi di kedua L1 dan L2, status baru `greeting` pada kontrak `Greeter` harus menjadi `“Pesan ini disalurkan antar-rantai!”`. Mengirim pesan dari satu rantai ke rantai lainnya harus memakan waktu sekitar 20 menit setelah transaksi dikonfirmasi di rantai asal.
+
+Selamat, Anda sekarang telah menjalankan transaksi dari satu rantai ke yang lain menggunakan Bridge asli kami!

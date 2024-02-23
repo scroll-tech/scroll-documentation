@@ -1,0 +1,39 @@
+---
+section: gettingStarted
+date: Last Modified
+title: "Persiapan"
+lang: "id"
+permalink: "user-guide/setup/"
+whatsnext: { "Dapatkan Sepolia ETH dari Faucet": "/id/user-guide/faucet" }
+excerpt: "Anda perlu memiliki dompet untuk berinteraksi dengan Scroll Testnet. Anda dapat menemukan beberapa contoh dompet dan tips konfigurasi di sini."
+---
+
+import Aside from "../../../../components/Aside.astro"
+
+## Wallet
+
+Anda perlu memiliki dompet untuk berinteraksi dengan dApps di jaringan uji coba Scroll Sepolia. Anda dapat menemukan beberapa contoh dompet dan tips konfigurasi di bawah ini. Aplikasi Bridge kami mendukung MetaMask, Coinbase Wallet, atau dompet apa pun yang mendukung WalletConnect.
+
+### MetaMask
+
+Anda dapat menginstal MetaMask dari [official website](https://metamask.io/download/) mereka.
+
+Anda dapat mengimpor konfigurasi tesnet Scroll Sepolia ke dompet MetaMask Anda. Untuk melakukannya, kunjungi [portal Scroll Sepolia](https://sepolia.scroll.io/portal), kemudian klik tombol "Connect Wallet" dan pilih MetaMask. Selanjutnya, klik tombol "Add to MetaMask" untuk Sepolia Testnet dan Scroll Sepolia Testnet. Hal ini akan mengimpor ID rantai dan URL RPC untuk Scroll Sepolia Testnet. Sepolia Testnet juga dikonfigurasi di MetaMask secara default. Untuk menampilkannya, klik "Show/hide test networks" dalam menu dropdown pemilihan jaringan MetaMask.
+
+### Konfigurasi jaringan manual (untuk dompet lainnya)
+
+Tautan **Add to wallet** mungkin tidak kompatibel dengan setiap dompet. Jika Anda mengalami masalah dalam menggunakannya, Anda mungkin perlu menambahkan secara manual jaringan _Sepolia Testnet_ dan _Scroll Sepolia_ dengan memasukkan detail konfigurasi dari tabel di bawah ini:
+
+| Network Name       | Scroll Sepolia Testnet                                           | Sepolia Testnet                                                              |
+| ------------------ | ---------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| RPC URL            | [https://sepolia-rpc.scroll.io/](https://sepolia-rpc.scroll.io/) | [https://eth-sepolia-public.unifra.io](https://eth-sepolia-public.unifra.io) |
+| Chain ID           | 534351                                                           | 11155111                                                                     |
+| Currency Symbol    | ETH                                                              | ETH                                                                          |
+| Block Explorer URL | [https://sepolia.scrollscan.com](https://sepolia.scrollscan.com) | [https://sepolia.etherscan.io](https://sepolia.etherscan.io)                 |
+
+<Aside type="tip" title="Additional Block Explorers">
+ Untuk melihat aktivitas di Layer 1, gunakan [Sepolia Testnet Explorer](https://sepolia.etherscan.io).
+
+Untuk explorer alternatif, Unifra telah membangun [L2Scan](https://scroll-sepolia.l2scan.co/), yang memungkinkan pengguna mengeksplorasi aspek tambahan dari Scroll Sepolia Testnet. [Dora](https://www.ondora.xyz/network/scroll-sepolia/interactions) juga mendukung Scroll Sepolia dan menyediakan tampilan multi-chain aktivitas blockchain.
+
+</Aside>

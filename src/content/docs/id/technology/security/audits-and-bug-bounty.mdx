@@ -1,0 +1,71 @@
+---
+section: technology
+date: Last Modified
+title: "Audits & Bug Bounty Program"
+lang: "id"
+permalink: "technology/security/audits-and-bug-bounty"
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+Scroll memperlakukan keamanan sebagai prioritas utama.
+
+Selain pengujian yang ketat, tim keamanan internal, dan tinjauan kode yang komprehensif, kami juga bekerja sama dengan beberapa firma audit keamanan untuk melakukan audit terhadap basis kode kami. Kami juga telah meluncurkan program bounty bug untuk mendorong komunitas berpartisipasi dalam keamanan protokol kami.
+
+<Aside type="danger" title="">
+  Audit tidak menjamin ketiadaan kerentanan keamanan. Menggunakan blockchain memiliki risiko, dan Scroll tidak terkecuali. Kami mendorong pengguna untuk menggunakan protokol ini dengan hati-hati dan atas risiko mereka sendiri.
+</Aside>
+
+## Audit Independen
+
+Scroll telah bekerja sama dengan beberapa firma audit keamanan terkemuka di industri untuk meninjau basis kode kami, dengan kode kritis menerima tinjauan dari beberapa tim, termasuk [Trail of Bits](https://www.trailofbits.com/), [OpenZeppelin](https://www.openzeppelin.com/), [Zellic](https://www.zellic.io/), dan [KALOS](https://www.kalos.xyz/).
+
+- Trail of Bits, Zellic, dan KALOS telah meninjau sirkuit zkEVM kami.
+- OpenZeppelin dan Zellic telah melakukan audit independen terhadap kontrak jembatan & rollup kami.
+- Trail of Bits telah menganalisis implementasi node kami.
+
+### zkEVM circuits
+
+- Trail of Bits
+  - [Gelombang 1](https://github.com/trailofbits/publications/blob/master/reviews/2023-04-scroll-zkEVM-wave1-securityreview.pdf)
+  - [Gelombang 2](https://github.com/trailofbits/publications/blob/master/reviews/2023-08-scroll-zkEVM-wave2-securityreview.pdf)
+  - [Gelombang 3](https://github.com/trailofbits/publications/blob/master/reviews/2023-09-scroll-zkEVM-wave3-securityreview.pdf)
+- Zellic and Kalos
+  - [Gelombang 1](https://github.com/Zellic/publications/blob/master/Scroll%20zkEVM%20-%20Part%201%20-%20Audit%20Report.pdf)
+  - [Gelombang 2](https://github.com/Zellic/publications/blob/master/Scroll%20zkEVM%20-%20Part%202%20-%20Audit%20Report.pdf)
+
+### Implementasi node
+
+- Trail of Bits
+  - [zkTrie](https://github.com/trailofbits/publications/blob/master/reviews/2023-07-scroll-zktrie-securityreview.pdf)
+  - [L2geth](https://github.com/trailofbits/publications/blob/master/reviews/2023-08-scrollL2geth-initial-securityreview.pdf)
+  - [L2geth diff](https://github.com/trailofbits/publications/blob/master/reviews/2023-08-scrollL2geth-securityreview.pdf)
+
+### Bridge dan rollup contract
+
+- OpenZeppelin
+  - [Phase 1](https://blog.openzeppelin.com/scroll-layer-1-audit-1)
+  - [Phase 2](https://blog.openzeppelin.com/scroll-phase-2-audit)
+  - [GasSwap, Multiple Verifier, Wrapped Ether and Diff](https://blog.openzeppelin.com/scroll-gasswap-multiple-verifier-wrapped-ether-and-diff-audit)
+  - [ScrollOwner and Rate Limiter](https://blog.openzeppelin.com/scrollowner-and-rate-limiter-audit)
+  - [USDC Gateway](https://blog.openzeppelin.com/scroll-usdc-gateway-audit)
+  - [Contract diff](https://blog.openzeppelin.com/scroll-diff-audit-report)
+- Zellic
+  - [Report 1](https://github.com/Zellic/publications/blob/master/Scroll%20-%2005.26.23%20Zellic%20Audit%20Report.pdf)
+  - [Report 2](https://github.com/Zellic/publications/blob/master/Scroll%20-%2009.27.23%20Zellic%20Audit%20Report.pdf)
+
+## Bug Bounty Program
+
+Scroll memiliki Program Bug Bounty aktif di Immunefi, sebuah platform bug bounty terkemuka. Program ini terbuka untuk umum, dan kami mendorong siapa pun untuk berpartisipasi.
+
+Reward tergantung pada tingkat keparahan kerentanan yang dilaporkan:
+
+- **Critical**: up to \$1,000,000
+- **High**: \$10,000 - \$50,000
+- **Medium**: \$5,000
+
+### Lingkup
+
+Lingkup dari program bug bounty mencakup infrastruktur blockchain dan kontrak pintar untuk bridging dan rollup. Untuk pemecahan rinci kategori bug, silakan lihat halaman bug bounty.
+
+Selain ruang lingkup yang terdaftar dalam program bug bounty, kami juga mendorong pelaporan kerentanan yang diidentifikasi kepada Immunefi, yang masih akan kami pertimbangkan untuk hadiah. Untuk penemuan kerentanan kritis di luar lingkup program bug bounty, silakan juga kirim laporan ke security@scroll.io.

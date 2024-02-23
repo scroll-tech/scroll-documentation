@@ -1,0 +1,51 @@
+---
+import { changeLanguage } from "i18next"
+import { MarkdownInstance } from "astro"
+import fs from "node:fs"
+
+changeLanguage("id")
+
+// import .astro files
+const pages = await Astro.glob("../**/*.astro")
+// import .md files
+const posts = [...(await Astro.glob("../../content/docs/en/**/*.md")).filter((post) => !post.frontmatter.draft)]
+const postsMdx = [...(await Astro.glob("../../content/docs/en/**/*.mdx")).filter((post) => !post.frontmatter.draft)]
+const postsMdxWithContent = postsMdx.map((post) => {
+  const url = new URL(post.file, import.meta.url)
+  const content = fs.readFileSync(url, "utf-8")
+  return { ...post, rawContent: () => content }
+})
+const markDownFiles = [...posts, ...postsMdxWithContent]
+const allContent = [...pages, ...posts, ...postsMdx]
+
+function transformPath(path) {
+  path = path.split("src/content/docs")[1]
+
+  path = path.substring(0, path.lastIndexOf(".")) || path
+
+  return path
+}
+
+const transformMarkdownInstancesToIndexes = async (instances: MarkdownInstance<Record<string, any>>[]) => {
+  return Promise.all(
+    instances.map(async (instance) => {
+      const { title, section, metadata } = instance.frontmatter
+      const headings = await instance.getHeadings()
+      const content = !!instance.rawContent ? await instance.rawContent() : undefined
+      return {
+        title,
+        headings,
+        url: transformPath(instance.file),
+        section,
+        description: metadata?.description ?? undefined,
+        content,
+      }
+    })
+  )
+}
+const index = await transformMarkdownInstancesToIndexes(markDownFiles)
+const stringifiedJson = JSON.stringify({ index }, null, 2)
+fs.writeFileSync(`${process.cwd()}/public/search-index.json`, stringifiedJson)
+---
+
+<meta http-equiv="refresh" content={`0; url=/`} />

@@ -1,0 +1,91 @@
+---
+section: technology
+date: Last Modified
+title: "Peningkata Scroll"
+lang: "id"
+permalink: "technology/overview/scroll-upgrades"
+---
+
+Seiring tim Scroll terus memajukan roadmapnya, kami akan melakukan upgrade jaringan Scroll untuk menyertakan fitur-fitur baru dan perbaikan-perbaikan.
+
+Berikut adalah kontrak-kontrak yang digunakan untuk memulai upgrade dan melaksanakan upgrade setelah periode timelock dua minggu:
+
+| Kontrak         | Network                                                      | Address | 
+| ------------------------ | ------- | - | 
+| L1 Scroll Multisig | Ethereum| [`0xEfc9D1096fb65c832207E5e7F13C2D1102244dbe`](https://etherscan.io/address/0xEfc9D1096fb65c832207E5e7F13C2D1102244dbe)| 
+| L1 Timelock |  Ethereum| [`0x1A658B88fD0a3c82fa1a0609fCDbD32e7dd4aB9C`](https://etherscan.io/address/0x1A658B88fD0a3c82fa1a0609fCDbD32e7dd4aB9C)| 
+| L2 Scroll Multisig | Scroll| [`0xEfc9D1096fb65c832207E5e7F13C2D1102244dbe`](https://scrollscan.com/address/0xEfc9D1096fb65c832207E5e7F13C2D1102244dbe)|
+| L2 Timelock | Scroll | [`0xf6069DB81239E5194bb53f83aF564d282357bc99`](https://scrollscan.com/address/0xf6069DB81239E5194bb53f83aF564d282357bc99)|
+
+## Februari 2024 Bridge Upgrade
+
+### Ikhtisar
+
+Untuk mengurangi biaya bridging, kami menerapkan beberapa optimisasi gas pada rangkaian kontrak bridge dan rollup kami. Teknik optimisasi yang digunakan antara lain:
+
+- Kami akan menggunakan konstanta untuk menyimpan beberapa alamat kontrak pendamping, daripada menggunakan variabel penyimpanan. Hal ini memungkinkan karena nilai-nilai ini seharusnya (hampir) tidak pernah berubah. Dengan perubahan ini, kami dapat menghemat beberapa operasi pemuatan penyimpanan.
+- Kami memperbarui estimasi gas intrinsik dalam `L1MessageQueue` untuk menggunakan batas atas sederhana daripada perhitungan yang tepat. Dua hasil tersebut akan mirip untuk sebagian besar transaksi bridge, tetapi implementasi baru ini jauh lebih murah.
+- Kami menggabungkan dua kontrak `L1MessageQueue` dan `L2GasPriceOracle` untuk menghemat biaya panggilan dari satu kontrak ke kontrak lainnya.
+
+### Jadwal
+
+
+- **Scroll Sepolia:**
+	- Pembaruan Jaringan: 19 Januari 2024
+- **Scroll Mainnet:**
+	- Inisiasi Pembaruan: 7 Februari 2024
+	- Penyelesaian Timelock & Pembaruan: 21 Februari 2024
+
+
+### Detail Teknikal
+
+#### Perubahan Kode
+
+- [Optimisasi Biaya Bridge](https://github.com/scroll-tech/scroll/pull/1011)
+- [Perbaikan Audit](https://github.com/scroll-tech/scroll/pulls?q=OZ+is%3Apr+created%3A2024-01-27..2024-02-10)
+- [Versi yang telah Diterapkan Sebelumnya](https://github.com/scroll-tech/scroll/tree/ff380141a8cbcc214dc65f17ffa44faf4be646b6) (commit `ff380141a8cbcc214dc65f17ffa44faf4be646b6`)
+- [Versi yang Diterapkan](https://github.com/scroll-tech/scroll/tree/6030927680a92d0285c2c13e6bb27ed27d1f32d1) (commit `6030927680a92d0285c2c13e6bb27ed27d1f32d1`)
+
+#### Audit
+
+- [OpenZeppelin](https://blog.openzeppelin.com/scroll-bridge-gas-optimizations-audit)
+
+#### Daftar Perubahan
+
+**Perubahan pada kontrak L1:**
+
+- In `ScrollChain`, change `messageQueue` and `verifier` to `immutable`.
+- In `L1ScrollMessenger`, change `counterpart`, `rollup`, and `messageQueue` to `immutable`.
+- In all token gateways, change `counterpart`, `router`, and `messenger` to `immutable`.
+- Merge `L1MessageQueue` and `L2GasPriceOracle` into a single contract `L1MessageQueueWithGasPriceOracle` (deployed on the same address as the previous `L1MessageQueue`). In this contract we also change `messenger` and `scrollChain` to `immutable`, and simplify `calculateIntrinsicGasFee`.
+
+**Perubahan pada kontrak L2:**
+
+- In `L2ScrollMessenger`, change `counterpart` to `immutable`.
+- In all token gateways, change `counterpart`, `router`, and `messenger` to `immutable`.
+
+**Kontrak yang terpengaruh:**
+
+- **L1:** `L1MessageQueue`, `L2GasPriceOracle`, `ScrollChain`, `L1WETHGateway`, `L1StandardERC20Gateway`, `L1GatewayRouter`, `L1ScrollMessenger`, `L1CustomERC20Gateway`, `L1ERC721Gateway`, `L1ERC1155Gateway`.
+- **L2:** `L2ScrollMessenger`, `L2WETHGateway`, `L2StandardERC20Gateway`, `L2GatewayRouter`, `L2CustomERC20Gateway`, `L2ERC721Gateway`, `L2ERC1155Gateway`.
+
+#### Kompatibilitas
+
+##### Sequencer dan pengikut node (l2geth)
+
+Operators running an `l2geth` node do not need to upgrade. The changes in this upgrade will not affect `l2geth`.
+
+##### Dapps dan indexer
+
+DApps dan indexer (serta infrastruktur off-chain serupa) yang mengambil data dari kontrak atau bergantung pada antarmuka kontrak pada kebanyakan kasus, tidak perlu diubah. Sebagian besar perubahan kontrak bersifat internal dan/atau kompatibel ke belakang.
+
+Jika aplikasi Anda bergantung pada [`L2GasPriceOracle`](https://etherscan.io/address/0x987e300fDfb06093859358522a79098848C33852) untuk memantau bagaimana Scroll melacak harga gas L2 di L1, mulai dari nomor blok upgrade, Anda perlu mulai memantau [`L1MessageQueueWithGasPriceOracle`](https://etherscan.io/address/0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B).
+
+Kontrak oracle harga gas asli akan ditinggalkan: itu tidak akan lagi diperbarui atau digunakan oleh Scroll bridge.
+
+- Ethereum:
+	- `L2GasPriceOracle`: [`0x987e300fDfb06093859358522a79098848C33852`](https://etherscan.io/address/0x987e300fDfb06093859358522a79098848C33852)
+	- `L1MessageQueueWithGasPriceOracle`: [`0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B`](https://etherscan.io/address/0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B)
+- Sepolia:
+	- `L2GasPriceOracle`: [`0x247969F4fad93a33d4826046bc3eAE0D36BdE548`](https://sepolia.etherscan.io/address/0x247969F4fad93a33d4826046bc3eAE0D36BdE548)
+	- `L1MessageQueueWithGasPriceOracle`: [`0xF0B2293F5D834eAe920c6974D50957A1732de763`](https://sepolia.etherscan.io/address/0xF0B2293F5D834eAe920c6974D50957A1732de763)

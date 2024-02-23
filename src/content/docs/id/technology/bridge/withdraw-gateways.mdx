@@ -1,0 +1,164 @@
+---
+section: technology
+date: Last Modified
+title: "Withdraw Gateway"
+lang: "id"
+permalink: "technology/bridge/withdraw-gateways"
+whatsnext: { "Sequencer": "/id/technology/sequencer/execution-node/" }
+---
+
+import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import Aside from "../../../../../components/Aside.astro"
+import WithdrawWorkflow from "../_images/withdraw.png"
+
+Dokumen ini menjelaskan bagaimana pengguna dan pengembang dapat memanfaatkan gateway untuk menarik token dari L2 ke L1. Kami menyediakan beberapa gateway untuk token standar dan router gateway di L2, yang terdaftar dalam tabel di bawah ini.
+
+| Kontrak Gateway         | Deskripsi                                                         |
+| ------------------------ | ------------------------------------------------------------------- |
+| `L2GatewayRouter`        | Router gateway mendukung penarikan ETH dan token ERC20.            |
+| `L2ETHGateway`           | Gateway untuk penarikan ETH.                                       |
+| `L2StandardERC20Gateway` | Gateway untuk penarikan token ERC20 standar.                       |
+| `L2CustomERC20Gateway`   | Gateway untuk penarikan token ERC20 kustom.                        |
+| `L2WETHGateway`          | Gateway untuk penarikan Wrapped ETH.                               |
+| `L2ERC721Gateway`        | Gateway untuk penarikan token ERC-721.                             |
+| `L2ERC1155Gateway`       | Gateway untuk penarikan token ERC-1155.                            |
+
+## Gambaran
+
+<ClickToZoom src={WithdrawWorkflow} alt="Withdraw Workflow" />
+
+Gambar tersebut menggambarkan alur penarikan dari L2 ke L1. Pengguna memanggil gateway untuk memulai penarikan token. Penarikan tersebut dienkripsi menjadi pesan yang dikirim ke `L2ScrollMessenger`, yang kemudian ditambahkan ke `L2MessageQueue`. `L2MessageQueue` memelihara Trie Penarikan dan memperbarui root setiap kali pesan baru ditambahkan. Root Trie Penarikan tersebut difinalisasi pada kontrak rollup L1 bersama dengan root status L2. Setelah root Trie Penarikan baru difinalisasi pada L1, pengguna atau pihak ketiga dapat membuat Bukti Inklusi Merkle yang valid ke root Trie Penarikan dan mengirimkan transaksi _withdraw execution_ untuk memfinalisasi penarikan di L1. Anda dapat menemukan lebih banyak detail tentang alur pesan L2-ke-L1 dalam [Cross-Domain Messaging](/technology/bridge/cross-domain-messaging#sending-messages-from-l2-to-l1).
+
+Bagian-bagian berikut menjelaskan detail tentang bagaimana berbagai token ditarik.
+
+## Penarikan ETH
+
+Penarikan token ETH berfungsi sebagai berikut.
+
+1. `L2GatewayRouter` menyediakan tiga fungsi untuk menarik ETH dari L2 ke L1. Fungsi `withdrawETHAndCall` dapat menarik ETH dan menjalankan panggilan kontrak secara bersamaan.
+
+    ```solidity
+    function withdrawETH(uint256 _amount, uint256 _gasLimit) external payable;
+
+    function withdrawETH(address _to, uint256 _amount, uint256 _gasLimit) public payable;
+
+    function withdrawETHAndCall(
+        address _to,
+        uint256 _amount,
+        bytes calldata _data,
+        uint256 _gasLimit
+    ) external payable;
+    ```
+
+2. Fungsi `withdrawETHAndCall` memanggil ke `L2ETHGateway`. `L2ETHGateway` mengenkripsi pesan penarikan dan mengirimkannya ke kontrak `L2ScrollMessenger` bersama dengan ETH yang ditarik.
+3. ETH yang ditarik kembali dikunci di kontrak `L2ScrollMessenger`. `L2ScrollMessenger` menambahkan pesan ke antrian pesan di kontrak `L2MessageQueue`.
+4. Transaksi eksekusi penarikan di L1 memanggil fungsi `L1ScrollMessenger.relayMessageWithProof` untuk menyelesaikan penarikan. Dalam hal penarikan ETH, fungsi `relayMessageWithProof` memanggil `L1ETHGateway.finalizeWithdrawETH` untuk mengirim kembali ETH ke akun penerima di L1.
+5. Jika pengguna memanggil `withdrawETHAndCall` di L2, `finalizeWithdrawETH` dalam kontrak `L1ETHGateway` akan meneruskan data tambahan ke kontrak L1 target.
+
+## Penarikan Token ERC20
+
+Penarikan token ERC20 berfungsi sebagai berikut.
+
+1. Untuk menarik token ERC20 dari L1 ke L2, pengguna dapat menggunakan `L2GatewayRouter.withdrawERC20` dan `L2GatewayRouter.withdrawERC20AndCall` seperti yang ditunjukkan di bawah ini.
+
+    ```solidity
+    function withdrawERC20(address _token, uint256 _amount, uint256 _gasLimit) external payable;
+
+    function withdrawERC20(address _token, address _to, uint256 _amount, uint256 _gasLimit) external payable;
+
+    function withdrawERC20AndCall(
+        address _token,
+        address _to,
+        uint256 _amount,
+        bytes memory _data,
+        uint256 _gasLimit
+    ) public payable;
+    ```
+
+### Token ERC20 Standar dan Kustom
+
+Penarikan token ERC20 standar dan kustom berfungsi sebagai berikut.
+
+3. Kontrak `L2StandardERC20Gateway` atau `L2CustomERC20Gateway` membakar token ERC20 yang ditarik, mengenkripsi penarikan ke dalam pesan, dan mengirimkannya ke `L2ScrollMessenger`.
+4. Transaksi eksekusi penarikan di L1 memanggil fungsi `L1ScrollMessenger.relayMessageWithProof` untuk menyelesaikan penarikan di L1. Dalam hal penarikan token ERC20 standar atau kustom, transaksi tersebut memanggil fungsi `finalizeWithdrawERC20` pada kontrak `L1StandardERC20Gateway` atau kontrak `L1CustomERC20Gateway` secara berturut-turut.
+   - Di kontrak `L1StandardERC20Gateway`, jika ini adalah transaksi penarikan pertama dari token ERC20, fungsi `finalizeWithdrawERC20` akan memperbarui pemetaan dari alamat token L1 ke alamat token L2-nya dalam `tokenMapping`.
+5. Gerbang token ERC20 L1 melepaskan token ERC20 yang dikunci dengan mentransfernya dari dirinya sendiri ke alamat penerima di L1.
+6. Jika pengguna memanggil `withdrawERC20AndCall` di L2, gateway akan memanggil kontrak L1 target dengan data tambahan.
+
+### Token WETH
+
+Kami menyediakan gateway kustom `L2WETHGateway` untuk token Wrapped ETH di L2 dan mencatat alamat gateway di `L2GatewayRouter`. Penarikan token WETH berfungsi sebagai berikut.
+
+3. `L2WETHGateway` mentransfer token WETH yang ditarik ke dirinya sendiri dan membuka token WETH menjadi token ETH asli. Token ETH kemudian dikirim kembali ke kontrak `L2ScrollMessenger`.
+4. `L2WETHGateway` mengenkripsi pesan penarikan token dan meneruskannya ke `L2ScrollMessenger`.
+5. Transaksi eksekusi penarikan di L1 memanggil fungsi `L1ScrollMessenger.relayMessageWithProof` untuk menyelesaikan penarikan di L1. Dalam hal penarikan token WETH, transaksi tersebut memanggil `L1WETHGateway.finalizeWithdrawERC20` dan mengirimkan jumlah yang ditarik dalam bentuk ETH ke `L1WETHGateway`.
+6. `L1WETHGateway` membungkus ETH yang ditarik ke token WETH L1 lagi dan mentransferkannya ke alamat penerima di L1.
+7. Jika pengguna memanggil `withdrawERC20AndCall` di L2, `L1WETHGateway` akan memanggil alamat L1 target dengan data tambahan.
+
+## Penarikan Token ERC-721/ERC-1155
+
+Penarikan token ERC-721 atau ERC-1155 berfungsi sangat mirip dengan token ERC20. Seseorang dapat menggunakan gateway `L2ERC721Gateway` atau `L2ERC1155Gateway` untuk menarik token ERC-721/ERC-1155 dari L2.
+
+```solidity
+function withdrawERC721(
+    address _token,
+    uint256 _tokenId,
+    uint256 _gasLimit
+) external payable;
+
+function withdrawERC721(
+    address _token,
+    address _to,
+    uint256 _tokenId,
+    uint256 _gasLimit
+) external payable;
+
+function withdrawERC1155(
+    address _token,
+    uint256 _tokenId,
+    uint256 _amount,
+    uint256 _gasLimit
+) external payable;
+
+function withdrawERC1155(
+    address _token,
+    address _to,
+    uint256 _tokenId,
+    uint256 _amount,
+    uint256 _gasLimit
+) external payable;
+```
+
+Untuk memfasilitasi penarikan sejumlah besar token ERC-721 atau ERC-1155, kami juga menyediakan fungsi penarikan dalam jumlah besar di kontrak `L2ERC721Gateway` dan `L2ERC1155Gateway` melalui fungsi-fungsi berikut:
+
+```solidity
+function batchWithdrawERC721(
+    address _token,
+    uint256[] calldata _tokenIds,
+    uint256 _gasLimit
+) external payable;
+
+function batchWithdrawERC721(
+    address _token,
+    address _to,
+    uint256[] calldata _tokenIds,
+    uint256 _gasLimit
+) external payable;
+
+function batchWithdrawERC1155(
+    address _token,
+    uint256[] calldata _tokenIds,
+    uint256[] calldata _amounts,
+    uint256 _gasLimit
+) external payable;
+
+function batchWithdrawERC1155(
+    address _token,
+    address _to,
+    uint256[] calldata _tokenIds,
+    uint256[] calldata _amounts,
+    uint256 _gasLimit
+) external payable;
+```
+
+Kontrak pendamping L1 untuk token ERC-721 atau ERC-1155 adalah `L1ERC721Gateway` dan `L1ERC1155Gateway` untuk menyelesaikan penarikan di L1.

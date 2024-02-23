@@ -1,0 +1,46 @@
+---
+section: technology
+date: Last Modified
+title: "Perbedaan EVM dari Ethereum"
+lang: "id"
+permalink: "technology/chain/differences"
+whatsnext: { "Bridge": "/id/technology/bridge/cross-domain-messaging/" }
+---
+
+## Opcodes
+
+| Opcode                      | Perilaku Scroll                                                                                              |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `BLOCKHASH`                 | Mengembalikan `keccak(chain_id \|\| block_number)` untuk 256 blok terakhir.                                    |
+| `COINBASE`                  | Mengembalikan alamat gudang biaya (kontrak pra-didirikan `0x5300000000000000000000000000000000000005`).        |
+| `DIFFICULTY` / `PREVRANDAO` | Selalu mengembalikan 0.                                                                                       |
+| `BASEFEE`                   | Dinonaktifkan karena saat ini kami menonaktifkan EIP-1559. Jika opcode ditemui, transaksi akan dibatalkan.    |
+| `SELFDESTRUCT`              | Dinonaktifkan. Jika opcode ditemui, transaksi akan dibatalkan.                                                |
+
+## Kontrak Pra-Kompilasi
+
+| Alamat | Nama         | Perilaku Scroll                                                                                  |
+| ------- | ------------ | ------------------------------------------------------------------------------------------------ |
+| `0x02`  | `SHA2-256`   | Saat ini tidak didukung.                                                                        |
+| `0x03`  | `RIPEMD-160` | Saat ini tidak didukung.                                                                        |
+| `0x05`  | `modexp`     | Batasi nilai input `B, E, M` menjadi bilangan bulat tak bertanda kurang dari $2^{256}$.         |
+| `0x08`  | `ecPairing`  | Input masih berupa beberapa nilai 32 byte yang merupakan kelipatan 6, tetapi batasi jumlah tuple menjadi maksimal 4. |
+| `0x09`  | `blake2f`    | Saat ini tidak didukung.                                                                        |
+
+Kontrak pra-kompilasi yang tersisa memiliki perilaku yang sama seperti Ethereum. Namun, penggunaannya maksimal dalam satu blok dibatasi oleh batasan yang terkait dengan kapasitas sirkuit zkEVM.
+
+## EIPs
+
+Sequencer kami dikembangkan berdasarkan fork London awalnya. Kami menonaktifkan beberapa EIP dalam fork London dan memperkenalkan beberapa EIP dari fork Shanghai untuk meningkatkan kompatibilitas.
+
+EIP yang dinonaktifkan hingga fork London:
+
+- [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559): Perubahan pasar biaya dan tipe transaksi EIP-1559
+- [EIP-2930](https://eips.ethereum.org/EIPS/eip-2930): Akses opsional ke daftar
+- [EIP-3198](https://eips.ethereum.org/EIPS/eip-3198): Opcode `BASEFEE`
+
+EIP yang diimpor dari fork Shanghai:
+
+- [EIP-3651](https://eips.ethereum.org/EIPS/eip-3651): `COINBASE` yang hangat
+- [EIP-3855](https://eips.ethereum.org/EIPS/eip-3855): Instruksi `PUSH0`
+- [EIP-3860](https://eips.ethereum.org/EIPS/eip-3860): Batasan dan meter initcode

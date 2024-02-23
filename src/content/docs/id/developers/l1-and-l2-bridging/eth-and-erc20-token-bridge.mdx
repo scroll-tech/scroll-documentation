@@ -1,0 +1,199 @@
+---
+section: developers
+date: Last Modified
+title: "ETH dan ERC20 Token Bridge"
+lang: "id"
+permalink: "developers/l1-and-l2-bridging/eth-and-erc20-token-bridge"
+whatsnext: { "ERC721 NFT Bridge": "/id/developers/l1-and-l2-bridging/erc721-nft-bridge/" }
+excerpt: "The Gateway Router memungkinkan bridging ETH dan token ERC20 dari L1 ke L2 menggunakan fungsi depositETH dan depositERC20 secara berturut-turut."
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+## Menyetorkan ETH dan Token ERC20 dari L1
+
+Gateway Router memungkinkan bridging ETH dan token ERC20 dari L1 ke L2 menggunakan fungsi `depositETH` dan `depositERC20` secara berturut-turut. Ini adalah jembatan tanpa izin yang diterapkan di L1. Perhatikan bahwa token ERC20 akan memiliki alamat yang berbeda di L2, Anda dapat menggunakan fungsi `getL2ERC20Address` untuk menanyakan alamat baru.
+
+<Aside type="tip" title="">
+  **`depositETH`** dan **`depositERC20`** adalah fungsi yang dapat menerima pembayaran, jumlah ETH yang dikirim ke fungsi-fungsi ini akan digunakan untuk membayar biaya L2. Jika jumlahnya tidak cukup, transaksi tidak akan dikirim. Semua ETH yang berlebihan akan dikirim kembali ke pengirim. `0.00001 ETH` seharusnya sudah lebih dari cukup untuk memproses deposit token.
+</Aside>
+
+Ketika melakukan bridging token ERC20, Anda tidak perlu khawatir memilih Gateway yang tepat. Hal ini karena `L1GatewayRouter` akan memilih titik masuk yang tepat secara otomatis untuk mengirim pesan:
+
+- **`L1StandardERC20Gateway`:** Gateway ini memperbolehkan setiap deposit ERC20 dan akan dipilih sebagai default oleh `L1GatewayRouter` untuk token ERC20 yang tidak memerlukan logika khusus di L2. Pada token bridging pertama kali, token baru akan dibuat di L2 yang mengimplementasikan `ScrollStandardERC20`. Untuk melakukan bridging token, panggil fungsi `depositERC20` pada `L1GatewayRouter`.
+- **`L1CustomERC20Gateway`:** Gateway ini akan dipilih oleh `L1GatewayRouter` untuk token dengan logika khusus. Agar pasangan token L1/L2 dapat berfungsi di Scroll Custom ERC20 Bridge, kontrak token L2 harus mengimplementasikan `IScrollStandardERC20`. Selain itu, token harus memberikan izin `mint` atau `burn` kepada `L2CustomERC20Gateway`. Kunjungi panduan [Bridge ERC20 menggunakan Gateway Kustom](/id/developers/guides/bridge-erc20-through-the-custom-gateway) untuk contoh langkah demi langkah tentang bagaimana melakukan bridging token kustom.
+
+Semua kontrak Gateway akan membentuk pesan dan mengirimkannya ke `L1ScrollMessenger` yang dapat mengirimkan pesan arbitrer ke L2. `L1ScrollMessenger` meneruskan pesan tersebut ke `L1MessageQueue`. Pengguna mana pun dapat mengirimkan pesan langsung ke Messenger untuk mengeksekusi data arbitrer di L2. Ini berarti mereka dapat mengeksekusi fungsi apa pun di L2 dari transaksi yang dibuat di L1 melalui jembatan. Meskipun aplikasi bisa langsung mengirimkan pesan ke kontrak token yang ada, Gateway abstrak dari spesifik dan menyederhanakan transfer dan panggilan.
+
+<Aside type="tip" title="">
+  Pada upgrade mendatang, pengguna akan dapat melewati `L1ScrollMessenger` dan mengirimkan pesan langsung ke `L1MessageQueue`. Jika pesan dikirim
+  melalui `L1MessageQueue`, pengirim transaksi akan menjadi alamat pengguna yang mengirimkan transaksi, bukan alamat
+  dari `L1ScrollMessenger`. 
+</Aside>
+
+Saat blok baru dibuat di L1, Pemantau akan mendeteksi pesan di `L1MessageQueue` dan akan meneruskannya ke layanan Pemancar, yang akan mengirimkan transaksi ke L2 melalui node l2geth. Akhirnya, node l2geth akan meneruskan transaksi ke kontrak `L2ScrollMessenger` untuk dieksekusi di L2.
+
+## Menarik ETH dan Token ERC20 dari L2
+
+Gateway L2 sangat mirip dengan Gateway L1. Kami dapat menarik ETH dan token ERC20 kembali ke L1 menggunakan fungsi `withdrawETH` dan `withdrawERC20`. Alamat kontraknya diterapkan di L2. Kami menggunakan `getL1ERC20Address` untuk mendapatkan alamat token di L1.
+
+<Aside type="tip" title="">
+  **`withdrawETH`** dan **`withdrawERC20`** adalah fungsi yang dapat menerima pembayaran, jumlah ETH yang dikirim ke fungsi-fungsi ini akan digunakan untuk membayar biaya L1. Jika jumlahnya tidak cukup, transaksi tidak akan dikirim. Semua ETH yang berlebihan akan dikirim kembali ke pengirim. Biaya akan tergantung pada aktivitas L1 tetapi `0.005 ETH`seharusnya sudah cukup untuk memproses penarikan token.
+</Aside>
+
+<Aside type="caution" title="">
+  Pastikan transaksi tidak akan mengalami revert di L1 saat dikirim dari L2. Tidak ada cara untuk memulihkan ETH,
+  token, atau NFT yang dilakukan bridging jika transaksi Anda mengalami revert di L1. Semua aset akan terbakar di Scroll ketika transaksi dikirim, dan
+  tidak mungkin untuk membuatnya lagi.
+</Aside>
+
+## Membuat token ERC20 dengan logika kustom di L2
+
+Jika sebuah token membutuhkan logika kustom di L2, maka token tersebut perlu dibawa melalui `L1CustomERC20Gateway` dan `L2CustomERC20Gateway` secara berturut-turut. Token kustom di L2 harus memberikan izin kepada Gateway untuk mencetak token baru ketika ada deposit dan membakar ketika token ditarik kembali.
+
+Berikut adalah antarmuka `IScrollStandardERC20` yang diperlukan untuk mendeploy token yang kompatibel dengan `L2CustomERC20Gateway` di L2.
+
+```solidity
+interface IScrollStandardERC20 {
+  /// @notice Return the address of Gateway the token belongs to.
+  function gateway() external view returns (address);
+
+  /// @notice Return the address of counterpart token.
+  function counterpart() external view returns (address);
+
+  /// @dev ERC677 Standard, see https://github.com/ethereum/EIPs/issues/677
+  /// Defi can use this method to transfer L1/L2 token to L2/L1,
+  /// and deposit to L2/L1 contract in one transaction
+  function transferAndCall(address receiver, uint256 amount, bytes calldata data) external returns (bool success);
+
+  /// @notice Mint some token to recipient's account.
+  /// @dev Gateway Utilities, only gateway contract can call
+  /// @param _to The address of recipient.
+  /// @param _amount The amount of token to mint.
+  function mint(address _to, uint256 _amount) external;
+
+  /// @notice Mint some token from account.
+  /// @dev Gateway Utilities, only gateway contract can call
+  /// @param _from The address of account to burn token.
+  /// @param _amount The amount of token to mint.
+  function burn(address _from, uint256 _amount) external;
+}
+```
+
+### Menambahkan Token L2 ERC20 Kustom ke Jembatan Scroll
+
+Token dapat dijembatani dengan aman dan tanpa izin melalui kontrak Gateway yang didaftarkan oleh pengembang mana pun. Namun, Scroll juga mengelola Router ERC20 dan sebuah Gateway di mana semua token yang dibuat oleh komunitas dipersilakan. Menjadi bagian dari Gateway yang dikelola oleh Scroll berarti Anda tidak perlu mendeploy kontrak Gateway sendiri, dan token Anda akan muncul di antarmuka pengguna Scroll. Untuk menjadi bagian dari Gateway Scroll, Anda harus menghubungi tim Scroll untuk menambahkan token ke kontrak jembatan baik di L1 maupun di L2. Untuk melakukannya, ikuti petunjuk di repositori [daftar token](https://github.com/scroll-tech/token-list) untuk menambahkan token baru Anda ke antarmuka pengguna resmi Scroll.
+
+## API Gateway L1
+
+Silakan kunjungi [npm library](https://www.npmjs.com/package/@scroll-tech/contracts?activeTab=code) untuk dokumentasi API kontrak Scroll yang lengkap.
+
+### depositETH
+
+```solidity
+function depositETH(address _to, uint256 _amount, uint256 _gasLimit) public payable;
+```
+
+Mengirimkan ETH dari L1 ke L2.
+
+| Parameter | Deskripsi                                                                                                                 |
+| --------- | ------------------------------------------------------------------------------------------------------------------------ |
+| to        | Alamat akun penerima di L2.                                                                                              |
+| amount    | Jumlah token yang akan ditransfer, dalam wei.                                                                            |
+| gasLimit  | Batas gas yang diperlukan untuk menyelesaikan deposit di L2. Sebanyak 170.000 biasanya cukup untuk memproses transaksi, tetapi dana yang tidak terpakai akan dikembalikan. |
+
+### depositERC20
+
+```solidity
+function depositERC20(address _token, address _to, uint256 _amount, uint256 _gasLimit) payable;
+```
+
+Mengirimkan token ERC20 dari L1 ke L2.
+
+| Parameter | Deskripsi                                                                                                                 |
+| --------- | ------------------------------------------------------------------------------------------------------------------------ |
+| token     | Alamat token di L1.                                                                                                    |
+| to        | Alamat akun penerima di L2.                                                                                              |
+| amount    | Jumlah token yang akan ditransfer, dalam wei.                                                                            |
+| gasLimit  | Batas gas yang diperlukan untuk menyelesaikan deposit di L2. Sebanyak 20.000 biasanya cukup untuk memproses transaksi, tergantung pada Gateway, tetapi dana yang tidak terpakai akan dikembalikan. |
+
+### getL2ERC20Address
+
+```solidity
+function getL2ERC20Address(address _l1Token) external view returns (address);
+```
+
+Mengembalikan alamat token L2 yang sesuai berdasarkan alamat token L1.
+
+| Parameter | Deskripsi                   |
+| --------- | --------------------------- |
+| \_l1Token | Alamat token di L1.         |
+
+### updateTokenMapping
+
+```solidity
+function updateTokenMapping(address _l1Token, address _l2Token) external;
+```
+
+Perbarui pemetaan yang menghubungkan token ERC20 dari L1 ke L2.
+
+| Parameter | Deskripsi                                            |
+| --------- | ---------------------------------------------------- |
+| \_l1Token | Alamat token ERC20 di L1.                            |
+| \_l2Token | Alamat token ERC20 yang sesuai di L2.                |
+
+## API L2 Gateway
+
+### withdrawETH
+
+```solidity
+function withdrawETH(address to, uint256 amount, uint256 gasLimit) external payable;
+```
+
+Mengirimkan ETH dari L2 ke L1.
+
+| Parameter | Deskripsi                                                                                               |
+| --------- | ------------------------------------------------------------------------------------------------------- |
+| to        | Alamat akun penerima di L1.                                                                             |
+| amount    | Jumlah token yang akan ditransfer, dalam wei.                                                           |
+| gasLimit  | Batas gas yang diperlukan untuk menyelesaikan deposit di L1. Ini bersifat opsional, kirim 0 jika tidak ingin menetapkannya. |
+
+### withdrawERC20
+
+```solidity
+function withdrawERC20(address token, address to, uint256 amount, uint256 gasLimit) external payable;
+```
+
+Mengirimkan token ERC20 dari L2 ke L1.
+
+| Parameter | Deskripsi                                                                                               |
+| --------- | ------------------------------------------------------------------------------------------------------- |
+| token     | Alamat token di L2.                                                                                     |
+| to        | Alamat akun penerima di L1.                                                                             |
+| amount    | Jumlah token yang akan ditransfer, dalam wei.                                                           |
+| gasLimit  | Batas gas yang diperlukan untuk menyelesaikan deposit di L1. Ini bersifat opsional, kirim 0 jika tidak ingin menetapkannya. |
+
+### getL1ERC20Address
+
+```solidity
+function getL1ERC20Address(address l2Token) external view returns (address);
+```
+
+Mengembalikan alamat token L1 yang sesuai dengan alamat token L2 yang diberikan.
+
+| Parameter | Deskripsi                           |
+| --------- | ----------------------------------- |
+| l2Token   | Alamat token L2 yang diberikan.    |
+
+### updateTokenMapping
+
+```solidity
+function updateTokenMapping(address _l1Token, address _l2Token) external;
+```
+
+Perbarui pemetaan yang menghubungkan kontrak ERC20 dari L2 ke L1.
+
+| Parameter | Deskripsi                                       |
+| --------- | ----------------------------------------------- |
+| \_l2Token | Alamat token ERC20 di L2.                      |
+| \_l1Token | Alamat token ERC20 yang sesuai di L1.           |
