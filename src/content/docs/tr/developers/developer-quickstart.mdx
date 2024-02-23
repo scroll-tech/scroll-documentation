@@ -1,11 +1,11 @@
 ---
 section: developers
 date: Last Modified
-title: "Developer Quickstart"
-lang: "en"
+title: "Geliştirici Hızlı Başlangıcı"
+lang: "tr"
 permalink: "developers/developer-quickstart"
-excerpt: "Scroll Developer Quickstart helps you acquire testnet Ether, configure your network, and access all of your favorite tooling"
-whatsnext: { "Verify Your Smart Contracts": "/developers/verifying-smart-contracts" }
+excerpt: "Scroll Geliştirici Hızlı Başlangıcı, test ağı Ether'i edinmenize, ağınızı yapılandırmanıza ve tüm favori araçlarınıza erişmenize yardımcı olur"
+whatsnext: { "Akıllı Sözleşemenizi Doğrulayın": "/tr/developers/verifying-smart-contracts" }
 ---
 
 import Aside from "../../../../components/Aside.astro"
@@ -14,78 +14,77 @@ import networkSelection from "./_images/mmNetworkSelection.png"
 import injectedProviderMM from "./_images/injectedProviderMM.png"
 import ToggleElement from "../../../../components/ToggleElement.astro"
 
-With Scroll, your favorite tools for building and testing smart contracts just work.
+Scroll ile akıllı sözleşmeler oluşturmak ve test ederken en sevdiğiniz araçlar oldukları gibi çalışırlar.
 
-Since Scroll is bytecode equivalent with the EVM, you’ll just need to point your favorite builder tools at a Scroll RPC Provider.
+Scroll, EVM ile bayt kodu olarak denk olduğundan, favori geliştirici araçlarınızı bir Scroll RPC Sağlayıcısına yönlendirmeniz yeterlidir.
 
-If you run into any issues, please reach out in [our Discord](https://discord.gg/scroll).
+Herhangi bir sorunla karşılaşırsanız lütfen [Discord'umuzdan](https://discord.gg/scroll) bize ulaşın.
 
-## Acquiring Ether
+## Ether Edinme
 
-Scroll uses ETH as its native currency, which will be needed to pay transaction fees for deploying and interacting with the network.
+Scroll yerel para birimi olarak ETH'yi kullanıyor ve bu ETH'ler, ağda akıllı sözleşme dağıtımı ve etkileşimleri için işlem ücretlerini ödemek için gerekli olacak.
 
-To start building on Scroll, we suggest you begin with using our Scroll Sepolia testnet. You'll first need to acquire some testnet ETH. See the [Faucet](/user-guide/faucet) page for tips on getting test tokens on Sepolia. After this, you can bridge your testnet ETH to the Scroll Sepolia Testnet (Layer 2) using our [Sepolia Bridge](https://sepolia.scroll.io/bridge), as described in the [Bridge article](/user-guide/bridge).
+Scroll üzerinde inşa etmeye başlamak için Scroll Sepolia test ağımızı kullanarak başlamanızı öneririz. Öncelikle bir miktar test ağı ETH edinmeniz gerekecek. Sepolia'da test token'ları almayla ilgili ipuçları için [Musluk](/tr/user-guide/faucet) sayfasına bakın. Bundan sonra, [Köprü makalesinde](/tr/user-guide/bridge) açıklandığı gibi [Sepolia Köprümüzü](https://sepolia.scroll.io/bridge) kullanarak test ağı ETH'lerinizi Scroll Sepolia Testnet'e (Katman 2) aktarabilirsiniz.
 
-For a walkthrough, start with the User Guide's [Setup](/user-guide/setup) page.
+Adım adım açıklama için Kullanım Kılavuzunun [Kurulum](/tr/user-guide/setup) sayfasıyla başlayın.
 
-Once you're ready to deploy on Scroll's mainnet, you can bridge over ETH using [our native bridge](https://scroll.io/bridge/) or one of the 3rd-party bridges.
+Scroll ana ağında akıllı sözleşme dağıtımak için hazır olduğunuzda, [yerel köprümüzü](https://scroll.io/bridge/) veya 3. taraf köprülerden birini kullanarak ETH üzerinden köprü kurabilirsiniz.
 
-## Network Configuration
+## Ağ Yapılandırması
 
-### Scroll Mainnet
+### Scroll Ana Ağı
 
-Use the table below to configure your Ethereum tools to the Scroll mainnet.
+Ethereum araçlarınızı Scroll ana ağına yapılandırmak için aşağıdaki tabloyu kullanın.
 
-| Network Name       | Scroll                                             | Ethereum Mainnet                                     |
+| Ağ Adı             | Scroll                                             | Ethereum Mainnet                                     |
 | ------------------ | -------------------------------------------------- | ---------------------------------------------------- |
-| RPC URL            | [https://rpc.scroll.io/](https://rpc.scroll.io/)   | [https://eth.llamarpc.com](https://eth.llamarpc.com) |
-| Chain ID           | 534352                                             | 1                                                    |
-| Currency Symbol    | ETH                                                | ETH                                                  |
-| Block Explorer URL | [https://scrollscan.com/](https://scrollscan.com/) | [https://etherscan.io](https://etherscan.io)         |
+| RPC URL'si         | [https://rpc.scroll.io/](https://rpc.scroll.io/)   | [https://eth.llamarpc.com](https://eth.llamarpc.com) |
+| Zincir Kimliği     | 534352                                             | 1                                                    |
+| Para Birimi Sembolü| ETH                                                | ETH                                                  |
+| Blok Gezgini URL'si| [https://scrollscan.com/](https://scrollscan.com/) | [https://etherscan.io](https://etherscan.io)         |
 
 <ToggleElement anchor="mainnet-additional-infra">
-  <div slot="title">Additional Scroll Mainnet RPCs and Infra</div>
-  - [Scroll Native Bridge](https://scroll.io/bridge)
-  - [Scroll RPC Providers on ChainList.org](https://chainlist.org/chain/534352)
-  - [Ethereum RPC Providers on ChainList.org](https://chainlist.org/chain/1)
-  {/* - Additional Block Explorers:
+  <div slot="title">Ek Scroll Ana Ağ RPC'leri ve Altyapıları</div>
+  - [Scroll Yerel Köprüsü](https://scroll.io/bridge)
+  - [ChainList.org'daki Scroll RPC Sağlayıcıları](https://chainlist.org/chain/534352)
+  - [ChainList.org'daki Ethereum RPC Sağlayıcıları](https://chainlist.org/chain/1)
+  {/* - Ek Blok Gezginleri:
     - [Dora](https://www.ondora.xyz/network/scroll/interactions)
     - [L2Scan](https://scroll.l2scan.co/) */}
 
 </ToggleElement>
 
-### Scroll Sepolia Testnet
+### Scroll Sepolia Test Ağı
 
-Use the table below to configure your Ethereum tools to the Scroll Sepolia Testnet.
+Ethereum araçlarınızı Scroll Sepolia Test ağına yapılandırmak için aşağıdaki tabloyu kullanın.
 
-| Network Name       | Scroll Sepolia                                                    | Ethereum Sepolia                                             |
+| Ağ Adı             | Scroll Sepolia                                                    | Ethereum Sepolia                                             |
 | ------------------ | ----------------------------------------------------------------- | ------------------------------------------------------------ |
-| RPC URL            | [https://sepolia-rpc.scroll.io/](https://sepolia-rpc.scroll.io/)  | [https://rpc2.sepolia.org](https://rpc2.sepolia.org)         |
-| Chain ID           | 534351                                                            | 11155111                                                     |
-| Currency Symbol    | ETH                                                               | ETH                                                          |
-| Block Explorer URL | [https://sepolia.scrollscan.com](https://sepolia.scrollscan.com/) | [https://sepolia.etherscan.io](https://sepolia.etherscan.io) |
+| RPC URL'si         | [https://sepolia-rpc.scroll.io/](https://sepolia-rpc.scroll.io/)  | [https://rpc2.sepolia.org](https://rpc2.sepolia.org)         |
+| Zincir Kimliği     | 534351                                                            | 11155111                                                     |
+| Para Birimi Sembolü| ETH                                                               | ETH                                                          |
+| Blok Gezgini URL'si| [https://sepolia.scrollscan.com](https://sepolia.scrollscan.com/) | [https://sepolia.etherscan.io](https://sepolia.etherscan.io) |
 
 <ToggleElement anchor="sepolia-additional-infra">
-  <div slot="title">Additional Scroll Sepolia RPCs and Infra</div>
-  - [Scroll Sepolia Native Bridge](https://sepolia.scroll.io/bridge)
-  - [Scroll Sepolia RPC Providers on ChainList.org](https://chainlist.org/chain/534351)
-  - [Ethereum Sepolia RPC Providers on ChainList.org](https://chainlist.org/chain/11155111)
-  - Additional Block Explorers:
+  <div slot="title">Ek Scroll Sepolia RPC'leri ve Altyapıları</div>
+  - [Scroll Sepolia Yerel Köprüsü](https://sepolia.scroll.io/bridge)
+  - [ChainList.org'daki Scroll Sepolia RPC Sağlayıcıları](https://chainlist.org/chain/534351)
+  - [ChainList.org'daki Ethereum Sepolia RPC Sağlayıcıları](https://chainlist.org/chain/11155111)
+  - Ek Blok Gezginleri:
     - [Dora](https://www.ondora.xyz/network/scroll-sepolia/interactions)
     - [L2Scan](https://scroll.l2scan.co/)
 
 </ToggleElement>
 
-## Configure your tooling
+## Araçlarınızı Yapılandırın
 
 <Aside type="tip" title="">
-  For setting up tooling to verify a smart contract deployment, see [Verifying Smart
-  Contracts](/developers/verifying-smart-contracts).
+  Akıllı sözleşme dağıtımınızı doğrulamaya yönelik araçları ayarlamak için bkz.[Akıllı Sözleşmeleri Doğrulama](/tr/developers/verifying-smart-contracts).
 </Aside>
 
 ### Hardhat
 
-Modify your Hardhat config file `hardhat.config.ts` to point at the Scroll Sepolia Testnet public RPC.
+Hardhat yapılandırma dosyanızı `hardhat.config.ts'yi Scroll Sepolia Testnet public RPC'sini işaret edecek şekilde değiştirin.
 
 ```jsx
 ...
@@ -106,7 +105,7 @@ const config: HardhatUserConfig = {
 
 ### Foundry
 
-To deploy using the Scroll Sepolia Testnet Public RPC, run:
+Scroll Sepolia Testnet Public RPC'yi kullanarak dağıtım yapmak için şunu çalıştırın:
 
 ```bash
 forge create ... --rpc-url=https://sepolia-rpc.scroll.io/ --legacy
@@ -114,19 +113,19 @@ forge create ... --rpc-url=https://sepolia-rpc.scroll.io/ --legacy
 
 ### Remix Web IDE
 
-After compiling your contracts, the easiest way to deploy using Remix is by [setting up Metamask](/user-guide/setup#metamask), then selecting the **Scroll Sepolia Testnet** network.
+Sözleşmelerinizi derledikten sonra Remix kullanarak dağıtım yapmanın en kolay yolu, [Metamask'ı kurmak](/tr/user-guide/setup) ve ardından **Scroll Sepolia Test ağını** seçmektir.
 
 <ClickToZoom src={networkSelection} />
 
-Now, in the “Deploy and Run Transactions” tab, use the “Environment” drop-down and select “Injected Provider - MetaMask.”
+Şimdi, "Dağıt ve İşlemleri Çalıştır" sekmesinde, "Ortam" açılır menüsünü kullanarak "Enjekte Edilen Sağlayıcı - MetaMask"ı seçin.
 
 <ClickToZoom src={injectedProviderMM} />
 
-Connect your wallet and select the Scroll Sepolia Testnet. Your account should be selected automatically in Remix, and you can click “Deploy.”
+Cüzdanınızı bağlayın ve Scroll Sepolia Test ağını seçin. Hesabınız Remix'te otomatik olarak seçilmelidir ve "Dağıt"a tıklayabilirsiniz.
 
 ### Truffle
 
-Assuming you already have a Truffle environment setup, go to the Truffle [configuration file](https://trufflesuite.com/docs/truffle/reference/configuration/), `truffle.js`. Make sure to have installed HDWalletProvider: `npm install @truffle/hdwallet-provider@1.4.0`
+Zaten bir Truffle ortamı kurulumunuz olduğunu varsayarak Truffle [yapılandırma dosyasına](https://trufflesuite.com/docs/truffle/reference/configuration/), `truffle.js`ye gidin. HDWalletProvider'ı yüklediğinizden emin olun: `npm install @truffle/hdwallet-provider@1.4.0`
 
 ```js
 const HDWalletProvider = require("@truffle/hdwallet-provider")
@@ -144,22 +143,22 @@ module.exports = {
 
 ### Brownie
 
-To add the Scroll Sepolia Testnet, run the following command:
+Scroll Sepolia Test ağını eklemek için aşağıdaki komutu çalıştırın:
 
 ```bash
 brownie networks add Ethereum scrollSepolia host=https://sepolia-rpc.scroll.io/ chainid=534351
 ```
 
-To set this as your default network, add the following in your project config file:
+Bunu varsayılan ağınız olarak ayarlamak için proje yapılandırma dosyanıza aşağıdakileri ekleyin:
 
 ```yaml
 networks:
   default: scrollSepolia
 ```
 
-Another way to add the Scroll Sepolia Testnet is to create a `yaml` file and run a command to add it.
+Scroll Sepolia Test ağını eklemenin başka bir yolu da bir 'yaml' dosyası oluşturmak ve onu eklemek için bir komut çalıştırmaktır.
 
-This is an example of a yaml file called `network-config.yaml`
+'network-config.yaml' adlı bir yaml dosyası örneği vermek gerekirse:
 
 ```yaml
 live:
@@ -172,13 +171,13 @@ live:
    name: Scroll Sepolia Testnet
 ```
 
-To add the Scroll Sepolia Testnet to the network list, run the following command:
+Scroll Sepolia Test ağını ağ listesine eklemek için aşağıdaki komutu çalıştırın:
 
 ```bash
 brownie networks import ./network-config.yaml
 ```
 
-To deploy on Scroll, run the following command. In this example, `token.py` is the script to deploy the smart contract. Replace this with the name of your script:
+Scroll'da dağıtmak için aşağıdaki komutu çalıştırın. Bu örnekte "token.py" akıllı sözleşmeyi dağıtan bir komut dosyasıdır. Bunu kendi komut dosyanızın adıyla değiştirin:
 
 ```bash
 brownie run token.py --network scrollSepolia
@@ -186,7 +185,7 @@ brownie run token.py --network scrollSepolia
 
 ### ethers.js
 
-Setting up a Scroll Sepolia Testnet provider in an `ethers` script:
+Bir 'ethers' komut dosyasında Scroll Sepolia Test ağı sağlayıcısının kurulması:
 
 ```jsx
 import { ethers } from "ethers"
@@ -196,16 +195,16 @@ const provider = new ethers.providers.JsonRpcProvider("https://sepolia-rpc.scrol
 
 ### scaffold-eth
 
-To deploy using Scaffold-eth, you’ll need to point both your Hardhat and React settings at the Scroll Sepolia Testnet.
+Scaffold-eth'i kullanarak dağıtım yapmak için hem Hardhat hem de React ayarlarınızı Scroll Sepolia Test ağına yönlendirmeniz gerekir.
 
-#### Configure Hardhat
+#### Hardhat'i Yapılandırma
 
-In the `packages/hardhat/hardhat.config.js` file, you’ll add the network and select it as the default network.
+'packages/hardhat/hardhat.config.js' dosyasına ağın eklenerek varsayılan ağ olarak seçilmesi gerekmektedir.
 
 ```jsx
 ...
 //
-// Select the network you want to deploy to here:
+// Burada dağıtmak istediğiniz ağı seçin:
 //
 const defaultNetwork = "scrollSepolia";
 ...
@@ -224,18 +223,17 @@ module.exports = {
 }
 ```
 
-Be sure to fund the deployment wallet as well! Run `yarn generate` to create the wallet and `yarn account` to check its funds. Once funded, run `yarn deploy --network scrollSepolia` to deploy on the Scroll Sepolia testnet.
+Dağıtım cüzdanına da fon sağladığınızdan emin olun! Cüzdanı oluşturmak için "yarn generate"i, fonlarını kontrol etmek için "yarn account"u çalıştırın. Fonlama sağlandıktan sonra Scroll Sepolia test ağına dağıtmak için `yarn deploy --network ScrollSepolia` komutunu çalıştırın.
 
 <Aside type="danger" title="warning">
-  On some project forks, you'll want to disable the contract verification, which relies on Etherscan. This can be
-  commented out in `packages/hardhat/deploy/00_deploy_your_contract.js`
+  Bazı proje çatallarında Etherscan tarafından sağlanan sözleşme doğrulamasını devre dışı bırakmak isteyebilirsiniz. Bu, "packages/hardhat/deploy/00_deploy_your_contract.js" dosyasında yorumlanabilir.
 </Aside>
 
-#### Configure the Frontend
+#### Kullanıcı Arayüzü Yapılandırması
 
-To configure your frontend, you need to add the Scroll Sepolia Testnet as a network option, then select it as default.
+Kullanıcı arayüzünüzü yapılandırmak için Scroll Sepolia Test ağını bir ağ seçeneği olarak eklemeniz ve ardından bunu varsayılan olarak seçmeniz gerekir.
 
-To add the network, modify `packages/react-app/src/constants.js`.
+Ağı eklemek için 'packages/react-app/src/constants.js' dosyasını değiştirin.
 
 ```jsx
 ...
@@ -252,7 +250,7 @@ export const NETWORKS = {
 }
 ```
 
-Next, in `packages/react-app/src/App.jsx` modify
+Daha sonra, 'packages/react-app/src/App.jsx' bölümünde değişiklik yapın
 
 ```jsx
 ...
