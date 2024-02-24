@@ -51,7 +51,7 @@ There are established methods of conducting trusted setup ceremonies with weak t
 
 - Given a commitment $c = [P(\tau)]_1$, an evaluation $P(a) = b$, and a proof $\pi = [Q(\tau)]_1$
 - Verify that $e(\pi, [\tau - a]_2) = e(c - [b]_1, h)$
-  - Some algebra shows that this is equivalent to checking that that the quotient polynomial is correctly formed at $\tau$: $Q(\tau) = \frac{P(\tau) -b}{\tau-a}$
+  - Some algebra shows that this is equivalent to checking that the quotient polynomial is correctly formed at $\tau$: $Q(\tau) = \frac{P(\tau) -b}{\tau-a}$
     $$
     \begin{align*}
     & e(\pi, [\tau - a]_2) = e(c - [b]_1, h) \\ \iff
