@@ -1,26 +1,22 @@
 ---
 section: developers
 date: Last Modified
-title: "Scroll Messenger Cross-chain Interaction"
-lang: "en"
+title: "Scroll Habercisi ile Zincirler Arası Etkileşim"
+lang: "tr"
 permalink: "developers/guides/scroll-messenger-cross-chain-interaction"
-whatsnext: { "Bridge ERC20 through the Custom Gateway": "/developers/guides/bridge-erc20-through-the-custom-gateway" }
-excerpt: "In this example, we will launch a dummy smart contract on either Sepolia or Scroll Sepolia testnet and interact with it from the opposite chain."
+whatsnext: { "Özel Ağ Geçidi üzerinden ERC20 köprüleyin": "/tr/developers/guides/bridge-erc20-through-the-custom-gateway" }
+excerpt: "Bu örnekte, Sepolia veya Scroll Sepolia test ağında bir kukla akıllı sözleşme oluşturacağız ve onunla karşı zincirden etkileşime geçeceğiz."
 ---
 
 import Aside from "../../../../../components/Aside.astro"
 
-In this example, we will launch a dummy smart contract on either Sepolia or Scroll and interact
-with it from the opposite chain. We will be using the `ScrollMessenger` that is deployed on both
-Sepolia and Scroll.
+Bu örnekte, Sepolia veya Scroll üzerinde bir kukla akıllı sözleşme başlatacağız ve onunla karşı zincirden etkileşime geçeceğiz. Hem Sepolia'da hem de Scroll'da konuşlandırılmış olan "ScrollMessenger"ı kullanacağız.
 
-## Deploying the Contracts
+## Sözleşmelerin Dağıtılması
 
-### Target Smart Contract
+### Hedef Akıllı Sözleşme
 
-Let’s start by deploying the target smart contract. We will use the Greeter contract for this
-example, but you can use any other contract. Deploy it to either Sepolia or Scroll. On Scroll, L1
-and L2 use the same API, so it’s up to you.
+Hedef akıllı sözleşmeyi dağıtarak başlayalım. Bu örnek için Greeter sözleşmesini kullanacağız, ancak siz başka herhangi bir sözleşmeyi kullanabilirsiniz. Sepolia veya Scroll'a dağıtabilirsiniz. Scroll'de L1 ve L2 aynı API'ı kullanır, dolayısıyla karar size bağlıdır.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -37,11 +33,11 @@ contract Greeter {
 }
 ```
 
-We will now execute `setGreeting` in a cross-chain way.
+Artık setGreeting'i zincirler arası bir şekilde yürüteceğiz.
 
-### Operator Smart Contract
+### Operatör Akıllı Sözleşmesi
 
-Switch to the other chain and deploy the `GreeterOperator`. So, if you deployed the `Greeter` contract on L1, deploy the `GreeterOperator` on L2 or vice versa.
+Diğer zincire geçin ve 'GreeterOperator'ı dağıtın. Eğer "Greeter" sözleşmesini L1'de dağıttıysanız, "GreeterOperator"ı L2'de dağıtın veya tam tersini uygulayın.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -74,49 +70,45 @@ contract GreeterOperator {
 }
 ```
 
-## Calling a Cross-chain Function
+## Zincirler Arası Fonksiyon Çağırma
 
-We pass the message by executing `executeFunctionCrosschain` and passing the following parameters:
+Mesajı `executeFunctionCrosschain` komutunu çalıştırıp aşağıdaki parametreleri ileterek iletiyoruz:
 
-- `scrollMessengerAddress`: This will depend on where you deployed the `GreeterOperator` contract.
-  - If you deployed it on Sepolia use `0x50c7d3e7f7c656493D1D76aaa1a836CedfCBB16A`. If you deployed on Scroll Sepolia use `0xBa50f5340FB9F3Bd074bD638c9BE13eCB36E603d`.
-- `targetAddress`: The address of the `Greeter` contract on the opposite chain.
-- `value`: In this case, it is `0` because the `setGreeting`is not payable.
-- `greeting`: This is the parameter that will be sent through the message. Try passing `“This message was cross-chain!”`
+- `scrollMessengerAddress`: Bu, "GreeterOperator" sözleşmesini nereye uyguladığınıza bağlı olacaktır.
+  - Sepolia'ya dağıttıysanız '0x50c7d3e7f7c656493D1D76aaa1a836CedfCBB16A', Scroll Sepolia'ya dağıttıysanız '0xBa50f5340FB9F3Bd074bD638c9BE13eCB36E603d' adreslerini kullanın.
+- `targetAddress`: Karşı zincirdeki 'Greeter' sözleşmesinin adresi.
+- `value`: Bu durumda '0'dır çünkü 'setGreeting' payable bir fonksiyon değil.
+- `greeting`: Mesaj yoluyla gönderilecek parametredir. `"Bu mesaj zincirler arasıydı!"` olarak ayarlayıp iletmeyi deneyin
 - `gasLimit`:
-  - If you are sending the message from L1 to L2, around `1000000` gas limit should be more than enough. That said, if you set this too high, and `msg.value` doesn't cover `gasLimit` * `baseFee`, the transaction will revert. If `msg.value` is greater than the gas fee, the unused portion will be refunded.
-  - If you are sending the message from L2 to L1, pass `0`, as the transaction will be completed by executing an additional transaction on L1.
+  - L1'den L2'ye mesaj gönderiyorsanız '1000000' civarındaki gaz limiti fazlasıyla yeterli olacaktır. Bununla birlikte, eğer çok yüksek ayarlarsanız ve "msg.value", "gasLimit" * "baseFee"yi karşılamıyorsa, işlem geri alınacaktır. 'msg.value' gaz ücretinden fazla ise kullanılmayan kısım iade edilecektir.
+  - L2'den L1'e mesaj gönderiyorsanız '0'ı değerini geçirin, çünkü işleminiz L1 üzerinde ek bir işlem yapılarak tamamlanacaktır.
 
-### Relay the Message when sending from L2 to L1
+### L2'den L1'e gönderirken Mesajı Aktarımı
 
-When a transaction is passed from L2 to L1, an additional "execute withdrawal transaction" must be sent on L1. To do this, you must call `relayMessageWithProof` on the L1 Scroll Messenger
-contract from an EOA wallet.
+L2'den L1'e bir işlem geçtiğinde, L1 üzerinde ek bir "para çekimi gerçekleştirme işlemi" gönderilmelidir. Bunu yapmak için L1 Scroll Habercisi'nde 'relayMessageWithProof'u çağırmalısınız.
+EOA cüzdanından sözleşme.
 
-You can do this directly on [Etherscan Sepolia](https://sepolia.etherscan.io/address/0x50c7d3e7f7c656493d1d76aaa1a836cedfcbb16a#writeProxyContract#F3).
-To do so, you will need to pass a Merkle inclusion proof for the bridged transaction and other parameters. You'll query these using the Scroll Bridge API.
+Doğrudan [Etherscan Sepolia](https://sepolia.etherscan.io/address/0x50c7d3e7f7c656493d1d76aaa1a836cedfcbb16a#writeProxyContract#F3) üzerinden yapabilirsiniz.
+Bunu yapmak için köprülenmiş işlem ve diğer parametreler için bir Merkle içerme kanıtını iletmeniz gerekecektir. Bunları Scroll Köprü API'ını kullanarak sorgulayacaksınız.
 
 {/* TODO: finish looking into API issues */}
 
-We're finalizing the API specifics, but for now, fetch or curl the following endpoint:
+API özelliklerini son haline getirmeye çalışıyoruz ancak şimdilik aşağıdaki uç noktayı getirin veya curl'leyin:
 
 ```bash
 curl "https://sepolia-api-bridge.scroll.io/api/claimable?page_size=10&page=1&address=GREETER_OPERATOR_ADDRESS_ON_L2"
 ```
 
-Replace `GREETER_OPERATOR_ADDRESS_ON_L2` with your GreeterOperator contract address as launched on L2. Read more about Execute Withdraw transactions
-in the [Scroll Messenger](/developers/l1-and-l2-bridging/the-scroll-messenger) article.
+'GREETER_OPERATOR_ADDRESS_ON_L2' kısmını L2'de oluşturduğunuz GreeterOperator sözleşmesinin adresiyle değiştirin. [Scroll Habercisi](/tr/developers/l1-and-l2-bridging/the-scroll-messenger) makalesinde Para Çekme Gerçekleştirme işlemlerini yürütme hakkında daha fazla bilgi edinin.
 
-<Aside type="danger" title="Experimental API">
-  This API was made for our Bridge UI. It is not yet finalized and may change in the future. We will update this guide
-  when the API is finalized.
+<Aside type="danger" title="Deneysel API">
+  Bu API Bridge kullanıcı arayüzümüz için yapıldı. Henüz son haline ulaşmamıştır ve gelecekte değişebilir. API tamamlandığında bu kılavuzu güncelleyeceğiz.
 </Aside>
 
-<Aside type="caution" title="Anyone can execute your L2 → L1 Message">
-  `relayMessageWithProof` is fully permissionless, so anyone can call it on your behalf if they're willing to pay the L1
-  gas fees. This feature allows for additional support infrastructure, including tooling to automate this process for
-  applications and users.
+<Aside type="caution" title="L2 → L1 Mesajınızı Herkes Yürütebilir">
+  `relayMessageWithProof` tamamen izin gerektirmeyen bir yapıdadır(permissionless), dolayısıyla L1 gas ücretlerini ödemeye istekli olan herkes sizin adınıza onu çağırabilir. Bu özellik, uygulamalar ve kullanıcılar için bu süreci otomatikleştirmeye yönelik araçlar da dahil olmak üzere ek destek altyapısına olanak tanır.
 </Aside>
 
-After executing and confirming the transaction on both L1 and L2, the new state of `greeting` on the `Greeter` contract should be `“This message was cross-chain!”`. Sending a message from one chain to the other should take around 20 minutes after the transactions are confirmed on the origin chain.
+İşlemi hem L1 hem de L2'de yürütüp onayladıktan sonra, "Greeter" sözleşmesindeki "greeting"in yeni durumu “This message was cross-chain!” olmalıdır. Bir zincirden diğerine mesaj göndermek, işlem zincirinde onaylandıktan sonra yaklaşık 20 dakika sürecektir.
 
-Congratulations, you now executed a transaction from one chain to the other using our native bridge!
+Tebrikler, artık yerel köprümüzü kullanarak bir zincirden diğerine işlem gerçekleştirdiniz!

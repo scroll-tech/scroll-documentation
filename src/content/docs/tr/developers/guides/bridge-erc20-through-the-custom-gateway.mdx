@@ -1,25 +1,23 @@
 ---
 section: developers
 date: Last Modified
-title: "Bridge ERC20 through the Custom Gateway"
-lang: "en"
+title: "Özel Ağ Geçidi üzerinden ERC20 köprüleyin"
+lang: "tr"
 permalink: "developers/guides/bridge-erc20-through-the-custom-gateway"
-excerpt: "This guide will walk through how to use Scroll's bridge for ERC20s that need custom functionality using the Custom Gateway."
+excerpt: "Bu kılavuz, Özel Ağ Geçidini kullanarak özel işlevlere ihtiyaç duyan ERC20'ler için Scroll köprüsünün nasıl kullanılacağını açıklayacaktır."
 ---
 
 import Aside from "../../../../../components/Aside.astro"
 
-This guide will walk through how to use Scroll's bridge for ERC20s that need custom functionality by using the Custom Gateway.
+Bu kılavuz, Özel Ağ Geçidini kullanarak özel işlevlere ihtiyaç duyan ERC20'ler için Scroll köprüsünün nasıl kullanılacağını açıklayacaktır.
 
-<Aside type="tip" title="Do you need custom logic?">
-  Remember, for many contexts, you won't need to use the Custom Gateway to add additional features to your token or to
-  its bridging logic. See the article on [ETH and ERC20 Token
-  Bridge](/developers/l1-and-l2-bridging/eth-and-erc20-token-bridge#deposit-eth-and-erc20-tokens-from-l1) for more info.
+<Aside type="tip" title="Özel mantığa ihtiyacınız var mı?">
+  Unutmayın, birçok durumda, tokenınıza veya tokenınızın köprüleme mantığına ek özellikler eklemek için Özel Ağ Geçidini kullanmanıza gerek olmayacaktır. Daha fazla bilgi için [ETH ve ERC20 Token Köprüsü](/tr/developers/l1-and-l2-bridge/eth-and-erc20-token-bridge#deposit-eth-and-erc20-tokens-from-l1) hakkındaki makaleye bakın .
 </Aside>
 
-## Step 1: Launch a token on Sepolia
+## 1. Adım: Sepolia'da bir token başlatın
 
-First, we need a token to bridge. There is no need for a particular ERC20 implementation in order for a token to be compatible with L2. If you already have a token, feel free to skip this step. If you want to deploy a new token, use the following contract of a simple ERC20 token that mints 1 million tokens to the deployer when launched.
+Öncelikle köprüleyecek bir tokena ihtiyacımız var. Bir tokenın L2 ile uyumlu olması için belirli bir ERC20 uygulamasına gerek yoktur. Zaten bir tokenınız varsa bu adımı atlayabilirsiniz. Yeni bir token dağıtmak istiyorsanız, başlatıldığında dağıtıcıya 1 milyon token basan basit bir ERC20 tokenının aşağıdaki sözleşmesini kullanın.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -34,16 +32,16 @@ contract L1Token is ERC20 {
 }
 ```
 
-## Step 2: Launch the counterpart token on Scroll Sepolia testnet
+## Adım 2: Scroll Sepolia test ağında muadil tokenı başlatın
 
-Next, you'll launch a counterpart to this token on Scroll, which will represent the original token on Sepolia. This token can implement custom logic to match that of the L1 token or even add additional features beyond those of the L1 token.
+Sıradaki adımda, Sepolia'daki orijinal tokenı temsil edecek olan bir karşılık tokenını Scroll üzerinde başlatacaksınız. Bu token, L1 tokenininkiyle eşleşmek için özel mantık uygulayabilir veya hatta L1 tokeninin ötesinde ek özellikler ekleyebilir.
 
-For this to work:
+Bunun çalışması için:
 
-- The token must implement the `IScrollStandardERC20` interface in order to be compatible with the bridge.
-- The contract should provide the gateway address and the counterpart token addresses (the L1 token we just launched) under the `gateway()` and `counterpart()` functions. It should also allow the L2 gateway to call the token `mint()` and `burn()` functions, which are called when a token is deposited and withdrawn.
+- Tokenın köprüyle uyumlu olabilmesi için "IScrollStandardERC20" arayüzünü uygulaması gerekir.
+- Sözleşme, "gateway()" ve "counterpart()" fonksiyonları altında ağ geçidi adresini ve karşılık gelen token adreslerini (yeni başlattığımız L1 token) sağlamalıdır. Ayrıca L2 ağ geçidinin, bir token yatırıldığında ve çekildiğinde 'mint()' ve 'burn()' işlevlerini çağırmasına da izin vermelidir.
 
-The following is a complete example of a token compatible with the bridge. To the constructor, you will pass the official Scroll Custom Gateway address (`0x058dec71E53079F9ED053F3a0bBca877F6f3eAcf`) and the address of the token launched on Sepolia.
+Aşağıda köprüyle uyumlu bir tokenın tam bir örneği bulunmaktadır. Yapıcıya(constructor) resmi Scroll Özel Ağ Geçidi adresini (`0x058dec71E53079F9ED053F3a0bBca877F6f3eAcf`) ve Sepolia'da oluşturulan tokenın adresini ileteceksiniz.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -95,25 +93,25 @@ contract L2Token is ERC20, IScrollERC20Extension {
 }
 ```
 
-## Step 3: Add the token to the Scroll Bridge
+## Adım 3: Token'ı Scroll Köprüsü'ne ekleyin
 
-You need to contact the Scroll team to add the token to `L2CustomERC20Gateway` contract in Scroll and `L1CustomERC20Gateway` contract in L1. In addition, follow the instructions on the [token lists](https://github.com/scroll-tech/token-list) repository to add your token to the Scroll official bridge frontend.
+Token'ı Scroll'deki "L2CustomERC20Gateway" sözleşmesine ve L1'deki "L1CustomERC20Gateway" sözleşmesine eklemek için Scroll ekibiyle iletişime geçmeniz gerekiyor. Ayrıca tokenınızı Scroll resmi köprü kullanıcı arayüzüne eklemek için [token listeleri](https://github.com/scroll-tech/token-list) deposundaki talimatları izleyin.
 
-## Step 4: Deposit tokens
+## Adım 4: Tokenları yatırın
 
-Once your token has been approved by the Scroll team, you should be able to deposit tokens from L1. To do so, you must first approve the `L1CustomGateway` contract address on Sepolia (`0x31C994F2017E71b82fd4D8118F140c81215bbb37`). Then, deposit tokens by calling the `depositERC20` function from the `L1CustomGateway` contract. This can be done using [our bridge UI](https://scroll.io/bridge), [Etherscan Sepolia](https://sepolia.etherscan.io/address/0x31C994F2017E71b82fd4D8118F140c81215bbb37#writeProxyContract), or a smart contract.
+Tokenınız Scroll ekibi tarafından onaylandıktan sonra L1'den token yatırabilirsiniz. Bunu yapmak için öncelikle Sepolia'daki 'L1CustomGateway' sözleşme adresine onay vermeniz gerekir ('0x31C994F2017E71b82fd4D8118F140c81215bbb37'). Ardından, 'L1CustomGateway' sözleşmesindeki 'depositERC20' fonksiyonunu çağırarak tokenları yatırın. Bu, [köprü kullanıcı arayüzümüz](https://scroll.io/bridge), [Etherscan Sepolia](https://sepolia.etherscan.io/address/0x31C994F2017E71b82fd4D8118F140c81215bbb37#writeProxyContract) veya bir akıllı sözleşme kullanılarak yapılabilir.
 
-## Step 5: Withdraw tokens
+## Adım 5: Tokenları çekin
 
-You will follow similar steps to send tokens back from L2 to L1. First, approve the `L2CustomGateway` address (`0x058dec71E53079F9ED053F3a0bBca877F6f3eAcf`) and then withdraw the tokens calling the `withdrawERC20` from the `L2CustomGateway` contract.
+Tokenları L2'den L1'e geri göndermek için benzer adımları izleyeceksiniz. Öncelikle, 'L2CustomGateway' adresine ('0x058dec71E53079F9ED053F3a0bBca877F6f3eAcf') onay verin ve ardından 'L2CustomGateway' sözleşmesinden 'drawERC20'yi çağırarak tokenları çekin.
 
-## Alternative Approach: Launch and set up a custom L1 gateway contract
+## Alternatif Yaklaşım: Özel bir L1 Ağ Geçidi sözleşmesi başlatın ve ayarlayın
 
-Adding your token to the Scroll official bridge (as described above) is the recommended method of bridging tokens to and from Scroll. This approach will make them easier to discover and safer for holders. However, it will require approval from the Scroll team. If you want to launch a custom token without the official approval process, you can launch a custom gateway yourself. To do so, you will need to deploy an `L1CustomERC20Gateway` contract on L1 and an `L2CustomERC20Gateway` on L2.
+Tokenları Scroll'e ve Scroll'den köprülemek için önerilen yöntem (yukarıda açıklandığı gibi) tokenınızı Scroll resmi köprüsüne eklemektir. Bu yaklaşım, tokenınızın keşfedilmesini kolaylaştıracak ve sahipleri için daha güvenli hale getirecektir. Ancak bunun için Scroll ekibinin onayı gereklidir. Resmi onay süreci olmadan özel bir token başlatmak istiyorsanız kendiniz özel bir ağ geçidi oluşturabilirsiniz. Bunu yapmak için L1'de bir "L1CustomERC20Gateway" sözleşmesi ve L2'de bir "L2CustomERC20Gateway" dağıtmanız gerekecektir.
 
-### Launch an L1 Custom Gateway
+### Özel bir L1 Ağ Geçidi başlatın
 
-Let’s start by launching the following contract on Sepolia.
+Sepolia'da aşağıdaki sözleşmeyi başlatarak işe koyulalım.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -209,9 +207,9 @@ contract L1CustomERC20Gateway is L1ERC20Gateway, Ownable {
 }
 ```
 
-### Launch an L2 Custom Gateway
+### Özel bir L2 Ağ Geçidi başlatın
 
-Now let’s launch the counterpart contract on Scroll.
+Şimdi Scroll'de muadil sözleşmeyi başlatalım.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -320,36 +318,36 @@ contract L2CustomERC20Gateway is L2ERC20Gateway, ScrollGatewayBase, Ownable {
 }
 ```
 
-### Setup your Gateway contract on Sepolia
+### Sepolia'da Ağ Geçidi sözleşmenizi kurun
 
-Once the contracts are deployed, call the following functions to initialize the contracts and bind them to the corresponding tokens and the gateway on the other side of the bridge.
+Sözleşmeler dağıtıldıktan sonra, sözleşmeleri başlatmak ve bunları karşılık gelen tokenlara ve köprünün diğer tarafındaki ağ geçidine bağlamak için aşağıdaki işlevleri çağırın.
 
-First, call the `initialize` function on the `MyL1Gateway` contract with the following parameters:
+İlk olarak, aşağıdaki parametrelerle 'MyL1Gateway' sözleşmesindeki 'initialize' fonksiyonunu çağırın:
 
-- `_counterpart`: The address of `MyL2Gateway` we just launched on Scroll.
-- `_router`: Set it to `0x13FBE0D0e5552b8c9c4AE9e2435F38f37355998a`, the `L1GatewayRouter` contract on Sepolia.
-- `_messenger`: Set it to `0x50c7d3e7f7c656493D1D76aaa1a836CedfCBB16A`, the `L1ScrollMessenger` contract on Sepolia.
+- `_counterpart`: Scroll'da yeni başlattığımız `MyL2Gateway`in adresi.
+- `_router`: Sepolia'daki `L1GatewayRouter` sözleşmesi olan `0x13FBE0D0e5552b8c9c4AE9e2435F38f37355998a` olarak ayarlayın.
+- `_messenger`: Sepolia'daki `L1ScrollMessenger` sözleşmesi olan `0x50c7d3e7f7c656493D1D76aaa1a836CedfCBB16A` olarak ayarlayın.
 
-A custom gateway can host multiple token bridges. In this case, we will only be allowing bridging between L1Token and L2Token by calling the `updateTokenMapping` function on the `MyL1Gateway` contract with the following parameters:
+Özel bir ağ geçidi birden fazla token köprüsüne ev sahipliği yapabilir. Ama biz örneğimizde, 'MyL1Gateway' sözleşmesindeki 'updateTokenMapping''i aşağıdaki parametrelerle çağırarak yalnızca L1Token ve L2Token arasında köprü kurulmasına izin vereceğiz:
 
-- `_l1Token`: The address of the `L1Token` contract we previously launched on Sepolia.
-- `_l2Token`: The address of the `L2Token` contract we previously launched on Scroll.
+- `_l1Token`: Daha önce Sepolia'da başlattığımız `L1Token` sözleşmesinin adresi.
+- `_l2Token`: Daha önce Scroll'da başlattığımız `L2Token` sözleşmesinin adresi.
 
-### Setup your Gateway contract on Scroll
+### Scroll'da Ağ Geçidi sözleşmenizi kurun
 
-Now let’s switch to the Scroll chain and initialize `MyL2Gateway`, following similar steps.
+Şimdi Scroll zincirine geçelim ve benzer adımları izleyerek `MyL2Gateway`i başlatalım.
 
-First, call the `initialize` function from `MyL2Gateway`:
+İlk olarak, 'MyL2Gateway'den 'initialize' fonksiyonunu çağırın:
 
-- `_counterpart`: The address of `MyL1Gateway` we just launched on Sepolia.
-- `_router`: Set it to `0x9aD3c5617eCAa556d6E166787A97081907171230`, the `L2GatewayRouter` contract on Scroll.
-- `_messenger`: Set it `0xBa50f5340FB9F3Bd074bD638c9BE13eCB36E603d`, the `L2ScrollMessenger` contract on Scroll.
+- `_counterpart`: Sepolia'da yeni başlattığımız `MyL1Gateway`in adresi.
+- `_router`: Scroll'daki `L2GatewayRouter` sözleşmesi olan `0x9aD3c5617eCAa556d6E166787A97081907171230` olarak ayarlayın.
+- `_messenger`: Scroll'daki `L2ScrollMessenger` sözleşmesi olan `0xBa50f5340FB9F3Bd074bD638c9BE13eCB36E603d`yi ayarlayın.
 
-Next, call `updateTokenMapping` on the `MyL2Gateway` contract:
+Daha sonra, 'MyL2Gateway' sözleşmesinde 'updateTokenMapping'i çağırın:
 
-- `_l2Token`: The address of the `L2Token` contract we previously launched on Scroll.
-- `_l1Token`: The address of the `L1Token` contract we previously launched on Sepolia.
+- `_l2Token`: Daha önce Scroll'da başlattığımız `L2Token` sözleşmesinin adresi.
+- `_l1Token`: Daha önce Sepolia'da başlattığımız `L1Token` sözleşmesinin adresi.
 
-### Bridging tokens
+### Tokenları köprüleme
 
-We can now call `depositERC20` from `MyL1Gateway` and `withdrawERC20` from `MyL2Gateway` just as with the official Scroll bridge.
+Artık tıpkı resmi Scroll köprüsünde olduğu gibi "MyL1Gateway"den "depositERC20"yi ve "MyL2Gateway"den "withdrawERC20"yi çağırabiliriz.
