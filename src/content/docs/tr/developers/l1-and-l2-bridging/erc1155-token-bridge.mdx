@@ -1,30 +1,28 @@
 ---
 section: developers
 date: Last Modified
-title: "ERC1155 Token Bridge"
-lang: "en"
+title: "ERC1155 Token Köprüsü"
+lang: "tr"
 permalink: "developers/l1-and-l2-bridging/erc1155-token-bridge"
-whatsnext: { "The Scroll Messenger": "/developers/l1-and-l2-bridging/the-scroll-messenger/" }
-excerpt: "ERC1155 bridging from L1 to L2 is done via the L1ERC1155Gateway."
+whatsnext: { "Scroll Habercisi": "/tr/developers/l1-and-l2-bridging/the-scroll-messenger/" }
+excerpt: "L1'den L2'ye ERC1155 köprülenmesi L1ERC1155Ağ Geçidi aracılığıyla yapılır."
 ---
 
 import Aside from "../../../../../components/Aside.astro"
 
-## Deposit ERC1155 tokens from L1
+## L1'den ERC1155 tokenları yatırın
 
-ERC1155 bridging from L1 to L2 is done via the L1ERC1155Gateway. Similarly to ERC721 bridging, we don't use a router but the `depositERC1155` function on the Gateway directly.
+ERC1155'in L1'den L2'ye köprülenmesi L1ERC1155Ağ Geçidi aracılığıyla yapılır. ERC721 köprülemeye benzer şekilde, bir yönlendirici kullanmak yerine doğrudan Ağ Geçidi üzerinde 'depositERC1155' fonksiyonunu kullanıyoruz.
 
 <Aside type="tip" title="">
-  **`depositERC1155`** is a payable function, and the amount of ETH sent to this function will be used to pay for L2
-  fees. If the amount is not enough, the transaction will not be sent. All excess eth will be sent back to the sender.
-  `0.00001 ETH` should be more than enough to process a token deposit.
+  **`depositERC1155`** ETH cinsinden değer gönderilebilen(payable) bir fonksiyondur. Bu fonksiyona gönderilen ETH miktarı, L2 ücretlerinin ödenmesi için kullanılacaktır. Tutarın yeterli olmaması durumunda işlem gönderilmeyecektir. Fazla ETH'in tamamı gönderene iade edilecektir. '0.00001 ETH', token yatırma işlemi başlatmak için fazlasıyla yeterli olacaktır.
 </Aside>
 
-### Creating an ERC1155 token on L2
+### L2'de ERC1155 tokenı oluşturma
 
-Similar to ERC721 bridging, in order to bridge ERC1155 tokens, a contract compatible with the `IScrollERC1155` standard has to be launched and mapped on a `L1ERC1155Gateway` and `L2ERC1155Gateway` on both L1 and L2 respectively. This contract has to grant permission to the Gateway on L2 to mint when a token is deposited and burn when the token is withdrawn.
+ERC721 köprülemeye benzer şekilde, ERC1155 tokenlerini köprülemek için, "IScrollERC1155" standardıyla uyumlu bir sözleşmenin oluşturulup hem L1 hem de L2'de sırasıyla "L1ERC1155Gateway" ve "L2ERC1155Gateway" üzerinde eşlenmesi gerekir. Bu sözleşmeye, L2'deki Ağ Geçidine bir token yatırıldığında basması ve token çekildiğinde yakması için izin vermelidir.
 
-The following interface is the `IScrollERC1155` needed for deploying ERC1155 tokens compatible with the `L2ERC1155Gateway` on L2.
+Aşağıdaki arayüz, L2'de "L2ERC1155Gateway" ile uyumlu ERC1155 tokenlarını dağıtmak için gereken "IScrollERC1155"tir.
 
 ```solidity
 interface IScrollERC1155 {
@@ -71,29 +69,25 @@ interface IScrollERC1155 {
 }
 ```
 
-### Adding an ERC1155 token to the Scroll Bridge
+### Scroll Köprüsü'ne bir ERC1155 token ekleme
 
-All assets can be bridged securely and permissionlessly through Gateway contracts deployed by any developer. However, Scroll also manages an ERC1155 Gateway contract where all NFTs created by the community are welcome. Being part of the Scroll-managed Gateway means you won't need to deploy the Gateway contracts, and your token will appear in the Scroll frontend. To be part of the Scroll Gateway, you must contact the Scroll team to add the token to both L1 and L2 Gateway contracts. To do so, follow the instructions on the [token lists](https://github.com/scroll-tech/token-list) repository to add your token to the Scroll official frontend.
+Tüm varlıklar, herhangi bir geliştirici tarafından dağıtılmış Ağ Geçidi sözleşmeleri aracılığıyla güvenli ve izinsiz olarak köprülenebilmektedir. Ancak Scroll aynı zamanda topluluk tarafından oluşturulan tüm NFT'lerin kabul edildiği bir ERC1155 Ağ Geçidi sözleşmesini de yönetmektedir. Scroll tarafından yönetilen Ağ Geçidinin bir parçası olmak, Ağ Geçidi sözleşmelerini dağıtmanıza gerek kalmayacağı ve tokenınızın Scroll kullanıcı arayüzünde görüneceği anlamına gelir. Scroll Ağ Geçidi'nin bir parçası olmak için, tokenı hem L1 hem de L2 Ağ Geçidi sözleşmelerine eklemelisiniz ve bunun için Scroll ekibiyle iletişime geçmelisiniz. Tokenınızı Scroll resmi kullanıcı arayüzüne eklemek için [token listeleri](https://github.com/scroll-tech/token-list) deposundaki talimatları izleyin.
 
-## Withdraw ERC1155 tokens from L2
+## ERC1155 tokenlarını L2'den çekin
 
-The `L2ERC1155Gateway` contract is used to send tokens from L2 to L1. Before bridging, the `L2ERC1155Gateway` contract has to be approved by the token contract. Once that is done, `withdrawERC1155` can be called to perform the asset bridge.
+'L2ERC1155Gateway' sözleşmesi L2'den L1'e token göndermek için kullanılır. Köprülemeden önce 'L2ERC1155Gateway' sözleşmesinin token sözleşmesi tarafından onaylanması gerekir. Bu yapıldıktan sonra varlık köprüsünü gerçekleştirmek için "drawERC1155" çağrılabilir.
 
 <Aside type="tip" title="">
-  **`withdrawERC1155`** is a payable function, and the amount of ETH sent to this function will be used to pay for L1
-  fees. If the amount is not enough, the transaction will not be sent. All excess ETH will be sent back to sender. Fees
-  depend on L1 activity but `0.005 ETH` should be enough to process a token withdrawal.
+  **`withdrawERC1155`** ETH cinsinden değer gönderilebilen(payable) bir fonksiyondur ve bu fonksiyona gönderilen ETH miktarı, L1 ücretlerinin ödenmesi için kullanılacaktır. Tutarın yeterli olmaması durumunda işlem gönderilmeyecektir. Fazlalık ETH'in tamamı gönderene iade edilecektir. Ücretler L1 etkinliğine bağlıdır ancak '0.005 ETH', token çekim işlemi için fazlasıyla yeterli olacaktır.
 </Aside>
 
 <Aside type="caution" title="">
-  **Make sure the transaction won't revert on L1** while sending from L2. There is no way to recover tokens bridged if
-  you're transaction reverts on L1. All assets are burnt on L2 when the transaction is sent, and it's impossible to mint
-  them again.
+  **L2'den gönderim yaparken işlemin L1'de geri döndürülmeyeceğinden(revert) emin olun**. İşleminiz L1'de geri dönerse köprülenmiş NFT'yi kurtarmanın bir yolu yoktur. İşlem gönderildiğinde tüm varlıklar L2'de yakılır ve yeniden basılması imkansızdır.
 </Aside>
 
 ## L1ERC1155Gateway API
 
-Please visit the [npm library](https://www.npmjs.com/package/@scroll-tech/contracts?activeTab=code) for the complete Scroll contract API documentation.
+Scroll sözleşmesi API dokümantasyonunun tamamı için lütfen [npm kitaplığını](https://www.npmjs.com/package/@scroll-tech/contracts?activeTab=code) ziyaret edin.
 
 ### depositERC1155
 
@@ -107,15 +101,15 @@ function depositERC1155(
 ) external payable;
 ```
 
-Deposit an ERC1155 token from L1 to a recipient's account on L2.
+L1'den alıcının L2'deki hesabına bir ERC1155 tokenı yatırır.
 
-| Parameter | Description                                       |
+| Parametre | Açıklama                                          |
 | --------- | ------------------------------------------------- |
-| token     | The address of ERC1155 token contract on L1.      |
-| to        | The address of recipient's account on L2.         |
-| tokenId   | The NFT id to deposit.                            |
-| amount    | The amount of tokens to deposit.                  |
-| gasLimit  | Gas limit required to complete the deposit on L2.  Unused portion of fee will be refunded.|
+| token     | ERC721 token sözleşmesinin L1'deki adresi.        |
+| to        | Alıcı hesabının L2'deki adresi.                   |
+| tokenId   | Yatırılacak NFT'nin ID'si.                        |
+| amount    | Yatırılacak tokenların miktarı.                   |
+| gasLimit  | L2'deki yatırma işlemini tamamlamak için gereken gaz limiti. Ücretin kullanılmayan kısmı iade edilecektir. |
 
 ### updateTokenMapping
 
@@ -123,12 +117,12 @@ Deposit an ERC1155 token from L1 to a recipient's account on L2.
 function updateTokenMapping(address _l1Token, address _l2Token) external;
 ```
 
-Update the mapping that connects an ERC1155 token contract from L1 to L2.
+ERC1155 token sözleşmesini L1'den L2'ye bağlayan eşlemeyi günceller.
 
-| Parameter | Description                                       |
+| Parametre | Açıklama                                          |
 | --------- | ------------------------------------------------- |
-| \_l1Token | The address of the ERC1155 token in L1.           |
-| \_l2Token | The address of corresponding ERC1155 token in L2. |
+| \_l1Token | ERC1155 tokenının L1'deki adresi.                 |
+| \_l2Token | ERC1155 tokeninin L2'deki karşılık gelen adresi.  |
 
 ## L2ERC1155Gateway API
 
@@ -138,15 +132,15 @@ Update the mapping that connects an ERC1155 token contract from L1 to L2.
 function withdrawERC1155(address token, address to, uint256 tokenId, uint256 amount, uint256 gasLimit) external payable;
 ```
 
-Send ERC1155 tokens from L2 to a recipient's account on L1.
+L2'den alıcının L1'deki hesabına ERC1155 tokenlarını gönderir.
 
-| Parameter | Description                                                              |
+| Parametre | Açıklama                                                                 |
 | --------- | ------------------------------------------------------------------------ |
-| token     | The address of ERC1155 token contract on L2.                             |
-| to        | The address of recipient's account on L1.                                |
-| tokenId   | The NFT id to withdraw.                                                  |
-| amount    | The amount of tokens to withdraw.                                        |
-| gasLimit  | Unused, but included for potential forward compatibility considerations. |
+| token     | ERC1155 token sözleşmesinin L2'deki adresi.                              |
+| to        | Alıcı hesabının L1'deki adresi.                                          |
+| tokenId   | Gönderilecek NFT ID'si.                                                  |
+| amount    | Çekilecek tokenların miktarı.                                        |
+| gasLimit  | Kullanılmıyor ancak potansiyel ileriye dönük uyumluluk hususları nedeniyle dahil edildi. |
 
 ### updateTokenMapping
 
@@ -154,9 +148,9 @@ Send ERC1155 tokens from L2 to a recipient's account on L1.
 function updateTokenMapping(address _l1Token, address _l2Token) external;
 ```
 
-Update the mapping that connects an ERC1155 token contract from L2 to L1.
+Bir ERC1155 token sözleşmesini L2'den L1'e bağlayan eşlemeyi günceller.
 
-| Parameter | Description                                       |
+| Parametre | Açıklama                                          |
 | --------- | ------------------------------------------------- |
-| \_l1Token | The address of th ERC1155 token in L1.            |
-| \_l2Token | The address of corresponding ERC1155 token in L2. |
+| \_l1Token | ERC1155 tokenının L1'deki adresi                  |
+| \_l2Token | ERC1155 tokenının L2'deki karşılık gelen adresi.  |

@@ -1,49 +1,42 @@
 ---
 section: developers
 date: Last Modified
-title: "The Scroll Messenger"
-lang: "en"
+title: "The Scroll Habercisi"
+lang: "tr"
 permalink: "developers/l1-and-l2-bridging/the-scroll-messenger"
-whatsnext: { "Transaction Fees on Scroll": "/developers/transaction-fees-on-scroll/" }
-excerpt: "The Scroll Messenger documentation for arbitrary message passing between L1 and L2."
+whatsnext: { "Scroll'de İşlem Ücretleri": "/tr/developers/transaction-fees-on-scroll/" }
+excerpt: "L1 ve L2 arasında herhangi bir mesaj geçişi sağlayan Scroll Haberci belgeleri."
 ---
 
 import Aside from "../../../../../components/Aside.astro"
 
-The Scroll Messenger contracts allow for sending arbitrary messages from L1 to L2 or vice versa. This enables executing functions on another chain in a secure and permissionless way. To send a message from L1 to L2, use
-the messenger smart contract deployed on L1, `L1ScrollMessenger`. To send a message from L2 to L1, use the contract deployed on L2, `L2ScrollMessenger`.
+Scroll Haberci sözleşmeleri, L1'den L2'ye veya L1'den L2'ye herhangi bir mesajın gönderilmesine izin verir. Bu, başka bir zincirdeki fonksiyonların güvenli ve izinsiz bir şekilde yürütülmesine olanak tanır. L1'den L2'ye mesaj göndermek için L1'de dağıtılmış olan 'L1ScrollMessenger' mesajlaşma akıllı sözleşmesini kullanın. L2'den L1'e mesaj göndermek için L2'de dağıtılmış olan 'L2ScrollMessenger' sözleşmesini kullanın.
 
 <Aside type="caution" title="">
-  When sending a transaction through the **Scroll Messenger** deployed on L1 and L2, the resulting transaction sender
-  (`CALLER` or `msg.sender`) will be the Messenger Contract address deployed on the receiving chain.
+  L1 ve L2'de dağıtılmış olan **Scroll Habercisi** aracılığıyla bir işlem gönderilirken; sonuçlanan işlemin göndereni ("CALLER" veya "msg.sender"), alıcı zincirde dağıtılmış olan Haberci Sözleşmesi'nin adresi olacaktır.
   <br />
-  In future Scroll versions, enforced transactions from the L1 will allow setting the sender on L2 as the original EOA
-  on L1. It will also allow 3rd parties to relay signed transactions securely.
+  Gelecekteki Scroll sürümlerinde, L1'den zorunlu işlemler, L2'deki gönderenin L1'deki orijinal EOA olarak ayarlanmasına olanak tanıyacaktır. Ayrıca 3. tarafların imzalanan işlemleri güvenli bir şekilde aktarmasına da olanak tanıyacak.
 </Aside>
 
-## Finalizing transactions on L1
+## İşlemlerin L1'de sonuçlandırılması
 
-Any upcoming transactions from L2 need to be finalized using the `relayMessageWithProof` function on the Scroll Messenger
-contract. We call this process "submitting an Execute Withdrawal transaction," and it is required for both sending arbitrary messages and transferring assets through a gateway or the router. When you use `relayMessageWithProof`, you'll have to provide a Merkle inclusion proof showing your transaction is included in the trie of "withdrawal" messages, along with other parameters. Producing this proof and these values can be done locally and permissionlessly, but at the moment, the easiest way to retrieve these parameters is through our backend APIs:
+L2'den gelecek tüm işlemlerin, Scroll Haberci sözleşmesindeki 'relayMessageWithProof' fonksiyonu kullanılarak tamamlanması gerekir. Bu sürece "Para Çekimi Gerçekleştirme İşlemi Gönderme" adını veriyoruz ve hem herhangi bir mesaj gönderilmesi hem de varlıkların bir ağ geçidi veya yönlendirici aracılığıyla aktarılması için gereklidir. 'relayMessageWithProof'u kullandığınızda, işleminizin diğer parametrelerle birlikte "para çekme" mesajlarının grubuna dahil olduğunu gösteren bir Merkle katılım kanıtı sağlamanız gerekir. Bu kanıtı ve bu değerleri üretmek yerel olarak ve izinsiz olarak yapılabilir, ancak şu anda bu parametreleri almanın en kolay yolu backend API'lerimiz aracılığıyladır:
 
 - Scroll Sepolia API: https://sepolia-api-bridge.scroll.io/api/
 - Scroll API: https://mainnet-api-bridge.scroll.io/api/
 
-<Aside type="danger" title="Experimental API">
-  This API was made for our Bridge UI. It is not yet finalized and may change in the future. We will update this guide
-  when the API is finalized. Additionally, all examples below use the Sepolia API service -- the calls should be easily
-  adapted to work on mainnet.
+<Aside type="danger" title="Deneysel API">
+  Bu API Bridge kullanıcı arayüzümüz için yapıldı. Henüz kesinleşmiş değildir ve gelecekte değişebilir. API tamamlandığında bu kılavuzu güncelleyeceğiz. Ek olarak, aşağıdaki örneklerin tümü Sepolia API hizmetini kullanmaktadır; çağrıların ana ağda çalışmasını sağlamak için kolaylıkla değişiklikler yapılabilir.
 </Aside>
 
-Supply the address of the EOA or contract responsible for initiating the original transaction on L2 to the `/claimable`
-endpoint. The API backend will provide you with all the necessary information to successfully conclude the transaction on L1.
-Take a look at the following example:
+L2'de orijinal işlemi başlatmaktan sorumlu olan EOA'nın veya sözleşmenin adresini "/claimable" uç noktasına sağlayın. API arka ucu, L1'deki işlemi başarılı bir şekilde sonuçlandırmak için gerekli tüm bilgileri size sağlayacaktır.
+Aşağıdaki örneğe bir göz atın:
 
 ```bash
 https://sepolia-api-bridge.scroll.io/api/claimable?address=0x031407eaaffFB4f1EC2c999bE4477E52C81de3c5&page_size=10&page=1
 ```
 
-The API should return your transaction data in the following format:
+API, işlem verilerinizi aşağıdaki biçimde döndürmelidir:
 
 ```json
 {
@@ -86,20 +79,15 @@ The API should return your transaction data in the following format:
 }
 ```
 
-The `claimInfo` object under the `result` json returned has all the information needed to execute your transaction on L1. The
-parameters needed by the `relayMessageWithProof` are: `from`, `to`, `value`, `nonce`, `message` and `proof`. Supply these to
-the `relayMessageWithProof` function on L1 to execute and finalize your transaction on L1.
+Döndürülen 'result' json'unun altındaki 'claimInfo' nesnesi, işleminizi L1'de yürütmek için gereken tüm bilgileri içerir. 'relayMessageWithProof'un ihtiyaç duyduğu parametreler şunlardır: 'from', 'to', 'value', 'nonce', 'message' ve 'proof'. İşleminizi L1'de yürütmek ve sonlandırmak için bunları L1'deki 'relayMessageWithProof' işlevine sağlayın.
 
 <Aside type="tip" title="">
-  All L2 transactions are bundled into batches – you have to wait for the batch that includes your transaction to
-  finalize before calling `relayMessageWithProof`. Your transaction batch index is returned in the `batch_index` value
-  on the `/claimable` endpoint, and you can follow the progress on the [Scroll Rollup
-  Explorer](https://scroll.io/rollupscan?page=1&per_page=10).
+  Tüm L2 işlemleri yığınlar halinde paketlenir; 'relayMessageWithProof'u çağırmadan önce işleminizi içeren yığının sonuçlanmasını beklemeniz gerekir. İşlem yığını index'iniz, "/claimable" uç noktasındaki "batch_index" değerinde döndürülür ve ilerlemeyi [Scroll Rollup Gezgini'nden](https://scroll.io/rollupscan?page=1&per_page=10) takip edebilirsiniz.
 </Aside>
 
-## Messenger API
+## Haberci API
 
-Please visit the [npm library](https://www.npmjs.com/package/@scroll-tech/contracts?activeTab=code) for the complete Scroll contract API documentation.
+Scroll sözleşmesi API dokümanlarının tamamı için lütfen [npm kitaplığını](https://www.npmjs.com/package/@scroll-tech/contracts?activeTab=code) ziyaret edin.
 
 ### sendMessage
 
@@ -113,15 +101,15 @@ function sendMessage(
 ) external payable;
 ```
 
-Sends arbitrary data from one chain to another. It allows us to execute functions cross-chain.
+Bir zincirden diğerine herhangi bir veri gönderir. Zincirler arası fonksiyonları yürütmemize olanak tanır.
 
-| Parameter     | Description                                                                                                         |
+| Parametre     | Açıklama                                                                                                            |
 | ------------- | ------------------------------------------------------------------------------------------------------------------- |
-| target        | The address of the account that receives the message. The receiver can be either a smart contract or an EOA wallet. |
-| value         | The amount of ether passed when calling the target contract.                                                        |
-| message       | The content of the message. This is the arbitrary calldata to be executed.                                          |
-| gasLimit      | Gas limit required to complete the message relay on the corresponding chain.                                        |
-| refundAddress | The address of the account that will receive the refunded fee.                                                      |
+| target        | Mesajı alan hesabın adresi. Alıcı bir akıllı sözleşme veya bir EOA cüzdanı olabilir.                                |
+| value         | Hedef sözleşme çağrılırken aktarılan Ether miktarı.                                                                 |
+| message       | Mesajın içeriği. Bu yürütülecek herhangi bir çağrının verileridir.                                                  |
+| gasLimit      | İlgili zincirdeki mesaj aktarımını tamamlamak için gereken gaz limiti.                                              |
+| refundAddress | İade ücretinin alınacağı hesabın adresi.                                                                            |
 
 ### relayMessageWithProof
 
@@ -136,13 +124,13 @@ function relayMessageWithProof(
 ) external;
 ```
 
-Relay a L2 => L1 message with message proof.
+Mesaj kanıtı ile birlikte L2'den L1'e mesaj aktarın.
 
-| Parameter | Description                                                  |
+| Parametre | Açıklama                                                     |
 | --------- | ------------------------------------------------------------ |
-| from      | The address of the sender of the message.                    |
-| to        | The address of the recipient of the message.                 |
-| value     | The msg.value passed to the message call.                    |
-| nonce     | The nonce of the message to avoid replay attack.             |
-| message   | The content of the message.                                  |
-| proof     | The proof used to verify the correctness of the transaction. |
+| from      | Mesajı gönderenin adresi.                                    |
+| to        | Mesajın alıcısının adresi.                                   |
+| value     | Mesaj çağrısına iletilen msg.value.                          |
+| nonce     | Tekrar saldırısını önlemek için mesajın nonce'ı.             |
+| message   | Mesajın içeriği.                                             |
+| proof     | İşlemin doğruluğunu doğrulamak için kullanılan kanıt.        |

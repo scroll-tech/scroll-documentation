@@ -60,7 +60,7 @@ Her işlemin çağrı verileri Ethereum'a taahhüt edilmelidir, bu da "L1 Ücret
 
 ### L1 Veri Ücretinin Tahmin Edilmesi
 
-Scroll, önceden konuşlandırılmış bir "L1GasPriceOracle"a sahiptir ve hem Scroll hem de Scroll Sepolia'da ([`0x5300000000000000000000000000000000000000002`](https://sepolia-blockscout.scroll.io/address/0x53000000000000000000000) adresinden erişilebilir 0000000000000000002). Belirli bir işlemin ham verileri için L1 veri ücretini tahmin etmek için bir "getL1Fee" yöntemi sağlar.
+Scroll, önceden konuşlandırılmış bir "L1GasPriceOracle"a sahiptir ve hem Scroll hem de Scroll Sepolia'da ([`0x5300000000000000000000000000000000000000002`](https://sepolia-blockscout.scroll.io/address/0x530000000000000000000000000000000000000002) adresinden erişilebilir durumdadır). Belirli bir işlemin ham verileri için L1 veri ücretini tahmin etmek için bir "getL1Fee" yöntemi sağlar.
 
 ```solidity
 function getL1Fee(bytes memory _data) external view override returns (uint256);
