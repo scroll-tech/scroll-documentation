@@ -1,0 +1,8 @@
+---
+import { IntegrationItem } from "./IntegrationItem"
+const { data } = Astro.props
+---
+
+<div style="flex-wrap: wrap; display: flex;">
+  {data.map((item) => <IntegrationItem data={item} />)}
+</div>

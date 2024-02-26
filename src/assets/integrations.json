@@ -1,0 +1,85 @@
+{
+  "integrations": [
+    {
+      "name": "The Graph",
+      "url": "https://thegraph.com/studio/",
+      "guide": "https://edgeandnode.notion.site/The-Graph-Subgraph-Studio-Non-Rate-Limited-Chain-Integration-889fe061ee6b4423a7f8e2c8070b9294?pvs=4",
+      "network": ["mainnet", "sepolia"],
+      "tags": ["indexer"],
+      "comment": "Use the latest version of The Graph's cli."
+    },
+    {
+      "name": "Wagmi",
+      "network": ["mainnet", "sepolia"],
+      "comment": "Upgrade your version of viem to 1.16.4 or later.",
+      "tags": ["frontend"]
+    },
+    {
+      "name": "DropX",
+      "logo": "https://app.stationx.network/_next/image?url=%2Fassets%2Fimages%2Fmonogram.png&w=48&q=75",
+      "url": "https://app.stationx.network/",
+      "comment": "A tool enabling anyone to create ERC20 drops/bulk distributions in less than 60 secs & share a unique claim link.",
+      "network": ["sepolia", "mainnet"]
+    },
+    {
+      "name": "OpenZeppelin Defender",
+      "url": "https://www.openzeppelin.com/defender",
+      "network": ["mainnet", "sepolia"],
+      "tags": ["security"]
+    },
+    {
+      "name": "Multicall3",
+      "url": "https://www.multicall3.com/",
+      "comment": "Batch contract calls on any chain.",
+      "network": ["mainnet", "sepolia"]
+    },
+    {
+      "name": "ethereum-multicall",
+      "url": "https://github.com/joshstevens19/ethereum-multicall",
+      "comment": "A lightweight library for interacting with the Multicall3 smart contract.",
+      "network": ["sepolia", "mainnet"]
+    },
+    {
+      "name": "EAS",
+      "url": "https://attest.sh/",
+      "logo": "https://attest.sh/logo2.png?v=3",
+      "network": ["mainnet", "sepolia"],
+      "tags": ["identity"]
+    },
+    {
+      "name": "Chainlink",
+      "logo": "https://crypto.marketswiki.com/images/e/e6/Chainlink_logo.png",
+      "network": ["mainnet", "sepolia"],
+      "url": "https://docs.chain.link/data-feeds/price-feeds/addresses?network=scroll&page=1",
+      "tags": ["oracle"]
+    },
+    {
+      "name": "Uniswap",
+      "url": "https://uniswap-showcase.sepolia.scroll.xyz/#/swap",
+      "network": ["sepolia"],
+      "logo": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Uniswap_Logo.svg",
+      "tags": ["dex"]
+    },
+    {
+      "name": "Safe",
+      "url": "https://safe.scroll.xyz/",
+      "network": ["sepolia", "mainnet"],
+      "logo": "https://user-images.githubusercontent.com/3975770/212338977-5968eae5-bb1b-4e71-8f82-af5282564c66.png",
+      "tags": ["multisig"]
+    },
+    {
+      "name": "Scroll library",
+      "url": "https://www.npmjs.com/package/@scroll-tech/contracts",
+      "comment": "A library for interacting with Scroll contracts.",
+      "network": ["mainnet", "sepolia"]
+    },
+    {
+      "name": "Aztec (Noir)",
+      "url": "https://noir-lang.org/",
+      "comment": "Noir supports generating EVM smart contract code for verifying zk proofs. These verifiers can be deployed on Scroll without modification.",
+      "network": ["sepolia", "mainnet"],
+      "guide": "https://dev.to/turupawn/votos-anonimos-usando-zk-39j",
+      "tags": ["privacy"]
+    }
+  ]
+}
