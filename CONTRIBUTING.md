@@ -1,88 +1,63 @@
 # Contributing to the Scroll Documentation
 
-As we build out the initial scope of the documentation, we intend to be selective about PRs, especially in our English language documentation. If you're interested in making a code or content contribution, please start by creating an issue and discussing the idea with a member of our team.
+Welcome to the Scroll Documentation project! As we develop the initial scope of our documentation, we're focused on ensuring high quality and relevance. We welcome code and content contributions but encourage a discussion-first approach to align on expectations and scope. Here's how you can contribute:
 
-If you want information about contributing a translation, please see [TRANSLATION.md](./TRANSLATION.md).
+### Starting Your Contribution
 
-We try to keep a clean commit history, so we'll follow a standard process initially created by the Chainlink team whose documentation we forked:
+1. **Discuss Your Idea First:**
+   - Before making any changes, please open an issue to discuss your proposed contribution. This helps us align on the necessity and implementation of your idea.
+   - If interested, comment on the issue to be assigned.
 
-- Create a new issue
-  - Comment on the issue if you'd like to be assigned to it
-- Fork the Repo & Create a PR
-  - If your PR contains multiple commits, we'll ask you to squash them
-  - If your PR has conflicts with `develop`, we'll ask you to rebase it
-- Someone will review your PR
-- Your PR will be merged, amended, closed, or you'll be asked for changes
+2. **Making Your Contribution:**
+   - **Fork the Repository:** Start by forking the repository to your own GitHub account.
+   - **Create a Pull Request (PR):** Make your changes in your fork and submit a PR to our repository.
+     - **Squash Your Commits:** If your PR includes multiple commits, please squash them into a single commit for a cleaner history.
+     - **Resolve Conflicts:** If your PR has conflicts with the `develop` branch, you may need to rebase it.
 
-## Standards
+3. **PR Review Process:**
+   - Once submitted, your PR will be reviewed by the team. We may merge it, request amendments, or close it based on our review.
 
-- Commit messages
-  - Start with a present-tense verb
-  - Keep your commit headline short but sufficient to understand the scope and focus of the change.
-  - Changes are often formatted like `add doc X`, `fix page Y`, `improve docs for Z`.
+### Contribution Standards
+
+- **Commit Messages:**
+  - Start with a present-tense verb.
+  - Keep the headline concise but descriptive.
+  - Use a format like `add X`, `fix Y`, `improve Z`.
   - Example: "`update contract addresses for USDC on Scroll Sepolia`".
-- If you touch any infrastructure, make sure it builds with `yarn build`
-- Trust the autoformatter (prettier)
-- Make sure images are optimized and compressed
-- Keep images < 20kb whenever possible to keep the site fast and the repo small (try [trimage](https://trimage.org/))
+  
+- **Code and Documentation Quality:**
+  - Ensure your changes build successfully with `yarn build`.
+  - Adhere to code formatting standards (e.g., Prettier).
+  - Optimize and compress images to maintain site performance. Keep images under 20kb.
 
-## How to rebase a PR
+### Advanced Git Techniques
 
-```shell
-git fetch
-git rebase origin/main
-# resolve conflicts
-git push -f
-```
+- **Rebasing a PR:**
+  ```shell
+  git fetch
+  git rebase origin/main
+  # Resolve any conflicts
+  git push --force-with-lease
+  ```
+  Rebasing helps keep your branch up to date with the main branch.
 
-It's okay to force push over your own PR branch. That's what we want so that the commits are clean.
+- **Squashing Commits:**
+  When squashing commits, edit the commit messages to reflect the singular change your PR introduces. This makes the project history more readable.
 
-## How to squash a PR
+### Quality Assurance
 
-To squash multiple commits, use the following steps:
+- **Link Checks:**
+  Run `npm run linkcheck` to verify that all links in your changes are valid.
 
-### 1. Rebase multiple commits into one
+- **Code Samples:**
+  Add or update code samples in `/public/samples/` to reflect your changes or new features.
 
-When squashing commits, you should always rebase from the main branch of the repo: `git rebase -i origin/main`.
+### Writing Style Guide
 
-After rebasing, you can squash the commits by changing `pick` into `squash` for all of your commits except the recent one:
+- Use **bold** for key terms and important concepts.
+- Use _italics_ for emphasis sparingly.
+- For menu navigation instructions, use bold: **File** > **New**.
+- Favor markdown syntax over HTML for simplicity.
+- Begin additional notes with **Note:** for clarity.
+- Maintain a second-person perspective ("you") throughout the documentation.
 
-```shell
-pick 686e386 add doc structure
-squash ee2eed7 add main content
-squash 3eccd39 fix typos
-
-# Rebase 287bc79..3eccd39 onto 287bc79 (3 commands)
-# …
-```
-
-### 2. Fix your commit message
-
-Next, comment or remove all of your commit messages and leave the one that describes your PR.
-
-### 3. Force push to your branch
-
-Lastly, force push the changes to your branch to have a clean history:
-
-```shell
-git push -f
-```
-
-It's easier to use `git --amend` while working on your PR first. Avoiding multiple commits is much cleaner and easier than fixing them.
-
-## Checking Links
-
-To check the site for broken links, run `npm run linkcheck`.
-
-## Adding or updating code samples
-
-The main code samples are stored in the `/public/samples/` directory.
-
-## Style Guide
-
-- **Bold** key terms or any terms the user must absolutely know when reading a doc.
-- _Italicize_ terms for emphasis but only when necessary.
-- When referring to dropdown menus or a sequence of dropdown events, bold the relevant entities. Example: Go to **Menu Name** > **Option**. Do not use quotes.
-- Use markdown over HTML wherever possible.
-- When writing an additional note, start it with **Note:**.
-- Use a consistent voice. When writing documentation, avoid first person plural "we" and opt for second person singular "you". Avoid passive voice.
