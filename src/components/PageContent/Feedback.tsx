@@ -1,3 +1,4 @@
+import { t } from "i18next"
 import { useState } from "preact/hooks"
 import button from "../../styles/design-system/button.module.css"
 
@@ -113,7 +114,7 @@ export const Feedback = () => {
         >
           {isSent ? (
             <div className="text-dark dark:text-white" style={{ fontSize: "1rem", lineHeight: "normal" }}>
-              We appreciate your feedback! 🤎
+              {t("rightSidebar.feedbackForm.thankYouMessage")}
             </div>
           ) : (
             <form
@@ -126,7 +127,7 @@ export const Feedback = () => {
                 className="text-dark dark:text-white"
                 style={{ fontSize: "1rem", lineHeight: "normal", marginBottom: "16px" }}
               >
-                Tell us more about your experience.
+                {t("rightSidebar.feedbackForm.instructions")}
               </label>
               <div style={{ display: "flex", flexDirection: "column" }}>
                 <textarea
@@ -147,7 +148,7 @@ export const Feedback = () => {
                   style={{ borderRadius: "5px", borderWidth: " 0", background: "var(--orange-400)" }}
                   disabled={isSubmitting}
                 >
-                  submit
+                  {t("rightSidebar.feedbackForm.submit")}
                 </button>
               </div>
             </form>

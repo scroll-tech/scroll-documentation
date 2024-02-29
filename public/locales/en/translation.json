@@ -4,7 +4,12 @@
     "more": "More",
     "editThisPage": "Edit this page",
     "joinOurCommunity": "Join our community",
-    "feedback": "Feedback"
+    "feedback": "Feedback",
+    "feedbackForm": {
+      "thankYouMessage": "We appreciate your feedback! 🤎",
+      "instructions": "Tell us more about your experience.",
+      "submit": "submit"
+    }
   },
   "ui": {
     "whatsNext": "What's Next",
