@@ -18,13 +18,13 @@ Bu makale KZG taahhüt planına genel bir bakış sunacaktır.
 
 Polinom taahhüt şemalarının önermesini hatırlayın. Taahhüt etmek istediğimiz bazı $P(x)$ polinomumuz var. Polinomun derecesinin $l$'dan küçük olduğunu varsayacağız.
 
-KZG taahhütleri [eliptik eğri eşleştirmelerine](https://vitalik.ca/general/2017/01/14/exploring_ecp.html) dayanmaktadır. $\mathbb{G}$ ve $\mathbb{G}$ $p$ düzeyinde iki eliptik eğri grubu olsun ve önemsiz olmayan bir [çift doğrusal eşleme](https://en.wikipedia.org/wiki) olsun /Bilinear_map) $e: \mathbb{G}1 \times \mathbb{G}2 \rightarrow \mathbb{G}T$. $g$, $\mathbb{G__1$ oluşturucusu olsun ve $h$, $\mathbb{G__2$ oluşturucusu olsun. $[x]_1 := x \cdot g$ ve $[x]_2 := x \cdot h$ gösterimini kullanacağız, burada $x \in \mathbb{F__p$.
+KZG taahhütleri [eliptik eğri eşleştirmelerine](https://vitalik.ca/general/2017/01/14/exploring_ecp.html) dayanmaktadır. $\mathbb{G}$ ve $\mathbb{G}$ $p$ düzeyinde iki eliptik eğri grubu olsun ve önemsiz olmayan bir [çift doğrusal eşleme](https://en.wikipedia.org/wiki/Bilinear_map) olsun. $e: \mathbb{G}_1 \times \mathbb{G}_2 \rightarrow \mathbb{G}_T$. $g$, $\mathbb{G}_1$ oluşturucusu olsun ve $h$, $\mathbb{G}_2$ oluşturucusu olsun. $[x]_1 := x \cdot g$ ve $[x]_2 := x \cdot h$ gösterimini kullanacağız, burada $x \in \mathbb{F}_p$.
 
 ## 1. Güvenilir kurulum
 
 Herhangi bir KZG taahhüdünü hesaplamadan önce tek seferlik güvenilir kurulum gerçekleştirilmelidir. Güvenilir kurulum tamamlandıktan sonra, istenildiği kadar farklı polinomun kaydedilmesi ve ortaya çıkarılması için yeniden kullanılabilir. Güvenilir kurulum şu şekilde çalışır:
 
-- Rastgele bir alan öğesi seçin $\tau \in \mathbb{F__p$
+- Rastgele bir alan öğesi seçin $\tau \in \mathbb{F}_p$
 - $l \in \mathbb{Z}$ taahhüt etmek istediğimiz polinomların maksimum derecesi olsun
   - Güvenilir kurulum yalnızca $\leq l$ derecesindeki polinomlara yönelik taahhütleri etkinleştirir
 - $([\tau^0]_1,[\tau^1]_1,[\tau^{2}]_1\ldots,[\tau^{l}]_1)$ ve $([\tau] hesaplayın _2)$ ve bu değerleri herkese açık olarak yayınlayın.
