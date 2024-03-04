@@ -1,127 +1,114 @@
----
 section: gettingStarted
 date: Last Modified
-title: "Bridge"
-lang: "en"
+title: "Cầu"
+lang: "vi"
 permalink: "user-guide/bridge/"
-excerpt: "To start bridging assets from Sepolia, navigate to the portal bridge app."
----
+excerpt: "Để bắt đầu cầu các tài sản từ Sepolia, hãy điều hướng đến ứng dụng cầu cổng thông tin."
+{/* // import ClickToZoom from "../../../../components/ClickToZoom.astro" /}
+{/ // import bridge1 from "./_images/bridge1.png" /}
+{/ // import bridge2 from "./_images/bridge2.png" /}
+{/ // import bridge3 from "./_images/bridge3.png" /}
+{/ // import bridge4 from "./_images/bridge4.png" /}
+{/ // import bridge5 from "./_images/bridge5.png" /}
+{/ // import bridge6 from "./_images/bridge6.png" /}
+{/ // import bridge7 from "./_images/bridge7.png" /}
+{/ // import bridge8 from "./_images/bridge8.png" */}
 
-{/* // import ClickToZoom from "../../../../components/ClickToZoom.astro" */}
-{/* // import bridge1 from "./\_images/bridge1.png" */}
-{/* // import bridge2 from "./\_images/bridge2.png" */}
-{/* // import bridge3 from "./\_images/bridge3.png" */}
-{/* // import bridge4 from "./\_images/bridge4.png" */}
-{/* // import bridge5 from "./\_images/bridge5.png" */}
-{/* // import bridge6 from "./\_images/bridge6.png" */}
-{/* // import bridge7 from "./\_images/bridge7.png" */}
-{/* // import bridge8 from "./\_images/bridge8.png" */}
+{/* TODO: Cập nhật tất cả hướng dẫn sau khi có thể thực hiện toàn bộ quy trình. */}
 
-{/* TODO: Update all instructions after being able to walk through the whole flow. */}
+Truy cập ứng dụng Cầu của chúng tôi để bắt đầu!1 Cầu hỗ trợ cả hoạt động Gửi và Rút, cho phép người dùng chuyển tài sản từ Mạng thử nghiệm Sepolia đến Mạng thử nghiệm Scroll Sepolia một cách đáng tin cậy.
 
+Việc gửi có thể mất đến 15 phút để có sẵn trên Scroll.
 
-Visit our [Bridge](https://sepolia.scroll.io/bridge) app to get started![^thanks-hop] The Bridge supports both **Deposit** and **Withdraw** operations, allowing users to trustlessly move assets from Sepolia Testnet to Scroll Sepolia Testnet.
-[^thanks-hop]: Forked from [Hop Exchange](https://hop.exchange/)'s UI 🙌
+Rút, cần một tương tác thứ hai trên Sepolia sau khi rút được hoàn tất, có thể mất nhiều thời gian hơn.
 
-Deposits can take up to 15 minutes to be available on Scroll.
-
-Withdrawals, which require a second interaction on Sepolia after the withdrawal is finalized, can take much longer.
-
-:::caution[Waiting a long time for a bridge transaction?]
-The time estimates above are typical for normal network behavior and activity levels. Because we only process so many queued L1 transactions per an L2 block, bridged messages may take longer to be included on Scroll in times of exceptional network usage.
+:::cảnhbáo[Chờ lâu cho giao dịch cầu?]
+Các ước tính thời gian ở trên là điển hình cho hành vi mạng bình thường và mức độ hoạt động. Vì chúng tôi chỉ xử lý một số lượng giới hạn các giao dịch L1 được xếp hàng mỗi khối L2, các tin nhắn cầu có thể mất thời gian hơn để được bao gồm trên Scroll trong những thời điểm sử dụng mạng ngoại lệ.
 :::
 
-## Deposit from Sepolia to Scroll Sepolia
+Gửi từ Sepolia đến Scroll Sepolia
+Hướng dẫn
+Đầu tiên, điều hướng đến Cầu Scroll và nhấn nút "Kết nối Ví".
+Trong ứng dụng, đảm bảo rằng Ethereum Sepolia nằm trên đầu và Scroll Sepolia nằm ở dưới. Bạn có thể nhấp vào nút "↓" để đổi chỗ của chúng.
+Chọn token mà bạn muốn chuyển từ Sepolia đến Scroll Sepolia. Nếu đây là lần đầu tiên bạn cầu, hãy thử "ETH".
+Nếu đây là lần đầu tiên bạn chuyển một token ERC20 cụ thể, bạn phải Phê duyệt hợp đồng Cầu Sepolia để truy cập vào token ERC20 của bạn.
+Tiếp theo, nhấp vào nút Gửi đến Scroll Sepolia để thực hiện gửi. Ví của bạn sẽ yêu cầu xác nhận giao dịch chuyển khoản.
+Khi giao dịch chuyển khoản được gửi và xác nhận, token sẽ bị trừ từ ví Sepolia của bạn.
+Bạn luôn có thể kiểm tra trạng thái của một giao dịch bằng cách nhấn biểu tượng "Lịch sử" kế bên địa chỉ ví của bạn ở góc trên bên phải.
+Khi nào token sẽ đến ví Scroll Sepolia của bạn?
+Nó có thể mất từ 8 đến 14 phút (chờ khối trở thành An toàn trên Sepolia) trước khi token xuất hiện trong ví Scroll Sepolia của bạn.
 
-### Instructions
+{/* Bạn có thể kiểm tra tiến độ của các giao dịch gửi như sau: */}
 
-1. First, navigate to the [Scroll Bridge](https://sepolia.scroll.io/bridge) and press the "Connect Wallet" button.
-1. In the app, ensure that **Ethereum Sepolia** is on top and **Scroll Sepolia** is on the bottom. You can click the "**↓**" button to switch their positions.
-1. Select the token you want to transfer from Sepolia to Scroll Sepolia. If it's you're first time bridging, try "ETH."
-1. If this is your first time transferring a specific ERC20 token, you must **Approve** the Sepolia Bridge contract to access your ERC20 token.
-1. Next, click the **Send to Scroll Sepolia** button to make the deposit. Your wallet will ask to confirm the transfer transaction.
-1. Once the transfer transaction is sent and confirmed, the token will be deducted from your Sepolia wallet.
-1. You can always check the status of a transaction by pressing the "History" icon next to your wallet address in the top-right corner.
-
-### When will the token arrive in your Scroll Sepolia wallet?
-
-It could take between **8 to 14 minutes** (awaiting block to become [_Safe_](https://www.alchemy.com/overviews/ethereum-commitment-levels#what-are-ethereum-commitment-levels) on Sepolia) before the token shows up in your Scroll Sepolia wallet.
-
-{/* You can check the progress of deposit transactions as follows: */}
-
-{/* ##### 1. Click the "History" icon next to your wallet address in the top-right corner. */}
+{/* ##### 1. Nhấp vào biểu tượng "Lịch sử" kế bên địa chỉ ví của bạn ở góc trên bên phải. */}
 
 {/* <ClickToZoom src={bridge1} /> */}
 
-{/* The pop-up panel lists the most recent transactions made in the Bridge app. There are two statuses: Sepolia status and Scroll Sepolia status. For deposit transactions (L1 -> L2), once your transaction becomes _Safe_ on Sepolia (**8 to 14 minutes**), you will see the **`success`** status shown. Your funds will be relayed to Scoll Sepolia after this. */}
+{/* Cửa sổ bật lên liệt kê các giao dịch gần đây nhất được thực hiện trong ứng dụng Cầu. Có hai trạng thái: trạng thái của Sepolia và trạng thái của Scroll Sepolia. Đối với các giao dịch gửi (L1 -> L2), sau khi giao dịch của bạn trở thành An toàn trên Sepolia (8 đến 14 phút), bạn sẽ thấy trạng thái thành công được hiển thị. Sau đó, tiền của bạn sẽ được chuyển tiếp đến Scroll Sepolia. */}
 
-{/* The Recent Bridge Transactions window should give you an estimate of the time expected before your transaction is _Safe_ on Sepolia. */}
+{/* Cửa sổ Giao dịch Cầu Gần đây sẽ cung cấp cho bạn một ước tính về thời gian cần thiết trước khi giao dịch của bạn trở thành An toàn trên Sepolia. */}
 
-{/* ##### 2. Click on the most recent transaction’s Sepolia transaction hash. */}
+{/* ##### 2. Nhấp vào băm giao dịch Sepolia của giao dịch gần đây nhất. */}
 
 {/* <ClickToZoom src={bridge2} /> */}
 
-{/* It will open the Transaction Details page in a new tab. You can see this transaction is confirmed on Sepolia. To check the Block's confirmation status, click the Block number and read the "Status" field. */}
+{/* Nó sẽ mở trang Chi tiết Giao dịch trong một tab mới. Bạn có thể thấy giao dịch này được xác nhận trên Sepolia. Để kiểm tra trạng thái xác nhận của Khối, nhấp vào số Khối và đọc trường "Trạng thái". */}
 
 {/* <ClickToZoom src={bridge3} /> */}
 
-{/* ##### 3. Return to the Bridge app and wait! */}
+{/* ##### 3. Quay lại ứng dụng Cầu và chờ đợi! */}
 
-{/* Once your transaction status shows **`success`** on Scroll Sepolia, you should see the funds in your Scroll L2 wallet and a transaction hash: */}
+{/* Khi trạng thái giao dịch của bạn hiển thị thành công trên Scroll Sepolia, bạn sẽ thấy tiền trong ví Scroll L2 của mình và một băm giao dịch: */}
 
 {/* <ClickToZoom src={bridge4} /> */}
 
-## Withdraw from Scroll Sepolia to Sepolia
+Rút từ Scroll Sepolia đến Sepolia
+Hướng dẫn
+Gửi Giao dịch Rút Ban đầu của bạn
+Đầu tiên, chuyển sang mạng Scroll Sepolia trong ví của bạn.
+Trong ứng dụng, đảm bảo rằng Scroll Sepolia đứng trên và Ethereum Sepolia đứng dưới. Bạn có thể nhấp vào nút "↓" để đổi vị trí của chúng.
+Chọn token mà bạn muốn chuyển từ Scroll Sepolia đến Sepolia. Nếu đây là lần đầu tiên bạn cầu, hãy thử "ETH."
+Nếu đây là lần đầu tiên bạn chuyển một token ERC20 cụ thể, bạn phải Phê duyệt hợp đồng Cầu Scroll Sepolia để truy cập vào token ERC20 của bạn.
+Tiếp theo, nhấp vào nút Gửi đến Ethereum Sepolia để thực hiện gửi. Ví của bạn sẽ yêu cầu xác nhận giao dịch chuyển khoản.
+Khi giao dịch chuyển khoản được gửi và xác nhận, token sẽ bị trừ từ ví Scroll Sepolia của bạn.
+Gửi Giao dịch Rút Thực thi
+{/* TODO: hoàn thành các hướng dẫn bổ sung, ước tính "thời gian chờ" tốt hơn */}
 
-### Instructions
+Các bước còn lại diễn ra trên Scroll Sepolia, nhưng bạn phải đợi giao dịch của mình được chứng minh hoàn toàn ("đã hoàn tất") trên Ethereum Sepolia trước tiên. Quá trình này có thể mất đến bốn giờ.
 
-#### Submitting your Initial Withdrawal Transaction
+Khi giao dịch rút của bạn đã hoàn tất trên Ethereum Sepolia, bạn sẽ thấy nút "Nhận" trong khu vực Giao dịch Gần đây trở nên chắc chắn.
+Nhấp vào nút "Nhận" để gửi giao dịch Thực thi Rút.
+Khi được gửi, số tiền đã rút của bạn nên xuất hiện ngay lập tức trong ví Sepolia của bạn.
+Khi nào token sẽ đến ví Sepolia của bạn?
+Token chuyển đến ví của bạn Sepolia ngay sau khi khối chứa giao dịch Thực thi Rút của bạn được xác nhận trên Sepolia.
 
-1. First, switch to the **Scroll Sepolia** network in your wallet.
-1. In the app, ensure that **Scroll Sepolia** is on top and **Ethereum Sepolia** is on the bottom. You can click the "**↓**" button to switch the positions.
-1. Select the token you want to transfer from **Scroll Sepolia** to **Sepolia**. If it's you're first time bridging, try "ETH."
-1. If this is your first time transferring a specific ERC20 token, you must **Approve** the Scroll Sepolia Bridge contract to access your ERC20 token.
-1. Next, click the **Send to Ethereum Sepolia** button to make the withdrawal. Your wallet will ask to confirm the transfer transaction.
-1. Once the transfer transaction is sent and confirmed, the token will be deducted from your Scroll Sepolia wallet.
+{/* TODO: kiểm tra liên kết kiến trúc có hoạt động không */}
 
-#### Submitting an Execute Withdrawal Transaction
-
-{/* TODO: finish the additional instructions, better estimate "wait time" */}
-
-_The remaining steps happen on Scroll Sepolia, but you first must wait for your transaction to be fully proven ("finalized") on Ethereum Sepolia. This process can take up to four hours._
-
-1. When your withdrawal transaction is completed finalizing on Ethereum Sepolia, you will see the "Claim" button in the Recent Transactions area become solid.
-1. Click the "Claim" button to submit the Execute Withdrawal transaction.
-1. Once submitted, your withdrawn funds should appear immediately in your Sepolia wallet.
-
-### When will the token arrive in your Sepolia wallet?
-
-The transferred token will arrive in your Sepolia wallet immediately after the block containing your Execute Withdrawal transaction is confirmed on Sepolia.
-
-{/* TODO: check architecture link is live */}
-
-:::tip[Rollup Status]
-The rollup status `Finalized` indicates that the correct execution of transactions in this block has been proven by verifying a validity proof on-chain on Sepolia. For more information about rollup status, see [Scroll's Architecture Overview](/technology).
+:::mẹo[Tình trạng Rollup]
+Tình trạng rollup Đã hoàn tất chỉ ra rằng việc thực hiện chính xác các giao dịch trong khối này đã được chứng minh bằng cách xác minh một bằng chứng tính hợp lệ trên chuỗi trên Sepolia. Để biết thêm thông tin về tình trạng rollup, xem Tổng quan Kiến trúc của Scroll.
 :::
 
-{/* You can check the progress of withdrawal transactions as follows: */}
+{/* Bạn có thể kiểm tra tiến độ của các giao dịch rút như sau: */}
 
-{/* 1. Click your wallet address at the top-right corner of the Bridge web app. */}
+{/* 1. Nhấp vào địa chỉ ví của bạn ở góc trên bên phải của ứng dụng web Cầu. */}
 
 {/* <ClickToZoom src={bridge5} /> */}
 
-{/* The pop-up panel lists the most recent transactions you made in the Bridge app (see the image below). There are two statuses: L1 status and L2 status. In this case, because we are bridging from L2 -> L1, we will quickly get a **`success`** status after submitting the transaction to the L2 Bridge. L1, on the other hand, takes **10 minutes to a few hours** to reach **`success`**. */}
+{/* Cửa sổ bật lên liệt kê các giao dịch gần đây nhất bạn đã thực hiện trong ứng dụng Cầu (xem hình ảnh dưới đây). Có hai trạng thái: trạng thái L1 và trạng thái L2. Trong trường hợp này, vì chúng ta đang cầu từ L2 -> L1, chúng ta sẽ nhanh chóng nhận được trạng thái thành công sau khi gửi giao dịch đến Cầu L2. L1, ngược lại, mất từ 10 phút đến vài giờ để đạt đến thành công. */}
 
-{/* 1. Click on the most recent transaction’s L2 transaction hash: */}
+{/* 1. Nhấp vào băm giao dịch L2 của giao dịch gần đây nhất: */}
 
 {/* <ClickToZoom src={bridge6} /> */}
 
-{/* It will open the _Transaction Details_ page in a new tab. You can see this transaction is confirmed on L2. */}
+{/* Nó sẽ mở trang Chi tiết Giao dịch trong một tab mới. Bạn có thể thấy giao dịch này đã được xác nhận trên L2. */}
 
 {/* <ClickToZoom src={bridge7} /> */}
 
-{/* The transaction is confirmed on L2, but still needs to be finalized on Goerli. */}
+{/* Giao dịch đã được xác nhận trên L2, nhưng vẫn cần được hoàn tất trên Goerli. */}
 
-{/* 1. Go back to the [Bridge](https://scroll.io/bridge) app. It takes about 10 minutes before the token shows up in your Goerli wallet. Once your transaction status shows success on L2, you should see the funds in your Goerli wallet and a transaction hash: */}
+{/* 1. Quay lại Cầu ứng dụng. Mất khoảng 10 phút trước khi token xuất hiện trong ví Goerli của bạn. Khi trạng thái giao dịch của bạn hiển thị thành công trên L2, bạn sẽ thấy số tiền trong ví Goerli của bạn và một băm giao dịch: */}
 
 {/* <ClickToZoom src={bridge8} /> */}
+
+Footnotes
+Được fork từ giao diện người dùng của Hop Exchange 🙌 ↩
