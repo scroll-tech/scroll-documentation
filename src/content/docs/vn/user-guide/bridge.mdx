@@ -1,0 +1,129 @@
+---
+section: gettingStarted
+date: Last Modified
+title: "Cầu"
+lang: "vi"
+permalink: "user-guide/bridge/"
+excerpt: "Để bắt đầu cầu các tài sản từ Sepolia, hãy điều hướng đến ứng dụng cầu cổng thông tin."
+---
+
+{/* // import ClickToZoom from "../../../../components/ClickToZoom.astro" /}
+{/ // import bridge1 from "./_images/bridge1.png" /}
+{/ // import bridge2 from "./_images/bridge2.png" /}
+{/ // import bridge3 from "./_images/bridge3.png" /}
+{/ // import bridge4 from "./_images/bridge4.png" /}
+{/ // import bridge5 from "./_images/bridge5.png" /}
+{/ // import bridge6 from "./_images/bridge6.png" /}
+{/ // import bridge7 from "./_images/bridge7.png" /}
+{/ // import bridge8 from "./_images/bridge8.png" */}
+
+{/* TODO: Cập nhật tất cả hướng dẫn sau khi có thể thực hiện toàn bộ quy trình. */}
+
+
+Truy cập ứng dụng Cầu của chúng tôi [Bridge](https://sepolia.scroll.io/bridge) để bắt đầu!1 Cầu hỗ trợ cả hoạt động Gửi và Rút, cho phép người dùng chuyển tài sản từ Mạng thử nghiệm Sepolia đến Mạng thử nghiệm Scroll Sepolia một cách đáng tin cậy.
+[^thanks-hop]: Được fork từ giao diện người dùng của Hop Exchange](https://hop.exchange/)'s UI 🙌
+
+Việc gửi có thể mất đến 15 phút để có sẵn trên Scroll.
+
+Rút, cần một tương tác thứ hai trên Sepolia sau khi rút được hoàn tất, có thể mất nhiều thời gian hơn.
+
+:::cảnhbáo[Chờ lâu cho giao dịch cầu?]
+Các ước tính thời gian ở trên là điển hình cho hành vi mạng bình thường và mức độ hoạt động. Vì chúng tôi chỉ xử lý một số lượng giới hạn các giao dịch L1 được xếp hàng mỗi khối L2, các tin nhắn cầu có thể mất thời gian hơn để được bao gồm trên Scroll trong những thời điểm sử dụng mạng ngoại lệ.
+:::
+
+## Gửi từ Sepolia đến Scroll Sepolia
+
+### Hướng dẫn
+
+1. Đầu tiên, điều hướng đến Cầu Scroll [Scroll Bridge](https://sepolia.scroll.io/bridge) và nhấn nút "Kết nối Ví".
+2. Trong ứng dụng, đảm bảo rằng Ethereum Sepolia nằm trên đầu và Scroll Sepolia nằm ở dưới. Bạn có thể nhấp vào nút "↓" để đổi chỗ của chúng.
+3. Chọn token mà bạn muốn chuyển từ Sepolia đến Scroll Sepolia. Nếu đây là lần đầu tiên bạn cầu, hãy thử "ETH".
+4. Nếu đây là lần đầu tiên bạn chuyển một token ERC20 cụ thể, bạn phải Phê duyệt hợp đồng Cầu Sepolia để truy cập vào token ERC20 của bạn.
+5. Tiếp theo, nhấp vào nút Gửi đến Scroll Sepolia để thực hiện gửi. Ví của bạn sẽ yêu cầu xác nhận giao dịch chuyển khoản.
+6. Khi giao dịch chuyển khoản được gửi và xác nhận, token sẽ bị trừ từ ví Sepolia của bạn.
+7. Bạn luôn có thể kiểm tra trạng thái của một giao dịch bằng cách nhấn biểu tượng "Lịch sử" kế bên địa chỉ ví của bạn ở góc trên bên phải.
+
+### Khi nào mã thông báo sẽ đến ví Scroll Sepolia của bạn?
+
+Nó có thể mất từ **8 đến 14 phút** (chờ khối trở thành An toàn [_Safe_](https://www.alchemy.com/overviews/ethereum-commitment-levels#what-are-ethereum-commitment-levels) trên Sepolia) trước khi token xuất hiện trong ví Scroll Sepolia của bạn.
+
+{/* Bạn có thể kiểm tra tiến độ của các giao dịch gửi như sau: */}
+
+{/* ##### 1. Nhấp vào biểu tượng "Lịch sử" kế bên địa chỉ ví của bạn ở góc trên bên phải. */}
+
+{/* <ClickToZoom src={bridge1} /> */}
+
+{/* Cửa sổ bật lên liệt kê các giao dịch gần đây nhất được thực hiện trong ứng dụng Cầu. Có hai trạng thái: trạng thái của Sepolia và trạng thái của Scroll Sepolia. Đối với các giao dịch gửi (L1 -> L2), sau khi giao dịch của bạn trở thành An toàn trên Sepolia (8 đến 14 phút), bạn sẽ thấy trạng thái thành công được hiển thị. Sau đó, tiền của bạn sẽ được chuyển tiếp đến Scroll Sepolia. */}
+
+{/* Cửa sổ Giao dịch Cầu Gần đây sẽ cung cấp cho bạn một ước tính về thời gian cần thiết trước khi giao dịch của bạn trở thành An toàn trên Sepolia. */}
+
+{/* ##### 2. Nhấp vào băm giao dịch Sepolia của giao dịch gần đây nhất. */}
+
+{/* <ClickToZoom src={bridge2} /> */}
+
+{/* Nó sẽ mở trang Chi tiết Giao dịch trong một tab mới. Bạn có thể thấy giao dịch này được xác nhận trên Sepolia. Để kiểm tra trạng thái xác nhận của Khối, nhấp vào số Khối và đọc trường "Trạng thái". */}
+
+{/* <ClickToZoom src={bridge3} /> */}
+
+{/* ##### 3. Quay lại ứng dụng Cầu và chờ đợi! */}
+
+{/* Khi trạng thái giao dịch của bạn hiển thị thành công trên Scroll Sepolia, bạn sẽ thấy tiền trong ví Scroll L2 của mình và một băm giao dịch: */}
+
+{/* <ClickToZoom src={bridge4} /> */}
+
+## Rút từ Scroll Sepolia đến Sepolia
+
+### Hướng dẫn
+
+### Gửi Giao dịch Rút Ban đầu của bạn
+
+1. Đầu tiên, chuyển sang mạng **Scroll Sepolia** trong ví của bạn.
+2. Trong ứng dụng, đảm bảo rằng **Scroll Sepolia** đứng trên và **Ethereum Sepolia** đứng dưới. Bạn có thể nhấp vào nút "**↓**" để đổi vị trí của chúng.
+3. Chọn token mà bạn muốn chuyển từ **Scroll Sepolia** đến **Sepolia**. Nếu đây là lần đầu tiên bạn cầu, hãy thử "ETH."
+4 .Nếu đây là lần đầu tiên bạn chuyển một token ERC20 cụ thể, bạn phải **Approve (Phê duyệt hợp đồng)** Cầu Scroll Sepolia để truy cập vào token ERC20 của bạn.
+5. Tiếp theo, nhấp vào nút **Send to Ethereum Sepolia (Gửi đến Ethereum Sepolia)** để thực hiện gửi. Ví của bạn sẽ yêu cầu xác nhận giao dịch chuyển khoản.
+6. Khi giao dịch chuyển khoản được gửi và xác nhận, token sẽ bị trừ từ ví Scroll Sepolia của bạn.
+
+### Gửi Giao dịch Thực thi rút tiền
+
+{/* TODO: hoàn thành các hướng dẫn bổ sung, ước tính "thời gian chờ" tốt hơn */}
+
+Các bước còn lại diễn ra trên Scroll Sepolia, nhưng bạn phải đợi giao dịch của mình được chứng minh hoàn toàn ("đã hoàn tất") trên Ethereum Sepolia trước tiên. Quá trình này có thể mất đến bốn giờ.
+
+1. Khi giao dịch rút của bạn đã hoàn tất trên Ethereum Sepolia, bạn sẽ thấy nút "Claim (Nhận)" trong khu vực Giao dịch Gần đây trở nên chắc chắn.
+2. Nhấp vào nút "Claim" để gửi giao dịch Thực thi Rút.
+3. Khi được gửi, số tiền đã rút của bạn nên xuất hiện ngay lập tức trong ví Sepolia của bạn.
+
+### Khi nào token sẽ đến ví Sepolia của bạn?
+
+Token chuyển đến ví của bạn Sepolia ngay sau khi khối chứa giao dịch Thực thi Rút của bạn được xác nhận trên Sepolia.
+
+{/* TODO: kiểm tra liên kết kiến trúc có hoạt động không */}
+
+:::mẹo[Tình trạng Rollup]
+
+Tình trạng rollup `Finalized` (Đã hoàn tất) chỉ ra rằng việc thực hiện chính xác các giao dịch trong khối này đã được chứng minh bằng cách xác minh một bằng chứng tính hợp lệ trên chuỗi trên Sepolia. Để biết thêm thông tin về tình trạng rollup, xem Tổng quan Kiến trúc của Scroll [Scroll's Architecture Overview](/technology).
+:::
+
+{/* Bạn có thể kiểm tra tiến độ của các giao dịch rút như sau: */}
+
+{/* 1. Nhấp vào địa chỉ ví của bạn ở góc trên bên phải của ứng dụng web Cầu. */}
+
+{/* <ClickToZoom src={bridge5} /> */}
+
+{/* Cửa sổ bật lên liệt kê các giao dịch gần đây nhất bạn đã thực hiện trong ứng dụng Cầu (xem hình ảnh dưới đây). Có hai trạng thái: trạng thái L1 và trạng thái L2. Trong trường hợp này, vì chúng ta đang cầu từ L2 -> L1, chúng ta sẽ nhanh chóng nhận được trạng thái thành công sau khi gửi giao dịch đến Cầu L2. L1, ngược lại, mất từ 10 phút đến vài giờ để đạt đến thành công. */}
+
+{/* 1. Nhấp vào băm giao dịch L2 của giao dịch gần đây nhất: */}
+
+{/* <ClickToZoom src={bridge6} /> */}
+
+{/* Nó sẽ mở trang Chi tiết Giao dịch trong một tab mới. Bạn có thể thấy giao dịch này đã được xác nhận trên L2. */}
+
+{/* <ClickToZoom src={bridge7} /> */}
+
+{/* Giao dịch đã được xác nhận trên L2, nhưng vẫn cần được hoàn tất trên Goerli. */}
+
+{/* 1. Quay lại Cầu ứng dụng. Mất khoảng 10 phút trước khi token xuất hiện trong ví Goerli của bạn. Khi trạng thái giao dịch của bạn hiển thị thành công trên L2, bạn sẽ thấy số tiền trong ví Goerli của bạn và một băm giao dịch: */}
+
+{/* <ClickToZoom src={bridge8} /> */}
+
