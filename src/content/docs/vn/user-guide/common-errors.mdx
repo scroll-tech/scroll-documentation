@@ -1,41 +1,37 @@
 ---
 section: gettingStarted
-date: Last Modified
-title: "Common Errors"
-lang: "en"
+date: Sửa lần cuối
+title: "Các lỗi thường gặp"
+lang: "vi"
 permalink: "user-guide/common-errors/"
-excerpt: "Seeing an error when trying to interact with Scroll Sepolia Testnet? Here are some common configuration errors and how to quickly fix them."
+excerpt: "Gặp phải lỗi khi cố gắng tương tác với Scroll Sepolia Testnet? Dưới đây là một số lỗi cấu hình phổ biến và cách khắc phục nhanh chóng."
 ---
 
-## Incorrect nonce error when sending a transaction in MetaMask
+## Lỗi nonce không chính xác khi gửi giao dịch trong MetaMask
 
-You will encounter this error when the local nonce stored in your MetaMask wallet is different from the nonce in the Scroll testnet node. It could be because there is a recent pending transaction.
+Bạn sẽ gặp phải lỗi này khi nonce cục bộ được lưu trong ví MetaMask của bạn khác với nonce trong nút testnet của Scroll. Điều này có thể là do có một giao dịch đang chờ xử lý gần đây.
 
-To fix this issue, you need to reset your account in MetaMask for the Scroll Sepolia Testnet. The steps to reset the account are:
+Để khắc phục vấn đề này, bạn cần đặt lại tài khoản của mình trong MetaMask cho Scroll Sepolia Testnet. Các bước để đặt lại tài khoản là:
 
-1. Open the **MetaMask** extension in the browser
-2. Select **Scroll Sepolia Testnet** in the top area
-3. Click the round **account icon** in the top-right corner
-4. Select **Settings**
-5. Go to **Advanced**
-6. Click **Reset account**
+Mở tiện ích mở rộng MetaMask trong trình duyệt
+Chọn Scroll Sepolia Testnet ở phần trên cùng
+Nhấp vào biểu tượng tài khoản tròn ở góc trên bên phải
+Chọn Cài đặt
+Đi đến Nâng cao
+Nhấp Đặt lại tài khoản
+Bạn sẽ không mất bất kỳ tài sản nào trong quá trình đặt lại tài khoản MetaMask.
 
-You will not lose any assets during the MetaMask account reset.
-
-:::caution[Caution]
-Removing and re-adding a network is NOT enough to fix this - you must reset your account.
+:::thận trọng[Cảnh báo]
+Loại bỏ và thêm lại mạng không đủ để khắc phục vấn đề này - bạn phải đặt lại tài khoản của mình.
 :::
 
-## Nothing happens when confirming a bridging/swapping transaction
+Không có gì xảy ra khi xác nhận một giao dịch cầu nối/hoán đổi
+Nếu không có lỗi hoặc nhật ký bảng điều khiển nào xuất hiện, điều này có thể do một vấn đề về nonce, vui lòng đặt lại tài khoản MetaMask của bạn như đã được mô tả ở trên tại #incorrect-nonce-error-when-sending-a-transaction-in-metamask.
 
-If no error or console logs appear, this is likely due to a nonce issue, please reset your MetaMask account as outlined above at [#incorrect-nonce-error-when-sending-a-transaction-in-metamask](#incorrect-nonce-error-when-sending-a-transaction-in-metamask).
+Trình duyệt khối hiển thị "Lỗi máy chủ nội bộ"
+Sử dụng cửa sổ ẩn danh hoặc mở cửa sổ điều hành phát triển trình duyệt của bạn và xóa cookie _explorer_key (hoặc tất cả các cookie). Xem hướng dẫn này để biết cách xóa cookie..
 
-## Block Explorer shows "Internal server error"
+Gửi số tiền tối đa của Ether trong MetaMask dẫn đến lỗi "Thất bại"
+Khi gửi Ether bằng cách sử dụng MetaMask, nếu bạn cố gắng gửi số lượng "Tối đa", đó sẽ dẫn đến lỗi "Thất bại". Điều này là do MetaMask không tính đến "Lệ phí L1" bổ sung mà rollup có thêm vào các phí gas thông thường và không đủ cho một lượng nhỏ cần thiết để trả phí gas của giao dịch.
 
-Use an incognito window, or open your browser developer console and remove the `_explorer_key` cookie (or all cookies). [See this guide for how to remove cookies.](https://www.contentstack.com/docs/developers/how-to-guides/clear-caches-and-cookies-in-different-browsers/).
-
-## Sending max amount of Ether in MetaMask results in a "Failed" error
-
-When sending Ether using MetaMask, if you try sending the "Max" amount, it's going to result in a "Failed" error. This is because MetaMask doesn't account for the additional "L1 Fee" that rollups have on top of regular gas fees and falls short for a small amount needed to pay for the gas of the transaction.
-
-To solve this, manually lower the amount of ether to be a little smaller than suggested and the transaction will go through.
+Để giải quyết vấn đề này, hãy giảm số tiền ether thủ công để nhỏ hơn một chút so với gợi ý và giao dịch sẽ được thực hiện.
