@@ -13,25 +13,29 @@ Bạn sẽ gặp phải lỗi này khi nonce cục bộ được lưu trong ví 
 
 Để khắc phục vấn đề này, bạn cần đặt lại tài khoản của mình trong MetaMask cho Scroll Sepolia Testnet. Các bước để đặt lại tài khoản là:
 
-Mở tiện ích mở rộng MetaMask trong trình duyệt
-Chọn Scroll Sepolia Testnet ở phần trên cùng
-Nhấp vào biểu tượng tài khoản tròn ở góc trên bên phải
-Chọn Cài đặt
-Đi đến Nâng cao
-Nhấp Đặt lại tài khoản
+1. Mở tiện ích mở rộng MetaMask trong trình duyệt
+2. Chọn Scroll Sepolia Testnet ở phần trên cùng
+3. Nhấp vào biểu tượng tài khoản tròn ở góc trên bên phải
+4. Chọn Cài đặt
+5. Đi đến Nâng cao
+6. Nhấp Đặt lại tài khoản
+
 Bạn sẽ không mất bất kỳ tài sản nào trong quá trình đặt lại tài khoản MetaMask.
 
 :::thận trọng[Cảnh báo]
 Loại bỏ và thêm lại mạng không đủ để khắc phục vấn đề này - bạn phải đặt lại tài khoản của mình.
 :::
 
-Không có gì xảy ra khi xác nhận một giao dịch cầu nối/hoán đổi
-Nếu không có lỗi hoặc nhật ký bảng điều khiển nào xuất hiện, điều này có thể do một vấn đề về nonce, vui lòng đặt lại tài khoản MetaMask của bạn như đã được mô tả ở trên tại #incorrect-nonce-error-when-sending-a-transaction-in-metamask.
+## Không có gì xảy ra khi xác nhận một giao dịch cầu nối/hoán đổi
 
-Trình duyệt khối hiển thị "Lỗi máy chủ nội bộ"
-Sử dụng cửa sổ ẩn danh hoặc mở cửa sổ điều hành phát triển trình duyệt của bạn và xóa cookie _explorer_key (hoặc tất cả các cookie). Xem hướng dẫn này để biết cách xóa cookie..
+Nếu không có lỗi hoặc nhật ký bảng điều khiển nào xuất hiện, điều này có thể do một vấn đề về nonce, vui lòng đặt lại tài khoản MetaMask của bạn như đã được mô tả ở trên tại [#incorrect-nonce-error-when-sending-a-transaction-in-metamask](#incorrect-nonce-error-when-sending-a-transaction-in-metamask).
 
-Gửi số tiền tối đa của Ether trong MetaMask dẫn đến lỗi "Thất bại"
+## Trình duyệt khối hiển thị "Lỗi máy chủ nội bộ"
+
+Sử dụng cửa sổ ẩn danh hoặc mở cửa sổ điều hành phát triển trình duyệt của bạn và xóa cookie `_explorer_key` (hoặc tất cả các cookie). [Xem hướng dẫn này để biết cách xóa cookie](https://www.contentstack.com/docs/developers/how-to-guides/clear-caches-and-cookies-in-different-browsers/).
+
+## Gửi số tiền tối đa của Ether trong MetaMask dẫn đến lỗi "Thất bại"
+
 Khi gửi Ether bằng cách sử dụng MetaMask, nếu bạn cố gắng gửi số lượng "Tối đa", đó sẽ dẫn đến lỗi "Thất bại". Điều này là do MetaMask không tính đến "Lệ phí L1" bổ sung mà rollup có thêm vào các phí gas thông thường và không đủ cho một lượng nhỏ cần thiết để trả phí gas của giao dịch.
 
 Để giải quyết vấn đề này, hãy giảm số tiền ether thủ công để nhỏ hơn một chút so với gợi ý và giao dịch sẽ được thực hiện.
