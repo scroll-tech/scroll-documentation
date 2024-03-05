@@ -142,26 +142,27 @@ Astro giúp bạn xây dựng các trang web nhanh hơn với “Kiến trúc C�
 [](#markmap)markmap
 ===================
 
-- đẹp2
-- hữu ích
-- dễ
-- tương tác
+- beautiful2
+- useful
+- easy
+- interactive
 
 </MarkmapView>
+
 
 ### Mermaid
 
 ```mermaid
 stateDiagram
-    Bước --> Trạng thái Bước
-    Bước --> Quản lý ô
-    Người xây dựng Ràng buộc --> Quản lý ô
-    Quản lý ô --> Hệ thống Chứng minh(Halo2)
-    Trạng thái Bước --> Trạng thái Thực thi
-    Trạng thái Bước --> ngữ cảnh bước
-    Trạng thái Thực thi --> Người xây dựng Ràng buộc
-    ngữ cảnh bước --> Người xây dựng Ràng buộc
-
+    Step --> StepState
+    Step --> CellManager
+    ConstraintBuilder --> CellManager
+    CellManager --> ProofSystem(Halo2)
+    StepState --> ExecutionState
+    StepState --> step_context
+    ExecutionState --> ConstraintBuilder
+    step_context --> ConstraintBuilder
+```
 ### RPC Table
 
 <RPCTable />
