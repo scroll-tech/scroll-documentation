@@ -36,6 +36,6 @@ Scroll mainnet trên Ethereum đã hoạt động! Chúng tôi cũng có một m
 - Gửi mã thông báo từ mainnet Ethereum sang Scroll (hoặc sử dụng một [vòi](/hướng-dẫn-người-dùng/faucet) Scroll Sepolia)
 - Thử nghiệm ứng dụng dapp Scroll Sepolia như [Uniswap Showcase](http://uniswap-showcase.sepolia.scroll.xyz/) của chúng tôi hoặc thậm chí là [Aave](https://app.aave.com/) -- chỉ cần chắc chắn chọn mạng Scroll Sepolia!
 
-## Scroll đang đi đâu?
+## Scroll đang hướng đến điều gì?
 
 Chúng tôi đã phát hành mainnet của chúng tôi trên Ethereum, nhưng vẫn còn nhiều công việc phải làm. Tiếp theo -- phi tập trung hóa từng thành phần của ngăn cách. Để cập nhật thông tin, hãy xem [blog của chúng tôi](https://scroll.io/blog) hoặc theo dõi trên [Discord của chúng tôi](https://discord.gg/scroll) hoặc trên [Twitter](https://twitter.com/scroll_zkp).
