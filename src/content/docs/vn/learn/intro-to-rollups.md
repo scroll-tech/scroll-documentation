@@ -1,51 +1,51 @@
 ---
 section: learn
 date: Last Modified
-title: "Intro to Rollups"
-lang: "en"
-permalink: "learn/intro-to-rollups"
-excerpt: "Rollups are the most predominant layer 2 scaling solution in the Ethereum ecosystem."
-whatsnext: { "Scroll Rollup Process": "/technology/chain/rollup" }
+title: "Giới thiệu về Rollups"
+lang: "vn"
+permalink: "học/giới-thiệu-về-rollups"
+excerpt: "Rollups là giải pháp mở rộng lớp 2 phổ biến nhất trong hệ sinh thái Ethereum."
+whatsnext: { "Quy trình Rollup của Scroll": "/technology/chain/rollup" }
 ---
 
-## What’s a rollup?
+## Rollup là gì?
 
-Rollups are the most predominant layer 2 scaling solution in the Ethereum ecosystem, and are viewed as a [central part](https://ethereum-magicians.org/t/a-rollup-centric-ethereum-roadmap/4698) of the Ethereum roadmap.
+Rollups là giải pháp mở rộng lớp 2 phổ biến nhất trong hệ sinh thái Ethereum và được xem là [phần trung tâm](https://ethereum-magicians.org/t/a-rollup-centric-ethereum-roadmap/4698) của lộ trình Ethereum.
 
-A rollup processes batches of transactions off-chain (i.e. not on layer 1), and then posts the resulting data on-chain (i.e. on layer 1).
+Một rollup xử lý các lô giao dịch ngoại chuỗi (tức là không trên lớp 1), sau đó đăng dữ liệu kết quả lên chuỗi (tức là trên lớp 1).
 
-The execution of each transaction is performed off-chain, and does not need to be re-executed layer 1 nodes. This allows for high transaction throughput, without impacting the decentralization of layer 1.
+Việc thực thi mỗi giao dịch được thực hiện ngoại chuỗi và không cần phải được thực hiện lại bởi các nút lớp 1. Điều này cho phép tăng năng suất giao dịch cao mà không ảnh hưởng đến sự phân tán của lớp 1.
 
-In order for a rollup to be secure, it must prove that its off-chain computation (the processing of transactions) was performed correctly. There are predominantly two mechanisms to prove the validity of off-chain computation: validity proofs and fraud proofs.
+Để một rollup được bảo mật, nó phải chứng minh rằng tính toán ngoại chuỗi của nó (việc xử lý giao dịch) đã được thực hiện đúng. Có chủ yếu hai cơ chế để chứng minh tính hợp lệ của tính toán ngoại chuỗi: chứng minh tính hợp lệ và chứng minh gian lận.
 
-## What’s an optimistic rollup?
+## Optimistic rollup là gì?
 
-An optimistic rollup is a rollup that uses fraud proofs to assert the validity of its computation.
+Một optimistic rollup là một rollup sử dụng chứng minh gian lận để khẳng định tính hợp lệ của tính toán của nó.
 
-Fraud proofs are a mechanism that allow users to challenge and prove the invalidity of any computation performed on the L2. If a fraud proof is successfully submitted, the L2 can be rolled back to a previous state and the invalid computation can be corrected. Fraud proofs depend on at least one honest party checking that the L2 transactions have been correctly executed.
+Chứng minh gian lận là một cơ chế cho phép người dùng thách thức và chứng minh tính không hợp lệ của bất kỳ tính toán nào được thực hiện trên L2. Nếu một chứng minh gian lận được gửi thành công, L2 có thể được quay trở lại trạng thái trước đó và tính toán không hợp lệ có thể được sửa chữa. Chứng minh gian lận phụ thuộc ít nhất vào một bên trung thực kiểm tra rằng các giao dịch L2 đã được thực hiện đúng.
 
-## What’s a ZK rollup?
+## ZK rollup là gì?
 
-A ZK rollup is a rollup that uses validity proofs to assert the validity of its computation.
+Một ZK rollup là một rollup sử dụng chứng minh tính hợp lệ để khẳng định tính hợp lệ của tính toán của nó.
 
-When a ZK rollup executes a batch of transactions and posts the resulting state to L1, it also posts a validity proof. This mathematical proof proves that the resulting state is indeed the state which results from correctly executing the batch of transactions.
+Khi một ZK rollup thực hiện một lô giao dịch và đăng tải trạng thái kết quả lên L1, nó cũng đăng tải một chứng minh tính hợp lệ. Chứng minh toán học này chứng minh rằng trạng thái kết quả thực sự là trạng thái kết quả từ việc thực thi đúng lô giao dịch.
 
-Today, there are multiple types of ZK rollups, broadly defined as either zkVMs (zk Virtual Machines) or zkEVMs (zk Ethereum Virtual Machines).
+Hiện nay, có nhiều loại ZK rollups, được định nghĩa rộng rãi là zkVMs (máy ảo zk) hoặc zkEVMs (máy ảo Ethereum zk).
 
-zkVMs are designed from the ground up to work well with ZK circuits and require different development workflows compared to a zkEVM. Some examples of these include Starkware and Aztec.
+zkVMs được thiết kế từ đầu để hoạt động tốt với mạch ZK và yêu cầu các quy trình phát triển khác so với một zkEVM. Một số ví dụ về điều này bao gồm Starkware và Aztec.
 
-zkEVMs are designed to emulate the EVM. There are two major types of zkEVMs: bytecode-compatible, and language-compatible. Bytecode-compatible zkEVMs emulate the EVM at a very low level, allowing for a near-identical development and user experience compared to Ethereum Layer 1. Language-compatible zkEVMs compile Solidity and other high-level languages down into different bytecode, which can result in changes to workflow. zkSync is the most popular language-compatible zkEVM.
+zkEVMs được thiết kế để mô phỏng EVM. Có hai loại chính của zkEVMs: tương thích bytecode và tương thích ngôn ngữ. zkEVMs tương thích bytecode mô phỏng EVM ở một cấp độ rất thấp, cho phép có một trải nghiệm phát triển và người dùng gần như giống với Ethereum Lớp 1. zkSync là zkEVM tương thích ngôn ngữ phổ biến nhất.
 
-Scroll is bytecode-compatible. This approach was chosen because it brings certain benefits:
+Scroll là tương thích bytecode. Phương pháp này được chọn vì nó mang lại một số lợi ích nhất định:
 
-- Solidity, Vyper, and Huff work out of the box
-- No re-auditing necessary
-- Most existing tooling is inherited
-- Near-identical UX and DevX as Ethereum
+- Solidity, Vyper và Huff hoạt động ngay lập tức
+- Không cần phải kiểm tra lại
+- Hầu hết các công cụ hiện có được thừa hưởng
+- Trải nghiệm người dùng gần như giống với Ethereum
 
-More detail on Scroll’s approach is found in the Technology section.
+Thông tin chi tiết về phương pháp của Scroll được tìm thấy trong phần Công nghệ.
 
-## Further reading
+## Đọc thêm
 
-- [An Incomplete Guide to Rollups](https://vitalik.ca/general/2021/01/05/rollup.html) - Vitalik Buterin
-- [Scaling](https://ethereum.org/en/developers/docs/scaling/) - Ethereum Docs
+- [Một Hướng Dẫn Không Đầy Đủ về Rollups](https://vitalik.ca/general/2021/01/05/rollup.html) - Vitalik Buterin
+- [Mở rộng](https://ethereum.org/en/developers/docs/scaling/) - Tài liệu Ethereum
