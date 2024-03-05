@@ -1,27 +1,27 @@
 ---
 section: learn
 date: Last Modified
-title: "The Scalability Problem"
-lang: "en"
-permalink: "learn/intro-to-rollups"
-excerpt: "Ethereum’s strong decentralization and security come at the cost of sacrificing scalability: to ensure that all the participating nodes can keep up with the network, the network’s throughput is limited. This limit ultimately results in higher costs and latencies for users."
-whatsnext: { "Intro to Rollups": "/learn/intro-to-rollups" }
+title: "Vấn đề về khả năng mở rộng"
+lang: "vn"
+permalink: "học/tổng-quan-về-rollups"
+excerpt: "Sự phân tán và bảo mật mạnh mẽ của Ethereum đến với một cái giá phải trả là sự hi sinh về khả năng mở rộng: để đảm bảo rằng tất cả các nút tham gia có thể theo kịp mạng lưới, năng suất của mạng bị giới hạn. Giới hạn này cuối cùng dẫn đến chi phí và độ trễ cao cho người dùng."
+whatsnext: { "Tổng quan về Rollups": "/học/tổng-quan-về-rollups" }
 ---
 
-## Ethereum’s scaling problem
+## Vấn đề về khả năng mở rộng của Ethereum
 
-[Ethereum](https://ethereum.org/en/developers/docs/intro-to-ethereum/#what-is-ethereum) is a general-purpose blockchain that supports the deployment and execution of [smart contracts](https://ethereum.org/en/developers/docs/intro-to-ethereum/#what-are-smart-contracts).
+[Ethereum](https://ethereum.org/en/developers/docs/intro-to-ethereum/#what-is-ethereum) là một blockchain đa mục đích hỗ trợ triển khai và thực thi [smart contracts](https://ethereum.org/en/developers/docs/intro-to-ethereum/#what-are-smart-contracts).
 
-One of the defining features of Ethereum is its unwavering commitment to security and decentralization. Ethereum is designed such that computers all across the world (even cheap ones, like a [Raspberry Pi](https://ethereum-on-arm-documentation.readthedocs.io/)) can participate in the network, running local copies of the blockchain and processing new transactions.
+Một trong những đặc điểm xác định của Ethereum là cam kết không lay chuyển đối với bảo mật và sự phân tán. Ethereum được thiết kế sao cho các máy tính trên khắp thế giới (kể cả những máy tính giá rẻ, như một [Raspberry Pi](https://ethereum-on-arm-documentation.readthedocs.io/)) có thể tham gia vào mạng lưới, chạy bản sao cục bộ của blockchain và xử lý các giao dịch mới.
 
-However, Ethereum’s strong decentralization and security come at the cost of sacrificing scalability: to ensure that all the participating nodes can keep up with the network, the network’s throughput is limited. This limit ultimately results in higher costs and latencies for users.
+Tuy nhiên, sự phân tán và bảo mật mạnh mẽ của Ethereum đến với một cái giá phải trả là sự hi sinh về khả năng mở rộng: để đảm bảo rằng tất cả các nút tham gia có thể theo kịp mạng lưới, năng suất của mạng bị giới hạn. Giới hạn này cuối cùng dẫn đến chi phí và độ trễ cao cho người dùng.
 
-## Scaling solutions
+## Các giải pháp về khả năng mở rộng
 
-Ethereum’s scaling solutions aim to increase the throughput of the network without sacrificing decentralization or security.
+Các giải pháp về khả năng mở rộng của Ethereum nhằm mục đích tăng năng suất của mạng mà không hi sinh sự phân tán hoặc bảo mật.
 
-There are primarily two types of scaling solutions: layer 1 scaling solutions and layer 2 scaling solutions.
+Có chủ yếu hai loại giải pháp về khả năng mở rộng: các giải pháp ở tầng 1 và các giải pháp ở tầng 2.
 
-**Layer 1** (or **L1**) scaling solutions attempt to scale the network by making modifications to the Ethereum blockchain directly. The term “layer 1” here refers to the main Ethereum blockchain. In general, it is very difficult to design layer 1 scaling solutions that increase throughput and at the same time preserve high levels of security and decentralization. Thus, recent scaling efforts have shifted away from layer 1 solutions and towards layer 2 solutions.
+**Tầng 1** (hoặc **L1**) là các giải pháp về khả năng mở rộng cố gắng mở rộng mạng bằng cách thay đổi trực tiếp blockchain Ethereum. Thuật ngữ “tầng 1” ở đây đề cập đến blockchain Ethereum chính. Nói chung, việc thiết kế các giải pháp mở rộng ở tầng 1 để tăng năng suất và đồng thời bảo tồn mức độ bảo mật và sự phân tán cao rất khó khăn. Do đó, những nỗ lực về mở rộng gần đây đã chuyển hướng từ các giải pháp ở tầng 1 sang các giải pháp ở tầng 2.
 
-**Layer 2** (or **L2**) scaling solutions are networks that live **on top** of Ethereum layer 1 - they are essentially separate blockchains which are “anchored” to the underlying Ethereum blockchain in some way. These layer 2 networks can generally process transactions at a higher rate than the underlying layer 1 network, as they are not subject to the same limitations. The “anchoring” mechanism, the specifics of which differ across various layer 2s, enables the layer 2 network to inherit the strong security and decentralization properties of Ethereum layer 1.
+**Tầng 2** (hoặc **L2**) là các giải pháp về khả năng mở rộng là các mạng sống **trên đỉnh** của Ethereum tầng 1 - chúng thực sự là các blockchain riêng biệt được “gắn kết” vào blockchain Ethereum cơ sở một cách nào đó. Các mạng ở tầng 2 này nói chung có thể xử lý các giao dịch với tốc độ cao hơn so với mạng tầng 1 cơ bản, vì chúng không chịu các hạn chế như vậy. Cơ chế “gắn kết”, chi tiết của đó khác nhau trên các tầng 2 khác nhau, cho phép mạng ở tầng 2 thừa kế các thuộc tính bảo mật và sự phân tán mạnh mẽ của Ethereum tầng 1.
