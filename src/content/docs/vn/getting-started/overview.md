@@ -1,41 +1,41 @@
 ---
 section: gettingStarted
 date: Last Modified
-title: "Scroll Overview"
+title: "Tổng quan về Scroll"
 lang: "en"
-permalink: "docs/conceptual-overview/"
-excerpt: "ZK Rollups and Scroll"
-whatsnext: { "User Guide": "/user-guide/", "Building on Scroll": "/developers/" }
+permalink: "tài-liệu/kiến-thức-chung/"
+excerpt: "ZK Rollups và Scroll"
+whatsnext: { "Hướng dẫn người dùng": "/hướng-dẫn-người-dùng/", "Xây dựng trên Scroll": "/nhà-phát-triển/" }
 ---
 
-#### Welcome to the Scroll docs!
+#### Chào mừng bạn đến với tài liệu của Scroll!
 
-Scroll is a security-focused scaling solution for Ethereum, using innovations in scaling design and zero knowledge proofs to build a new layer on Ethereum. The Scroll network is more accessible, more responsive, and can support more users at once than Ethereum alone, and if you've ever used or developed an application on Ethereum, you'll be right at home on Scroll.
+Scroll là một giải pháp tăng cường về an ninh cho Ethereum, sử dụng các đổi mới trong thiết kế tăng cường và bằng chứng không đối xứng để xây dựng một tầng mới trên Ethereum. Mạng lưới Scroll trở nên dễ truy cập hơn, nhanh hơn và có thể hỗ trợ nhiều người dùng cùng một lúc hơn so với Ethereum một mình, và nếu bạn từng sử dụng hoặc phát triển ứng dụng trên Ethereum, bạn sẽ cảm thấy như ở nhà trên Scroll.
 
-Want to try out the Scroll Sepolia testnet with free assets before using Scroll? Check out our [User Guide](/user-guide/).
+Muốn thử nghiệm mạng thử nghiệm Scroll Sepolia với tài sản miễn phí trước khi sử dụng Scroll? Hãy xem [Hướng dẫn người dùng](/hướng-dẫn-người-dùng/) của chúng tôi.
 
-## What is Scroll building?
+## Scroll đang xây dựng cái gì?
 
-Scroll is building the technology to scale Ethereum.
+Scroll đang xây dựng công nghệ để tăng cường Ethereum.
 
-While Ethereum is the leading blockchain network for powering decentralized applications, its popularity also brings higher costs, creating a barrier to adoption for the next wave of users and developers.
+Trong khi Ethereum là mạng blockchain hàng đầu để cung cấp các ứng dụng phi tập trung, sự phổ biến của nó cũng mang lại chi phí cao hơn, tạo ra một rào cản cho việc tiếp nhận cho các nhóm người dùng và nhà phát triển tiếp theo.
 
-Leveraging cutting-edge research in zero knowledge proofs (”zk”), Scroll is building a Layer 2 rollup network on Ethereum. The team, in open-source collaboration with others in the Ethereum community, has created a “zkEVM” that allows for all activity on the network, which behaves just like Ethereum, to be secured by smart contracts _on_ Ethereum. The network publishes all of the transactions to Ethereum, and the zkEVM creates and publishes cryptographic "proofs" that the Scroll network is following the rules of Ethereum.
+Tận dụng nghiên cứu tiên tiến về bằng chứng không đối xứng (”zk”), Scroll đang xây dựng một mạng Layer 2 rollup trên Ethereum. Nhóm, trong sự hợp tác mã nguồn mở với các bên khác trong cộng đồng Ethereum, đã tạo ra một "zkEVM" cho phép mọi hoạt động trên mạng, hoạt động giống như Ethereum, được bảo mật bởi các hợp đồng thông minh _trên_ Ethereum. Mạng lưới xuất bản tất cả các giao dịch lên Ethereum, và zkEVM tạo và xuất bản "bằng chứng" mật mã rằng mạng lưới Scroll đang tuân thủ các quy tắc của Ethereum.
 
-Ultimately, Ethereum smart contracts verify that every transaction on Scroll is valid for these proofs, lending the network incredible security, decentralization, and censorship resistance. This level of security and scalability for Ethereum is only possible with recent breakthroughs in zero knowledge cryptography, blockchain protocol design, and hardware acceleration.
+Cuối cùng, các hợp đồng thông minh Ethereum xác minh rằng mỗi giao dịch trên Scroll là hợp lệ cho các bằng chứng này, mang lại cho mạng lưới mức độ an ninh, phi tập trung và kháng kiểm duyệt đáng kinh ngạc. Mức độ an ninh và khả năng mở rộng này cho Ethereum chỉ có thể đạt được với các đột phá gần đây trong lĩnh vực mật mã không đối xứng, thiết kế giao thức blockchain và tăng tốc phần cứng.
 
-<!-- TODO: Confirm Architecture page exists -->
+<!-- TODO: Xác nhận Trang kiến trúc tồn tại -->
 
-For more information on our architecture, see [Scroll Architecture](/technology/).
+Để biết thêm thông tin về kiến trúc của chúng tôi, hãy xem [Kiến trúc Scroll](/công-nghệ/).
 
-## Can I use Scroll today?
+## Tôi có thể sử dụng Scroll ngay bây giờ không?
 
-Scroll mainnet on Ethereum is live! We also have a testnet running on Ethereum Sepolia, the Scroll Sepolia testnet. Although we have a [comprehensive guide](/user-guide/), if you're familiar with using Ethereum, you can get started in minutes:
+Scroll mainnet trên Ethereum đã hoạt động! Chúng tôi cũng có một mạng thử nghiệm đang chạy trên Ethereum Sepolia, gọi là mạng thử nghiệm Scroll Sepolia. Mặc dù chúng tôi có [một hướng dẫn toàn diện](/hướng-dẫn-người-dùng/), nếu bạn quen thuộc với việc sử dụng Ethereum, bạn có thể bắt đầu chỉ trong vài phút:
 
-- Visit our [Bridge](https://scroll.io/bridge) or [Scroll Sepolia Bridge](https://sepolia.scroll.io/bridge) and connect your wallet
-- Send tokens from Ethereum mainnet to Scroll (or use a Scroll Sepolia [faucet](/user-guide/faucet))
-- Test out Scroll Sepolia testnet dapp like our [Uniswap Showcase](http://uniswap-showcase.sepolia.scroll.xyz/) or even [Aave](https://app.aave.com/) -- just be sure to select the Scroll Sepolia network!
+- Ghé thăm [Bridge của chúng tôi](https://scroll.io/bridge) hoặc [Bridge Scroll Sepolia](https://sepolia.scroll.io/bridge) và kết nối ví của bạn
+- Gửi mã thông báo từ mainnet Ethereum sang Scroll (hoặc sử dụng một [vòi](/hướng-dẫn-người-dùng/faucet) Scroll Sepolia)
+- Thử nghiệm ứng dụng dapp Scroll Sepolia như [Uniswap Showcase](http://uniswap-showcase.sepolia.scroll.xyz/) của chúng tôi hoặc thậm chí là [Aave](https://app.aave.com/) -- chỉ cần chắc chắn chọn mạng Scroll Sepolia!
 
-## Where is Scroll headed?
+## Scroll đang đi đâu?
 
-We've released our mainnet on Ethereum, but there's still more work to do. Next up -- decentralizing each component of the stack. To stay up to date, check out [our blog](https://scroll.io/blog) or follow along in [our Discord](https://discord.gg/scroll) or on [Twitter](https://twitter.com/scroll_zkp).
+Chúng tôi đã phát hành mainnet của chúng tôi trên Ethereum, nhưng vẫn còn nhiều công việc phải làm. Tiếp theo -- phi tập trung hóa từng thành phần của ngăn cách. Để cập nhật thông tin, hãy xem [blog của chúng tôi](https://scroll.io/blog) hoặc theo dõi trên [Discord của chúng tôi](https://discord.gg/scroll) hoặc trên [Twitter](https://twitter.com/scroll_zkp).
