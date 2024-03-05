@@ -1,51 +1,43 @@
 ---
 section: technology
 date: Last Modified
-title: "Cross-Domain Messaging"
+title: "Giao Tiếp Giữa Các Miền"
 lang: "en"
 permalink: "technology/bridge/cross-domain-messaging"
-whatsnext: { "Deposit Gateways": "/technology/bridge/deposit-gateways/" }
+whatsnext: { "Cổng Nạp": "/technology/bridge/deposit-gateways/" }
 ---
 
-import ClickToZoom from "../../../../../components/ClickToZoom.astro"
-import Aside from "../../../../../components/Aside.astro"
-import ToggleElement from "../../../../../components/ToggleElement.astro"
+Scroll có một cầu chuyển thông điệp tùy ý cho phép chuyển token và cho phép các ứng dụng phi tầng lớp giao tiếp giữa lớp 1 và lớp 2. Điều này có nghĩa là các ứng dụng trên lớp 1 có thể kích hoạt các hàm hợp đồng trên lớp 2, và ngược lại. Tiếp theo, chúng tôi sẽ giải thích cách các thông điệp được truyền giữa lớp 1 và lớp 2.
 
-import L1ToL2 from "../_images/L1-to-L2.png"
-import L2ToL1 from "../_images/L2-to-L1.png"
-import WithdrawTrie from "../_images/withdraw-trie.png"
+## Gửi Thông Điệp từ L1 đến L2
 
-Scroll has an arbitrary message passing bridge that enables token transfers and allows dapps to communicate between layer 1 and layer 2. This means that dapps on layer 1 can trigger contract functions on layer 2, and vice versa. Next, we will explain how the messages are relayed between layer 1 and layer 2.
+<ClickToZoom src={L1ToL2} alt="L1 to L2 workflow" caption="Hình 1. Luồng công việc truyền thông điệp từ L1 đến L2" />
 
-## Sending Messages from L1 to L2
-
-<ClickToZoom src={L1ToL2} alt="L1 to L2 workflow" caption="Figure 1. L1 to L2 message relay workflow" />
-
-There are two primary approaches to sending a message from L1 to L2: sending arbitrary messages via `L1ScrollMessenger` and sending enforced transactions via `EnforcedTxGateway`. Both approaches allow users to initiate a L2 transaction on L1 and call arbitrary contracts on L2. For arbitrary messages, the sender of the L2 transactions is the aliased `L1ScrollMessenger` address. For enforced transactions, the L2 sender is an externally-owned account (EOA). In addition, we provide several standard token gateways to make it easier for users to deposit ETH and other standard tokens including ERC-20, ERC-677, ERC-721, and ERC-1155. In essence, these gateways encode token deposits into a message and send it to their counterparts on L2 through the `L1ScrollMessenger` contract. You can find more details about the L1 token gateways in the [Deposit Gateways](/technology/bridge/deposit-gateways).
+Có hai phương pháp chính để gửi một thông điệp từ L1 đến L2: gửi các thông điệp tùy ý qua `L1ScrollMessenger` và gửi các giao dịch bắt buộc thông qua `EnforcedTxGateway`. Cả hai phương pháp đều cho phép người dùng khởi tạo một giao dịch L2 trên L1 và gọi các hợp đồng tùy ý trên L2. Đối với các thông điệp tùy ý, người gửi của các giao dịch L2 là địa chỉ `L1ScrollMessenger` đã được đặt tên. Đối với các giao dịch bắt buộc, người gửi L2 là một tài khoản sở hữu bên ngoài (EOA). Ngoài ra, chúng tôi cung cấp một số cổng token tiêu chuẩn để giúp người dùng nạp ETH và các token tiêu chuẩn khác bao gồm ERC-20, ERC-677, ERC-721 và ERC-1155. Đơn giản, các cổng này mã hóa các khoản nạp token thành một thông điệp và gửi nó đến các đối tác của chúng trên L2 thông qua hợp đồng `L1ScrollMessenger`. Bạn có thể tìm hiểu thêm chi tiết về các cổng token L1 trong [Cổng Nạp](/technology/bridge/deposit-gateways).
 
 <Aside type="danger" title="">
-Enforced Transactions are not yet enabled on Scroll. In future upgrades, users will be able to use this functionality to bypass the `L1ScrollMessenger` and send messages directly to the `L1MessageQueue`.
+Giao dịch bắt buộc hiện chưa được kích hoạt trên Scroll. Trong các nâng cấp tương lai, người dùng sẽ có thể sử dụng chức năng này để bỏ qua `L1ScrollMessenger` và gửi thông điệp trực tiếp đến `L1MessageQueue`.
 </Aside>
 
-As depicted in Figure 1, both arbitrary messages and enforced transactions are appended to the message queue stored in the `L1MessageQueue` contract. The `L1MessageQueue` contract provides two functions `appendCrossDomainMessage` and `appendEnforcedTransaction` for appending arbitrary messages and enforced transactions respectively.
+Như được mô tả trong Hình 1, cả hai thông điệp tùy ý và giao dịch bắt buộc được thêm vào hàng đợi thông điệp được lưu trữ trong hợp đồng `L1MessageQueue`. Hợp đồng `L1MessageQueue` cung cấp hai chức năng `appendCrossDomainMessage` và `appendEnforcedTransaction` để thêm thông điệp tùy ý và giao dịch bắt buộc vào lượt lượt.
 
 ```solidity
-/// @notice Append an arbitrary L1-to-L2 message into this contract.
-/// @param target The target address on L2.
-/// @param gasLimit The maximum gas can be used for this transaction on L2.
-/// @param data The calldata of the L1-initiated transaction.
+/// @notice Thêm một thông điệp L1-to-L2 tùy ý vào hợp đồng này.
+/// @param target Địa chỉ mục tiêu trên L2.
+/// @param gasLimit Số gas tối đa có thể được sử dụng cho giao dịch này trên L2.
+/// @param data Dữ liệu gọi của giao dịch được khởi tạo từ L1.
 function appendCrossDomainMessage(
     address target,
     uint256 gasLimit,
     bytes calldata data
 ) external;
 
-/// @notice Append an enforced transaction to this contract.
-/// @param sender The sender address of this transaction.
-/// @param target The target address of this transaction.
-/// @param value The value to be transferred on L2.
-/// @param gasLimit The maximum gas should be used for this transaction on L2.
-/// @param data The calldata of the L1-initiated transaction.
+/// @notice Thêm một giao dịch bắt buộc vào hợp đồng này.
+/// @param sender Địa chỉ người gửi của giao dịch này.
+/// @param target Địa chỉ mục tiêu của giao dịch này.
+/// @param value Số tiền được chuyển sang L2.
+/// @param gasLimit Số gas tối đa nên sử dụng cho giao dịch này trên L2.
+/// @param data Dữ liệu gọi của giao dịch được khởi tạo từ L1.
 function appendEnforcedTransaction(
     address sender,
     address target,
@@ -53,54 +45,52 @@ function appendEnforcedTransaction(
     uint256 gasLimit,
     bytes calldata data
 ) external;
+
 ```
 
-Both functions construct an L1-initiated transaction with a new transaction type `L1MessageTx` introduced in the Scroll chain and compute the transaction hash (see more details in the [L1 Message Transaction](/technology/chain/transactions#l1-message-transaction)). `L1MessageQueue` then appends the transaction hash to the message queue, and emits the event `QueueTransaction(sender, target, value, queueIndex, gasLimit, calldata)`. The difference between `appendCrossDomainMessage` and `appendEnforcedTransaction` when constructing L1 message transactions is:
+Cả hai hàm xây dựng một giao dịch được khởi tạo từ L1 với một loại giao dịch mới L1MessageTx được giới thiệu trong chuỗi Scroll và tính toán mã băm của giao dịch (xem thêm chi tiết tại Giao Dịch Thông Điệp L1). L1MessageQueue sau đó thêm mã băm của giao dịch vào hàng đợi thông điệp, và phát ra sự kiện QueueTransaction(sender, target, value, queueIndex, gasLimit, calldata). Sự khác biệt giữa appendCrossDomainMessage và appendEnforcedTransaction khi xây dựng các giao dịch thông điệp L1 là:
 
-- `appendCrossDomainMessage` can be only called by `L1ScrollMessenger` and it uses the [aliased address](#address-alias) of `msg.sender`, which will be the address of `L1ScrollMessenger`, as the transaction sender.
-- `appendEnforcedTransaction` can be only called by `EnforcedTxGateway` and it uses `sender` from the function parameter as the transaction sender. This allows users to enforce a withdrawal or transfer of ETH from their L2 accounts directly through the L1 bridge.
+appendCrossDomainMessage chỉ có thể được gọi bởi L1ScrollMessenger và nó sử dụng [địa chỉ được đặt tên](#địa chỉ-đặt tên) của msg.sender, mà sẽ là địa chỉ của L1ScrollMessenger, như người gửi giao dịch.
+appendEnforcedTransaction chỉ có thể được gọi bởi EnforcedTxGateway và nó sử dụng sender từ tham số hàm như người gửi giao dịch. Điều này cho phép người dùng bắt buộc một rút tiền hoặc chuyển tiền ETH từ các tài khoản L2 của họ trực tiếp thông qua cầu nối L1.
+Sau khi giao dịch được thực hiện thành công trên L1, bộ giám sát trong bộ xử lý Scroll theo dõi hợp đồng L1MessageQueue thu thập các sự kiện QueueTransaction mới từ các khối L1. Bộ xử lý sau đó xây dựng một giao dịch L1MessageTx mới cho mỗi sự kiện và thêm chúng vào hàng đợi giao dịch L1 cục bộ của mình. Khi xây dựng một khối L2 mới, bộ xử lý bao gồm các giao dịch từ cả hàng đợi giao dịch L1 của mình và bộ nhớ tạm L2 của mình. Lưu ý rằng các giao dịch thông điệp L1 phải được bao gồm theo thứ tự tuần tự dựa trên thứ tự hàng đợi thông điệp L1 trong hợp đồng L1MessageQueue. Các giao dịch L1MessageTx luôn đến trước trong các khối L2 tiếp theo sau bởi các giao dịch L2. Hiện tại, chúng tôi giới hạn số lượng giao dịch L1MessageTx trong một khối L2 là NumL1MessagesPerBlock (hiện được đặt thành 10).
 
-After the transaction is successfully executed on L1, the watcher in the Scroll sequencer that monitors the `L1MessageQueue` contract collects the new `QueueTransaction` events from L1 blocks. The sequencer then constructs a new `L1MessageTx` transaction per event and appends them to its local L1 transaction queue. When constructing a new L2 block, the sequencer includes the transactions from both its L1 transaction queue and its L2 mempool. Note that the L1 message transactions must be included sequentially based on the L1 message queue order in the `L1MessageQueue` contract. `L1MessageTx` transactions always come first in the L2 blocks followed by L2 transactions. Currently, we limit the number of `L1MessageTx` transactions in a L2 block to `NumL1MessagesPerBlock` (currently set to 10).
+Tiếp theo, chúng tôi sẽ mở rộng thêm về quy trình cụ thể của việc gửi thông điệp tùy ý qua L1ScrollMessenger và gửi các giao dịch bắt buộc thông qua EnforcedTxGateway.
 
-Next, we will expand more on the specific process of sending arbitrary messages via `L1ScrollMessenger` and sending enforced transactions via `EnforcedTxGateway`.
+## Gửi Các Thông Điệp Tùy Ý (Sending Arbitrary Messages)
 
-### Sending Arbitrary Messages
-
-The `L1ScrollMessenger` contract provides two `sendMessage` functions to send arbitrary messages. The only difference is that the second one allows users to specify a refund address other than the sender address to receive a fee refund.
+Hợp đồng L1ScrollMessenger cung cấp hai hàm sendMessage để gửi các thông điệp tùy ý. Sự khác biệt duy nhất là hàm thứ hai cho phép người dùng chỉ định một địa chỉ hoàn tiền khác với địa chỉ người gửi để nhận hoàn tiền phí.
 
 <ToggleElement anchor="sendMessage function signatures">
-<div slot="title"><code>sendMessage</code> function signatures</div>
+<div slot="title">Các chữ ký chức năng <code>sendMessage</code></div>
 ```solidity
-/// @param target The target address on L2.
-/// @param value The value to deposit to L2 from `msg.value`.
-/// @param message The message passed to target contract.
-/// @param gasLimit The maximum gas can be used for this transaction on L2.
+/// @param target Địa chỉ mục tiêu trên L2.
+/// @param value Giá trị để nạp vào L2 từ `msg.value`.
+/// @param message Thông điệp được truyền cho hợp đồng mục tiêu.
+/// @param gasLimit Số gas tối đa có thể được sử dụng cho giao dịch này trên L2.
 function sendMessage(
     address target,
     uint256 value,
     bytes memory message,
     uint256 gasLimit
 ) external payable;
-
-/// @param target The target address on L2.
-/// @param value The value to deposit to L2 from `msg.value`.
-/// @param message The message passed to target contract.
-/// @param gasLimit The maximum gas can be used for this transaction on L2.
-/// @param refundAddress The address to refund excessive fee on L1.
+/// @param target Địa chỉ mục tiêu trên L2.
+/// @param value Giá trị để nạp vào L2 từ msg.value.
+/// @param message Thông điệp được truyền cho hợp đồng mục tiêu.
+/// @param gasLimit Số gas tối đa có thể được sử dụng cho giao dịch này trên L2.
+/// @param refundAddress Địa chỉ để hoàn tiền phí vượt quá trên L1.
 function sendMessage(
-    address target,
-    uint256 value,
-    bytes calldata message,
-    uint256 gasLimit,
-    address refundAddress
+address target,
+uint256 value,
+bytes calldata message,
+uint256 gasLimit,
+address refundAddress
 ) external payable;
 ````
 </ToggleElement>
 
+Cả hai hàm đều yêu cầu người dùng cung cấp một giới hạn gas cho giao dịch `L1MessageTx` tương ứng trên L2 và trả trước [phí chuyển thông điệp](#phí-chuyển thông điệp) trên L1, được tính dựa trên số lượng giới hạn gas. Phí được thu về một hợp đồng `feeVault` trên L1. Trong trường hợp giao dịch thất bại trên L2 vì người dùng không đặt giới hạn gas chính xác cho thông điệp của họ trên L1, người dùng có thể chạy lại cùng một thông điệp với một giới hạn gas cao hơn. Bạn có thể tìm hiểu thêm chi tiết trong phần [Chạy lại các thông điệp thất bại](#chạy lại các thông điệp thất bại), nhưng vì bất kỳ phần không sử dụng nào của các khoản phí này đều được hoàn trả cho người dùng, không có hình phạt cho việc ước lượng quá cao về giới hạn gas.
 
-Both functions require users to provide a gas limit for the corresponding `L1MessageTx` transaction on L2 and prepay the [message relay fee](#message-relay-fee) on L1, which is calculated based on the gas limit amount. The fee is collected to a `feeVault` contract on L1. In case the transaction fails on L2 because the user did not set the correct gas limit for their message on L1, the user can replay the same message with a higher gas limit. You can find more details in the [Retrying failed messages](#retrying-failed-messages) section, but since any unused portion of these fees is refunded to the user, there is no penalty for overestimating the gas limit.
-
-The `sendMessage` functions encode the arguments into a cross-domain message (see the code snippet below), where the message nonce is the next queue index of the L1 message queue. The encoded data is then used as calldata in the `L1MessageTx` transaction executed on L2. Note that such cross-domain messages always call the `relayMessage` function of the `L2ScrollMessenger` contract on L2.
+Các hàm `sendMessage` mã hóa các đối số thành một thông điệp giữa các miền (xem đoạn mã bên dưới), trong đó nonce của thông điệp là chỉ số hàng đợi tiếp theo của hàng đợi thông điệp L1. Dữ liệu được mã hóa sau đó được sử dụng như calldata trong giao dịch `L1MessageTx` được thực hiện trên L2. Lưu ý rằng các thông điệp giữa các miền luôn gọi hàm `relayMessage` của hợp đồng `L2ScrollMessenger` trên L2.
 
 ```solidity
 abi.encodeWithSignature(
@@ -113,24 +103,22 @@ abi.encodeWithSignature(
 )
 ````
 
-The deposited ETH of `value` amount is locked in the `L1ScrollMessenger` contract. If the amount of ETH in the message cannot cover the message relay fee and the deposited amount, the transaction will be reverted. The `L1ScrollMessenger` contract will refund the excess amount to the designated `refundAddress` or the transaction sender otherwise. Finally, `L1ScrollMessenger` appends the cross-domain message to `L1MessageQueue` via the `appendCrossDomainMessage` method.
+Số tiền ETH được gửi của số lượng value được khóa trong hợp đồng L1ScrollMessenger. Nếu số tiền ETH trong thông điệp không thể đủ để thanh toán phí chuyển thông điệp và số tiền đã nạp, giao dịch sẽ bị quay lại. Hợp đồng L1ScrollMessenger sẽ hoàn trả số tiền dư cho địa chỉ hoàn tiền đã được chỉ định hoặc người gửi giao dịch nếu không. Cuối cùng, L1ScrollMessenger thêm thông điệp giữa các miền vào L1MessageQueue qua phương thức appendCrossDomainMessage.
 
-### Sending Enforced Transactions
-
+Gửi Các Giao Dịch Bắt Buộc
 <Aside type="danger" title="">
-Enforced Transactions are not yet enabled on Scroll. In future upgrades, users will be able to use this functionality to bypass the `L1ScrollMessenger` and send messages directly to the `L1MessageQueue`.
+Giao Dịch Bắt Buộc hiện chưa được kích hoạt trên Scroll. Trong các nâng cấp tương lai, người dùng sẽ có thể sử dụng chức năng này để bỏ qua `L1ScrollMessenger` và gửi thông điệp trực tiếp đến `L1MessageQueue`.
 </Aside>
-
-The `EnforcedTxGateway` contract provides two `sendTransaction` functions to send an enforced transaction. In the first function, the sender of the generated `L1MessageTx` transaction is the transaction sender. On the other hand, the second function uses the passed `sender` address as the sender of the `L1MessageTx` transaction. This allows a third party to send an enforced transaction on behalf of the user and pay the relay fee. Note that the second function requires providing a valid signature of the generated `L1MessageTx` transaction that matches the `sender` address. Both `sendTransaction` functions enforce the sender to be an EOA account.
+Hợp đồng EnforcedTxGateway cung cấp hai hàm sendTransaction để gửi một giao dịch bắt buộc. Trong hàm đầu tiên, người gửi của giao dịch L1MessageTx được tạo ra là người gửi giao dịch. Ngược lại, hàm thứ hai sử dụng địa chỉ sender được truyền qua như là người gửi của giao dịch L1MessageTx. Điều này cho phép một bên thứ ba gửi một giao dịch bắt buộc thay mặt cho người dùng và trả phí chuyển thông điệp. Lưu ý rằng hàm thứ hai yêu cầu cung cấp một chữ ký hợp lệ của giao dịch L1MessageTx được tạo ra phù hợp với địa chỉ sender. Cả hai hàm sendTransaction đều yêu cầu người gửi là một tài khoản EOA.
 
 <ToggleElement anchor="sendTransaction function signatures">
 <div slot="title"><code>sendTransaction</code> function signatures</div>
 
 ```solidity
-/// @param target The target address on L2.
-/// @param value The value to withdraw from the `tx.origin` address on L2.
-/// @param gasLimit The maximum gas can be used for this transaction on L2.
-/// @param data The calldata passed to target contract.
+/// @param target Địa chỉ mục tiêu trên L2.
+/// @param value Giá trị để rút từ địa chỉ `tx.origin` trên L2.
+/// @param gasLimit Số gas tối đa có thể được sử dụng cho giao dịch này trên L2.
+/// @param data Dữ liệu gọi được truyền cho hợp đồng mục tiêu.
 function sendTransaction(
     address target,
     uint256 value,
@@ -138,13 +126,13 @@ function sendTransaction(
     bytes calldata data
 ) external payable;
 
-/// @param sender The sender address who will initiate this transaction on L2.
-/// @param target The target address on L2.
-/// @param value The value to withdraw from the `sender` address on L2.
-/// @param gasLimit The maximum gas can be used for this transaction on L2.
-/// @param data The calldata passed to target contract.
-/// @param signature The signature for the corresponding `L1MessageTx` transaction.
-/// @param refundAddress The address to refund excessive fee on L1.
+/// @param sender Địa chỉ người gửi sẽ khởi tạo giao dịch này trên L2.
+/// @param target Địa chỉ mục tiêu trên L2.
+/// @param value Giá trị để rút từ địa chỉ `sender` trên L2.
+/// @param gasLimit Số gas tối đa có thể được sử dụng cho giao dịch này trên L2.
+/// @param data Dữ liệu gọi được truyền cho hợp đồng mục tiêu.
+/// @param signature Chữ ký cho giao dịch `L1MessageTx` tương ứng.
+/// @param refundAddress Địa chỉ để hoàn tiền phí vượt quá trên L1.
 function sendTransaction(
     address sender,
     address target,
@@ -154,15 +142,16 @@ function sendTransaction(
     bytes memory signature,
     address refundAddress
 ) external payable;
+
 ```
 
 </ToggleElement>
 
-Similar to arbitrary message relaying, `sendTransaction` deducts the message relay fee and transfers it to the L1 `feeVault` account. But a key difference is that the `value` passed to the function indicates the amount of ETH to be transferred from the sender account on L2, not on L1. Hence, the `msg.value` only needs to cover the [message relay fee](#message-relay-fee). If the amount of ETH in the message cannot cover the fee, the transaction will fail. Any excess fee is refunded to the transaction sender in the first function and to the `refundAddress` in the second function. Lastly, `EnforcedTxGateway` calls `L1MessageQueue.appendEnforcedTransaction` to append the transaction to the message queue.
+Tương tự như việc chuyển thông điệp tùy ý, `sendTransaction` trừ phí chuyển thông điệp từ số tiền ETH được nạp đến tài khoản L1 `feeVault`. Nhưng điểm khác biệt chính là `value` được chuyển đến hàm cho biết số lượng ETH được chuyển từ tài khoản người gửi trên L2, không ở L1. Do đó, `msg.value` chỉ cần bao gồm [phí chuyển tiếp tin nhắn](#message-relay-fee). Nếu số lượng ETH trong tin nhắn không thể trả phí thì giao dịch sẽ không thành công. Mọi khoản phí vượt quá sẽ được hoàn trả cho người gửi giao dịch ở chức năng đầu tiên và cho `refundAddress` ở chức năng thứ hai. Cuối cùng, `EnforcedTxGateway` gọi `L1MessageQueue.appendEnforcedTransaction` để thêm giao dịch vào hàng đợi tin nhắn.
 
-### Retrying Failed Messages
+### Đang thử lại tin nhắn không thành công (Retrying Failed Messages)
 
-If a `L1MessageTx` transaction fails on L2 due to insufficient gas, users can replay the message with a higher gas limit. `L1ScrollMessenger` provides the method `replayMessage` that allows users to send the same information as the previous failed message with a higher gas limit. This message will become a new `L1MessageTx` transaction on L2. Note that we won't refund the gas fee for the previous failed transaction as it is already processed on L2.
+Nếu giao dịch `L1MessageTx` không thành công trên L2 do không đủ gas, người dùng có thể phát lại tin nhắn với giới hạn gas cao hơn. `L1ScrollMessenger` cung cấp phương thức `replayMessage` cho phép người dùng gửi thông tin tương tự như tin nhắn không thành công trước đó với giới hạn gas cao hơn. Tin nhắn này sẽ trở thành giao dịch `L1MessageTx` mới trên L2. Lưu ý rằng chúng tôi sẽ không hoàn lại phí gas cho giao dịch thất bại trước đó vì giao dịch này đã được xử lý trên L2.
 
 <ToggleElement anchor="replayMessage function signature">
 <div slot="title"><code>replayMessage</code> function signature</div>
@@ -188,30 +177,30 @@ function replayMessage(
 
 </ToggleElement>
 
-Because the `L2ScrollMessenger` contract records all L1 messages that were successfully relayed to L2, the transaction of the replayed message will be reverted on L2 if the original message succeeds.
+Bởi vì hợp đồng `L2ScrollMessenger` ghi lại tất cả các tin nhắn L1 đã được chuyển tiếp thành công đến L2, giao dịch của tin nhắn được phát lại sẽ được hoàn nguyên trên L2 nếu tin nhắn ban đầu thành công.
 
-### Message Relay Fee
+### Phí chuyển tiếp tin nhắn (Message Relay Fee)
 
-The contract `L2GasPriceOracle` deployed on L1 computes the relay fee of a message given its gas limit. This contract stores the `l2BaseFee` in its storage, which is updated by a dedicated relayer run by Scroll currently. The relay fee of L1-to-L2 messages is `gasLimit * l2BaseFee`.
+Hợp đồng `L2GasPriceOracle` được triển khai trên L1 tính toán phí chuyển tiếp của tin nhắn dựa trên giới hạn gas của nó. Hợp đồng này lưu trữ `l2BaseFee` trong bộ lưu trữ của nó, hiện được cập nhật bởi một trình chuyển tiếp chuyên dụng do Scroll điều hành. Phí chuyển tiếp của tin nhắn L1-to-L2 là `gasLimit * l2BaseFee`.
 
 <Aside type="tip" title="Upgrade Notice">
-During the February 2024 Bridge Upgrade, `L2GasPriceOracle` will be deprecated, with its functionality moved into the `L1MessageQueueWithGasPriceOracle` contract.
+Trong đợt nâng cấp cầu tháng 2 năm 2024, `L2GasPriceOracle` sẽ không được dùng nữa và chức năng của nó sẽ được chuyển sang hợp đồng `L1MessageQueueWithGasPriceOracle`.
 
-The upgrade is expected to be finalized on February 21, 2024, after a two-week timelock. Scroll Sepolia has already undergone this upgrade. Read more [here](https://scroll.io/blog/protocol-upgrade-bridging-cost-reduction).
+Quá trình nâng cấp dự kiến ​​sẽ hoàn tất vào ngày 21 tháng 2 năm 2024, sau khoảng thời gian hai tuần. Scroll Sepolia đã trải qua quá trình nâng cấp này. Đọc thêm [tại đây](https://scroll.io/blog/protocol-upgrade-bridging-cost-reduction).
 
 </Aside>
 
 ### Address Alias
 
-Due to the behavior of the `CREATE` opcode, it is possible that someone deploys a contract at the same address on L1 and L2 but with different bytecode. To avoid malicious users taking advantage of this, the bridge applies an address alias when the message sender is a contract on L1. The aliased sender address of the L1 message transaction is `l1_contract_address + offset` where the `offset` is `0x1111000000000000000000000000000000001111`.
+Do hoạt động của opcode `CREATE`, có thể ai đó triển khai hợp đồng tại cùng một địa chỉ trên L1 và L2 nhưng với mã byte khác nhau. Để tránh những người dùng độc hại lợi dụng điều này, bridge sẽ áp dụng bí danh địa chỉ khi người gửi tin nhắn là hợp đồng trên L1. Địa chỉ người gửi bí danh của giao dịch tin nhắn L1 là `l1_contract_address + offset` trong đó `offset` là `0x1111000000000000000000000000000000000001111`.
 
-## Sending Messages from L2 to L1
+## Gửi tin nhắn từ L2 đến L1 (Sending Messages from L2 to L1)
 
 <ClickToZoom src={L2ToL1} alt="L2 to L1 workflow" caption="Figure 2. L2 to L1 message relay workflow" />
 
-On L2, users can send arbitrary messages through `L2ScrollMessenger` to withdraw tokens and call L1 contracts. Similar to L1, we have built several standard token gateways to make it easier to initialize token withdrawals. For more details about L2 token gateways, please refer to the [Withdraw Gateways](/technology/bridge/withdraw-gateways).
+Trên L2, người dùng có thể gửi tin nhắn tùy ý thông qua `L2ScrollMessenger` để rút token và gọi các hợp đồng L1. Tương tự như L1, chúng tôi đã xây dựng một số cổng token tiêu chuẩn để giúp việc khởi tạo việc rút token trở nên dễ dàng hơn. Để biết thêm chi tiết về cổng mã thông báo L2, vui lòng tham khảo [Cổng rút tiền](/technology/bridge/rút-gateways).
 
-The `L2ScrollMessenger` contract also provides a `sendMessage` function. The difference from the `L1ScrollMessenger.sendMessage` is that the `gasLimit` parameter is ignored in the function because the withdrawal execution transaction on L1 is submitted by users and the transaction fee is paid on L1 directly. Thus, the `sendMessage` function requires `msg.value` to be equal to the parameter `value`. The function encodes the arguments into a cross-domain message following the same schema as in [`L1ScrollMessenger`](#sending-arbitrary-messages).
+Hợp đồng `L2ScrollMessenger` cũng cung cấp chức năng `sendMessage`. Sự khác biệt so với `L1ScrollMessenger.sendMessage` là tham số `gasLimit` bị bỏ qua trong hàm vì giao dịch thực hiện rút tiền trên L1 được người dùng gửi và phí giao dịch được thanh toán trực tiếp trên L1. Do đó, hàm `sendMessage` yêu cầu `msg.value` phải bằng tham số `value`. Hàm mã hóa các đối số thành một thông báo tên miền chéo theo cùng một lược đồ như trong [`L1ScrollMessenger`](#sending-arbitrary-messages).
 
 <ToggleElement anchor="sendMessage function signatures">
 <div slot="title"><code>sendMessage</code> function signatures</div>
@@ -231,18 +220,18 @@ function sendMessage(
 
 </ToggleElement>
 
-Next, the cross-domain message hash is appended to `L2MessageQueue` by calling its `appendMessage` function. The `L2MessageQueue` contract maintains the [Withdraw Trie](#withdraw-trie), an append-only Merkle tree. Every time a new message is appended to the queue, the contract inserts it into the Withdraw Trie and updates the trie's root hash.
+Tiếp theo, hàm băm thông báo giữa các miền được thêm vào `L2MessageQueue` bằng cách gọi hàm `appendMessage` của nó. Hợp đồng `L2MessageQueue` duy trì [Rút Trie](#rút-trie), một cây Merkle chỉ nối thêm. Mỗi khi một tin nhắn mới được thêm vào hàng đợi, hợp đồng sẽ chèn nó vào Withdraw Trie và cập nhật hàm băm gốc của trie.
 
-After the transaction batch containing users' L2-to-L1 messages is finalized on the L1 rollup contract, users need to submit corresponding _Execute Withdrawal_ transactions to call `relayMessageWithProof` method in the `L1ScrollMessenger` contract that executes the withdrawal on L1. Thanks to the Merkle proofs, the finalization of withdrawal transactions on L1 is trustless and can be submitted by user themselves or by a third party on behalf of users.
+Sau khi hoàn tất lô giao dịch chứa thông báo L2-to-L1 của người dùng trên hợp đồng tổng hợp L1, người dùng cần gửi giao dịch _Thực thi rút tiền_ tương ứng để gọi phương thức `relayMessageWithProof` trong hợp đồng `L1ScrollMessenger` thực hiện việc rút tiền trên L1. Nhờ bằng chứng Merkle, việc hoàn tất các giao dịch rút tiền trên L1 là không đáng tin cậy và có thể được gửi bởi chính người dùng hoặc bên thứ ba thay mặt cho người dùng.
 
-To make it easier to construct a withdraw MIP, Scroll maintains a service called Bridge History API. Bridge History API monitors `SentMessage` events emitted from `L2ScrollMessenger` and maintains a Withdraw Trie internally. It continuously generates Merkle proofs for every withdrawal messages. Users and third-party services can query Merkle proofs from the Bridge History API to include in the _Execute Withdrawal_ transactions.
+Để giúp việc xây dựng MIP rút tiền dễ dàng hơn, Scroll duy trì một dịch vụ có tên là Bridge History API. API lịch sử cầu nối giám sát các sự kiện `SentMessage` được phát ra từ `L2ScrollMessenger` và duy trì Withdraw Trie trong nội bộ. Nó liên tục tạo ra bằng chứng Merkle cho mỗi tin nhắn rút tiền. Người dùng và dịch vụ của bên thứ ba có thể truy vấn bằng chứng Merkle từ API Lịch sử cầu nối để đưa vào các giao dịch _Thực thi rút tiền_.
 
-Note that the execute withdrawal transactions can be submitted by the users themselves or by a third-party service.
+Lưu ý rằng các giao dịch rút tiền thực hiện có thể được gửi bởi chính người dùng hoặc dịch vụ của bên thứ ba.
 
 ### Withdraw Trie
 
 <ClickToZoom src={WithdrawTrie} alt="Withdraw Trie structure" caption="Figure 3. Withdraw Trie structure" />
 
-The Withdraw Trie is a dense binary Merkle tree. The hash of a leaf node is inherited from the message hash, while the hash of a non-leaf node is the Keccak hash digest of the concatenated hashes of its two children. The depth of the Withdraw Trie grows dynamically depending on the number of messages appended to the trie.
+Withdraw Trie là một cây Merkle nhị phân dày đặc. Giá trị băm của nút lá được kế thừa từ giá trị băm của thông báo, trong khi giá trị băm của nút không phải là lá là bản tóm tắt băm Keccak của giá trị băm được nối của hai nút con của nó. Độ sâu của Trie Rút tiền tăng lên linh hoạt tùy thuộc vào số lượng tin nhắn được thêm vào trie.
 
-Figure 3(a) shows an example of a complete 3-layer withdraw trie. When the number of leaves cannot saturate a complete binary tree, we pad leaf nodes with hash 0, as depicted in Figure 3(b) and 3(c). When appending a new message to a non-complete Withdraw Trie, the padding node will be then replaced by a new leaf node with the actual message hash.
+Hình 3(a) hiển thị ví dụ về thử nghiệm rút tiền 3 lớp hoàn chỉnh. Khi số lượng lá không thể bão hòa một cây nhị phân hoàn chỉnh, chúng tôi đệm các nút lá bằng hàm băm 0, như mô tả trong Hình 3(b) và 3(c). Khi thêm một tin nhắn mới vào Withdraw Trie chưa hoàn chỉnh, nút đệm sau đó sẽ được thay thế bằng một nút lá mới với hàm băm thông báo thực tế.
