@@ -1,42 +1,41 @@
 ---
 section: gettingStarted
-date: Last Modified
-title: "Setup"
-lang: "en"
-permalink: "user-guide/setup/"
-whatsnext: { "Grab Sepolia ETH from a Faucet": "/user-guide/faucet" }
-excerpt: "You need to have a wallet to interact with the Scroll Testnet. You can find some example wallets and configuration tips here."
+date: Được sửa lần cuối
+title: "Thiết lập"
+lang: "vn"
+permalink: "hướng-dẫn-người-dùng/thiết-lập/"
+whatsnext: { "Nhận ETH từ một Vòi nước Sepolia": "/hướng-dẫn-người-dùng/vòi-nước" }
+excerpt: "Bạn cần có một ví để tương tác với Mạng thử nghiệm Scroll. Bạn có thể tìm thấy một số ví mẫu và mẹo cấu hình dưới đây."
 ---
 
 import Aside from "../../../../components/Aside.astro"
 
-## Wallet
+## Ví
 
-You need to have a wallet to interact with dApps on the Scroll Sepolia testnet. You can find some example wallets and configuration tips below. Our Bridge app supports MetaMask, Coinbase Wallet, or any wallet with WalletConnect support.
+Bạn cần có một ví để tương tác với ứng dụng phi tập trung trên mạng thử nghiệm Scroll Sepolia. Dưới đây là một số ví mẫu và mẹo cấu hình:
 
 ### MetaMask
 
-You can install MetaMask from their [official website](https://metamask.io/download/).
+Bạn có thể cài đặt MetaMask từ [trang web chính thức](https://metamask.io/download/) của họ.
 
-You can import the Scroll Sepolia testnet configurations to your MetaMask wallet. To do this, visit the [Scroll Sepolia portal](https://sepolia.scroll.io/portal), then click the "Connect Wallet" button and select MetaMask. Next, click the "Add to MetaMask" buttons for Sepolia Testnet and Scroll Sepolia Testnet. This will import the chain ID and RPC URLs for the Scroll Sepolia Testnet. The Sepolia Testnet is also configured on MetaMask by default. To show it, click "Show/hide test networks" in the MetaMask network selection dropdown menu.
+Bạn có thể nhập cấu hình mạng thử nghiệm Scroll Sepolia vào ví MetaMask của bạn. Để làm điều này, truy cập [cổng thông tin Scroll Sepolia](https://sepolia.scroll.io/portal), sau đó nhấn nút "Kết nối Ví" và chọn MetaMask. Tiếp theo, nhấn các nút "Thêm vào MetaMask" cho Mạng thử nghiệm Sepolia và Mạng thử nghiệm Scroll Sepolia. Điều này sẽ nhập ID chuỗi và URL RPC cho Mạng thử nghiệm Scroll Sepolia. Mạng thử nghiệm Sepolia cũng được cấu hình trên MetaMask theo mặc định. Để hiển thị nó, nhấp vào "Hiển thị/Ẩn mạng thử nghiệm" trong menu thả xuống chọn mạng của MetaMask.
 
-### Manual network configuration (for other wallets)
+### Cấu hình mạng bằng tay (cho các ví khác)
 
-The **Add to wallet** links may not be compatible with every wallet. If you are having issues using them, you may need to manually add the _Sepolia Testnet_ and _Scroll Sepolia_ network by inserting the configuration details from the table below:
+Các liên kết **Thêm vào ví** có thể không tương thích với mọi ví. Nếu bạn gặp vấn đề khi sử dụng chúng, bạn có thể cần thêm mạng _Mạng thử nghiệm Sepolia_ và _Scroll Sepolia_ vào ví bằng cách thêm các chi tiết cấu hình từ bảng dưới đây:
 
-| Network Name       | Scroll Sepolia Testnet                                           | Sepolia Testnet                                                              |
-| ------------------ | ---------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| RPC URL            | [https://sepolia-rpc.scroll.io/](https://sepolia-rpc.scroll.io/) | [https://eth-sepolia-public.unifra.io](https://eth-sepolia-public.unifra.io) |
-| Chain ID           | 534351                                                           | 11155111                                                                     |
-| Currency Symbol    | ETH                                                              | ETH                                                                          |
-| Block Explorer URL | [https://sepolia.scrollscan.com](https://sepolia.scrollscan.com) | [https://sepolia.etherscan.io](https://sepolia.etherscan.io)                 |
+| Tên Mạng          | Mạng thử nghiệm Scroll Sepolia                                      | Mạng thử nghiệm Sepolia                                                             |
+| ------------------| -------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| URL RPC            | [https://sepolia-rpc.scroll.io/](https://sepolia-rpc.scroll.io/)     | [https://eth-sepolia-public.unifra.io](https://eth-sepolia-public.unifra.io)       |
+| ID Chuỗi          | 534351                                                               | 11155111                                                                            |
+| Ký hiệu Tiền Tệ  | ETH                                                                  | ETH                                                                                 |
+| URL Trình Duyệt Khối | [https://sepolia.scrollscan.com](https://sepolia.scrollscan.com)   | [https://sepolia.etherscan.io](https://sepolia.etherscan.io)                        |
 
-<Aside type="tip" title="Additional Block Explorers">
-  For looking into activity on Layer 1, use Etherscan's [Sepolia Testnet Explorer](https://sepolia.etherscan.io).
+<Aside type="tip" title="Trình Duyệt Khối Bổ Sung">
+  Để xem hoạt động trên Lớp 1, hãy sử dụng [Trình duyệt Mạng thử nghiệm Sepolia](https://sepolia.etherscan.io).
 
-For an alternative block explorer experience, Unifra has built [L2Scan](https://scroll-sepolia.l2scan.co/), which lets users
-explore additional aspects of the Scroll Sepolia Testnet.
-[Dora](https://www.ondora.xyz/network/scroll-sepolia/interactions) also supports Scroll Sepolia and provides a
-multi-chain view of blockchain activity.
+Đối với một trải nghiệm trình duyệt khối thay thế, Unifra đã xây dựng [L2Scan](https://scroll-sepolia.l2scan.co/), cho phép người dùng khám phá các khía cạnh bổ sung của Mạng thử nghiệm Scroll Sepolia.
+[Dora](https://www.ondora.xyz/network/scroll-sepolia/interactions) cũng hỗ trợ Scroll Sepolia và cung cấp một
+quan điểm đa chuỗi về hoạt động blockchain.
 
 </Aside>
