@@ -1,18 +1,18 @@
 ---
 section: gettingStarted
-date: Last Modified
-title: "Transfer Tokens"
+date: Được sửa lần cuối
+title: "Chuyển Mã thông báo"
 lang: "en"
-permalink: "user-guide/transfer-tokens/"
-excerpt: "You can use your wallet as usual to transfer tokens within the Scroll Sepolia Testnet."
+permalink: "hướng-dẫn-người-dùng/chuyển-mã-thông-báo/"
+excerpt: "Bạn có thể sử dụng ví của mình như thường lệ để chuyển mã thông báo trong Mạng thử nghiệm Scroll Sepolia."
 ---
 
-You can use your wallet's normal function for transferring tokens within the Scroll Sepolia Testnet -- no additional configurations are needed.
+Bạn có thể sử dụng chức năng bình thường của ví để chuyển mã thông báo trong Mạng thử nghiệm Scroll Sepolia - không cần thiết lập bổ sung.
 
-## Sending a token in MetaMask
+## Gửi một mã thông báo trong MetaMask
 
-1. Open your wallet and switch to **Scroll Sepolia Testnet**.
-2. Click the **Send** button in the middle and type the address you want to transfer to in the text box.
-3. Select the token in the **Asset** box and type the amount of token that you want to transfer.
-4. Click the **Next** button and then click the **Confirm** button to send out the transaction.
-5. After sending, you can find the transaction in the **Activity** tab in your wallet.
+1. Mở ví của bạn và chuyển sang **Mạng thử nghiệm Scroll Sepolia**.
+2. Nhấp vào nút **Gửi** ở giữa và nhập địa chỉ bạn muốn chuyển đến vào ô văn bản.
+3. Chọn mã thông báo trong ô **Tài sản** và nhập số lượng mã thông báo mà bạn muốn chuyển.
+4. Nhấp vào nút **Tiếp theo** và sau đó nhấp vào nút **Xác nhận** để gửi giao dịch đi.
+5. Sau khi gửi, bạn có thể tìm thấy giao dịch trong tab **Hoạt động** trong ví của bạn.
