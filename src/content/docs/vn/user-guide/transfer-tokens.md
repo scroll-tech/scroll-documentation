@@ -2,7 +2,7 @@
 section: gettingStarted
 date: Được sửa lần cuối
 title: "Chuyển Mã thông báo"
-lang: "en"
+lang: "vn"
 permalink: "hướng-dẫn-người-dùng/chuyển-mã-thông-báo/"
 excerpt: "Bạn có thể sử dụng ví của mình như thường lệ để chuyển mã thông báo trong Mạng thử nghiệm Scroll Sepolia."
 ---
