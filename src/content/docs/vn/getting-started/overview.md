@@ -2,7 +2,7 @@
 section: gettingStarted
 date: Last Modified
 title: "Tổng quan về Scroll"
-lang: "en"
+lang: "vn"
 permalink: "tài-liệu/kiến-thức-chung/"
 excerpt: "ZK Rollups và Scroll"
 whatsnext: { "Hướng dẫn người dùng": "/hướng-dẫn-người-dùng/", "Xây dựng trên Scroll": "/nhà-phát-triển/" }
