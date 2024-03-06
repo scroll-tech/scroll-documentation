@@ -29,7 +29,7 @@ Tüm Ağ Geçidi sözleşmeleri mesajı oluşturacak ve L2'ye isteğe bağlı me
   Gelecekteki yükseltmelerde, kullanıcılar 'L1ScrollMessenger'ı atlayıp doğrudan 'L1MessageQueue'ya mesaj gönderebilecekler. 'L1MessageQueue' aracılığıyla bir mesaj gönderilirse, işlemin göndereni, 'L1ScrollMessenger'ın adresi değil, işlemi gönderen kullanıcının adresi olacaktır.
 </Aside>
 
-L1'de yeni bir blok oluşturulduğunda, Watcher "L1MessageQueue"daki mesajı algılayacak ve bunu, işlemi l2geth düğümü aracılığıyla L2'ye gönderecek olan Relayer hizmetine iletecektir. Son olarak, l2geth düğümü, işlemi L2'de yürütülmek üzere 'L2ScrollMessenger' sözleşmesine iletecektir.
+L1'de yeni bir blok oluşturulduğunda, Watcher "L1MessageQueue"daki mesajı algılayacak ve bunu, işlemi l2geth düğümü aracılığıyla L2'ye gönderecek olan Aktarıcı hizmetine iletecektir. Son olarak, l2geth düğümü, işlemi L2'de yürütülmek üzere 'L2ScrollMessenger' sözleşmesine iletecektir.
 
 ## L2'den ETH ve ERC20 tokenleri çekin
 
