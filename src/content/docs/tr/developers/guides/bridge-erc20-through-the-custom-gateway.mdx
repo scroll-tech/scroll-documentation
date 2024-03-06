@@ -95,7 +95,7 @@ contract L2Token is ERC20, IScrollERC20Extension {
 
 ## Adım 3: Token'ı Scroll Köprüsü'ne ekleyin
 
-Token'ı Scroll'deki "L2CustomERC20Gateway" sözleşmesine ve L1'deki "L1CustomERC20Gateway" sözleşmesine eklemek için Scroll ekibiyle iletişime geçmeniz gerekiyor. Ayrıca tokenınızı Scroll resmi köprü kullanıcı arayüzüne eklemek için [token listeleri](https://github.com/scroll-tech/token-list) deposundaki talimatları izleyin.
+Token'ı Scroll'daki "L2CustomERC20Gateway" sözleşmesine ve L1'deki "L1CustomERC20Gateway" sözleşmesine eklemek için Scroll ekibiyle iletişime geçmeniz gerekiyor. Ayrıca tokenınızı Scroll resmi köprü kullanıcı arayüzüne eklemek için [token listeleri](https://github.com/scroll-tech/token-list) deposundaki talimatları izleyin.
 
 ## Adım 4: Tokenları yatırın
 
@@ -107,7 +107,7 @@ Tokenları L2'den L1'e geri göndermek için benzer adımları izleyeceksiniz. �
 
 ## Alternatif Yaklaşım: Özel bir L1 Ağ Geçidi sözleşmesi başlatın ve ayarlayın
 
-Tokenları Scroll'e ve Scroll'den köprülemek için önerilen yöntem (yukarıda açıklandığı gibi) tokenınızı Scroll resmi köprüsüne eklemektir. Bu yaklaşım, tokenınızın keşfedilmesini kolaylaştıracak ve sahipleri için daha güvenli hale getirecektir. Ancak bunun için Scroll ekibinin onayı gereklidir. Resmi onay süreci olmadan özel bir token başlatmak istiyorsanız kendiniz özel bir ağ geçidi oluşturabilirsiniz. Bunu yapmak için L1'de bir "L1CustomERC20Gateway" sözleşmesi ve L2'de bir "L2CustomERC20Gateway" dağıtmanız gerekecektir.
+Tokenları Scroll'a ve Scroll'dan köprülemek için önerilen yöntem (yukarıda açıklandığı gibi) tokenınızı Scroll resmi köprüsüne eklemektir. Bu yaklaşım, tokenınızın keşfedilmesini kolaylaştıracak ve sahipleri için daha güvenli hale getirecektir. Ancak bunun için Scroll ekibinin onayı gereklidir. Resmi onay süreci olmadan özel bir token başlatmak istiyorsanız kendiniz özel bir ağ geçidi oluşturabilirsiniz. Bunu yapmak için L1'de bir "L1CustomERC20Gateway" sözleşmesi ve L2'de bir "L2CustomERC20Gateway" dağıtmanız gerekecektir.
 
 ### Özel bir L1 Ağ Geçidi başlatın
 
@@ -209,7 +209,7 @@ contract L1CustomERC20Gateway is L1ERC20Gateway, Ownable {
 
 ### Özel bir L2 Ağ Geçidi başlatın
 
-Şimdi Scroll'de muadil sözleşmeyi başlatalım.
+Şimdi Scroll'da muadil sözleşmeyi başlatalım.
 
 ```solidity
 // SPDX-License-Identifier: MIT

@@ -9,7 +9,7 @@ excerpt: "Scroll Sepolia Test Ağı ile etkileşim kurmaya çalışırken bir ha
 
 ## MetaMask işlem gönderirken yanlış nonce hatası
 
-Bu hatayla karşılaşma sebebiniz MetaMask cüzdanınızda saklanan yerel nonce ile Scroll test ağı düğümündeki nonce'ın farklı olmasıdır. Bu, son zamanlarda bekleyen bir işleminiz olabileceğinden kaynaklanabilir.
+MetaMask cüzdanınızda depolanan yerel nonce, Scroll testnet düğümündeki nonce'tan farklı olduğunda bu hatayla karşılaşırsınız. Bunun nedeni yakın zamanda bekleyen bir işleminiz olması olabilir.
 
 Bu sorunu düzeltmek için MetaMask hesabınızı Scroll Sepolia Test ağı için sıfırlamanız gerekir. Hesabı sıfırlamak için izlenmesi gereken adımlar şunlardır:
 
@@ -36,6 +36,6 @@ Bir gizli pencere kullanın veya tarayıcıdan geliştirici konsolunu açıp `_e
 
 ## MetaMask'te maksimum Ether gönderme "Başarısız" hatası veriyor
 
-MetaMask kullanarak Ether gönderirken, "Maksimum" miktarını göndermeye çalışırsanız, "Başarısız" hatası alırsınız. Bu, MetaMask'ın alışılmış gaz ücretlerine ek olarak rollup'ların "L1 Ücreti"ni hesaba katmamasından kaynaklanır ve işlem için gaz ücretini ödemek için gereken ufak miktarı karşılayamaz.
+MetaMask kullanarak Ether gönderirken, "Maksimum" miktarı göndermeyi denerseniz, "Başarısız" hatasıyla sonuçlanacaktır. Bunun nedeni, MetaMask'ın, rollup'ların normal gaz ücretlerinin yanı sıra ek "L1 Ücreti"ni hesaba katmaması ve işlemin gazını ödemek için gereken küçük bir miktarın yetersiz kalmasıdır.
 
-Bu sorunu çözmek için Ether miktarını el ile önerilenden biraz daha az bir miktar olarak ayarlayın, işlem gerçekleştirilecektir.
+Bunu çözmek için, ether miktarını önerilenden biraz daha az olacak şekilde manuel olarak azaltın; işlem gerçekleşecektir.

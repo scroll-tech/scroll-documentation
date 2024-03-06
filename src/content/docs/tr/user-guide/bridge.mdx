@@ -19,15 +19,15 @@ excerpt: "Sepolia'dan varlıkları köprülemeye başlamak için Portal Bridge u
 
 {/* TODO: Update all instructions after being able to walk through the whole flow. */}
 
-Başlamak için [Köprü](https://sepolia.scroll.io/bridge) uygulamamızı ziyaret edin![^thanks-hop] Köprü, **Yatırma** ve **Çekim** işlemlerini destekler ve kullanıcılara Sepolia Test Ağı'ndan Scroll Sepolia Test Ağı'na varlıkları güvenle taşıma imkanı sunar.
+Başlamak için [Köprü](https://sepolia.scroll.io/bridge) uygulamamızı ziyaret edin![^thanks-hop] Köprü, varlık **Yatırma** ve **Çekme** işlemlerini destekler ve kullanıcılara Sepolia Test Ağı'ndan Scroll Sepolia Test Ağı'na varlıkları güvenle taşıma imkanı sunar.
 [^thanks-hop]: [Hop Exchange](https://hop.exchange/)’in kullanıcı arayüzünden forklanmıştır 🙌
 
 Yatırılan varlıkların Scroll üzerinde kullanılabilir hale gelmesi 15 dakikaya kadar sürebilir.
 
-Çekimler, çekimin tamamlanmasından sonra Sepolia'da ikinci bir etkileşim gerektirmesinden dolayı daha uzun sürebilir.
+Varlık çekme işlemleri, çekim işlemi tamamlandıktan sonra Sepolia'da ikinci bir ek etkileşim gerektirmesinden dolayı çok daha uzun sürebilir.
 
 :::caution[Köprü işlemi için uzun süredir bekliyor musunuz?]
-Yukarıdaki zaman tahminleri, normal ağ davranışı ve etkinlik seviyeleri içindir. L2 bloğunda sıralı L1 işlemlerini sınırlı sayıda işlediğimizden, köprülenen mesajların olağanüstü ağ kullanımı zamanlarında Scroll'de dahil edilmesi daha uzun sürebilir.
+Yukarıdaki zaman tahminleri, normal ağ davranışı ve etkinlik seviyeleri içindir. Bir L2 bloğunda, yalnızca belirli sayıda sıralanmış L1 işlemini işlediğimizden, köprülenmiş mesajların Scroll’a dahil edilmesi, istisnai ağ kullanım durumlarında daha uzun sürebilir.
 :::
 
 ## Sepolia'dan Scroll Sepolia'ya Yatırma
@@ -70,7 +70,7 @@ Tokenlarınızın Scroll Sepolia cüzdanınıza gelmesi **8 ile 14 dakika** aras
 
 {/* <ClickToZoom src={bridge4} /> */}
 
-## Scroll Sepolia'dan Sepolia'ya Çekim Yapma
+## Scroll Sepolia'dan Sepolia'ya Varlık Çekme
 
 ### Talimatlar
 
@@ -80,14 +80,14 @@ Tokenlarınızın Scroll Sepolia cüzdanınıza gelmesi **8 ile 14 dakika** aras
 1. Uygulamada, **Scroll Sepolia**'nın en üstte ve **Ethereum Sepolia**'nın en altta olduğundan emin olun. Pozisyonlarını değiştirmek için "**↓**" butonuna tıklayabilirsiniz.
 1. **Scroll Sepolia**'dan **Sepolia**'ya aktarmak istediğiniz tokeni seçin. İlk kez köprü kullanıyorsanız, "ETH"yi deneyin.
 1. Eğer belirli bir ERC20 tokenini ilk kez transfer ediyorsanız, Scroll Sepolia Köprü sözleşmesine ERC20 tokeninize erişim izni vermek için **Onayla**'yı seçmelisiniz.
-1. Ardından, çekim yapmak için **Ethereum Sepolia'ya Gönder** düğmesine tıklayın. Cüzdanınız transfer işlemini onaylamanızı isteyecektir.
+1. Ardından, varlık çekme işlemi yapmak için **Ethereum Sepolia'ya Gönder** düğmesine tıklayın. Cüzdanınız transfer işlemini onaylamanızı isteyecektir.
 1. Transfer işlemi gönderildikten ve onaylandıktan sonra, token Scroll Sepolia cüzdanınızdan düşecektir.
 
 #### Çekim Gerçekleştirme İşlemi Göndermek
 
 _Kalan adımlar Scroll Sepolia'da gerçekleşiyor, ama işleminizin Ethereum Sepolia'da tamamen kanıtlanması ("kesinleşmesi") beklenmelidir. Bu süreç en fazla dört saat sürebilir._
 
-1. Çekim işleminiz Ethereum Sepolia'da tamamlandığında, Son İşlemler alanında "Talep Et" düğmesinin dolgu rengine dönüştüğünü göreceksiniz.
+1. Varlık çekme işleminiz Ethereum Sepolia'da tamamlandığında, Son İşlemler alanında "Talep Et" düğmesinin dolgu rengine dönüştüğünü göreceksiniz.
 1. "Talep Et" düğmesine tıklayarak Çekim Gerçekleştirme işlemini gönderin.
 1. Gönderildikten sonra, çekilen fonlarınız Sepolia cüzdanınızda hemen görünmelidir.
 
