@@ -24,7 +24,7 @@ Herhangi bir sorunla karşılaşırsanız lütfen [Discord'umuzdan](https://disc
 
 Scroll yerel para birimi olarak ETH'yi kullanıyor ve bu ETH'ler, ağda akıllı sözleşme dağıtımı ve etkileşimleri için işlem ücretlerini ödemek için gerekli olacak.
 
-Scroll üzerinde inşa etmeye başlamak için Scroll Sepolia test ağımızı kullanarak başlamanızı öneririz. Öncelikle bir miktar test ağı ETH edinmeniz gerekecek. Sepolia'da test token'ları almayla ilgili ipuçları için [Musluk](/tr/user-guide/faucet) sayfasına bakın. Bundan sonra, [Köprü makalesinde](/tr/user-guide/bridge) açıklandığı gibi [Sepolia Köprümüzü](https://sepolia.scroll.io/bridge) kullanarak test ağı ETH'lerinizi Scroll Sepolia Testnet'e (Katman 2) aktarabilirsiniz.
+Scroll üzerinde inşa etmeye başlamak için Scroll Sepolia test ağımızı kullanarak başlamanızı öneririz. Öncelikle bir miktar test ağı ETH edinmeniz gerekecek. Sepolia'da test token'ları almayla ilgili ipuçları için [Musluk](/tr/user-guide/faucet) sayfasına bakın. Bundan sonra, [Köprü makalesinde](/tr/user-guide/bridge) açıklandığı gibi [Sepolia Köprümüzü](https://sepolia.scroll.io/bridge) kullanarak test ağı ETH'lerinizi Scroll Sepolia Test ağına (Katman 2) aktarabilirsiniz.
 
 Adım adım açıklama için Kullanım Kılavuzunun [Kurulum](/tr/user-guide/setup) sayfasıyla başlayın.
 
@@ -36,7 +36,7 @@ Scroll ana ağında akıllı sözleşme dağıtımak için hazır olduğunuzda, 
 
 Ethereum araçlarınızı Scroll ana ağına yapılandırmak için aşağıdaki tabloyu kullanın.
 
-| Ağ Adı             | Scroll                                             | Ethereum Mainnet                                     |
+| Ağ Adı             | Scroll                                             | Ethereum Ana Ağı                                     |
 | ------------------ | -------------------------------------------------- | ---------------------------------------------------- |
 | RPC URL'si         | [https://rpc.scroll.io/](https://rpc.scroll.io/)   | [https://eth.llamarpc.com](https://eth.llamarpc.com) |
 | Zincir Kimliği     | 534352                                             | 1                                                    |
@@ -84,7 +84,7 @@ Ethereum araçlarınızı Scroll Sepolia Test ağına yapılandırmak için aşa
 
 ### Hardhat
 
-Hardhat yapılandırma dosyanızı `hardhat.config.ts'yi Scroll Sepolia Testnet public RPC'sini işaret edecek şekilde değiştirin.
+Hardhat yapılandırma dosyanızı `hardhat.config.ts'yi Scroll Sepolia Test ağı public RPC'sini işaret edecek şekilde değiştirin.
 
 ```jsx
 ...
@@ -105,7 +105,7 @@ const config: HardhatUserConfig = {
 
 ### Foundry
 
-Scroll Sepolia Testnet Public RPC'yi kullanarak dağıtım yapmak için şunu çalıştırın:
+Scroll Sepolia Test ağı Public RPC'sini kullanarak dağıtım yapmak için şunu çalıştırın:
 
 ```bash
 forge create ... --rpc-url=https://sepolia-rpc.scroll.io/ --legacy

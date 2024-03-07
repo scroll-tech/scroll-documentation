@@ -32,7 +32,7 @@ Scroll Ana ağı Ethereum üzerinde aktif! Ayrıca, Ethereum Sepolia üzerinde �
 
 - [Köprü](https://scroll.io/bridge) sayfamızı veya [Scroll Sepolia Köprüsü](https://sepolia.scroll.io/bridge) sayfamızı ziyaret edin ve cüzdanınızı bağlayın.
 - Ethereum ana ağından Scroll'a token gönderin. (veya bir Scroll Sepolia [musluğu](/tr/user-guide/faucet) kullanın)
-- Scroll Sepolia testnet dapp'lerini deneyin, örneğin [Uniswap Vitrini](http://uniswap-showcase.sepolia.scroll.xyz/) veya [Aave](https://app.aave.com/) -- Scroll Sepolia ağını seçtiğinizden emin olun!
+- Scroll Sepolia Test ağı dApp'lerini deneyin, örneğin [Uniswap Vitrini](http://uniswap-showcase.sepolia.scroll.xyz/) veya [Aave](https://app.aave.com/) -- Scroll Sepolia ağını seçtiğinizden emin olun!
 
 ## Scroll ne yöne ilerliyor?
 
