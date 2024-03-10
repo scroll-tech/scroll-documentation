@@ -51,8 +51,8 @@ type L1MessageTx struct {
 Scroll'daki işlem yaşam döngüsü aşağıdaki üç aşamayı içerir:
 
 1. **Onaylandı**: Kullanıcılar L1 köprü sözleşmesine veya L2 sıralayıcıya bir işlem gönderir. İşlem yürütülüp L2 bloğuna dahil edildikten sonra 'Onaylandı' olur.
-2. **Kaydedildi**: İşlemler bir gruba dahil edilir ve bu grubun verilerini içeren bir _commit işlemi_ L1'e gönderilir. L1 bloklarında commit işlemi tamamlandıktan sonra bu partideki işlemler 'Kaydedildi' olur.
-3. **Sonlandırılmış**: Bu serinin geçerlilik kanıtı L1'de oluşturulur ve doğrulanır. _finalize transaction_ L1'de sonlandırıldıktan sonra, işlemin durumu 'Sonlandırıldı' olur ve Scroll L2 zincirinin kanonik bir parçası haline gelir.
+2. **Taahhüt Edildi**: İşlemler bir gruba dahil edilir ve bu grubun verilerini içeren bir _taahhüt işlemi_ L1'e gönderilir. L1 bloklarında taahhüt işlemi tamamlandıktan sonra bu partideki işlemler 'Taahhüt Edildi' olur.
+3. **Sonlandırıldı**: Bu serinin geçerlilik kanıtı L1'de oluşturulur ve doğrulanır. _Sonlandırma işlemi_ L1'de sonlandırıldıktan sonra, işlemin durumu 'Sonlandırıldı' olur ve Scroll L2 zincirinin kanonik bir parçası haline gelir.
 
 ### İşlemlerin Gönderilmesi
 
@@ -62,19 +62,19 @@ Kullanıcıların Scroll'a işlem gönderebilecekleri iki giriş noktası vardı
 
 İkincisi, mevduat ve icra edilen işlemler L1'den kaynaklanmaktadır. Scroll L1 köprü sözleşmesi, kullanıcılara ve akıllı sözleşmelere L1'den işlem göndermeleri için üç giriş noktası sağlar. Bu üç giriş noktası üzerinden gönderilen tüm mesajlar 'L1MessageQueue' sözleşmesine eklenecektir.
 
-- 'ScrollGatewayRouter' sözleşmesi ve çeşitli standart jeton ağ geçitleri, kullanıcıların ve sözleşmelerin standart jetonları L2'ye yatırmasına olanak tanır. Daha fazla ayrıntıyı [Para Yatırma Jetonu Ağ Geçitleri](/tr/technology/bridge/deposit-gateways) bölümünde bulabilirsiniz.
-- 'L1ScrollMessenger' sözleşmesi, kullanıcıların ve sözleşmelerin L2'ye isteğe bağlı mesajlar göndermesine olanak tanır. Daha fazla ayrıntıyı [Rastgele Mesaj Gönderme](/tr/technology/bridge/cross-domain-messaging#sending-arbitrary-messages) bölümünde bulabilirsiniz.
+- 'ScrollGatewayRouter' sözleşmesi ve çeşitli standart token ağ geçitleri, kullanıcıların ve sözleşmelerin standart tokenları L2'ye yatırmasına olanak tanır. Daha fazla ayrıntıyı [Yatırma Ağ Geçitleri](/tr/technology/bridge/deposit-gateways) bölümünde bulabilirsiniz.
+- 'L1ScrollMessenger' sözleşmesi, kullanıcıların ve sözleşmelerin L2'ye isteğe bağlı mesajlar göndermesine olanak tanır. Daha fazla ayrıntıyı [Keyfi Mesaj Gönderme](/tr/technology/bridge/cross-domain-messaging#sending-arbitrary-messages) bölümünde bulabilirsiniz.
 - 'EnforcedTxGateway' sözleşmesi, EOA'ların aynı adresten zorunlu bir işlem başlatmasına, tokenleri çekmesine veya L2'deki diğer sözleşmeleri çağırmasına olanak tanır. Daha fazla ayrıntıyı [Zorunlu İşlem Gönderme](/tr/technology/bridge/cross-domain-messaging#sending-enforced-transactions) bölümünde bulabilirsiniz.
 
 Scroll sıralayıcısı periyodik olarak yeni bir madencilik işi başlatır. L1 mesajlarını 'L1MessageQueue' sözleşmesinden ve L2 bellek havuzundaki işlemlerden çeker ve bir bloğu mühürler. Bir işlem L2 bloğuna dahil edildiğinde durumu 'Onaylandı' olur.
 
 ### İşlem Verilerinin Taahhüdü
 
-Rollup düğümü, yeni L2 bloklarını toplar ve bunları parçalar ve gruplar halinde paketler (daha fazla ayrıntı için [Transaction Batching](/tr/technology/chain/transactions#transaction-batching) bölümüne bakın). Periyodik olarak, bir işlem grubunun verilerini L1 "ScrollChain" sözleşmesine gönderen bir _Commit Transaction_ gönderir. Commit İşlemi L1 bloğunda sonlandırıldıktan sonra bu partideki işlemlerin durumu 'Comtained' olur. Şu anda kullanıcılar, L1 sözleşmesindeki taahhüt edilen verilere dayanarak L2 durumunu kendileri tamamen yeniden yapılandırabilirler.
+Rollup düğümü, yeni L2 bloklarını toplar ve bunları parçalar ve gruplar halinde paketler (daha fazla ayrıntı için [İşlem Yığınları](/tr/technology/chain/transactions#transaction-batching) bölümüne bakın). Periyodik olarak, bir işlem grubunun verilerini L1 "ScrollChain" sözleşmesine gönderen bir _Taahhüt İşlemi_ gönderir. Taahhüt İşlemi L1 bloğunda sonlandırıldıktan sonra bu partideki işlemlerin durumu 'Kaydedildi' olur. Şu anda kullanıcılar, L1 sözleşmesindeki taahhüt edilen verilere dayanarak L2 durumunu kendileri tamamen yeniden yapılandırabilirler.
 
 ### İşlemlerin Sonlandırılması
 
-Geçerlilik kanıtı oluşturulduktan sonra rollup düğümü, zincir içi doğrulama için bu gruptan sonra geçerlilik kanıtını ve yeni durum kökünü içeren bir _Sonlandırma İşlemi_ gönderir. Sonlandırma İşlemi başarılı olduğunda ve bir L1 bloğunda onaylandığında, bu gruptaki L2 işlemlerinin durumu 'Sonlandırılmış' olur. Yeni durum kökü üçüncü taraflarca güvenle kullanılabilir.
+Geçerlilik kanıtı oluşturulduktan sonra rollup düğümü, zincir içi doğrulama için bu gruptan sonra geçerlilik kanıtını ve yeni durum kökünü içeren bir _Sonlandırma İşlemi_ gönderir. Sonlandırma İşlemi başarılı olduğunda ve bir L1 bloğunda onaylandığında, bu gruptaki L2 işlemlerinin durumu 'Sonlandırıldı' olur. Yeni durum kökü üçüncü taraflarca güvenle kullanılabilir.
 
 ## İşlem Yığınları
 
