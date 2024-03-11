@@ -60,7 +60,7 @@ Transactions aren't committed 1-by-1 -- they are collected in batches of blocks 
 
 ### Estimating the L1 Data Fee
 
-Scroll has a pre-deployed `L1GasPriceOracle`, accessible on both Scroll and Scroll Sepolia at ([`0x5300000000000000000000000000000000000002`](https://sepolia-blockscout.scroll.io/address/0x5300000000000000000000000000000000000002)). It provides a `getL1Fee` method to estimate the L1 data fee for a given transaction's raw data.
+Scroll has a pre-deployed `L1GasPriceOracle`, accessible on both Scroll and Scroll Sepolia at ([`0x5300000000000000000000000000000000000002`](https://sepolia.scrollscan.com/address/0x5300000000000000000000000000000000000002)). It provides a `getL1Fee` method to estimate the L1 data fee for a given transaction's raw data.
 
 ```solidity
 function getL1Fee(bytes memory _data) external view override returns (uint256);
