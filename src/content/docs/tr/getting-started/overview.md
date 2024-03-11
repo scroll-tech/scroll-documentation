@@ -1,7 +1,7 @@
 ---
 section: gettingStarted
 date: Last Modified
-title: "Scroll'e Genel Bakış"
+title: "Scroll'a Genel Bakış"
 lang: "tr"
 permalink: "docs/conceptual-overview/"
 excerpt: "ZK Rollups and Scroll"
@@ -12,7 +12,7 @@ whatsnext: { "Kullanıcı kılavuzu": "/tr/user-guide/", "Scroll üzerinde geli�
 
 Scroll, Ethereum için güvenlik odaklı bir ölçeklenebilirlik çözümüdür; ölçekleme tasarımındaki ve sıfır bilgi kanıtlarındaki yenilikleri kullanarak Ethereum üzerinde yeni bir katman oluşturmayı hedeflemektedir. Scroll ağı, Ethereum'un tek başına olduğundan daha erişilebilir, daha duyarlı ve aynı anda daha fazla kullanıcıyı destekleyebilir. Eğer daha önce Ethereum üzerinde bir uygulama kullandıysanız veya geliştirdiyseniz, Scroll'de kendinizi evinizde hissedeceksiniz.
 
-Scroll'ü kullanmadan önce Scroll Sepolia test ağını ücretsiz varlıklarla denemek ister misiniz? [Kullanıcı kılavuzumuza](/tr/user-guide/) göz atın.
+Scroll'u kullanmadan önce Scroll Sepolia test ağını ücretsiz varlıklarla denemek ister misiniz? [Kullanıcı kılavuzumuza](/tr/user-guide/) göz atın.
 
 ## Scroll ne inşa ediyor?
 
