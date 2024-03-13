@@ -1,26 +1,26 @@
 ---
 section: learn
 date: Last Modified
-title: "Additional ZK Learning Resources"
-lang: "en"
+title: "Tài Nguyên Học Thêm về Zero Knowledge"
+lang: "vn"
 permalink: "learn/zero-knowledge/additional-zk-learning-resources"
-excerpt: "Looking to dive deeper into ZK? Here are some of our favorite resources."
+excerpt: "Muốn tìm hiểu sâu hơn về Zero Knowledge? Dưới đây là một số tài nguyên mà chúng tôi yêu thích."
 ---
 
-Looking to dive deeper into ZK? Here are some of our favorite resources.
+# Muốn tìm hiểu sâu hơn về Zero Knowledge? Dưới đây là một số tài nguyên mà chúng tôi yêu thích.
 
 ## Video
 
 - [ZK Whiteboard Sessions](https://youtube.com/playlist?list=PLj80z0cJm8QErn3akRcqvxUsyXWC81OGq)
-  - These whiteboard sessions are a fantastic way to learn about ZK. The first three lectures by Dan Boneh provide a great foundational understanding, on which the following lectures build, discussing more recent developments.
+  - Các buổi giảng trên bảng trắng này là cách tuyệt vời để tìm hiểu về Zero Knowledge. Ba bài giảng đầu tiên của Dan Boneh cung cấp một hiểu biết cơ bản tuyệt vời, trên đó các bài giảng tiếp theo xây dựng, thảo luận về các phát triển gần đây hơn.
 - [Zero Knowledge Proofs MOOC](https://youtube.com/playlist?list=PLS01nW3Rtgor_yJmQsGBZAg5XM4TSGpPs)
-  - A MOOC that covers zero knowledge proofs from first principles, all the way to modern industry topics.
+  - Một khóa học trực tuyến mở (MOOC) nói về chứng minh không cho biết từ các nguyên tắc cơ bản, đến các chủ đề hiện đại trong ngành công nghiệp.
 - [The 9th BIU Winter School on Cryptography - Zero Knowledge](https://youtube.com/playlist?list=PL8Vt-7cSFnw29cLUVqAIuMlg1QJ-szV0K)
-  - These lectures lay the theoretical foundations for zero knowledge - they are targeted towards academics and audiences with mathematical maturity.
+  - Những bài giảng này đặt nền tảng lý thuyết cho zero knowledge - chúng được hướng tới các nhà học thuật và khán giả có kiến thức toán học.
 - [ZK Symposium](https://www.youtube.com/playlist?list=PLrzRr7okCcmbAlgYpuFjzUJv8tAyowDQY)
-  - A mix of applied and theoretical presentations from some of the top researchers and product builders in the zero knowledge space.
+  - Một sự kết hợp giữa các bài thuyết trình áp dụng và lý thuyết từ một số nhà nghiên cứu hàng đầu và nhà xây dựng sản phẩm trong lĩnh vực zero knowledge.
 
 ## Text
 
 - [Proofs, Arguments, and Zero Knowledge](https://people.cs.georgetown.edu/jthaler/ProofsArgsAndZK.html) - Justin Thaler
-  - A comprehensive textbook on the theory of zero knowledge.
+  - Một sách giáo khoa toàn diện về lý thuyết của zero knowledge.
