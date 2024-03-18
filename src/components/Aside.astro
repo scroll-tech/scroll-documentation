@@ -8,7 +8,7 @@ export type Props = {
   title?: string
 }
 
-const { type = "note", title = type } = Astro.props as Props
+const { type = "note", title } = Astro.props as Props
 
 // SVG icon paths based on GitHub Octicons
 const icons = {
@@ -26,9 +26,13 @@ const icons = {
     </span>
   </div>
   <section class="asideContent">
-    <p class="title heading-100" aria-hidden="true">
-      {title}
-    </p>
+    {
+      title && (
+        <p class="title heading-100" aria-hidden="true">
+          {title}
+        </p>
+      )
+    }
     <slot />
   </section>
 </aside>
