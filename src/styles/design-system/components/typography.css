@@ -5,6 +5,17 @@
   @apply leading-[1.3] font-medium tracking-[0.18px];
 }
 
+:is(h1, h2, h3, h4, h5, h6) {
+  > a {
+    color: var(--color-text-primary);
+    font-weight: inherit !important;
+  }
+
+  &:hover > a {
+    color: var(--color-text-primary);
+  }
+}
+
 :where(h6) {
   @apply text-base mb-2;
 }
