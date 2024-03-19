@@ -73,7 +73,7 @@ Bununla ilgili olarak, her sözleşme bayt kodu için iki tür kod hash'i sağla
 
 Scroll, 3 saniyelik sabit bir blok süresini hedefler. Bu, ideal koşullar altında Ethereum'da kullanılan 12 saniyeden daha kısa ve daha tutarlıdır.
 
-Bu iki nedenden dolayı seçildi:
+Bu şekilde seçilmesinin iki nedeni var:
 
 - Daha hızlı ve sabit blok süresine sahip olmak, daha hızlı geri bildirim ve daha iyi bir kullanıcı deneyimi sağlar.
 - Test ağlarımızdaki zkEVM devrelerini optimize ederken, blok veya parti başına daha küçük bir gas limitini korusak bile, yine de Ethereum'dan daha yüksek verime ulaşabiliriz.
@@ -90,7 +90,7 @@ Scroll işlemlerinden alınan ücret iki bölümden oluşur:
    - L2 sıralayıcı yürütme ve depolama maliyeti
    - L1'de geçerlilik kanıtı doğrulama ve sonuçlandırma maliyeti
    - Kanıtlayıcı maliyeti
-- **L1 veri ücreti:** L2 gaz ücretine ek olarak ek ücret. L1 veri ücreti yalnızca L2 tarafından başlatılan işlemlerden alınır, L1 tarafından başlatılan işlemlerden alınmaz. Ücret, veri kullanılabilirliği için L1'e veri gönderme maliyetini kapsar. Tx verilerini L1'e yuvarladığımız için L1 toplama ücreti, tx verilerinin boyutuna göre hesaplanır.
+- **L1 veri ücreti:** L2 gaz ücretine ek olarak ek ücret. L1 veri ücreti yalnızca L2 tarafından başlatılan işlemlerden alınır, L1 tarafından başlatılan işlemlerden alınmaz. Ücret, veri kullanılabilirliği için L1'e veri gönderme maliyetini kapsar. Tx verilerini L1'e yuvarladığımız için L1 rollup ücreti, tx verilerinin boyutuna göre hesaplanır.
 
 Daha fazla bilgi için, bkz. [Scroll'da İşlem Ücretleri](/tr/developers/transaction-fees-on-scroll).
 

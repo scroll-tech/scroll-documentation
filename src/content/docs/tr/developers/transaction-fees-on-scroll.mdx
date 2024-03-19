@@ -12,7 +12,7 @@ import Aside from "../../../../components/Aside.astro"
 
 ## Genel Bakış
 
-Scroll'da işlem ücretleri, destek verdiği katmana(Katman 1) göre oldukça düşüktür. Kullanıcılar ve geliştiriciler için Scroll'daki işlem ücretleri, Ethereum ana ağında olduğuna benzer şekilde çalışıyor gibidir. Mevcut araçlar, cüzdanlar ve kodlar da büyük ihtimalle oldukları gibi çalışacaklardır. Ancak cüzdanda gösterilen işlem ücreti, kullanılan yazılım Scroll'un ücret hesaplamalarından özellikle haberdar olmadığı sürece resmin tamamını içermeyecektir.
+Scroll'da işlem ücretleri, destek verdiği katmana (Katman 1) göre oldukça düşüktür. Kullanıcılar ve geliştiriciler için Scroll'daki işlem ücretleri, Ethereum ana ağında olduğuna benzer şekilde çalışır gibi görünür. Mevcut araçlar, cüzdanlar ve kodlar da muhtemelen olduğu gibi çalışacaklardır. Ancak cüzdanda gösterilen işlem ücreti, kullanılan yazılım Scroll'un ücret hesaplamalarından özellikle haberdar olmadığı sürece resmin tamamını içermeyecektir.
 
 L2 rollup'larındaki işlem maliyetleri tasarımları nedeniyle L1'in maliyetlerine bağlıdır. Ethereum'un güvenliğinden yararlanmak için Scroll'un, L1'de veri saklanması ve doğrulanmasında gereken işlem verilerinin ve kanıtların maliyetini de hesaba katması gerekir.
 
@@ -25,7 +25,7 @@ Ethereum ana ağıyla karşılaştırıldığında Scroll, bunu yapmak için iş
   - İşlemin çağrı verilerinin(calldata) boyutuna göre hesaplanır
   - ETH, ücret karşılığında kullanıcının Scroll'daki bakiyesinden otomatik olarak düşülür
 
-Yüksek düzeyde, **L2 ücreti** işleminizi L2 sıralayıcısında gerçekleştirmenin maliyetidir ve **L1 ücreti** ise bu işlemi L1'de gerçekleştirmenin maliyetidir.
+Yüksek düzeyden bakacak olursak; **L2 ücreti** işleminizi L2 sıralayıcısında gerçekleştirmenin maliyetidir, **L1 ücreti** ise bu işlemi L1'de gerçekleştirmenin maliyetidir.
 
 Kısacası, "totalTxFee = l2Fee + l1Fee", tamamı Scroll ağının yerel gas tokenı olan ETH cinsinden ifade edilir.
 
@@ -185,7 +185,7 @@ Yükseltme işleminin iki haftalık bir sürenin ardından 21 Şubat 2024'te tam
 
 ## Gelecek Yol Haritası
 
-Şu anda, L1'de kanıt üretimi ve kanıt doğrulaması için gaz için gereken hesaplama, Scroll ve çeşitli kanıtlama ortakları tarafından desteklenmektedir. L2 Gaz Fiyatına bir taban değer belirlenerek kısmen halledilmiştir.
+Şu anda, L1'de kanıt üretimi için gereken hesaplama ve kanıt doğrulaması için gereken gas, Scroll ve çeşitli kanıtlama ortakları tarafından karşılanmaktadır. L2 Gaz Fiyatına bir taban değer belirlenerek kısmen halledilmiştir.
 
 Kanıtlayıcı ağı merkeziyetsizleştikçe, sistemin sürdürülebilir ve ölçeklenebilir olması için kanıt oluşturmaya yönelik teşviklerin protokole dahil edilmesi gerekecektir.
 

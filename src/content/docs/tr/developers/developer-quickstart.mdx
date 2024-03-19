@@ -14,9 +14,9 @@ import networkSelection from "./_images/mmNetworkSelection.png"
 import injectedProviderMM from "./_images/injectedProviderMM.png"
 import ToggleElement from "../../../../components/ToggleElement.astro"
 
-Scroll ile akıllı sözleşmeler oluşturmak ve test ederken en sevdiğiniz araçlar oldukları gibi çalışırlar.
+Scroll ile akıllı sözleşmeler oluştururken ve test ederken en sevdiğiniz araçlar oldukları gibi çalışırlar.
 
-Scroll, EVM ile bayt kodu olarak denk olduğundan, favori geliştirici araçlarınızı bir Scroll RPC Sağlayıcısına yönlendirmeniz yeterlidir.
+Scroll, EVM ile bytecode olarak denk olduğu için en sevdiğiniz geliştirici araçlarınızı bir Scroll RPC sağlayıcısına yönlendirmeniz yeterli olacaktır.
 
 Herhangi bir sorunla karşılaşırsanız lütfen [Discord'umuzdan](https://discord.gg/scroll) bize ulaşın.
 
@@ -28,7 +28,7 @@ Scroll üzerinde inşa etmeye başlamak için Scroll Sepolia test ağımızı ku
 
 Adım adım açıklama için Kullanım Kılavuzunun [Kurulum](/tr/user-guide/setup) sayfasıyla başlayın.
 
-Scroll ana ağında akıllı sözleşme dağıtımak için hazır olduğunuzda, [yerel köprümüzü](https://scroll.io/bridge/) veya 3. taraf köprülerden birini kullanarak ETH üzerinden köprü kurabilirsiniz.
+Scroll ana ağında akıllı sözleşme dağıtmak için hazır olduğunuzda, [yerel köprümüzü](https://scroll.io/bridge/) veya 3. taraf köprülerden birini kullanarak ETH üzerinden köprü kurabilirsiniz.
 
 ## Ağ Yapılandırması
 
@@ -226,7 +226,7 @@ module.exports = {
 Dağıtım cüzdanına da fon sağladığınızdan emin olun! Cüzdanı oluşturmak için "yarn generate"i, fonlarını kontrol etmek için "yarn account"u çalıştırın. Fonlama sağlandıktan sonra Scroll Sepolia test ağına dağıtmak için `yarn deploy --network ScrollSepolia` komutunu çalıştırın.
 
 <Aside type="danger" title="warning">
-  Bazı proje çatallarında Etherscan tarafından sağlanan sözleşme doğrulamasını devre dışı bırakmak isteyebilirsiniz. Bu, "packages/hardhat/deploy/00_deploy_your_contract.js" dosyasında yorumlanabilir.
+  Bazı proje çatallarında Etherscan tarafından sağlanan sözleşme doğrulamasını devre dışı bırakmak isteyebilirsiniz. Bu, "packages/hardhat/deploy/00_deploy_your_contract.js" dosyasında yorum olarak eklenebilir/devre dışı bırakılabilir.
 </Aside>
 
 #### Kullanıcı Arayüzü Yapılandırması
@@ -254,7 +254,7 @@ Daha sonra, 'packages/react-app/src/App.jsx' bölümünde değişiklik yapın
 
 ```jsx
 ...
-/// 📡 What chain are your contracts deployed to?
+/// 📡 Sözleşmeleriniz hangi zincire dağıtıldı?
 const initialNetwork = NETWORKS.scrollSepolia;
 ...
 ```
