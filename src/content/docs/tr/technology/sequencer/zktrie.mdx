@@ -62,46 +62,46 @@ Bir zkTrie'ye yeni bir yaprak düğüm eklediğimizde, Şekil 2'de gösterilen i
 Bir yaprak düğümün silinmesi ekleme işlemine benzer. Şekil 3'te gösterilen iki durum vardır.
 
 1. Silinecek yaprak düğümün kardeş düğümü,
-dal düğümü (Şekil 3a). Bu durumda, 'a' düğümünü boş bir düğümle değiştirebilir ve atalarının düğüm karma değerini kök düğüme kadar güncelleyebiliriz.
+dal düğümü (Şekil 3a). Bu durumda, 'a' düğümünü boş bir düğümle değiştirebilir ve atalarının düğüm hash değerini kök düğüme kadar güncelleyebiliriz.
 2. Silinecek yaprak düğümün kardeş düğümü bir yaprak düğümdür (Şekil 3b). Durum 1'e benzer şekilde, önce yaprak düğümü boş bir düğümle değiştiririz ve kardeş düğümü boş bir düğüm olmayana kadar kardeş düğümünü yukarı doğru daraltmaya başlarız. Örneğin, Şekil 3b'de 'b' yaprak düğümünü boş bir düğümle değiştiriyoruz. 'c' düğümünün kardeşi artık boş bir düğüm haline geldiğinden, 'c' düğümünü bir seviye yukarı taşımamız ve ebeveynini değiştirmemiz gerekiyor. 'C' düğümünün yeni kardeşi 'e' düğümü hâlâ boş bir düğümdür. Böylece yine 'c' düğümünü yukarı doğru hareket ettiriyoruz. Artık 'c' düğümünün kardeşi bir yaprak düğüm olan 'a' düğümü olduğuna göre, silme işlemi tamamlanmıştır.
 
 Geçerli bir zkTrie'deki yaprak düğümün kardeşinin boş bir düğüm olamayacağını unutmayın. Aksi halde her zaman alt ağacı budamalı ve yaprak düğümünü yukarı doğru hareket ettirmeliyiz.
 
 ## Düğüm Hash İşlemi
 
-In this section, we will describe how leaf secure key and node Merkle hash are computed. We use Poseidon hash with arity 2 for both hashing computation. In Scroll, the Poseidon hash function is configured to take two field element inputs each time and a `domain_value` as the initial context for domain separation, denoted as follows.
+Bu bölümde yaprak güvenlik anahtarının ve düğüm Merkle hash'inin nasıl hesaplandığını anlatacağız. Her iki hash hesaplaması için arity 2 ile Poseidon hash değerini kullanıyoruz. Scroll'da, Poseidon hash işlevi her seferinde iki alan öğesi girişi ve etki alanı ayırma için başlangıç ​​bağlamı olarak aşağıda belirtilen bir "domain_value" alacak şekilde yapılandırılmıştır.
 ```
 h{domain_value}(input1, input2)
 ```
 
-### Empty Node
+### Boş Düğüm
 
-The node hash of an empty node is 0.
+Boş bir düğümün düğüm hashi 0'dır.
 
-### Branch Node
+### Dal Düğümü
 
-The branch node hash is computed as follows
+Dal düğümü hashi aşağıdaki şekilde hesaplanır
 
 ```go
 branchNodeHash = h{BranchNodeType}(leftChildHash, rightChildHash)
 ```
 
-### Leaf Node
+### Yaprak düğümü
 
-The node hash of a leaf node is computed as follows.
+Bir yaprak düğümün düğüm hashi aşağıdaki şekilde hesaplanır.
 
 ```go
 leafNodeHash = h{LeafNodeType}(nodeKey, valueHash)
 ```
 
-The computation involves two fields `nodeKey` and `valueHash`.
-- `nodeKey` is hashed from the original key. The domain value used in the Poseidon hash is 256.
-- `valueHash` is calculated by hashing the leaf node value. The domain value used in the Poseidon hash is `256 * n`, where `n` is the number of elements in the leaf node value.
+Hesaplama, iki alanı 'nodeKey' ve 'valueHash' içerir.
+- 'nodeKey' orijinal anahtardan hashe dönüştürülür. Poseidon hashinde kullanılan alan adı değeri 256'dır.
+- `valueHash`, yaprak düğüm değerinin hashlenmesiyle hesaplanır. Poseidon hashinde kullanılan etki alanı değeri '256 * n'dir; burada 'n', yaprak düğüm değerindeki öğelerin sayısıdır.
 
-There are two types of leaf nodes: Ethereum accounts and storage key-value pairs. Next, we will describe the calculation method of the node key and value hash for each leaf node type respectively.
+İki tür yaprak düğüm vardır: Ethereum hesapları ve depolama anahtar/değer çiftleri. Daha sonra, her bir yaprak düğüm türü için sırasıyla düğüm anahtarının ve değer hashinin hesaplama yöntemini açıklayacağız.
 
-#### Ethereum Account Leaf Node
-For an Ethereum Account Leaf Node, it consists of an Ethereum address and a state account data structure. The secure key is derived from the Ethereum address.
+#### Ethereum Hesabı Yaprak Düğümü
+Bir Ethereum Hesabı Yaprak Düğümü, bir Ethereum adresinden ve bir durum hesabı veri yapısından oluşur. Güvenli anahtar Ethereum adresinden türetilir.
 ```go
 var address byte[20] // 20 bytes in big-endian
 valHi := address[0:16]
@@ -109,16 +109,16 @@ valLo := address[16:20] * 2^96 // padding 12 bytes of 0 at the end
 nodeKey := h{256}(valHi, valLo)
 ```
 
-A state account struct in the Scroll consists of the following fields (`Fr` indicates the finite field and is a 254-bit value)
+Scroll'daki bir durum hesabı yapısı aşağıdaki alanlardan oluşur ('Fr' sonlu alanı belirtir ve 254 bitlik bir değerdir)
 
 - `Nonce`: u64
-- `Balance`: u256, but treated as Fr
+- `Balance`: u256, ancak Fr olarak kabul edilir
 - `StorageRoot`: Fr
 - `KeccakCodeHash`: u256
 - `PoseidonCodeHash`: Fr
 - `CodeSize`: u64
 
-Before computing the value hash, the state account is first marshaled into a list of `u256` values. The marshaling scheme is
+Değer hashini hesaplamadan önce, durum hesabı ilk olarak "u256" değerlerinin yer aldığı bir listeye sıralanır. Sıralama şeması
 
 ```text
 (The following scheme assumes the big-endian encoding)
@@ -133,7 +133,7 @@ Before computing the value hash, the state account is first marshaled into a lis
 (total 160 bytes)
 ```
 
-The marshal function also returns a `flag` value along with a vector of `u256` values. The `flag` is a bitmap that indicates whether a `u256` value cannot be treated as a field element (Fr). The `flag` value for state account is 8, shown below.
+Marshal işlevi aynı zamanda "u256" değerlerinden oluşan bir vektörle birlikte bir "flag" değeri de döndürür. 'Flag', bir 'u256' değerinin alan öğesi (Fr) olarak değerlendirilip değerlendirilemeyeceğini belirten bir bit eşlemdir. Durum hesabı için 'flag' değeri aşağıda gösterildiği gibi 8'dir.
 
 ```
          +--------------------+---------+------+----------+----------+
@@ -146,18 +146,18 @@ flag bit |          0         |    0    |   0  |     1    |     0    |
          (LSB)                                                   (MSB)
 ```
 
-The value hash is computed in two steps:
-1. Convert the value that cannot be represented as a field element of the Poseidon hash to the field element.
-2. Combine field elements in a binary tree structure till the tree root is treated as the value hash.
+Değer hashi iki adımda hesaplanır:
+1. Poseidon hashinin alan öğesi olarak temsil edilemeyen değerini alan öğesine dönüştürün.
+2. Ağaç kökü değer hashi olarak ele alınana kadar alan öğelerini ikili ağaç yapısında birleştirin.
 
-In the first step, when the bit in the `flag` is 1 indicating the `u256` value that cannot be treated as a field element, we split the value into a high-128bit value and a low-128bit value, and then pass them to a Poseidon hash to derive a field element value, `h(valueHi, valueLo)`.
+İlk adımda, 'flag'daki bit, alan elemanı olarak değerlendirilemeyen 'u256' değerini belirten 1 olduğunda, değeri yüksek 128 bitlik değere ve düşük-128 bitlik değere bölüyoruz ve ardından bunları bir alan öğesi değeri üretmek için Poseidon hashine dönüştürüyoruz.
 
 ```go
 // convert Keccak codehash to a field element
 compressedKeccakCodeHash := h{512}(keccakCodeHash[0:16], keccakCodeHash[16:32])
 ```
 
-Second, the value hash is computed as follows.
+İkinci olarak değer hashi şu şekilde hesaplanır.
 
 ```go
 domain := 256 * 5  // 5 elements to compute the valueHash
@@ -174,9 +174,9 @@ valueHash :=
     )
 ```
 
-#### Storage Leaf Node
+#### Depolama Yaprak Düğümü
 
-A Storage Leaf Node encodes a key-value pair, which both key and value are `u256` values. The secure key of this leaf node is derived from the storage key.
+Depolama Yaprağı Düğümü, hem anahtar hem de değerin "u256" değerleri olduğu bir anahtar/değer çiftini kodlar. Bu yaprak düğümün güvenli anahtarı, depolama anahtarından türetilir.
 
 ```go
 var storageKey byte[32]  // 32 bytes in big-endian
@@ -185,7 +185,7 @@ valLo := storageKey[16:32]
 nodeKey := h{256}(valHi, valLo)
 ```
 
-The storage value is a `u256` value. The `flag` for the storage value is 1, showed below.
+Depolama değeri bir "u256" değeridir. Depolama değeri için 'flag' aşağıda gösterilen 1'dir.
 
 ```
          +--------------+
@@ -197,7 +197,7 @@ flag bit |      1       |
          +--------------+
 ```
 
-The value hash is computed as follows
+Değer hashi aşağıdaki şekilde hesaplanır
 
 ```go
 valueHash = h{512}(storageValue[0:16], storageValue[16:32])
