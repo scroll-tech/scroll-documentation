@@ -21,10 +21,10 @@ Aşağıdaki sözleşmeler, yükseltmeleri başlatmak ve iki haftalık zaman kil
 
 ### Genel Bakış
 
-Köprüleme maliyetlerini azaltmak için köprü ve toplama sözleşme paketimizde çeşitli gaz optimizasyonları uyguladık. Kullanılan optimizasyon teknikleri aşağıdakileri içerir:
+Köprüleme maliyetlerini azaltmak için köprü ve rollup sözleşme paketimizde çeşitli gas optimizasyonları uyguladık. Kullanılan optimizasyon teknikleri aşağıdakileri içerir:
 
 - Artık bazı tamamlayıcı sözleşme adreslerini depolamak için depolama değişkenleri yerine sabitleri kullanacağız. Bu değerlerin (neredeyse) asla değişmemesi gerektiğinden bu mümkündür. Bu değişiklikle birkaç depolama yükleme işleminden tasarruf edebiliriz.
-- 'L1MessageQueue'daki içsel gaz tahminini, kesin bir hesaplama yerine basit bir üst sınır kullanacak şekilde güncelledik. Çoğu köprü işlemi için iki sonuç benzer olacaktır ancak yeni uygulama önemli ölçüde daha ucuzdur.
+- 'L1MessageQueue'daki içsel gas tahminini, kesin bir hesaplama yerine basit bir üst sınır kullanacak şekilde güncelledik. Çoğu köprü işlemi için iki sonuç benzer olacaktır ancak yeni uygulama önemli ölçüde daha ucuzdur.
 - Bir sözleşmeden diğerine çağrı maliyetlerinden tasarruf etmek için iki sözleşme 'L1MessageQueue' ve 'L2GasPriceOracle'yı birleştirdik.
 
 ### Zaman çizelgesi
@@ -78,7 +78,7 @@ Bir 'l2geth' düğümü çalıştıran operatörlerin yükseltme yapmasına gere
 
 Sözleşmeleri sorgulayan veya sözleşme arayüzlerine dayanan dapp'lerin ve indeksleyicilerin (ve benzer zincir dışı altyapının) çoğu durumda değiştirilmesine gerek yoktur. Sözleşme değişikliklerinin çoğunluğu dahili ve/veya geriye dönük olarak uyumludur.
 
-Uygulamanız, Scroll'un L1'deki L2 gaz fiyatını nasıl takip ettiğini izlemek için [`L2GasPriceOracle`](https://etherscan.io/address/0x987e300fDfb06093859358522a79098848C33852)'ye bağlıysa yükseltme blok numarasından izlemeye başlamanız gerekir [` L1MessageQueueWithGasPriceOracle`](https://etherscan.io/address/0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B).
+Uygulamanız, Scroll'un L1'deki L2 gas fiyatını nasıl takip ettiğini izlemek için [`L2GasPriceOracle`](https://etherscan.io/address/0x987e300fDfb06093859358522a79098848C33852)'ye bağlıysa yükseltme blok numarasından izlemeye başlamanız gerekir [` L1MessageQueueWithGasPriceOracle`](https://etherscan.io/address/0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B).
 
 Orijinal gaz fiyatı oracle sözleşmesi kullanımdan kaldırılacak: artık Scroll köprüsü tarafından güncellenmeyecek veya kullanılmayacaktır.
 

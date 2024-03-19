@@ -17,29 +17,29 @@ import TransactionBatching from "../_images/batching.png"
 Şu anda Scroll üç tür işlemi desteklemektedir.
 
 - EIP-155 Öncesi İşlem: Bu, [Singleton Factory](https://eips.ethereum.org/EIPS/eip-2470) sözleşmesini desteklemek içindir.
-- Eski İşlem (bkz. [EIP-155](https://eips.ethereum.org/EIPS/eip-155))
-- `L1MessageTx` Türlü İşlem (Tür: `0x7E`): Bu, aşağıda açıklandığı gibi Scroll'da tanıtılan yeni bir [EIP-2718](https://eips.ethereum.org/EIPS/eip-2718) işlemidir. Bu işlem türü L1'de başlatılan işlemler içindir.
+- Eski Tip İşlem (bkz. [EIP-155](https://eips.ethereum.org/EIPS/eip-155))
+- `L1MessageTx` Tipi Belirli İşlem (Tip: `0x7E`): Bu, aşağıda açıklandığı gibi Scroll'da tanıtılan yeni bir [EIP-2718](https://eips.ethereum.org/EIPS/eip-2718) işlemidir. Bu işlem tipi L1'de başlatılan işlemler içindir.
 
-[EIP-2930](https://eips.ethereum.org/EIPS/eip-2930) ve [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559) işlem türlerinin şu anda Scroll'da desteklenmiyor olduğunu unutmayın. Scroll gelecekte bu iki işlem türünü geri getirecek.
+Unutmayın ki [EIP-2930](https://eips.ethereum.org/EIPS/eip-2930) ve [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559) işlem tiplerinin şu anda Scroll'da desteklenmemektedir. Scroll gelecekte bu iki işlem türünü geri getirecektir.
 
 ### L1 Mesaj İşlemi
 
-L1 tarafından başlatılan işlemler için yeni bir tür işlem olan 'L1MessageTx'i sunuyoruz. Bu tür işlemler L1 köprü sözleşmesinde başlatılır. L1'deki 'L1MessageQueue' sözleşmesine her yeni mesaj eklendiğinde, L2 sıralayıcı, L2 bloklarına dahil edilecek karşılık gelen bir 'L1MessageTx' işlemi yaratacaktır. Kullanıcılar L1'de işlemi gönderdiğinde imza zaten örtülü olarak doğrulanmış olduğundan, "L1MessageTx" işlemlerinin imzası yoktur.
+L1 tarafından başlatılan işlemler için yeni bir tür işlem olan 'L1MessageTx'i sunuyoruz. Bu tür işlemler L1 köprü sözleşmesinde başlatılır. L1'deki 'L1MessageQueue' sözleşmesine her yeni mesaj eklendiğinde, L2 sıralayıcı, L2 bloklarına dahil edilecek karşılık gelen bir 'L1MessageTx' işlemi yaratacaktır. Kullanıcılar L1'de işlemi gönderdiğinde imza zaten dolaylı olarak doğrulanmış olduğundan, "L1MessageTx" işlemlerinin imzası yoktur.
 
 `L1MessageTx` işlem türü `0x7E` olup, yükü aşağıdaki gibi tanımlanmıştır.
 
 ```go
 type L1MessageTx struct {
-	QueueIndex uint64          // L1 sözleşmesindeki mesaj kuyruğunun kuyruk indeksi
-	Gas        uint64          // Gaz sınırı
-	To         *common.Address // Sıfır olamaz, L1'den sözleşme oluşturulmasına izin vermiyoruz
+	QueueIndex uint64          // The queue index of the message queue in L1 contract
+	Gas        uint64          // Gas limit
+	To         *common.Address // Cannot be nil, we do not allow contract creation from L1
 	Value      *big.Int
 	Data       []byte
 	Sender     common.Address
 }
 ```
 
-'L1MessageTx' işlemlerinin RLP kodlaması, [EIP-2718](https://eips.ethereum.org/EIPS/eip-2718) 'TransactionType || TransactionPayload`; burada 'TransactionType', '0x7E' ve 'TransactionPayload = RLP(L1MessageTx)'dir.
+'L1MessageTx' işlemlerinin RLP (Recursive Length Prefix) kodlaması, [EIP-2718](https://eips.ethereum.org/EIPS/eip-2718) 'TransactionType || TransactionPayload`; burada 'TransactionType', '0x7E' ve 'TransactionPayload = RLP(L1MessageTx)'dir.
 
 'L1MessageTx' işlemlerinin dikkat çeken iki davranışı:
 
@@ -86,6 +86,6 @@ Scroll'da işlemler birden fazla katman halinde yığın hale getirilir.
 2. Bir dizi bitişik blok, bir parça halinde gruplandırılır. Parça, zkEVM devresinin kanıt üretimi için temel birimdir.
 3. Bir dizi bitişik parça bir yığın halinde gruplandırılır. Yığın, L1'de veri taahhüdü ve kanıt doğrulama için temel birimdir. Bir grubun kanıtı veya _toplu kanıt_, bu gruptaki yığın kanıtlarının toplu kanıtıdır.
 
-Bu çok katmanlı gruplandırma şemasının amacı, zincir üstü veri taahhüdü ve kanıt doğrulamanın gaz maliyetini azaltmaktır. Bu yaklaşım, sabit devre kapasitesini dikkate alırken L1'deki toplama birimlerinin ayrıntı düzeyini artırır. Sonuç olarak, toplu işlem sözleşmede saklanacak verileri azaltır ve kanıt doğrulama maliyetini daha fazla L2 işlemine göre amorti eder.
+Bu çok katmanlı gruplandırma şemasının amacı, zincir üstü veri taahhüdü ve kanıt doğrulamanın gas maliyetini azaltmaktır. Bu yaklaşım, sabit devre kapasitesini dikkate alırken L1'deki toplama birimlerinin ayrıntı düzeyini artırır. Sonuç olarak, toplu işlem sözleşmede saklanacak verileri azaltır ve kanıt doğrulama maliyetini daha fazla L2 işlemine göre amorti eder.
 
-Bir parça oluşturulduktan sonra karşılık gelen bir parça kanıtlama görevi oluşturulacak ve bir zkEVM kanıtlayıcıya gönderilecektir. Yeni bir yığın oluşturulduktan sonra birbirini takip eden iki eylem gerçekleşir: (a) rollup düğümü bu yığın işlem verilerini ve blok bilgilerini L1 sözleşmesine gönderir ve (b) yığın kanıtlarını bir araya getirmek için bir parça kanıtlama görevi bir L1 kanıtlama toplayıcısı sözleşmesine gönderilir. Bir parça ve yığın önermeye yönelik standartlar [Rollup Düğümü](/tr/technology/sequencer/rollup-node) belgesinde ayrıntılı olarak açıklanmıştır.
+Bir parça oluşturulduktan sonra karşılık gelen bir parça kanıtlama görevi oluşturulacak ve bir zkEVM kanıtlayıcıya gönderilecektir. Yeni bir yığın oluşturulduktan sonra birbirini takip eden iki eylem gerçekleşir: (a) rollup düğümü bu yığın işlem verilerini ve blok bilgilerini L1 sözleşmesine gönderir ve (b) yığın kanıtlarını bir araya getirmek için bir parça kanıtlama görevi bir L1 kanıtlama toplayıcısı sözleşmesine gönderilir. Bir parça ve yığın önermeye yönelik standartlar [Rollup Düğümü](/tr/technology/sequencer/rollup-node) kısmında ayrıntılı olarak açıklanmıştır.
