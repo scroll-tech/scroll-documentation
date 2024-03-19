@@ -2,10 +2,10 @@
 section: technology
 date: Last Modified
 title: "zkTrie"
-lang: "en"
+lang: "tr"
 permalink: "technology/sequencer/zktrie"
-whatsnext: { "zkEVM": "/technology/zkevm/intro-to-zkevm/" }
-excerpt: "zkTrie is a sparse binary Merkle Patricia Trie built using Poseidon hash."
+whatsnext: { "zkEVM": "/tr/technology/zkevm/intro-to-zkevm/" }
+excerpt: "zkTrie, Poseidon hashi kullanılarak oluşturulmuş seyrek bir ikili (binary) Merkle Patricia Trie'dir."
 ---
 
 import Aside from "../../../../../components/Aside.astro"
@@ -14,60 +14,60 @@ import zktrie1 from "../_images/zktrie-arch.png"
 import zktrie2 from "../_images/zktrie-insertion.png"
 import zktrie3 from "../_images/zktrie-deletion.png"
 
-This document describes zkTrie, a sparse binary Merkle Patricia Trie used to store key-value pairs efficiently. It explains the tree structure, construction, node hashing, and tree operations, including insertion and deletion.
+Bu belgede, anahtar/değer çiftlerini verimli bir şekilde depolamak için kullanılan seyrek bir ikili Merkle Patricia Trie olan zkTrie açıklanmaktadır. Ekleme ve silme de dahil olmak üzere ağaç yapısını, yapısını, düğüm hash işlemini ve ağaç işlemlerini açıklar.
 
-You can also explore our [zktrie repo](https://github.com/scroll-tech/zktrie).
+Ayrıca [zktrie repomuzu](https://github.com/scroll-tech/zktrie) de inceleyebilirsiniz.
 
-## Tree Structure
+## Ağaç Yapısı
 
-zkTrie is a sparse binary Merkle Patricia Trie, depicted in the below figure.
-Before diving into the Sparse Binary Merkle Patricia Trie, let's briefly touch on Merkle Trees and Patricia Tries.
-* **Merkle Tree**: A Merkle Tree is a tree where each leaf node represents a hash of a data block, and each non-leaf node represents the hash of its child nodes.
-* **Patricia Trie**: A Patricia Trie is a type of radix tree or compressed trie used to store key-value pairs efficiently. It encodes the nodes with same prefix of the key to share the common path, where the path is determined by the value of the node key.
+zkTrie, aşağıdaki şekilde gösterildiği şekilde seyrek bir ikili Merkle Patricia Trie'dir.
+Seyrek İkili Merkle Patricia Trie konusuna dalmadan önce Merkle Trees ve Patricia Tries'e kısaca değinelim.
+* **Merkle Ağacı**: Merkle Ağacı, her yaprak düğümünün bir veri bloğunun hash değerini temsil ettiği ve yaprak olmayan her düğümün, alt düğümlerinin hash değerini temsil ettiği bir ağaçtır.
+* **Patricia Trie**: Patricia Trie, anahtar/değer çiftlerini verimli bir şekilde depolamak için kullanılan bir tür taban ağacı veya sıkıştırılmış trie'dir. Yolun düğüm anahtarının değeri tarafından belirlendiği ortak yolu paylaşmak için düğümleri aynı anahtar önekiyle kodlar.
 
-As illustrated in the Figure 1, there are three types of nodes in the zkTrie.
-- Branch Node: Given the zkTrie is a binary tree, a branch node has two children.
-- Leaf Node: A leaf node holds the data of a key-value pair.
-- Empty Node: An empty node is a special type of node, indicating the sub-trie that shares the same prefix is empty.
+Şekil 1'de gösterildiği gibi zkTrie'de üç tip düğüm vardır.
+- Dal Düğümü: zkTrie'nin ikili bir ağaç olduğu göz önüne alındığında, bir dal düğümünün iki çocuğu vardır.
+- Yaprak Düğümü: Bir yaprak düğümü, bir anahtar/değer çiftinin verilerini tutar.
+- Boş Düğüm: Boş bir düğüm, aynı öneki paylaşan alt grubun boş olduğunu belirten özel bir düğüm türüdür.
 
-In zkTrie, we use Poseidon hash to compute the node hash because it's more friendly and efficient to prove it in the zk circuit.
+zkTrie'de, düğüm hash değerini hesaplamak için Poseidon hash değerini kullanırız çünkü bunu zk devresinde kanıtlamak daha kolay ve verimlidir.
 
 <ClickToZoom src={zktrie1} alt="zkTrie Structure" caption="Figure 1. zkTrie Structure" />
 
-## Tree Construction
+## Ağaç Yapımı
 
-Given a key-value pair, we first compute a *secure key* for the corresponding leaf node by hashing the original key (i.e., account address and storage key) using the Poseidon hash function. This can make the key uniformly distributed over the key space. The node key hashing method is described in the [Node Hashing](#node-hashing) section below.
+Bir anahtar/değer çifti verildiğinde, ilk önce Poseidon hash işlevini kullanarak orijinal anahtarı (yani hesap adresi ve depolama anahtarının) hashleyerek ilgili yaprak düğüm için bir *güvenli anahtar* hesaplarız. Bu, anahtarın anahtar alanı üzerinde tekdüze (uniform) dağıtılmasını sağlar. Düğüm anahtarı hash yöntemi, aşağıdaki [Node Hashing](#node-hashing) bölümünde açıklanmaktadır.
 
-We encode the path of a new leaf node by traversing the secure key from Least Significant Bit (LSB) to the Most Significant Bit (MSB). At each step, if the bit is 0, we will traverse to the left child; otherwise, traverse to the right child.
+Yeni bir yaprak düğümün yolunu, güvenli anahtarı En Az Önemli Bit'ten (LSB) En Önemli Bit'e (MSB) geçerek kodluyoruz. Her adımda, eğer bit 0 ise soldaki çocuğa; aksi halde sağ çocuğa geçiyoruz.
 
-We limit the maximum depth of zkTrie to 248, meaning that the tree will only traverse the lower 248 bits of the key. Because the secure key space is a finite field used by Poseidon hash that doesn't occupy the full range of $2^{256}$, the bit representation of the key can be ambiguous in the finite field and thus results in a soundness issue in the zk circuit. After we truncate the key to lower 248 bits, the key space can fully occupy the range of $2^{248}$ and won't have the ambiguity in the bit representation.
+ZkTrie'nin maksimum derinliğini 248 ile sınırlandırıyoruz; bu, ağacın anahtarın yalnızca alt 248 bitini geçeceği anlamına gelir. Güvenli anahtar alanı, Poseidon hashi tarafından kullanılan ve $2^{256}$ aralığının tamamını kaplamayan sonlu bir alan olduğundan, anahtarın bit temsili sonlu alanda belirsiz olabilir ve bu nedenle, zk devresinde bir sağlamlık sorunuyla sonuçlanır.
 
-We apply an optimization to reduce the tree depth by contracting a subtree that has only one leaf node to a single leaf node. For example, in the Figure 1, the tree has three nodes in total, with keys `0100`, `0010`, and `1010`. Because there is only one node that has key with suffix `00`, the leaf node for key `0100` only traverses the suffix `00` and doesn't fully expand its key which would have resulted in depth of 4.
+Yalnızca bir yaprak düğümü olan bir alt ağacı tek bir yaprak düğümüne daraltarak ağaç derinliğini azaltacak bir optimizasyon uyguluyoruz. Örneğin, Şekil 1'de ağacın toplamda '0100', '0010' ve '1010' tuşlarına sahip üç düğümü vardır. '00' son ekine sahip yalnızca bir düğüm olduğundan, '0100' anahtarının yaprak düğümü yalnızca '00' son ekini geçer ve 4 derinliğine neden olacak anahtarını tam olarak genişletmez.
 
-## Tree Operations
+## Ağaç İşlemleri
 
-### Insertion
+### Ekleme
 
 <ClickToZoom src={zktrie2} alt="zkTrie Structure" caption="Figure 2. Insert a new leaf node to zkTrie" />
 
-When we insert a new leaf node to a zkTrie, there are two cases illustrated in the Figure 2.
+Bir zkTrie'ye yeni bir yaprak düğüm eklediğimizde, Şekil 2'de gösterilen iki durum vardır.
 
-1. When traversing the path of the node key, it reaches an empty node (Figure 2a). In this case, we just need to replace this empty node by this leaf node and backtrace the path to update the merkle hash of branch nodes till the root.
-2. When traversing the path of the node key, it reaches another leaf node `b` (Figure 2b). In this case, we need to push down the existing leaf node `b` until the next bit in the node keys of two leaf nodes differs. At each push-down step, we need to insert an empty sibling node to the branch node. When we reach the level where the bits differ, we then place two leaf nodes `b` and `d` as the left child and the right child depending on their bits. At last, we backtrace the path and update the Merkle hash of all branch nodes.
+1. Düğüm anahtarının yolunu geçerken boş bir düğüme ulaşır (Şekil 2a). Bu durumda, bu boş düğümü bu yaprak düğümle değiştirmemiz ve dal düğümlerinin merkle hashini köke kadar güncellemek için yolu geriye doğru izlememiz gerekiyor.
+2. Düğüm anahtarının yolunu kat ederken başka bir yaprak düğüm olan 'b'ye ulaşır (Şekil 2b). Bu durumda, iki yaprak düğümün düğüm anahtarlarındaki bir sonraki bit farklılaşana kadar mevcut yaprak düğümü 'b'yi aşağı itmemiz gerekir. Her aşağı itme adımında, dal düğümüne boş bir kardeş düğüm eklememiz gerekir. Bitlerin farklı olduğu seviyeye ulaştığımızda, bitlerine bağlı olarak sol çocuk ve sağ çocuk olarak iki yaprak düğümü 'b' ve 'd' yerleştiririz. Sonunda yolu geriye doğru izleriz ve tüm dal düğümlerinin Merkle hashini güncelleriz.
 
-### Deletion
+### Silme
 
 <ClickToZoom src={zktrie3} alt="zkTrie Structure" caption="Figure 3. Delete a leaf node from the zkTrie" />
 
-The deletion of a leaf node is similar to the insertion. There are two cases illustrated in the Figure 3.
+Bir yaprak düğümün silinmesi ekleme işlemine benzer. Şekil 3'te gösterilen iki durum vardır.
 
-1. The sibling node of the to-be-deleted leaf node is a
-branch node (Figure 3a). In this case, we can simply replace the node `a` by an empty node and update the node hash of its ancestors till the root node.
-2. The sibling node of the to-be-deleted leaf node is a leaf node (Figure 3b). Similarly to case 1, we first replace the leaf node by an empty node and start to contract its sibling node upwards until its sibling node is not an empty node. For example, in Figure 3b, we replace the leaf node `b` by an empty node. Because the sibling of node `c` now becomes an empty node, we need to move node `c` one level upward and replace its parent. The new sibling of node `c`, node `e`, is still an empty node. So again we move node `c` upward. Now that the sibling of node `c` is node `a`, a leaf node, the deletion process is finished.
+1. Silinecek yaprak düğümün kardeş düğümü,
+dal düğümü (Şekil 3a). Bu durumda, 'a' düğümünü boş bir düğümle değiştirebilir ve atalarının düğüm karma değerini kök düğüme kadar güncelleyebiliriz.
+2. Silinecek yaprak düğümün kardeş düğümü bir yaprak düğümdür (Şekil 3b). Durum 1'e benzer şekilde, önce yaprak düğümü boş bir düğümle değiştiririz ve kardeş düğümü boş bir düğüm olmayana kadar kardeş düğümünü yukarı doğru daraltmaya başlarız. Örneğin, Şekil 3b'de 'b' yaprak düğümünü boş bir düğümle değiştiriyoruz. 'c' düğümünün kardeşi artık boş bir düğüm haline geldiğinden, 'c' düğümünü bir seviye yukarı taşımamız ve ebeveynini değiştirmemiz gerekiyor. 'C' düğümünün yeni kardeşi 'e' düğümü hâlâ boş bir düğümdür. Böylece yine 'c' düğümünü yukarı doğru hareket ettiriyoruz. Artık 'c' düğümünün kardeşi bir yaprak düğüm olan 'a' düğümü olduğuna göre, silme işlemi tamamlanmıştır.
 
-Note that the sibling of a leaf node in a valid zkTrie cannot be an empty node. Otherwise, we should always prune the subtree and move the leaf node upwards.
+Geçerli bir zkTrie'deki yaprak düğümün kardeşinin boş bir düğüm olamayacağını unutmayın. Aksi halde her zaman alt ağacı budamalı ve yaprak düğümünü yukarı doğru hareket ettirmeliyiz.
 
-## Node Hashing
+## Düğüm Hash İşlemi
 
 In this section, we will describe how leaf secure key and node Merkle hash are computed. We use Poseidon hash with arity 2 for both hashing computation. In Scroll, the Poseidon hash function is configured to take two field element inputs each time and a `domain_value` as the initial context for domain separation, denoted as follows.
 ```
