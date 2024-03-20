@@ -66,7 +66,7 @@ Kullanıcıların Scroll'a işlem gönderebilecekleri iki giriş noktası vardı
 - 'L1ScrollMessenger' sözleşmesi, kullanıcıların ve sözleşmelerin L2'ye isteğe bağlı mesajlar göndermesine olanak tanır. Daha fazla ayrıntıyı [Keyfi Mesaj Gönderme](/tr/technology/bridge/cross-domain-messaging#sending-arbitrary-messages) bölümünde bulabilirsiniz.
 - 'EnforcedTxGateway' sözleşmesi, EOA'ların aynı adresten zorunlu bir işlem başlatmasına, tokenleri çekmesine veya L2'deki diğer sözleşmeleri çağırmasına olanak tanır. Daha fazla ayrıntıyı [Zorunlu İşlem Gönderme](/tr/technology/bridge/cross-domain-messaging#sending-enforced-transactions) bölümünde bulabilirsiniz.
 
-Scroll sıralayıcısı periyodik olarak yeni bir madencilik işi başlatır. L1 mesajlarını 'L1MessageQueue' sözleşmesinden ve L2 bellek havuzundaki işlemlerden çeker ve bir bloğu mühürler. Bir işlem L2 bloğuna dahil edildiğinde durumu 'Onaylandı' olur.
+Scroll sıralayıcısı periyodik olarak yeni bir madencilik işi başlatır. L1 mesajlarını 'L1MessageQueue' sözleşmesinden ve L2 mempool'daki işlemlerden çeker ve bir bloğu mühürler. Bir işlem L2 bloğuna dahil edildiğinde durumu 'Onaylandı' olur.
 
 ### İşlem Verilerinin Taahhüdü
 
@@ -84,8 +84,8 @@ Scroll'da işlemler birden fazla katman halinde yığın hale getirilir.
 
 1. Bir grup sıralı işlem bir blok halinde paketlenir.
 2. Bir dizi bitişik blok, bir parça halinde gruplandırılır. Parça, zkEVM devresinin kanıt üretimi için temel birimdir.
-3. Bir dizi bitişik parça bir yığın halinde gruplandırılır. Yığın, L1'de veri taahhüdü ve kanıt doğrulama için temel birimdir. Bir grubun kanıtı veya _toplu kanıt_, bu gruptaki yığın kanıtlarının toplu kanıtıdır.
+3. Bir dizi bitişik parça bir yığın halinde gruplandırılır. Yığın, L1'de veri taahhüdü ve kanıt doğrulama için temel birimdir. Bir yığının kanıtı veya _yığın kanıtı_, bu gruptaki yığın kanıtlarının toplu kanıtıdır.
 
-Bu çok katmanlı gruplandırma şemasının amacı, zincir üstü veri taahhüdü ve kanıt doğrulamanın gas maliyetini azaltmaktır. Bu yaklaşım, sabit devre kapasitesini dikkate alırken L1'deki toplama birimlerinin ayrıntı düzeyini artırır. Sonuç olarak, toplu işlem sözleşmede saklanacak verileri azaltır ve kanıt doğrulama maliyetini daha fazla L2 işlemine göre amorti eder.
+Bu çok katmanlı gruplandırma şemasının amacı, zincir üstü veri taahhüdü ve kanıt doğrulamanın gas maliyetini azaltmaktır. Bu yaklaşım, sabit devre kapasitesini dikkate alırken L1'deki rollup birimlerinin ayrıntı düzeyini artırır. Sonuç olarak, yığın sözleşmede saklanacak verileri azaltır ve kanıt doğrulama maliyetini daha fazla L2 işlemine göre amorti eder.
 
 Bir parça oluşturulduktan sonra karşılık gelen bir parça kanıtlama görevi oluşturulacak ve bir zkEVM kanıtlayıcıya gönderilecektir. Yeni bir yığın oluşturulduktan sonra birbirini takip eden iki eylem gerçekleşir: (a) rollup düğümü bu yığın işlem verilerini ve blok bilgilerini L1 sözleşmesine gönderir ve (b) yığın kanıtlarını bir araya getirmek için bir parça kanıtlama görevi bir L1 kanıtlama toplayıcısı sözleşmesine gönderilir. Bir parça ve yığın önermeye yönelik standartlar [Rollup Düğümü](/tr/technology/sequencer/rollup-node) kısmında ayrıntılı olarak açıklanmıştır.

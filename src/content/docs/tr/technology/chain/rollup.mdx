@@ -19,8 +19,8 @@ Bu belgede Scroll'daki rollup işlemi açıklanmaktadır.
 Şekilde rollup iş akışı gösterilmektedir. L2 sıralayıcısı üç modül içerir:
 
 - **Senkronizasyon hizmeti** L1 köprü sözleşmesinden düzenlenen etkinliğe abone olur. L1 gelen kutusuna yeni eklenen mesajları tespit ettiğinde, Senkronizasyon Hizmeti buna göre yeni bir "L1MessageTx" işlemi oluşturacak ve bunu yerel L1 işlem kuyruğuna ekleyecektir.
-- **Bellek Havuzu** doğrudan L2 sıralayıcısına gönderilen işlemleri toplar.
-- **Yürütücü** hem L1 işlem kuyruğundan hem de L2 bellek havuzundan işlemleri çeker ve yeni bir L2 bloğu oluşturmak için bunları yürütür.
+- **Mempool** doğrudan L2 sıralayıcısına gönderilen işlemleri toplar.
+- **Yürütücü** hem L1 işlem kuyruğundan hem de L2 mempool'dan işlemleri çeker ve yeni bir L2 bloğu oluşturmak için bunları yürütür.
 
 Rollup düğümü üç modül içerir:
 
