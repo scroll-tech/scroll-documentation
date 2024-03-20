@@ -141,6 +141,16 @@ const currentPageMatch = removeSlashes(currentPage.slice(1))
     @apply pt-[15px];
   }
 
+  .sidebar-nav-groups::-webkit-scrollbar {
+    width: 5px;
+    height: 8px;
+    background-color: var(--color-gray-40);
+  }
+
+  .sidebar-nav-groups::-webkit-scrollbar-thumb {
+    background: var(--orange-500);
+  }
+
   @media (min-width: 50em) {
     #mobile-menu,
     .menu-separator {
