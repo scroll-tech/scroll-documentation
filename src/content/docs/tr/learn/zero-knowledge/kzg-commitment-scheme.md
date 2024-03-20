@@ -27,7 +27,7 @@ Herhangi bir KZG taahhüdünü hesaplamadan önce tek seferlik güvenilir kurulu
 - Rastgele bir alan öğesi seçin $\tau \in \mathbb{F}_p$
 - $l \in \mathbb{Z}$ taahhüt etmek istediğimiz polinomların maksimum derecesi olsun
   - Güvenilir kurulum yalnızca $\leq l$ derecesindeki polinomlara yönelik taahhütleri etkinleştirir
-- $([\tau^0]_1,[\tau^1]_1,[\tau^{2}]_1\ldots,[\tau^{l}]_1)$ ve $([\tau] hesaplayın _2)$ ve bu değerleri herkese açık olarak yayınlayın.
+- $([\tau^0]_1,[\tau^1]_1,[\tau^{2}]_1\ldots,[\tau^{l}]_1)$ ve $([\tau]_2)$ hesaplayın ve bu değerleri herkese açık olarak yayınlayın.
 
 $\tau$'ın açıklanmaması gerektiğini unutmayın; bu, kurulumun gizli bir parametresidir ve güvenilir kurulum töreni tamamlandıktan sonra kimsenin değerini anlayamaması için atılmalıdır.
 
@@ -38,7 +38,7 @@ $\tau$'ın açıklanmaması gerektiğini unutmayın; bu, kurulumun gizli bir par
 - Bir $P(x) = \sum_{i=0}^{l} p_i x^i$ polinomu verildiğinde
 - Taahhüdü hesaplayın ve çıktısını alın $c = [P(\tau)]_1$
   - Her ne kadar taahhüt eden $P(\tau)$'ı doğrudan hesaplayamasa da ($\tau$'ı bilmediğinden), güvenilir kurulumun çıktısını kullanarak bunu hesaplayabilir:
-    - $[P(\tau)]_1 = [\sum_{i=0}^{l} p*i \tau^i]\_1 = \sum*{i=0}^{l} p_i [\tau^i]\_1 $
+    - $[P(\tau)]_1 = [\sum_{i=0}^{l} p*i \tau^i]\_1 = \sum*{i=0}^{l} p_i [\tau^i]\_1$
 
 ## 3. Bir değerlendirmeyi kanıtlayın
 
