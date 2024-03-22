@@ -33,7 +33,7 @@ All Gateway contracts will form the message and send it to the `L1ScrollMessenge
   address of the `L1ScrollMessenger`. 
 </Aside>
 
-When a new block gets created on L1, the Watcher will detect the message on the `L1MessageQueue` and will pass it to the Relayer service, which will submit the transaction to the L2 via the l2geth node. Finally, the l2geth node will pass the transaction to the `L2ScrollMessagner` contract for execution on L2.
+When a new block gets created on L1, the Watcher will detect the message on the `L1MessageQueue` and will pass it to the Relayer service, which will submit the transaction to the L2 via the l2geth node. Finally, the l2geth node will pass the transaction to the `L2ScrollMessenger` contract for execution on L2.
 
 ## Withdraw ETH and ERC20 tokens from L2
 
