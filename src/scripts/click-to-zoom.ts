@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll(".click-to-zoom").forEach((element: HTMLImageElement) => {
-    document.addEventListener("astro:page-load", () => {
+  document.addEventListener("astro:page-load", () => {
+    document.querySelectorAll(".click-to-zoom").forEach((element: HTMLImageElement) => {
       element.addEventListener("click", () => {
         if (element.classList.contains("expanded")) return
 

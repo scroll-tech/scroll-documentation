@@ -61,7 +61,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site)
       }
     </style>
     <script is:inline>
-      const themeMode = localStorage.getItem("THEME_MODE")
+      var themeMode = localStorage.getItem("THEME_MODE")
 
       if (themeMode === "dark") {
         document.documentElement.classList.add("dark")

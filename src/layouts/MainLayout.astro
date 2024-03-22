@@ -203,7 +203,7 @@ changeLanguage(content.lang)
       }
     </script>
     <script is:inline>
-      const themeMode = localStorage.getItem("THEME_MODE")
+      var themeMode = localStorage.getItem("THEME_MODE")
       if (themeMode === "dark") {
         document.documentElement.classList.add("dark")
       } else {
