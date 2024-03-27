@@ -15,19 +15,19 @@ Bu belge, kullanıcıların ve geliştiricilerin, tokenleri L2'den L1'e çekmek 
 
 | Gateway Contract         | Açıklama                                                                   |
 | ------------------------ | -------------------------------------------------------------------------- |
-| `L2GatewayRouter`        | Ağ geçidi yönlendiricisi, ETH ve ERC20 tokenlarının çekilmesini destekler. |
-| `L2ETHGateway`           | ETH para çekme işlemleri için ağ geçidi.                                   |
-| `L2StandardERC20Gateway` | Standart ERC20 token çekimleri için ağ geçidi.                             |
-| `L2CustomERC20Gateway`   | Özel ERC20 token çekimleri için ağ geçidi.                                 |
-| `L2WETHGateway`          | Wrapped ETH para çekme işlemleri için ağ geçidi.                           |
-| `L2ERC721Gateway`        | ERC-721 token çekimleri için ağ geçidi.                                    |
-| `L2ERC1155Gateway`       | ERC-1155 token çekimleri için ağ geçidi.                                   |
+| `L2GatewayRouter`        | The gateway router supports the withdrawal of ETH and ERC20 tokens. |
+| `L2ETHGateway`           | The gateway for ETH withdrawals.                                   |
+| `L2StandardERC20Gateway` | The gateway for standard ERC20 token withdrawals.                             |
+| `L2CustomERC20Gateway`   | The gateway for custom ERC20 token withdrawals.                                 |
+| `L2WETHGateway`          | The gateway for Wrapped ETH withdrawals.                           |
+| `L2ERC721Gateway`        | The gateway for ERC-721 token withdrawals.                                    |
+| `L2ERC1155Gateway`       | The gateway for ERC-1155 token withdrawals.                                   |
 
 ## Genel Bakış
 
 <ClickToZoom src={WithdrawWorkflow} alt="Withdraw Workflow" />
 
-Şekilde L2'den L1'e para çekme iş akışı gösterilmektedir. Kullanıcılar token çekme işlemini başlatmak için ağ geçitlerini ararlar. Geri çekme işlemi 'L2ScrollMessenger'a gönderilen bir mesajla kodlanır ve bu mesaj daha sonra 'L2MessageQueue'ya eklenir. 'L2MessageQueue' bir Withdraw Trie'sini korur ve her yeni mesaj eklendiğinde kökü günceller. Withdraw Trie kökü, L2 durum kökü ile birlikte L1 rollup sözleşmesinde sonlandırılır. Yeni Withdraw Trie kökü L1'de sonlandırıldıktan sonra, kullanıcılar veya üçüncü taraflar Withdraw Trie köküne geçerli bir Merkle Ekleme Kanıtı oluşturabilir ve L1'de çekilmeyi tamamlamak için bir _withdraw execution_ işlemi gönderebilir. L2'den L1'e mesaj aktarma iş akışı hakkında daha fazla ayrıntıyı [Etki Alanları Arası Mesajlaşma](/technology/bridge/cross-domain-messaging#sending-messages-from-l2-to-l1) bölümünde bulabilirsiniz.
+Şekilde L2'den L1'e para çekme iş akışı gösterilmektedir. Kullanıcılar token çekme işlemini başlatmak için ağ geçitlerini ararlar. Geri çekme işlemi 'L2ScrollMessenger'a gönderilen bir mesajla kodlanır ve bu mesaj daha sonra 'L2MessageQueue'ya eklenir. 'L2MessageQueue' bir Withdraw Trie'sini korur ve her yeni mesaj eklendiğinde kökü günceller. Withdraw Trie kökü, L2 durum kökü ile birlikte L1 rollup sözleşmesinde sonlandırılır. Yeni Withdraw Trie kökü L1'de sonlandırıldıktan sonra, kullanıcılar veya üçüncü taraflar Withdraw Trie köküne geçerli bir Merkle Inclusion Kanıtı oluşturabilir ve L1'de çekilmeyi tamamlamak için bir _withdraw execution_ işlemi gönderebilir. L2'den L1'e mesaj aktarma iş akışı hakkında daha fazla ayrıntıyı [Alanlar Arası Mesajlaşma](/technology/bridge/cross-domain-messaging#sending-messages-from-l2-to-l1) bölümünde bulabilirsiniz.
 
 Sonraki bölümlerde farklı tokenlerin nasıl geri çekildiğinin ayrıntıları açıklanmaktadır.
 
