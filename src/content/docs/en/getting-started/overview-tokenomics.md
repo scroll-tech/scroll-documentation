@@ -1,20 +1,21 @@
 ---
-section: gettingStarted
+section: Getting started
 date: Last Modified
-title: "Scroll Overview"
+title: "Scroll Overview and TOKENOMICS"
 lang: "en"
-permalink: "docs/conceptual-overview/"
+permalink: "docs/conceptual-overview--tokenomics/"
 excerpt: "ZK Rollups and Scroll"
 whatsnext: { "User Guide": "/user-guide/", "Building on Scroll": "/developers/" }
 ---
 
-#### Welcome to the Scroll docs!
+
+## Welcome to the SCROLL DOCS :
 
 Scroll is a security-focused scaling solution for Ethereum, using innovations in scaling design and zero knowledge proofs to build a new layer on Ethereum. The Scroll network is more accessible, more responsive, and can support more users at once than Ethereum alone, and if you've ever used or developed an application on Ethereum, you'll be right at home on Scroll.
 
 Want to try out the Scroll Sepolia testnet with free assets before using Scroll? Check out our [User Guide](/user-guide/).
 
-## What is Scroll building?
+### What is Scroll building?
 
 Scroll is building the technology to scale Ethereum.
 
@@ -27,6 +28,40 @@ Ultimately, Ethereum smart contracts verify that every transaction on Scroll is 
 <!-- TODO: Confirm Architecture page exists -->
 
 For more information on our architecture, see [Scroll Architecture](/technology/).
+
+### Scroll Tokenomics :
+
+While it's currently unclear if Scroll will have tokenomics, here's an overview of what they could look like if they decide to implement them:
+
+Potential Token Utility:
+
+Network fees: Users might pay fees in Scroll tokens for transactions and using network resources.
+Staking: Token holders could stake their tokens to participate in network validation and earn rewards.
+Governance: Tokens could give holders voting rights on network upgrades, fee structures, and other governance decisions.
+Discounted access: Holding tokens could provide discounts on specific applications or services built on Scroll.
+Token Distribution:
+
+Team & Advisors: An allocation might be reserved for the team and advisors who contribute to Scroll's development.
+Foundation/Treasury: A portion could be allocated to a foundation or treasury for funding future development and ecosystem growth.
+Public Sale: Tokens could be sold in a public sale to raise funds and distribute ownership.
+Mining/Staking Rewards: Tokens could be distributed as rewards for network validation or staking.
+Community Grants: Some tokens could be allocated for community grants to support developers and projects building on Scroll.
+Tokenomics Model:
+
+Total Supply: The total number of tokens issued would need careful consideration to balance incentives with inflation concerns.
+Distribution Schedule: The release of tokens over time would need to be planned to manage supply and incentivize long-term participation.
+Governance Model: The specific mechanisms for on-chain governance using tokens would need to be designed.
+Important Considerations:
+
+Regulations: Complying with evolving cryptocurrency regulations would be crucial.
+Security: Secure token design and smart contract implementation would be essential.
+Community Alignment: Any tokenomics design should align with the values and goals of the Scroll community.
+Remember:
+
+This is just a hypothetical overview based on common tokenomics models in other blockchain projects. The actual tokenomics of Scroll, if implemented, could be different and would depend on specific decisions made by the Scroll team.
+
+It's important to stay updated on official announcements from Scroll to understand their future plans regarding tokenomics.
+
 
 ## Can I use Scroll today?
 
