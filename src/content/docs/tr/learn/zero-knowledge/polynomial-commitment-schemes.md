@@ -18,7 +18,7 @@ Adından da anlaşılacağı gibi polinom taahhüt şemaları, taahhüt edilecek
 
 Güvenli taahhüt planlarının iki özelliği vardır:
 
-1. **Bağlayıcı**: $c$ taahhüdünü yayınladıktan sonra, taahhüt eden kişi $v$'den farklı olan ve aynı zamanda $c$'a karşılık gelen başka bir $v'$ değeri bulamamalıdır. Yani, $c$ taahhüdü, taahhüt edeni orijinal $v$ değerine bağlar.
+1. **Bağlayıcı**: $c$ taahhüdünü yayınladıktan sonra, taahhüt eden kişi $v$'den farklı olan ve aynı zamanda $c$'ye karşılık gelen başka bir $v'$ değeri bulamamalıdır. Yani, $c$ taahhüdü, taahhüt edeni orijinal $v$ değerine bağlar.
 2. **Gizleme**: Doğrulayıcı, $c$ taahhüdünden orijinal $v$ değeri hakkında herhangi bir bilgi öğrenememelidir. Yani, $c$ taahhüdü, orijinal $v$ değeri hakkındaki tüm bilgileri gizler.
 
 ## Polinom taahhüt şemaları

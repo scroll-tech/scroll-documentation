@@ -8,9 +8,9 @@ excerpt: "KZG, Ethereum'un Proto-Danksharding'inde kullanılır ve ayrıca Scrol
 whatsnext: { "Ek Kaynaklar": "/tr/learn/zero-knowledge/additional-zk-learning-resources" }
 ---
 
-En yaygın kullanılan polinom taahhüt planlarından biri KZG taahhüt şemasıdır. Plan ilk olarak 2010 yılında Kate, Zaverucha ve Goldberg tarafından [yayınlandı](https://www.iacr.org/archive/asiacrypt2010/6477178/6477178.pdf).
+En yaygın kullanılan polinom taahhüt planlarından biri KZG taahhüt şemasıdır. Plan ilk olarak 2010 yılında Kate, Zaverucha ve Goldberg tarafından [yayınlanmıştır](https://www.iacr.org/archive/asiacrypt2010/6477178/6477178.pdf).
 
-KZG, Ethereum'un [Proto-Danksharding'inde](https://notes.ethereum.org/@vbuterin/proto_danksharding_faq) kullanılır ve ayrıca Scroll'un kanıt sisteminde de kullanılır.
+KZG, Ethereum'un [Proto-Danksharding'inde](https://notes.ethereum.org/@vbuterin/proto_danksharding_faq) ve ayrıca Scroll'un kanıt sisteminde kullanılır.
 
 Bu makale KZG taahhüt planına genel bir bakış sunacaktır.
 
@@ -18,7 +18,7 @@ Bu makale KZG taahhüt planına genel bir bakış sunacaktır.
 
 Polinom taahhüt şemalarının önermesini hatırlayın. Taahhüt etmek istediğimiz bazı $P(x)$ polinomumuz var. Polinomun derecesinin $l$'dan küçük olduğunu varsayacağız.
 
-KZG taahhütleri [eliptik eğri eşleştirmelerine](https://vitalik.ca/general/2017/01/14/exploring_ecp.html) dayanmaktadır. $\mathbb{G}$ ve $\mathbb{G}$ $p$ düzeyinde iki eliptik eğri grubu olsun ve önemsiz olmayan bir [çift doğrusal eşleme](https://en.wikipedia.org/wiki/Bilinear_map) olsun. $e: \mathbb{G}_1 \times \mathbb{G}_2 \rightarrow \mathbb{G}_T$. $g$, $\mathbb{G}_1$ oluşturucusu olsun ve $h$, $\mathbb{G}_2$ oluşturucusu olsun. $[x]_1 := x \cdot g$ ve $[x]_2 := x \cdot h$ gösterimini kullanacağız, burada $x \in \mathbb{F}_p$.
+KZG taahhütleri [eliptik eğri eşleştirmelerine](https://vitalik.ca/general/2017/01/14/exploring_ecp.html) dayanmaktadır. $\mathbb{G}_1$ ve $\mathbb{G}_2$ $p$ düzeyinde iki eliptik eğri grubu olsun ve önemsiz olmayan bir [çift doğrusal eşleme](https://en.wikipedia.org/wiki/Bilinear_map) olsun. $e: \mathbb{G}_1 \times \mathbb{G}_2 \rightarrow \mathbb{G}_T$. $g$, $\mathbb{G}_1$ oluşturucusu olsun ve $h$, $\mathbb{G}_2$ oluşturucusu olsun. $[x]_1 := x \cdot g$ ve $[x]_2 := x \cdot h$ gösterimini kullanacağız, burada $x \in \mathbb{F}_p$.
 
 ## 1. Güvenilir kurulum
 
@@ -61,7 +61,7 @@ $\tau$'ın açıklanmaması gerektiğini unutmayın; bu, kurulumun gizli bir par
     \end{align*}
     $$
   - Çift doğrusal eşleme $e$, gizli kurulum parametresi $\tau$'ı bilmeden bu özelliği kontrol etmemizi sağlar.
-- Bu doğrulama tamamlandıktan sonra, bölüm polinomunun doğru şekilde oluşturulduğu ve dolayısıyla değerlendirmenin doğru olduğu sonucuna varabiliriz (çok yüksek olasılıkla).
+- Bu doğrulama tamamlandıktan sonra, bölüm polinomunun doğru şekilde oluşturulduğu ve dolayısıyla değerlendirmenin (çok yüksek olasılıkla) doğru olduğu sonucuna varabiliriz.
 
 ## Daha fazla bilgi edin
 
