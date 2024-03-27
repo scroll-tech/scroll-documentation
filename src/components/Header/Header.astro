@@ -8,6 +8,7 @@ import ThemeModeToggle from "./ThemeModeToggle"
 import GithubSvg from "~/assets/svgs/header/github.svg?raw"
 // import LanguageSelector from "./LanguageSelector/index.tsx"
 import LanguageSelector from "./LanguageSelector/LanguageSelector.astro"
+import { ViewTransitions } from "astro:transitions"
 
 import { localizePath } from "astro-i18next"
 import i18next from "i18next"
@@ -21,7 +22,7 @@ export type Props = {
 }
 const { frontmatter, dark } = Astro.props
 
-const backgroundColor = dark ? "#101010" : ""
+const backgroundColor = dark ? "#101010" : "#ffffff"
 
 const textColor = dark ? "#FFF8F3" : ""
 
@@ -33,6 +34,7 @@ const section = frontmatter?.section ?? ""
   height="0"
   width="0"
   style="display:none;visibility:hidden"></iframe> --><!-- End Google Tag Manager (noscript) --><!-- Google tag (gtag.js) -->
+<ViewTransitions />
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-56SBDN1LL2"></script>
 <script>
   window.dataLayer = window.dataLayer || []
@@ -50,7 +52,7 @@ const section = frontmatter?.section ?? ""
     <!-- <Logo></Logo> -->
 
     <div class="logo flex items-center">
-      <a href={localizePath("/")}>
+      <a href={localizePath("/home")}>
         <span
           class={clsx(
             "inline-block w-[144px] h-[22px]  dark:bg-[url('/scroll-docs-white.svg')] bg-contain bg-no-repeat bg-center",

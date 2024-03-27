@@ -28,7 +28,7 @@ changeLanguage(content.lang)
 // const includeLinkToWalletScript = !!Astro.props?.content?.metadata?.linkToWallet
 ---
 
-<html dir={content.dir ?? "ltr"} lang={content.lang ?? "en-us"} class="initial">
+<html transition:animate="none" dir={content.dir ?? "ltr"} lang={content.lang ?? "en-us"} class="initial">
   <head>
     <HeadCommon />
     <HeadSEO {content} {canonicalURL} />
@@ -203,13 +203,20 @@ changeLanguage(content.lang)
       }
     </script>
     <script is:inline>
-      const themeMode = localStorage.getItem("THEME_MODE")
-
+      var themeMode = localStorage.getItem("THEME_MODE")
       if (themeMode === "dark") {
         document.documentElement.classList.add("dark")
       } else {
         document.documentElement.classList.remove("dark")
       }
+    </script>
+    <script>
+      document.addEventListener("astro:after-swap", () => {
+        const themeMode = localStorage.getItem("THEME_MODE")
+        themeMode === "dark"
+          ? document.documentElement.classList.add("dark")
+          : document.documentElement.classList.remove("dark")
+      })
     </script>
   </head>
 

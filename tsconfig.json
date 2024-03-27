@@ -13,7 +13,7 @@
     "esModuleInterop": true,
     // Add type definitions for our Vite runtime.
     "allowImportingTsExtensions": true,
-    "types": ["vite/client"],
+    "types": ["vite/client", "astro/client"],
     "baseUrl": ".",
     "paths": {
       "~/*": ["src/*"],
@@ -24,6 +24,7 @@
       "@components/*": ["src/components/*"],
       "@components": ["src/components/index.ts"],
       "@abi": ["src/features/abi/index.ts"]
-    }
+    },
+    "verbatimModuleSyntax": false
   }
 }
