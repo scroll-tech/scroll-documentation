@@ -14,7 +14,7 @@ import zktrie1 from "../_images/zktrie-arch.png"
 import zktrie2 from "../_images/zktrie-insertion.png"
 import zktrie3 from "../_images/zktrie-deletion.png"
 
-Bu belgede, anahtar/değer çiftlerini verimli bir şekilde depolamak için kullanılan seyrek bir ikili Merkle Patricia Trie olan zkTrie açıklanmaktadır. Ekleme ve silme de dahil olmak üzere ağaç yapısını, yapısını, düğüm hash işlemini ve ağaç işlemlerini açıklar.
+Bu belgede, anahtar/değer çiftlerini verimli bir şekilde depolamak için kullanılan seyrek bir ikili Merkle Patricia Trie olan zkTrie açıklanmaktadır. Ekleme ve silme de dahil olmak üzere ağaç yapısını, yapımını, düğüm hash işlemini ve ağaç işlemlerini açıklar.
 
 Ayrıca [zktrie repomuzu](https://github.com/scroll-tech/zktrie) de inceleyebilirsiniz.
 
@@ -22,13 +22,13 @@ Ayrıca [zktrie repomuzu](https://github.com/scroll-tech/zktrie) de inceleyebili
 
 zkTrie, aşağıdaki şekilde gösterildiği şekilde seyrek bir ikili Merkle Patricia Trie'dir.
 Seyrek İkili Merkle Patricia Trie konusuna dalmadan önce Merkle Trees ve Patricia Tries'e kısaca değinelim.
-* **Merkle Ağacı**: Merkle Ağacı, her yaprak düğümünün bir veri bloğunun hash değerini temsil ettiği ve yaprak olmayan her düğümün, alt düğümlerinin hash değerini temsil ettiği bir ağaçtır.
+* **Merkle Tree**: Merkle Tree, her yaprak düğümünün bir veri bloğunun hash değerini temsil ettiği ve yaprak olmayan her düğümün, alt düğümlerinin hash değerini temsil ettiği bir ağaçtır.
 * **Patricia Trie**: Patricia Trie, anahtar/değer çiftlerini verimli bir şekilde depolamak için kullanılan bir tür taban ağacı veya sıkıştırılmış trie'dir. Yolun düğüm anahtarının değeri tarafından belirlendiği ortak yolu paylaşmak için düğümleri aynı anahtar önekiyle kodlar.
 
 Şekil 1'de gösterildiği gibi zkTrie'de üç tip düğüm vardır.
-- Dal Düğümü: zkTrie'nin ikili bir ağaç olduğu göz önüne alındığında, bir dal düğümünün iki çocuğu vardır.
-- Yaprak Düğümü: Bir yaprak düğümü, bir anahtar/değer çiftinin verilerini tutar.
-- Boş Düğüm: Boş bir düğüm, aynı öneki paylaşan alt grubun boş olduğunu belirten özel bir düğüm türüdür.
+- Dal Düğümü (Branch Node): zkTrie'nin ikili bir ağaç olduğu göz önüne alındığında, bir dal düğümünün iki çocuğu vardır.
+- Yaprak Düğümü (Leaf Node): Bir yaprak düğümü, bir anahtar/değer çiftinin verilerini tutar.
+- Boş Düğüm (Empty Node): Boş bir düğüm, aynı öneki paylaşan alt grubun boş olduğunu belirten özel bir düğüm türüdür.
 
 zkTrie'de, düğüm hash değerini hesaplamak için Poseidon hash değerini kullanırız çünkü bunu zk devresinde kanıtlamak daha kolay ve verimlidir.
 
@@ -52,7 +52,7 @@ Yalnızca bir yaprak düğümü olan bir alt ağacı tek bir yaprak düğümüne
 
 Bir zkTrie'ye yeni bir yaprak düğüm eklediğimizde, Şekil 2'de gösterilen iki durum vardır.
 
-1. Düğüm anahtarının yolunu geçerken boş bir düğüme ulaşır (Şekil 2a). Bu durumda, bu boş düğümü bu yaprak düğümle değiştirmemiz ve dal düğümlerinin merkle hashini köke kadar güncellemek için yolu geriye doğru izlememiz gerekiyor.
+1. Düğüm anahtarının yolunu izlerken boş bir düğüme ulaşılıyor (Şekil 2a). Bu durumda, bu boş düğümü bu yaprak düğümle değiştirmemiz ve dal düğümlerinin merkle hashini köke kadar güncellemek için yolu geriye doğru izlememiz gerekiyor.
 2. Düğüm anahtarının yolunu kat ederken başka bir yaprak düğüm olan 'b'ye ulaşır (Şekil 2b). Bu durumda, iki yaprak düğümün düğüm anahtarlarındaki bir sonraki bit farklılaşana kadar mevcut yaprak düğümü 'b'yi aşağı itmemiz gerekir. Her aşağı itme adımında, dal düğümüne boş bir kardeş düğüm eklememiz gerekir. Bitlerin farklı olduğu seviyeye ulaştığımızda, bitlerine bağlı olarak sol çocuk ve sağ çocuk olarak iki yaprak düğümü 'b' ve 'd' yerleştiririz. Sonunda yolu geriye doğru izleriz ve tüm dal düğümlerinin Merkle hashini güncelleriz.
 
 ### Silme
@@ -94,7 +94,7 @@ Bir yaprak düğümün düğüm hashi aşağıdaki şekilde hesaplanır.
 leafNodeHash = h{LeafNodeType}(nodeKey, valueHash)
 ```
 
-Hesaplama, iki alanı 'nodeKey' ve 'valueHash' içerir.
+Hesaplama, 'nodeKey' ve 'valueHash' olmak üzere iki alanı içerir.
 - 'nodeKey' orijinal anahtardan hashe dönüştürülür. Poseidon hashinde kullanılan alan adı değeri 256'dır.
 - `valueHash`, yaprak düğüm değerinin hashlenmesiyle hesaplanır. Poseidon hashinde kullanılan etki alanı değeri '256 * n'dir; burada 'n', yaprak düğüm değerindeki öğelerin sayısıdır.
 

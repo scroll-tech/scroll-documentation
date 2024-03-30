@@ -9,32 +9,32 @@ whatsnext: { "Rollup Düğümü": "/tr/technology/sequencer/rollup-node/" }
 
 import Aside from "../../../../../components/Aside.astro"
 
-Yürütme düğümü, Scroll protokolündeki temel bileşenlerden biridir: L2 blok zincirinin devamlılığından sorumludur. Yürütme düğümü sayesinde Scroll'daki kullanıcı ve geliştirici deneyimi Ethereum'daki kullanıcı ve geliştirici deneyimine benzer. Bu benzerliği doğrudan Ethereum'dan miras aldığı EVM ve RPC davranışını minimal değişiklikle koruyarak başarır.
+Yürütme düğümü, Scroll protokolündeki temel bileşenlerden biridir, L2 blok zincirinin devamlılığından sorumludur. Yürütme düğümü sayesinde Scroll'daki kullanıcı ve geliştirici deneyimi Ethereum'daki kullanıcı ve geliştirici deneyimine benzer. Bu benzerliği doğrudan Ethereum'dan miras aldığı EVM ve RPC davranışını minimal değişiklikle koruyarak başarır.
 
 Scroll'un yürütme düğümünün ana işlevleri şunlardır:
 - L1 ve L2'den işlemleri toplar.
 - İşlemleri doğrular ve bu işlemleri L2 bloklarına paketler.
 - Blokları yürütür (execute eder) ve L2 zinciri sürdürür.
 
-L1'den L2'ye token ve mesaj köprülemenin de yürütme düğümünün sorumluluğunda olduğunu vurgulamakta fayda var. Öte yandan L2'den L1'e () gerçekleşen mesajlar L1'deki herhangi bir kullanıcı tarafından yürütülebilir.
+L1'den L2'ye token ve mesaj köprülemenin de yürütme düğümünün sorumluluğunda olduğunu vurgulamakta fayda var. Öte yandan L2'den L1'e gerçekleşen mesajlar L1'deki herhangi bir kullanıcı tarafından yürütülebilir.
 
 Scroll'un yürütme düğümünün ikincil işlevleri şunlardır:
 - Standart Ethereum RPC API'leri ve bazı Scroll eklenti API'leri sunar.
-- Eşlerin (takipçi düğümlerinin) Ethereum'un eşler arası protokolünü kullanarak blok zincirini senkronize etmesine olanak sağlar.
+- Eşlerin (takipçi düğümlerinin), Ethereum'un eşler arası protokolünü kullanarak blokzincirini senkronize etmesine olanak sağlar.
 
-[go-ethereum](https://github.com/ethereum/go-ethereum)'un bir çatalı olan yürütme düğümü, işlevlerinin çoğunu Ethereum'dan devralır. Buna işlem ve blok veri yapıları, EVM yürütme, RPC ve p2p protokolleri dahildir. Bu veri yapıları ve protokoller doğrudan "go-ethereum"dan miras alındığı için, Scroll'un Ethereum ile uyumluluğu konusunda çok yüksek bir kesinliğe sahip olabiliriz.
+[go-ethereum](https://github.com/ethereum/go-ethereum)'un bir çatallanması olan yürütme düğümü, işlevlerinin çoğunu Ethereum'dan devralır. Buna işlem ve blok veri yapıları, EVM yürütme, RPC ve p2p protokolleri dahildir. Bu veri yapıları ve protokoller doğrudan "go-ethereum"dan miras alındığı için, Scroll'un Ethereum ile uyumluluğu konusunda çok yüksek bir kesinliğe sahip olabiliriz.
 
 Aşağıdaki bölümlerde yürütme düğümünün ana bileşenleri, ek doğrulama kuralları ve değişiklik ayrıntılarının özeti tanıtılacaktır.
 
 ## `l2geth` Bileşenleri
 
-[`l2geth`](https://github.com/scroll-tech/go-ethereum), Scroll'un [go-ethereum](https://github.com/ethereum/go-ethereum) çatalıdır. Blokların oluşturulmasından, yürütülmesinden ve blockchain durumunun sürdürülmesinden sorumludur. 'l2geth', aşağıda listelenen bazı önemli farklılıklarla birlikte, işlevlerinin çoğunu Ethereum'dan devralmaktadır. 'l2geth' aşağıdaki alt modüllere sahiptir (kapsamlı liste değildir):
+[`l2geth`](https://github.com/scroll-tech/go-ethereum), Scroll'un [go-ethereum](https://github.com/ethereum/go-ethereum) çatallanmasıdır. Blokların oluşturulmasından, yürütülmesinden ve blokzincir durumunun sürdürülmesinden sorumludur. 'l2geth', aşağıda listelenen bazı önemli farklılıklarla birlikte, işlevlerinin çoğunu Ethereum'dan devralmaktadır. 'l2geth' aşağıdaki alt modüllere sahiptir (kapsamlı liste değildir):
 - **Storage**: LevelDB kullanılarak uygulanan defter ve durum depolaması.
 - **EVM**: Ethereum'un durum geçiş kuralları.
 - **Worker:** Yeni L2 blokları oluşturmaktan sorumludur.
 - **L1 SyncService**: L1 mesajlarını 'l2geth' yerel veritabanında senkronize eder ve saklar.
 - **API katmanı**: Standart Ethereum RPC ve p2p arayüzleri.
-- **Transaction pool**: L2 işlemleri için bellek havuzu.
+- **Transaction pool**: L2 işlemleri için mempool.
 - **Circuit capacity checker**: bir işlemin veya bloğun devre kapasitesi sınırını aşıp aşmadığını kontrol eder.
 
 ### Devre Kapasitesi Denetleyicisi
@@ -71,7 +71,7 @@ Scroll, Ethereum'un blok doğrulama kurallarına ek olarak birkaç doğrulama ku
 
 Scroll yürütme düğümü, Ethereum'un davranışlarının çoğunu devralır. Ancak daha verimli kanıtlamayı mümkün kılmak için 'l2geth'te bazı önemli değişiklikler yapmamız gerekiyordu. Bu bölümde, gerekçeleriyle birlikte değişikliklerin kapsamlı olmayan bir listesi sunulmaktadır.
 
-- **State and storage tree**: Ethereum, durum ve sözleşme depolama veri yapısı olarak MPT'yi (Merkle-Partricia Trie) kullanır. Bu trie'nin yapısı ve Keccak karma değerini kullanması, onu ZK devreleri için aşırı derecede pahalı hale getirecektir. 'l2geth' bunun yerine [zkTrie](/tr/technology/sequencer/zktrie) kullanır: durumu ve sözleşme depolaması için Poseidon karma değerine sahip ikili bir Merkle trie'si.
+- **State and storage tree**: Ethereum, durum ve sözleşme depolama veri yapısı olarak MPT'yi (Merkle-Partricia Trie) kullanır. Bu trie'nin yapısı ve Keccak karma değerini kullanması, onu ZK devreleri için aşırı derecede pahalı hale getirecektir. 'l2geth' bunun yerine [zkTrie](/tr/technology/sequencer/zktrie) kullanır: durumu ve sözleşme depolaması için Poseidon hash değerine sahip ikili bir Merkle trie'si.
 - **StateAccount**: Durum hesabının değiştirilmesi [Hesaplar ve Durum] bölümünde açıklanmıştır.(/tr/technology/chain/accounts).
 - **EVM**: Değişiklikler [Ethereum'dan EVM Farkları] bölümünde açıklanmıştır.(/tr/technology/chain/differences)
 - **İşlem ücretleri**
