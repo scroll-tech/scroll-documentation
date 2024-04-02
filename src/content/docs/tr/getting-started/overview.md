@@ -22,7 +22,7 @@ Ethereum, merkeziyetsiz uygulamaları desteklemek konusunda önde gelen blok zin
 
 Sıfır bilgi kanıtları alanındaki öncü araştırmalardan yararlanarak, Scroll, Ethereum üzerinde bir Katman 2 rollup ağı inşa ediyor. Ethereum topluluğundaki diğer kişilerle açık kaynaklı işbirliği içinde olan ekip, tıpkı Ethereum gibi davranan ağdaki tüm faaliyetlerin Ethereum üzerindeki akıllı sözleşmelerle güvence altına alınmasına olanak tanıyan bir "zkEVM" oluşturdu. Ağ, tüm işlemleri Ethereum'da yayınlar ve zkEVM, Scroll ağının Ethereum kurallarına uyduğuna dair kriptografik "kanıtlar" oluşturur ve yayınlar.
 
-Sonuç olarak, Ethereum'daki akıllı sözleşmeler Scroll'daki her işlemin bu kanıtlar için geçerli olduğunu doğrular ve ağı inanılmaz bir güvenliğe, merkeziyetsizliğe ve sansür direncine kavuşturur. Ethereum için bu düzeyde güvenlik ve ölçeklenebilirlik yalnızca sıfır bilgi kriptografisi, blockchain protokol tasarımı ve donanım hızlandırmadaki son gelişmelerle mümkün olabilir.
+Sonuç olarak, Ethereum'daki akıllı sözleşmeler Scroll'daki her işlemin bu kanıtlar için geçerli olduğunu doğrular ve ağı inanılmaz bir güvenliğe, merkeziyetsizliğe ve sansür direncine kavuşturur. Ethereum için bu düzeyde güvenlik ve ölçeklenebilirlik yalnızca sıfır bilgi kriptografisi, blokzincir protokol tasarımı ve donanım hızlandırmadaki son gelişmelerle mümkün olabilir.
 
 Daha fazla bilgi için mimarimiz hakkında bilgi almak için [Scroll Mimarisi](/tr/technology/) sayfasına bakın.
 

@@ -81,7 +81,7 @@ Bahsedildiği gibi, 'L1GasPriceOracle' verilen ham işlem verilerine göre L1 ga
 
 İstenecek verinin ücreti birden fazla faktöre bağlıdır:
 
-- İmzalı RLP kodlu bir işlemin "sıfırları" ve "sıfır olmayan" baytları
+- İmzalı RLP kodlu bir işlemin "sıfırları" ve "sıfır olmayan" byteları
 - `l1BaseFee` - L1'deki mevcut taban ücret
 - "overhead" - Bir veri taahhüdü işleminin ek gaz yükü
 - `scalingFactor` - Fiyat artışlarını hesaba katmak için kullanılan bir ölçeklendirme faktörü
@@ -97,7 +97,7 @@ L1 veri ücretini hesaplamak için aşağıdaki adımlar gerçekleştirilir:
    | overhead  | 2    |
    | scalar    | 3    |
 
-2. İşlemdeki sıfır baytları ve sıfır olmayan baytları say.
+2. İşlemdeki sıfır byteları ve sıfır olmayan byteları say.
 3. `TX_DATA_ZERO_GAS = 4`, `TX_DATA_NON_ZERO_GAS = 16`[^eip-2028] ve `PRECISION = 1e9`'i göz önüne alarak L1 veri ücretini hesapla:
 
    ```javascript
@@ -105,7 +105,7 @@ L1 veri ücretini hesaplamak için aşağıdaki adımlar gerçekleştirilir:
    l1GasFee = ((l1Gas + overhead) * l1BaseFee * scalar) / PRECISION
    ```
 
-   RLP kodlu işlemdeki bayt sayısını depolamak için sıfır olmayan baytlarda ek 4 bayt ayırırız.
+   RLP kodlu işlemdeki byte sayısını depolamak için sıfır olmayan bytelarda ek 4 byte ayırırız.
 
 [^eip-2028]: Daha fazla bilgi için bkz. [EIP-2028](https://eips.ethereum.org/EIPS/eip-2028).
 
@@ -155,7 +155,7 @@ RLP kodlu giriş işleminin(input) boyutuna, mevcut L1 taban ücretine ve çeşi
 function getL1GasUsed(bytes memory data) external view returns (uint256);
 ```
 
-Bir işlem için kullanılan L1 gazının miktarını hesaplar. İşlemin ve durum köklerinin L1'e kaydedilmesine ilişkin işlem başına gaz ek yükünü temsil eden ek yükü ekler. Giriş işleminin imzası olmadığı gerçeğini hesaba katarak 74 baytlık dolgu ekler.
+Bir işlem için kullanılan L1 gazının miktarını hesaplar. İşlemin ve durum köklerinin L1'e kaydedilmesine ilişkin işlem başına gaz ek yükünü temsil eden ek yükü ekler. Giriş işleminin imzası olmadığı gerçeğini hesaba katarak 74 bytelık dolgu ekler.
 
 **Döndürür:** İşlemi yayınlamak için kullanılan L1 gazı miktarı.
 

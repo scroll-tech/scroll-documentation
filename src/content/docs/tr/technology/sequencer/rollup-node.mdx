@@ -7,7 +7,7 @@ permalink: "technology/sequencer/rollup-node"
 whatsnext: { "zkTrie": "/tr/technology/sequencer/zktrie/" }
 ---
 
-Toplama düğümü, Scroll blok zincirini L1'de kanıtlama ve taahhüt için uygun bölümlere bölmekten sorumludur. Bunun iki ana birimi *chunks* ve *batches*'dır.
+Rollup düğümü, Scroll blokzincirini L1'de kanıtlama ve taahhüt için uygun bölümlere bölmekten sorumludur. Bunun iki ana birimi *chunks* ve *batches*'dır.
 * Bir parça, L2 defterinin bitişik bir bölümüdür, L2 bloklarının bir koleksiyonudur ve parçalar, zkEVM kanıtlama birimidir.
 * Öte yandan bir yığın, toplu bir kanıtla birlikte L1'e gönderilen parçaların bir koleksiyonudur.
 
@@ -29,5 +29,5 @@ Parçalardaki kısıtlamalar:
 Yığınlardaki kısıtlamalar:
 - **L1 payload:** Ethereum'un işlem yükü boyutunda sabit kodlanmış 128 KB sınırı vardır.
 - **L1 commit gas:** Bir yığını işlemenin gas maliyeti, içindeki blokların ve işlemlerin sayısıyla orantılıdır. Bu maliyetin L1 blok gas limitini aşmadığından emin olmalıyız.
-- **Number of chunks:** Bir yığın, toplama kanıtlayıcısı için en uygun sayıda parçayı içerir.
+- **Number of chunks:** Bir yığın, rollup kanıtlayıcısı için en uygun sayıda parçayı içerir.
 

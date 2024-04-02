@@ -5,14 +5,14 @@ title: "ERC1155 Token Köprüsü"
 lang: "tr"
 permalink: "developers/l1-and-l2-bridging/erc1155-token-bridge"
 whatsnext: { "Scroll Habercisi": "/tr/developers/l1-and-l2-bridging/the-scroll-messenger/" }
-excerpt: "L1'den L2'ye ERC1155 köprülenmesi L1ERC1155Ağ Geçidi aracılığıyla yapılır."
+excerpt: "L1'den L2'ye ERC1155 köprülenmesi L1ERC1155Gateway aracılığıyla yapılır."
 ---
 
 import Aside from "../../../../../components/Aside.astro"
 
 ## L1'den ERC1155 tokenları yatırın
 
-ERC1155'in L1'den L2'ye köprülenmesi L1ERC1155Ağ Geçidi aracılığıyla yapılır. ERC721 köprülemeye benzer şekilde, bir yönlendirici kullanmak yerine doğrudan Ağ Geçidi üzerinde 'depositERC1155' fonksiyonunu kullanıyoruz.
+ERC1155'in L1'den L2'ye köprülenmesi L1ERC1155Gateway aracılığıyla yapılır. ERC721 köprülemeye benzer şekilde, bir yönlendirici kullanmak yerine doğrudan Ağ Geçidi üzerinde 'depositERC1155' fonksiyonunu kullanıyoruz.
 
 <Aside type="tip" title="">
   **`depositERC1155`** ETH cinsinden değer gönderilebilen(payable) bir fonksiyondur. Bu fonksiyona gönderilen ETH miktarı, L2 ücretlerinin ödenmesi için kullanılacaktır. Tutarın yeterli olmaması durumunda işlem gönderilmeyecektir. Fazla ETH'in tamamı gönderene iade edilecektir. '0.00001 ETH', token yatırma işlemi başlatmak için fazlasıyla yeterli olacaktır.

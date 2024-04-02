@@ -35,7 +35,7 @@ Açık kaynak katkıda bulunanlar ve altyapı oluşturucular, daha fazla destek 
 
 'SHA2-256' (adress '0x2'), 'RIPEMD-160' (adress '0x3') ve 'blake2f' (adress '0x9') ön derlemeleri şu anda desteklenmemektedir. Bu ön derlenmiş sözleşmelere yapılan çağrılar geri alınacaktır. Bu üç ön derlemeyi gelecekteki bir hard fork'ta etkinleştirmeyi planlıyoruz.
 
-'Modexp' ön derlemesi destekleniyor ancak yalnızca 32 bayta eşit veya daha küçük boyuttaki girişleri destekliyor (ör. 'u256').
+'Modexp' ön derlemesi destekleniyor ancak yalnızca 32 bytea eşit veya daha küçük boyuttaki girişleri destekliyor (ör. 'u256').
 
 'ecPairing' ön derlemesi destekleniyor, fakat nokta sayısı (kümeler, çiftler) 6 yerine 4 ile sınırlıdır.
 
@@ -61,9 +61,9 @@ type StateAccount struct {
 
 ### **CodeHash**
 
-Bununla ilgili olarak, her sözleşme bayt kodu için iki tür kod hash'i sağlarız: Keccak hash'i ve Poseidon hash'i.
+Bununla ilgili olarak, her sözleşme bytecode'u için iki tür kod hash'i sağlarız: Keccak hash'i ve Poseidon hash'i.
 
-'KeccakCodeHash', 'EXTCODEHASH' uyumluluğunu korumak için tutulur. Poseidon hash işleminin çok daha verimli olduğu zkEVM'ye yüklenen bayt kodlarının doğruluğunu doğrulamak için "PoseidonCodeHash" kullanılır.
+'KeccakCodeHash', 'EXTCODEHASH' uyumluluğunu korumak için tutulur. Poseidon hash işleminin çok daha verimli olduğu zkEVM'ye yüklenen bytecodeların doğruluğunu doğrulamak için "PoseidonCodeHash" kullanılır.
 
 ### CodeSize
 
