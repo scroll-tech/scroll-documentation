@@ -14,17 +14,17 @@ Son on yılda, "sıfır bilgi" olarak adlandırılan kriptografi alanı hızla i
 
 Sıfır bilgi kanıtları alanını bu kadar heyecan verici kılan şeyin ne olduğuna ve mühendislerin hangi sorunları çözmesine yardımcı olduğuna bakalım.
 
-## Güven Gerektirmeyen Blok Zincirleri ve Doğrulanabilirlik
+## Güven Gerektirmeyen Blokzincirler ve Doğrulanabilirlik
 
-Blok zincirleri genellikle kullanıcılar tarafından gönderilen işlemleri işleyerek çalışır. Bu işlemler genellikle blok zincirinin gerçekleştirmesi için bazı hesaplamaları tetikler.
+Blokzincirler genellikle kullanıcılar tarafından gönderilen işlemleri işleyerek çalışır. Bu işlemler genellikle blokzincirin gerçekleştirmesi için bazı hesaplamaları tetikler.
 
-Blockchain'in güven gerektirmemesi (yani bireysel bir tarafa güvenmeye bağlı olmaması) için ağdaki katılımcıların işlemlerin geçerli olduğunu ve sonuçta ortaya çıkan hesaplamaların doğru şekilde yapıldığını doğrulaması gerekir.
+Blokzincirin güven gerektirmemesi (yani bireysel bir tarafa güvenmeye bağlı olmaması) için ağdaki katılımcıların işlemlerin geçerli olduğunu ve sonuçta ortaya çıkan hesaplamaların doğru şekilde yapıldığını doğrulaması gerekir.
 
 İşlemin geçerli olduğunu doğrulamak için genellikle dijital imza doğrulaması gerekir; bu, işlemin bildirilen göndericisinin gerçekten işlemin yazarı olduğunu doğrular. Bir işlemin hesaplamasının doğru bir şekilde gerçekleştirildiğinin doğrulanması genellikle işlemin yerel olarak yeniden yürütülmesini gerektirir.
 
 ## Doğrulanabilirliğe İlişkin Sınırlamalar
 
-Her bir işlemi doğrulamaya yönelik bu metodoloji, bir katılımcının hesaplamayı yeniden çalıştıramadığı durumlarda bozulur. Bir katılımcı birkaç nedenden dolayı hesaplamayı yeniden gerçekleştiremeyebilir: (1) belirli verilerin kullanıma sunulmaması gerekebilir (gizlilik nedenleriyle) veya (2) belirli bir veri için çok pahalı olabilir. Katılımcı bilgisayarın tüm işlemleri yeniden yürütmesi - bu ikinci neden, özellikle saniyede çok sayıda işlem gerçekleştiren yüksek verimli blok zincirleri söz konusu olduğunda geçerlidir.
+Her bir işlemi doğrulamaya yönelik bu metodoloji, bir katılımcının hesaplamayı yeniden çalıştıramadığı durumlarda bozulur. Bir katılımcı birkaç nedenden dolayı hesaplamayı yeniden gerçekleştiremeyebilir: (1) belirli verilerin kullanıma sunulmaması gerekebilir (gizlilik nedenleriyle) veya (2) belirli bir veri için çok pahalı olabilir. Katılımcı bilgisayarın tüm işlemleri yeniden yürütmesi - bu ikinci neden, özellikle saniyede çok sayıda işlem gerçekleştiren yüksek verimli blokzincirler söz konusu olduğunda geçerlidir.
 
 ## Zero Knowledge Kanıtlarının Gücü
 
@@ -32,7 +32,7 @@ Sıfır bilgi kanıtları (ZKP'ler) bu sınırlamaların üstesinden gelme güc�
 
 ZKP'ler, (1) hesaplamada kullanılan hassas verilerin gizliliğini korurken ve (2) doğrulamanın, hesaplamanın yeniden yürütülmesinden önemli ölçüde daha ucuz olmasını sağlayarak katılımcıların bir hesaplamanın sonuçlarını doğrulamasına olanak tanır. ZKP'lerin bu iki özelliğine sırasıyla **sıfır bilgi** ve **özlülük** denir.
 
-ZKP'lerin yukarıdaki özellikleri, güven gerektirmeyen blok zincirlerin doğrulanabilirliği bağlamında son derece faydalıdır. ZKP'ler olmadan katılımcıların her işlemin sonuç hesaplamasını yeniden yürütmesi gerekir. Bu, tüm katılımcıların her hesaplamada kullanılan tüm (potansiyel olarak hassas) verileri görmesini gerektirir ve aynı zamanda tüm sistemin verimini de sınırlar. ZKP'lerle bir taraf hesaplamayı gerçekleştirebilir ve ardından hesaplamanın doğru yapıldığına dair bir kanıt oluşturabilir. Diğer katılımcılar, hesaplamayı kendileri yeniden yürütmek yerine, _kanıtın geçerli olduğunu doğrulayarak_ hesaplamanın doğru şekilde yapıldığını doğrulayabilirler. Kanıtın doğrulanması (1) orijinal hesaplamada kullanılan hassas veriler hakkında bilgi sızdırmaz ve (2) hesaplama açısından orijinal hesaplamanın tekrar gerçekleştirilmesinden büyük oranda daha ucuzdur. Bu iki özellik, güven gerektirmeyen blok zincirler için gizlilik ve ölçeklenebilirlik sağlama potansiyeline sahiptir.
+ZKP'lerin yukarıdaki özellikleri, güven gerektirmeyen blokzincirlerin doğrulanabilirliği bağlamında son derece faydalıdır. ZKP'ler olmadan katılımcıların her işlemin sonuç hesaplamasını yeniden yürütmesi gerekir. Bu, tüm katılımcıların her hesaplamada kullanılan tüm (potansiyel olarak hassas) verileri görmesini gerektirir ve aynı zamanda tüm sistemin verimini de sınırlar. ZKP'lerle bir taraf hesaplamayı gerçekleştirebilir ve ardından hesaplamanın doğru yapıldığına dair bir kanıt oluşturabilir. Diğer katılımcılar, hesaplamayı kendileri yeniden yürütmek yerine, _kanıtın geçerli olduğunu doğrulayarak_ hesaplamanın doğru şekilde yapıldığını doğrulayabilirler. Kanıtın doğrulanması (1) orijinal hesaplamada kullanılan hassas veriler hakkında bilgi sızdırmaz ve (2) hesaplama açısından orijinal hesaplamanın tekrar gerçekleştirilmesinden büyük oranda daha ucuzdur. Bu iki özellik, güven gerektirmeyen blokzincirler için gizlilik ve ölçeklenebilirlik sağlama potansiyeline sahiptir.
 
 ## Devreler, Kanıtlar ve Doğrulayıcılar
 
@@ -58,9 +58,9 @@ Daha sonra Alice'in belirli bir bulmaca için devreyi karşılayan bir girdiyi (
 
 Kanıt, bulmacayla birlikte Bob'a iletilebilir; o da daha sonra kanıtın geçerli olup olmadığını değerlendirmek için Sudoku kontrol devresine karşılık gelen bir **doğrulayıcı** kullanabilir ve böylece Alice gerçekten bulmacanın çözümünü bilir. . İşin kritik tarafı Bob, Alice'in çözümü hakkında herhangi bir bilgi sahibi değil ama yine de Alice'in geçerli bir çözüm bildiğini doğrulayabiliyor!
 
-## Sıfır Bilgi Kanıtları ve Blok Zincirleri
+## Sıfır Bilgi Kanıtları ve Blokzincirler
 
-ZKP'lerdeki son gelişmelerin temel motivasyonlarından biri, bunun blok zincirlere uygulanmasıdır. Merkezi olmayan blok zincirlerinin karşılaştığı en önemli zorluklardan ikisi gizlilik ve ölçeklenebilirliktir; tüm veriler halka açıktır ve ağdaki her düğüm, ağdaki her hesaplamayı yeniden çalıştırmak zorundadır. ZKP'ler bu iki zorluğun da çözülmesine yardımcı olabilir.
+ZKP'lerdeki son gelişmelerin temel motivasyonlarından biri, bunun blokzincirlere uygulanmasıdır. Merkezi olmayan blokzincirlerin karşılaştığı en önemli zorluklardan ikisi gizlilik ve ölçeklenebilirliktir; tüm veriler halka açıktır ve ağdaki her düğüm, ağdaki her hesaplamayı yeniden çalıştırmak zorundadır. ZKP'ler bu iki zorluğun da çözülmesine yardımcı olabilir.
 
 Gizliliği koruyan uygulamalar oluşturmak için ZKP'lerin sıfır bilgi özelliğini kullanan çeşitli projeler olsa da, biz Scroll olarak Ethereum'u ölçeklendirmek için ZKP'lerin yalnızca kısa ve öz özelliğini kullanıyoruz.
 
