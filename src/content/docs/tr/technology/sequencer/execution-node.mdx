@@ -71,7 +71,7 @@ Scroll, Ethereum'un blok doğrulama kurallarına ek olarak birkaç doğrulama ku
 
 Scroll yürütme düğümü, Ethereum'un davranışlarının çoğunu devralır. Ancak daha verimli kanıtlamayı mümkün kılmak için 'l2geth'te bazı önemli değişiklikler yapmamız gerekiyordu. Bu bölümde, gerekçeleriyle birlikte değişikliklerin kapsamlı olmayan bir listesi sunulmaktadır.
 
-- **State and storage tree**: Ethereum, durum ve sözleşme depolama veri yapısı olarak MPT'yi (Merkle-Partricia Trie) kullanır. Bu trie'nin yapısı ve Keccak karma değerini kullanması, onu ZK devreleri için aşırı derecede pahalı hale getirecektir. 'l2geth' bunun yerine [zkTrie](/tr/technology/sequencer/zktrie) kullanır: durumu ve sözleşme depolaması için Poseidon hash değerine sahip ikili bir Merkle trie'si.
+- **State and storage tree**: Ethereum, durum ve sözleşme depolama veri yapısı olarak MPT'yi (Merkle-Partricia Trie) kullanır. Bu trie'nin yapısı ve Keccak hash değerini kullanması, onu ZK devreleri için aşırı derecede pahalı hale getirecektir. 'l2geth' bunun yerine [zkTrie](/tr/technology/sequencer/zktrie) kullanır: durumu ve sözleşme depolaması için Poseidon hash değerine sahip ikili bir Merkle trie'si.
 - **StateAccount**: Durum hesabının değiştirilmesi [Hesaplar ve Durum] bölümünde açıklanmıştır.(/tr/technology/chain/accounts).
 - **EVM**: Değişiklikler [Ethereum'dan EVM Farkları] bölümünde açıklanmıştır.(/tr/technology/chain/differences)
 - **İşlem ücretleri**
