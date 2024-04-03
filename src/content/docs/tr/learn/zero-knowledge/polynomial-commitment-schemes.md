@@ -4,11 +4,11 @@ date: Last Modified
 title: "Polinom Taahhüt Şemaları"
 lang: "tr"
 permalink: "learn/zero-knowledge/polynomial-commitment-schemes"
-excerpt: "Polinom taahhüt şemaları sıfır bilgi kanıt sisteminin temel yapı taşıdır"
+excerpt: "Polinom taahhüt şemaları zero knowledge kanıt sisteminin temel yapı taşıdır"
 whatsnext: { "KZG Taahhüt Şeması": "/tr/learn/zero-knowledge/kzg-commitment-scheme" }
 ---
 
-Polinom taahhüt şemaları, sıfır bilgi kanıtlama sistemlerinin (ve diğer şifreleme protokollerinin) temel yapı taşıdır.
+Polinom taahhüt şemaları, zero knowledge kanıtlama sistemlerinin (ve diğer şifreleme protokollerinin) temel yapı taşıdır.
 
 Adından da anlaşılacağı gibi polinom taahhüt şemaları, taahhüt edilecek nesnenin bir polinom olduğu taahhüt şemalarıdır. Bu şemaların ayrıca polinomun değerlendirmesinin yalnızca polinomun taahhüdüne erişimle doğrulanabileceği özel bir özelliği vardır.
 
@@ -25,7 +25,7 @@ Güvenli taahhüt planlarının iki özelliği vardır:
 
 **Polinom taahhüt şeması**, taahhüt eden kişinin $c$ taahhüdünü hesaplayarak $P(x)$ polinomunu taahhüt ettiği bir taahhüt şemasıdır. Normal taahhüt planlarında olduğu gibi, taahhüt eden kişi daha sonra orijinal polinomu ortaya çıkarabilir ve doğrulayıcı, taahhüdün ortaya çıkan polinoma karşılık gelip gelmediğini kontrol edebilir. Bununla birlikte, polinom taahhüt şemalarının ek bir özelliği vardır: taahhüt eden, polinomun kendisini açıklamadan taahhüt edilen polinomun belirli değerlendirmelerini kanıtlayabilir. Örneğin, taahhüt eden $P(a) = b$ olduğunu kanıtlayabilir ve doğrulayıcı böyle bir kanıtı yalnızca $c$ taahhüdünü kullanarak doğrulayabilir.
 
-Polinom taahhüt şemaları sıfır bilgi uygulamaları için son derece faydalıdır. Bir kanıtlayıcı, temeldeki polinomu açıklamadan, belirli özellikleri (örneğin, belirli bir $(a,b)$ noktasından geçtiğini) karşılayan bazı polinomları bildiğini kanıtlamak için böyle bir şema kullanabilir.
+Polinom taahhüt şemaları zero knowledge uygulamaları için son derece faydalıdır. Bir kanıtlayıcı, temeldeki polinomu açıklamadan, belirli özellikleri (örneğin, belirli bir $(a,b)$ noktasından geçtiğini) karşılayan bazı polinomları bildiğini kanıtlamak için böyle bir şema kullanabilir.
 
 Polinom şemalarının faydalı olmasının bir başka nedeni de, $c$ taahhüdünün genellikle temsil ettiği polinomdan çok daha küçük olmasıdır ve dolayısıyla $P(x)$ polinomunun **sıkıştırılması** olarak düşünülebilir. Sıkıştırmanın büyüklüğü özel şemaya bağlıdır. Örneğin, KZG polinom taahhüt şemasında, keyfi derecede büyük dereceli bir polinom, tek bir grup elemanından oluşan bir taahhüt halinde sıkıştırılabilir.
 
