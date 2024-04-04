@@ -1,7 +1,7 @@
 ---
 section: developers
 date: Last Modified
-title: "Scroll Habercisi (Scroll Messenger) ile Zincirler Arası Etkileşim"
+title: "Scroll Messenger ile Zincirler Arası Etkileşim"
 lang: "tr"
 permalink: "developers/guides/scroll-messenger-cross-chain-interaction"
 whatsnext: { "Özel Ağ Geçidi üzerinden ERC20 köprüleyin": "/tr/developers/guides/bridge-erc20-through-the-custom-gateway" }
@@ -85,7 +85,7 @@ Mesajı `executeFunctionCrosschain` komutunu çalıştırıp aşağıdaki parame
 
 ### L2'den L1'e gönderirken Mesajı Aktarın
 
-L2'den L1'e bir işlem geçtiğinde, L1 üzerinde ek bir "para çekimi gerçekleştirme işlemi" gönderilmelidir. Bunu yapmak için L1 Scroll Habercisi'nde 'relayMessageWithProof'u çağırmalısınız.
+L2'den L1'e bir işlem geçtiğinde, L1 üzerinde ek bir "para çekimi gerçekleştirme işlemi" gönderilmelidir. Bunu yapmak için L1 Scroll Messenger'da 'relayMessageWithProof'u çağırmalısınız.
 EOA cüzdanından sözleşme.
 
 Doğrudan [Etherscan Sepolia](https://sepolia.etherscan.io/address/0x50c7d3e7f7c656493d1d76aaa1a836cedfcbb16a#writeProxyContract#F3) üzerinden yapabilirsiniz.
@@ -99,7 +99,7 @@ API özelliklerini son haline getirmeye çalışıyoruz ancak şimdilik aşağı
 curl "https://sepolia-api-bridge.scroll.io/api/claimable?page_size=10&page=1&address=GREETER_OPERATOR_ADDRESS_ON_L2"
 ```
 
-'GREETER_OPERATOR_ADDRESS_ON_L2' kısmını L2'de oluşturduğunuz GreeterOperator sözleşmesinin adresiyle değiştirin. [Scroll Habercisi](/tr/developers/l1-and-l2-bridging/the-scroll-messenger) makalesinde Para Çekme Gerçekleştirme işlemlerini yürütme hakkında daha fazla bilgi edinin.
+'GREETER_OPERATOR_ADDRESS_ON_L2' kısmını L2'de oluşturduğunuz GreeterOperator sözleşmesinin adresiyle değiştirin. [Scroll Messenger](/tr/developers/l1-and-l2-bridging/the-scroll-messenger) makalesinde Para Çekme Gerçekleştirme işlemlerini yürütme hakkında daha fazla bilgi edinin.
 
 <Aside type="danger" title="Deneysel API">
   Bu API Bridge kullanıcı arayüzümüz için yapıldı. Henüz son haline ulaşmamıştır ve gelecekte değişebilir. API tamamlandığında bu kılavuzu güncelleyeceğiz.

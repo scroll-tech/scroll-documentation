@@ -1,26 +1,26 @@
 ---
 section: developers
 date: Last Modified
-title: "Scroll Habercisi (Scroll Messenger)"
+title: "Scroll Messenger"
 lang: "tr"
 permalink: "developers/l1-and-l2-bridging/the-scroll-messenger"
 whatsnext: { "Scroll'da İşlem Ücretleri": "/tr/developers/transaction-fees-on-scroll/" }
-excerpt: "L1 ve L2 arasında herhangi bir mesaj geçişi sağlayan Scroll Habercisi belgeleri."
+excerpt: "L1 ve L2 arasında herhangi bir mesaj geçişi sağlayan Scroll Messenger belgeleri."
 ---
 
 import Aside from "../../../../../components/Aside.astro"
 
-Scroll Habercisi sözleşmeleri, L1'den L2'ye veya L1'den L2'ye herhangi bir mesajın gönderilmesine izin verir. Bu, başka bir zincirdeki fonksiyonların güvenli ve izin gerektirmeyen bir şekilde yürütülmesine olanak tanır. L1'den L2'ye mesaj göndermek için L1'de dağıtılmış olan 'L1ScrollMessenger' mesajlaşma akıllı sözleşmesini kullanın. L2'den L1'e mesaj göndermek için L2'de dağıtılmış olan 'L2ScrollMessenger' sözleşmesini kullanın.
+Scroll Messenger sözleşmeleri, L1'den L2'ye veya L1'den L2'ye herhangi bir mesajın gönderilmesine izin verir. Bu, başka bir zincirdeki fonksiyonların güvenli ve izin gerektirmeyen bir şekilde yürütülmesine olanak tanır. L1'den L2'ye mesaj göndermek için L1'de dağıtılmış olan 'L1ScrollMessenger' mesajlaşma akıllı sözleşmesini kullanın. L2'den L1'e mesaj göndermek için L2'de dağıtılmış olan 'L2ScrollMessenger' sözleşmesini kullanın.
 
 <Aside type="caution" title="">
-  L1 ve L2'de dağıtılmış olan **Scroll Habercisi** aracılığıyla bir işlem gönderilirken; sonuçlanan işlemin göndereni ("CALLER" veya "msg.sender"), alıcı zincirde dağıtılmış olan Haberci Sözleşmesi'nin adresi olacaktır.
+  L1 ve L2'de dağıtılmış olan **Scroll Messenger** aracılığıyla bir işlem gönderilirken; sonuçlanan işlemin göndereni ("CALLER" veya "msg.sender"), alıcı zincirde dağıtılmış olan Messenger Sözleşmesi'nin adresi olacaktır.
   <br />
   Gelecekteki Scroll sürümlerinde, L1'den zorunlu işlemler, L2'deki gönderenin L1'deki orijinal EOA olarak ayarlanmasına olanak tanıyacaktır. Ayrıca 3. tarafların imzalanan işlemleri güvenli bir şekilde aktarmasına da olanak tanıyacak.
 </Aside>
 
 ## İşlemlerin L1'de sonuçlandırılması
 
-L2'den gelecek tüm işlemlerin, Scroll Habercisi sözleşmesindeki 'relayMessageWithProof' fonksiyonu kullanılarak tamamlanması gerekir. Bu sürece "Para Çekimi Gerçekleştirme İşlemi Gönderme" adını veriyoruz ve hem herhangi bir mesaj gönderilmesi hem de varlıkların bir ağ geçidi veya yönlendirici aracılığıyla aktarılması için gereklidir. 'relayMessageWithProof'u kullandığınızda, işleminizin diğer parametrelerle birlikte "para çekme" mesajlarının grubuna dahil olduğunu gösteren bir Merkle katılım kanıtı sağlamanız gerekir. Bu kanıtı ve bu değerleri üretmek yerel olarak ve izinsiz olarak yapılabilir, ancak şu anda bu parametreleri almanın en kolay yolu backend API'lerimiz aracılığıyladır:
+L2'den gelecek tüm işlemlerin, Scroll Messenger sözleşmesindeki 'relayMessageWithProof' fonksiyonu kullanılarak tamamlanması gerekir. Bu sürece "Para Çekimi Gerçekleştirme İşlemi Gönderme" adını veriyoruz ve hem herhangi bir mesaj gönderilmesi hem de varlıkların bir ağ geçidi veya yönlendirici aracılığıyla aktarılması için gereklidir. 'relayMessageWithProof'u kullandığınızda, işleminizin diğer parametrelerle birlikte "para çekme" mesajlarının grubuna dahil olduğunu gösteren bir Merkle katılım kanıtı sağlamanız gerekir. Bu kanıtı ve bu değerleri üretmek yerel olarak ve izinsiz olarak yapılabilir, ancak şu anda bu parametreleri almanın en kolay yolu backend API'lerimiz aracılığıyladır:
 
 - Scroll Sepolia API: https://sepolia-api-bridge.scroll.io/api/
 - Scroll API: https://mainnet-api-bridge.scroll.io/api/
@@ -85,7 +85,7 @@ Döndürülen 'result' json'unun altındaki 'claimInfo' nesnesi, işleminizi L1'
   Tüm L2 işlemleri yığınlar halinde paketlenir; 'relayMessageWithProof'u çağırmadan önce işleminizi içeren yığının sonuçlanmasını beklemeniz gerekir. İşlem yığını index'iniz, "/claimable" uç noktasındaki "batch_index" değerinde döndürülür ve ilerlemeyi [Scroll Rollup Gezgini'nden](https://scroll.io/rollupscan?page=1&per_page=10) takip edebilirsiniz.
 </Aside>
 
-## Haberci API
+## Messenger API
 
 Scroll sözleşmesi API dokümanlarının tamamı için lütfen [npm kitaplığını](https://www.npmjs.com/package/@scroll-tech/contracts?activeTab=code) ziyaret edin.
 
