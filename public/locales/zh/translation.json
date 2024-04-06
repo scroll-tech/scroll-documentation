@@ -1,4 +1,15 @@
 {
+  "rightSidebar": {
+    "onThisPage": "本页",
+    "more": "更多",
+    "editThisPage": "编辑本页",
+    "joinOurCommunity": "加入我们的社区",
+    "feedback": "反馈"
+  },
+  "ui": {
+    "whatsNext": "接下来是什么",
+    "readMore": "阅读更多"
+  },
   "landing": {
     "test": "test",
     "search": {
@@ -38,44 +49,146 @@
     },
     "NewsletterCTA": {
       "title": "随时了解最新的 Scroll 新闻",
-      "placeholder": "输入你的电子邮箱地址",
-      "buttonText": "报名"
+      "text": "路线图更新，虚拟和现场活动，生态机会等等",
+      "placeholder": "在此输入您的电子邮件地址",
+      "thankYouForSubscribing": "感谢您的订阅！",
+      "correctEmail": "请使用正确的电子邮件地址。",
+      "pleaseInsertEmail": "请输入您的电子邮件。"
     }
   },
   "sidebar": {
     "gettingStarted": {
       "gettingStarted": "入门",
-      "overview": "概述",
+      "overview": "概览",
+      "scrollSepoliaTestnet": "Scroll Sepolia 测试网",
       "userGuide": "用户指南",
       "setup": "设置",
       "faucet": "水龙头",
-      "bridge": "桥接器",
+      "bridge": "跨链桥",
       "transferTokens": "转移代币",
       "commonErrors": "常见错误",
-      "rollupExplorer": "Rollup浏览器",
+      "rollupExplorer": "Rollup 浏览器",
+      "scrollSepoliaBlockExplorer": "Scroll Sepolia 浏览器",
+      "scrollMainnet": "Scroll 主网",
+      "scrollscan": "Scrollscan 区块浏览器",
+      "sepoliaBlockExplorer": "Sepolia 浏览器",
       "community": "社区",
+      "discord": "Discord",
       "communityForum": "社区论坛"
     },
     "developers": {
       "developers": "开发者",
-      "buildingOnScroll": "构建Scroll应用",
+      "buildingOnScroll": "在 Scroll 上开发",
       "developerQuickstart": "开发者快速入门",
-      "integrations": "集成",
+      "verifyingSmartContracts": "验证智能合约",
+      "scrollContracts": "Scroll 合约",
+      "ethereumAndScrollDifferences": "以太坊 和 Scroll 的区别",
+      "l1AndL2Bridging": "L1 和 L2 跨链",
+      "ethAndErc20TokenBridge": "ETH 和 ERC20 代币跨链桥",
+      "erc721NftBridge": "ERC721 NFT 跨链桥",
+      "erc1155TokenBridge": "ERC1155 代币跨链桥",
+      "theScrollMessenger": "The Scroll Messenger",
+      "transactionFeesOnScroll": "Scroll 上的交易手续费",
+      "l2Fee": "L2 Fee",
+      "l1Fee": "L1 Fee",
+      "gasOracle": "Gas 预言机",
+      "future": "未来",
       "guides": "指南",
       "contractDeploymentTutorial": "合约部署教程",
+      "crossChainInteraction": "Scroll Messenger 跨链交互",
+      "bridgingERC20TokenThroughCustomGateway": "通过自定义网关跨链 ERC20",
+      "bridgingERC721NftThroughCustomGateway": "通过自定义网关跨链 ERC721 NFT",
+      "bridgingERC1155ThroughCustomGateway": "通过自定义网关跨链 ERC1155",
+      "estimatingGasAndTxFees": "预估 Gas 费和交易手续费",
       "resources": "资源",
-      "rollupExplorer": "Rollup浏览器"
+      "mainnetResources": "主网资源",
+      "sepoliaResources": "Sepolia资源",
+      "scrollBlockExplorer": "Scrollscan 区块浏览器",
+      "rollupExplorer": "Rollup 浏览器",
+      "scrollSepoliaBlockExplorer": "Scroll Sepolia 浏览器",
+      "sepoliaRollupExplorer": "Rollup 浏览器",
+      "sepoliaBlockExplorer": "Sepolia 浏览器"
     },
     "technology": {
-      "overview": "概述",
-      "scrollArchitecture": "Scroll架构"
+      "introduction": "介绍",
+      "principles": "原则",
+      "scrollArchitecture": "Scroll 架构",
+      "overview": "概览",
+
+      "scrollChain": "Scroll 链",
+      "accountsAndState": "账户和状态",
+      "blocks": "区块",
+      "transactions": "交易",
+      "rollupProcess": "Rollup 流程",
+      "evmDifferencesFromEthereum": "和以太坊 EVM 的区别",
+
+      "bridge": "跨链桥",
+      "crossDomainMessaging": "跨链消息传递",
+      "depositGateways": "存款网关",
+      "withdrawGateways": "提款网关",
+
+      "sequencer": "排序器",
+      "executionNode": "执行节点",
+      "rollupNode": "Rollup 节点",
+      "zkTrie": "zkTrie树",
+
+      "zkevm": "zkEVM",
+      "introToZkevm": "zkEVM 介绍",
+      "zkevmOverview": "zkEVM 概览",
+      "bridgeOverview": "跨链桥 概览",
+      "prover": "prover",
+      "proofGeneration": "证明生成",
+      "cpuProverRepo": "CPU prover 代码仓库",
+
+      "security": "安全",
+      "auditsAndBugBounty": "审计和漏洞赏金",
+      "l2BeatAssessment": "L2Beat 评估"
     },
     "learn": {
-      "zkEVMOverview": "zkEVM概述"
-    },
-    "infrastructure": {
-      "introduction": "介绍"
+      "ethereumAndProtocols": "以太坊与协议",
+      "theScalabilityProblem": "扩容问题",
+      "introToRollups": "Rollups 介绍",
+      "zeroKnowledge": "零知识证明",
+      "introToZeroKnowledge": "零知识证明介绍",
+      "polynomialCommitmentSchemes": "多项式承诺方案",
+      "kzgCommitmentScheme": "KZG 承诺方案",
+      "additionalResources": "其他资源"
     }
+  },
+  "footer": {
+    "aboutScroll": {
+      "title": "关于 Scroll",
+      "bugBounty": "漏洞赏金",
+      "joinUs": "加入我们",
+      "healthStatus": "健康状况",
+      "privacyPolicy": "隐私政策",
+      "termsAndConditions": "条款和条件"
+    },
+    "resources": {
+      "title": "资源",
+      "scrollDocsURL": "https://docs.scroll.io/",
+      "blog": "博客",
+      "documentation": "文档",
+      "brandKit": "品牌工具包",
+      "audits": "审计"
+    },
+    "followUs": {
+      "title": "关注我们"
+    }
+  },
+  "pageNotFound": {
+    "title": "页面未找到",
+    "text": "很抱歉，我们找不到您正在寻找的页面"
+  },
+  "rpcTable": {
+    "rpcServerAddress": "RPC 服务地址",
+    "height": "区块高度",
+    "latency": "延迟",
+    "score": "评分",
+    "privacy": "隐私",
+    "addNetwork": "添加网络",
+    "connect": "连接钱包",
+    "sorting": "自动更新"
   },
   "notTranslated": {
     "notTranslated": "此页面尚未翻译。"

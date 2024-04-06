@@ -32,6 +32,7 @@
     "astro-auto-import": "^0.3.0",
     "astro-i18next": "^1.0.0-beta.21",
     "clipboard": "^2.0.11",
+    "ethereum-rpc-table": "^0.0.1",
     "ethers": "^5.7.2",
     "focus-trap-react": "^10.0.0",
     "github-slugger": "^1.4.0",
@@ -47,13 +48,14 @@
     "rehype-mermaidjs": "^1.0.1",
     "remark-gfm": "^3.0.1",
     "remark-math": "^5.1.1",
+    "squirrel-gill": "^1.0.5",
     "tailwindcss": "^3.2.4",
     "to-querystring": "^1.1.1",
     "turndown": "^7.1.2"
   },
   "devDependencies": {
-    "@astrojs/mdx": "^0.11.6",
-    "@astrojs/preact": "^1.2.0",
+    "@astrojs/mdx": "^0.19.7",
+    "@astrojs/preact": "^3.0.1",
     "@astrojs/react": "^2.2.0",
     "@astrojs/sitemap": "^1.0.0",
     "@nomicfoundation/hardhat-toolbox": "^2.0.0",
@@ -88,7 +90,8 @@
     "solhint-plugin-prettier": "^0.0.5",
     "tsconfig-paths": "^4.1.0",
     "typescript": "^4.8.4",
-    "unist-util-remove": "^3.1.0"
+    "unist-util-remove": "^3.1.0",
+    "vite-plugin-svgr": "^4.2.0"
   },
   "lint-staged": {
     "*.{css,md,yml,yaml,astro}": "prettier --write",

@@ -1,0 +1,134 @@
+---
+section: developers
+date: Last Modified
+title: "The Scroll Messenger"
+lang: "zh"
+permalink: "developers/l1-and-l2-bridging/the-scroll-messenger"
+whatsnext: { "Scroll 上的交易手续费": "/zh/developers/transaction-fees-on-scroll/" }
+excerpt: "The Scroll Messenger documentation for arbitrary message passing between L1 and L2."
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+
+Scroll Messenger 合约允许从 L1 向 L2 发送任意消息，反之亦然。这使得能够以安全和无需许可的方式在另一条链上执行功能。要将消息从 L1 发送到 L2，请使用部署在 L1 上的 `L1ScrollMessenger` 合约 .要将消息从 L2 发送到 L1，请使用部署在 L2 上的 `L2ScrollMessenger` 合约。
+
+<Aside type="caution" title="">
+  当通过部署在L1和L2上的**Scroll Messenger**合约发送交易时，生成的交易发送方（ CALLER 或 msg.sender ）将是部署在接收链上的Messenger合约地址。
+  <br />
+  在未来的Scroll版本中，来自 L1 的强制交易将允许将 L2 上的发送方设置为 L1 上的原始 EOA 账户。还将允许第三方安全地中继已签名的交易。
+</Aside>
+
+## L1 交易最终确认
+
+任何从L2发起的交易都需要使用Scroll Messenger合约上的 `relayMessageWithProof` 方法最终确认。我们将此过程称为“提交执行提款交易”，并且通过网关或路由器发送任意消息和转移资产都需要它。当您使用 `relayMessageWithProof` 时，您必须提供默克尔树包含证明，证明您的交易包含在“提款”消息的树中，以及其他参数。生成此证明和这些值可以在本地无需许可的情况下完成，但目前，检索这些参数的最简单方法是通过我们托管在 https://sepolia-api-bridge.scroll.io/api/ 的后端 API。
+
+<Aside type="danger" title="实验性 API">
+  此 API 是为我们的跨链桥 UI 所定制。它尚未最终确定，将来可能会发生变化。当 API 最终确定时，我们将更新本指南。
+</Aside>
+
+向 `/claimable` 端点提供负责在 L2 上发布原始交易的 EOA 或合约地址。API 后端将为您提供在 L1 上成功完成交易所需的所有信息。请看以下示例：
+
+```bash
+https://sepolia-api-bridge.scroll.io/api/claimable?address=0x031407eaaffFB4f1EC2c999bE4477E52C81de3c5&page_size=10&page=1
+```
+
+API 应按以下格式返回交易数据：
+
+```json
+{
+  "errcode": 0,
+  "errmsg": "",
+  "data": {
+    "result": [
+      {
+        "hash": "0xa476850306d6ee52b127628ded34dcf2343570873cce9c5383bd497db48d4f9b",
+        "amount": "",
+        "to": "",
+        "isL1": false,
+        "l1Token": "",
+        "l2Token": "",
+        "blockNumber": 748,
+        "blockTimestamp": null,
+        "finalizeTx": {
+          "hash": "",
+          "amount": "",
+          "to": "",
+          "isL1": false,
+          "blockNumber": 0,
+          "blockTimestamp": null
+        },
+        "claimInfo": {
+          "from": "0x031407eaaffFB4f1EC2c999bE4477E52C81de3c5",
+          "to": "0x1039057185CFe192d16c03F5656225821A193FD5",
+          "value": "0",
+          "nonce": "9",
+          "batch_hash": "0x49a18d72dbceeb957f918947b532db452c031f528e7e6bf329007066638c5e50",
+          "message": "0xa413686200000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000005686f6c6973000000000000000000000000000000000000000000000000000000",
+          "proof": "0x69b4ee6cf9a38bed79668ddd347fef2bdff44c3760c9309fa41decfd60202d22ad3228b676f7d3cd4284a5443f17f1962b36e491b30a40b2405849e597ba5fb5b4c11951957c6f8f642c4af61cd6b24640fec6dc7fc607ee8206a99e92410d3079f53171df5c0661d2afe86c4d97b6f34278daf6a0ea9baff5b4fc979d5629a5",
+          "batch_index": "93"
+        },
+        "createdTime": null
+      }
+    ],
+    "total": 1
+  }
+}
+```
+
+返回的 `result` json 中的`claimInfo` 对象拥有在 L1 上执行交易所需的所有信息。`relayMessageWithProof` 所需的参数是: `from`, `to`, `value`, `nonce`, `message` and `proof`。 将这些参数提供给 L1 上的 relayMessageWithProof 方法，以在 L1 上执行和最终确认交易。
+
+
+<Aside type="tip" title="">
+  所有 L2 交易都打包成批次（batches） – 您必须等待包含您交易的批处理完成，然后再调用 `relayMessageWithProof` 。交易批处理索引在 `/claimable` 端点的 `batch_index` 值中返回，您可以在 [Scroll Rollup 浏览器](https://scroll.io/rollupscan?page=1&per_page=10) 上跟踪进度。
+</Aside>
+
+## Messenger API
+
+请访问 [npm 库](https://www.npmjs.com/package/@scroll-tech/contracts?activeTab=code) 来获取完整的 Scroll 合约 API 文档。
+
+### sendMessage
+
+```solidity
+function sendMessage(
+  address target,
+  uint256 value,
+  bytes calldata message,
+  uint256 gasLimit,
+  address refundAddress
+) external payable;
+```
+
+将任意数据从一个链发送到另一个链。它允许我们跨链执行方法。
+
+| 参数     | 描述                                                                                                         |
+| ------------- | ------------------------------------------------------------------------------------------------------------------- |
+| target        | 接收消息的帐户的地址。接收者可以是智能合约或EOA钱包 |
+| value         | 调用目标合约时传递的 ETH 数量                                                        |
+| message       | 消息的内容。这是要执行的任意调用数据                                         |
+| gasLimit      | 在相应链上完成消息中继所需的gas上限                                        |
+| refundAddress | 将收到退款费用的帐户的地址                                                  |
+
+### relayMessageWithProof
+
+```solidity
+function relayMessageWithProof(
+  address from,
+  address to,
+  uint256 value,
+  uint256 nonce,
+  bytes memory message,
+  L2MessageProof memory proof
+) external;
+```
+
+中继带有消息证明的 L2 => L1 消息。
+
+| 参数 | 描述                                                 |
+| --------- | ------------------------------------------------------------ |
+| from      | 消息发件人的地址                   |
+| to        | 消息收件人的地址                 |
+| value     | 传递给消息调用的 msg.value                   |
+| nonce     | 消息的nonce，以避免重放攻击             |
+| message   | 消息的内容                               |
+| proof     | 用于验证交易正确性的证明 |

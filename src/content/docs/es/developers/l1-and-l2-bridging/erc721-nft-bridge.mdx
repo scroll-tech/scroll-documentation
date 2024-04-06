@@ -85,7 +85,7 @@ Depósito de un NFT ERC721 desde L1 a la cuenta de un destinatario en L2.
 | token     | Dirección del contrato ERC721 NFT en L1.         |
 | to        | Dirección de la cuenta del destinatario en L2.         |
 | tokenId   | Id del NFT a depositar.                            |
-| gasLimit  | Límite de gas necesario para completar el depósito en L2. |
+| gasLimit  | Límite de gas necesario para completar el depósito en L2. La porción de gas que no fué utilizado será automáticamente enviada de vuelta. |
 
 ### updateTokenMapping
 
@@ -105,7 +105,7 @@ Actualización del mapping que conecta un contrato NFT de L1 a L2.
 ### withdrawERC721
 
 ```solidity
-function depositERC721(address _token, address _to, uint256 _tokenId, uint256 _gasLimit) external payable;
+function withdrawERC721(address _token, address _to, uint256 _tokenId, uint256 _gasLimit) external payable;
 ```
 
 Envío de un ERC721 NFT desde L2 a la cuenta de un destinatario en L1.

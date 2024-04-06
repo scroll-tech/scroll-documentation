@@ -1,0 +1,78 @@
+---
+section: technology
+date: Last Modified
+title: "Auditorías & Programa de Bounties"
+lang: "es"
+permalink: "technology/security/audits-and-bug-bounty"
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+Para Scroll la seguridad es prioridad principal.
+
+Aparte de pruebas rigurosas, un equipo de seguridad interno y revisiones exhaustivas de código, también hemos colaborado con varias firmas de auditoría de seguridad para llevar a cabo auditorías en nuestro código. También hemos lanzado un programa de recompensas por encontrar errores para animar a la comunidad a participar en la seguridad de nuestro protocolo.
+
+<Aside type="danger" title="">
+Las auditorías no garantizan la ausencia de vulnerabilidades de seguridad. El uso de blockchains conlleva riesgos,
+y Scroll no es una excepción. Animamos a los usuarios a utilizar el protocolo con precaución y bajo su propio riesgo.
+</Aside>
+
+## Auditorías independientes
+
+Scroll ha trabajado con varias firmas líderes en auditoría de seguridad de la industria para revisar nuestro código, y el código crítico ha sido revisado por múltiples equipos, incluyendo [Trail of Bits](https://www.trailofbits.com/), [OpenZeppelin](https://www.openzeppelin.com/), [Zellic](https://www.zellic.io/), y [KALOS](https://www.kalos.xyz/).
+
+- Trail of Bits, Zellic, y KALOS revisaron nuestros circuitos de la zkEVM
+- OpenZeppelin y Zellic realizaron auditorías independientes en nuestros contratos del bridge y rollup
+- Trail of Bits analizó nuestra implementación de nuestro nodo
+
+<Aside type="tip" title="">
+  Todavía estamos trabajando con nuestros proyectos aliados para publicar todos nuestros informes. Actualizaremos esta página
+  con enlaces a medida que estén disponibles.
+</Aside>
+
+### Circuitos de la zkEVM
+
+- Trail of Bits
+  - Wave 1
+  - Wave 2
+  - Wave 3
+- Zellic y Kalos
+  - [Wave 1](https://github.com/Zellic/publications/blob/master/Scroll%20zkEVM%20-%20Part%201%20-%20Audit%20Report.pdf)
+  - [Wave 2](https://github.com/Zellic/publications/blob/master/Scroll%20zkEVM%20-%20Part%202%20-%20Audit%20Report.pdf)
+
+### Implementación del Nodo
+
+- Trail of Bits
+  - [zkTrie](https://github.com/trailofbits/publications/blob/master/reviews/2023-07-scroll-zktrie-securityreview.pdf)
+  - L2geth
+  - [L2geth diff](https://github.com/trailofbits/publications/blob/master/reviews/2023-08-scrollL2geth-securityreview.pdf)
+
+### Bridge y contrato de rollup
+
+- OpenZeppelin
+  - [Fase 1](https://blog.openzeppelin.com/scroll-layer-1-audit-1)
+  - [Fase 2](https://blog.openzeppelin.com/scroll-phase-2-audit)
+  - [GasSwap, Verificador Múltiple, Wrapped Ether y Diff](https://blog.openzeppelin.com/scroll-gasswap-multiple-verifier-wrapped-ether-and-diff-audit)
+  - [ScrollOwner y Limitador de Rate](https://blog.openzeppelin.com/scrollowner-and-rate-limiter-audit)
+  - [Gateway de USDC](https://blog.openzeppelin.com/scroll-usdc-gateway-audit)
+  - [Diff de Contrato](https://blog.openzeppelin.com/scroll-diff-audit-report)
+- Zellic
+  - [Reporte 1](https://github.com/Zellic/publications/blob/master/Scroll%20-%2005.26.23%20Zellic%20Audit%20Report.pdf)
+  - [Reporte 2](https://github.com/Zellic/publications/blob/master/Scroll%20-%2009.27.23%20Zellic%20Audit%20Report.pdf)
+
+## Programa de Cazarrecompensas de Bugs
+
+Scroll tiene un programa de [Cazarrecompensas de Bugs en Immunefi](https://immunefi.com/bounty/scroll/), una plataforma líder en cazarecompensas de bugs. El programa es abierto
+al público, y alentamos a todos a participar.
+
+Las recompensas dependen de la severidad de las vulnerabilidades:
+
+- **Crítica**: hasta \$1,000,000
+- **Alta**: \$10,000 - \$50,000
+- **Media**: \$5,000
+
+### Alcance
+
+El alcance del programa de recompensas por errores cubre la infraestructura de la blockchain y contratos de bridge y rollup. Para obtener un desglose detallado de las categorías de errores, por favor consulta la página del programa de recompensas por errores.
+
+Además de los ámbitos mencionados en el programa de cazarecompensas por errores, también alentamos a informar sobre cualquier vulnerabilidad identificada a Immunefi, donde se llevarán a cabo las recompensas. Para cualquier descubrimiento de vulnerabilidades críticas que estén fuera del alcance del programa, por favor envía también los informes a security@scroll.io.

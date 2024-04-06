@@ -1,0 +1,80 @@
+---
+section: technology
+date: Last Modified
+title: "审计与漏洞赏金计划"
+lang: "zh"
+permalink: "technology/security/audits-and-bug-bounty"
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+Scroll 将安全性视为重中之重。
+
+除了严格的测试、内部安全团队和全面的代码审核外，
+我们还与多家安全审计公司合作，对我们的代码库进行审计。
+我们还启动了一个漏洞赏金计划，来鼓励社区参与加强我们协议的安全性。
+
+<Aside type="danger" title="">
+  审计并不能保证不存在安全漏洞。使用区块链是有风险的，Scroll也不例外。我们鼓励用户使用 Scroll 协议保持谨慎，并自行承担风险。
+</Aside>
+
+## 独立审计
+
+Scroll 已经与多家业内领先的安全审计公司合作，来审查我们的代码库，
+我们的核心代码接受了多个审计团队的审计，包括 [Trail of Bits](https://www.trailofbits.com/), [OpenZeppelin](https://www.openzeppelin.com/), [Zellic](https://www.zellic.io/) 和 [KALOS](https://www.kalos.xyz/)。
+
+- Trail of Bits, Zellic 和 KALOS 审计了我们的 zkEVM 电路
+- OpenZeppelin 和 Zellic 对我们的跨链桥和 Rollup 合约进行了独立审计
+- Trail of Bits 分析了我们的节点实现
+
+<Aside type="tip" title="">
+  我们仍在与合作伙伴合作，以发布所有报告。当链接可用时，我们将更新此页面。
+</Aside>
+
+### zkEVM 电路
+
+- Trail of Bits
+  - [Wave 1](https://github.com/trailofbits/publications/blob/master/reviews/2023-04-scroll-zkEVM-wave1-securityreview.pdf)
+  - [Wave 2](https://github.com/trailofbits/publications/blob/master/reviews/2023-08-scroll-zkEVM-wave2-securityreview.pdf)
+  - [Wave 3](https://github.com/trailofbits/publications/blob/master/reviews/2023-09-scroll-zkEVM-wave3-securityreview.pdf)
+- Zellic and Kalos
+  - [Wave 1](https://github.com/Zellic/publications/blob/master/Scroll%20zkEVM%20-%20Part%201%20-%20Audit%20Report.pdf)
+  - [Wave 2](https://github.com/Zellic/publications/blob/master/Scroll%20zkEVM%20-%20Part%202%20-%20Audit%20Report.pdf)
+
+### 节点实现
+
+- Trail of Bits
+  - [zkTrie](https://github.com/trailofbits/publications/blob/master/reviews/2023-07-scroll-zktrie-securityreview.pdf)
+  - [L2geth](https://github.com/trailofbits/publications/blob/master/reviews/2023-08-scrollL2geth-initial-securityreview.pdf)
+  - [L2geth diff](https://github.com/trailofbits/publications/blob/master/reviews/2023-08-scrollL2geth-securityreview.pdf)
+
+### 跨链桥和 Rollup 合约
+
+- OpenZeppelin
+  - [Phase 1](https://blog.openzeppelin.com/scroll-layer-1-audit-1)
+  - [Phase 2](https://blog.openzeppelin.com/scroll-phase-2-audit)
+  - [GasSwap, Multiple Verifier, Wrapped Ether and Diff](https://blog.openzeppelin.com/scroll-gasswap-multiple-verifier-wrapped-ether-and-diff-audit)
+  - [ScrollOwner and Rate Limiter](https://blog.openzeppelin.com/scrollowner-and-rate-limiter-audit)
+  - [USDC Gateway](https://blog.openzeppelin.com/scroll-usdc-gateway-audit)
+  - [Contract diff](https://blog.openzeppelin.com/scroll-diff-audit-report)
+  - [Bridge Gas Optimizations](https://blog.openzeppelin.com/scroll-bridge-gas-optimizations-audit)
+- Zellic
+  - [Report 1](https://github.com/Zellic/publications/blob/master/Scroll%20-%2005.26.23%20Zellic%20Audit%20Report.pdf)
+  - [Report 2](https://github.com/Zellic/publications/blob/master/Scroll%20-%2009.27.23%20Zellic%20Audit%20Report.pdf)
+
+## 漏洞赏金计划
+
+Scroll 在业内知名的漏洞赏金平台 Immunefi 上有一个活跃的 [漏洞赏金计划](https://immunefi.com/bounty/scroll/)。
+该计划向公众开放，我们鼓励任何人参与。
+
+奖励取决于报告漏洞的严重程度：
+
+- **严重**: 高达 \$1,000,000
+- **高风险**: \$10,000 - \$50,000
+- **中风险**: \$5,000
+
+### 范围
+
+漏洞赏金计划的范围涵盖区块链基础设施以及用于跨链桥和 rollup 的智能合约。有关漏洞类别的详细细分情况，请参阅漏洞赏金页面。
+
+除了漏洞赏金计划中列出的范围外，我们还鼓励向 Immunefi 报告任何发现的漏洞，我们也将考虑对其进行奖励。如果发现漏洞赏金计划范围之外的任何关键漏洞，也请向 security@scroll.io 发送报告。

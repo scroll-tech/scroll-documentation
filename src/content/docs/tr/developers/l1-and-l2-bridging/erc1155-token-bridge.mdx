@@ -1,0 +1,156 @@
+---
+section: developers
+date: Last Modified
+title: "ERC1155 Token Köprüsü"
+lang: "tr"
+permalink: "developers/l1-and-l2-bridging/erc1155-token-bridge"
+whatsnext: { "Scroll Messenger": "/tr/developers/l1-and-l2-bridging/the-scroll-messenger/" }
+excerpt: "L1'den L2'ye ERC1155 köprülenmesi L1ERC1155Gateway aracılığıyla yapılır."
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+## L1'den ERC1155 tokenları yatırın
+
+ERC1155'in L1'den L2'ye köprülenmesi L1ERC1155Gateway aracılığıyla yapılır. ERC721 köprülemeye benzer şekilde, bir yönlendirici kullanmak yerine doğrudan Ağ Geçidi üzerinde 'depositERC1155' fonksiyonunu kullanıyoruz.
+
+<Aside type="tip" title="">
+  **`depositERC1155`** ETH cinsinden değer gönderilebilen(payable) bir fonksiyondur. Bu fonksiyona gönderilen ETH miktarı, L2 ücretlerinin ödenmesi için kullanılacaktır. Tutarın yeterli olmaması durumunda işlem gönderilmeyecektir. Fazla ETH'in tamamı gönderene iade edilecektir. '0.00001 ETH', token yatırma işlemi başlatmak için fazlasıyla yeterli olacaktır.
+</Aside>
+
+### L2'de ERC1155 tokenı oluşturma
+
+ERC721 köprülemeye benzer şekilde, ERC1155 tokenlerini köprülemek için, "IScrollERC1155" standardıyla uyumlu bir sözleşmenin oluşturulup hem L1 hem de L2'de sırasıyla "L1ERC1155Gateway" ve "L2ERC1155Gateway" üzerinde eşlenmesi gerekir. Bu sözleşmeye, L2'deki Ağ Geçidine bir token yatırıldığında basması ve token çekildiğinde yakması için izin vermelidir.
+
+Aşağıdaki arayüz, L2'de "L2ERC1155Gateway" ile uyumlu ERC1155 tokenlarını dağıtmak için gereken "IScrollERC1155"tir.
+
+```solidity
+interface IScrollERC1155 {
+  /// @notice Return the address of Gateway the token belongs to.
+  function gateway() external view returns (address);
+
+  /// @notice Return the address of counterpart token.
+  function counterpart() external view returns (address);
+
+  /// @notice Mint some token to recipient's account.
+  /// @dev Gateway Utilities, only gateway contract can call
+  /// @param _to The address of recipient.
+  /// @param _tokenId The token id to mint.
+  /// @param _amount The amount of token to mint.
+  /// @param _data The data passed to recipient
+  function mint(address _to, uint256 _tokenId, uint256 _amount, bytes memory _data) external;
+
+  /// @notice Burn some token from account.
+  /// @dev Gateway Utilities, only gateway contract can call
+  /// @param _from The address of account to burn token.
+  /// @param _tokenId The token id to burn.
+  /// @param _amount The amount of token to burn.
+  function burn(address _from, uint256 _tokenId, uint256 _amount) external;
+
+  /// @notice Batch mint some token to recipient's account.
+  /// @dev Gateway Utilities, only gateway contract can call
+  /// @param _to The address of recipient.
+  /// @param _tokenIds The token id to mint.
+  /// @param _amounts The list of corresponding amount of token to mint.
+  /// @param _data The data passed to recipient
+  function batchMint(
+    address _to,
+    uint256[] calldata _tokenIds,
+    uint256[] calldata _amounts,
+    bytes calldata _data
+  ) external;
+
+  /// @notice Batch burn some token from account.
+  /// @dev Gateway Utilities, only gateway contract can call
+  /// @param _from The address of account to burn token.
+  /// @param _tokenIds The list of token ids to burn.
+  /// @param _amounts The list of corresponding amount of token to burn.
+  function batchBurn(address _from, uint256[] calldata _tokenIds, uint256[] calldata _amounts) external;
+}
+```
+
+### Scroll Köprüsü'ne bir ERC1155 token ekleme
+
+Tüm varlıklar, herhangi bir geliştirici tarafından dağıtılmış Ağ Geçidi sözleşmeleri aracılığıyla güvenli ve izinsiz olarak köprülenebilmektedir. Ancak Scroll aynı zamanda topluluk tarafından oluşturulan tüm NFT'lerin kabul edildiği bir ERC1155 Ağ Geçidi sözleşmesini de yönetmektedir. Scroll tarafından yönetilen Ağ Geçidinin bir parçası olmak, Ağ Geçidi sözleşmelerini dağıtmanıza gerek kalmayacağı ve tokenınızın Scroll kullanıcı arayüzünde görüneceği anlamına gelir. Scroll Ağ Geçidi'nin bir parçası olmak için, tokenı hem L1 hem de L2 Ağ Geçidi sözleşmelerine eklemelisiniz ve bunun için Scroll ekibiyle iletişime geçmelisiniz. Tokenınızı Scroll resmi kullanıcı arayüzüne eklemek için [token listeleri](https://github.com/scroll-tech/token-list) deposundaki talimatları izleyin.
+
+## ERC1155 tokenlarını L2'den çekin
+
+'L2ERC1155Gateway' sözleşmesi L2'den L1'e token göndermek için kullanılır. Köprülemeden önce 'L2ERC1155Gateway' sözleşmesinin token sözleşmesi tarafından onaylanması gerekir. Bu yapıldıktan sonra varlık köprüsünü gerçekleştirmek için "drawERC1155" çağrılabilir.
+
+<Aside type="tip" title="">
+  **`withdrawERC1155`** ETH cinsinden değer gönderilebilen(payable) bir fonksiyondur ve bu fonksiyona gönderilen ETH miktarı, L1 ücretlerinin ödenmesi için kullanılacaktır. Tutarın yeterli olmaması durumunda işlem gönderilmeyecektir. Fazlalık ETH'in tamamı gönderene iade edilecektir. Ücretler L1 etkinliğine bağlıdır ancak '0.005 ETH', token çekim işlemi için fazlasıyla yeterli olacaktır.
+</Aside>
+
+<Aside type="caution" title="">
+  **L2'den gönderim yaparken işlemin L1'de geri döndürülmeyeceğinden(revert) emin olun**. İşleminiz L1'de geri dönerse köprülenmiş NFT'yi kurtarmanın bir yolu yoktur. İşlem gönderildiğinde tüm varlıklar L2'de yakılır ve yeniden basılması imkansızdır.
+</Aside>
+
+## L1ERC1155Gateway API
+
+Scroll sözleşmesi API dokümantasyonunun tamamı için lütfen [npm kitaplığını](https://www.npmjs.com/package/@scroll-tech/contracts?activeTab=code) ziyaret edin.
+
+### depositERC1155
+
+```solidity
+function depositERC1155(
+  address _token,
+  address _to,
+  uint256 _tokenId,
+  uint256 _amount,
+  uint256 _gasLimit
+) external payable;
+```
+
+L1'den alıcının L2'deki hesabına bir ERC1155 tokenı yatırır.
+
+| Parametre | Açıklama                                          |
+| --------- | ------------------------------------------------- |
+| token     | ERC721 token sözleşmesinin L1'deki adresi.        |
+| to        | Alıcı hesabının L2'deki adresi.                   |
+| tokenId   | Yatırılacak NFT'nin ID'si.                        |
+| amount    | Yatırılacak tokenların miktarı.                   |
+| gasLimit  | L2'deki yatırma işlemini tamamlamak için gereken gaz limiti. Ücretin kullanılmayan kısmı iade edilecektir. |
+
+### updateTokenMapping
+
+```solidity
+function updateTokenMapping(address _l1Token, address _l2Token) external;
+```
+
+ERC1155 token sözleşmesini L1'den L2'ye bağlayan eşlemeyi günceller.
+
+| Parametre | Açıklama                                          |
+| --------- | ------------------------------------------------- |
+| \_l1Token | ERC1155 tokenının L1'deki adresi.                 |
+| \_l2Token | ERC1155 tokeninin L2'deki karşılık gelen adresi.  |
+
+## L2ERC1155Gateway API
+
+### withdrawERC1155
+
+```solidity
+function withdrawERC1155(address token, address to, uint256 tokenId, uint256 amount, uint256 gasLimit) external payable;
+```
+
+L2'den alıcının L1'deki hesabına ERC1155 tokenlarını gönderir.
+
+| Parametre | Açıklama                                                                 |
+| --------- | ------------------------------------------------------------------------ |
+| token     | ERC1155 token sözleşmesinin L2'deki adresi.                              |
+| to        | Alıcı hesabının L1'deki adresi.                                          |
+| tokenId   | Gönderilecek NFT ID'si.                                                  |
+| amount    | Çekilecek tokenların miktarı.                                        |
+| gasLimit  | Kullanılmıyor ancak potansiyel ileriye dönük uyumluluk hususları nedeniyle dahil edildi. |
+
+### updateTokenMapping
+
+```solidity
+function updateTokenMapping(address _l1Token, address _l2Token) external;
+```
+
+Bir ERC1155 token sözleşmesini L2'den L1'e bağlayan eşlemeyi günceller.
+
+| Parametre | Açıklama                                          |
+| --------- | ------------------------------------------------- |
+| \_l1Token | ERC1155 tokenının L1'deki adresi                  |
+| \_l2Token | ERC1155 tokenının L2'deki karşılık gelen adresi.  |
