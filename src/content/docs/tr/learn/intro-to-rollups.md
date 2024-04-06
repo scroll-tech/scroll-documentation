@@ -10,7 +10,7 @@ whatsnext: { "Scroll Rollup Süreci": "/tr/technology/chain/rollup" }
 
 ## Rollup nedir?
 
-Rolluplar, Ethereum ekosistemindeki en yaygın katman 2 ölçeklendirme çözümüdür ve Ethereum yol haritasının [merkezi bir parçası](https://ethereum-magicians.org/t/a-rollup-centric-ethereum-roadmap/4698) olarak görülmektedir.
+Rolluplar, Ethereum ekosistemindeki en yaygın katman 2 ölçeklenme çözümüdür ve Ethereum yol haritasının [merkezi bir parçası](https://ethereum-magicians.org/t/a-rollup-centric-ethereum-roadmap/4698) olarak görülmektedir.
 
 Bir rollup, işlem gruplarını zincir dışında işler (yani katman 1'de değil) ve ardından ortaya çıkan verileri zincir üstünde yayınlar (yani katman 1'de).
 

@@ -16,12 +16,12 @@ Ethereum'un tanımlayıcı özelliklerinden biri, güvenliğe ve merkeziyetsizli
 
 Ancak Ethereum'un güçlü merkeziyetsizliği ve güvenliği, ölçeklenebilirlikten ödün verme pahasına gelir: katılan tüm düğümlerin ağa ayak uydurabilmesini sağlamak için ağın verimi sınırlıdır. Bu durum, kullanıcılar için daha yüksek maliyetler ve gecikmeler anlamına gelir.
 
-## Ölçeklendirme çözümleri
+## Ölçeklenme çözümleri
 
-Ethereum'un ölçeklendirme çözümleri, merkeziyetsizlikten veya güvenlikten ödün vermeden ağın verimini artırmayı amaçlıyor.
+Ethereum'un ölçeklenme çözümleri, merkeziyetsizlikten veya güvenlikten ödün vermeden ağın verimini artırmayı amaçlıyor.
 
-Ana olarak iki tür ölçeklendirme çözümü vardır: katman 1 ölçeklendirme çözümleri ve katman 2 ölçeklendirme çözümleri.
+Ana olarak iki tür ölçeklenme çözümü vardır: katman 1 ölçeklenme çözümleri ve katman 2 ölçeklenme çözümleri.
 
-**Katman 1** (veya **L1**) ölçeklendirme çözümleri, doğrudan Ethereum blokzincirinde değişiklikler yaparak ağı ölçeklendirmeye çalışır. Buradaki “katman 1” terimi ana Ethereum blokzincirini ifade etmektedir. Genel olarak, verimi artıran ve aynı zamanda yüksek düzeyde güvenlik ve merkeziyetsizliği koruyan katman 1 ölçeklendirme çözümlerini tasarlamak çok zordur. Bu nedenle son zamanlardaki ölçeklendirme çabaları 1. katman çözümlerinden 2. katman çözümlerine doğru kaymıştır.
+**Katman 1** (veya **L1**) ölçeklenme çözümleri, doğrudan Ethereum blokzincirinde değişiklikler yaparak ağı ölçeklendirmeye çalışır. Buradaki “katman 1” terimi ana Ethereum blokzincirini ifade etmektedir. Genel olarak, verimi artıran ve aynı zamanda yüksek düzeyde güvenlik ve merkeziyetsizliği koruyan katman 1 ölçeklenme çözümlerini tasarlamak çok zordur. Bu nedenle son zamanlardaki ölçeklenme çabaları 1. katman çözümlerinden 2. katman çözümlerine doğru kaymıştır.
 
-**Katman 2** (veya **L2**) ölçeklendirme çözümleri, Ethereum katman 1'in **üstünde** yaşayan ağlardır; bunlar esasen, temeldeki Ethereum blokzincirine bir şekilde "sabitlenmiş" ayrı blokzincirlerdir. Bu katman 2 ağları, aynı sınırlamalara tabi olmadıkları için genellikle işlemleri temel katman 1 ağından daha yüksek bir hızda işleyebilir. "Sabitleme" mekanizmasının özellikleri çeşitli katman 2'ler arasında farklılık gösterebilir. Bu mekanizma, katman 2 ağının, Ethereum katman 1'in güçlü güvenlik ve merkeziyetsiz özelliklerini miras almasını sağlar.
+**Katman 2** (veya **L2**) ölçeklenme çözümleri, Ethereum katman 1'in **üstünde** yaşayan ağlardır; bunlar esasen, temeldeki Ethereum blokzincirine bir şekilde "sabitlenmiş" ayrı blokzincirlerdir. Bu katman 2 ağları, aynı sınırlamalara tabi olmadıkları için genellikle işlemleri temel katman 1 ağından daha yüksek bir hızda işleyebilir. "Sabitleme" mekanizmasının özellikleri çeşitli katman 2'ler arasında farklılık gösterebilir. Bu mekanizma, katman 2 ağının, Ethereum katman 1'in güçlü güvenlik ve merkeziyetsiz özelliklerini miras almasını sağlar.

@@ -10,7 +10,7 @@ whatsnext: { "Kullanıcı kılavuzu": "/tr/user-guide/", "Scroll üzerinde geli�
 
 #### Scroll Dokümantasyonu'na hoş geldiniz!
 
-Scroll, Ethereum için güvenlik odaklı bir ölçeklenebilirlik çözümüdür; ölçekleme tasarımındaki ve zero knowledge kanıtlarındaki yenilikleri kullanarak Ethereum üzerinde yeni bir katman oluşturmayı hedeflemektedir. Scroll ağı, Ethereum'un tek başına olduğundan daha erişilebilir, daha duyarlı ve aynı anda daha fazla kullanıcıyı destekleyebilir. Eğer daha önce Ethereum üzerinde bir uygulama kullandıysanız veya geliştirdiyseniz, Scroll'de kendinizi evinizde hissedeceksiniz.
+Scroll, Ethereum için güvenlik odaklı bir ölçeklenebilirlik çözümüdür; ölçekleme tasarımındaki ve zero knowledge kanıtlarındaki yenilikleri kullanarak Ethereum üzerinde yeni bir katman oluşturmayı hedeflemektedir. Scroll ağı, Ethereum'un tek başına olduğundan daha erişilebilirdir, daha duyarlıdır ve aynı anda daha fazla kullanıcıyı destekleyebilir. Eğer daha önce Ethereum üzerinde bir uygulama kullandıysanız veya geliştirdiyseniz, Scroll'da kendinizi evinizde hissedeceksiniz.
 
 Scroll'u kullanmadan önce Scroll Sepolia test ağını ücretsiz varlıklarla denemek ister misiniz? [Kullanıcı kılavuzumuza](/tr/user-guide/) göz atın.
 
@@ -18,7 +18,7 @@ Scroll'u kullanmadan önce Scroll Sepolia test ağını ücretsiz varlıklarla d
 
 Scroll, Ethereum'u ölçeklendirmek için teknoloji geliştiriyor.
 
-Ethereum, merkeziyetsiz uygulamaları desteklemek konusunda önde gelen blok zinciri ağı olmasına rağmen, popülerliği daha yüksek maliyetleri de beraberinde getiriyor ve bu durum gelecek kullanıcılar ve geliştiriciler için bir engel oluşturuyor.
+Ethereum, merkeziyetsiz uygulamaları desteklemek konusunda önde gelen blokzinciri ağı olmasına rağmen, popülerliği daha yüksek maliyetleri de beraberinde getiriyor ve bu durum gelecek kullanıcılar ve geliştiriciler için bir engel oluşturuyor.
 
 Zero knowledge kanıtları alanındaki öncü araştırmalardan yararlanarak, Scroll, Ethereum üzerinde bir Katman 2 rollup ağı inşa ediyor. Ethereum topluluğundaki diğer kişilerle açık kaynaklı işbirliği içinde olan ekip, tıpkı Ethereum gibi davranan ağdaki tüm faaliyetlerin Ethereum üzerindeki akıllı sözleşmelerle güvence altına alınmasına olanak tanıyan bir "zkEVM" oluşturdu. Ağ, tüm işlemleri Ethereum'da yayınlar ve zkEVM, Scroll ağının Ethereum kurallarına uyduğuna dair kriptografik "kanıtlar" oluşturur ve yayınlar.
 
@@ -34,6 +34,6 @@ Scroll Ana ağı Ethereum üzerinde aktif! Ayrıca, Ethereum Sepolia üzerinde �
 - Ethereum ana ağından Scroll'a token gönderin. (veya bir Scroll Sepolia [musluğu](/tr/user-guide/faucet) kullanın)
 - Scroll Sepolia Test ağı dApp'lerini deneyin, örneğin [Uniswap Vitrini](http://uniswap-showcase.sepolia.scroll.xyz/) veya [Aave](https://app.aave.com/) -- Scroll Sepolia ağını seçtiğinizden emin olun!
 
-## Scroll ne yöne ilerliyor?
+## Scroll ne yönde ilerliyor?
 
 Scroll ana ağımızı Ethereum üzerinde yayınladık, ancak hala daha yapılacak çok iş buluyor. Sırada yığının her bileşenini merkeziyetsizleştirmek var. Güncel kalmak için [bloğumuza](https://scroll.io/blog) göz atın, [Discord](https://discord.gg/scroll) veya [Twitter](https://twitter.com/scroll_zkp) hesaplarımızı takip edin.
