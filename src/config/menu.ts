@@ -39,12 +39,12 @@ export const MENU: MenuItems = {
   ],
   tr: [
     {
-      text: "Getting Started",
+      text: "Başlayın",
       link: "/tr/getting-started/overview",
       section: "gettingStarted",
     },
-    { text: "Developers", link: "/tr/developers", section: "developers" },
-    { text: "Technology", link: "/tr/technology", section: "technology" },
-    { text: "Learn", link: "/tr/learn", section: "learn" },
+    { text: "Geliştiriciler", link: "/tr/developers", section: "developers" },
+    { text: "Teknoloji", link: "/tr/technology", section: "technology" },
+    { text: "Öğren", link: "/tr/learn", section: "learn" },
   ],
 }

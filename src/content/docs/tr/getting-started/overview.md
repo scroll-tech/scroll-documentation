@@ -28,11 +28,11 @@ Daha fazla bilgi için mimarimiz hakkında bilgi almak için [Scroll Mimarisi](/
 
 ## Scroll'u şu anda kullanabilir miyim?
 
-Scroll Ana ağı Ethereum üzerinde aktif! Ayrıca, Ethereum Sepolia üzerinde çalışan Scroll Sepolia test ağımız da bulunuyor. [Kapsamlı bir kılavuzumuz](/tr/user-guide/) olsa da, Ethereum'u kullanmaya aşina iseniz, birkaç dakika içinde başlayabilirsiniz:
+Scroll ana ağı Ethereum üzerinde aktif! Ayrıca, Ethereum Sepolia üzerinde çalışan Scroll Sepolia test ağımız da bulunuyor. [Kapsamlı bir kılavuzumuz](/tr/user-guide/) olsa da, Ethereum'u kullanmaya aşina iseniz, birkaç dakika içinde başlayabilirsiniz:
 
 - [Köprü](https://scroll.io/bridge) sayfamızı veya [Scroll Sepolia Köprüsü](https://sepolia.scroll.io/bridge) sayfamızı ziyaret edin ve cüzdanınızı bağlayın.
 - Ethereum ana ağından Scroll'a token gönderin. (veya bir Scroll Sepolia [musluğu](/tr/user-guide/faucet) kullanın)
-- Scroll Sepolia Test ağı dApp'lerini deneyin, örneğin [Uniswap Vitrini](http://uniswap-showcase.sepolia.scroll.xyz/) veya [Aave](https://app.aave.com/) -- Scroll Sepolia ağını seçtiğinizden emin olun!
+- Scroll Sepolia test ağı dApp'lerini deneyin, örneğin [Uniswap Vitrini](http://uniswap-showcase.sepolia.scroll.xyz/) veya [Aave](https://app.aave.com/) -- Scroll Sepolia Ağı'nı seçtiğinizden emin olun!
 
 ## Scroll ne yönde ilerliyor?
 

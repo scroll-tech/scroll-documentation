@@ -14,11 +14,11 @@ Adından da anlaşılacağı gibi polinom taahhüt şemaları, taahhüt edilecek
 
 ## Taahhüt planları
 
-**[taahhüt şeması](https://en.wikipedia.org/wiki/Commitment_scheme)** iki tarafı içeren bir kriptografik ilkeldir: _committer_ ve _verifier_. Taahhüt eden kişi, $c$ taahhüdünü hesaplayıp bunu doğrulayıcıya açıklayarak $v$ değerini taahhüt eder. Daha sonraki bir zamanda taahhüt eden kişi orijinal değeri ortaya çıkarabilir ve doğrulayıcı da taahhüdün bu açıklanan değere karşılık geldiğini doğrulayabilir.
+**[Taahhüt şeması](https://en.wikipedia.org/wiki/Commitment_scheme)** iki tarafı içeren bir kriptografik ilkeldir: _committer_ ve _verifier_. Taahhüt eden kişi, $c$ taahhüdünü hesaplayıp bunu doğrulayıcıya açıklayarak $v$ değerini taahhüt eder. Daha sonraki bir zamanda taahhüt eden kişi orijinal değeri ortaya çıkarabilir ve doğrulayıcı da taahhüdün bu açıklanan değere karşılık geldiğini doğrulayabilir.
 
 Güvenli taahhüt planlarının iki özelliği vardır:
 
-1. **Bağlayıcı**: $c$ taahhüdünü yayınladıktan sonra, taahhüt eden kişi $v$'den farklı olan ve aynı zamanda $c$'ye karşılık gelen başka bir $v'$ değeri bulamamalıdır. Yani, $c$ taahhüdü, taahhüt edeni orijinal $v$ değerine bağlar.
+1. **Bağlayıcı olma**: $c$ taahhüdünü yayınladıktan sonra, taahhüt eden kişi $v$'den farklı olan ve aynı zamanda $c$'ye karşılık gelen başka bir $v'$ değeri bulamamalıdır. Yani, $c$ taahhüdü, taahhüt edeni orijinal $v$ değerine bağlar.
 2. **Gizleme**: Doğrulayıcı, $c$ taahhüdünden orijinal $v$ değeri hakkında herhangi bir bilgi öğrenememelidir. Yani, $c$ taahhüdü, orijinal $v$ değeri hakkındaki tüm bilgileri gizler.
 
 ## Polinom taahhüt şemaları

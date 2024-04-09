@@ -1,32 +1,32 @@
 {
   "rightSidebar": {
-    "onThisPage": "On This Page",
-    "more": "More",
-    "editThisPage": "Edit this page",
-    "joinOurCommunity": "Join our community",
-    "feedback": "Feedback"
+    "onThisPage": "Bu Sayfada",
+    "more": "Daha Fazla",
+    "editThisPage": "Bu sayfayı düzenleyin",
+    "joinOurCommunity": "Topluluğumuza katılın",
+    "feedback": "Geri bildirim"
   },
   "ui": {
-    "whatsNext": "What's Next",
-    "readMore": "Read More"
+    "whatsNext": "Sırada ne var?",
+    "readMore": "Daha fazla okuyun"
   },
   "landing": {
     "test": "test",
     "search": {
-      "title": "Welcome to the Scroll Documentation",
-      "placeholder": "Search Scroll documentation..."
+      "title": "Scroll Dokümantasyonu'na Hoş Geldiniz",
+      "placeholder": "Scroll dokümantasyonunda arayın..."
     },
     "newUserCTA": {
-      "title": "New to Scroll and ZK Rollups?",
-      "description": "Learn the basics in the Getting Started Guide."
+      "title": "Scroll ve ZK Rollup'larda yeni misiniz?",
+      "description": "Başlangıç Kılavuzu'ndan temel bilgileri öğrenin."
     },
     "resourcesCTA": {
-      "title": "Useful resources"
+      "title": "Yararlı kaynaklar"
     },
     "nodesCTA": {
-      "title": "Need to run your own Scroll Node?",
-      "description": "See the Node Operator’s Guide to learn about starting and maintaining Scroll Nodes.",
-      "buttonText": "Node Operator’s Guide"
+      "title": "Kendi Scroll Düğümünüzü çalıştırmanız mı gerekiyor?",
+      "description": "Scroll Düğümlerini başlatma ve sürdürme hakkında bilgi edinmek için Düğüm Operatörü Kılavuzu'na bakın.",
+      "buttonText": "Düğüm Operatörü Kılavuzu"
     },
     "TutorialsCTA": {
       "title": "Watch tutorials",

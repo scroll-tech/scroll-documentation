@@ -20,13 +20,13 @@ const toolList = [
 
 <div>
   <SectionHeader
-    title="Geliştirici Hızlı Başlangıcı"
-    content="Akıllı sözleşmeler oluştururken ve test ederken kullanmayı en sevdiğiniz araçların tümü ile Scroll'da geliştirmeye başlayın."
+    title="Geliştiriciler İçin Hızlı Başlangıç"
+    content="Akıllı sözleşmeler oluştururken ve test ederken kullanmayı en sevdiğiniz tüm araçlar ile Scroll'da geliştirmeye başlayın."
   />
   <div class="tools">
     {
       toolList.map(({ icon, name, quickstartAnchor, color }) => (
-        <a href={`/en/developers/developer-quickstart#${quickstartAnchor}`} class={`tools-item ${color}`}>
+        <a href={`/tr/developers/developer-quickstart#${quickstartAnchor}`} class={`tools-item ${color}`}>
           <figure class={color ? "p-[18px]" : ""}>
             {color ? <Fragment set:html={icon} /> : <img src={icon} alt={name} />}
           </figure>
