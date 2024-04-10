@@ -26,8 +26,8 @@ the messenger smart contract deployed on L1, `L1ScrollMessenger`. To send a mess
 Any upcoming transactions from L2 need to be finalized using the `relayMessageWithProof` function on the Scroll Messenger
 contract. We call this process "submitting an Execute Withdrawal transaction," and it is required for both sending arbitrary messages and transferring assets through a gateway or the router. When you use `relayMessageWithProof`, you'll have to provide a Merkle inclusion proof showing your transaction is included in the trie of "withdrawal" messages, along with other parameters. Producing this proof and these values can be done locally and permissionlessly, but at the moment, the easiest way to retrieve these parameters is through our backend APIs:
 
-- Scroll Sepolia API: https://sepolia-api-bridge.scroll.io/api/
-- Scroll API: https://mainnet-api-bridge.scroll.io/api/
+- Scroll Sepolia API: https://sepolia-api-bridge-v2.scroll.io/api/
+- Scroll API: https://mainnet-api-bridge-v2.scroll.io/api/
 
 <Aside type="danger" title="Experimental API">
   This API was made for our Bridge UI. It is not yet finalized and may change in the future. We will update this guide
