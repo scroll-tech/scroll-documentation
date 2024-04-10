@@ -17,6 +17,58 @@ The following contracts are used to initiate upgrades and execute upgrades after
 | L2 Scroll Multisig | Scroll| [`0xEfc9D1096fb65c832207E5e7F13C2D1102244dbe`](https://scrollscan.com/address/0xEfc9D1096fb65c832207E5e7F13C2D1102244dbe)|
 | L2 Timelock | Scroll | [`0xf6069DB81239E5194bb53f83aF564d282357bc99`](https://scrollscan.com/address/0xf6069DB81239E5194bb53f83aF564d282357bc99)|
 
+## Apr 2024 Bernoulli Upgrade
+
+### Overview
+
+This upgrade features a significant reduction in transaction costs by introducing support for EIP-4844 data blobs and supporting the SHA2-256 precompile. 
+
+### Timeline
+
+- **Scroll Sepolia**
+	- Network Upgrade: April 24th, 2024
+- **Scroll Mainnet**
+	- TBD
+
+### Technical Details
+
+#### Contract changes
+
+The contract changes for this upgrade are in [this PR](https://github.com/scroll-tech/scroll/pull/1179).
+
+As well as the audit fixes listed here [TODO]
+
+#### Node changes
+
+The new node version is v5.2.0. See [here](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.2.0) for the changelog.
+
+#### Prover changes
+
+[TODO]
+
+#### Audits
+
+- OpenZeppelin [TODO]
+- TrailofBits [TODO]
+
+### Compatibility
+
+#### Sequencer and follower nodes (l2geth)
+
+This upgrade is a hard fork as it introduces the new blob data type and the SHA2-256 precompiled contract. Operators running an `l2geth` node are required to upgrade before the hard fork block. See the [node releases](https://github.com/scroll-tech/go-ethereum/releases) for more information.
+
+#### Indexers and Bridges
+
+This upgrade changes the format that Scroll uses to publish data to Ethereum. Projects that rely on this data should carefully review [the new data format](https://docs.scroll.io/en/technology/chain/rollup/#codec), and check whether their decoders need to be adjusted. A summary of the new format:
+
+- The format of [`BlockContext`](https://github.com/scroll-tech/scroll/blob/5362e28f744093495c1c09a6b68fc96a3264278b/common/types/encoding/codecv1/codecv1.go#L125) will not change.
+- `Chunks` will [no longer include](https://github.com/scroll-tech/scroll/blob/5362e28f744093495c1c09a6b68fc96a3264278b/common/types/encoding/codecv1/codecv1.go#L162) the L2 transaction data. This will instead be [stored in a blob](https://github.com/scroll-tech/scroll/blob/5362e28f744093495c1c09a6b68fc96a3264278b/common/types/encoding/codecv1/codecv1.go#L284) attached to the `commitBatch` transaction.
+- `BatchHeader` now contains one new field, [`BlobVersionedHash`](https://github.com/scroll-tech/scroll/blob/5362e28f744093495c1c09a6b68fc96a3264278b/common/types/encoding/codecv1/codecv1.go#L405). 
+
+#### Provers
+
+This upgrade involves a breaking change in zkevm-circuits. Operators running a prover node are required to upgrade.
+
 ## February 2024 Bridge Upgrade
 
 ### Overview
