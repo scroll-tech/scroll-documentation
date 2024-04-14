@@ -24,8 +24,8 @@ Aşağıdaki sözleşmeler, yükseltmeleri başlatmak ve iki haftalık zaman kil
 Köprüleme maliyetlerini azaltmak için köprü ve rollup sözleşme paketimizde çeşitli gas optimizasyonları uyguladık. Kullanılan optimizasyon teknikleri aşağıdakileri içerir:
 
 - Artık bazı tamamlayıcı sözleşme adreslerini depolamak için depolama değişkenleri yerine sabitleri kullanacağız. Bu değerlerin (neredeyse) asla değişmemesi gerektiğinden bu mümkündür. Bu değişiklikle birkaç depolama yükleme işleminden tasarruf edebiliriz.
-- 'L1MessageQueue'daki içsel gas tahminini, kesin bir hesaplama yerine basit bir üst sınır kullanacak şekilde güncelledik. Çoğu köprü işlemi için iki sonuç benzer olacaktır ancak yeni uygulama önemli ölçüde daha ucuzdur.
-- Bir sözleşmeden diğerine çağrı maliyetlerinden tasarruf etmek için iki sözleşme 'L1MessageQueue' ve 'L2GasPriceOracle'yı birleştirdik.
+- `L1MessageQueue`daki içsel gas tahminini, kesin bir hesaplama yerine basit bir üst sınır kullanacak şekilde güncelledik. Çoğu köprü işlemi için iki sonuç benzer olacaktır ancak yeni uygulama önemli ölçüde daha ucuzdur.
+- Bir sözleşmeden diğerine çağrı maliyetlerinden tasarruf etmek için iki sözleşme `L1MessageQueue` ve `L2GasPriceOracle`yı birleştirdik.
 
 ### Zaman çizelgesi
 
@@ -56,29 +56,29 @@ Köprüleme maliyetlerini azaltmak için köprü ve rollup sözleşme paketimizd
 - `ScrollChain`de, `messageQueue` ve `verifier`ı `immutable` yaptık.
 - `L1ScrollMessenger`da, `counterpart`, `rollup`, ve `messageQueue`yu `immutable` yaptık.
 - Tüm token ağ geçitlerinde, `counterpart`, `router`, ve `messenger`ı `immutable` yaptık.
-- 'L1MessageQueue' ve 'L2GasPriceOracle'ı tek bir 'L1MessageQueueWithGasPriceOracle' sözleşmesinde birleştirdik (önceki 'L1MessageQueue' ile aynı adrese konuşlandırıldı). Bu sözleşmede ayrıca "messenger" ve "scrollChain"i "değişmez" olarak değiştiriyoruz ve "calculateIntrinsicGasFee"yi basitleştiriyoruz.
+- `L1MessageQueue` ve `L2GasPriceOracle`ı tek bir `L1MessageQueueWithGasPriceOracle` sözleşmesinde birleştirdik (önceki `L1MessageQueue` ile aynı adrese konuşlandırıldı). Bu sözleşmede ayrıca `messenger` ve `scrollChain`i `değişmez` olarak değiştiriyoruz ve `calculateIntrinsicGasFee`yi basitleştiriyoruz.
 
 **L2 sözleşmelerindeki değişiklikler:**
 
-- "L2ScrollMessenger"da `counterpart`ı `immutable` olacak şekilde değiştirdik.
+- `L2ScrollMessenger`da `counterpart`ı `immutable` olacak şekilde değiştirdik.
 - Tüm token ağ geçitlerinde, `counterpart`, `router`, ve `messenger`ı to `immutable` olacak şekilde değiştirdik.
 
 **Etkilenen sözleşmeler:**
 
-- **L1:** 'L1MessageQueue', 'L2GasPriceOracle', 'ScrollChain', 'L1WETHGateway', 'L1StandardERC20Gateway', 'L1GatewayRouter', 'L1ScrollMessenger', 'L1CustomERC20Gateway', 'L1ERC721Gateway', 'L1ERC1155Gateway'.
-- **L2:** 'L2ScrollMessenger', 'L2WETHGateway', 'L2StandardERC20Gateway', 'L2GatewayRouter', 'L2CustomERC20Gateway', 'L2ERC721Gateway', 'L2ERC1155Gateway'.
+- **L1:** `L1MessageQueue`, `L2GasPriceOracle`, `ScrollChain`, `L1WETHGateway`, `L1StandardERC20Gateway`, `L1GatewayRouter`, `L1ScrollMessenger`, `L1CustomERC20Gateway`, `L1ERC721Gateway`, `L1ERC1155Gateway`.
+- **L2:** `L2ScrollMessenger`, `L2WETHGateway`, `L2StandardERC20Gateway`, `L2GatewayRouter`, `L2CustomERC20Gateway`, `L2ERC721Gateway`, `L2ERC1155Gateway`.
 
 #### Uyumluluk
 
 ##### Sıralayıcı ve takipçi düğümleri (l2geth)
 
-'l2geth' düğümü çalıştıran operatörlerin yükseltme yapmasına gerek yoktur. Bu yükseltmedeki değişiklikler 'l2geth'i etkilemeyecektir.
+`l2geth` düğümü çalıştıran operatörlerin yükseltme yapmasına gerek yoktur. Bu yükseltmedeki değişiklikler `l2geth`i etkilemeyecektir.
 
 ##### Dapp'ler ve indexer'lar
 
 Sözleşmeleri sorgulayan veya sözleşme arayüzlerine dayanan dapp'lerin ve indeksleyicilerin (ve benzer zincir dışı altyapının) çoğu durumda değiştirilmesine gerek yoktur. Sözleşme değişikliklerinin çoğunluğu dahili ve/veya geriye dönük olarak uyumludur.
 
-Uygulamanız, Scroll'un L1'deki L2 gas fiyatını nasıl takip ettiğini izlemek için [`L2GasPriceOracle`](https://etherscan.io/address/0x987e300fDfb06093859358522a79098848C33852)'ye bağlıysa yükseltme blok numarasından izlemeye başlamanız gerekir [` L1MessageQueueWithGasPriceOracle`](https://etherscan.io/address/0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B).
+Uygulamanız, Scroll'un L1'deki L2 gas fiyatını nasıl takip ettiğini izlemek için [`L2GasPriceOracle`](https://etherscan.io/address/0x987e300fDfb06093859358522a79098848C33852)'ye bağlıysa yükseltme blok numarasından izlemeye başlamanız gerekir [`L1MessageQueueWithGasPriceOracle`](https://etherscan.io/address/0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B).
 
 Orijinal gas fiyatı oracle sözleşmesi kullanımdan kaldırılacak: artık Scroll köprüsü tarafından güncellenmeyecek veya kullanılmayacaktır.
 
