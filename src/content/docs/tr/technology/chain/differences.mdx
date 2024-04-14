@@ -10,22 +10,22 @@ whatsnext: { "Köprü": "/tr/technology/bridge/cross-domain-messaging/" }
 ## Opcode'lar
 
 | Opcode                      | Scroll Davranışı                                                                                                 |
-| ----------------- | -------------------------------------------------- -------------------------------------------------- ------------ |
-| 'BLOKHASH' | Returns keccak(chain_id || block_number) for the last 256 blocks.|
-| 'COINBASE' | Returns the fee vault address (predeployed contract 0x5300000000000000000000000000000000000005). |
-| `DIFFICULTY` / `PREVRANDAO` | Always return 0. |
-| 'BASE FEE' | Disabled because currently we disabled EIP-1559. If the opcode is encountered, the transaction will be reverted. |
-| 'SELFDESTRUCT' | Disabled. If the opcode is encountered, the transaction will be reverted. |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `BLOCKHASH`                 | Son 256 blok için `keccak(chain_id \|\| block_number)`nı döndürür.                                               |
+| `COINBASE`                  | Ücret kasası adresini döndürür (önceden konuşlandırılmış sözleşme `0x5300000000000000000000000000000000000005`). |
+| `DIFFICULTY` / `PREVRANDAO` | Her zaman 0 değerini döndür.                                                                                     |
+| `BASEFEE`                   | Şu anda EIP-1559'u devre dışı bıraktığımız için devre dışı bırakıldı. Opcode ile karşılaşılırsa işlem geri alınacaktır.|
+| `SELFDESTRUCT`              | Devre dışı bırakıldı. Opcode ile karşılaşılırsa işlem geri alınacaktır.                                          |
 
 ## Önceden Derlenmiş Sözleşmeler
 
-| Address | Name         | Scroll Davranışı                                                                                 |
+| Adres | İsim         | Scroll Davranışı                                                                                 |
 | ------- | ------------ | ----------------------------------------------------------------------------------------------- |
-| '0x02' | 'SHA2-256' | Currently not supported. |
-| '0x03' | 'RIPEMD-160' | Currently not supported. |
-| '0x05' | 'modexp' | Restrict the input values B, E, M to unsigned integers less than $2^{256}$ |
-| '0x08' | 'ecPairing' | The inputs are still multiple of 6 32-byte values, but limit the number of tuples to at most 4.
-| '0x09' | 'blake2f' | Currently not supported.                                                                |
+| '0x02' | 'SHA2-256' | Şu anda desteklenmiyor. |
+| '0x03' | 'RIPEMD-160' | Şu anda desteklenmiyor. |
+| '0x05' | 'modexp' | B, E, M giriş değerlerini $2^{256}$'dan küçük imzasız tamsayılarla sınırlar. |
+| '0x08' | 'ecPairing' | Girişler hala 6 adet 32 ​​bytelık değerin tam katıdır ancak demet sayısını en fazla 4 ile sınırlandırır.
+| '0x09' | 'blake2f' | Şu anda desteklenmiyor.                                                             |
 
 Geriye kalan önceden derlenmiş sözleşmeler Ethereum ile aynı davranışa sahiptir. Ancak bir blok içindeki maksimum kullanımları zkEVM devre kapasitesine bağlı bir limit ile sınırlıdır.
 
@@ -35,12 +35,12 @@ Sıralayıcımız başlangıçta Londra çatallanmasına dayalı olarak gelişti
 
 Londra çatallanmasına kadar devre dışı bırakılan EIP'ler:
 
-- [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559): Fee market change and EIP-1559 transaction type
-- [EIP-2930](https://eips.ethereum.org/EIPS/eip-2930): Optional access lists
+- [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559): Ücret piyasası değişikliği ve EIP-1559 işlem türü
+- [EIP-2930](https://eips.ethereum.org/EIPS/eip-2930): İsteğe bağlı erişim listeleri
 - [EIP-3198](https://eips.ethereum.org/EIPS/eip-3198):  BASEFEE opcode
 
 Şangay çatallanmasından gelen EIP'ler:
 
 - [EIP-3651](https://eips.ethereum.org/EIPS/eip-3651): Warm `COINBASE'
-- [EIP-3855](https://eips.ethereum.org/EIPS/eip-3855): PUSH0 instruction
-- [EIP-3860](https://eips.ethereum.org/EIPS/eip-3860): Limit and meter initcode
+- [EIP-3855](https://eips.ethereum.org/EIPS/eip-3855): PUSH0 talimatı
+- [EIP-3860](https://eips.ethereum.org/EIPS/eip-3860): initcode'u sınırlar ve ölçer

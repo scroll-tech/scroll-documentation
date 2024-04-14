@@ -18,7 +18,7 @@ Scroll'daki blok başlığı Ethereum'un yapısını yansıtır. Ancak blok baş
 | `parentHash`        | Kendinden önceki bloğun hash'i.                                      |
 | `uncleHash`         | Her zaman `keccak256(rlp([]))`.                                       |
 | `coinbase`          | İşlem ücretleri önceden dağıtılan ücret kasası sözleşme adresi `0x5300000000000000000000000000000000000005`'e tahsil edilir. Çoğu durumda, RPC "madenci" alanı dönüşü sıfır adresidir `0x0000000000000000000000000000000000000000`. |
-| `stateRoot`         | Durum trie'sinin kök hash'i. Aynı zamanda Poseidon'dur                |
+| `stateRoot`         | Durum trie'sinin kök hash'i. Aynı zamanda Poseidon'dur.              |
 | `transactionsRoot ` | İşlem trie'sinin kök hash'i.                             |
 | `receiptsRoot `     | İşlem makbuzu trie'sinin kök hash'i.                    |
 | `logsBloom`         | Olay kayıtlarını içeren veri yapısı.                          |
@@ -34,6 +34,6 @@ Scroll'daki blok başlığı Ethereum'un yapısını yansıtır. Ancak blok baş
 
 ## Blok zamanı
 
-Blok süresi ardışık iki blok arasındaki süreyi ifade eder. Scroll'da blok süresi 3 saniyeye ayarlanmıştır. Kısaltılmış blok süresi kullanıcı deneyimini artırır ve Scroll zincirinin ölçeklenebilirliğini artırır.
+Blok süresi ardışık iki blok arasındaki süreyi ifade eder. Scroll'da blok süresi 3 saniyeye ayarlanmıştır. Kısaltılmış blok süresi kullanıcı deneyimini iyileştirir ve Scroll zincirinin ölçeklenebilirliğini artırır.
 
 3 saniyelik blok süresi en iyi çaba esasına göre korunur, protokol tarafından garanti edilmez veya zorunlu kılınmaz.
