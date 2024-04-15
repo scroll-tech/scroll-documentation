@@ -8,7 +8,6 @@ import ThemeModeToggle from "./ThemeModeToggle"
 import GithubSvg from "~/assets/svgs/header/github.svg?raw"
 // import LanguageSelector from "./LanguageSelector/index.tsx"
 import LanguageSelector from "./LanguageSelector/LanguageSelector.astro"
-import { ViewTransitions } from "astro:transitions"
 
 import { localizePath } from "astro-i18next"
 import i18next from "i18next"
@@ -34,7 +33,6 @@ const section = frontmatter?.section ?? ""
   height="0"
   width="0"
   style="display:none;visibility:hidden"></iframe> --><!-- End Google Tag Manager (noscript) --><!-- Google tag (gtag.js) -->
-<ViewTransitions />
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-56SBDN1LL2"></script>
 <script>
   window.dataLayer = window.dataLayer || []
