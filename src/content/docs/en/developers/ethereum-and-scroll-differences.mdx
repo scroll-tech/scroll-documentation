@@ -30,7 +30,7 @@ For open-source contributors and infrastructure builders, please contact our tea
 | `SELFDESTRUCT`              | `selfdestruct`      | Disabled. If the opcode is encountered, the transaction will be reverted.[^willadpot]                      |
 
 <Aside type="caution" title="">
-Opcodes from the Cancun upgrade are not yet available on Scroll, including `MCOPY`, `TSTORE`, `TLOAD`, and `BLOBBASEFEE`. Additionally, [EIP-4788](https://eips.ethereum.org/EIPS/eip-4788) for accessing the Beacon Chain block root is not supported. We recommend using `shanghai` as your EVM target and avoiding using a Solidity version higher than `0.8.23`.
+Opcodes from the Cancun upgrade are not yet available on Scroll, including `MCOPY`, `TSTORE`, `TLOAD`, `BLOBHASH` and `BLOBBASEFEE`. Additionally, [EIP-4788](https://eips.ethereum.org/EIPS/eip-4788) for accessing the Beacon Chain block root is not supported. We recommend using `shanghai` as your EVM target and avoiding using a Solidity version higher than `0.8.23`.
 </Aside>
 
 [^eip1559]: We have currently disabled EIP-1559 on Scroll.
@@ -38,7 +38,7 @@ Opcodes from the Cancun upgrade are not yet available on Scroll, including `MCOP
 
 ## EVM Precompiles
 
-The `SHA2-256` (address `0x2`), `RIPEMD-160` (address `0x3`), and `blake2f` (address `0x9`) precompiles are currently not supported. Calls to these precompiled contracts will revert. We plan to enable these three precompiles in a future hard fork.
+The `SHA2-256` (address `0x2`), `RIPEMD-160` (address `0x3`), `blake2f` (address `0x9`), and `point evaluation` (address `0x0a`) precompiles are currently not supported. Calls to these precompiled contracts will revert. We plan to enable these three precompiles in a future hard fork.
 
 The `modexp` precompile is supported but only supports inputs of size less than or equal to 32 bytes (i.e. `u256`).
 
@@ -58,6 +58,7 @@ Because of a bounded size of the zkEVM circuits, there is an upper limit on the 
 | `ecAdd`             | 50    |
 | `ecMul`             | 50    |
 | `ecPairing`         | 2     |
+{/* TODO: Add SHA256 after upgrade */}
 
 
 ## State Account

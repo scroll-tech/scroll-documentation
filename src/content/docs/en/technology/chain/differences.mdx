@@ -28,6 +28,7 @@ import Aside from "../../../../components/Aside.astro"
 | `0x05`  | `modexp`     | Restrict the input values `B, E, M` to unsigned integers less than $2^{256}$.                   |
 | `0x08`  | `ecPairing`  | The inputs are still multiple of 6 32-byte values, but limit the number of tuples to at most 4. |
 | `0x09`  | `blake2f`    | Currently not supported.                                                                        |
+| `0x0a`  | `point evaluation`    | Currently not supported.                                                                        |
 
 The remaining precompiled contracts have the same behavior as Ethereum. However, their maximum usage within a block is constrained by a limit tied to the zkEVM circuit capacity.
 
@@ -49,5 +50,5 @@ EIPs imported from the Shanghai fork:
 
 
 <Aside type="tip" title="">
-Opcodes from the Cancun upgrade are not yet available on Scroll, including `MCOPY`, `TSTORE`, `TLOAD`, and `BLOBBASEFEE`. Additionally, [EIP-4788](https://eips.ethereum.org/EIPS/eip-4788) for accessing the Beacon Chain block root is not supported.
+Opcodes from the Cancun upgrade are not yet available on Scroll, including `MCOPY`, `TSTORE`, `TLOAD`, `BLOBHASH` and `BLOBBASEFEE`. Additionally, [EIP-4788](https://eips.ethereum.org/EIPS/eip-4788) for accessing the Beacon Chain block root is not supported.
 </Aside>
