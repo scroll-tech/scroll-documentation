@@ -137,7 +137,7 @@
 }
 
 /* Text styles */
-:where(.text, .text-100, .text-200, .text-300, ) {
+:where(.text, .text-100, .text-200, .text-300) {
   @apply font-text font-normal text-primary leading-[1rem];
 }
 

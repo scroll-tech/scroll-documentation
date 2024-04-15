@@ -41,6 +41,7 @@ export default defineConfig({
     mdx(),
     tailwind({
       applyBaseStyles: false,
+      nesting: true,
     }),
 
     astroI18next(),

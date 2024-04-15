@@ -70,7 +70,7 @@ const section = frontmatter?.section ?? ""
           ))
         }
       </div>
-      <div class="tools">
+      <div class="tools" transition:persist>
         {
           CONFIG.ALGOLIA && (
             <div class="search-item">
