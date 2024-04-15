@@ -4,7 +4,7 @@ date: Last Modified
 title: "Ethereum & Scroll Differences"
 lang: "en"
 permalink: "developers/ethereum-and-scroll-differences"
-whatsnext: { "L1 & L2 Bridging": "/developers/l1-and-l2-bridging/" }
+whatsnext: { "L1 & L2 Bridging": "/en/developers/l1-and-l2-bridging/" }
 excerpt: "There are a number of technical details that differ between Ethereum mainnet's EVM and Scroll's modified design for a zkEVM. Below you can see those differences as they exist now."
 ---
 
@@ -38,7 +38,7 @@ Opcodes from the Cancun upgrade are not yet available on Scroll, including `MCOP
 
 ## EVM Precompiles
 
-The `SHA2-256` (address `0x2`), `RIPEMD-160` (address `0x3`), `blake2f` (address `0x9`), and `point evaluation` (address `0x0a`) precompiles are currently not supported. Calls to these precompiled contracts will revert. We plan to enable these three precompiles in a future hard fork.
+The `RIPEMD-160` (address `0x3`) `blake2f` (address `0x9`), and `point evaluation` (address `0x0a`) precompiles are currently not supported. The `SHA2-256` (address `0x2`) is currently supported on Scroll Sepolia, but will soon be supported on Scroll Mainnet. Calls to unsupported precompiled contracts will revert. We plan to enable these precompiles in future hard forks.
 
 The `modexp` precompile is supported but only supports inputs of size less than or equal to 32 bytes (i.e. `u256`).
 
