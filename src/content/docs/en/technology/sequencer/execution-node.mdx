@@ -72,7 +72,7 @@ Scroll adds a few validation rules in addition to Ethereum's block validation ru
 
 The Scroll execution node inherits most of Ethereum's behaviours. However, we needed to make some breaking changes to `l2geth` to enable more efficient proving. This section provides a non-exhaustive list of the modifications, along with their rationale.
 
-- **State and storage tree**: Ethereum uses the MPT (Merkle-Partricia Trie) as its state and contract storage data structure. This trie's structure and the fact that it uses Keccak hash would make it prohibitively expensive for ZK circuits. `l2geth` instead uses [zkTrie](/technology/sequencer/zktrie): a binary Merkle trie with Poseidon hash for its state and contract storage.
+- **State and storage tree**: Ethereum uses the MPT (Merkle-Patricia Trie) as its state and contract storage data structure. This trie's structure and the fact that it uses Keccak hash would make it prohibitively expensive for ZK circuits. `l2geth` instead uses [zkTrie](/technology/sequencer/zktrie): a binary Merkle trie with Poseidon hash for its state and contract storage.
 - **StateAccount**: The modification of state account is described in the [Accounts and State](/technology/chain/accounts).
 - **EVM**: The modifications are described in the [EVM Differences from Ethereum](/technology/chain/differences)
 - **Transaction fees**
