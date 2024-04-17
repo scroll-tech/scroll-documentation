@@ -24,7 +24,7 @@ Note that [EIP-2930](https://eips.ethereum.org/EIPS/eip-2930) and [EIP-1559](htt
 
 ### L1 Message Transaction
 
-We introduce a new type of transactions `L1MessageTx` for L1 initiated transactions. This type of transaction is initiated on the L1 bridge contract. Every time a new message is appended to the `L1MessageQueue` contract on L1, the L2 sequeuncer will create a corresponding `L1MessageTx` transaction to be included in the L2 blocks. Because the signature was already implicitly verified when users submitted the transaction on L1, `L1MessageTx` transactions don't have signature.
+We introduce a new type of transactions `L1MessageTx` for L1 initiated transactions. This type of transaction is initiated on the L1 bridge contract. Every time a new message is appended to the `L1MessageQueue` contract on L1, the L2 sequencer will create a corresponding `L1MessageTx` transaction to be included in the L2 blocks. Because the signature was already implicitly verified when users submitted the transaction on L1, `L1MessageTx` transactions don't have signature.
 
 The `L1MessageTx` transaction type is `0x7E` and its payload is defined as follows.
 
