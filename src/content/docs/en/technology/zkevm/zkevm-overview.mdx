@@ -20,7 +20,7 @@ The EVM can be modeled as a state transition function. It specifies a transition
 
 The “world state” is modeled as a [modified Merkle-Patricia Trie](https://ethereum.org/en/developers/docs/data-structures-and-encoding/patricia-merkle-trie/) (MPT). This trie contains all of the network’s persistent data. This includes the information of all externally-owned accounts (EOAs) and smart contract accounts. Smart contract accounts have sub-tries that hold the smart contract’s bytecode and persistent storage.
 
-The EVM processes a new transaction by executing its resulting computations, and making changes to the world state accordingly. EVM computation works over transient data stores (stack and memory) as well as persistent data stores (contract bytecode and storage).
+The EVM processes a new transaction by executing its resulting computations and making changes to the world state accordingly. EVM computation works over transient data stores (stack and memory) as well as persistent data stores (contract bytecode and storage).
 
 <ClickToZoom src={zkevm1} />
 

@@ -110,7 +110,7 @@ To reduce bridging costs, we implemented several gas optimizations on our bridge
 - In `ScrollChain`, change `messageQueue` and `verifier` to `immutable`.
 - In `L1ScrollMessenger`, change `counterpart`, `rollup`, and `messageQueue` to `immutable`.
 - In all token gateways, change `counterpart`, `router`, and `messenger` to `immutable`.
-- Merge `L1MessageQueue` and `L2GasPriceOracle` into a single contract `L1MessageQueueWithGasPriceOracle` (deployed on the same address as the previous `L1MessageQueue`). In this contract we also change `messenger` and `scrollChain` to `immutable`, and simplify `calculateIntrinsicGasFee`.
+- Merge `L1MessageQueue` and `L2GasPriceOracle` into a single contract `L1MessageQueueWithGasPriceOracle` (deployed on the same address as the previous `L1MessageQueue`). In this contract, we also change `messenger` and `scrollChain` to `immutable`, and simplify `calculateIntrinsicGasFee`.
 
 **Changes to L2 contracts:**
 

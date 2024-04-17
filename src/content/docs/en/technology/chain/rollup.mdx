@@ -26,8 +26,8 @@ The figure illustrates the rollup workflow. The L2 sequencer contains three modu
 
 The rollup node contains three modules:
 
-- **Relayer** submits the commit transactions and finalize transactions to the rollup contract for data availability and finality.
-- **Chunk Proposer** and **Batch Proposer** proposes new chunks and new batches following the constraints described in the [Transaction Batching](/technology/chain/transactions#transaction-batching).
+- **Relayer** submits the commit transactions and finalizes transactions to the rollup contract for data availability and finality.
+- **Chunk Proposer** and **Batch Proposer** propose new chunks and new batches following the constraints described in the [Transaction Batching](/technology/chain/transactions#transaction-batching).
 
 The rollup process can be broken down into three phases: transaction execution, batching and data commitment, and proof generation and finalization.
 
@@ -53,7 +53,7 @@ The rollup process can be broken down into three phases: transaction execution, 
 
 ## Commit Transaction
 
-The Commit Transaction submits the block information and transaction data to L1 for data availability. The transaction includes the parent batch header, chunk data, and a bitmap of skipped L1 message. The parent batch header designates the previous batch that this batch links to. The parent batch must be committed before; otherwise the transaction will be reverted. See the `commitBatch` function signature below.
+The Commit Transaction submits the block information and transaction data to L1 for data availability. The transaction includes the parent batch header, chunk data, and a bitmap of skipped L1 messages. The parent batch header designates the previous batch that this batch links to. The parent batch must be committed before; otherwise, the transaction will be reverted. See the `commitBatch` function signature below.
 
 ```solidity
 function commitBatch(
@@ -70,7 +70,7 @@ After the `commitBatch` function verifies the parent batch is committed before, 
 mapping(uint256 => bytes32) public committedBatches;
 ```
 
-The encoding of batch header and chunk data are described in the [Codec](#codec) section. Most fields in the batch header are straight-forward to derive from the chunk data. One important field to note is `dataHash` that will become part of the public input to verify the validity proof. Assuming that a batch contains `n` chunks, its `dataHash` is computed as follows
+The encoding of batch header and chunk data are described in the [Codec](#codec) section. Most fields in the batch header are straightforward to derive from the chunk data. One important field to note is `dataHash` which will become part of the public input to verify the validity proof. Assuming that a batch contains `n` chunks, its `dataHash` is computed as follows
 
 ```
 batch.dataHash := keccak(chunk[0].dataHash || ... || chunk[n-1].dataHash)
