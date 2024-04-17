@@ -4,10 +4,11 @@ date: Last Modified
 title: "Withdraw Gateways"
 lang: "en"
 permalink: "technology/bridge/withdraw-gateways"
-whatsnext: { "Sequencer": "/technology/sequencer/execution-node/" }
+whatsnext: { "Sequencer": "/en/technology/sequencer/execution-node/" }
 ---
 
 import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import Aside from "../../../../../components/Aside.astro"
 import WithdrawWorkflow from "../_images/withdraw.png"
 
 This document describes how users and developers can utilize gateways to withdraw tokens from L2 to L1. We provide several gateways for standard tokens and a gateway router on L2, listed in the table below.
@@ -58,7 +59,7 @@ The withdrawal of ETH token works as follows.
 
 The withdraw of ERC20 tokens works as follows.
 
-1. To withdraw ERC20 tokens from L1 to L2, users can use `L2GatewayRouter.withdrawERC20` and `L2GatewayRouter.withdrawERC20AndCall` showed below.
+1. To withdraw ERC20 tokens from L2 to L1, users can use `L2GatewayRouter.withdrawERC20` and `L2GatewayRouter.withdrawERC20AndCall` showed below.
 
     ```solidity
     function withdrawERC20(address _token, uint256 _amount, uint256 _gasLimit) external payable;
@@ -81,7 +82,7 @@ The withdraw of ERC20 tokens works as follows.
 The withdrawal of standard and custom ERC20 tokens works in the same way as follows.
 
 3. The `L2StandardERC20Gateway` or `L2CustomERC20Gateway` contract burns the withdrawn ERC20 token, encodes the withdrawal into a message, and sends it to `L2ScrollMessenger`.
-4. The L1 withdrawal execution transaction calls `L1ScrollMessenger.relayMessageWithProof` function to finalize the withdrawals on L1. In the case of standard or custome ERC20 token withdrawal, the transaction calls `finalizeWithdrawERC20` function on the `L1StandardERC20Gateway` or `L1CustomERC20Gateway` contract respectively.
+4. The L1 withdrawal execution transaction calls `L1ScrollMessenger.relayMessageWithProof` function to finalize the withdrawals on L1. In the case of standard or custom ERC20 token withdrawal, the transaction calls `finalizeWithdrawERC20` function on the `L1StandardERC20Gateway` or `L1CustomERC20Gateway` contract respectively.
    - In the `L1StandardERC20Gateway` contract, if this is the first withdrawal transaction of a ERC20 token, `finalizeWithdrawERC20` function will update the mapping from L1 token address to its L2 token address in the `tokenMapping`.
 5. The L1 ERC20 token gateway releases the locked ERC20 tokens by transferring them from itself to the recipient address on L1.
 6. If the user calls `withdrawERC20AndCall` on L2, the gateways will call the target L1 contract with additional data.

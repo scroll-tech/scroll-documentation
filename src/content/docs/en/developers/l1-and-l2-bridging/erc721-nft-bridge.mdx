@@ -5,7 +5,7 @@ title: "ERC721 NFT Bridge"
 lang: "en"
 permalink: "developers/l1-and-l2-bridging/erc721-nft-bridge"
 excerpt: "NFT bridging from L1 to L2 is done via the L1ERC721Gateway contract instead of using a router."
-whatsnext: { "ERC1155 Token Bridge": "/developers/l1-and-l2-bridging/erc1155-token-bridge/" }
+whatsnext: { "ERC1155 Token Bridge": "/en/developers/l1-and-l2-bridging/erc1155-token-bridge/" }
 ---
 
 import Aside from "../../../../../components/Aside.astro"
@@ -86,7 +86,7 @@ Deposit an ERC721 NFT from L1 to a recipient's account on L2.
 | token     | The address of ERC721 NFT contract on L1.         |
 | to        | The address of recipient's account on L2.         |
 | tokenId   | The NFT id to deposit.                            |
-| gasLimit  | Gas limit required to complete the deposit on L2. |
+| gasLimit  | Gas limit required to complete the deposit on L2. Unused portion of fee will be refunded. |
 
 ### updateTokenMapping
 
@@ -106,7 +106,7 @@ Update the mapping that connects an NFT contract from L1 to L2.
 ### withdrawERC721
 
 ```solidity
-function depositERC721(address _token, address _to, uint256 _tokenId, uint256 _gasLimit) external payable;
+function withdrawERC721(address _token, address _to, uint256 _tokenId, uint256 _gasLimit) external payable;
 ```
 
 Send an ERC721 NFT from L2 to a recipient's account on L1.

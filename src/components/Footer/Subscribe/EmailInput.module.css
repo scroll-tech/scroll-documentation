@@ -11,7 +11,6 @@
   width: 48px;
   height: 100%;
   position: absolute;
-  background-color: #1f1f1f;
   border-radius: 10px;
   z-index: 1;
   top: 0;
@@ -19,12 +18,12 @@
   transition: width 0.5s ease;
   overflow: hidden;
   cursor: default;
+  @apply bg-black;
 }
 
 .iconButton {
   width: 54px;
   height: 100%;
-  color: #fff;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -47,6 +46,7 @@
   border-radius: 50%;
   overflow: visible;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  @apply text-white;
 }
 
 .iconButton img {
@@ -57,13 +57,12 @@
 .success {
   font-size: 16px;
   font-weight: 600;
-  color: #fff;
-  background-color: #1f1f1f;
   border-radius: 10px;
   border-left: none;
   text-align: center;
   flex: 1;
   line-height: 54px;
+  @apply text-white  bg-black;
 }
 
 .inputBase {
@@ -71,16 +70,11 @@
   font-weight: 600;
   height: 100%;
   width: 100%;
-  color: #000;
-  background-color: #fff;
   border-radius: 10px;
   border: 1px solid #000;
   border-left: none;
   text-align: center;
-}
-
-.inputBase::placeholder {
-  color: #dcdcdc;
+  @apply text-black bg-pure-white border-black;
 }
 
 @media (min-width: 50em) {

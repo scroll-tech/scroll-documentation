@@ -4,7 +4,7 @@ date: Last Modified
 title: "zkTrie"
 lang: "en"
 permalink: "technology/sequencer/zktrie"
-whatsnext: { "zkEVM": "/technology/zkevm/intro-to-zkevm/" }
+whatsnext: { "zkEVM": "/en/technology/zkevm/intro-to-zkevm/" }
 excerpt: "zkTrie is a sparse binary Merkle Patricia Trie built using Poseidon hash."
 ---
 
@@ -61,9 +61,9 @@ When we insert a new leaf node to a zkTrie, there are two cases illustrated in t
 
 The deletion of a leaf node is similar to the insertion. There are two cases illustrated in the Figure 3.
 
-1. The sibling node of to-be-deleted leaf node is a
+1. The sibling node of the to-be-deleted leaf node is a
 branch node (Figure 3a). In this case, we can simply replace the node `a` by an empty node and update the node hash of its ancestors till the root node.
-2. The node of to-be-deleted leaf node is a leaf node (Figure 3b). Similarly to case 1, we first replace the leaf node by an empty node and start to contract its sibling node upwards until its sibling node is not an empty node. For example, in Figure 3b, we replace the leaf node `b` by an empty node. Because the sibling of node `c` now becomes an empty node, we need to move node `c` one level upward and replace its parent. The new sibling of node `c`, node `e`, is still an empty node. So again we move node `c` upward. Now that the sibling of node `c` is node `a`, a leaf node, the deletion process is finished.
+2. The sibling node of the to-be-deleted leaf node is a leaf node (Figure 3b). Similarly to case 1, we first replace the leaf node by an empty node and start to contract its sibling node upwards until its sibling node is not an empty node. For example, in Figure 3b, we replace the leaf node `b` by an empty node. Because the sibling of node `c` now becomes an empty node, we need to move node `c` one level upward and replace its parent. The new sibling of node `c`, node `e`, is still an empty node. So again we move node `c` upward. Now that the sibling of node `c` is node `a`, a leaf node, the deletion process is finished.
 
 Note that the sibling of a leaf node in a valid zkTrie cannot be an empty node. Otherwise, we should always prune the subtree and move the leaf node upwards.
 

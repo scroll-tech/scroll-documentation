@@ -4,11 +4,12 @@ date: Last Modified
 title: "L1 and L2 Bridging"
 lang: "en"
 permalink: "developers/l1-and-l2-bridging"
-whatsnext: { "ETH & ERC20 Token Bridge": "/developers/l1-and-l2-bridging/eth-and-erc20-token-bridge/" }
+whatsnext: { "ETH & ERC20 Token Bridge": "/en/developers/l1-and-l2-bridging/eth-and-erc20-token-bridge/" }
 excerpt: "An overview of Scroll's Bridging architecture"
 ---
 
 import ClickToZoom from "../../../../components/ClickToZoom.astro"
+import Aside from "../../../../components/Aside.astro"
 import L1GatewayWHITE from "../../../../assets/images/developers/L1GatewayWHITE.png"
 import withdrawWHITE from "../../../../assets/images/developers/withdrawWHITE.png"
 
@@ -22,14 +23,15 @@ In addition to token transfers, the Scroll Messenger contract enables cross-chai
 
 ## L1 Gateway architecture
 
+
 <ClickToZoom src={L1GatewayWHITE} />
 
-There are many entry points from the user to the Scroll bridge. This will depend on what you want to do and how you want to do it. If you want to send ETH or ERC20 tokens, you should use the `GatewayRouter` . If you want to send NFTs, you should use the `L1ERC721Gateway` or `L1ERC1155Gateway`. If you want to send arbitrary data, you should use the `L1ScrollMessenger`. All Gateway transfers use the Scroll Messenger to send assets cross-chain, whose job is to append the transactions to the Message Queue for L2 inclusion.
+There are many entry points from the user to the Scroll bridge. This will depend on what you want to do and how you want to do it. If you want to send ETH or ERC20 tokens, you should use the `GatewayRouter`. If you want to send NFTs, you should use the `L1ERC721Gateway` or `L1ERC1155Gateway`. If you want to send arbitrary data, you should use the `L1ScrollMessenger`. All Gateway transfers use the Scroll Messenger to send assets cross-chain, whose job is to append the transactions to the Message Queue for L2 inclusion.
 
 ## L2 Gateway architecture
 
 <ClickToZoom src={withdrawWHITE} />
 
-Regarding possible permissionlessly callable entry points, the L2 Gateway Architecture is very similar to L1. The difference is that when sending a message from L2, calling the `appendMessage` function will store the message in an append-only binary merkle tree (aka withdraw tree) in the `L2MessageQueue`. When a new message is sent to the `L2MessageQueue`, the relayer will detect it and store it in the database. When the block is finalized, it will generate a proof of the new merkle path and pass it to the L1geth node to execute on `L1ScrollMessenger` . All finalized withdraw roots will be stored in the rollup contract so we can verify the proof against them. In the next Scroll versions, the Relayer won't be needed since all users will be able to finalize the transaction on L1.
+Regarding possible permissionlessly callable entry points, the L2 Gateway Architecture is very similar to L1. The difference is that when sending a message from L2, calling the `appendMessage` function will store the message in an append-only binary merkle tree (aka withdraw tree) in the `L2MessageQueue`. When a new message is sent to the `L2MessageQueue`, the relayer will detect it and store it in the database. When the block is finalized, it will generate a proof of the new merkle path and pass it to the L1geth node to execute on `L1ScrollMessenger`. All finalized withdraw roots will be stored in the rollup contract so we can verify the proof against them. In the next Scroll versions, the Relayer won't be needed since all users will be able to finalize the transaction on L1.
 
 In the upcoming sections, we will explore the technical aspects of the bridge, including the smart contract API required to utilize its capabilities. Detailed guides with code examples are provided in the Developer Guides section to assist developers and users in understanding and implementing these functionalities.

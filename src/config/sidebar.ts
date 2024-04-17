@@ -149,6 +149,10 @@ export const getSidebar = () => {
             title: t("sidebar.developers.bridgingERC20TokenThroughCustomGateway"),
             url: formatUrl("developers/guides/bridge-erc20-through-the-custom-gateway"),
           },
+          {
+            title: t("sidebar.developers.runningNode"),
+            url: formatUrl("developers/guides/running-a-scroll-node"),
+          },
           // {
           //   title: t("sidebar.developers.bridgingERC721NftThroughCustomGateway"),
           //   url: formatUrl("developers/guides/"),
@@ -181,7 +185,13 @@ export const getSidebar = () => {
     technology: [
       {
         section: t("sidebar.technology.overview"),
-        contents: [{ title: t("sidebar.technology.scrollArchitecture"), url: formatUrl("technology") }],
+        contents: [
+          { title: t("sidebar.technology.scrollArchitecture"), url: formatUrl("technology") },
+          {
+            title: t("sidebar.technology.scrollUpgrades"),
+            url: "technology/overview/scroll-upgrades",
+          },
+        ],
       },
       {
         section: t("sidebar.technology.scrollChain"),

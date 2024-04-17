@@ -4,8 +4,10 @@ date: Last Modified
 title: "EVM Differences from Ethereum"
 lang: "en"
 permalink: "technology/chain/differences"
-whatsnext: { "Bridge": "/technology/bridge/cross-domain-messaging/" }
+whatsnext: { "Bridge": "/en/technology/bridge/cross-domain-messaging/" }
 ---
+
+import Aside from "../../../../../components/Aside.astro"
 
 ## Opcodes
 
@@ -21,11 +23,12 @@ whatsnext: { "Bridge": "/technology/bridge/cross-domain-messaging/" }
 
 | Address | Name         | Scroll behavior                                                                                 |
 | ------- | ------------ | ----------------------------------------------------------------------------------------------- |
-| `0x02`  | `SHA2-256`   | Currently not supported.                                                                        |
+| `0x02`  | `SHA2-256`   | Supported on Scroll Sepolia, and will soon be supported on Scroll Mainnet.                      |
 | `0x03`  | `RIPEMD-160` | Currently not supported.                                                                        |
 | `0x05`  | `modexp`     | Restrict the input values `B, E, M` to unsigned integers less than $2^{256}$.                   |
 | `0x08`  | `ecPairing`  | The inputs are still multiple of 6 32-byte values, but limit the number of tuples to at most 4. |
 | `0x09`  | `blake2f`    | Currently not supported.                                                                        |
+| `0x0a`  | `point evaluation`    | Currently not supported.                                                                        |
 
 The remaining precompiled contracts have the same behavior as Ethereum. However, their maximum usage within a block is constrained by a limit tied to the zkEVM circuit capacity.
 
@@ -44,3 +47,8 @@ EIPs imported from the Shanghai fork:
 - [EIP-3651](https://eips.ethereum.org/EIPS/eip-3651): Warm `COINBASE`
 - [EIP-3855](https://eips.ethereum.org/EIPS/eip-3855): `PUSH0` instruction
 - [EIP-3860](https://eips.ethereum.org/EIPS/eip-3860): Limit and meter initcode
+
+
+<Aside type="tip" title="">
+Opcodes from the Cancun upgrade are not yet available on Scroll, including `MCOPY`, `TSTORE`, `TLOAD`, `BLOBHASH` and `BLOBBASEFEE`. Additionally, [EIP-4788](https://eips.ethereum.org/EIPS/eip-4788) for accessing the Beacon Chain block root is not supported.
+</Aside>

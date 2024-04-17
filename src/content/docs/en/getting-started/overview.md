@@ -5,12 +5,12 @@ title: "Scroll Overview"
 lang: "en"
 permalink: "docs/conceptual-overview/"
 excerpt: "ZK Rollups and Scroll"
-whatsnext: { "User Guide": "/user-guide/", "Building on Scroll": "/developers/" }
+whatsnext: { "User Guide": "/en/user-guide/", "Building on Scroll": "/en/developers/" }
 ---
 
 #### Welcome to the Scroll docs!
 
-Scroll is a security-focused scaling solution for Ethereum, using innovations in scaling design and zero knowledge proofs to build a new layer on Ethereum. The Scroll network is more accessible, more responsive, and can support more users at once than Ethereum alone, and if you've ever used or developed an application on Ethereum, you'll be right home on Scroll.
+Scroll is a security-focused scaling solution for Ethereum, using innovations in scaling design and zero knowledge proofs to build a new layer on Ethereum. The Scroll network is more accessible, more responsive and can support more users at once than Ethereum alone. If you've ever used or developed an application on Ethereum, you'll be right at home on Scroll.
 
 Want to try out the Scroll Sepolia testnet with free assets before using Scroll? Check out our [User Guide](/user-guide/).
 
@@ -20,7 +20,7 @@ Scroll is building the technology to scale Ethereum.
 
 While Ethereum is the leading blockchain network for powering decentralized applications, its popularity also brings higher costs, creating a barrier to adoption for the next wave of users and developers.
 
-Leveraging cutting-edge research in zero knowledge proofs (”zk”), Scroll is building a Layer 2 rollup network on Ethereum. The team, in open-source collaboration with others in the Ethereum community, has created a “zkEVM” that allows for all activity on the network, which behaves just like Ethereum, to be secured by smart contracts _on_ Ethereum. The network publishes all of the transactions to Ethereum, and the zkEVM creates and publishes cryptographic "proofs" that the Scroll network is following the rules of Ethereum.
+Leveraging cutting-edge research in zero knowledge (”zk”) proofs , Scroll is building a Layer 2 rollup network on Ethereum. The team, in open-source collaboration with others in the Ethereum community, has created a “zkEVM” that allows for all activity on the network, which behaves just like Ethereum, to be secured by smart contracts _on_ Ethereum. The network publishes all of the transactions to Ethereum, and the zkEVM creates and publishes cryptographic "proofs" that the Scroll network is following the rules of Ethereum.
 
 Ultimately, Ethereum smart contracts verify that every transaction on Scroll is valid for these proofs, lending the network incredible security, decentralization, and censorship resistance. This level of security and scalability for Ethereum is only possible with recent breakthroughs in zero knowledge cryptography, blockchain protocol design, and hardware acceleration.
 

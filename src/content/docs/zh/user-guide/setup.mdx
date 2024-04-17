@@ -1,0 +1,41 @@
+---
+section: gettingStarted
+date: Last Modified
+title: "设置"
+lang: "zh"
+permalink: "user-guide/setup/"
+whatsnext: { "从水龙头中获取Sepolia ETH": "/zh/user-guide/faucet" }
+excerpt: "You need to have a wallet to interact with the Scroll Testnet. You can find some example wallets and configuration tips here."
+---
+
+import Aside from "../../../../components/Aside.astro"
+
+## 钱包
+
+您需要有一个钱包才能与Scroll Sepolia测试网上的dApp进行交互。您可以在下面找到一些示例钱包和配置提示。我们的跨链桥应用程序支持小狐狸钱包(MetaMask)，Coinbase钱包或任何支持WalletConnect的钱包。
+
+### 小狐狸钱包(MetaMask)
+
+您可以从他们的[官方网站](https://metamask.io/download/)安装小狐狸钱包。
+
+您可以将 Scroll Sepolia 测试网配置导入您的小狐狸钱包。为此，请访问 [Scroll Sepolia 门户网站](https://scroll.io/portal)，然后单击“连接钱包”按钮并选择小狐狸钱包。接下来，单击Sepolia测试网和Scroll Sepolia测试网的“添加到小狐狸钱包”按钮。这将导入 Scroll Sepolia 测试网的链 ID 和 RPC URL。默认情况下，Sepolia 测试网也在小狐狸钱包配置中。要显示它，请单击小狐狸钱包网络选择下拉菜单中的“显示/隐藏测试网络”。
+
+
+### 手动网络配置（适用于其他钱包）
+
+**添加到钱包**链接可能不是和每个钱包都兼容。如果您在使用它们时遇到问题，您可能需要通过插入下表中的详细配置信息来手动添加 Sepolia 测试网和Scroll Sepolia 网络：
+
+| 网络名称       | Scroll Sepolia 测试网                                                        | Sepolia Testnet                                                              |
+| ------------------ | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| RPC URL            | [https://sepolia-rpc.scroll.io/](https://sepolia-rpc.scroll.io/)              | [https://eth-sepolia-public.unifra.io](https://eth-sepolia-public.unifra.io) |
+| 链 ID           | 534351                                                                        | 11155111                                                                     |
+| 代币符号    | ETH                                                                           | ETH                                                                          |
+| 区块链浏览器链接 | [https://sepolia-blockscout.scroll.io](https://sepolia-blockscout.scroll.io/) | [https://sepolia.etherscan.io](https://sepolia.etherscan.io)                 |
+
+<Aside type="tip" title="其他区块链浏览器">
+  对于Layer1的交易活动, 使用 Etherscan's [Sepolia 测试网浏览器](https://sepolia.etherscan.io).
+
+其他可选的区块链浏览器, Unifra 构建了 [L2Scan](https://scroll.l2scan.co/), 使得用户可以探索 Scroll Sepolia 测试网上的其他细节。
+[Dora](https://www.ondora.xyz/network/scroll-sepolia/interactions) 同样支持 Scroll Sepolia 并且提供了区块链活动的多链视角
+
+</Aside>

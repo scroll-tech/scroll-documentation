@@ -4,7 +4,7 @@ date: Last Modified
 title: "Scroll Contracts"
 lang: "en"
 permalink: "developers/scroll-contracts"
-whatsnext: { "Ethereum & Scroll Differences": "/developers/ethereum-and-scroll-differences" }
+whatsnext: { "Ethereum & Scroll Differences": "/en/developers/ethereum-and-scroll-differences" }
 excerpt: "The network info and contract addresses you need to start with Scroll Sepolia Testnet."
 ---
 
@@ -44,8 +44,8 @@ Use the table below to configure your Ethereum tools to the Scroll mainnet.
 
 ### ETH and ERC20 Bridge
 
-- L1 ERC20 Gateway Router: [`0xF8B1378579659D8F7EE5f3C929c2f3E332E41Fd6`](https://etherscan.io/address/0xF8B1378579659D8F7EE5f3C929c2f3E332E41Fd6)
-- L2 ERC20 Gateway Router: [`0x4C0926FF5252A435FD19e10ED15e5a249Ba19d79`](https://scrollscan.com/address/0x4C0926FF5252A435FD19e10ED15e5a249Ba19d79)
+- L1 Gateway Router: [`0xF8B1378579659D8F7EE5f3C929c2f3E332E41Fd6`](https://etherscan.io/address/0xF8B1378579659D8F7EE5f3C929c2f3E332E41Fd6)
+- L2 Gateway Router: [`0x4C0926FF5252A435FD19e10ED15e5a249Ba19d79`](https://scrollscan.com/address/0x4C0926FF5252A435FD19e10ED15e5a249Ba19d79)
 
 ### Advanced Bridge Contracts
 
@@ -68,8 +68,10 @@ Use the table below to configure your Ethereum tools to the Scroll mainnet.
 - ERC1155 Bridge
   - L1 ERC1155 Gateway: [`0xb94f7F6ABcb811c5Ac709dE14E37590fcCd975B6`](https://etherscan.io/address/0xb94f7F6ABcb811c5Ac709dE14E37590fcCd975B6)
   - L2 ERC1155 Gateway: [`0x62597Cc19703aF10B58feF87B0d5D29eFE263bcc`](https://scrollscan.com/address/0x62597Cc19703aF10B58feF87B0d5D29eFE263bcc)
-- Gas Oracle
-  - L2 Gas Oracle (deployed on Mainnet): [`0x987e300fDfb06093859358522a79098848C33852`](https://scrollscan.com/address/0x987e300fDfb06093859358522a79098848C33852)
+- Gas Oracle (deployed on Mainnet)
+  - L2 Gas Oracle (*soon to be deprecated*): [`0x987e300fDfb06093859358522a79098848C33852`](https://etherscan.io/address/0x987e300fDfb06093859358522a79098848C33852)
+  - *after [Feb '24 Bridge Upgrade](https://scroll.io/blog/protocol-upgrade-bridging-cost-reduction)*
+    - L2 Message Queue With Gas Price Oracle: [`0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B`](https://etherscan.io/address/0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B)
 
 ### L2 Predeploys
 
@@ -97,6 +99,13 @@ Use the table below to configure your Ethereum tools to the Scroll mainnet.
   - v3MigratorAddress: [`0xF00577B5Dd0DA227298E954Ed11356F264Cf93d4`](https://scrollscan.com/address/0xF00577B5Dd0DA227298E954Ed11356F264Cf93d4)
   - v3StakerAddress: [`0xFdFbE973c9ecB036Ecfb7af697FcACe789D3f928`](https://scrollscan.com/address/0xFdFbE973c9ecB036Ecfb7af697FcACe789D3f928)
   - quoterV2Address: [`0x2566e082Cb1656d22BCbe5644F5b997D194b5299`](https://scrollscan.com/address/0x2566e082Cb1656d22BCbe5644F5b997D194b5299)
+
+#### Ethereum Attestation Service (EAS)
+
+- EAS: [`0xC47300428b6AD2c7D03BB76D05A176058b47E6B0`](https://scrollscan.com/address/0xC47300428b6AD2c7D03BB76D05A176058b47E6B0)
+- SchemaRegistry: [`0xD2CDF46556543316e7D34e8eDc4624e2bB95e3B6`](https://scrollscan.com/address/0xD2CDF46556543316e7D34e8eDc4624e2bB95e3B6)
+- EIP712Proxy: [`0x77b7DA1c40762Cd8AFfE2069b575328EfD4D9801`](https://scrollscan.com/address/0x77b7DA1c40762Cd8AFfE2069b575328EfD4D9801)
+- Indexer: `Not deployed yet`
 
 ## Additional Useful Contracts
 
@@ -148,8 +157,8 @@ Use the table below to configure your Ethereum tools to the Scroll Sepolia Testn
 
 #### ETH and ERC20 Bridge
 
-- L1 ERC20 Gateway Router: [`0x13FBE0D0e5552b8c9c4AE9e2435F38f37355998a`](https://sepolia.etherscan.io/address/0x13FBE0D0e5552b8c9c4AE9e2435F38f37355998a)
-- L2 ERC20 Gateway Router: [`0x9aD3c5617eCAa556d6E166787A97081907171230`](https://sepolia.scrollscan.com/address/0x9aD3c5617eCAa556d6E166787A97081907171230)
+- L1 Gateway Router: [`0x13FBE0D0e5552b8c9c4AE9e2435F38f37355998a`](https://sepolia.etherscan.io/address/0x13FBE0D0e5552b8c9c4AE9e2435F38f37355998a)
+- L2 Gateway Router: [`0x9aD3c5617eCAa556d6E166787A97081907171230`](https://sepolia.scrollscan.com/address/0x9aD3c5617eCAa556d6E166787A97081907171230)
 
 #### Advanced Bridge Contracts
 
@@ -172,8 +181,9 @@ Use the table below to configure your Ethereum tools to the Scroll Sepolia Testn
 - ERC1155 Bridge
   - L1 ERC1155 Gateway: [`0xa5Df8530766A85936EE3E139dECE3bF081c83146`](https://sepolia.etherscan.io/address/0xa5Df8530766A85936EE3E139dECE3bF081c83146)
   - L2 ERC1155 Gateway: [`0xe17C9b9C66FAF07753cdB04316D09f52144612A5`](https://sepolia.scrollscan.com/address/0xe17C9b9C66FAF07753cdB04316D09f52144612A5)
-- Gas Oracle
-  - L2 Gas Oracle (deployed on Sepolia): [`0x247969F4fad93a33d4826046bc3eAE0D36BdE548`](https://sepolia.scrollscan.com/address/0x247969F4fad93a33d4826046bc3eAE0D36BdE548)
+- Gas Oracle (deployed on Sepolia)
+  - L1 Message Queue With Gas Price Oracle: [`0xF0B2293F5D834eAe920c6974D50957A1732de763`](https://sepolia.etherscan.io/address/0xF0B2293F5D834eAe920c6974D50957A1732de763)
+  - L2 Gas Oracle (*deprecated*): [`0x247969F4fad93a33d4826046bc3eAE0D36BdE548`](https://sepolia.etherscan.io/address/0x247969F4fad93a33d4826046bc3eAE0D36BdE548)
 
 #### L2 Predeploys
 
@@ -206,6 +216,13 @@ Use the table below to configure your Ethereum tools to the Scroll Sepolia Testn
 #### Aave
 
 See this [Github gist](https://gist.github.com/dghelm/7fe68f0a524f30846e1142721c081d84).
+
+#### Ethereum Attestation Service (EAS)
+
+- EAS: [`0xaEF4103A04090071165F78D45D83A0C0782c2B2a`](https://sepolia.scrollscan.com/address/0xaEF4103A04090071165F78D45D83A0C0782c2B2a)
+- SchemaRegistry: [`0x55D26f9ae0203EF95494AE4C170eD35f4Cf77797`](https://sepolia.scrollscan.com/address/0x55D26f9ae0203EF95494AE4C170eD35f4Cf77797)
+- EIP712Proxy: [`0xB3574f76b1720E61FdA98702c7016674CD6Eaa7b`](https://sepolia.scrollscan.com/address/0xB3574f76b1720E61FdA98702c7016674CD6Eaa7b)
+- Indexer: [`0x7C2cb1eDC328491da52de2a0afc44D3B0Ae7ee17`](https://sepolia.scrollscan.com/address/0x7C2cb1eDC328491da52de2a0afc44D3B0Ae7ee17)
 
 ### Additional Useful Contracts
 
