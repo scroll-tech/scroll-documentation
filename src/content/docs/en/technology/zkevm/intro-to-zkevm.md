@@ -22,7 +22,7 @@ Scroll is a general-purpose ZK rollup that uses the EVM for off-chain computatio
 
 However, achieving Ethereum compatibility with a ZK rollup poses a large challenge - the rollup must be able to generate a proof proving that an off-chain EVM computation was executed correctly. This is essentially what a “zkEVM” is: **a zkEVM is a system that proves the correct execution of the EVM**.
 
-The EVM was originally designed without ZK rollups in mind, and it turns out that it is quite challenging build a zkEVM. However, we at Scroll are undeterred by the challenge, and have been working hard in collaboration with the [Ethereum Privacy and Scaling Explorations](https://appliedzkp.org/) team to make the zkEVM a reality.
+The EVM was originally designed without ZK rollups in mind, and it turns out that it is quite challenging to build a zkEVM. However, we at Scroll are undeterred by the challenge, and have been working hard in collaboration with the [Ethereum Privacy and Scaling Explorations](https://appliedzkp.org/) team to make the zkEVM a reality.
 
 ## Learn more
 
