@@ -11,7 +11,7 @@ import ClickToZoom from "../../../../../components/ClickToZoom.astro"
 import Aside from "../../../../../components/Aside.astro"
 import WithdrawWorkflow from "../_images/withdraw.png"
 
-Bu belge, kullanıcıların ve geliştiricilerin, tokenleri L2'den L1'e çekmek için ağ geçitlerini nasıl kullanabileceğini açıklamaktadır. Aşağıdaki tabloda listelenen, standart belirteçler için çeşitli ağ geçitleri ve L2'de bir ağ geçidi yönlendiricisi sağlıyoruz.
+Bu belge, kullanıcıların ve geliştiricilerin, tokenleri L2'den L1'e çekmek için ağ geçitlerini nasıl kullanabileceğini açıklamaktadır. Aşağıdaki tabloda listelenen, standart tokenler için çeşitli ağ geçitleri ve L2'de bir ağ geçidi yönlendiricisi sağlıyoruz.
 
 | Gateway Kontratı         | Açıklama                                                                       |
 | ------------------------ | ----------------------------------------------------------------------------   |
@@ -27,7 +27,7 @@ Bu belge, kullanıcıların ve geliştiricilerin, tokenleri L2'den L1'e çekmek 
 
 <ClickToZoom src={WithdrawWorkflow} alt="Withdraw Workflow" />
 
-Şekilde L2'den L1'e para çekme iş akışı gösterilmektedir. Kullanıcılar token çekme işlemini başlatmak için ağ geçitlerini ararlar. Geri çekme işlemi 'L2ScrollMessenger'a gönderilen bir mesajla kodlanır ve bu mesaj daha sonra 'L2MessageQueue'ya eklenir. 'L2MessageQueue' bir Withdraw Trie'sini korur ve her yeni mesaj eklendiğinde kökü günceller. Withdraw Trie kökü, L2 durum kökü ile birlikte L1 rollup sözleşmesinde sonlandırılır. Yeni Withdraw Trie kökü L1'de sonlandırıldıktan sonra, kullanıcılar veya üçüncü taraflar Withdraw Trie köküne geçerli bir Merkle Inclusion Kanıtı oluşturabilir ve L1'de çekilmeyi tamamlamak için bir _withdraw execution_ işlemi gönderebilir. L2'den L1'e mesaj aktarma iş akışı hakkında daha fazla ayrıntıyı [Alanlar Arası Mesajlaşma](/technology/bridge/cross-domain-messaging#sending-messages-from-l2-to-l1) bölümünde bulabilirsiniz.
+Şekilde L2'den L1'e para çekme iş akışı gösterilmektedir. Kullanıcılar token çekme işlemini başlatmak için ağ geçitlerini ararlar. Geri çekme işlemi `L2ScrollMessenger`a gönderilen bir mesajla kodlanır ve bu mesaj daha sonra `L2MessageQueue`ya eklenir. `L2MessageQueue` bir Withdraw Trie'sini korur ve her yeni mesaj eklendiğinde kökü günceller. Withdraw Trie kökü, L2 durum kökü ile birlikte L1 rollup sözleşmesinde sonlandırılır. Yeni Withdraw Trie kökü L1'de sonlandırıldıktan sonra, kullanıcılar veya üçüncü taraflar Withdraw Trie köküne geçerli bir Merkle Inclusion Kanıtı oluşturabilir ve L1'de çekilmeyi tamamlamak için bir _withdraw execution_ işlemi gönderebilir. L2'den L1'e mesaj aktarma iş akışı hakkında daha fazla ayrıntıyı [Alanlar Arası Mesajlaşma](/technology/bridge/cross-domain-messaging#sending-messages-from-l2-to-l1) bölümünde bulabilirsiniz.
 
 Sonraki bölümlerde farklı tokenlerin nasıl geri çekildiğinin ayrıntıları açıklanmaktadır.
 
@@ -35,7 +35,7 @@ Sonraki bölümlerde farklı tokenlerin nasıl geri çekildiğinin ayrıntılar�
 
 ETH tokeninin çekilmesi şu şekilde çalışır.
 
-1. 'L2GatewayRouter', ETH'i L2'den L1'e çekmek için üç işlev sağlar. 'withdrawETHAndCall' işlevi, aynı anda ETH'i çekebilir ve bir sözleşme çağrısı gerçekleştirebilir.
+1. `L2GatewayRouter`, ETH'i L2'den L1'e çekmek için üç işlev sağlar. `withdrawETHAndCall` işlevi, aynı anda ETH'i çekebilir ve bir sözleşme çağrısı gerçekleştirebilir.
 
     ```solidity
     function withdrawETH(uint256 _amount, uint256 _gasLimit) external payable;
@@ -50,16 +50,16 @@ ETH tokeninin çekilmesi şu şekilde çalışır.
     ) external payable;
     ```
 
-2. 'withdrawETHAndCall' işlevleri 'L2ETHGateway'i çağırır. 'L2ETHGateway', çekilme mesajını kodlar ve çekilen ETH ile birlikte 'L2ScrollMessenger' sözleşmesine gönderir.
-3. Geri çekilen ETH tekrar 'L2ScrollMessenger' sözleşmesine kilitlenir. 'L2ScrollMessenger', mesajı 'L2MessageQueue' sözleşmesindeki mesaj kuyruğuna ekler.
-4. L1'deki para çekme işlemi, para çekme işlemini tamamlamak için 'L1ScrollMessenger.relayMessageWithProof' fonksiyonunu çağırır. ETH'in çekilmesi durumunda, 'relayMessageWithProof' fonksiyonu, ETH'i L1'deki alıcı hesabına geri göndermek için 'L1ETHGateway.finalizeWithdrawETH'yi çağırır.
-5. Kullanıcı L2'de "withdrawETHAndCall" çağırırsa, "L1ETHGateway" sözleşmesindeki "finalizeWithdrawETH", ek verileri hedef L1 sözleşmesine iletecektir.
+2. `withdrawETHAndCall` işlevleri `L2ETHGateway`i çağırır. `L2ETHGateway`, çekilme mesajını kodlar ve çekilen ETH ile birlikte `L2ScrollMessenger` sözleşmesine gönderir.
+3. Geri çekilen ETH tekrar `L2ScrollMessenger` sözleşmesine kilitlenir. `L2ScrollMessenger`, mesajı `L2MessageQueue` sözleşmesindeki mesaj kuyruğuna ekler.
+4. L1'deki para çekme işlemi, para çekme işlemini tamamlamak için `L1ScrollMessenger.relayMessageWithProof` fonksiyonunu çağırır. ETH'in çekilmesi durumunda, `relayMessageWithProof` fonksiyonu, ETH'i L1'deki alıcı hesabına geri göndermek için `L1ETHGateway.finalizeWithdrawETH`i çağırır.
+5. Kullanıcı L2'de `withdrawETHAndCall` fonksiyonunu çağırırsa, `L1ETHGateway` sözleşmesindeki `finalizeWithdrawETH`, ek verileri hedef L1 sözleşmesine iletecektir.
 
 ## ERC20 Tokenlarının Çekilmesi
 
 ERC20 tokenlarının geri çekilmesi şu şekilde çalışır.
 
-1. ERC20 tokenlerini L1'den L2'ye çekmek için kullanıcılar aşağıda gösterilen 'L2GatewayRouter.withdrawERC20' ve 'L2GatewayRouter.withdrawERC20AndCall'ı kullanabilirler.
+1. ERC20 tokenlerini L1'den L2'ye çekmek için kullanıcılar aşağıda gösterilen `L2GatewayRouter.withdrawERC20` ve `L2GatewayRouter.withdrawERC20AndCall`ı kullanabilirler.
 
     ```solidity
     function withdrawERC20(address _token, uint256 _amount, uint256 _gasLimit) external payable;
@@ -75,31 +75,31 @@ ERC20 tokenlarının geri çekilmesi şu şekilde çalışır.
     ) public payable;
     ```
 
-2. ERC20 tokenlerinden ağ geçidine yapılan eşlemeye bağlı olarak, 'L2GatewayRouter' ilgili ağ geçidini, 'L2StandardERC20Gateway', 'L2CustomERC20Gateway' veya 'L2WETHGateway'i çağırır. Adımların geri kalanı ayrı ayrı açıklanacaktır.
+2. ERC20 tokenlerinden ağ geçidine yapılan eşlemeye bağlı olarak, `L2GatewayRouter` ilgili ağ geçidini, `L2StandardERC20Gateway`, `L2CustomERC20Gateway` veya `L2WETHGateway`i çağırır. Adımların geri kalanı ayrı ayrı açıklanacaktır.
 
 ### Standart ve Özel ERC20 Tokenları
 
 Standart ve özel ERC20 tokenlarının geri çekilmesi aşağıdaki şekilde gerçekleşir.
 
-3. 'L2StandardERC20Gateway' veya 'L2CustomERC20Gateway' sözleşmesi, çekilen ERC20 tokenını yakar, çekilme işlemini bir mesaja kodlar ve 'L2ScrollMessenger'a gönderir.
-4. L1 para çekme işleminin kendisi, L1'deki para çekme işlemlerini tamamlamak için 'L1ScrollMessenger.relayMessageWithProof' fonksiyonunu çağırır. Standart veya özel ERC20 tokeninin çekilmesi durumunda, işlem sırasıyla 'L1StandardERC20Gateway' veya 'L1CustomERC20Gateway' sözleşmesinde 'finalizeWithdrawERC20' fonksiyonunu çağırır.
-    - 'L1StandardERC20Gateway' sözleşmesinde, eğer bu bir ERC20 tokeninin ilk çekilme işlemiyse, 'finalizeWithdrawERC20' işlevi, eşlemeyi 'tokenMapping'de L1 token adresinden L2 token adresine güncelleyecektir.
+3. `L2StandardERC20Gateway` veya `L2CustomERC20Gateway` sözleşmesi, çekilen ERC20 tokenini yakar, çekilme işlemini bir mesaja kodlar ve `L2ScrollMessenger`a gönderir.
+4. L1 para çekme işleminin kendisi, L1'deki para çekme işlemlerini tamamlamak için `L1ScrollMessenger.relayMessageWithProof` fonksiyonunu çağırır. Standart veya özel ERC20 tokeninin çekilmesi durumunda, işlem sırasıyla `L1StandardERC20Gateway` veya `L1CustomERC20Gateway` sözleşmesinde `finalizeWithdrawERC20` fonksiyonunu çağırır.
+    - `L1StandardERC20Gateway` sözleşmesinde, eğer bu bir ERC20 tokeninin ilk çekilme işlemiyse, `finalizeWithdrawERC20` işlevi, eşlemeyi `tokenMapping`de L1 token adresinden L2 token adresine güncelleyecektir.
 5. L1 ERC20 token ağ geçidi, kilitli ERC20 tokenlarını kendisinden L1'deki alıcı adresine aktararak serbest bırakır.
-6. Kullanıcı L2'de "withdrawERC20AndCall" çağırırsa ağ geçitleri ek verilerle hedef L1 sözleşmesini arayacaktır.
+6. Kullanıcı L2'de `withdrawERC20AndCall` çağırırsa ağ geçitleri ek verilerle hedef L1 sözleşmesini arayacaktır.
 
 ### WETH Tokeni
 
-L2'de Wrapped ETH tokeni için özel bir ağ geçidi 'L2WETHGateway' sağlıyoruz ve ağ geçidi adresini 'L2GatewayRouter'a kaydediyoruz. WETH tokeninin geri çekilmesi şu şekilde çalışır.
+L2'de Wrapped ETH tokeni için özel bir ağ geçidi `L2WETHGateway` sağlıyoruz ve ağ geçidi adresini `L2GatewayRouter`a kaydediyoruz. WETH tokeninin geri çekilmesi şu şekilde çalışır.
 
-3. 'L2WETHGateway', çekilen WETH tokenını kendisine aktarır ve WETH tokenını yerel ETH tokenine dönüştürür. ETH tokeni daha sonra 'L2ScrollMessenger' sözleşmesine geri gönderilir.
-4. 'L2WETHGateway', token çekme mesajını kodlar ve bunu 'L2ScrollMessenger'a iletir.
-5. L1 para çekme işleminin kendisi, L1'de para çekme işlemini tamamlamak için 'L1ScrollMessenger.relayMessageWithProof' fonksiyonunu çağırır. WETH tokeninin çekilmesi durumunda, işlem "L1WETHGateway.finalizeWithdrawERC20" çağrısını yapar ve ETH cinsinden çekilen tutarı "L1WETHGateway"e gönderir.
+3. `L2WETHGateway`, çekilen WETH tokenını kendisine aktarır ve WETH tokenını yerel ETH tokenine dönüştürür. ETH tokeni daha sonra `L2ScrollMessenger` sözleşmesine geri gönderilir.
+4. `L2WETHGateway`, token çekme mesajını kodlar ve bunu `L2ScrollMessenger`a iletir.
+5. L1 para çekme işleminin kendisi, L1'de para çekme işlemini tamamlamak için `L1ScrollMessenger.relayMessageWithProof` fonksiyonunu çağırır. WETH tokeninin çekilmesi durumunda, işlem `L1WETHGateway.finalizeWithdrawERC20` çağrısını yapar ve ETH cinsinden çekilen tutarı `L1WETHGateway`e gönderir.
 6. 'L1WETHGateway', çekilen ETH'i tekrar L1 WETH token'a sarar ve L1'deki alıcı adresine aktarır.
-7. Kullanıcı L2'de "withdrawERC20AndCall"ı çağırırsa, "L1WETHGateway" ek verilerle birlikte hedef L1 adresini çağıracaktır.
+7. Kullanıcı L2'de `withdrawERC20AndCall` fonksiyonunu çağırırsa, `L1WETHGateway` ek verilerle birlikte hedef L1 adresini çağıracaktır.
 
 ## ERC-721/ERC-1155 Tokenlarının Geri Çekilmesi
 
-ERC-721 veya ERC-1155 tokenlarının geri çekilmesi, ERC20 tokenlerine çok benzer şekilde çalışır. ERC-721 /ERC-1155 tokenlerini L2'den çekmek için 'L2ERC721Gateway' veya 'L2ERC1155Gateway' ağ geçidi kullanılabilir.
+ERC-721 veya ERC-1155 tokenlarının geri çekilmesi, ERC20 tokenlerine çok benzer şekilde çalışır. ERC-721 /ERC-1155 tokenlerini L2'den çekmek için `L2ERC721Gateway` veya `L2ERC1155Gateway` ağ geçidi kullanılabilir.
 
 ```solidity
 function withdrawERC721(
@@ -131,7 +131,7 @@ function withdrawERC1155(
 ) external payable;
 ```
 
-Büyük miktarda ERC-721 veya ERC-1155 token çekimini kolaylaştırmak için, aşağıdaki işlevler aracılığıyla 'L2ERC721Gateway' ve 'L2ERC1155Gateway' sözleşmesinde toplu para çekme işlevleri de sağlıyoruz:
+Büyük miktarda ERC-721 veya ERC-1155 token çekimini kolaylaştırmak için, aşağıdaki işlevler aracılığıyla `L2ERC721Gateway` ve `L2ERC1155Gateway` sözleşmesinde toplu para çekme işlevleri de sağlıyoruz:
 
 ```solidity
 function batchWithdrawERC721(
@@ -163,4 +163,4 @@ function batchWithdrawERC1155(
 ) external payable;
 ```
 
-ERC-721 veya ERC-1155 tokenleri için L1 muadil sözleşmeleri, L1'deki para çekme işlemlerini tamamlamak için "L1ERC721Gateway" ve "L1ERC1155Gateway"dir.
+ERC-721 veya ERC-1155 tokenleri için L1 muadil sözleşmeleri, L1'deki para çekme işlemlerini tamamlamak için `L1ERC721Gateway` ve `L1ERC1155Gateway` sözleşmeleridir.

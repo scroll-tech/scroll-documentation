@@ -26,13 +26,13 @@ Bu belge, kullanıcıların ve geliştiricilerin L1'den L2'ye token yatırmak i�
 
 <ClickToZoom src={DepositWorkflow} alt="Deposit Workflow" />
 
-Şekilde L1'den L2'ye para yatırma iş akışı gösterilmektedir. Kullanıcılar token yatırma işlemini başlatmak için ağ geçitlerini çağırırlar. Yatırılan değer daha sonra 'L1ScrollMessenger' sözleşmesine gönderilen bir mesaja kodlanır ve karşılık gelen L1 tarafından başlatılan işlem 'L1MessageQueue'ya eklenir. L2'deki para yatırma işlemlerini tamamlamak için L2 sıralayıcı, yeni L1 işlem olaylarını toplar ve karşılık gelen işlemleri, oluşturduğu L2 bloklarına dahil eder. Sonraki bölümlerde farklı tokenlerin nasıl yatırıldığına ilişkin ayrıntılar açıklanmaktadır. L1'den L2'ye mesaj aktarma iş akışı hakkında daha fazla ayrıntıyı [Alanlar Arası Mesajlaşma](/technology/bridge/cross-domain-messaging#sending-messages-from-l1-to-l2) bölümünde bulabilirsiniz.
+Şekilde L1'den L2'ye para yatırma iş akışı gösterilmektedir. Kullanıcılar token yatırma işlemini başlatmak için ağ geçitlerini çağırırlar. Yatırılan değer daha sonra `L1ScrollMessenger` sözleşmesine gönderilen bir mesaja kodlanır ve karşılık gelen L1 tarafından başlatılan işlem `L1MessageQueue`ya eklenir. L2'deki para yatırma işlemlerini tamamlamak için L2 sıralayıcı, yeni L1 işlem olaylarını toplar ve karşılık gelen işlemleri, oluşturduğu L2 bloklarına dahil eder. Sonraki bölümlerde farklı tokenlerin nasıl yatırıldığına ilişkin ayrıntılar açıklanmaktadır. L1'den L2'ye mesaj aktarma iş akışı hakkında daha fazla ayrıntıyı [Alanlar Arası Mesajlaşma](/technology/bridge/cross-domain-messaging#sending-messages-from-l1-to-l2) bölümünde bulabilirsiniz.
 
 ## ETH yatırma
 
-Scroll, ETH'i kendi yerel token'ı olarak ele alır. Yerel ETH tokenını basım yapmadan L2 hesaplarına aktarabilmesi için, genesis bloğundaki 'L2ScrollMessenger' sözleşmesine yeterli miktarda ETH'i önceden tahsis ediyoruz. ETH yatırma işlemi şu şekilde çalışır;
+Scroll, ETH'i kendi yerel token'ı olarak ele alır. Yerel ETH tokenını basım yapmadan L2 hesaplarına aktarabilmesi için, genesis bloğundaki `L2ScrollMessenger` sözleşmesine yeterli miktarda ETH'i önceden tahsis ediyoruz. ETH yatırma işlemi şu şekilde çalışır;
 
-1. 'L1GatewayRouter', ETH'yi L1'den L2'ye yatırmak için üç fonksiyon sağlar. 'depositETHAndCall' fonksiyonu, aynı anda ETH'i aktarabilir ve bir kontrat çağrısı (contract call) gerçekleştirebilir.
+1. `L1GatewayRouter`, ETH'i L1'den L2'ye yatırmak için üç fonksiyon sağlar. `depositETHAndCall` fonksiyonu, aynı anda ETH'i aktarabilir ve bir kontrat çağrısı (contract call) gerçekleştirebilir.
 
     ```solidity
     function depositETH(uint256 _amount, uint256 _gasLimit) external payable;
@@ -47,24 +47,24 @@ Scroll, ETH'i kendi yerel token'ı olarak ele alır. Yerel ETH tokenını basım
     ) external payable;
     ```
 
-2. Üç 'depositETH' fonksiyonunun tümü 'L1ETHGateway'i çağırır. 'L1ETHGateway', depozitoyu 'L1ScrollMessenger' kontratına gönderilen bir mesaja kodlar.
+2. Üç `depositETH` fonksiyonunun tümü `L1ETHGateway`i çağırır. `L1ETHGateway`, depozitoyu `L1ScrollMessenger` kontratına gönderilen bir mesaja kodlar.
 
-3. Yatırılan tutarın ETH'i 'L1ScrollMessenger' sözleşmesinde kilitlenir. 'L1ScrollMessenger', mesajı 'L1MessageQueue' sözleşmesindeki mesaj kuyruğuna ekler.
+3. Yatırılan tutarın ETH'i `L1ScrollMessenger` sözleşmesinde kilitlenir. `L1ScrollMessenger`, mesajı `L1MessageQueue` sözleşmesindeki mesaj kuyruğuna ekler.
 
 4. L1'de para yatırma işlemi tamamlandıktan sonra sıralayıcı, yatırmayı tamamlamak ve ETH'i L2'deki alıcı adresine aktarmak için L2 bloğuna karşılık gelen bir L2 işlemini dahil edecektir.
 
-5. L2 işlemi, aktarılan mesajı yürüten 'L2ScrollMessenger.relayMessage' işlevini çağırır.
-    ETH yatırma durumunda, 'relayMessage' fonksiyonu, ETH'yi L2'deki alıcı hesabına aktarmak için 'L2ETHGateway.finalizeDepositETH'i çağırır.
+5. L2 işlemi, aktarılan mesajı yürüten `L2ScrollMessenger.relayMessage` işlevini çağırır.
+    ETH yatırma durumunda, `relayMessage` fonksiyonu, ETH'yi L2'deki alıcı hesabına aktarmak için `L2ETHGateway.finalizeDepositETH`i çağırır.
 
-6. Kullanıcı L1'de 'depositETHAndCall' çağırırsa, 'L2ETHGateway' sözleşmesindeki 'finalizeDepositETH', ek verileri hedef L2 sözleşmesine iletecektir.
+6. Kullanıcı L1'de `depositETHAndCall` çağırırsa, `L2ETHGateway` sözleşmesindeki `finalizeDepositETH`, ek verileri hedef L2 sözleşmesine iletecektir.
 
 ## ERC20 Tokenlarını Yatırma
 
-Standart ERC20 tokenleri, özel ERC20 tokenleri ve Wrapped ETH tokeni gibi farklı ERC20 token türlerini birbirine bağlamak için çeşitli ERC20 ağ geçidi sözleşmeleri sağlanmıştır. 'L1GatewayRouter', ERC20 tokenlerinin L1'deki karşılık gelen ERC20 ağ geçidine kanonik eşlemesini kaydeder. 'L1GatewayRouter', özel bir ağ geçidi önceden kurulmadığı sürece yeni ERC20 tokenleri için varsayılan ERC20 ağ geçidi olarak 'StandartERC20Gateway'i kullanır.
+Standart ERC20 tokenleri, özel ERC20 tokenleri ve Wrapped ETH tokeni gibi farklı ERC20 token türlerini birbirine bağlamak için çeşitli ERC20 ağ geçidi sözleşmeleri sağlanmıştır. `L1GatewayRouter`, ERC20 tokenlerinin L1'deki karşılık gelen ERC20 ağ geçidine kanonik eşlemesini kaydeder. `L1GatewayRouter`, özel bir ağ geçidi önceden kurulmadığı sürece yeni ERC20 tokenleri için varsayılan ERC20 ağ geçidi olarak `StandartERC20Gateway`i kullanır.
 
 ERC20 tokenlerinin yatırılması aşağıdaki şekilde çalışır.
 
-1. L1'den L2'ye ERC20 tokenlarını yatırmak için kullanıcılar aşağıda gösterilen 'L1GatewayRouter.depositERC20' ve 'L1GatewayRouter.depositERC20AndCall'ı kullanabilirler.
+1. L1'den L2'ye ERC20 tokenlarını yatırmak için kullanıcılar aşağıda gösterilen `L1GatewayRouter.depositERC20` ve `L1GatewayRouter.depositERC20AndCall`ı kullanabilirler.
 
     ```solidity
     function depositERC20(address _token, uint256 _amount, uint256 _gasLimit) external payable;
@@ -80,19 +80,19 @@ ERC20 tokenlerinin yatırılması aşağıdaki şekilde çalışır.
     ) public payable;
     ```
 
-2. ERC20 tokenlerinden ağ geçidine yapılan eşlemeyi temel alarak, 'L1GatewayRouter' ilgili ağ geçidini çağırır: 'L1StandardERC20Gateway', 'L1CustomERC20Gateway' veya 'L1WETHGateway'. Adımların geri kalanı ayrı ayrı açıklanacaktır.
+2. ERC20 tokenlerinden ağ geçidine yapılan eşlemeyi temel alarak, `L1GatewayRouter` ilgili ağ geçidini çağırır: `L1StandardERC20Gateway`, `L1CustomERC20Gateway` veya `L1WETHGateway`. Adımların geri kalanı ayrı ayrı açıklanacaktır.
 
 ### Standart ERC20 Tokenları
 
-Standart ERC20 tokenleri herhangi bir özel mantık gerektirmeyen tokenlardır. Bu tür tokenler için L2 ERC20 token sözleşmeleri 'L2StandardERC20Gateway' tarafından oluşturulur. Standart ERC20 token yatırma işlemi için kalan adımlar şunlardır:
+Standart ERC20 tokenleri herhangi bir özel mantık gerektirmeyen tokenlardır. Bu tür tokenler için L2 ERC20 token sözleşmeleri `L2StandardERC20Gateway` tarafından oluşturulur. Standart ERC20 token yatırma işlemi için kalan adımlar şunlardır:
 
-3. 'L1StandardERC20Gateway' sözleşmesi, ERC20 tokenlerini göndericiden kendisine aktararak kilitler.
-4. Bu ERC20 tokeni daha önce "L1StandardERC20Gateway" aracılığıyla çekilmemişse, "L1StandardERC20Gateway" deterministik bir L2 ERC20 token adresi hesaplayacak ve token meta verilerini (sembol, ad ve ondalık sayılar) gelecekte L2'daki potansiyel sözleşme dağıtımı (deployment) için mesaja ekleyecektir. L2 token adresi zaten 'tokenMapping'de kayıtlıysa, 'L1StandardERC20Gateway' eşlemeden L2 token adresini doğrudan yükleyecektir.
+3. `L1StandardERC20Gateway` sözleşmesi, ERC20 tokenlerini göndericiden kendisine aktararak kilitler.
+4. Bu ERC20 tokeni daha önce `L1StandardERC20Gateway` aracılığıyla çekilmemişse, `L1StandardERC20Gateway` deterministik bir L2 ERC20 token adresi hesaplayacak ve token meta verilerini (sembol, ad ve ondalık sayılar) gelecekte L2'daki potansiyel sözleşme dağıtımı (deployment) için mesaja ekleyecektir. L2 token adresi zaten `tokenMapping`de kayıtlıysa, `L1StandardERC20Gateway` eşlemeden L2 token adresini doğrudan yükleyecektir.
 5. 'L1StandardERC20Gateway', token yatırma mesajını kodlar ve mesajı göndermek için 'L1ScrollMessenger'ı çağırır.
-6. İlgili L2 işlemi, L2'deki para yatırma işlemini tamamlamak için 'L2ScrollMessenger.relayMessage' fonksiyonunu çağırır. Standart ERC20 token yatırma durumunda ise işlem daha sonra 'L2StandardERC20Gateway.finalizeDepositERC20'yi çağırır.
-7. Bu ERC20 token sözleşmesi L2'de konuşlandırılmamışsa, 'L2StandardERC20Gateway' mesajdan token metadata'yı çıkaracak ve standart ERC20 tokenını L2'de dağıtmak için 'ScrollStandardERC20Factory'yi çağıracaktır.
-8. 'L2StandardERC20Gateway', ilgili L2 ERC20 token sözleşmesindeki mint fonksiyonunu çağırır.
-9. Kullanıcı L1'de 'depositERC20AndCall'ı çağırırsa, 'L2StandardERC20Gateway' ek verilerle hedef L2 sözleşmesini çağıracaktır.
+6. İlgili L2 işlemi, L2'deki para yatırma işlemini tamamlamak için `L2ScrollMessenger.relayMessage` fonksiyonunu çağırır. Standart ERC20 token yatırma durumunda ise işlem daha sonra `L2StandardERC20Gateway.finalizeDepositERC20`yi çağırır.
+7. Bu ERC20 token sözleşmesi L2'de konuşlandırılmamışsa, `L2StandardERC20Gateway` mesajdan token metadata'yı çıkaracak ve standart ERC20 tokenını L2'de dağıtmak için `ScrollStandardERC20Factory`yi çağıracaktır.
+8. `L2StandardERC20Gateway`, ilgili L2 ERC20 token sözleşmesindeki mint fonksiyonunu çağırır.
+9. Kullanıcı L1'de `depositERC20AndCall`ı çağırırsa, `L2StandardERC20Gateway` ek verilerle hedef L2 sözleşmesini çağıracaktır.
 
 ### Özel ERC20 Tokenları
 
@@ -106,17 +106,17 @@ Standart ERC20 tokenlarıyla karşılaştırıldığında, özel ERC20 tokenlar�
 
 ### WETH Tokeni
 
-L1'de Wrapped ETH tokeni için özel bir ağ geçidi 'L1WETHGateway' sağlıyoruz ve ağ geçidi adresini 'L1GatewayRouter'a kaydediyoruz. WETH tokeninin yatırılması şu şekilde çalışır.
+L1'de Wrapped ETH tokeni için özel bir ağ geçidi `L1WETHGateway` sağlıyoruz ve ağ geçidi adresini `L1GatewayRouter`a kaydediyoruz. WETH tokeninin yatırılması şu şekilde çalışır.
 
-3. 'L1WETHGateway', WETH tokenlarını göndericiden kendisine aktararak ve WETH tokenını yerel ETH tokenine dönüştürerek kilitler. ETH tokenı ve "msg.value" (geçiş ücretinin ödenmesi için) daha sonra birlikte "L1ScrollMessenger" sözleşmesine gönderilir.
-4. 'L1WETHGateway', token yatırma mesajını kodlar ve bunu 'L1ScrollMessenger'a iletir.
-5. İlgili L2 işlemi, L2'deki para yatırma işlemini tamamlamak için 'L2ScrollMessenger.relayMessage' işlevini çağırır. WETH tokeni yatırma durumunda, işlem 'L2WETHGateway.finalizeDepositERC20'yi çağırır.
-6. 'L2WETHGateway', yatırılan ETH'yi tekrar L2 WETH token'a sarar ve L2'deki alıcı adresine aktarır.
-7. Kullanıcı L1'de 'depositERC20AndCall'ı çağırırsa, 'L2WETHGateway' ek verilerle hedef L2 sözleşmesini arayacaktır.
+3. `L1WETHGateway`, WETH tokenlarını göndericiden kendisine aktararak ve WETH tokenını yerel ETH tokenine dönüştürerek kilitler. ETH tokenı ve `msg.value` (geçiş ücretinin ödenmesi için) daha sonra birlikte `L1ScrollMessenger` sözleşmesine gönderilir.
+4. `L1WETHGateway`, token yatırma mesajını kodlar ve bunu `L1ScrollMessenger`a iletir.
+5. İlgili L2 işlemi, L2'deki para yatırma işlemini tamamlamak için `L2ScrollMessenger.relayMessage` işlevini çağırır. WETH tokeni yatırma durumunda, işlem `L2WETHGateway.finalizeDepositERC20`yi çağırır.
+6. `L2WETHGateway`, yatırılan ETH'yi tekrar L2 WETH token'a sarar ve L2'deki alıcı adresine aktarır.
+7. Kullanıcı L1'de `depositERC20AndCall`ı çağırırsa, `L2WETHGateway` ek verilerle hedef L2 sözleşmesini arayacaktır.
 
 ## ERC-721/ERC-1155 Tokenlarını Yatırma
 
-ERC-721 veya ERC-1155 tokenlarının yatırılması, ERC20 tokenlerine çok benzer şekilde çalışır. L1'den ERC-721 /ERC-1155 tokenlarını yatırmak için 'L1ERC721Gateway' veya 'L1ERC1155Gateway' ağ geçitleri kullanılabilir.
+ERC-721 veya ERC-1155 tokenlarının yatırılması, ERC20 tokenlerine çok benzer şekilde çalışır. L1'den ERC-721 /ERC-1155 tokenlarını yatırmak için `L1ERC721Gateway` veya `L1ERC1155Gateway` ağ geçitleri kullanılabilir.
 
 ```solidity
 function depositERC721(
@@ -148,7 +148,7 @@ function depositERC1155(
 ) external payable;
 ```
 
-Büyük miktarda ERC-721 veya ERC-1155 token yatırma işlemini kolaylaştırmak amaçlı, aşağıdaki işlevler aracılığıyla 'L1ERC721Gateway' ve 'L1ERC1155Gateway' sözleşmesinde toplu para yatırma işlevleri de sağlıyoruz:
+Büyük miktarda ERC-721 veya ERC-1155 token yatırma işlemini kolaylaştırmak amaçlı, aşağıdaki işlevler aracılığıyla `L1ERC721Gateway` ve `L1ERC1155Gateway` sözleşmesinde toplu para yatırma işlevleri de sağlıyoruz:
 
 ```solidity
 function batchDepositERC721(
@@ -180,4 +180,4 @@ function batchDepositERC1155(
 ) external payable;
 ```
 
-ERC-721 veya ERC-1155 tokenleri için L2 muadil sözleşmeleri "L2ERC721Gateway" ve "L2ERC1155Gateway"dir. Bunlar L2'deki para yatırma işlemlerini tamamlamak için kullanılır.
+ERC-721 veya ERC-1155 tokenleri için L2 muadil sözleşmeleri `L2ERC721Gateway` ve `L2ERC1155Gateway`dir. Bunlar L2'deki para yatırma işlemlerini tamamlamak için kullanılır.
