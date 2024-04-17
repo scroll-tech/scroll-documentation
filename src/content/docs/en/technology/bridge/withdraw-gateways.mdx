@@ -4,7 +4,7 @@ date: Last Modified
 title: "Withdraw Gateways"
 lang: "en"
 permalink: "technology/bridge/withdraw-gateways"
-whatsnext: { "Sequencer": "/technology/sequencer/execution-node/" }
+whatsnext: { "Sequencer": "/en/technology/sequencer/execution-node/" }
 ---
 
 import ClickToZoom from "../../../../../components/ClickToZoom.astro"
@@ -59,7 +59,7 @@ The withdrawal of ETH token works as follows.
 
 The withdraw of ERC20 tokens works as follows.
 
-1. To withdraw ERC20 tokens from L1 to L2, users can use `L2GatewayRouter.withdrawERC20` and `L2GatewayRouter.withdrawERC20AndCall` showed below.
+1. To withdraw ERC20 tokens from L2 to L1, users can use `L2GatewayRouter.withdrawERC20` and `L2GatewayRouter.withdrawERC20AndCall` showed below.
 
     ```solidity
     function withdrawERC20(address _token, uint256 _amount, uint256 _gasLimit) external payable;
