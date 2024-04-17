@@ -16,7 +16,7 @@ import zkevm3 from "../_images/zkevm3.png"
 
 EVM'nin çalışmasını kanıtlayan zkEVM'nin nasıl oluşturulacağını anlamak için öncelikle EVM'nin kendisine bakmamız gerekiyor.
 
-EVM, durum geçiş fonksiyonu olarak modellenebilir. Başlangıç dünya durumu "S" ve bir "T" işlemi verildiğinde, yeni bir dünya durumu "S": "f(S,T) = S" üreten bir geçiş fonksiyonu "f"yi belirtir.
+EVM, durum geçiş fonksiyonu olarak modellenebilir. Başlangıç dünya durumu `S` ve bir `T` işlemi verildiğinde, yeni bir dünya durumu `S’`: `f(S,T) = S'` üreten bir geçiş fonksiyonu `f`yi belirtir.
 
 "Dünya durumu", [değiştirilmiş Merkle-Patricia Trie](https://ethereum.org/en/developers/docs/data-structures-and-encoding/patricia-merkle-trie/) (MPT) olarak modellenmiştir. Bu trie ağın tüm kalıcı verilerini içerir. Bu, tüm harici sahipli hesapların (EOA'lar) ve akıllı sözleşme hesaplarının bilgilerini içerir. Akıllı sözleşme hesapları, akıllı sözleşmenin bytecode'unu ve kalıcı depolamayı tutan alt trie'lere sahiptir.
 
@@ -32,19 +32,19 @@ Opcode'lar yürütüldükçe durum trie'si değiştirilir. Bu, yeni bir durum k�
 
 ## Bir EVM yürütmesinin kanıtlanması
 
-zkEVM'nin amacı, bir işlemin yürütülmesinin geçerliliğini doğrulayan bir kanıt oluşturmaktır. Başka bir deyişle, başlangıç dünya durumu "S", bir işlem "T" ve sonuçta ortaya çıkan dünya durumu "S" verildiğinde, zkEVM'nin "f(S,T) = S" olduğuna dair bir kanıt üretmesi gerekir; burada ` f`, Ethereum Yellow Paper'da belirtilen durum geçiş fonksiyonudur.
+zkEVM'nin amacı, bir işlemin yürütülmesinin geçerliliğini doğrulayan bir kanıt oluşturmaktır. Başka bir deyişle, başlangıç dünya durumu `S`, bir işlem `T` ve sonuçta ortaya çıkan dünya durumu `S` verildiğinde, zkEVM'nin `f(S,T) = S` olduğuna dair bir kanıt üretmesi gerekir; burada `f`, Ethereum Yellow Paper'da belirtilen durum geçiş fonksiyonudur.
 
-Geçiş fonksiyonu yürütmesinin geçerliliğini kanıtlamak için yürütmeyi adım adım yürütme izine böleriz. 'f(S,T)'nin yürütülmesi, sıralı opcode yürütmelerinin bir listesine genişletilir. Yürütme izi, 'f(S,T) = S' durum geçişinin doğruluğunu onaylayan bir "tanık" görevi görür - iz, bir anlamda, durumun "S"den nasıl geçiş yaptığını adım adım açıklayan bir açıklamadır. 'S''ye.
+Geçiş fonksiyonu yürütmesinin geçerliliğini kanıtlamak için yürütmeyi adım adım yürütme izine böleriz. `f(S,T)`nin yürütülmesi, sıralı opcode yürütmelerinin bir listesine genişletilir. Yürütme izi, `f(S,T) = S` durum geçişinin doğruluğunu onaylayan bir "tanık" görevi görür - iz, bir anlamda, durumun `S`den `S'`e nasıl geçiş yaptığını adım adım açıklayan bir açıklamadır. 
 
 Daha sonra sorun aşağıdakileri kanıtlamaya indirgenir:
 
 - Yürütme izlemesi _doğru_.
    - Her bir opcode, Ethereum Yellow Paper spesifikasyonuna göre doğru şekilde yürütülür.
-     - Örneğin, "ADD" opcode'u, yığından iki değerin çıkarılması ve bunların toplamının yığına aktarılmasıyla sonuçlanmalıdır.
-     - Bir kanıt, geçici veri depolarında (stack and memory) veya kalıcı veri depolarında (contract bytecode and storage) yapılan değişiklikler de dahil olmak üzere her bir opcode'unun uygun davranışla yürütüldüğünü göstermelidir.
+     - Örneğin, `ADD` opcode'u, yığından iki değerin çıkarılması ve bunların toplamının yığına aktarılmasıyla sonuçlanmalıdır.
+     - Bir kanıt, geçici veri depolarında (stack and memory) veya kalıcı veri depolarında yapılan değişiklikler de dahil olmak üzere her bir opcode'unun uygun davranışla yürütüldüğünü göstermelidir.
    - Yürütülen opcodelarının sıralı listesi aslında işlem tarafından tetiklenen opcodelarının doğru listesidir.
      - Bu, ilk işlem çağrı verilerinin ve çağrılan sözleşmelerin bytecode'unun doğru şekilde yüklenmesini içerir.
-- Yürütme izlemesi başlangıç durumu "S" ile başlar ve "S" durumuyla sonuçlanır.
+- Yürütme izlemesi başlangıç durumu `S` ile başlar ve `S` durumuyla sonuçlanır.
 
 <ClickToZoom src={zkevm3} />
 

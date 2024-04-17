@@ -10,9 +10,9 @@ whatsnext: { "zkEVM Overview": "/tr/technology/zkevm/zkevm-overview" }
 
 ## Giriş ve motivasyon
 
-ZK rolluplar, Ethereum için ideal ölçeklendirme çözümü olarak geniş çapta kabul edilmektedir. Ethereum Katman 1'in güçlü güvenliğini miras alırlar ve diğer Katman 2 çözümleriyle karşılaştırıldığında en hızlı işlem kesinliğini sunarlar.
+ZK rolluplar, Ethereum için ideal ölçeklendirme çözümü olarak geniş çapta kabul edilmektedir. Ethereum'un güçlü güvenliğini miras alırlar ve diğer L2 çözümleriyle karşılaştırıldığında en hızlı işlem kesinliğini sunarlar.
 
-ZK rollupların temel fikri, işlemleri zincir dışında yürütmek ve yürütmenin geçerliliğine dair kısa ve öz kanıtlar oluşturmaktır. Bu kısa ve öz kanıtlar daha sonra Ethereum Katman 1'e gönderilebilir ve doğrulanabilir. ZK rolluplar, bir grup işlem için kanıtın doğrulanması, işlem kümesinin yeniden yürütülmesinden çok daha ucuz olduğundan ölçeklenebilirliği artırır.
+ZK rollupların temel fikri, işlemleri zincir dışında yürütmek ve yürütmenin geçerliliğine dair kısa ve öz kanıtlar oluşturmaktır. Bu kısa ve öz kanıtlar daha sonra Ethereum'a gönderilebilir ve doğrulanabilir. ZK rolluplar, bir grup işlem için kanıtın doğrulanması, işlem kümesinin yeniden yürütülmesinden çok daha ucuz olduğundan ölçeklenebilirliği artırır.
 
 ZK rolluplar, destekledikleri işlem türlerine göre uygulamaya özel ve genel amaçlı rolluplar olarak kategorize edilebilir. Uygulamaya özel ZK rolluplar, ödemeler ve takaslar gibi belirli işlem kümeleri veya bir oyuncunun zincir üstü bir oyun için eylem kümesi için tasarlanmıştır. Bu durumlarda, rolluplar yalnızca oyun oyuncuları için geçerli durum geçişleri gibi desteklenen temel öğelerin doğruluğunu kanıtlayan kanıtlar üretmesi gerekir.
 
