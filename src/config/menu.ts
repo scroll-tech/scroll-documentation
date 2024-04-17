@@ -39,7 +39,7 @@ export const MENU: MenuItems = {
   ],
   tr: [
     {
-      text: "Başlayın",
+      text: "Başla",
       link: "/tr/getting-started/overview",
       section: "gettingStarted",
     },
