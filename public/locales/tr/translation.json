@@ -29,169 +29,169 @@
       "buttonText": "Düğüm Operatörü Kılavuzu"
     },
     "TutorialsCTA": {
-      "title": "Watch tutorials",
-      "description": "Learn more about the technology we are building. We're constantly uploading new videos to our YouTube channel.",
-      "buttonText": "Watch tutorials"
+      "title": "Eğitimleri izleyin",
+      "description": "Teknolojimiz hakkında daha fazla bilgi edinin. YouTube kanalımıza sürekli olarak yeni videolar yüklüyoruz.",
+      "buttonText": "Eğitimleri izleyin"
     },
     "LinksCTA": {
       "card1": {
-        "title": "Need integration support?",
-        "description": "Talk to an expert once we TODO: a url"
+        "title": "Entegrasyon desteğine mi ihtiyacınız var?",
+        "description": "Bir uzmanla görüşün"
       },
       "card2": {
         "title": "Discord",
-        "description": "Join the community"
+        "description": "Topluluğumuza katılın"
       },
       "card3": {
-        "title": "TODO: Discourse",
-        "description": "Really, join the community"
+        "title": "TODO: Tartışma",
+        "description": "Gerçekten, topluluğumuza katılın"
       }
     },
     "NewsletterCTA": {
-      "title": "Stay up-to-date on the latest Scroll Developer news",
-      "text": "Roadmap updates, virtual and live events, ecosystem opportunities and more",
-      "placeholder": "your email address here",
-      "thankYouForSubscribing": "Thank you for subscribing!",
-      "correctEmail": "Please use a correct email address.",
-      "pleaseInsertEmail": "Please insert your email."
+      "title": "Scroll Geliştirici haberlerini yakından takip edin",
+      "text": "Güncellemeler, online ve yüz yüze etkinlikler, ekosistemdeki fırsatlar ve daha fazlası",
+      "placeholder": "e-posta adresi",
+      "thankYouForSubscribing": "Takip ettiğiniz için teşekkür ederiz!",
+      "correctEmail": "Lütfen geçerli bir e-posta adresi kullanın.",
+      "pleaseInsertEmail": "Lütfen e-posta adresinizi girin."
     }
   },
   "sidebar": {
     "gettingStarted": {
-      "gettingStarted": "Getting Started",
-      "overview": "Overview",
-      "scrollSepoliaTestnet": "Scroll Sepolia Testnet",
-      "userGuide": "User Guide",
-      "setup": "Setup",
-      "faucet": "Faucet",
-      "bridge": "Bridge",
-      "transferTokens": "Transfer Tokens",
-      "commonErrors": "Common Errors",
-      "rollupExplorer": "Rollup Explorer",
-      "scrollSepoliaBlockExplorer": "Scroll Sepolia Explorer",
-      "scrollMainnet": "Scroll Mainnet",
-      "scrollscan": "Scrollscan Block Explorer",
-      "sepoliaBlockExplorer": "Sepolia Explorer",
-      "community": "Community",
+      "gettingStarted": "Başlarken",
+      "overview": "Genel Bakış",
+      "scrollSepoliaTestnet": "Scroll Sepolia Test Ağı",
+      "userGuide": "Kullanıcı Rehberi",
+      "setup": "Kurulum",
+      "faucet": "Musluk",
+      "bridge": "Köprü",
+      "transferTokens": "Tokenları Aktar",
+      "commonErrors": "Yaygın Hatalar",
+      "rollupExplorer": "Rollup Gezgini",
+      "scrollSepoliaBlockExplorer": "Scroll Sepolia Gezgini",
+      "scrollMainnet": "Scroll Ana Ağı",
+      "scrollscan": "Scrollscan Block Gezgini",
+      "sepoliaBlockExplorer": "Sepolia Gezgini",
+      "community": "Topluluk",
       "discord": "Discord",
-      "communityForum": "Community Forum"
+      "communityForum": "Topluluk Forumu"
     },
     "developers": {
-      "developers": "Developers",
-      "buildingOnScroll": "Building on Scroll",
-      "developerQuickstart": "Developer Quickstart",
-      "verifyingSmartContracts": "Verifying Smart Contracts",
-      "scrollContracts": "Scroll Contracts",
-      "ethereumAndScrollDifferences": "Ethereum & Scroll Differences",
-      "l1AndL2Bridging": "L1 & L2 Bridging",
-      "ethAndErc20TokenBridge": "ETH & ERC20 Token Bridge",
-      "erc721NftBridge": "ERC721 NFT Bridge",
-      "erc1155TokenBridge": "ERC1155 Token Bridge",
-      "theScrollMessenger": "The Scroll Messenger",
-      "transactionFeesOnScroll": "Transaction Fees on Scroll",
-      "l2Fee": "L2 Fee",
-      "l1Fee": "L1 Fee",
-      "gasOracle": "Gas Oracle",
-      "future": "Future",
-      "guides": "Guides",
-      "contractDeploymentTutorial": "Contract Deployment Tutorial",
-      "crossChainInteraction": "Scroll Messenger Cross-chain Interaction",
-      "bridgingERC20TokenThroughCustomGateway": "Bridge an ERC20 through the Custom Gateway",
-      "bridgingERC721NftThroughCustomGateway": "Bridging ERC721 NFT through Custom Gateway",
-      "bridgingERC1155ThroughCustomGateway": "Bridging ERC1155 through Custom Gateway",
-      "estimatingGasAndTxFees": "Estimating Gas & Tx Fees",
-      "resources": "Resources",
-      "mainnetResources": "Mainnet Resources",
-      "sepoliaResources": "Sepolia Resources",
-      "scrollBlockExplorer": "Scrollscan Explorer",
-      "rollupExplorer": "Rollup Explorer",
-      "scrollSepoliaBlockExplorer": "Scroll Sepolia Explorer",
-      "sepoliaRollupExplorer": "Rollup Explorer",
-      "sepoliaBlockExplorer": "Scrollscan Explorer"
+      "developers": "Geliştiriciler",
+      "buildingOnScroll": "Scroll Üzerinde Geliştirmek",
+      "developerQuickstart": "Geliştirici Hızlı Başlangıcı",
+      "verifyingSmartContracts": "Akıllı Sözleşmeleri Doğrulama",
+      "scrollContracts": "Scroll Sözleşmeleri",
+      "ethereumAndScrollDifferences": "Ethereum ve Scroll Farkları",
+      "l1AndL2Bridging": "L1 ve L2 Köprüleme",
+      "ethAndErc20TokenBridge": "ETH ve ERC20 Token Köprüsü",
+      "erc721NftBridge": "ERC721 NFT Köprüsü",
+      "erc1155TokenBridge": "ERC1155 Token Köprüsü",
+      "theScrollMessenger": "Scroll Messenger",
+      "transactionFeesOnScroll": "Scroll'da İşlem Ücretleri",
+      "l2Fee": "L2 Ücretleri",
+      "l1Fee": "L1 Ücretleri",
+      "gasOracle": "Gaz Oracle'ı'",
+      "future": "Gelecek",
+      "guides": "Rehberler",
+      "contractDeploymentTutorial": "Sözleşme Dağıtımı Eğitimi",
+      "crossChainInteraction": "Scroll Messenger ile Zincirler Arası Etkileşim",
+      "bridgingERC20TokenThroughCustomGateway": "Özel Ağ Geçidi üzerinden ERC20 köprüleyin",
+      "bridgingERC721NftThroughCustomGateway": "Özel Ağ Geçidi üzerinden ERC721 NFT köprüleyin",
+      "bridgingERC1155ThroughCustomGateway": "Özel Ağ Geçidi üzerinden ERC1155 NFT köprüleyin",
+      "estimatingGasAndTxFees": "Gaz ve İşlem Ücretlerinin Tahmin Edilmesi",
+      "resources": "Kaynaklar",
+      "mainnetResources": "Ana Ağ Kaynakları",
+      "sepoliaResources": "Sepolia Kaynakları",
+      "scrollBlockExplorer": "Scrollscan Gezgini",
+      "rollupExplorer": "Rollup Gezgini",
+      "scrollSepoliaBlockExplorer": "Scroll Sepolia Gezgini",
+      "sepoliaRollupExplorer": "Rollup Gezgini",
+      "sepoliaBlockExplorer": "Scrollscan Gezgini"
     },
     "technology": {
-      "introduction": "Introduction",
-      "principles": "Principles",
-      "scrollArchitecture": "Scroll Architecture",
-      "scrollUpgrades": "Scroll Upgrades",
-      "overview": "Overview",
+      "introduction": "Giriş",
+      "principles": "Prensipler",
+      "scrollArchitecture": "Scroll Mimarisi",
+      "scrollUpgrades": "Scroll Güncellemeleri",
+      "overview": "Genel Bakış",
 
-      "scrollChain": "Scroll Chain",
-      "accountsAndState": "Accounts and State",
-      "blocks": "Blocks",
-      "transactions": "Transactions",
-      "rollupProcess": "Rollup Process",
-      "evmDifferencesFromEthereum": "EVM Differences from Ethereum",
+      "scrollChain": "Scroll Zinciri",
+      "accountsAndState": "Hesaplar ve Durum",
+      "blocks": "Bloklar",
+      "transactions": "İşlemler",
+      "rollupProcess": "Rollup Süreci",
+      "evmDifferencesFromEthereum": "Ethereum EVM'inden Farklar",
 
-      "bridge": "Bridge",
-      "crossDomainMessaging": "Cross-Domain Messaging",
-      "depositGateways": "Deposit Gateways",
-      "withdrawGateways": "Withdraw Gateways",
+      "bridge": "Köprü",
+      "crossDomainMessaging": "Alanlar Arası Mesajlaşma",
+      "depositGateways": "Yatırım Ağ Geçitleri (Deposit Gateways)",
+      "withdrawGateways": "Çekim Geçitleri",
 
-      "sequencer": "Sequencer",
-      "executionNode": "Execution Node",
-      "rollupNode": "Rollup Node",
+      "sequencer": "Sıralayıcı",
+      "executionNode": "Yürütme Düğümü",
+      "rollupNode": "Rollup Düğümü",
       "zkTrie": "zkTrie",
 
       "zkevm": "zkEVM",
-      "introToZkevm": "Intro to zkEVM",
-      "zkevmOverview": "zkEVM Overview",
-      "bridgeOverview": "Bridge Overview",
-      "prover": "Prover",
-      "proofGeneration": "Proof Generation",
-      "cpuProverRepo": "CPU Prover Repo",
+      "introToZkevm": "zkEVM'e Giriş",
+      "zkevmOverview": "zkEVM Genel Bakış",
+      "bridgeOverview": "Köprüye Genel Bakış",
+      "prover": "Kanıtlayıcı",
+      "proofGeneration": "Kanıt Oluşturma",
+      "cpuProverRepo": "CPU Kanıtlayıcı Deposu",
 
-      "security": "Security",
-      "auditsAndBugBounty": "Audits & Bug Bounty",
-      "l2BeatAssessment": "L2Beat Assessment"
+      "security": "Güvenlik",
+      "auditsAndBugBounty": "Denetimler ve Hata Ödül Programı",
+      "l2BeatAssessment": "L2Beat Değerlendirmesi"
     },
     "learn": {
-      "ethereumAndProtocols": "Ethereum & Protocols",
-      "theScalabilityProblem": "The Scalability Problem",
-      "introToRollups": "Intro to Rollups",
+      "ethereumAndProtocols": "Ethereum & Protokoller",
+      "theScalabilityProblem": "Ölçeklenebilirlik Sorunu",
+      "introToRollups": "Rollup'lara Giriş",
       "zeroKnowledge": "Zero Knowledge",
-      "introToZeroKnowledge": "Intro to Zero Knowledge",
-      "polynomialCommitmentSchemes": "Polynomial Commitment Schemes",
-      "kzgCommitmentScheme": "KZG Commitment Scheme",
-      "additionalResources": "Additional Resources"
+      "introToZeroKnowledge": "Zero Knowledge'a Giriş",
+      "polynomialCommitmentSchemes": "Polinom Taahhüt Şemaları",
+      "kzgCommitmentScheme": "KZG Taahhüt Şeması",
+      "additionalResources": "Ek Kaynaklar"
     }
   },
   "footer": {
     "aboutScroll": {
-      "title": "About Scroll",
-      "bugBounty": "Bug Bounty",
-      "joinUs": "Join Us",
-      "healthStatus": "Health Status",
-      "privacyPolicy": "Privacy Policy",
-      "termsAndConditions": "Terms and Conditions"
+      "title": "Scroll Hakkında",
+      "bugBounty": "Hata Ödül Programı",
+      "joinUs": "Bize Katılın",
+      "healthStatus": "Sağlık Durumu",
+      "privacyPolicy": "Gizlilik Politikası",
+      "termsAndConditions": "Şartlar ve Koşullar"
     },
     "resources": {
-      "title": "Resources",
+      "title": "Kaynaklar",
       "scrollDocsURL": "https://docs.scroll.io/",
       "blog": "Blog",
-      "documentation": "Documentation",
-      "brandKit": "Brand Kit",
-      "audits": "Audits"
+      "documentation": "Dokümantasyon",
+      "brandKit": "Marka Kiti",
+      "audits": "Denetimler"
     },
     "followUs": {
-      "title": "Follow Us"
+      "title": "Bizi Takip Edin"
     }
   },
   "pageNotFound": {
-    "title": "Page not found",
-    "text": "We're sorry, but we couldn't find the page you were looking for."
+    "title": "Sayfa bulunamadı",
+    "text": "Üzgünüz, aradığınız sayfa bulunamadı."
   },
   "rpcTable": {
-    "rpcServerAddress": "RPC Server Address",
-    "height": "Height",
-    "latency": "Latency",
-    "score": "Score",
-    "privacy": "Privacy",
-    "addNetwork": "Add Network",
-    "connect": "Connect",
-    "sorting": "Sorting"
+    "rpcServerAddress": "RPC Sunucu Adresi",
+    "height": "Yükseklik",
+    "latency": "Gecikme",
+    "score": "Puan",
+    "privacy": "Gizlilik",
+    "addNetwork": "Ağ Ekle",
+    "connect": "Bağlan",
+    "sorting": "Sıralama"
   },
   "notTranslated": {
-    "notTranslated": "This page has not been translated yet."
+    "notTranslated": "Bu sayfanın çevirisi henüz yapılmadı."
   }
 }
