@@ -126,7 +126,7 @@
       "bridge": "Köprü",
       "crossDomainMessaging": "Alanlar Arası Mesajlaşma",
       "depositGateways": "Yatırım Ağ Geçitleri",
-      "withdrawGateways": "Çekim Geçitleri",
+      "withdrawGateways": "Çekim Ağ Geçitleri",
 
       "sequencer": "Sıralayıcı",
       "executionNode": "Yürütme Düğümü",

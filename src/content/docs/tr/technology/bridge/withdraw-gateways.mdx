@@ -1,7 +1,7 @@
 ---
 section: technology
 date: Last Modified
-title: "Çekim Geçitleri"
+title: "Çekim Ağ Geçitleri"
 lang: "tr"
 permalink: "technology/bridge/withdraw-gateways"
 whatsnext: { "Sıralayıcı": "/tr/technology/sequencer/execution-node/" }
@@ -33,7 +33,7 @@ Sonraki bölümlerde farklı tokenlerin nasıl geri çekildiğinin ayrıntılar�
 
 ## ETH'i Çekme
 
-ETH tokeninin çekilmesi şu şekilde çalışır.
+ETH tokenının çekilmesi şu şekilde çalışır.
 
 1. `L2GatewayRouter`, ETH'i L2'den L1'e çekmek için üç işlev sağlar. `withdrawETHAndCall` işlevi, aynı anda ETH'i çekebilir ve bir sözleşme çağrısı gerçekleştirebilir.
 
@@ -81,19 +81,19 @@ ERC20 tokenlarının geri çekilmesi şu şekilde çalışır.
 
 Standart ve özel ERC20 tokenlarının geri çekilmesi aşağıdaki şekilde gerçekleşir.
 
-3. `L2StandardERC20Gateway` veya `L2CustomERC20Gateway` sözleşmesi, çekilen ERC20 tokenini yakar, çekilme işlemini bir mesaja kodlar ve `L2ScrollMessenger`a gönderir.
-4. L1 para çekme işleminin kendisi, L1'deki para çekme işlemlerini tamamlamak için `L1ScrollMessenger.relayMessageWithProof` fonksiyonunu çağırır. Standart veya özel ERC20 tokeninin çekilmesi durumunda, işlem sırasıyla `L1StandardERC20Gateway` veya `L1CustomERC20Gateway` sözleşmesinde `finalizeWithdrawERC20` fonksiyonunu çağırır.
-    - `L1StandardERC20Gateway` sözleşmesinde, eğer bu bir ERC20 tokeninin ilk çekilme işlemiyse, `finalizeWithdrawERC20` işlevi, eşlemeyi `tokenMapping`de L1 token adresinden L2 token adresine güncelleyecektir.
+3. `L2StandardERC20Gateway` veya `L2CustomERC20Gateway` sözleşmesi, çekilen ERC20 tokenını yakar, çekilme işlemini bir mesaja kodlar ve `L2ScrollMessenger`a gönderir.
+4. L1 para çekme işleminin kendisi, L1'deki para çekme işlemlerini tamamlamak için `L1ScrollMessenger.relayMessageWithProof` fonksiyonunu çağırır. Standart veya özel ERC20 tokenının çekilmesi durumunda, işlem sırasıyla `L1StandardERC20Gateway` veya `L1CustomERC20Gateway` sözleşmesinde `finalizeWithdrawERC20` fonksiyonunu çağırır.
+    - `L1StandardERC20Gateway` sözleşmesinde, eğer bu bir ERC20 tokenının ilk çekilme işlemiyse, `finalizeWithdrawERC20` işlevi, eşlemeyi `tokenMapping`de L1 token adresinden L2 token adresine güncelleyecektir.
 5. L1 ERC20 token ağ geçidi, kilitli ERC20 tokenlarını kendisinden L1'deki alıcı adresine aktararak serbest bırakır.
 6. Kullanıcı L2'de `withdrawERC20AndCall` çağırırsa ağ geçitleri ek verilerle hedef L1 sözleşmesini arayacaktır.
 
-### WETH Tokeni
+### WETH Tokenı
 
-L2'de Wrapped ETH tokeni için özel bir ağ geçidi `L2WETHGateway` sağlıyoruz ve ağ geçidi adresini `L2GatewayRouter`a kaydediyoruz. WETH tokeninin geri çekilmesi şu şekilde çalışır.
+L2'de Wrapped ETH tokenı için özel bir ağ geçidi `L2WETHGateway` sağlıyoruz ve ağ geçidi adresini `L2GatewayRouter`a kaydediyoruz. WETH tokenının geri çekilmesi şu şekilde çalışır.
 
-3. `L2WETHGateway`, çekilen WETH tokenını kendisine aktarır ve WETH tokenını yerel ETH tokenine dönüştürür. ETH tokeni daha sonra `L2ScrollMessenger` sözleşmesine geri gönderilir.
+3. `L2WETHGateway`, çekilen WETH tokenını kendisine aktarır ve WETH tokenını yerel ETH tokenına dönüştürür. ETH tokenı daha sonra `L2ScrollMessenger` sözleşmesine geri gönderilir.
 4. `L2WETHGateway`, token çekme mesajını kodlar ve bunu `L2ScrollMessenger`a iletir.
-5. L1 para çekme işleminin kendisi, L1'de para çekme işlemini tamamlamak için `L1ScrollMessenger.relayMessageWithProof` fonksiyonunu çağırır. WETH tokeninin çekilmesi durumunda, işlem `L1WETHGateway.finalizeWithdrawERC20` çağrısını yapar ve ETH cinsinden çekilen tutarı `L1WETHGateway`e gönderir.
+5. L1 para çekme işleminin kendisi, L1'de para çekme işlemini tamamlamak için `L1ScrollMessenger.relayMessageWithProof` fonksiyonunu çağırır. WETH tokenının çekilmesi durumunda, işlem `L1WETHGateway.finalizeWithdrawERC20` çağrısını yapar ve ETH cinsinden çekilen tutarı `L1WETHGateway`e gönderir.
 6. 'L1WETHGateway', çekilen ETH'i tekrar L1 WETH token'a sarar ve L1'deki alıcı adresine aktarır.
 7. Kullanıcı L2'de `withdrawERC20AndCall` fonksiyonunu çağırırsa, `L1WETHGateway` ek verilerle birlikte hedef L1 adresini çağıracaktır.
 
