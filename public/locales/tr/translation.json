@@ -113,7 +113,7 @@
       "introduction": "Giriş",
       "principles": "Prensipler",
       "scrollArchitecture": "Scroll Mimarisi",
-      "scrollUpgrades": "Scroll Güncellemeleri",
+      "scrollUpgrades": "Scroll Yükseltmeleri",
       "overview": "Genel Bakış",
 
       "scrollChain": "Scroll Zinciri",
@@ -125,7 +125,7 @@
 
       "bridge": "Köprü",
       "crossDomainMessaging": "Alanlar Arası Mesajlaşma",
-      "depositGateways": "Yatırım Ağ Geçitleri (Deposit Gateways)",
+      "depositGateways": "Yatırım Ağ Geçitleri",
       "withdrawGateways": "Çekim Geçitleri",
 
       "sequencer": "Sıralayıcı",
