@@ -1,28 +1,25 @@
 ---
 section: developers
 date: Last Modified
-title: "Contract Deployment Tutorial"
-lang: "en"
+title: "Hướng dẫn Triển khai Hợp đồng Thông minh"
+lang: "vi"
 permalink: "developers/guides/contract-deployment-tutorial"
-excerpt: "The Scroll Sepolia Testnet allows the community to deploy smart contracts on Scroll. In this tutorial, we will teach you how to deploy a contract on Scroll Sepolia."
-whatsnext: { "Scroll Messenger Cross-chain Interaction": "/developers/guides/scroll-messenger-cross-chain-interaction/" }
+excerpt: "Mạng thử nghiệm Scroll Sepolia cho phép cộng đồng triển khai các hợp đồng thông minh trên Scroll. Trong hướng dẫn này, chúng ta sẽ hướng dẫn bạn cách triển khai một hợp đồng trên Scroll Sepolia."
+whatsnext: { "Tương Tác Mạng Scroll Messenger Liên chuỗi": "/developers/guides/scroll-messenger-cross-chain-interaction/" }
 ---
 
 import Aside from "../../../../../components/Aside.astro"
 
-The Scroll Sepolia Testnet allows anyone to deploy a smart contract on Scroll. In this tutorial, you will learn how to deploy a contract on Scroll Sepolia using common tools for developing on Ethereum. This [demo repo](https://github.com/scroll-tech/scroll-guides/tree/main/contract-deploy-demo) illustrates contract deployment with [Hardhat](https://hardhat.org/) and [Foundry](https://github.com/foundry-rs/foundry).
+Mạng thử nghiệm Scroll Sepolia cho phép bất kỳ ai triển khai một hợp đồng thông minh trên Scroll. Trong hướng dẫn này, bạn sẽ học cách triển khai một hợp đồng trên Scroll Sepolia bằng cách sử dụng các công cụ phổ biến cho việc phát triển trên Ethereum. [Repo demo](https://github.com/scroll-tech/scroll-guides/tree/main/contract-deploy-demo) này minh họa việc triển khai hợp đồng với [Hardhat](https://hardhat.org/) và [Foundry](https://github.com/foundry-rs/foundry).
 
-<Aside type="tip" title="Got Testnet ETH?">
-  Before you start deploying the contract, you need to request test tokens from a Sepolia faucet and use the
-  [bridge](https://scroll.io/bridge) to transfer some test ETH from _Sepolia_ to _Scroll Sepolia_. Alternatively, you
-  could acquire Scroll Sepolia ETH directly. See our [Faucet](/user-guide/faucet/) and [Bridge](/user-guide/bridge/)
-  guides for help.
+<Aside type="tip" title="Có ETH Thử nghiệm chưa?">
+  Trước khi bạn bắt đầu triển khai hợp đồng, bạn cần yêu cầu các mã thông báo thử nghiệm từ một vòi phun Sepolia và sử dụng [cầu](https://scroll.io/bridge) để chuyển một số ETH thử nghiệm từ _Sepolia_ sang _Scroll Sepolia_. Hoặc bạn có thể mua ETH thử nghiệm trực tiếp từ Scroll Sepolia. Xem hướng dẫn [Vòi phun](/user-guide/faucet/) và [Cầu](/user-guide/bridge/) của chúng tôi để biết thêm chi tiết.
 </Aside>
 
-## Deploy contracts with Hardhat
+## Triển khai hợp đồng với Hardhat
 
-1. If you haven't already, install [nodejs](https://nodejs.org/en/download/) and [yarn](https://classic.yarnpkg.com/lang/en/docs/install).
-2. Clone the repo and install dependencies:
+1. Nếu bạn chưa có, hãy cài đặt [nodejs](https://nodejs.org/en/download/) và [yarn](https://classic.yarnpkg.com/lang/en/docs/install).
+2. Sao chép repo và cài đặt các phụ thuộc:
 
    ```shell
    git clone https://github.com/scroll-tech/scroll-guides.git
@@ -30,33 +27,33 @@ The Scroll Sepolia Testnet allows anyone to deploy a smart contract on Scroll. I
    yarn install
    ```
 
-3. Create a `.env` file following the example `.env.example` in the root directory. Change `PRIVATE_KEY` to your own account private key in the `.env`.
+3. Tạo một tệp `.env` theo ví dụ trong tệp `.env.example` trong thư mục gốc. Thay đổi `PRIVATE_KEY` thành khóa riêng của bạn trong tệp `.env`.
 
-4. Run `yarn compile` to compile the contract.
+4. Chạy `yarn compile` để biên dịch hợp đồng.
 
-5. Run `yarn deploy:scrollTestnet` to deploy the contract on the Scroll Sepolia Testnet.
+5. Chạy `yarn deploy:scrollTestnet` để triển khai hợp đồng trên mạng thử nghiệm Scroll Sepolia.
 
-6. Run `yarn test` for hardhat tests.
+6. Chạy `yarn test` để chạy các bài kiểm tra hardhat.
 
-## Deploy contracts with Foundry
+## Triển khai hợp đồng với Foundry
 
-1. Clone the repo:
+1. Sao chép kho lưu trữ:
 
    ```shell
    git clone https://github.com/scroll-tech/scroll-guides.git
    cd scroll-guides/contract-deploy-demo
    ```
 
-2. Install Foundry:
+2. Cài đặt Foundry:
 
    ```shell
    curl -L https://foundry.paradigm.xyz | bash
    foundryup
    ```
 
-3. Run `forge build` to build the project.
+3. Chạy lệnh `forge build` để xây dựng dự án.
 
-4. Deploy your contract with Foundry:
+4. Triển khai hợp đồng của bạn bằng Foundry:
 
    ```bash
    forge create --rpc-url https://sepolia-rpc.scroll.io/ \
@@ -67,10 +64,10 @@ The Scroll Sepolia Testnet allows anyone to deploy a smart contract on Scroll. I
      contracts/Lock.sol:Lock
    ```
 
-   - `<lock_amount>` is the amount of test `ETH` to be locked in the contract. Try setting this to some small amount, like `0.0000001ether`.&#x20;
-   - `<unlock_time>` is the Unix timestamp after which the funds locked in the contract will become available for withdrawal. Try setting this to some Unix timestamp in the future, like `1696118400` (this Unix timestamp corresponds to October 1, 2023).
+   - `<lock_amount>` là số lượng `ETH` thử nghiệm sẽ được khóa trong hợp đồng. Hãy thử đặt giá trị này thành một số nhỏ, như `0.0000001ether`.
+   - `<unlock_time>` là dấu thời gian Unix sau đó số tiền khóa trong hợp đồng sẽ trở thành có sẵn để rút ra. Hãy thử đặt giá trị này thành một dấu thời gian Unix trong tương lai, như `1696118400` (dấu thời gian Unix này tương ứng với ngày 1 tháng 10 năm 2023).
 
-   For example:
+   Ví dụ:
 
    ```bash
    forge create --rpc-url https://sepolia-rpc.scroll.io/ \
@@ -80,6 +77,6 @@ The Scroll Sepolia Testnet allows anyone to deploy a smart contract on Scroll. I
      --legacy contracts/Lock.sol:Lock
    ```
 
-## Questions and Feedback
+## Câu hỏi và Phản hồi
 
-Thank you for participating in and developing on the Scroll Sepolia Testnet! If you encounter any issues, join our [Discord](https://discord.gg/scroll) and ask us in the `#testnet-devs` channel.
+Cảm ơn bạn đã tham gia và phát triển trên Mạng thử nghiệm Scroll Sepolia! Nếu bạn gặp bất kỳ vấn đề nào, hãy tham gia [Discord](https://discord.gg/scroll) của chúng tôi và hỏi ở kênh #testnet-devs.
