@@ -1,91 +1,77 @@
 ---
 section: developers
 date: Last Modified
-title: "Building on Scroll"
-lang: "en"
+title: "Xây dựng trên Scroll"
+lang: "vn"
 permalink: "developers/"
-excerpt: "Building on Scroll feels just like Ethereum, and you can bring your favorite tooling and contracts with you."
+excerpt: "Xây dựng trên Scroll có cảm giác giống như Ethereum và bạn có thể mang theo công cụ và hợp đồng yêu thích của mình."
 whatsnext: { "Developer Quickstart": "/developers/developer-quickstart" }
 ---
 
 import Aside from "../../../../components/Aside.astro"
 import ToggleElement from "../../../../components/ToggleElement.astro"
 
-**Welcome to the Scroll developer documentation!**
+**Chào mừng bạn đến với tài liệu dành cho nhà phát triển Scroll!**
 
-Scroll is its own Layer 2 network built on Ethereum (more specifically, a “zero knowledge rollup”).
+Scroll là mạng Lớp 2 của riêng nó được xây dựng trên Ethereum (cụ thể hơn là “Bản tổng hợp kiến ​​thức bằng không”).
 
-If you’re experienced in building on Ethereum, your code, dependencies, and tooling work with Scroll out of the box. This is possible because our network is compatible with EVM bytecode and designed to feel just like developing on Ethereum.
+Nếu bạn có kinh nghiệm xây dựng trên Ethereum thì mã, phần phụ thuộc và công cụ của bạn sẽ hoạt động với Scroll out of the box. Điều này có thể thực hiện được vì mạng của chúng tôi tương thích với mã byte EVM và được thiết kế để mang lại cảm giác giống như đang phát triển trên Ethereum.
 
 <Aside type="tip" title="New to zero knowledge rollups?">
-Scroll gains its security and speed by executing transactions off-chain, and also producing a cryptographic proof that
-the transactions were executed correctly. This cryptographic proof is verified in a smart contract on Layer 1,
-ensuring that all code executed on the Scroll Layer 2 behaves just as if it were executed on Ethereum Layer 1.
+Scroll đạt được tính bảo mật và tốc độ bằng cách thực hiện các giao dịch ngoài chuỗi và cũng tạo ra bằng chứng mật mã rằng các giao dịch đã được thực hiện chính xác. Bằng chứng mật mã này được xác minh trong hợp đồng thông minh trên Lớp 1, đảm bảo rằng tất cả mã được thực thi trên Lớp cuộn 2 hoạt động giống như khi nó được thực thi trên Lớp 1 Ethereum.
 
-[Learn more about Scroll’s architecture →](/technology)
+[Học nhiều hơn về Scroll’s architecture →](/technology)
 
 </Aside>
 
-## Getting Started
+## Bắt đầu
 
-**Looking to build on the Scroll?**
+**Bạn đang tìm cách xây dựng trên Scroll?**
 
-- For the essentials: Check out the [Developer Quickstart](/developers/developer-quickstart)
-- For a tutorial walking through deploying your first smart contract on Scroll, read our [contract deployment tutorial](/developers/guides/contract-deployment-tutorial)
-- We also have a number of [deployed contract addresses](/developers/scroll-contracts) to build on.
+- Để biết thông tin cần thiết: Hãy xem [Bắt đầu nhanh dành cho nhà phát triển](/developers/developer-quickstart) 
+- Để biết hướng dẫn cách triển khai hợp đồng thông minh đầu tiên của bạn trên Scroll, hãy đọc [Hướng dẫn triển khai hợp đồng](/developers/guides/contract-deployment-tutorial) của chúng tôi 
+- Chúng tôi cũng có một số [Địa chỉ hợp đồng đã triển khai](/developers/scroll-contracts) để xây dựng.
 
-## Why Build on Scroll?
+
+## Tại sao lại xây dựng trên Scroll?
 
 <ToggleElement anchor="throughput">
   <div slot="title">Throughput — Scroll creates more secure blockspace for Ethereum.</div>
   <p>
-    ZK Rollups allow for more activity on the network, minimizing congestion. By inheriting the security of Ethereum,
-    which verifies the behavior of the network using zero knowledge proofs, Scroll can process more transactions without
-    compromising on decentralization.
+   ZK Rollups cho phép nhiều hoạt động hơn trên mạng, giảm thiểu tắc nghẽn. Bằng cách kế thừa tính bảo mật của Ethereum, xác minh hành vi của mạng bằng cách sử dụng bằng chứng kiến ​​thức bằng không, Scroll có thể xử lý nhiều giao dịch hơn mà không cần thỏa hiệp về sự phân quyền.
   </p>
 </ToggleElement>
 
 <ToggleElement anchor="cost">
   <div slot="title">Cost — Scroll saves users gas fees.</div>
   <p>
-    On Ethereum, competition for blockspace results in higher costs per transaction, as each transaction makes a bid to
-    be included in the next block. Scroll leverages recent breakthroughs in zero knowledge proofs and hardware
-    acceleration to vastly increase secure blockspace and minimize transaction costs for users.
+    Trên Ethereum, sự cạnh tranh giành không gian khối dẫn đến chi phí cho mỗi giao dịch cao hơn vì mỗi giao dịch đều đặt giá thầu để được đưa vào khối tiếp theo. Scroll tận dụng những đột phá gần đây về phần cứng và bằng chứng kiến ​​thức bằng không tăng tốc để tăng đáng kể không gian khối an toàn và giảm thiểu chi phí giao dịch cho người dùng.
   </p>
 </ToggleElement>
 <ToggleElement anchor="speed">
   <div slot="title">Speed — Scroll delivers feedback to users, faster.</div>
   <p>
-    After the merge, Ethereum blocks reliably confirm every 12 seconds. Scroll blocks are minted every 3 seconds, and
-    for the sake of lower-risk operations, transactions can be assumed to be final once included in a block. This opens
-    up new possibilities for on-chain interaction in social and gaming applications.
+    Sau khi hợp nhất, các khối Ethereum được xác nhận một cách đáng tin cậy cứ sau 12 giây. Các khối cuộn được tạo ra cứ sau 3 giây và vì mục đích hoạt động có rủi ro thấp hơn, các giao dịch có thể được coi là cuối cùng sau khi được đưa vào một khối. Điều này mở ra nâng cao các khả năng mới cho tương tác trực tuyến trong các ứng dụng xã hội và trò chơi.
   </p>
 </ToggleElement>
 <ToggleElement anchor="alignment">
   <div slot="title">Alignment — Scroll builds on Ethereum's vision.</div>
   <p>
-    Scroll builds on Ethereum’s vision. Our ethos is to build Ethereum, not to splinter it. Decentralization,
-    permissionlessness, censorship-resistance, and community ownership are the core of what we do and the roadmap we’re
-    building. We believe in open-source software, and we work closely with the Ethereum Foundation’s Privacy and Scaling
-    Explorations team to support their work on a zkEVM that might someday be the heart of Ethereum.
+    Scroll được xây dựng dựa trên tầm nhìn của Ethereum. Đặc tính của chúng tôi là xây dựng Ethereum chứ không phải chia nhỏ nó. Phân quyền, không được phép, chống kiểm duyệt và quyền sở hữu cộng đồng là cốt lõi của những gì chúng tôi làm và lộ trình của chúng tôi xây dựng. Chúng tôi tin tưởng vào phần mềm nguồn mở và chúng tôi hợp tác chặt chẽ với Chính sách quyền riêng tư và mở rộng quy mô của Ethereum Foundation Nhóm thám hiểm hỗ trợ công việc của họ trên zkEVM mà một ngày nào đó có thể trở thành trái tim của Ethereum.
   </p>
   <p>
-    We also work with governance DAOs and other open-source protocols to make sure that as applications are deployed,
-    we’re working to grow their impact — whether that be in public goods, core infrastructure, or the next generation of
-    zero knowledge use cases.
+    Chúng tôi cũng làm việc với các DAO quản trị và các giao thức nguồn mở khác để đảm bảo rằng khi các ứng dụng được triển khai, chúng tôi đang nỗ lực tăng cường tác động của chúng — cho dù đó là về hàng hóa công cộng, cơ sở hạ tầng cốt lõi hay thế hệ tiếp theo của không có trường hợp sử dụng kiến ​​thức.
   </p>
 </ToggleElement>
 <ToggleElement anchor="community">
   <div slot="title">Community — Scroll brings together users and builders.</div>
   <p>
-    We know the challenges of building in the open and getting user engagement! Scroll has a blossoming community of
-    users and builders, and with a Discord community of over 500,000 members eager to try out applications on our
-    testnet or mainnet, we’re excited to connect builders with users that can provide real-world feedback.
+    Chúng tôi biết những thách thức của việc xây dựng theo hướng mở và thu hút sự tham gia của người dùng! Scroll có một cộng đồng đang nở rộ người dùng và nhà xây dựng cũng như với cộng đồng Discord gồm hơn 500.000 thành viên mong muốn dùng thử các ứng dụng trên của chúng tôi testnet hoặc mainnet, chúng tôi rất vui được kết nối các nhà xây dựng với những người dùng có thể cung cấp phản hồi trong thế giới thực.
   </p>
 </ToggleElement>
 
-## Thank you for building with us.
+## Cảm ơn bạn đã xây dựng với chúng tôi.
 
-We’re working to bring more integrations and support infrastructure to the network, and are excitedly working towards our Mainnet release.
+Chúng tôi đang nỗ lực mang lại nhiều tích hợp và cơ sở hạ tầng hỗ trợ hơn cho mạng và đang rất hào hứng hướng tới việc phát hành Mainnet của mình.
 
-Join our growing developer community. You can find us on [Discord](https://discord.gg/scroll), join our [discussion forum](https://community.scroll.io/), or follow our progress on [Twitter](https://twitter.com/Scroll_ZKP).
+Tham gia cộng đồng nhà phát triển đang phát triển của chúng tôi. Bạn có thể tìm thấy chúng tôi trên [Discord](https://discord.gg/scroll), tham gia [diễn đàn thảo luận](https://community.scroll.io/) của chúng tôi hoặc theo dõi tiến trình của chúng tôi trên [Twitter](https: //twitter.com/Scroll_ZKP).
