@@ -2,65 +2,65 @@
 section: developers
 date: Last Modified
 title: "Transaction Fees on Scroll"
-lang: "en"
+lang: "vn"
 permalink: "developers/transaction-fees-on-scroll"
 whatsnext: { "Contract Deployment Tutorial": "/developers/guides/contract-deployment-tutorial/" }
-excerpt: "Understand how L1 and L2 transaction fees work on Scroll "
+excerpt: "Hiểu cách hoạt động của phí giao dịch L1 và L2 trên Scroll"
 ---
 
 import Aside from "../../../../components/Aside.astro"
 
-## Overview
+## Tổng quan
 
-Scroll fees are notably lower than on its supporting layer. For users and developers, transaction fees on Scroll appear to work similarly to those on Ethereum mainnet, and existing tools, wallets, and code will likely work as if they were. However, the transaction fee shown in the wallet isn't the whole picture unless the software is specifically aware of Scroll's fee calculations.
+Phí cuộn thấp hơn đáng kể so với lớp hỗ trợ của nó. Đối với người dùng và nhà phát triển, phí giao dịch trên Scroll dường như hoạt động tương tự như trên mạng chính Ethereum và các công cụ, ví và mã hiện có có thể sẽ hoạt động như cũ. Tuy nhiên, phí giao dịch hiển thị trong ví không phải là toàn bộ bức tranh trừ khi phần mềm nhận thức cụ thể về cách tính phí của Scroll.
 
-Due to the design of L2 rollups, transaction costs depend on the L1's costs. To leverage Ethereum's security, Scroll must account for the cost of the transaction data and proofs that must be stored and verified on the L1.
+Do thiết kế tổng hợp L2, chi phí giao dịch phụ thuộc vào chi phí của L1. Để tận dụng tính bảo mật của Ethereum, Scroll phải tính đến chi phí của dữ liệu giao dịch và bằng chứng phải được lưu trữ và xác minh trên L1.
 
-Compared to Ethereum mainnet, Scroll introduces some new dimensions to transaction fee calculation to do this. The final cost of a transaction is constructed from several parts:
+So với mạng chính Ethereum, Scroll giới thiệu một số khía cạnh mới trong tính toán phí giao dịch để thực hiện việc này. Chi phí cuối cùng của một giao dịch được xây dựng từ nhiều phần:
 
-- **L2 fee**
-  - Calculated in the same manner as on the L1, equaling `gas_price * gas_used`
-- **L1 fee**
-  - This additional fee covers sending data to L1 for data availability. Transactions initiated on the L1 do not pay this fee.
-  - It is calculated based on the size of the transaction's calldata
-  - ETH is automatically deducted from the user’s balance on Scroll for the fee
+- **Phí L2**
+  - Tính tương tự như trên L1, bằng `gas_price * gas_used`
+- **Phí L1**
+  - Khoản phí bổ sung này bao gồm việc gửi dữ liệu đến L1 để đảm bảo tính khả dụng của dữ liệu. Các giao dịch được thực hiện trên L1 không phải trả khoản phí này. 
+  - Nó được tính dựa trên kích thước của calldata của giao dịch 
+  - ETH được tự động khấu trừ khỏi số dư của người dùng trên Scroll để trả phí
 
-At a high level, the **L2 fee** is the cost of executing your transaction on the L2 sequencer, and the **L1 fee** is the cost of committing that transaction onto L1.
 
-In short, `totalTxFee = l2Fee + l1Fee`, all denominated in ETH, the native gas token for the Scroll network.
+Ở mức cao, **phí L2** là chi phí thực hiện giao dịch của bạn trên trình sắp xếp L2 và **phí L1** là chi phí thực hiện giao dịch đó trên L1.
+
+Nói tóm lại, `totalTxFee = l2Fee + l1Fee`, tất cả đều có mệnh giá bằng ETH, mã thông báo gas gốc cho mạng Scroll.
 
 <Aside type="note" title="Where are transaction fees sent?">
-All tx fees are collected into the `L2ScrollFeeVault` contract balance. This contract also tracks the amount we’ve historically withdrawn to L1 using `totalProcessed()(uint256)`.
+Tất cả phí tx được thu vào số dư hợp đồng `L2ScrollFeeVault`. Hợp đồng này cũng theo dõi số tiền trước đây chúng tôi đã rút về L1 bằng cách sử dụng `totalProcessed()(uint256)`.
 
-The block producer receives no direct reward, and the `COINBASE` opcode returns the fee vault address.
+Nhà sản xuất khối không nhận được phần thưởng trực tiếp và opcode `COINBASE` trả về địa chỉ kho tiền phí.
 
 </Aside>
 
-## L2 Fee
+## Phí trên L2
 
-Transactions on Scroll, like on Ethereum, must pay the cost of executing their computations and storing the data they produce.
+Các giao dịch trên Scroll, giống như trên Ethereum, phải trả chi phí thực hiện các tính toán và lưu trữ dữ liệu mà chúng tạo ra.
 
-### Calculating the Execution Fee
+### Tính phí thực hiện
 
-The L2 execution fee is straightforward:
-
+Phí thực hiện L2 rất đơn giản:
 ```javascript
 l2TransactionExecutionFee = l2TransactionGasUsed * l2TransactionGasPrice
 ```
 
-The total fee depends on what the transaction does (`l2TransactionGasUsed`) as well as the current market conditions (`l2TransactionGasPrice`). Users set the gas price, and the "gas used" is assessed by calling the `estimateGas` endpoint on a Scroll node.
+Tổng phí phụ thuộc vào nội dung giao dịch thực hiện (`l2TransactionGasUsed`) cũng như các điều kiện thị trường hiện tại (`l2TransactionGasPrice`). Người dùng đặt giá gas và "gas đã sử dụng" được đánh giá bằng cách gọi điểm cuối `estimateGas` trên nút Scroll.
 
-In other words, the execution fee is calculated precisely like pre-[EIP1559](https://eips.ethereum.org/EIPS/eip-1559) Ethereum.
+Nói cách khác, phí thực thi được tính toán chính xác giống như pre-[EIP1559](https://eips.ethereum.org/EIPS/eip-1559) Ethereum.
 
-## L1 Fee
+## Phí trên L1
 
-Every transaction's calldata must be committed to Ethereum, which incurs an additional transaction fee, referred to as the "L1 Fee". Without doing this, Scroll couldn't be reconstructed from only L1 data.
+Dữ liệu cuộc gọi của mọi giao dịch phải được cam kết với Ethereum, điều này sẽ phát sinh phí giao dịch bổ sung, được gọi là "Phí L1". Nếu không làm điều này, Scroll không thể được xây dựng lại chỉ từ dữ liệu L1.
 
-Transactions aren't committed 1-by-1 -- they are collected in batches of blocks (and blocks of transactions). The cost of an individual transaction is computed based on the zeros and non-zero bytes in its payload.
+Các giao dịch không được thực hiện từng bước một -- chúng được thu thập theo lô khối (và khối giao dịch). Chi phí của một giao dịch riêng lẻ được tính toán dựa trên các byte số 0 và khác 0 trong tải trọng của nó.
 
-### Estimating the L1 Data Fee
+### Ước tính phí dữ liệu L1
 
-Scroll has a pre-deployed `L1GasPriceOracle`, accessible on both Scroll and Scroll Sepolia at ([`0x5300000000000000000000000000000000000002`](https://sepolia-blockscout.scroll.io/address/0x5300000000000000000000000000000000000002)). It provides a `getL1Fee` method to estimate the L1 data fee for a given transaction's raw data.
+Scroll có `L1GasPriceOracle` được triển khai trước, có thể truy cập trên cả Scroll và Scroll Sepolia tại ([`0x5300000000000000000000000000000000000002`](https://sepolia-blockscout.scroll.io/address/0x53000000000000000000000000 0000000000000002)). Nó cung cấp phương pháp `getL1Fee` để ước tính phí dữ liệu L1 cho dữ liệu thô của một giao dịch nhất định.
 
 ```solidity
 function getL1Fee(bytes memory _data) external view override returns (uint256);
@@ -68,30 +68,28 @@ function getL1Fee(bytes memory _data) external view override returns (uint256);
 
 <Aside type="note" title="What happens if gas prices spike on L1?">
 
-Once the sequencer has processed a transaction, a user's L1 fee is locked in, and any fluctuations will not affect what a user pays.
+Khi trình sắp xếp thứ tự đã xử lý giao dịch, phí L1 của người dùng sẽ bị khóa và mọi biến động sẽ không ảnh hưởng đến số tiền người dùng thanh toán.
 
 <br />
-Because of Scroll's short block times, any L1 gas changes between a transaction's submission and its inclusion in a block
-should be minimal. The sequencer will absorb any changes to L1 gas costs between a transaction's inclusion in a block and
-when the sequencer commits the data to L1.
+Do thời gian tạo khối của Scroll ngắn nên bất kỳ lượng khí L1 nào cũng thay đổi giữa quá trình gửi giao dịch và việc đưa giao dịch đó vào khối nên ở mức tối thiểu. Trình sắp xếp thứ tự sẽ hấp thụ mọi thay đổi đối với chi phí gas L1 giữa việc đưa giao dịch vào khối và khi trình sắp xếp chuỗi chuyển dữ liệu sang L1.
 
 </Aside>
 
-### Calculating the L1 Data Fee with Gas Oracle
+### Tính phí dữ liệu L1 với Gas Oracle
 
-As mentioned, the `L1GasPriceOracle` is used to estimate the L1 gas fee given raw transaction data. This is a **push oracle**, updated by a relayer run by Scroll.
+Như đã đề cập, `L1GasPriceOracle` được sử dụng để ước tính phí gas L1 dựa trên dữ liệu giao dịch thô. Đây là **push oracle**, được cập nhật bởi một trình chuyển tiếp do Scroll điều hành.
 
-The data fee is based on multiple factors:
+Phí dữ liệu được tính dựa trên nhiều yếu tố:
 
-- The bytes which are `zeros` and `nonzeros` of an RLP-encoded transaction with Signature
-- `l1BaseFee` - Current base fee on the L1
-- `overhead` - Additional gas overhead of a data commitment transaction
-- `scalingFactor` - A scaling factor used to account for price spikes
-- `PRECISION` - A constant used to scale the final fee
+- Các byte là `số 0` và `khác 0` của giao dịch được mã hóa RLP bằng Chữ ký
+- `l1BaseFee` - Phí cơ bản hiện tại trên L1 
+- `chi phí chung` - Chi phí gas bổ sung của giao dịch cam kết dữ liệu 
+- `scalingFactor` - Hệ số chia tỷ lệ được sử dụng để tính mức tăng đột biến của giá 
+- `PRECISION` - Một hằng số được sử dụng để tính mức phí cuối cùng.
 
-The following steps are taken to calculate the L1 data fee:
+Các bước sau đây được thực hiện để tính phí dữ liệu L1:
 
-1. Read three fields `l1BaseFee`, `overhead`, `scalar` from the `L1GasPriceOracle` contract. The slots for these fields in the contract are:
+1. Đọc ba trường `l1BaseFee`, `overhead`, `scalar` từ hợp đồng `L1GasPriceOracle`. Các vị trí cho các trường này trong hợp đồng là:
 
    | Field     | Slot |
    | --------- | ---- |
@@ -99,15 +97,15 @@ The following steps are taken to calculate the L1 data fee:
    | overhead  | 2    |
    | scalar    | 3    |
 
-2. Count the number of zero bytes and non-zero bytes from the transaction.
-3. Calculate the L1 data fee, given `TX_DATA_ZERO_GAS = 4` and `TX_DATA_NON_ZERO_GAS = 16`[^eip-2028] and `PRECISION = 1e9`:
+2. Đếm số byte 0 và byte khác 0 từ giao dịch.
+3. Tính phí dữ liệu L1, cho trước `TX_DATA_ZERO_GAS = 4` và `TX_DATA_NON_ZERO_GAS = 16`[^eip-2028] và `PRECISION = 1e9`:
 
    ```javascript
    l1Gas = zeros * TX_DATA_ZERO_GAS + (nonzeros + 4) * TX_DATA_NON_ZERO_GAS
    l1GasFee = ((l1Gas + overhead) * l1BaseFee * scalar) / PRECISION
    ```
 
-   We reserve an additional 4 bytes in the non-zero bytes to store the number of bytes in the RLP-encoded transaction.
+Chúng tôi dự trữ thêm 4 byte trong các byte khác 0 để lưu trữ số byte trong giao dịch được mã hóa RLP.
 
 [^eip-2028]: See [EIP-2028](https://eips.ethereum.org/EIPS/eip-2028) for more info.
 
@@ -119,7 +117,7 @@ The following steps are taken to calculate the L1 data fee:
 function overhead() external view returns (uint256);
 ```
 
-Returns the current L1 fee overhead
+Trả về chi phí phí ​​L1 hiện tại
 
 #### scalar
 
@@ -127,7 +125,7 @@ Returns the current L1 fee overhead
 function scalar() external view returns (uint256);
 ```
 
-Returns the current l1 fee scalar
+Trả về phí scalar l1 hiện tại
 
 #### l1BaseFee
 
@@ -135,7 +133,7 @@ Returns the current l1 fee scalar
 function l1BaseFee() external view returns (uint256);
 ```
 
-Returns the latest known l1 base fee
+Trả về phí cơ sở l1 đã biết mới nhất
 
 #### getL1Fee
 
@@ -143,9 +141,9 @@ Returns the latest known l1 base fee
 function getL1Fee(bytes memory data) external view returns (uint256);
 ```
 
-Computes the L1 portion of the fee based on the size of the RLP encoded input transaction, the current L1 base fee, and the various dynamic parameters.
+Tính toán phần phí L1 dựa trên quy mô của giao dịch đầu vào được mã hóa RLP, phí cơ sở L1 hiện tại và các thông số động khác nhau.
 
-**Returns:** L1 fee that should be paid for the transaction
+**Trả lại:** Phí L1 phải trả cho giao dịch
 
 | Parameter | Description                                                 |
 | --------- | ----------------------------------------------------------- |
@@ -157,38 +155,38 @@ Computes the L1 portion of the fee based on the size of the RLP encoded input tr
 function getL1GasUsed(bytes memory data) external view returns (uint256);
 ```
 
-Computes the amount of L1 gas used for a transaction. Adds the overhead which represents the per-transaction gas overhead of posting the transaction and state roots to L1. Adds 74 bytes of padding to account for the fact that the input does not have a signature.
+Tính toán lượng gas L1 được sử dụng cho một giao dịch. Thêm chi phí thể hiện chi phí gas cho mỗi giao dịch khi đăng giao dịch và gốc trạng thái vào L1. Thêm 74 byte đệm để giải thích cho thực tế là đầu vào không có chữ ký.
 
-**Returns:** Amount of L1 gas used to publish the transaction.
+**Trả về:** Lượng gas L1 được sử dụng để thực hiện giao dịch.
 
 | Parameter | Description                                                 |
 | --------- | ----------------------------------------------------------- |
-| data      | Signed fully RLP-encoded transaction to get the L1 fee for. |
+| data      | Đã ký giao dịch được mã hóa RLP đầy đủ để nhận phí L1.      |
 
 ## L1 Originated Transactions
 
-When messaging from L1 to L2, the user pays all transaction fees on L1. The user pays L1 gas fees, but because of this, doesn't need to pay Scroll an L1 Data Fee. They will need to account for L2 Execution Fees in their L1 transaction though, and will need to know how much L2 gas to pay.
+Khi nhắn tin từ L1 đến L2, người dùng thanh toán toàn bộ phí giao dịch trên L1. Người dùng trả phí gas L1, nhưng vì điều này, không cần phải trả Phí dữ liệu L1. Tuy nhiên, họ sẽ cần phải tính đến Phí thực hiện L2 trong giao dịch L1 của mình và sẽ cần biết số lượng gas L2 phải trả.
 
-Contracts on L1 can use an L2 Gas Price Oracle deployed to the L1 to get the gas fee for a given transaction. The oracle also exposes the current l2BaseFee and estimated cross-domain message fee for a given gas limit.
+Các hợp đồng trên L1 có thể sử dụng Giá gas L2 mà Oracle triển khai cho L1 để nhận phí gas cho một giao dịch nhất định. Oracle cũng tiết lộ l2BaseFee hiện tại và phí tin nhắn giữa các miền ước tính cho một giới hạn gas nhất định.
 
-On mainnet, the `L2GasPriceOracle` is deployed at [`0x987e300fDfb06093859358522a79098848C33852`](https://etherscan.io/address/0x987e300fDfb06093859358522a79098848C33852).
+Trên mạng chính, `L2GasPriceOracle` được triển khai tại [`0x987e300fDfb06093859358522a79098848C33852`](https://etherscan.io/address/0x987e300fDfb06093859358522a79098848C33852).
 
-On Sepolia, an upgraded `L1MessageQueueWithGasPriceOracle` should be used, deployed to [`0xF0B2293F5D834eAe920c6974D50957A1732de763`](https://sepolia.etherscan.io/address/0xF0B2293F5D834eAe920c6974D50957A1732de763).
+Trên Sepolia, nên sử dụng `L1MessageQueueWithGasPriceOracle` đã nâng cấp, triển khai tới [`0xF0B2293F5D834eAe920c6974D50957A1732de763`](https://sepolia.etherscan.io/address/0xF0B2293F5D834eAe920c6974D50957A 1732de763).
 
-If your system supports off-chain mechanisms, you can also call `eth_estimateGas` and `eth_gasPrice` on any Scroll RPC node to get an estimate of the gas required for a given transaction.
+Nếu hệ thống của bạn hỗ trợ các cơ chế ngoài chuỗi, bạn cũng có thể gọi `eth_estimateGas` và `eth_gasprice` trên bất kỳ nút Scroll RPC nào để ước tính lượng gas cần thiết cho một giao dịch nhất định.
 
 <Aside type="danger" title="Upgrade Notice">
-After the February 2024 Bridge Upgrade, `L1GasPriceOracle` will be deprecated in favor of `L1MessageQueueWithGasPriceOracle`, which will be available at [`0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B`](https://etherscan.io/address/0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B).
+Sau đợt nâng cấp cầu tháng 2 năm 2024, `L1GasPriceOracle` sẽ không còn được dùng nữa và thay vào đó là `L1MessageQueueWithGasPriceOracle`, sẽ có tại [`0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B`](https://etherscan.io/address/0x0d7E906BD9cAFa154 b048cFa766Cc1E54E39AF9B).
 
-The upgrade is expected to be finalized on February 21, 2024, after a two-week timelock. Scroll Sepolia has already undergone this upgrade. Read more [here](https://scroll.io/blog/protocol-upgrade-bridging-cost-reduction).
+Quá trình nâng cấp dự kiến ​​sẽ hoàn tất vào ngày 21 tháng 2 năm 2024, sau khoảng thời gian hai tuần. Scroll Sepolia đã trải qua quá trình nâng cấp này. Đọc thêm [tại đây](https://scroll.io/blog/protocol-upgrade-bridging-cost-reduction).
 
 </Aside>
 {/* TODO: Add full documentation of key methods */}
 
-## Future Roadmap
+## Lộ trình tương lai
 
-Currently, the computation required for proof generation and gas for proof verification on L1 is subsidized by Scroll and various proving partners. It is partially covered by setting a floor to L2 Gas Price.
+Hiện tại, việc tính toán cần thiết để tạo bằng chứng và khí để xác minh bằng chứng trên L1 được Scroll và các đối tác chứng minh khác nhau trợ cấp. Nó được bao phủ một phần bằng cách đặt mức sàn cho Giá Gas L2.
 
-As the prover network becomes decentralized, incentives for proof generation will need to be incorporated into the protocol for the system to be sustainable and scalable.
+Khi mạng chứng minh trở nên phi tập trung, các biện pháp khuyến khích tạo ra bằng chứng sẽ cần được tích hợp vào giao thức để hệ thống có thể bền vững và có thể mở rộng.
 
-We expect the final gas cost will explicitly include the cost of this proof generation. With further protocol optimization, this cost for the user should be minimal, as each proof covers many transactions.
+Chúng tôi hy vọng chi phí khí đốt cuối cùng sẽ bao gồm rõ ràng chi phí cho việc tạo ra thử nghiệm này. Với việc tối ưu hóa giao thức hơn nữa, chi phí này đối với người dùng sẽ ở mức tối thiểu vì mỗi bằng chứng bao gồm nhiều giao dịch.
