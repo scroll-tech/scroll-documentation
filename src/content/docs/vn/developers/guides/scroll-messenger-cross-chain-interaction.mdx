@@ -1,59 +1,55 @@
 ---
 section: developers
 date: Last Modified
-title: "Scroll Messenger Cross-chain Interaction"
-lang: "en"
+title: "Tương tác chuỗi chéo của Scroll Messenger"
+lang: "vn"
 permalink: "developers/guides/scroll-messenger-cross-chain-interaction"
-whatsnext: { "Bridge ERC20 through the Custom Gateway": "/developers/guides/bridge-erc20-through-the-custom-gateway" }
-excerpt: "In this example, we will launch a dummy smart contract on either Sepolia or Scroll Sepolia testnet and interact with it from the opposite chain."
+whatsnext: { "Kết nối ERC20 thông qua Cổng tùy chỉnh": "/developers/guides/bridge-erc20-through-the-custom-gateway" }
+excerpt: "Trong ví dụ này, chúng tôi sẽ khởi chạy một hợp đồng thông minh giả trên mạng thử nghiệm Sepolia hoặc Scroll Sepolia và tương tác với nó từ chuỗi đối diện."
 ---
 
 import Aside from "../../../../../components/Aside.astro"
 
-In this example, we will launch a dummy smart contract on either Sepolia or Scroll and interact
-with it from the opposite chain. We will be using the `ScrollMessenger` that is deployed on both
-Sepolia and Scroll.
+Trong ví dụ này, chúng tôi sẽ khởi chạy một hợp đồng thông minh giả trên Sepolia hoặc Scroll và tương tác với nó từ chuỗi đối diện. Chúng tôi sẽ sử dụng `ScrollMessenger` được triển khai trên cả hai Sepolia và cuộn.
 
-## Deploying the Contracts
+## Triển khai các hợp đồng
 
-### Target Smart Contract
+### Hợp đồng thông minh mục tiêu
 
-Let’s start by deploying the target smart contract. We will use the Greeter contract for this
-example, but you can use any other contract. Deploy it to either Sepolia or Scroll. On Scroll, L1
-and L2 use the same API, so it’s up to you.
+Hãy bắt đầu bằng cách triển khai hợp đồng thông minh mục tiêu. Chúng tôi sẽ sử dụng hợp đồng Greeter cho việc này ví dụ, nhưng bạn có thể sử dụng bất kỳ hợp đồng nào khác. Triển khai nó tới Sepolia hoặc Scroll. Trên cuộn, L1 và L2 sử dụng cùng một API, vì vậy điều đó tùy thuộc vào bạn.
 
 ```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.16;
 
-// This Greeter contract will be interacted with through the ScrollMessenger across the bridge
+// Hợp đồng Greeter này sẽ được tương tác thông qua ScrollMessenger qua cầu
 contract Greeter {
   string public greeting = "Hello World!";
 
-  // This function will be called by executeFunctionCrosschain on the Operator Smart Contract
+  // Hàm này sẽ được gọi bởi executeFunctionCrosschain trên the Operator Smart Contract
   function setGreeting(string memory greeting_) public {
     greeting = greeting_;
   }
 }
 ```
 
-We will now execute `setGreeting` in a cross-chain way.
+Bây giờ chúng ta sẽ thực thi `setGreeting` theo cách xuyên chuỗi.
 
 ### Operator Smart Contract
 
-Switch to the other chain and deploy the `GreeterOperator`. So, if you deployed the `Greeter` contract on L1, deploy the `GreeterOperator` on L2 or vice versa.
+Chuyển sang chuỗi khác và triển khai `GreeterOperator`. Vì vậy, nếu bạn đã triển khai hợp đồng `Greeter` trên L1, hãy triển khai `GreeterOperator` trên L2 hoặc ngược lại.
 
 ```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.16;
 
-// The Scroll Messenger interface is the same on both L1 and L2, it allows sending cross-chain transactions
-// Let's import it directly from the Scroll Contracts library
+// Giao diện Scroll Messenger giống nhau trên cả L1 và L2, cho phép gửi giao dịch xuyên chuỗi
+// Hãy import nó trực tiếp từ thư viện Hợp đồng Scroll
 import "@scroll-tech/contracts@0.1.0/libraries/IScrollMessenger.sol";
 
-// The GreeterOperator is capable of executing the Greeter function through the bridge
+// GreeterOperator có khả năng thực thi chức năng Greeter thông qua bridge
 contract GreeterOperator {
-  // This function will execute setGreeting on the Greeter contract
+  // Hàm này sẽ thực thi setGreeting trên hợp đồng Greeter
   function executeFunctionCrosschain(
     address scrollMessengerAddress,
     address targetAddress,
@@ -74,49 +70,42 @@ contract GreeterOperator {
 }
 ```
 
-## Calling a Cross-chain Function
+## Gọi hàm chuỗi chéo
 
-We pass the message by executing `executeFunctionCrosschain` and passing the following parameters:
+Chúng tôi chuyển thông báo bằng cách thực thi `executeFunctionCrosschain` và chuyển các tham số sau:
 
-- `scrollMessengerAddress`: This will depend on where you deployed the `GreeterOperator` contract.
-  - If you deployed it on Sepolia use `0x50c7d3e7f7c656493D1D76aaa1a836CedfCBB16A`. If you deployed on Scroll Sepolia use `0xBa50f5340FB9F3Bd074bD638c9BE13eCB36E603d`.
-- `targetAddress`: The address of the `Greeter` contract on the opposite chain.
-- `value`: In this case, it is `0` because the `setGreeting`is not payable.
-- `greeting`: This is the parameter that will be sent through the message. Try passing `“This message was cross-chain!”`
+- `scrollMessengerAddress`: Điều này sẽ phụ thuộc vào nơi bạn triển khai hợp đồng `GreeterOperator`.
+  - Nếu bạn đã triển khai nó trên Sepolia, hãy sử dụng `0x50c7d3e7f7c656493D1D76aaa1a836CedfCBB16A`. Nếu bạn đã triển khai trên Scroll Sepolia, hãy sử dụng `0xBa50f5340FB9F3Bd074bD638c9BE13eCB36E603d`.
+-`targetAddress`: Địa chỉ của hợp đồng `Greeter` trên chuỗi đối diện.
+- `value`: Trong trường hợp này, nó là `0` vì `setGreeting`không được thanh toán.
+- `greeting`: Đây là tham số sẽ được gửi qua tin nhắn. Hãy thử chuyển `“This message was cross-chain!”`
 - `gasLimit`:
-  - If you are sending the message from L1 to L2, around `1000000` gas limit should be more than enough. That said, if you set this too high, and `msg.value` doesn't cover `gasLimit` * `baseFee`, the transaction will revert. If `msg.value` is greater than the gas fee, the unused portion will be refunded.
-  - If you are sending the message from L2 to L1, pass `0`, as the transaction will be completed by executing an additional transaction on L1.
+  - Nếu bạn đang gửi tin nhắn từ L1 đến L2, giới hạn gas khoảng `1000000` là quá đủ. Điều đó có nghĩa là, nếu bạn đặt giá trị này quá cao và `msg.value` không bao gồm `gasLimit` * `baseFee`, giao dịch sẽ hoàn nguyên. Nếu `msg.value` lớn hơn phí gas, phần chưa sử dụng sẽ được hoàn lại.
+  - Nếu bạn đang gửi tin nhắn từ L2 đến L1, hãy chuyển `0`, vì giao dịch sẽ được hoàn thành bằng cách thực hiện một giao dịch bổ sung trên L1.
 
-### Relay the Message when sending from L2 to L1
+### Chuyển tiếp tin nhắn khi gửi từ L2 đến L1
 
-When a transaction is passed from L2 to L1, an additional "execute withdrawal transaction" must be sent on L1. To do this, you must call `relayMessageWithProof` on the L1 Scroll Messenger
-contract from an EOA wallet.
+Khi một giao dịch được chuyển từ L2 sang L1, một thực hiện giao dịch rút tiền "execute withdrawal transaction" phải được gửi trên L1. Để làm điều này, bạn phải gọi `relayMessageWithProof` trên Messenger Scroll L1 hợp đồng từ ví EOA.
 
-You can do this directly on [Etherscan Sepolia](https://sepolia.etherscan.io/address/0x50c7d3e7f7c656493d1d76aaa1a836cedfcbb16a#writeProxyContract#F3).
-To do so, you will need to pass a Merkle inclusion proof for the bridged transaction and other parameters. You'll query these using the Scroll Bridge API.
+Bạn có thể thực hiện việc này trực tiếp trên [Etherscan Sepolia](https://sepolia.etherscan.io/address/0x50c7d3e7f7c656493d1d76aaa1a836cedfcbb16a#writeProxyContract#F3). Để làm như vậy, bạn sẽ cần phải chuyển bằng chứng bao gồm Merkle cho giao dịch bắc cầu và các thông số khác. Bạn sẽ truy vấn những thứ này bằng API Scroll Bridge.
 
-{/* TODO: finish looking into API issues */}
+{/* VIỆC CẦN LÀM: hoàn tất việc xem xét các vấn đề về API */}
 
-We're finalizing the API specifics, but for now, fetch or curl the following endpoint:
-
+Chúng tôi đang hoàn thiện các thông tin cụ thể về API nhưng hiện tại, hãy tìm nạp hoặc thu gọn điểm cuối sau:
 ```bash
 curl "https://sepolia-api-bridge.scroll.io/api/claimable?page_size=10&page=1&address=GREETER_OPERATOR_ADDRESS_ON_L2"
 ```
 
-Replace `GREETER_OPERATOR_ADDRESS_ON_L2` with your GreeterOperator contract address as launched on L2. Read more about Execute Withdraw transactions
-in the [Scroll Messenger](/developers/l1-and-l2-bridging/the-scroll-messenger) article.
+Thay thế `GREETER_OPERATOR_ADDRESS_ON_L2` bằng địa chỉ hợp đồng GreeterOperator của bạn như đã ra mắt trên L2. Đọc thêm về Thực hiện giao dịch Rút tiền trong bài viết [Scroll Messenger](/developers/l1-and-l2-bridge/the-scroll-messenger).
 
 <Aside type="danger" title="Experimental API">
-  This API was made for our Bridge UI. It is not yet finalized and may change in the future. We will update this guide
-  when the API is finalized.
+ API này được tạo cho Bridge UI của chúng tôi. Nó vẫn chưa được hoàn thiện và có thể thay đổi trong tương lai. Chúng tôi sẽ cập nhật hướng dẫn này khi API được hoàn thiện.
 </Aside>
 
 <Aside type="caution" title="Anyone can execute your L2 → L1 Message">
-  `relayMessageWithProof` is fully permissionless, so anyone can call it on your behalf if they're willing to pay the L1
-  gas fees. This feature allows for additional support infrastructure, including tooling to automate this process for
-  applications and users.
+  `relayMessageWithProof` hoàn toàn không được phép, vì vậy bất kỳ ai cũng có thể gọi nó thay mặt bạn nếu họ sẵn sàng trả L1 phí gas. Tính năng này cho phép cơ sở hạ tầng hỗ trợ bổ sung, bao gồm công cụ để tự động hóa quy trình này cho ứng dụng và người dùng.
 </Aside>
 
-After executing and confirming the transaction on both L1 and L2, the new state of `greeting` on the `Greeter` contract should be `“This message was cross-chain!”`. Sending a message from one chain to the other should take around 20 minutes after the transactions are confirmed on the origin chain.
+Sau khi thực hiện và xác nhận giao dịch trên cả L1 và L2, trạng thái `greeting` mới trên hợp đồng `Greeter` sẽ là `“This message was cross-chain!”`. Việc gửi tin nhắn từ chuỗi này sang chuỗi khác sẽ mất khoảng 20 phút sau khi giao dịch được xác nhận trên chuỗi gốc.
 
-Congratulations, you now executed a transaction from one chain to the other using our native bridge!
+Xin chúc mừng, giờ đây bạn đã thực hiện giao dịch từ chuỗi này sang chuỗi khác bằng cách sử dụng cầu nối gốc của chúng tôi!
