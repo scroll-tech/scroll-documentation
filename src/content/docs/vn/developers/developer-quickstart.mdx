@@ -2,9 +2,9 @@
 section: developers
 date: Last Modified
 title: "Developer Quickstart"
-lang: "en"
+lang: "vn"
 permalink: "developers/developer-quickstart"
-excerpt: "Scroll Developer Quickstart helps you acquire testnet Ether, configure your network, and access all of your favorite tooling"
+excerpt: "Scroll Developer Quickstart giúp bạn lấy Ether testnet, định cấu hình mạng của bạn và truy cập tất cả công cụ yêu thích của bạn"
 whatsnext: { "Verify Your Smart Contracts": "/developers/verifying-smart-contracts" }
 ---
 
@@ -14,27 +14,27 @@ import networkSelection from "./_images/mmNetworkSelection.png"
 import injectedProviderMM from "./_images/injectedProviderMM.png"
 import ToggleElement from "../../../../components/ToggleElement.astro"
 
-With Scroll, your favorite tools for building and testing smart contracts just work.
+Với Scroll, các công cụ yêu thích của bạn để xây dựng và thử nghiệm hợp đồng thông minh sẽ hoạt động.
 
-Since Scroll is bytecode equivalent with the EVM, you’ll just need to point your favorite builder tools at a Scroll RPC Provider.
+Vì Scroll có mã byte tương đương với EVM nên bạn chỉ cần trỏ các công cụ xây dựng yêu thích của mình tới Nhà cung cấp Scroll RPC.
 
-If you run into any issues, please reach out in [our Discord](https://discord.gg/scroll).
+Nếu bạn gặp bất kỳ vấn đề nào, vui lòng liên hệ qua [Discord của chúng tôi](https://discord.gg/scroll).
 
-## Acquiring Ether
+## Thu thập Ether
 
-Scroll uses ETH as its native currency, which will be needed to pay transaction fees for deploying and interacting with the network.
+Scroll sử dụng ETH làm tiền tệ gốc, số tiền này sẽ cần thiết để trả phí giao dịch cho việc triển khai và tương tác với mạng.
 
-To start building on Scroll, we suggest you begin with using our Scroll Sepolia testnet. You'll first need to acquire some testnet ETH. See the [Faucet](/user-guide/faucet) page for tips on getting test tokens on Sepolia. After this, you can bridge your testnet ETH to the Scroll Sepolia Testnet (Layer 2) using our [Sepolia Bridge](https://sepolia.scroll.io/bridge), as described in the [Bridge article](/user-guide/bridge).
+Để bắt đầu xây dựng trên Scroll, chúng tôi khuyên bạn nên bắt đầu bằng việc sử dụng mạng thử nghiệm Scroll Sepolia của chúng tôi. Trước tiên, bạn cần có được một số ETH testnet. Xem [Faucet](/user-guide/faucet) trang để biết các mẹo nhận mã thông báo thử nghiệm trên Sepolia. Sau này, bạn có thể kết nối ETH testnet của mình với testnet Scroll Sepolia (Lớp 2) bằng cách sử dụng của chúng tôi [Sepolia Bridge](https://sepolia.scroll.io/bridge), như được mô tả trong [Bridge article](/user-guide/bridge).
 
-For a walkthrough, start with the User Guide's [Setup](/user-guide/setup) page.
+Để xem hướng dẫn, hãy bắt đầu với trang [Setup](/user-guide/setup) của Hướng dẫn sử dụng.
 
-Once you're ready to deploy on Scroll's mainnet, you can bridge over ETH using [our native bridge](https://scroll.io/bridge/) or one of the 3rd-party bridges.
+Sau khi sẵn sàng triển khai trên mạng chính của Scroll, bạn có thể kết nối qua ETH bằng [our native bridge](https://scroll.io/bridge/) hoặc một trong những cầu nối của bên thứ 3.
 
 ## Network Configuration
 
 ### Scroll Mainnet
 
-Use the table below to configure your Ethereum tools to the Scroll mainnet.
+Sử dụng bảng bên dưới để định cấu hình các công cụ Ethereum của bạn cho mạng chính Scroll.
 
 | Network Name       | Scroll                                             | Ethereum Mainnet                                     |
 | ------------------ | -------------------------------------------------- | ---------------------------------------------------- |
@@ -56,7 +56,7 @@ Use the table below to configure your Ethereum tools to the Scroll mainnet.
 
 ### Scroll Sepolia Testnet
 
-Use the table below to configure your Ethereum tools to the Scroll Sepolia Testnet.
+Sử dụng bảng bên dưới để định cấu hình các công cụ Ethereum của bạn cho Mạng thử nghiệm Scroll Sepolia.
 
 | Network Name       | Scroll Sepolia                                                    | Ethereum Sepolia                                             |
 | ------------------ | ----------------------------------------------------------------- | ------------------------------------------------------------ |
@@ -79,13 +79,12 @@ Use the table below to configure your Ethereum tools to the Scroll Sepolia Testn
 ## Configure your tooling
 
 <Aside type="tip" title="">
-  For setting up tooling to verify a smart contract deployment, see [Verifying Smart
-  Contracts](/developers/verifying-smart-contracts).
+  Để thiết lập công cụ nhằm xác minh việc triển khai hợp đồng thông minh, hãy xem [Verifying Smart Contracts](/developers/verifying-smart-contracts).
 </Aside>
 
 ### Hardhat
 
-Modify your Hardhat config file `hardhat.config.ts` to point at the Scroll Sepolia Testnet public RPC.
+Sửa đổi tệp cấu hình Hardhat của bạn `hardhat.config.ts` để trỏ đến RPC công khai của Scroll Sepolia Testnet.
 
 ```jsx
 ...
@@ -106,7 +105,7 @@ const config: HardhatUserConfig = {
 
 ### Foundry
 
-To deploy using the Scroll Sepolia Testnet Public RPC, run:
+Để triển khai bằng RPC công khai Scroll Sepolia Testnet, hãy chạy:
 
 ```bash
 forge create ... --rpc-url=https://sepolia-rpc.scroll.io/ --legacy
@@ -114,19 +113,19 @@ forge create ... --rpc-url=https://sepolia-rpc.scroll.io/ --legacy
 
 ### Remix Web IDE
 
-After compiling your contracts, the easiest way to deploy using Remix is by [setting up Metamask](/user-guide/setup#metamask), then selecting the **Scroll Sepolia Testnet** network.
+Sau khi biên soạn hợp đồng, cách dễ nhất để triển khai bằng Remix là [setting up Metamask](/user-guide/setup#metamask), sau đó chọn mạng **Scroll Sepolia Testnet**.
 
 <ClickToZoom src={networkSelection} />
 
-Now, in the “Deploy and Run Transactions” tab, use the “Environment” drop-down and select “Injected Provider - MetaMask.”
+Bây giờ, trong tab “Deploy and Run Transactions”, sử dụng “Environment” thả xuống và chọn “Injected Provider - MetaMask.”
 
 <ClickToZoom src={injectedProviderMM} />
 
-Connect your wallet and select the Scroll Sepolia Testnet. Your account should be selected automatically in Remix, and you can click “Deploy.”
+Kết nối ví của bạn và chọn Testnet Scroll Sepolia. Tài khoản của bạn sẽ được chọn tự động trong Remix và bạn có thể nhấp vào “Deploy.”
 
 ### Truffle
 
-Assuming you already have a Truffle environment setup, go to the Truffle [configuration file](https://trufflesuite.com/docs/truffle/reference/configuration/), `truffle.js`. Make sure to have installed HDWalletProvider: `npm install @truffle/hdwallet-provider@1.4.0`
+Giả sử bạn đã thiết lập môi trường Truffle, hãy truy cập Truffle [configuration file](https://trufflesuite.com/docs/truffle/reference/configuration/), `truffle.js`. Đảm bảo đã cài đặt HDWalletProvider: `npm install @truffle/hdwallet-provider@1.4.0`
 
 ```js
 const HDWalletProvider = require("@truffle/hdwallet-provider")
@@ -144,22 +143,22 @@ module.exports = {
 
 ### Brownie
 
-To add the Scroll Sepolia Testnet, run the following command:
+Để thêm Scroll Sepolia Testnet, hãy chạy lệnh sau:
 
 ```bash
 brownie networks add Ethereum scrollSepolia host=https://sepolia-rpc.scroll.io/ chainid=534351
 ```
 
-To set this as your default network, add the following in your project config file:
+Để đặt mạng này làm mạng mặc định của bạn, hãy thêm phần sau vào tệp cấu hình dự án của bạn:
 
 ```yaml
 networks:
   default: scrollSepolia
 ```
 
-Another way to add the Scroll Sepolia Testnet is to create a `yaml` file and run a command to add it.
+Một cách khác để thêm Scroll Sepolia Testnet là tạo một tệp `yaml` và chạy lệnh để thêm nó.
 
-This is an example of a yaml file called `network-config.yaml`
+Đây là một ví dụ về tệp yaml có tên `network-config.yaml`
 
 ```yaml
 live:
@@ -172,13 +171,13 @@ live:
    name: Scroll Sepolia Testnet
 ```
 
-To add the Scroll Sepolia Testnet to the network list, run the following command:
+Để thêm Scroll Sepolia Testnet vào danh sách mạng, hãy chạy lệnh sau:
 
 ```bash
 brownie networks import ./network-config.yaml
 ```
 
-To deploy on Scroll, run the following command. In this example, `token.py` is the script to deploy the smart contract. Replace this with the name of your script:
+Để triển khai trên Scroll, hãy chạy lệnh sau. Trong ví dụ này, `token.py` là tập lệnh để triển khai hợp đồng thông minh. Thay thế tên này bằng tên tập lệnh của bạn:
 
 ```bash
 brownie run token.py --network scrollSepolia
@@ -186,7 +185,7 @@ brownie run token.py --network scrollSepolia
 
 ### ethers.js
 
-Setting up a Scroll Sepolia Testnet provider in an `ethers` script:
+Thiết lập nhà cung cấp Scroll Sepolia Testnet trong tập lệnh `ethers`:
 
 ```jsx
 import { ethers } from "ethers"
@@ -196,16 +195,15 @@ const provider = new ethers.providers.JsonRpcProvider("https://sepolia-rpc.scrol
 
 ### scaffold-eth
 
-To deploy using Scaffold-eth, you’ll need to point both your Hardhat and React settings at the Scroll Sepolia Testnet.
+Để triển khai bằng Scaffold-eth, bạn cần trỏ cả cài đặt Hardhat và React của mình vào Scroll Sepolia Testnet.
 
 #### Configure Hardhat
 
-In the `packages/hardhat/hardhat.config.js` file, you’ll add the network and select it as the default network.
+`packages/hardhat/hardhat.config.js`, bạn sẽ thêm mạng và chọn mạng đó làm mạng mặc định.
 
 ```jsx
 ...
-//
-// Select the network you want to deploy to here:
+//Chọn mạng bạn muốn triển khai tại đây:
 //
 const defaultNetwork = "scrollSepolia";
 ...
@@ -224,18 +222,17 @@ module.exports = {
 }
 ```
 
-Be sure to fund the deployment wallet as well! Run `yarn generate` to create the wallet and `yarn account` to check its funds. Once funded, run `yarn deploy --network scrollSepolia` to deploy on the Scroll Sepolia testnet.
+Hãy nhớ nạp tiền vào ví triển khai! Chạy `yarn generate` để tạo ví và `yarn account` để kiểm tra tiền của nó. Sau khi được cấp vốn, hãy chạy `yarn triển khai --network ScrollSepolia` để triển khai trên mạng thử nghiệm Scroll Sepolia.
 
 <Aside type="danger" title="warning">
-  On some project forks, you'll want to disable the contract verification, which relies on Etherscan. This can be
-  commented out in `packages/hardhat/deploy/00_deploy_your_contract.js`
+  Trên một số nhánh dự án, bạn sẽ muốn tắt tính năng xác minh hợp đồng dựa trên Etherscan. Điều này có thể là đã bình luận trong `packages/hardhat/deploy/00_deploy_your_contract.js`
 </Aside>
 
-#### Configure the Frontend
+#### Cấu hình giao diện người dùng (FrontEnd)
 
-To configure your frontend, you need to add the Scroll Sepolia Testnet as a network option, then select it as default.
+Để định cấu hình giao diện người dùng của bạn, bạn cần thêm Scroll Sepolia Testnet làm tùy chọn mạng, sau đó chọn nó làm mặc định.
 
-To add the network, modify `packages/react-app/src/constants.js`.
+Để thêm mạng, hãy sửa đổi `packages/react-app/src/constants.js`.
 
 ```jsx
 ...
@@ -252,11 +249,11 @@ export const NETWORKS = {
 }
 ```
 
-Next, in `packages/react-app/src/App.jsx` modify
+Kế tiếp, trong `packages/react-app/src/App.jsx` chỉnh sửa
 
 ```jsx
 ...
-/// 📡 What chain are your contracts deployed to?
+/// 📡 Hợp đồng của bạn được triển khai ở chuỗi nào?
 const initialNetwork = NETWORKS.scrollSepolia;
 ...
 ```
