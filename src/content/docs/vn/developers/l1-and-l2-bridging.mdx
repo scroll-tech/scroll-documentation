@@ -2,36 +2,39 @@
 section: developers
 date: Last Modified
 title: "L1 and L2 Bridging"
-lang: "en"
+lang: "vn"
 permalink: "developers/l1-and-l2-bridging"
 whatsnext: { "ETH & ERC20 Token Bridge": "/developers/l1-and-l2-bridging/eth-and-erc20-token-bridge/" }
-excerpt: "An overview of Scroll's Bridging architecture"
+excerpt: "Tổng quan về kiến ​​trúc Bridge của Scroll"
 ---
 
 import ClickToZoom from "../../../../components/ClickToZoom.astro"
+
 import Aside from "../../../../components/Aside.astro"
+
 import L1GatewayWHITE from "../../../../assets/images/developers/L1GatewayWHITE.png"
+
 import withdrawWHITE from "../../../../assets/images/developers/withdrawWHITE.png"
 
-The Scroll bridge enables the transfer of ETH, ERC20 tokens, NFTs, and arbitrary messages between L1 and L2. It serves as a secure mechanism for moving various digital assets across L1 and L2.
+Cầu cuộn cho phép chuyển ETH, mã thông báo ERC20, NFT và tin nhắn tùy ý giữa L1 ​​và L2. Nó phục vụ như một cơ chế an toàn để di chuyển các tài sản kỹ thuật số khác nhau qua L1 và L2.
 
-To facilitate the transfer of ETH and ERC20 tokens, the Scroll bridge utilizes the Gateway Router. This contract ensures the smooth passage of these assets between L1 and L2, allowing users to transfer their Ethereum-based tokens seamlessly.
+Để tạo điều kiện thuận lợi cho việc chuyển mã thông báo ETH và ERC20, cầu Scroll sử dụng Bộ định tuyến cổng. Hợp đồng này đảm bảo việc chuyển giao suôn sẻ các tài sản này giữa L1 ​​và L2, cho phép người dùng chuyển mã thông báo dựa trên Ethereum của họ một cách liền mạch.
 
-The ERC721 and ERC1155 Gateway enables the transfer of non-fungible assets between the two networks, allowing users to move their NFTs across L1 and L2.
+Cổng ERC721 và ERC1155 cho phép chuyển các tài sản không thể thay thế giữa hai mạng, cho phép người dùng di chuyển NFT của họ qua L1 và L2.
 
-In addition to token transfers, the Scroll Messenger contract enables cross-chain contract interaction. This means that contracts on one network can interact with contracts on the other network through the Scroll Messenger contract. This functionality expands the possibilities for decentralized applications and smart contracts to operate seamlessly across both networks.
+Ngoài việc chuyển mã thông báo, hợp đồng Scroll Messenger còn cho phép tương tác hợp đồng chuỗi chéo. Điều này có nghĩa là các hợp đồng trên một mạng có thể tương tác với các hợp đồng trên mạng khác thông qua hợp đồng Scroll Messenger. Chức năng này mở rộng khả năng cho các ứng dụng phi tập trung và hợp đồng thông minh hoạt động trơn tru trên cả hai mạng.
 
 ## L1 Gateway architecture
 
 
 <ClickToZoom src={L1GatewayWHITE} />
 
-There are many entry points from the user to the Scroll bridge. This will depend on what you want to do and how you want to do it. If you want to send ETH or ERC20 tokens, you should use the `GatewayRouter` . If you want to send NFTs, you should use the `L1ERC721Gateway` or `L1ERC1155Gateway`. If you want to send arbitrary data, you should use the `L1ScrollMessenger`. All Gateway transfers use the Scroll Messenger to send assets cross-chain, whose job is to append the transactions to the Message Queue for L2 inclusion.
+Có nhiều điểm vào từ người dùng đến cầu Scroll. Điều này sẽ phụ thuộc vào những gì bạn muốn làm và cách bạn muốn làm điều đó. Nếu bạn muốn gửi mã thông báo ETH hoặc ERC20, bạn nên sử dụng `GatewayRouter` . Nếu muốn gửi NFT, bạn nên sử dụng `L1ERC721Gateway` hoặc `L1ERC1155Gateway`. Nếu bạn muốn gửi dữ liệu tùy ý, bạn nên sử dụng `L1ScrollMessenger`. Tất cả các lần chuyển qua Cổng đều sử dụng Scroll Messenger để gửi nội dung xuyên chuỗi, nhiệm vụ của nó là nối các giao dịch vào Hàng đợi Tin nhắn để đưa vào L2.
 
 ## L2 Gateway architecture
 
 <ClickToZoom src={withdrawWHITE} />
 
-Regarding possible permissionlessly callable entry points, the L2 Gateway Architecture is very similar to L1. The difference is that when sending a message from L2, calling the `appendMessage` function will store the message in an append-only binary merkle tree (aka withdraw tree) in the `L2MessageQueue`. When a new message is sent to the `L2MessageQueue`, the relayer will detect it and store it in the database. When the block is finalized, it will generate a proof of the new merkle path and pass it to the L1geth node to execute on `L1ScrollMessenger` . All finalized withdraw roots will be stored in the rollup contract so we can verify the proof against them. In the next Scroll versions, the Relayer won't be needed since all users will be able to finalize the transaction on L1.
+Về các điểm vào có thể được phép gọi mà không được phép, Kiến trúc Cổng L2 rất giống với L1. Sự khác biệt là khi gửi tin nhắn từ L2, việc gọi hàm `appendMessage` sẽ lưu trữ tin nhắn trong cây merkle nhị phân chỉ nối thêm (còn gọi là cây rút) trong `L2MessageQueue`. Khi một tin nhắn mới được gửi đến `L2MessageQueue`, bộ chuyển tiếp sẽ phát hiện nó và lưu trữ nó trong cơ sở dữ liệu. Khi khối được hoàn thiện, nó sẽ tạo bằng chứng về đường dẫn merkle mới và chuyển nó đến nút L1geth để thực thi trên `L1ScrollMessenger` . Tất cả các gốc rút tiền cuối cùng sẽ được lưu trữ trong hợp đồng tổng hợp để chúng tôi có thể xác minh bằng chứng chống lại chúng. Trong các phiên bản Scroll tiếp theo, Relayer sẽ không cần thiết vì tất cả người dùng sẽ có thể hoàn tất giao dịch trên L1.
 
-In the upcoming sections, we will explore the technical aspects of the bridge, including the smart contract API required to utilize its capabilities. Detailed guides with code examples are provided in the Developer Guides section to assist developers and users in understanding and implementing these functionalities.
+Trong các phần sắp tới, chúng ta sẽ khám phá các khía cạnh kỹ thuật của cây cầu, bao gồm API hợp đồng thông minh cần thiết để tận dụng các khả năng của nó. Hướng dẫn chi tiết với các ví dụ về mã được cung cấp trong phần Hướng dẫn dành cho nhà phát triển để hỗ trợ nhà phát triển và người dùng hiểu và triển khai các chức năng này.
