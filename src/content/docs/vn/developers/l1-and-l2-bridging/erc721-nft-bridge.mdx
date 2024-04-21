@@ -2,29 +2,27 @@
 section: developers
 date: Last Modified
 title: "ERC721 NFT Bridge"
-lang: "en"
+lang: "vn"
 permalink: "developers/l1-and-l2-bridging/erc721-nft-bridge"
-excerpt: "NFT bridging from L1 to L2 is done via the L1ERC721Gateway contract instead of using a router."
+excerpt: "Việc kết nối NFT từ L1 đến L2 được thực hiện thông qua hợp đồng L1ERC721Gateway thay vì sử dụng bộ định tuyến."
 whatsnext: { "ERC1155 Token Bridge": "/developers/l1-and-l2-bridging/erc1155-token-bridge/" }
 ---
 
 import Aside from "../../../../../components/Aside.astro"
 
-## Deposit ERC721 tokens from L1
+## Gửi token ERC721 từ L1
 
-NFT bridging from L1 to L2 is done via the `L1ERC721Gateway` contract instead of using a router. Similarly to bridging ERC20 tokens, we use the `depositERC721` function to send tokens to L2, and we can later retrieve them back to L1 using `withdrawERC721` on the `L2ERC721Gateway` contract deployed on L2.
+Việc kết nối NFT từ L1 đến L2 được thực hiện thông qua hợp đồng `L1ERC721Gateway` thay vì sử dụng bộ định tuyến. Tương tự như việc kết nối mã thông báo ERC20, chúng tôi sử dụng chức năng `depositERC721` để gửi mã thông báo đến L2 và sau đó chúng tôi có thể truy xuất chúng trở lại L1 bằng cách sử dụng `rútERC721` trên hợp đồng `L2ERC721Gateway` được triển khai trên L2. 
 
-NFT contracts on both L1 and l2 must be launched and connected through the Gateways to enable bridging. This means deposit and withdraw transactions will revert if a contract on either L1 or L2 is missing or not mapped through the `updateTokenMapping` function.
+Hợp đồng NFT trên cả L1 và l2 phải được khởi chạy và kết nối thông qua Cổng để kích hoạt kết nối. Điều này có nghĩa là các giao dịch gửi và rút tiền sẽ hoàn nguyên nếu hợp đồng trên L1 hoặc L2 bị thiếu hoặc không được ánh xạ thông qua chức năng `updateTokenMapping`.
 
 <Aside type="tip" title="">
-  **`depositERC721`** is a payable function. The amount of ETH sent to this function will be used to pay for L2 fees. If
-  the amount is not enough, the transaction will not be sent. All excess eth will be sent back to the sender. `0.00001
-  ETH` should be more than enough to process a token deposit.
+  **`depositERC721`** là một chức năng phải trả. Lượng ETH được gửi đến chức năng này sẽ được sử dụng để thanh toán phí L2. Nếu như số tiền không đủ, giao dịch sẽ không được gửi. Tất cả số ETH dư thừa sẽ được gửi lại cho người gửi. `0,00001 ETH` là quá đủ để xử lý khoản tiền gửi mã thông báo.
 </Aside>
 
-### Creating a ScrollERC721 token on L2
+### Tạo mã thông báo ScrollERC721 trên L2
 
-To deposit an ERC721 token to L2, a token contract compatible with the `IScrollERC721` standard has to be launched and mapped on a `L1ERC721Gateway` and `L2ERC721Gateway` on both L1 and L2, respectively. This contract has to grant permission to the Gateway on L2 to mint when a token is deposited and burn when the token is withdrawn.
+Để gửi mã thông báo ERC721 vào L2, một hợp đồng mã thông báo tương thích với tiêu chuẩn `IScrollERC721` phải được khởi chạy và ánh xạ trên `L1ERC721Gateway` và `L2ERC721Gateway` trên cả L1 và L2 tương ứng. Hợp đồng này phải cấp quyền cho Cổng trên L2 để đúc khi mã thông báo được gửi và ghi khi rút mã thông báo.
 
 The following interface is the `IScrollERC721` needed for deploying ERC721 tokens compatible with the `L2ERC721Gateway` on L2.
 
@@ -49,29 +47,25 @@ interface IScrollERC721 {
 }
 ```
 
-### Adding ERC721 NFTs to the Scroll Bridge
+### Thêm NFT ERC721 vào Scroll Bridge
 
-All assets can be bridged securely and permissionlessly through Gateway contracts deployed by any developer. However, Scroll also manages an ERC721 Gateway contract where all NFTs created by the community are welcome. Being part of the Scroll-managed Gateway means you won't need to deploy the Gateway contracts, and your token will appear in the Scroll frontend. To be part of the Scroll Gateway, you must contact the Scroll team to add the NFT on both L1 and L2 Gateway contracts. To do so, follow the instructions on the [token lists](https://github.com/scroll-tech/token-list) repository to add a new token to the Scroll official frontend.
+Tất cả nội dung có thể được kết nối một cách an toàn và không cần xin phép thông qua các hợp đồng Gateway do bất kỳ nhà phát triển nào triển khai. Tuy nhiên, Scroll cũng quản lý hợp đồng ERC721 Gateway nơi tất cả NFT do cộng đồng tạo ra đều được chào đón. Trở thành một phần của Cổng được quản lý cuộn có nghĩa là bạn sẽ không cần triển khai các hợp đồng Cổng và mã thông báo của bạn sẽ xuất hiện trong giao diện Cuộn. Để trở thành một phần của Cổng cuộn, bạn phải liên hệ với nhóm Cuộn để thêm NFT vào cả hợp đồng Cổng L1 và L2. Để làm như vậy, hãy làm theo hướng dẫn trên kho lưu trữ [danh sách mã thông báo](https://github.com/scroll-tech/token-list) để thêm mã thông báo mới vào giao diện chính thức của Scroll.
 
-## Withdraw ERC721 tokens from Scroll
+## Rút token ERC721 từ Scroll
 
-The `L2ERC721Gateway` contract is used to send tokens from L2 to L1. Before bridging, the `L2ERC721Gateway` contract has to be approved by the NFT contract. Once that is done, `withdrawERC721` can be called to perform the asset bridge.
+Hợp đồng `L2ERC721Gateway` được sử dụng để gửi mã thông báo từ L2 đến L1. Trước khi bắc cầu, hợp đồng `L2ERC721Gateway` phải được hợp đồng NFT phê duyệt. Sau khi hoàn tất, `rútERC721` có thể được gọi để thực hiện kết nối tài sản.
 
 <Aside type="tip" title="">
-  **`withdrawERC721`** is a payable function, and the amount of ETH sent to this function will be used to pay for L1
-  fees. If the amount is not enough, the transaction will not be sent. All excess ETH will be sent back to sender. Fees
-  depend on L1 activity but `0.005 ETH` should be enough to process a token withdrawal.
+  **`withdrawERC721`** là chức năng phải trả và số ETH gửi đến chức năng này sẽ được dùng để thanh toán cho L1 lệ phí. Nếu số tiền không đủ, giao dịch sẽ không được gửi. Tất cả ETH dư thừa sẽ được gửi lại cho người gửi. Phí phụ thuộc vào hoạt động L1 nhưng `0,005 ETH` sẽ đủ để xử lý việc rút mã thông báo.
 </Aside>
 
 <Aside type="caution" title="">
-  **Make sure the transaction won't revert on L1** while sending from L2. There is no way to recover the NFT bridged if
-  your transaction reverts on L1. All assets are burnt on L2 when the transaction is sent, and it's impossible to mint
-  them again.
+  **Đảm bảo giao dịch sẽ không hoàn nguyên trên L1** khi gửi từ L2. Không có cách nào để khôi phục cầu nối NFT nếu giao dịch của bạn hoàn nguyên trên L1. Tất cả tài sản đều bị đốt cháy trên L2 khi giao dịch được gửi và không thể đúc được họ một lần nữa.
 </Aside>
 
 ## L1ERC721Gateway API
 
-Please visit the [npm library](https://www.npmjs.com/package/@scroll-tech/contracts?activeTab=code) for the complete Scroll contract API documentation.
+Vui lòng truy cập [thư viện npm](https://www.npmjs.com/package/@scroll-tech/contracts?activeTab=code) để xem tài liệu API hợp đồng Scroll đầy đủ.
 
 ### depositERC721
 
@@ -79,14 +73,14 @@ Please visit the [npm library](https://www.npmjs.com/package/@scroll-tech/contra
 function depositERC721(address _token, address _to, uint256 _tokenId, uint256 _gasLimit) external payable;
 ```
 
-Deposit an ERC721 NFT from L1 to a recipient's account on L2.
+Gửi ERC721 NFT từ L1 vào tài khoản của người nhận trên L2.
 
 | Parameter | Description                                       |
 | --------- | ------------------------------------------------- |
-| token     | The address of ERC721 NFT contract on L1.         |
-| to        | The address of recipient's account on L2.         |
-| tokenId   | The NFT id to deposit.                            |
-| gasLimit  | Gas limit required to complete the deposit on L2. Unused portion of fee will be refunded. |
+| token     | Địa chỉ hợp đồng ERC721 NFT trên L1.              |
+| to        | Địa chỉ tài khoản người nhận trên L2.             |
+| tokenId   | Id NFT để gửi tiền.                               |
+| gasLimit  | Giới hạn gas cần thiết để hoàn thành việc gửi tiền vào L2. Phần phí chưa sử dụng sẽ được hoàn lại.|
 
 ### updateTokenMapping
 
@@ -98,8 +92,8 @@ Update the mapping that connects an NFT contract from L1 to L2.
 
 | Parameter | Description                                      |
 | --------- | ------------------------------------------------ |
-| \_l1Token | The address of ERC721 token in L1.               |
-| \_l2Token | The address of corresponding ERC721 token in L2. |
+| \_l1Token | Địa chỉ hợp đồng ERC721 NFT trên L1.             |
+| \_l2Token | Địa chỉ của mã thông báo ERC721 tương ứng trong L2.|
 
 ## L2ERC721Gateway API
 
@@ -113,10 +107,10 @@ Send an ERC721 NFT from L2 to a recipient's account on L1.
 
 | Parameter | Description                                                              |
 | --------- | ------------------------------------------------------------------------ |
-| token     | The address of ERC721 NFT token contract on L2.                          |
-| to        | The address of recipient's account on L1.                                |
-| tokenId   | The NFT id to deposit.                                                   |
-| gasLimit  | Unused, but included for potential forward compatibility considerations. |
+| token     | Địa chỉ của hợp đồng token ERC721 NFT trên L2.                           |
+| to        | Địa chỉ tài khoản người nhận trên L1.                                    |
+| tokenId   | Id NFT để gửi tiền.                                                      |
+| gasLimit  | Không được sử dụng nhưng được đưa vào để cân nhắc khả năng tương thích về sau.|
 
 ### updateTokenMapping
 
@@ -124,7 +118,7 @@ Send an ERC721 NFT from L2 to a recipient's account on L1.
 function updateTokenMapping(address _l1Token, address _l2Token) external;
 ```
 
-Update the mapping that connects an NFT contract from L2 to L1.
+Cập nhật ánh xạ kết nối hợp đồng NFT từ L2 đến L1.
 
 | Parameter | Description                                      |
 | --------- | ------------------------------------------------ |
