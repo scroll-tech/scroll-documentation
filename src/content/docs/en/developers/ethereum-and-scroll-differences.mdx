@@ -38,7 +38,7 @@ Opcodes from the Cancun upgrade are not yet available on Scroll, including `MCOP
 
 ## EVM Precompiles
 
-The `RIPEMD-160` (address `0x3`) `blake2f` (address `0x9`), and `point evaluation` (address `0x0a`) precompiles are currently not supported. The `SHA2-256` (address `0x2`) is currently supported on Scroll Sepolia, but will soon be supported on Scroll Mainnet. Calls to unsupported precompiled contracts will revert. We plan to enable these precompiles in future hard forks.
+The `RIPEMD-160` (address `0x3`) `blake2f` (address `0x9`), and `point evaluation` (address `0x0a`) precompiles are currently not supported. Calls to unsupported precompiled contracts will revert. We plan to enable these precompiles in future hard forks.
 
 The `modexp` precompile is supported but only supports inputs of size less than or equal to 32 bytes (i.e. `u256`).
 
