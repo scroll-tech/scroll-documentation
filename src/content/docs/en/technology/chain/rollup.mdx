@@ -26,8 +26,8 @@ The figure illustrates the rollup workflow. The L2 sequencer contains three modu
 
 The rollup node contains three modules:
 
-- **Relayer** submits the commit transactions and finalize transactions to the rollup contract for data availability and finality.
-- **Chunk Proposer** and **Batch Proposer** proposes new chunks and new batches following the constraints described in the [Transaction Batching](/technology/chain/transactions#transaction-batching).
+- **Relayer** submits the commit transactions and finalizes transactions to the rollup contract for data availability and finality.
+- **Chunk Proposer** and **Batch Proposer** propose new chunks and new batches following the constraints described in the [Transaction Batching](/technology/chain/transactions#transaction-batching).
 
 The rollup process can be broken down into three phases: transaction execution, batching and data commitment, and proof generation and finalization.
 
@@ -53,7 +53,7 @@ The rollup process can be broken down into three phases: transaction execution, 
 
 ## Commit Transaction
 
-The Commit Transaction submits the block information and transaction data to L1 for data availability. The transaction includes the parent batch header, chunk data, and a bitmap of skipped L1 message. The parent batch header designates the previous batch that this batch links to. The parent batch must be committed before; otherwise the transaction will be reverted. See the `commitBatch` function signature below.
+The Commit Transaction submits the block information and transaction data to L1 for data availability. The transaction includes the parent batch header, chunk data, and a bitmap of skipped L1 messages. The parent batch header designates the previous batch that this batch links to. The parent batch must be committed before; otherwise, the transaction will be reverted. See the `commitBatch` function signature below.
 
 ```solidity
 function commitBatch(
@@ -70,7 +70,7 @@ After the `commitBatch` function verifies the parent batch is committed before, 
 mapping(uint256 => bytes32) public committedBatches;
 ```
 
-The encoding of batch header and chunk data are described in the [Codec](#codec) section. Most fields in the batch header are straight-forward to derive from the chunk data. One important field to note is `dataHash` that will become part of the public input to verify the validity proof. Assuming that a batch contains `n` chunks, its `dataHash` is computed as follows
+The encoding of batch header and chunk data are described in the [Codec](#codec) section. Most fields in the batch header are straightforward to derive from the chunk data. One important field to note is `dataHash` which will become part of the public input to verify the validity proof. Assuming that a batch contains `n` chunks, its `dataHash` is computed as follows
 
 ```
 batch.dataHash := keccak(chunk[0].dataHash || ... || chunk[n-1].dataHash)
@@ -86,7 +86,7 @@ chunk.dataHash := keccak(blockContext[0] || ... || blockContext[k-1] ||
 
 , where `block.l1TxHashes` are the concatenated transaction hashes of the L1 transactions in this block and `block.l2TxHashes` are the concatenated transaction hashes of the L2 transactions in this block. Note that the transaction hashes of L1 transactions are not uploaded by the rollup node, but instead directly loaded from the `L1MessageQueue` contract given the index range of included L1 messages in this block. The L2 transaction hashes are calculated from the RLP-encoded bytes in the `l2Transactions` field in the [`Chunk`](#Chunk-Codec).
 
-In addition, the `commitBatch` function contains a bitmap of skipped L1 messages. Unfortunately, this is due to the problem of proof overflow. If the L1 transaction corresponding to a L1 message exceeds the circuit capacity limit, we won't be able to generate a valid proof for this transaction and thus cannot finalize it on L1. Scroll is working actively to eliminate the proof overflow problem through upgrades to our proving system.
+In addition, the `commitBatch` function contains a bitmap of skipped L1 messages. Unfortunately, this is due to the problem of proof overflow. If the L1 transaction corresponding to an L1 message exceeds the circuit capacity limit, we won't be able to generate a valid proof for this transaction and thus cannot finalize it on L1. Scroll is working actively to eliminate the proof overflow problem through upgrades to our proving system.
 
 ## Finalize Transaction
 
@@ -121,37 +121,77 @@ At this stage, the state root of the latest finalized batch can be used trustles
 
 This section describes the codec of three data structures in the Rollup contract: `BatchHeader`, `Chunk`, and `BlockContext`.
 
-#### `BatchHeader` Codec
+The latest update to the codec was introduced in the Bernoulli upgrade.
 
-| Field                    | Bytes   | Type        | Offset | Description                                                     |
-| ------------------------ | ------- | ----------- | ------ | --------------------------------------------------------------- |
-| `version`                | 1       | `uint8`     | 0      | The batch header version                                        |
-| `batchIndex`             | 8       | `uint64`    | 1      | The index of the batch                                          |
-| `l1MessagePopped`        | 8       | `uint64`    | 9      | The number of L1 messages poped in the batch                    |
-| `totalL1MessagePopped`   | 8       | `uint64`    | 17     | The number of total L1 messages popped after the batch          |
-| `dataHash`               | 32      | `bytes32`   | 25     | The data hash of the batch                                      |
-| `blobVersionedHash`      | 32      | `bytes32`   | 57     | The versioned hash of the blob with this batch’s data           |
-| `parentBatchHash`        | 32      | `bytes32`   | 89     | The parent batch hash                                           |
-| `skippedL1MessageBitmap` | dynamic | `uint256[]` | 121    | A bitmap to indicate which L1 messages are skipped in the batch |
+### Bernoulli
 
-#### `Chunk` Codec
+        #### `BatchHeader` Codec
 
-| Field            | Bytes   | Type           | Offset    | Description                                                                                                                                       |
-| ---------------- | ------- | -------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `numBlocks`      | 1       | `uint8`        | 0         | The number of blocks in the chunk                                                                                                                 |
-| `block[0]`       | 60      | `BlockContext` | 1         | The block information of the 1st block                                                                                                            |
-| ...              | ...     | ...            | ...       | ...                                                                                                                                               |
-| `block[i]`       | 60      | `BlockContext` | `60*i+1`  | The block information of `i+1`-th block                                                                                                           |
-| ...              | ...     | ...            | ...       | ...                                                                                                                                               |
-| `block[n-1]`     | 60      | `BlockContext` | `60*n-59` | The block information of the last block                                                                                                           |
+        | Field                    | Bytes   | Type        | Offset | Description                                                     |
+        | ------------------------ | ------- | ----------- | ------ | --------------------------------------------------------------- |
+        | `version`                | 1       | `uint8`     | 0      | The batch header version                                        |
+        | `batchIndex`             | 8       | `uint64`    | 1      | The index of the batch                                          |
+        | `l1MessagePopped`        | 8       | `uint64`    | 9      | The number of L1 messages popped in the batch                    |
+        | `totalL1MessagePopped`   | 8       | `uint64`    | 17     | The number of total L1 messages popped after the batch          |
+        | `dataHash`               | 32      | `bytes32`   | 25     | The data hash of the batch                                      |
+        | `blobVersionedHash`      | 32      | `bytes32`   | 57     | The versioned hash of the blob with this batch’s data           |
+        | `parentBatchHash`        | 32      | `bytes32`   | 89     | The parent batch hash                                           |
+        | `skippedL1MessageBitmap` | dynamic | `uint256[]` | 121    | A bitmap to indicate which L1 messages are skipped in the batch |
 
-#### `BlockContext` Codec
+        #### `Chunk` Codec
 
-| Field             | Bytes | Type      | Offset | Description                                                                         |
-| ----------------- | ----- | --------- | ------ | ----------------------------------------------------------------------------------- |
-| `blockNumber`     | 8     | `uint64`  | 0      | The block number                                                                    |
-| `timestamp`       | 8     | `uint64`  | 8      | The block time                                                                      |
-| `baseFee`         | 32    | `uint256` | 16     | The base fee of this block. Currently, it is always 0, because we disable EIP-1559. |
-| `gasLimit`        | 8     | `uint64`  | 48     | The gas limit of this block                                                         |
-| `numTransactions` | 2     | `uint16`  | 56     | The number of transactions in this block, including both L1 & L2 txs                |
-| `numL1Messages`   | 2     | `uint16`  | 58     | The number of L1 messages in this block    
+        | Field            | Bytes   | Type           | Offset    | Description                                                                                                                                       |
+        | ---------------- | ------- | -------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+        | `numBlocks`      | 1       | `uint8`        | 0         | The number of blocks in the chunk                                                                                                                 |
+        | `block[0]`       | 60      | `BlockContext` | 1         | The block information of the 1st block                                                                                                            |
+        | ...              | ...     | ...            | ...       | ...                                                                                                                                               |
+        | `block[i]`       | 60      | `BlockContext` | `60*i+1`  | The block information of `i+1`-th block                                                                                                           |
+        | ...              | ...     | ...            | ...       | ...                                                                                                                                               |
+        | `block[n-1]`     | 60      | `BlockContext` | `60*n-59` | The block information of the last block                                                                                                           |
+
+        #### `BlockContext` Codec
+
+        | Field             | Bytes | Type      | Offset | Description                                                                         |
+        | ----------------- | ----- | --------- | ------ | ----------------------------------------------------------------------------------- |
+        | `blockNumber`     | 8     | `uint64`  | 0      | The block number                                                                    |
+        | `timestamp`       | 8     | `uint64`  | 8      | The block time                                                                      |
+        | `baseFee`         | 32    | `uint256` | 16     | The base fee of this block. Currently, it is always 0, because we disable EIP-1559. |
+        | `gasLimit`        | 8     | `uint64`  | 48     | The gas limit of this block                                                         |
+        | `numTransactions` | 2     | `uint16`  | 56     | The number of transactions in this block, including both L1 & L2 txs                |
+        | `numL1Messages`   | 2     | `uint16`  | 58     | The number of L1 messages in this block    
+
+### Archimedes
+        #### `BatchHeader` Codec
+
+        | Field                    | Bytes   | Type        | Offset | Description                                                     |
+        | ------------------------ | ------- | ----------- | ------ | --------------------------------------------------------------- |
+        | `version`                | 1       | `uint8`     | 0      | The batch header version                                        |
+        | `batchIndex`             | 8       | `uint64`    | 1      | The index of the batch                                          |
+        | `l1MessagePopped`        | 8       | `uint64`    | 9      | The number of L1 messages popped in the batch                    |
+        | `totalL1MessagePopped`   | 8       | `uint64`    | 17     | The number of total L1 messages popped after the batch          |
+        | `dataHash`               | 32      | `bytes32`   | 25     | The data hash of the batch                                      |
+        | `parentBatchHash`        | 32      | `bytes32`   | 57     | The parent batch hash                                           |
+        | `skippedL1MessageBitmap` | dynamic | `uint256[]` | 89     | A bitmap to indicate which L1 messages are skipped in the batch |
+
+        #### `Chunk` Codec
+
+        | Field            | Bytes   | Type           | Offset    | Description                                                                                                                                       |
+        | ---------------- | ------- | -------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+        | `numBlocks`      | 1       | `uint8`        | 0         | The number of blocks in the chunk                                                                                                                 |
+        | `block[0]`       | 60      | `BlockContext` | 1         | The block information of the 1st block                                                                                                            |
+        | ...              | ...     | ...            | ...       | ...                                                                                                                                               |
+        | `block[i]`       | 60      | `BlockContext` | `60*i+1`  | The block information of `i+1`-th block                                                                                                           |
+        | ...              | ...     | ...            | ...       | ...                                                                                                                                               |
+        | `block[n-1]`     | 60      | `BlockContext` | `60*n-59` | The block information of the last block  
+        | `l2Transactions` | dynamic | `bytes`        | `60*n+1`  | The concatenated RLP encoding of L2 transactions with signatures. The byte length (`uint32`) of RLP encoding is inserted before each transaction. |                                                                                                         |
+
+        #### `BlockContext` Codec
+
+        | Field             | Bytes | Type      | Offset | Description                                                                         |
+        | ----------------- | ----- | --------- | ------ | ----------------------------------------------------------------------------------- |
+        | `blockNumber`     | 8     | `uint64`  | 0      | The block number                                                                    |
+        | `timestamp`       | 8     | `uint64`  | 8      | The block time                                                                      |
+        | `baseFee`         | 32    | `uint256` | 16     | The base fee of this block. Currently, it is always 0, because we disable EIP-1559. |
+        | `gasLimit`        | 8     | `uint64`  | 48     | The gas limit of this block                                                         |
+        | `numTransactions` | 2     | `uint16`  | 56     | The number of transactions in this block, including both L1 & L2 txs                |
+        | `numL1Messages`   | 2     | `uint16`  | 58     | The number of L1 messages in this block    
