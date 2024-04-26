@@ -64,7 +64,7 @@ This upgrade is a hard fork as it introduces the new blob data type and the SHA2
 
 #### Indexers and Bridges
 
-This upgrade changes the format that Scroll uses to publish data to Ethereum. Projects that rely on this data should carefully review [the new data format](https://docs.scroll.io/en/technology/chain/rollup/#codec), and check whether their decoders need to be adjusted. A summary of the new format:
+This upgrade changes the format that Scroll uses to publish data to Ethereum. Projects that rely on this data should carefully review [the new data format](/en/technology/chain/rollup/#codec), and check whether their decoders need to be adjusted. A summary of the new format:
 
 - The format of [`BlockContext`](https://github.com/scroll-tech/scroll/blob/5362e28f744093495c1c09a6b68fc96a3264278b/common/types/encoding/codecv1/codecv1.go#L125) will not change.
 - `Chunks` will [no longer include](https://github.com/scroll-tech/scroll/blob/5362e28f744093495c1c09a6b68fc96a3264278b/common/types/encoding/codecv1/codecv1.go#L162) the L2 transaction data. This will instead be [stored in a blob](https://github.com/scroll-tech/scroll/blob/5362e28f744093495c1c09a6b68fc96a3264278b/common/types/encoding/codecv1/codecv1.go#L284) attached to the `commitBatch` transaction.
