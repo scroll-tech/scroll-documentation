@@ -30,28 +30,31 @@ This upgrade features a significant reduction in transaction costs by introducin
 - **Scroll Sepolia**
 	- Network Upgrade: April 15th, 2024
 - **Scroll Mainnet**
-	- TBD
+	- Upgrade Initiation: April 15th, 2024
+	- Timelock Completion & Upgrade: April 29th, 2024
 
 ### Technical Details
 
 #### Contract changes
 
-The contract changes for this upgrade are in [this PR](https://github.com/scroll-tech/scroll/pull/1179).
+The contract changes for this upgrade are in [this PR](https://github.com/scroll-tech/scroll/pull/1179), along with the audit fixes [here](https://github.com/scroll-tech/scroll/pulls?q=is%3Apr+created%3A2024-04-10..2024-04-11+fix+in%3Atitle+label%3Abug). The main changes are as follows: 
 
-{/* As well as the audit fixes listed here [TODO] */}
+- `ScrollChain` now accepts batches with either calldata or blob encoding in `commitBatch`.
+- `ScrollChain` now supports finalizing blob-encoded batches through `finalizeBatchWithProof4844`.
+- `MultipleVersionRollupVerifier` can now manage different on-chain verifiers for each batch encoding version.
 
 #### Node changes
 
-The new node version is v5.2.0. See [here](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.2.0) for the changelog.
+The new node version is `v5.3.0`. See [here](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.3.0) for the release log.
 
-{/* #### Prover changes
+#### zkEVM circuit changes
 
-[TODO]
+The new version of zkevm circuits is `v0.10.3`. See [here](https://github.com/scroll-tech/zkevm-circuits/releases/tag/v0.10.3) for the release log.
 
 #### Audits
 
-- OpenZeppelin [TODO]
-- TrailofBits [TODO] */}
+- [OpenZeppelin](https://blog.openzeppelin.com/scroll-eip-4844-support-audit)
+- TrailofBits (will be posted soon)
 
 ### Compatibility
 
@@ -61,7 +64,7 @@ This upgrade is a hard fork as it introduces the new blob data type and the SHA2
 
 #### Indexers and Bridges
 
-This upgrade changes the format that Scroll uses to publish data to Ethereum. Projects that rely on this data should carefully review [the new data format](https://docs.scroll.io/en/technology/chain/rollup/#codec), and check whether their decoders need to be adjusted. A summary of the new format:
+This upgrade changes the format that Scroll uses to publish data to Ethereum. Projects that rely on this data should carefully review [the new data format](/en/technology/chain/rollup/#codec), and check whether their decoders need to be adjusted. A summary of the new format:
 
 - The format of [`BlockContext`](https://github.com/scroll-tech/scroll/blob/5362e28f744093495c1c09a6b68fc96a3264278b/common/types/encoding/codecv1/codecv1.go#L125) will not change.
 - `Chunks` will [no longer include](https://github.com/scroll-tech/scroll/blob/5362e28f744093495c1c09a6b68fc96a3264278b/common/types/encoding/codecv1/codecv1.go#L162) the L2 transaction data. This will instead be [stored in a blob](https://github.com/scroll-tech/scroll/blob/5362e28f744093495c1c09a6b68fc96a3264278b/common/types/encoding/codecv1/codecv1.go#L284) attached to the `commitBatch` transaction.
@@ -70,6 +73,7 @@ This upgrade changes the format that Scroll uses to publish data to Ethereum. Pr
 #### Provers
 
 This upgrade involves a breaking change in [zkevm-circuits](https://github.com/scroll-tech/zkevm-circuits). Operators running a prover node are required to upgrade.
+
 
 ## Bridge Upgrade
 
