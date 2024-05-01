@@ -1,0 +1,56 @@
+---
+section: technology
+date: Last Modified
+title: "Ikhtisar zkEVM"
+lang: "id"
+permalink: "technology/zkevm-overview"
+excerpt: "In order to understand how to build a zkEVM, which proves the execution of the EVM, we need to first look at the EVM itself."
+---
+
+import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import zkevm1 from "../_images/zkevm1.png"
+import zkevm2 from "../_images/zkevm2.png"
+import zkevm3 from "../_images/zkevm3.png"
+
+## EVM
+
+Untuk memahami bagaimana membangun zkEVM, yang membuktikan eksekusi dari EVM, kita perlu pertama-tama melihat EVM itu sendiri.
+
+EVM dapat dimodelkan sebagai fungsi transisi keadaan. Ini menentukan sebuah fungsi transisi `f` yang, diberikan sebuah keadaan dunia awal `S` dan sebuah transaksi `T`, menghasilkan sebuah keadaan dunia baru `S'`: `f(S,T) = S'`.
+
+"Keadaan dunia" dimodelkan sebagai sebuah [Trie Merkle-Patricia yang dimodifikasi](https://ethereum.org/en/developers/docs/data-structures-and-encoding/patricia-merkle-trie/) (MPT). Trie ini berisi semua data persisten jaringan. Ini mencakup informasi dari semua akun yang dimiliki secara eksternal (EOA) dan akun kontrak pintar. Akun kontrak pintar memiliki sub-trie yang menyimpan bytecode kontrak pintar dan penyimpanan persisten.
+
+EVM memproses sebuah transaksi baru dengan mengeksekusi komputasi yang dihasilkan, dan membuat perubahan pada keadaan dunia sesuai. Komputasi EVM berfungsi di atas toko data sementara (tumpukan dan memori) serta toko data persisten (bytecode kontrak dan penyimpanan).
+
+<ClickToZoom src={zkevm1} />
+
+Komputasi yang dipicu oleh sebuah transaksi individual dipecahkan menjadi instruksi mesin kecil yang disebut "opcode," yang dapat dimengerti dan dieksekusi langsung oleh EVM. Perilaku dari setiap opcode dijelaskan dalam [Ethereum Yellow Paper](https://ethereum.github.io/yellowpaper/paper.pdf). Eksekusi sebuah transaksi oleh karena itu dapat diringkas oleh sebuah "jejak eksekusi," yang pada dasarnya adalah daftar terurut dari eksekusi opcode. Klien eksekusi Ethereum, seperti [Geth](https://geth.ethereum.org/), dapat secara eksplisit menghasilkan jejak eksekusi langkah-demi-langkah untuk komputasi yang telah dilakukan.
+
+<ClickToZoom src={zkevm2} />
+
+Saat opcode dieksekusi, trie keadaan diubah. Ini menghasilkan sebuah trie keadaan baru, dengan sebuah akar keadaan baru.
+
+## Membuktikan sebuah Eksekusi EVM
+
+Tujuan dari sebuah zkEVM adalah untuk menghasilkan sebuah bukti yang menyatakan kevalidan dari eksekusi transaksi. Dengan kata lain, diberikan sebuah keadaan dunia awal `S`, sebuah transaksi `T`, dan sebuah keadaan dunia hasil `S'`, zkEVM harus menghasilkan sebuah bukti bahwa `f(S,T) = S'`, di mana `f` adalah fungsi transisi keadaan yang ditentukan dalam Ethereum Yellow Paper.
+
+Untuk membuktikan kevalidan dari eksekusi fungsi transisi, kita memecah eksekusi menjadi jejak eksekusi langkah-demi-langkahnya. Eksekusi dari `f(S,T)` diperluas menjadi daftar eksekusi opcode yang berurutan. Jejak eksekusi berfungsi sebagai "saksi" yang menyatakan kebenaran dari transisi keadaan `f(S,T) = S'` - jejak tersebut pada dasarnya adalah penjelasan langkah-demi-langkah tentang bagaimana keadaan bertransisi dari `S` ke `S'`.
+
+Masalah ini kemudian direduksi menjadi membuktikan hal-hal berikut:
+
+- Jejak eksekusi adalah _benar_.
+  - Setiap opcode individu dieksekusi dengan benar sesuai dengan spesifikasi Ethereum Yellow Paper.
+    - Sebagai contoh, opcode `ADD` harus menghasilkan pencabutan dua nilai dari tumpukan, dan mendorong jumlah mereka ke tumpukan.
+    - Sebuah bukti harus menunjukkan bahwa setiap opcode dieksekusi dengan perilaku yang tepat, termasuk segala perubahan pada toko data sementara (tumpukan dan memori) atau toko data persisten (bytecode kontrak dan penyimpanan).
+  - Daftar terurut opcode yang dieksekusi adalah daftar opcode yang benar yang dipicu oleh transaksi.
+    - Ini termasuk memuat data panggilan transaksi awal dengan benar, dan bytecode untuk semua kontrak yang dipanggil.
+- Jejak eksekusi dimulai dengan keadaan awal `S` dan menghasilkan keadaan `S'`.
+
+<ClickToZoom src={zkevm3} />
+
+Pada bagian-bagian berikutnya, kita akan menjelajahi detail tentang bagaimana kebenaran jejak eksekusi EVM dapat dibuktikan.
+
+## Lebih lanjut
+
+- Cypherpunks [GitBook chapter](https://cypherpunks-core.github.io/ethereumbook/13evm.html) di EVM
+- [zkEVM overview](https://youtu.be/NHwd-gJ8xg4) - Haichen Shen

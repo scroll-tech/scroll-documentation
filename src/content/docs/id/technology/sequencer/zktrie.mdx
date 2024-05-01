@@ -1,0 +1,201 @@
+---
+section: technology
+date: Last Modified
+title: "zkTrie"
+lang: "id"
+permalink: "technology/sequencer/zktrie"
+whatsnext: { "zkEVM": "/id/technology/zkevm/intro-to-zkevm/" }
+excerpt: "zkTrie is a sparse binary Merkle Patricia Trie built using Poseidon hash."
+---
+
+import Aside from "../../../../../components/Aside.astro"
+import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import zktrie1 from "../_images/zktrie-arch.png"
+import zktrie2 from "../_images/zktrie-insertion.png"
+import zktrie3 from "../_images/zktrie-deletion.png"
+
+Dokumen ini menjelaskan tentang zkTrie, sebuah Trie Patricia Merkle biner yang jarang digunakan untuk menyimpan pasangan kunci-nilai secara efisien. Ini menjelaskan struktur pohon, konstruksi, penghashan node, dan operasi pohon, termasuk penyisipan dan penghapusan.
+
+Anda juga dapat menjelajahi [repositori zktrie kami](https://github.com/scroll-tech/zktrie).
+
+## Tree Struktur
+
+zkTrie adalah Trie Patricia Merkle biner yang jarang digunakan, digambarkan dalam gambar di bawah ini.
+Sebelum menyelami Trie Patricia Merkle biner yang jarang digunakan, mari kita singgung singkat tentang Pohon Merkle dan Trie Patricia.
+- **Pohon Merkle**: Pohon Merkle adalah pohon di mana setiap Leaf Node mewakili hash dari blok data, dan setiap Node non-lef mewakili hash dari Node anaknya.
+- **Trie Patricia**: Trie Patricia adalah jenis trie radix atau trie terkompresi yang digunakan untuk menyimpan pasangan kunci-nilai secara efisien. Ini mengkodekan Node dengan awalan kunci yang sama untuk berbagi jalur umum, di mana jalur ditentukan oleh nilai kunci Node.
+
+Seperti yang diilustrasikan dalam Gambar 1, ada tiga jenis Node dalam zkTrie.
+- Node Cabang: Mengingat zkTrie adalah pohon biner, sebuah Node cabang memiliki dua anak.
+- Leaf Node: Sebuah Leaf Node menyimpan data dari pasangan kunci-nilai.
+- Node Kosong: Sebuah Node kosong adalah jenis khusus dari Node, menunjukkan sub-trie yang berbagi awalan yang sama kosong.
+
+Dalam zkTrie, kami menggunakan hash Poseidon untuk menghitung hash node karena lebih ramah dan efisien untuk membuktikannya dalam sirkuit zk.
+
+<ClickToZoom src={zktrie1} alt="Struktur zkTrie" caption="Gambar 1. Struktur zkTrie" />
+
+## Tree Konstruksi
+
+Diberikan sebuah pasangan kunci-nilai, kami pertama-tama menghitung *kunci aman* untuk Leaf Node yang sesuai dengan menghash kunci asli (yaitu, alamat akun dan kunci penyimpanan) menggunakan fungsi hash Poseidon. Ini dapat membuat kunci terdistribusi secara merata di seluruh ruang kunci. Metode penghashan kunci node dijelaskan dalam bagian [Node Hash](#node-hashing) di bawah.
+
+Kami mengkodekan jalur Leaf Node baru dengan menelusuri kunci aman dari Least Significant Bit (LSB) ke Most Significant Bit (MSB). Pada setiap langkah, jika bitnya adalah 0, kami akan menelusuri ke anak kiri; jika tidak, menelusuri ke anak kanan.
+
+Kami membatasi kedalaman maksimum zkTrie menjadi 248, yang berarti pohon hanya akan menelusuri 248 bit terendah dari kunci. Karena ruang kunci yang aman adalah medan terbatas yang digunakan oleh hash Poseidon yang tidak mencakup seluruh rentang $2^{256}$, representasi bit dari kunci dapat ambigu dalam medan terbatas dan oleh karena itu menghasilkan masalah kebenaran dalam sirkuit zk. Setelah kami memotong kunci menjadi 248 bit terendah, ruang kunci dapat sepenuhnya mengisi rentang $2^{248}$ dan tidak akan memiliki ambiguitas dalam representasi bit.
+
+Kami menerapkan optimisasi untuk mengurangi kedalaman pohon dengan mempersempit subtree yang hanya memiliki satu Leaf Node menjadi sebuah Leaf Node tunggal. Sebagai contoh, pada Gambar 1, pohon memiliki tiga Node secara total, dengan kunci `0100`, `0010`, dan `1010`. Karena hanya ada satu Node yang memiliki kunci dengan akhiran `00`, Leaf Node untuk kunci `0100` hanya menelusuri akhiran `00` dan tidak sepenuhnya memperluas kuncinya yang akan menghasilkan kedalaman 4.
+
+## Tree Operations
+
+### Penyisipan
+
+<ClickToZoom src={zktrie2} alt="zkTrie Structure" caption="Gambar 2. Menyisipkan leaf node baru ke zkTrie" />
+
+Ketika kami menyisipkan Leaf Node baru ke zkTrie, ada dua kasus yang diilustrasikan dalam Gambar 2.
+
+1. Saat menelusuri jalur kunci Node, mencapai Node kosong (Gambar 2a). Dalam kasus ini, kami hanya perlu mengganti Node kosong ini dengan Leaf Node yang baru dan melacak kembali jalurnya untuk memperbarui hash Merkle dari Node cabang hingga ke akar.
+2. Saat menelusuri jalur kunci Node, mencapai Leaf Node lain `b` (Gambar 2b). Dalam kasus ini, kami perlu mendorong ke bawah Leaf Node yang ada `b` hingga bit selanjutnya dalam kunci Node dua Leaf Node tersebut berbeda. Pada setiap langkah penurunan, kami perlu menyisipkan Node sibling kosong ke Node cabang. Ketika kami mencapai tingkat di mana bit berbeda, kami kemudian menempatkan dua Leaf Node `b` dan `d` sebagai anak kiri dan anak kanan tergantung pada bit mereka. Pada akhirnya, kami melacak kembali jalurnya dan memperbarui hash Merkle dari semua Node cabang.
+
+### Penghapusan
+
+Penghapusan Leaf Node serupa dengan penyisipan. Ada dua kasus yang diilustrasikan dalam Gambar 3.
+
+1. Node sibling dari Leaf Node yang akan dihapus adalah Node cabang (Gambar 3a). Dalam kasus ini, kami dapat dengan mudah mengganti Node `a` dengan Node kosong dan memperbarui hash Nodenya sampai ke Node akar.
+2. Node sibling dari Leaf Node yang akan dihapus adalah Leaf Node (Gambar 3b). Serupa dengan kasus 1, pertama-tama kami mengganti Leaf Node dengan Node kosong dan mulai mengontrak Node sibling ke atas sampai Node sibling tidak lagi berupa Node kosong. Sebagai contoh, dalam Gambar 3b, kami mengganti Leaf Node `b` dengan Node kosong. Karena Node sibling dari Node `c` sekarang menjadi Node kosong, kami perlu memindahkan Node `c` satu level ke atas dan mengganti induknya. sibling baru dari Node `c`, Node `e`, masih merupakan Node kosong. Jadi lagi kami memindahkan Node `c` ke atas. Sekarang bahwa sibling dari Node `c` adalah Node `a`, sebuah Leaf Node, proses penghapusan selesai.
+
+Perlu dicatat bahwa sibling dari Leaf Node dalam zkTrie yang valid tidak dapat menjadi Node kosong. Jika demikian, kami harus selalu menebang subpohon dan memindahkan Leaf Node ke atas.
+
+## Node Hashing
+
+Pada bagian ini, kami akan menjelaskan bagaimana kunci aman leaf node dan hash Merkle node dihitung. Kami menggunakan fungsi hash Poseidon dengan aritas 2 untuk kedua perhitungan hash. Dalam Scroll, fungsi hash Poseidon dikonfigurasi untuk mengambil dua input elemen lapangan setiap kali dan sebuah `domain_value` sebagai konteks awal untuk pemisahan domain, ditulis sebagai berikut.
+```
+h{domain_value}(input1, input2)
+```
+
+### Node Kosong
+
+Hash node dari sebuah node kosong adalah 0.
+
+### Branch Node
+
+Branch node hash di komputasi sebagai berikut
+
+```go
+branchNodeHash = h{BranchNodeType}(leftChildHash, rightChildHash)
+```
+
+### Leaf Node
+
+Node hash dari leaf node di komputasi sebagai berikut
+
+```go
+leafNodeHash = h{LeafNodeType}(nodeKey, valueHash)
+```
+
+Perhitungan melibatkan dua bidang, yaitu `nodeKey` dan `valueHash`.
+- `nodeKey` di-hash dari kunci asli. Nilai domain yang digunakan dalam hash Poseidon adalah 256.
+- `valueHash` dihitung dengan meng-hash nilai Leaf Node. Nilai domain yang digunakan dalam hash Poseidon adalah `256 * n`, di mana `n` adalah jumlah elemen dalam nilai Leaf Node.
+
+Ada dua jenis Leaf Node: akun Ethereum dan pasangan kunci-nilai penyimpanan. Selanjutnya, kami akan menjelaskan metode perhitungan kunci simpul dan nilai hash untuk masing-masing jenis Leaf Node tersebut secara berurutan.
+
+#### Akun Ethereum Leaf Node Akun Ethereum
+Untuk Akun Ethereum Leaf Node, terdiri dari alamat Ethereum dan struktur data akun status. Kunci aman diambil dari alamat Ethereum.
+```go
+var address byte[20] // 20 bytes in big-endian
+valHi := address[0:16]
+valLo := address[16:20] * 2^96 // padding 12 bytes of 0 at the end
+nodeKey := h{256}(valHi, valLo)
+```
+
+A state account struct dalam Scroll terdiri dari bidang-bidang berikut (Fr menunjukkan bidang hingga dan merupakan nilai 254-bit):
+
+- `Nonce`: u64
+- `Balance`: u256, tetapi dianggap sebagai Fr
+- `StorageRoot`: Fr
+- `KeccakCodeHash`: u256
+- `PoseidonCodeHash`: Fr
+- `CodeSize`: u64
+
+Sebelum menghitung nilai hash, akun status pertama kali dimasukkan ke dalam daftar nilai `u256`. Skema penggabungan adalah
+
+```text
+(Skema berikut mengasumsikan pengkodean big-endian)
+[0:32]
+	[0:16] Direservasi dengan semua nilai 0
+	[16:24] CodeSize, uint64 dalam big-endian
+	[24:32] Nonce, uint64 dalam big-endian
+[32:64] Balance
+[64:96] StorageRoot
+[96:128] KeccakCodeHash
+[128:160] PoseidonCodehash
+(total 160 bytes)
+```
+
+Fungsi marshal juga mengembalikan nilai `flag` bersama dengan vektor nilai `u256`. `flag` adalah bitmap yang menunjukkan apakah nilai `u256` tidak dapat dianggap sebagai elemen bidang (Fr). Nilai `flag` untuk akun status adalah 8, seperti yang ditunjukkan di bawah ini.
+
+```
+         +--------------------+---------+------+----------+----------+
+ index   |          0         |    1    |   2  |     3    |     4    |
+         +--------------------+---------+------+----------+----------+
+  u256   | nonce||codesize||0 | balance | root |  keccak  | poseidon |
+         +--------------------+---------+------+----------+----------+
+flag bit |          0         |    0    |   0  |     1    |     0    |
+         +--------------------+---------+------+----------+----------+
+         (LSB)                                                   (MSB)
+```
+
+Hash nilai dihitung dalam dua langkah:
+1. Mengonversi nilai yang tidak dapat diwakili sebagai elemen bidang dari hash Poseidon menjadi elemen bidang.
+2. Menggabungkan elemen bidang dalam struktur pohon biner hingga akar pohon dianggap sebagai hash nilai.
+
+Pada langkah pertama, ketika bit di `flag` adalah 1 yang menunjukkan nilai `u256` yang tidak dapat dianggap sebagai elemen bidang, kita membagi nilai tersebut menjadi nilai 128-bit tinggi dan nilai 128-bit rendah, dan kemudian melewatkan keduanya ke hash Poseidon untuk mendapatkan nilai elemen bidang, `h(valueHi, valueLo)`.
+
+```go
+// convert Keccak codehash to a field element
+compressedKeccakCodeHash := h{512}(keccakCodeHash[0:16], keccakCodeHash[16:32])
+```
+
+Kedua, hash nilai dihitung sebagai berikut.
+
+```go
+domain := 256 * 5  // 5 elements to compute the valueHash
+valueHash :=
+    h{domain}(
+        h{domain}(
+            h{domain}(nonce||codesize||0, balance),
+            h{domain}(
+                storageRoot,
+                compressedKeccakCodeHash,
+            ),
+        ),
+        poseidonCodeHash,
+    )
+```
+
+#### Storage Leaf Node
+
+Storage Leaf Node mengkodekan sepasang key-value, di mana keduanya adalah nilai `u256`. Kunci aman dari Leaf Node ini berasal dari kunci Storage.
+
+```go
+var storageKey byte[32]  // 32 bytes in big-endian
+valHi := storageKey[0:16]
+valLo := storageKey[16:32]
+nodeKey := h{256}(valHi, valLo)
+```
+
+Nilai storage adalah nilai `u256`. `flag` untuk nilai penyimpanan adalah 1, seperti yang ditunjukkan di bawah ini.
+
+```
+         +--------------+
+  index  |      0       |
+         +--------------+
+  u256   | storageValue |
+         +--------------+
+flag bit |      1       |
+         +--------------+
+```
+
+Nilai hash dihitung sebagai berikut:
+
+```go
+valueHash = h{512}(storageValue[0:16], storageValue[16:32])
+```

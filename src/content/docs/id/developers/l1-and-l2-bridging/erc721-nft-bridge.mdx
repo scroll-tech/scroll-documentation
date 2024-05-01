@@ -1,0 +1,126 @@
+---
+section: developers
+date: Last Modified
+title: "ERC721 NFT Bridge"
+lang: "id"
+permalink: "developers/l1-and-l2-bridging/erc721-nft-bridge"
+excerpt: "Pemindahan NFT dari Layer 1 (L1) ke Layer 2 (L2) dilakukan melalui kontrak L1ERC721Gateway daripada menggunakan router."
+whatsnext: { "ERC1155 Token Bridge": "/id/developers/l1-and-l2-bridging/erc1155-token-bridge/" }
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+## Mendepositkan Token ERC721 dari L1
+
+Pemindahan NFT dari L1 ke L2 dilakukan melalui kontrak `L1ERC721Gateway` daripada menggunakan router. Serupa dengan pemindahan token ERC20, kita menggunakan fungsi `depositERC721` untuk mengirim token ke L2, dan kita dapat mengambilnya kembali ke L1 menggunakan `withdrawERC721` pada kontrak `L2ERC721Gateway` yang dideploy di L2.
+
+Kontrak NFT di kedua L1 dan L2 harus diluncurkan dan terhubung melalui Gateway untuk memungkinkan pemindahan. Ini berarti transaksi deposit dan penarikan akan mengembalikan jika suatu kontrak di L1 atau L2 hilang atau tidak dipetakan melalui fungsi `updateTokenMapping`.
+
+<Aside type="tip" title="">
+  **`depositERC721`** adalah fungsi berbayar. Jumlah ETH yang dikirim ke fungsi ini akan digunakan untuk membayar biaya L2. Jika jumlahnya tidak cukup, transaksi tidak akan dikirim. Semua ETH yang berlebihan akan dikirim kembali ke pengirim. `0.00001 ETH` seharusnya lebih dari cukup untuk memproses deposit token.
+</Aside>
+
+### Membuat token ScrollERC721 di L2
+
+Untuk mendepositkan token ERC721 ke L2, kontrak token yang kompatibel dengan standar `IScrollERC721` harus diluncurkan dan dipetakan pada `L1ERC721Gateway` dan `L2ERC721Gateway` di L1 dan L2, masing-masing. Kontrak ini harus memberikan izin kepada Gateway di L2 untuk melakukan pencetakan saat token didapatkan dan membakar saat token ditarik.
+
+Berikut adalah antarmuka `IScrollERC721` yang diperlukan untuk mendeploy token ERC721 yang kompatibel dengan `L2ERC721Gateway` di L2.
+
+```solidity
+interface IScrollERC721 {
+  /// @notice Return the address of Gateway the token belongs to.
+  function gateway() external view returns (address);
+
+  /// @notice Return the address of counterpart token.
+  function counterpart() external view returns (address);
+
+  /// @notice Mint some token to recipient's account.
+  /// @dev Gateway Utilities, only gateway contract can call
+  /// @param _to The address of recipient.
+  /// @param _tokenId The token id to mint.
+  function mint(address _to, uint256 _tokenId) external;
+
+  /// @notice Burn some token from account.
+  /// @dev Gateway Utilities, only gateway contract can call
+  /// @param _tokenId The token id to burn.
+  function burn(uint256 _tokenId) external;
+}
+```
+
+### Menambahkan NFT ERC721 ke bridge Scroll
+
+Semua aset dapat dipindahkan dengan aman dan tanpa izin melalui kontrak Gateway yang dideploy oleh pengembang mana pun. Namun, Scroll juga mengelola kontrak Gateway ERC721 di mana semua NFT yang dibuat oleh komunitas dipersilakan. Menjadi bagian dari Gateway yang dikelola oleh Scroll berarti Anda tidak perlu mendeploy kontrak Gateway, dan token Anda akan muncul di frontend Scroll. Untuk menjadi bagian dari Gateway Scroll, Anda harus menghubungi tim Scroll untuk menambahkan NFT pada kontrak Gateway L1 dan L2. Untuk melakukannya, ikuti petunjuk pada repositori [daftar token](https://github.com/scroll-tech/token-list) untuk menambahkan token baru ke frontend resmi Scroll.
+
+## Menarik token ERC721 dari Scroll
+
+Kontrak `L2ERC721Gateway` digunakan untuk mengirim token dari L2 ke L1. Sebelum memindahkan, kontrak `L2ERC721Gateway` harus disetujui oleh kontrak NFT. Setelah itu dilakukan, `withdrawERC721` dapat dipanggil untuk melakukan bridge aset.
+
+<Aside type="tip" title="">
+  **`withdrawERC721`** adalah fungsi berbayar, dan jumlah ETH yang dikirim ke fungsi ini akan digunakan untuk membayar biaya L1. Jika jumlahnya tidak cukup, transaksi tidak akan dikirim. Semua ETH yang berlebih akan dikembalikan kepada pengirim. Biaya tergantung pada aktivitas L1 tetapi `0.005 ETH` seharusnya cukup untuk memproses penarikan token.
+</Aside>
+
+<Aside type="caution" title="">
+  **Pastikan transaksi tidak akan mengalami revert di L1** saat mengirim dari L2. Tidak ada cara untuk memulihkan NFT yang dipindahkan jika transaksi Anda mengalami revert di L1. Semua aset dibakar di L2 ketika transaksi dikirim, dan tidak mungkin untuk mencetak ulang mereka.
+</Aside>
+
+## L1ERC721Gateway API
+
+Silakan kunjungi [pustaka npm](https://www.npmjs.com/package/@scroll-tech/contracts?activeTab=code) untuk dokumentasi lengkap API kontrak Scroll.
+
+### depositERC721
+
+```solidity
+function depositERC721(address _token, address _to, uint256 _tokenId, uint256 _gasLimit) external payable;
+```
+
+Mendepositkan sebuah NFT ERC721 dari L1 ke akun penerima di L2.
+
+| Parameter | Deskripsi                                          |
+| --------- | -------------------------------------------------- |
+| token     | Alamat kontrak ERC721 NFT di L1.                  |
+| to        | Alamat akun penerima di L2.                        |
+| tokenId   | ID NFT yang akan didedositkan.                     |
+| gasLimit  | Batas gas yang diperlukan untuk menyelesaikan deposit di L2. Bagian yang tidak terpakai dari biaya akan dikembalikan. |
+
+### updateTokenMapping
+
+```solidity
+function updateTokenMapping(address _l1Token, address _l2Token) external;
+```
+
+Memperbarui pemetaan yang menghubungkan sebuah kontrak NFT dari L1 ke L2.
+
+| Parameter | Deskripsi                                       |
+| --------- | ----------------------------------------------- |
+| \_l1Token | Alamat token ERC721 di L1.                     |
+| \_l2Token | Alamat token ERC721 yang sesuai di L2.          |
+
+## API L2ERC721Gateway
+
+### withdrawERC721
+
+```solidity
+function withdrawERC721(address _token, address _to, uint256 _tokenId, uint256 _gasLimit) external payable;
+```
+
+Mengirimkan sebuah ERC721 NFT dari L2 ke akun penerima di L1.
+
+| Parameter | Deskripsi                                                              |
+| --------- | ---------------------------------------------------------------------- |
+| token     | Alamat kontrak token ERC721 NFT di L2.                                |
+| to        | Alamat akun penerima di L1.                                           |
+| tokenId   | ID NFT yang akan dikirimkan.                                           |
+| gasLimit  | Tidak terpakai, tetapi disertakan untuk pertimbangan kompatibilitas ke depan. |
+
+### updateTokenMapping
+
+```solidity
+function updateTokenMapping(address _l1Token, address _l2Token) external;
+```
+
+Memperbarui pemetaan yang menghubungkan sebuah kontrak NFT dari L2 ke L1.
+
+| Parameter | Deskripsi                                      |
+| --------- | ----------------------------------------------- |
+| \_l2Token | Alamat token ERC721 di L2.                     |
+| \_l1Token | Alamat token ERC721 yang sesuai di L1.          |

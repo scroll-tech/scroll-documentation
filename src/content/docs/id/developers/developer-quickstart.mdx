@@ -1,0 +1,260 @@
+---
+section: developers
+date: Last Modified
+title: "Developer Quickstart"
+lang: "id"
+permalink: "developers/developer-quickstart"
+excerpt: "Scroll Developer Quickstart membantu Anda mendapatkan Ether testnet, mengonfigurasi jaringan Anda, dan mengakses semua alat favorit Anda."
+whatsnext: { "Verifikasi Smart Contract": "/id/developers/verifying-smart-contracts" }
+---
+
+import Aside from "../../../../components/Aside.astro"
+import ClickToZoom from "../../../../components/ClickToZoom.astro"
+import networkSelection from "./_images/mmNetworkSelection.png"
+import injectedProviderMM from "./_images/injectedProviderMM.png"
+import ToggleElement from "../../../../components/ToggleElement.astro"
+
+Dengan Scroll, alat favorit Anda untuk membangun dan menguji kontrak pintar akan berfungsi dengan baik.
+
+Karena Scroll setara dengan bytecode dengan EVM, Anda hanya perlu menunjuk alat pembangun favorit Anda ke Penyedia RPC Scroll.
+
+Jika Anda mengalami masalah, silakan hubungi kami di [Discord kami](https://discord.gg/scroll).
+
+## Mendapatkan Ether
+
+Scroll menggunakan ETH sebagai mata uang aslinya, yang akan dibutuhkan untuk membayar biaya transaksi untuk mendeploy dan berinteraksi dengan jaringan.
+
+Untuk memulai membangun di Scroll, kami menyarankan Anda mulai dengan menggunakan testnet Scroll Sepolia kami. Anda pertama-tama perlu memperoleh beberapa ETH testnet. Lihat halaman [Faucet](/user-guide/faucet) untuk tips tentang mendapatkan token uji di Sepolia. Setelah ini, Anda dapat menyalurkan ETH testnet Anda ke Testnet Scroll Sepolia (Layer 2) menggunakan [Brdige Sepolia](https://sepolia.scroll.io/bridge) kami, seperti yang dijelaskan dalam [artikel Bridge](/id/user-guide/bridge).
+
+Untuk panduan langkah demi langkah, mulailah dengan halaman [Penyiapan](/id/user-guide/setup) Panduan Pengguna.
+
+Setelah Anda siap mendeploy di mainnet Scroll, Anda dapat menyalurkan ETH melalui [native bridge kami](https://scroll.io/bridge/) atau salah satu jembatan pihak ketiga.
+
+## Konfigurasi Jaringan
+
+### Scroll Mainnet
+
+Gunakan tabel di bawah ini untuk mengkonfigurasi alat-alat Ethereum Anda ke Scroll Mainnet.
+
+| Network Name       | Scroll                                             | Ethereum Mainnet                                     |
+| ------------------ | -------------------------------------------------- | ---------------------------------------------------- |
+| RPC URL            | [https://rpc.scroll.io/](https://rpc.scroll.io/)   | [https://eth.llamarpc.com](https://eth.llamarpc.com) |
+| Chain ID           | 534352                                             | 1                                                    |
+| Currency Symbol    | ETH                                                | ETH                                                  |
+| Block Explorer URL | [https://scrollscan.com/](https://scrollscan.com/) | [https://etherscan.io](https://etherscan.io)         |
+
+<ToggleElement anchor="mainnet-additional-infra">
+  <div slot="title">Additional Scroll Mainnet RPCs and Infra</div>
+  - [Scroll Native Bridge](https://scroll.io/bridge)
+  - [Scroll RPC Providers pada ChainList.org](https://chainlist.org/chain/534352)
+  - [Ethereum RPC Providers pada ChainList.org](https://chainlist.org/chain/1)
+  {/* - Block Explorers lain:
+    - [Dora](https://www.ondora.xyz/network/scroll/interactions)
+    - [L2Scan](https://scroll.l2scan.co/) */}
+
+</ToggleElement>
+
+### Scroll Sepolia Testnet
+
+Gunakan tabel di bawah ini untuk mengkonfigurasi alat-alat Ethereum Anda ke Scroll Sepolia Testnet.
+
+| Network Name       | Scroll Sepolia                                                    | Ethereum Sepolia                                             |
+| ------------------ | ----------------------------------------------------------------- | ------------------------------------------------------------ |
+| RPC URL            | [https://sepolia-rpc.scroll.io/](https://sepolia-rpc.scroll.io/)  | [https://rpc2.sepolia.org](https://rpc2.sepolia.org)         |
+| Chain ID           | 534351                                                            | 11155111                                                     |
+| Currency Symbol    | ETH                                                               | ETH                                                          |
+| Block Explorer URL | [https://sepolia.scrollscan.com](https://sepolia.scrollscan.com/) | [https://sepolia.etherscan.io](https://sepolia.etherscan.io) |
+
+<ToggleElement anchor="sepolia-additional-infra">
+  <div slot="title">Additional Scroll Sepolia RPCs and Infra</div>
+  - [Scroll Sepolia Native Bridge](https://sepolia.scroll.io/bridge)
+  - [Scroll Sepolia RPC Providers pada ChainList.org](https://chainlist.org/chain/534351)
+  - [Ethereum Sepolia RPC Providers pada ChainList.org](https://chainlist.org/chain/11155111)
+  - Block Explorers lain:
+    - [Dora](https://www.ondora.xyz/network/scroll-sepolia/interactions)
+    - [L2Scan](https://scroll.l2scan.co/)
+
+</ToggleElement>
+
+## Konfigurasikan alat Anda
+
+<Aside type="tip" title="">
+  Untuk menyiapkan alat untuk memverifikasi implementasi smart contract, lihat [Memverifikasi Smart Contract](/id/developers/verifying-smart-contracts).
+</Aside>
+
+### Hardhat
+
+Modifikasi file konfigurasi Hardhat Anda `hardhat.config.ts` untuk menunjuk ke RPC publik Scroll Sepolia Testnet.
+
+```jsx
+...
+
+const config: HardhatUserConfig = {
+  ...
+  networks: {
+    scrollSepolia: {
+      url: "https://sepolia-rpc.scroll.io/" || "",
+      accounts:
+        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    },
+  },
+};
+
+...
+```
+
+### Foundry
+
+Untuk deploy menggunakan Scroll Sepolia Testnet Public RPC, jalankan:
+
+```bash
+forge create ... --rpc-url=https://sepolia-rpc.scroll.io/ --legacy
+```
+
+### Remix Web IDE
+
+Setelah mengompilasi kontrak Anda, cara termudah untuk melakukan deploy menggunakan Remix adalah dengan [mengatur Metamask](/id/user-guide/setup#metamask), kemudian memilih jaringan **Scroll Sepolia Testnet**.
+
+<ClickToZoom src={networkSelection} />
+
+Sekarang, di tab “Deploy and Run Transactions”, gunakan drop-down “Environment” dan pilih “Injected Provider - MetaMask.”
+
+<ClickToZoom src={injectedProviderMM} />
+
+Sambungkan dompet Anda dan pilih Scroll Sepolia Testnet. Akun Anda harus terpilih secara otomatis di Remix, dan Anda dapat mengklik “Deploy.”
+
+### Truffle
+
+Diasumsikan Anda sudah memiliki lingkungan Truffle yang sudah disiapkan, buka [file konfigurasi](https://trufflesuite.com/docs/truffle/reference/configuration/) Truffle, `truffle.js`. Pastikan Anda telah menginstal HDWalletProvider: `npm install @truffle/hdwallet-provider@1.4.0`
+
+```js
+const HDWalletProvider = require("@truffle/hdwallet-provider")
+...
+module.exports = {
+  networks: {
+    scrollSepolia: {
+      provider: () =>
+        new HDWalletProvider(process.env.PRIVATE_KEY, "https://sepolia-rpc.scroll.io/"),
+      network_id: '*',
+    },
+  }
+}
+```
+
+### Brownie
+
+Untuk menambah Scroll Sepolia Testnet, jalankan command:
+
+```bash
+brownie networks add Ethereum scrollSepolia host=https://sepolia-rpc.scroll.io/ chainid=534351
+```
+
+To set this as your default network, add the following in your project config file:
+
+```yaml
+networks:
+  default: scrollSepolia
+```
+
+Cara lain untuk menambahkan Scroll Sepolia Testnet adalah dengan membuat file `yaml` dan menjalankan perintah untuk menambahkannya.
+
+Berikut contoh file yaml yang disebut `network-config.yaml`:
+
+```yaml
+live:
+- name: Ethereum
+ networks:
+ - chainid: 534351
+   explorer: https://sepolia.scrollscan.com/
+   host: https://sepolia-rpc.scroll.io
+   id: scrollSepolia
+   name: Scroll Sepolia Testnet
+```
+
+Untuk menambah Scroll Sepolia Testnet ke network list, jalankan command:
+
+```bash
+brownie networks import ./network-config.yaml
+```
+
+Untuk melakukan deploy di Scroll, jalankan perintah berikut. Dalam contoh ini, `token.py` adalah skrip untuk melakukan deploy kontrak pintar (smart contract). Ganti dengan nama skrip Anda:
+
+```bash
+brownie run token.py --network scrollSepolia
+```
+
+### ethers.js
+
+Mengatur penyedia Scroll Sepolia Testnet dalam skrip `ethers`:
+
+```jsx
+import { ethers } from "ethers"
+
+const provider = new ethers.providers.JsonRpcProvider("https://sepolia-rpc.scroll.io/")
+```
+
+### scaffold-eth
+
+Untuk melakukan deploy menggunakan Scaffold-eth, Anda perlu mengarahkan pengaturan Hardhat dan React Anda ke Scroll Sepolia Testnet.
+
+#### Configure Hardhat
+
+Di dalam file `packages/hardhat/hardhat.config.js`, Anda akan menambahkan jaringan dan memilihnya sebagai jaringan default.
+
+```jsx
+...
+//
+// Select the network you want to deploy to here:
+//
+const defaultNetwork = "scrollSepolia";
+...
+module.exports = {
+...
+	networks: {
+...
+          scrollSepolia: {
+            url: "https://sepolia-rpc.scroll.io/",
+            accounts: {
+              mnemonic: mnemonic(),
+            },
+          },
+	}
+...
+}
+```
+
+Pastikan juga untuk mendanai dompet implementasi! Jalankan `yarn generate` untuk membuat dompet dan `yarn account` untuk memeriksa dananya. Setelah didanai, jalankan `yarn deploy --network scrollSepolia` untuk melakukan implementasi di Scroll Sepolia testnet.
+
+<Aside  type="danger" title="Peringatan">
+Pada beberapa proyek yang di-fork, Anda akan ingin menonaktifkan verifikasi kontrak, yang mengandalkan Etherscan. Ini dapat dijadikan komentar di `packages/hardhat/deploy/00_deploy_your_contract.js`
+</Aside>
+
+#### Konfigurasi Frontend
+
+Untuk mengonfigurasi frontend Anda, Anda perlu menambahkan Scroll Sepolia Testnet sebagai opsi jaringan, kemudian pilih sebagai default.
+
+Untuk menambahkan jaringan, ubah `packages/react-app/src/constants.js`.
+
+```jsx
+...
+export const NETWORKS = {
+...
+  scrollSepolia: {
+    name: "scrollSepolia",
+    color: "#e9d0b8",
+    chainId: 534351,
+    rpcUrl: "https://sepolia-rpc.scroll.io/",
+    blockExplorer: "https://sepolia.scrollscan.com",
+  },
+...
+}
+```
+
+Berikutnya, di dalam `packages/react-app/src/App.jsx` modifikasi:
+
+```jsx
+...
+/// 📡 What chain are your contracts deployed to?
+const initialNetwork = NETWORKS.scrollSepolia;
+...
+```

@@ -1,0 +1,86 @@
+---
+section: developers
+date: Last Modified
+title: "Tutorial Deploy Kontrak"
+lang: "id"
+permalink: "developers/guides/contract-deployment-tutorial"
+excerpt: "Scroll Sepolia Testnet memungkinkan komunitas untuk mendeploy smart contract di Scroll. Dalam tutorial ini, kami akan mengajarkan Anda cara mendeploy kontrak di Scroll Sepolia.."
+whatsnext: { "Interaksi Scroll Messenger Cross-chain": "/id/developers/guides/scroll-messenger-cross-chain-interaction/" }
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+Testnet Scroll Sepolia memungkinkan siapa pun untuk mendeploy smart contract di Scroll. Dalam tutorial ini, Anda akan belajar cara mendeploy kontrak di Scroll Sepolia menggunakan alat umum untuk pengembangan di Ethereum. [Repositori demo](https://github.com/scroll-tech/scroll-guides/tree/main/contract-deploy-demo) ini mengilustrasikan deploy kontrak dengan [Hardhat](https://hardhat.org/) dan [Foundry](https://github.com/foundry-rs/foundry).
+
+
+<Aside type="tip" title="Dapatkan Testnet ETH?">
+  Sebelum Anda mulai menerapkan kontrak, Anda perlu meminta test token dari faucet Sepolia dan menggunakan
+  [bridge](https://scroll.io/bridge) untuk mentransfer beberapa ETH pengujian dari _Sepolia_ ke _Scroll Sepolia_. Atau, Anda
+  dapat memperoleh Scroll Sepolia ETH secara langsung. Lihat [Faucet](/id/user-guide/faucet/) dan [Bridge](/id/user-guide/bridge/) kami
+   panduan untuk bantuan.
+</Aside>
+
+## Mendeploy kontrak dengan Hardhat
+
+1. Jika belum, instal [nodejs](https://nodejs.org/en/download/) dan [yarn](https://classic.yarnpkg.com/lang/en/docs/install).
+2. Clone repositori dan instal dependensi:
+
+   ```shell
+   git clone https://github.com/scroll-tech/scroll-guides.git
+   cd scroll-guides/contract-deploy-demo
+   yarn install
+   ```
+
+3. Buat file `.env` mengikuti contoh `.env.example` di direktori root. Ubah `PRIVATE_KEY` menjadi kunci privat akun Anda di `.env`.
+
+4. Jalankan `yarn compile` untuk mengkompilasi kontrak.
+
+5. Jalankan `yarn deploy:scrollTestnet` untuk mendeploy kontrak di Testnet Scroll Sepolia.
+
+6. Jalankan `yarn test` untuk pengujian Hardhat.
+
+## Mendeploy kontrak dengan Foundry
+
+1. Clone repo:
+
+   ```shell
+   git clone https://github.com/scroll-tech/scroll-guides.git
+   cd scroll-guides/contract-deploy-demo
+   ```
+
+2. Install Foundry:
+
+   ```shell
+   curl -L https://foundry.paradigm.xyz | bash
+   foundryup
+   ```
+
+3. Jalankan `forge build` untuk membangun projek.
+
+4. Mendeploy kontrak dengan Foundry:
+
+   ```bash
+   forge create --rpc-url https://sepolia-rpc.scroll.io/ \
+     --value <lock_amount> \
+     --constructor-args <unlock_time> \
+     --private-key <your_private_key> \
+     --legacy \
+     contracts/Lock.sol:Lock
+   ```
+
+   - `<lock_amount>` adalah jumlah test `ETH` yang akan dikunci di kontrak. Cobalah atur ke jumlah kecil, seperti `0.0000001ether`. 
+   - `<unlock_time>` adalah Unix timestamp setelahnya dana yang dikunci di kontrak akan tersedia untuk penarikan. Cobalah atur ke beberapa Unix timestamp di masa depan, seperti `1696118400` (Unix timestamp ini sesuai dengan 1 Oktober 2023).
+
+   Contoh:
+
+   ```bash
+   forge create --rpc-url https://sepolia-rpc.scroll.io/ \
+     --value 0.00000000002ether \
+     --constructor-args 1696118400 \
+     --private-key 0xabc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc1 \
+     --legacy contracts/Lock.sol:Lock
+   ```
+
+## Pertanyaan dan Umpan Balik
+
+Terima kasih telah berpartisipasi dalam dan mengembangkan di Testnet Scroll Sepolia! Jika Anda mengalami masalah, bergabunglah dengan [Discord](https://discord.gg/scroll) kami dan tanyakan kepada kami di saluran `#testnet-devs`.

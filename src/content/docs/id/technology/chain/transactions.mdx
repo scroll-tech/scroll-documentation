@@ -1,0 +1,91 @@
+---
+section: technology
+date: Last Modified
+title: "Transaksi"
+lang: "id"
+permalink: "technology/chain/transactions"
+whatsnext: { "Blok": "/id/technology/chain/blocks/" }
+---
+
+import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import TransactionBatching from "../_images/batching.png"
+
+Sebuah transaksi adalah pesan yang ditandatangani secara kriptografis yang memulai transisi keadaan ke keadaan rantai. Ini bisa berupa transfer saldo sederhana atau memanggil kontrak pintar, yang pada gilirannya menjalankan program untuk mengubah keadaan.
+
+## Tipe Transaksi
+
+Saat ini, Scroll mendukung tiga jenis transaksi.
+
+- Transaksi Pra-EIP-155: Ini untuk mendukung kontrak [Singleton Factory](https://eips.ethereum.org/EIPS/eip-2470).
+- Transaksi Warisan (mengacu pada [EIP-155](https://eips.ethereum.org/EIPS/eip-155))
+- Transaksi Bertipe `L1MessageTx` (Tipe: `0x7E`): Ini adalah transaksi baru [EIP-2718](https://eips.ethereum.org/EIPS/eip-2718) yang diperkenalkan dalam Scroll seperti yang dijelaskan di bawah ini. Jenis transaksi ini untuk transaksi yang dimulai di L1.
+
+Perlu dicatat bahwa tipe transaksi [EIP-2930](https://eips.ethereum.org/EIPS/eip-2930) dan [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559) tidak didukung dalam Scroll saat ini. Scroll akan mengembalikan dua jenis transaksi ini di masa mendatang.
+
+### Transaksi Pesan L1
+
+Kami memperkenalkan jenis transaksi baru `L1MessageTx` untuk transaksi yang dimulai di L1. Jenis transaksi ini dimulai pada kontrak jembatan L1. Setiap kali pesan baru ditambahkan ke kontrak `L1MessageQueue` di L1, sekuens L2 akan membuat transaksi `L1MessageTx` yang sesuai untuk dimasukkan dalam blok-blok L2. Karena tanda tangan sudah secara implisit diverifikasi saat pengguna mengirimkan transaksi di L1, transaksi `L1MessageTx` tidak memiliki tanda tangan.
+
+Jenis transaksi `L1MessageTx` adalah `0x7E` dan muatan (payload)nya didefinisikan sebagai berikut.
+
+```go
+type L1MessageTx struct {
+	QueueIndex uint64          // The queue index of the message queue in L1 contract
+	Gas        uint64          // Gas limit
+	To         *common.Address // Cannot be nil, we do not allow contract creation from L1
+	Value      *big.Int
+	Data       []byte
+	Sender     common.Address
+}
+```
+
+Proses encoding RLP dari transaksi `L1MessageTx` mengikuti aturan [EIP-2718](https://eips.ethereum.org/EIPS/eip-2718) `TransactionType || TransactionPayload`, di mana `TransactionType` adalah `0x7E` dan `TransactionPayload = RLP(L1MessageTx)`.
+
+Dua perilaku yang mencolok dari transaksi `L1MessageTx`:
+
+- `QueueIndex` dalam transaksi adalah indeks antrian dalam antrian pesan L1, berbeda dari `Nonce` akun `Sender`. Namun, `Nonce` pengirim masih akan meningkat sebanyak 1 setelah transaksi.
+- Jenis transaksi ini tidak membayar [biaya L2](/id/developers/transaction-fees-on-scroll#l2-fee) atau [biaya L1](/id/developers/transaction-fees-on-scroll#l1-fee). Biaya L2 sudah dibayar saat pengguna mengirimkan transaksi di L1. Biaya L1 tidak dikenakan karena data transaksi `L1MessageTx` sudah tersedia di kontrak jembatan L1.
+
+## Siklus Hidup Transaksi
+
+Siklus hidup transaksi dalam Scroll terdiri dari tiga fase berikut:
+
+1. **Confirmed**: Pengguna mengirimkan transaksi ke kontrak jembatan L1 atau sekuenser L2. Transaksi menjadi `Confirmed` setelah dieksekusi dan disertakan dalam sebuah blok L2.
+2. **Committed**: Transaksi disertakan dalam sebuah batch dan sebuah _transaksi commit_ yang berisi data batch ini dikirimkan ke L1. Setelah transaksi commit selesai di L1, status transaksi dalam batch ini menjadi `Committed`. 
+3. **Finalized**: Bukti keabsahan batch ini dihasilkan dan diverifikasi di L1. Setelah _transaksi finalisasi_ berhasil dan dikonfirmasi di blok L1, status transaksi L2 dalam batch ini menjadi `Finalized`. Akar status baru dapat digunakan oleh pihak ketiga dengan aman.
+
+### Mengirimkan Transaksi
+
+Ada dua titik masuk di mana pengguna dapat mengirimkan transaksi ke Scroll.
+
+Pertama, pengguna dapat langsung mengirimkan transaksi ke sekuenser L2. Untuk melakukannya, pengguna hanya perlu mengkonfigurasi dompet mereka dan terhubung ke titik akhir RPC Scroll. Sekuenser memvalidasi transaksi dan menyimpannya dalam kolam transaksi lokalnya.
+
+Kedua, transaksi deposit dan diperlukan berasal dari L1. Kontrak jembatan L1 Scroll menyediakan tiga titik masuk untuk pengguna dan kontrak pintar mengirimkan transaksi dari L1. Semua pesan yang dikirim melalui tiga titik masuk ini akan ditambahkan ke kontrak `L1MessageQueue`.
+
+- Kontrak `ScrollGatewayRouter` dan beberapa gateway token standar memungkinkan pengguna dan kontrak untuk melakukan deposit token standar ke L2. Lihat lebih banyak detail di [Deposit Token Gateways](/technology/bridge/deposit-gateways).
+- Kontrak `L1ScrollMessenger` memungkinkan pengguna dan kontrak untuk mengirimkan pesan sembarang ke L2. Lihat lebih banyak detail di [Mengirim Pesan Sembarang](/id/technology/bridge/cross-domain-messaging#mengirim-pesan-arbitrary).
+- Kontrak `EnforcedTxGateway` memungkinkan EOA untuk memulai transaksi yang diperlukan dari alamat yang sama untuk menarik token atau memanggil kontrak lain di L2. Lihat lebih banyak detail di [Mengirimkan Transaksi yang Diperlukan](/id/technology/bridge/cross-domain-messaging#mengirim-transaksi-enforced).
+
+Sekuenser Scroll secara berkala memulai pekerjaan pertambangan baru. Ia menarik pesan-pesan L1 dari kontrak `L1MessageQueue` dan transaksi dalam mempool L2 dan menutup sebuah blok. Begitu sebuah transaksi disertakan dalam blok L2, statusnya menjadi `Dikonfirmasi`.
+
+### Data Transaksi Commit
+
+Node rollup mengumpulkan blok L2 baru dan mengemasnya ke dalam chunk dan batch (lihat lebih banyak detail di [Transaksi Batch](/id/technology/chain/transactions#transaksi-batch)). Secara berkala, node ini mengirim _Transaksi Commit_ yang mengirimkan data dari batch transaksi ke kontrak `ScrollChain` di L1. Setelah Transaksi Commit selesai di sebuah blok L1, status transaksi dalam batch ini menjadi `Dikonfirmasi`. Pada saat ini, pengguna dapat sepenuhnya membangun kembali keadaan L2 berdasarkan data yang dikomitmen dari kontrak L1.
+
+### Transaksi Finalisasi
+
+Setelah bukti keabsahan dihasilkan, node rollup mengirim _Transaksi Finalisasi_ termasuk bukti keabsahan dan akar status baru setelah batch ini untuk verifikasi on-chain. Begitu Transaksi Finalisasi berhasil dan dikonfirmasi di sebuah blok L1, status transaksi L2 dalam batch ini menjadi `Difinalisasi`. Akar status baru dapat digunakan oleh pihak ketiga dengan aman.
+
+## Transaksi Batch
+
+<ClickToZoom src={TransactionBatching} alt="Transaction Batching" />
+
+Di Scroll, transaksi dikelompokkan dalam beberapa tingkat.
+
+1. Sejumlah transaksi yang diurutkan dikemas ke dalam sebuah blok.
+2. Serangkaian blok yang berurutan digabungkan menjadi sebuah chunk. Chunk adalah unit dasar untuk pembangkitan bukti dari sirkuit zkEVM.
+3. Serangkaian chunk yang berurutan digabungkan menjadi sebuah batch. Batch adalah unit dasar untuk komitmen data dan verifikasi bukti di L1. Bukti untuk sebuah batch, atau _bukti batch_, adalah bukti terkumpul dari bukti chunk dalam batch ini.
+
+Tujuan dari skema pengelompokan multi-lapisan ini adalah untuk mengurangi biaya gas dari komitmen data onchain dan verifikasi bukti. Pendekatan ini meningkatkan granularitas unit rollup di L1 sambil mempertimbangkan kapasitas sirkuit yang tetap. Akibatnya, pengelompokan mengurangi data yang harus disimpan di kontrak dan membagi biaya verifikasi bukti ke lebih banyak transaksi L2.
+
+Setelah sebuah chunk dibuat, sebuah tugas pembuktian chunk yang sesuai akan dibuat dan dikirim ke seorang pembuktik zkEVM. Setelah pembuatan sebuah batch baru, dua tindakan berikut terjadi: (a) node rollup melakukan komitmen data transaksi dan informasi blok dari batch ini ke kontrak L1, dan (b) sebuah tugas pembuktian batch untuk mengumpulkan bukti chunk dikirimkan ke seorang pembuktik agregator. Standar untuk mengusulkan sebuah chunk dan sebuah batch dijelaskan dalam [Node Rollup](/id/technology/sequencer/rollup-node).

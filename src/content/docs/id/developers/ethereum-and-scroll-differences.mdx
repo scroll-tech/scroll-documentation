@@ -1,0 +1,97 @@
+---
+section: developers
+date: Last Modified
+title: "Perbedaan Ethereum & Scroll"
+lang: "id"
+permalink: "developers/ethereum-and-scroll-differences"
+whatsnext: { "L1 & L2 Bridging": "/id/developers/l1-and-l2-bridging/" }
+excerpt: "There are a number of technical details that differ between Ethereum mainnet's EVM and Scroll's modified design for a zkEVM. Below you can see those differences as they exist now."
+---
+
+import Aside from "../../../../components/Aside.astro"
+
+Sejumlah detail teknis berbeda antara EVM Ethereum mainnet dan desain modifikasi Scroll untuk zkEVM. Di bawah ini Anda dapat melihat perbedaan tersebut sebagaimana ada di Scroll dan Scroll Sepolia.
+
+Untuk kontributor sumber terbuka dan pembangun infrastruktur, silakan hubungi tim kami untuk dukungan tambahan.
+
+<Aside type="tip" title="Jangan Khawatir!">
+  Bagi pengembang Solidity rata-rata, detail-detail ini tidak akan memengaruhi pengalaman pengembangan Anda.
+</Aside>
+
+## Opcodes EVM
+
+| Opcode                      | Padanan Solidity    | Perilaku Scroll                                                                                           |
+| --------------------------- | ------------------- | --------------------------------------------------------------------------------------------------------- |
+| `BLOCKHASH`                 | `block.blockhash`   | Mengembalikan `keccak(chain_id \|\| block_number)` untuk 256 blok terakhir.                                |
+| `COINBASE`                  | `block.coinbase`    | Mengembalikan alamat kontrak vault biaya yang sudah didaftarkan sebelumnya. Lihat [Kontrak Scroll](/developers/scroll-contracts). |
+| `DIFFICULTY` / `PREVRANDAO` | `block.difficulty`  | Mengembalikan 0.                                                                                          |
+| `BASEFEE`                   | `block.basefee`     | Dinonaktifkan.[^eip1559] Jika opcode ini dijumpai, transaksi akan direversi.                                |
+| `SELFDESTRUCT`              | `selfdestruct`      | Dinonaktifkan. Jika opcode ini dijumpai, transaksi akan direversi.[^willadpot]                             |
+
+[^eip1559]: Saat ini kami menonaktifkan EIP-1559 di Scroll.
+[^willadpot]: Akan berubah untuk mengadopsi solusi Ethereum di masa mendatang.
+
+## Precompiles EVM
+
+Precompile `SHA2-256` (alamat `0x2`), `RIPEMD-160` (alamat `0x3`), dan `blake2f` (alamat `0x9`) saat ini tidak didukung. Panggilan ke kontrak precompile ini akan direversi. Kami berencana untuk mengaktifkan ketiga precompile ini dalam hard fork masa depan.
+
+Precompile `modexp` didukung tetapi hanya mendukung input dengan ukuran kurang dari atau sama dengan 32 byte (yaitu `u256`).
+
+Precompile `ecPairing` didukung, tetapi jumlah titik (set, pasangan) dibatasi menjadi 4, bukan 6.
+
+Precompile EVM lainnya semuanya didukung: `ecRecover`, `identity`, `ecAdd`, `ecMul`.
+
+## Akun State
+
+### **Kolom Tambahan**
+
+Kami menambahkan dua kolom dalam objek `StateAccount` saat ini: `PoseidonCodehash` dan `CodeSize`.
+
+```go
+type StateAccount struct {
+	Nonce    uint64
+	Balance  *big.Int
+	Root     common.Hash // merkle root of the storage trie
+	KeccakCodeHash []byte // still the Keccak codehash
+	// added fields
+	PoseidonCodeHash []byte // the Poseidon codehash
+	CodeSize uint64
+}
+```
+
+### **CodeHash**
+
+Terkait dengan hal ini, kami menyimpan dua jenis codehash untuk setiap bytecode kontrak: hash Keccak dan hash Poseidon.
+
+`KeccakCodeHash` dipertahankan untuk menjaga kompatibilitas dengan `EXTCODEHASH`. `PoseidonCodeHash` digunakan untuk memverifikasi kebenaran bytecode yang dimuat dalam zkEVM, di mana hashing Poseidon jauh lebih efisien.
+
+### CodeSize
+
+Ketika memverifikasi `EXTCODESIZE`, mahal untuk memuat seluruh data kontrak ke dalam zkEVM. Sebagai gantinya, kami menyimpan ukuran kontrak di penyimpanan selama pembuatan kontrak. Dengan cara ini, kami tidak perlu memuat kode — sebuah bukti penyimpanan sudah cukup untuk memverifikasi opcode ini.
+
+## Waktu Blok
+
+Scroll bertujuan untuk memiliki waktu blok konstan selama 3 detik. Ini lebih pendek dan lebih konsisten daripada 12 detik yang digunakan di Ethereum dalam kondisi ideal.
+
+Ini dipilih atas dua alasan:
+
+- Memiliki waktu blok yang lebih cepat dan konstan menghasilkan umpan balik yang lebih cepat dan pengalaman pengguna yang lebih baik.
+- Saat kami mengoptimalkan sirkuit zkEVM di jaringan uji kami, bahkan jika kami mempertahankan batas gas yang lebih kecil per blok atau batch, kami masih dapat mencapai throughput yang lebih tinggi daripada Ethereum.
+
+## EIP Mendatang
+
+Kami memperhatikan semua EIP yang muncul yang diadopsi oleh Ethereum dan mengadopsinya saat cocok. Jika Anda tertarik dengan lebih banyak detail, hubungi kami di [forum komunitas kami](https://community.scroll.io) atau di [Scroll Discord](https://discord.gg/scroll).
+
+## Biaya Transaksi
+
+Biaya yang dibebankan ke transaksi Scroll terdiri dari dua bagian:
+
+- **Biaya gas L2:** mirip dengan L1, jumlah biaya eksekusi L2 sama dengan `harga_gas_L2 * gas_digunakan_L2`, yang mencakup biaya-biaya berikut:
+  - Eksekusi & biaya penyimpanan sekuen L2
+  - Biaya verifikasi bukti validitas dan penyelesaian akhir di L1
+  - Biaya pembuat bukti
+- **Biaya data L1:** biaya tambahan di atas biaya gas L2. Biaya data L1 hanya dikenakan pada transaksi yang dimulai dari L2, bukan dari L1. Biaya tersebut menutupi biaya pengiriman data ke L1 untuk ketersediaan data. Karena kami menggulung data tx ke L1, biaya gulung L1 dihitung berdasarkan ukuran data tx.
+
+Untuk informasi lebih lanjut, lihat [Biaya Transaksi di Scroll](/id/developers/transaction-fees-on-scroll).
+
+---

@@ -1,0 +1,63 @@
+---
+import NavCard from "~/components/NavCard.astro"
+import StartSvg from "~/assets/svgs/home/home-start.svg?raw"
+import DevelopSvg from "~/assets/svgs/home/home-develop.svg?raw"
+import TechnologySvg from "~/assets/svgs/home/home-technology.svg?raw"
+import LearnSvg from "~/assets/svgs/home/home-learn.svg?raw"
+import SectionHeader from "~/components/SectionHeader/index.astro"
+
+const navList = [
+  {
+    icon: StartSvg,
+    name: "Memulai",
+    content: "Bridge ke Scroll dan jelajahi Ekosistem dApp kami.",
+    link: "/id/getting-started/overview",
+  },
+  {
+    icon: DevelopSvg,
+    name: "Developer",
+    content: "Jelajahi dokumentasi pengembang Scroll.",
+    link: "/id/developers",
+  },
+  {
+    icon: TechnologySvg,
+    name: "Teknologi",
+    content: "Ikhtisar Arsitektur zkEVM Scroll.",
+    link: "/id/technology",
+  },
+  {
+    icon: LearnSvg,
+    name: "Belajar",
+    content: "Pengantar dunia ZK dan Skalabilitas.",
+    link: "/id/learn",
+  },
+]
+---
+
+<div class="navigate">
+  <SectionHeader title="Navigasikan Dokumen" content="Mulai kembangkan di Scroll hari ini." />
+  <div class="navs">
+    {navList.map(({ icon, name, content, link }) => <NavCard icon={icon} name={name} content={content} link={link} />)}
+  </div>
+</div>
+
+<style>
+  .navigate {
+    margin-top: 146px;
+  }
+
+  .navs {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  @media screen and (max-width: 50em) {
+    .navigate {
+      margin-top: 106px;
+    }
+    .navs {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+</style>
