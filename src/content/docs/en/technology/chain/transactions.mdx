@@ -4,7 +4,7 @@ date: Last Modified
 title: "Transactions"
 lang: "en"
 permalink: "technology/chain/transactions"
-whatsnext: { "Blocks": "/technology/chain/blocks/" }
+whatsnext: { "Blocks": "/en/technology/chain/blocks/" }
 ---
 
 import ClickToZoom from "../../../../../components/ClickToZoom.astro"
@@ -20,11 +20,11 @@ Currently, Scroll supports three types of transactions.
 - Legacy Transaction (refer to [EIP-155](https://eips.ethereum.org/EIPS/eip-155))
 - `L1MessageTx` Typed Transaction (Type: `0x7E`): This is a new [EIP-2718](https://eips.ethereum.org/EIPS/eip-2718) transaction introduced in Scroll as described below. This transaction type is for transactions initiated on L1.
 
-Note that [EIP-2930](https://eips.ethereum.org/EIPS/eip-2930) and [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559) transaction type are not supported in Scroll currently. Scroll will bring back these two transaction types in the future.
+Note that [EIP-2930](https://eips.ethereum.org/EIPS/eip-2930) and [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559) transaction types are not supported in Scroll currently. Scroll will bring back these two transaction types in the future.
 
 ### L1 Message Transaction
 
-We introduce a new type of transactions `L1MessageTx` for L1 initiated transactions. This type of transaction is initiated on the L1 bridge contract. Every time a new message is appended to the `L1MessageQueue` contract on L1, the L2 sequeuncer will create a corresponding `L1MessageTx` transaction to be included in the L2 blocks. Because the signature was already implicitly verified when users submitted the transaction on L1, `L1MessageTx` transactions don't have signature.
+We introduce a new type of transaction `L1MessageTx` for L1-initiated transactions. This type of transaction is initiated on the L1 bridge contract. Every time a new message is appended to the `L1MessageQueue` contract on L1, the L2 sequencer will create a corresponding `L1MessageTx` transaction to be included in the L2 blocks. Because the signature was already implicitly verified when users submitted the transaction on L1, `L1MessageTx` transactions don't have signature.
 
 The `L1MessageTx` transaction type is `0x7E` and its payload is defined as follows.
 
@@ -43,15 +43,15 @@ The RLP encoding of `L1MessageTx` transactions follows the [EIP-2718](https://ei
 
 Two noticeable behaviors of the `L1MessageTx` transactions:
 
-- The `QueueIndex` in the transaction is the queue index in the L1 message queue, different from the `Nonce` of the `Sender` account. But the sender's `Nonce` will still increases by 1 after the transaction.
+- The `QueueIndex` in the transaction is the queue index in the L1 message queue, different from the `Nonce` of the `Sender` account. But the sender's `Nonce` will still increase by 1 after the transaction.
 - This type of transactions doesn't pay [L2 fee](/developers/transaction-fees-on-scroll#l2-fee) or [L1 fee](/developers/transaction-fees-on-scroll#l1-fee). The L2 fee is already paid when users submit transactions on L1. The L1 Fee isn't charged because the data of `L1MessageTx` transactions is already available in the L1 bridge contract.
 
 ## Transaction Life Cycle
 
 The transaction life cycle in the Scroll contains the following three phases:
 
-1. **Confirmed**: Users submits a transaction to either the L1 bridge contract or L2 sequencer. The transaction becomes `Confirmed` after it gets executed and included in a L2 block.
-2. **Committed**: The transactions are included in a batch and a _commit transaction_ that contains the data of this batch is submitted to L1. After the commit transaction is finalized in the L1 blocks, the transactions in this batch becomes `Committed`.
+1. **Confirmed**: Users submits a transaction to either the L1 bridge contract or L2 sequencer. The transaction becomes `Confirmed` after it gets executed and included in an L2 block.
+2. **Committed**: The transactions are included in a batch and a _commit transaction_ that contains the data of this batch is submitted to L1. After the commit transaction is finalized in the L1 blocks, the transactions in this batch become `Committed`.
 3. **Finalized**: The validity proof of this batch is generated and verified on the L1. After the _finalize transaction_ is finalized on L1, the status of the transaction is `Finalized` and becomes a canonical part of the Scroll L2 chain.
 
 ### Submit Transactions
@@ -74,7 +74,7 @@ The rollup node collects new L2 blocks and packs them into chunks and batches (s
 
 ### Finalize Transactions
 
-After the validity proof is generated, the rollup node sends a _Finalize Transaction_ including the validity proof and the new state root after this batch for onchain verification. Once the Finalize Transaction succeeds and confirmed in a L1 block, the status of the L2 transactions in this batch becomes `Finalized`. The new state root can be used by third parties trustlessly.
+After the validity proof is generated, the rollup node sends a _Finalize Transaction_ including the validity proof and the new state root after this batch for onchain verification. Once the Finalize Transaction succeeds and is confirmed in an L1 block, the status of the L2 transactions in this batch becomes `Finalized`. The new state root can be used by third parties trustlessly.
 
 ## Transaction Batching
 

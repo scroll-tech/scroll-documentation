@@ -5,6 +5,18 @@
   @apply leading-[1.3] font-medium tracking-[0.18px];
 }
 
+:is(h1, h2, h3, h4, h5, h6) {
+  > a {
+    color: inherit;
+    font-weight: inherit !important;
+    font-family: inherit !important;
+  }
+
+  &:hover > a {
+    color: inherit;
+  }
+}
+
 :where(h6) {
   @apply text-base mb-2;
 }
@@ -125,7 +137,7 @@
 }
 
 /* Text styles */
-:where(.text, .text-100, .text-200, .text-300, ) {
+:where(.text, .text-100, .text-200, .text-300) {
   @apply font-text font-normal text-primary leading-[1rem];
 }
 

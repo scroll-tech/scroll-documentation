@@ -17,7 +17,65 @@ The following contracts are used to initiate upgrades and execute upgrades after
 | L2 Scroll Multisig | Scroll| [`0xEfc9D1096fb65c832207E5e7F13C2D1102244dbe`](https://scrollscan.com/address/0xEfc9D1096fb65c832207E5e7F13C2D1102244dbe)|
 | L2 Timelock | Scroll | [`0xf6069DB81239E5194bb53f83aF564d282357bc99`](https://scrollscan.com/address/0xf6069DB81239E5194bb53f83aF564d282357bc99)|
 
-## February 2024 Bridge Upgrade
+You can join our [Telegram channel for technical updates](https://t.me/scroll_tech_updates), which includes future upgrade announcements and on-chain operation events.
+
+## Bernoulli Upgrade
+
+### Overview
+
+This upgrade features a significant reduction in transaction costs by introducing support for EIP-4844 data blobs and supporting the SHA2-256 precompile. 
+
+### Timeline
+
+- **Scroll Sepolia**
+	- Network Upgrade: April 15th, 2024
+- **Scroll Mainnet**
+	- Upgrade Initiation: April 15th, 2024
+	- Timelock Completion & Upgrade: April 29th, 2024
+
+### Technical Details
+
+#### Contract changes
+
+The contract changes for this upgrade are in [this PR](https://github.com/scroll-tech/scroll/pull/1179), along with the audit fixes [here](https://github.com/scroll-tech/scroll/pulls?q=is%3Apr+created%3A2024-04-10..2024-04-11+fix+in%3Atitle+label%3Abug). The main changes are as follows: 
+
+- `ScrollChain` now accepts batches with either calldata or blob encoding in `commitBatch`.
+- `ScrollChain` now supports finalizing blob-encoded batches through `finalizeBatchWithProof4844`.
+- `MultipleVersionRollupVerifier` can now manage different on-chain verifiers for each batch encoding version.
+
+#### Node changes
+
+The new node version is `v5.3.0`. See [here](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.3.0) for the release log.
+
+#### zkEVM circuit changes
+
+The new version of zkevm circuits is `v0.10.3`. See [here](https://github.com/scroll-tech/zkevm-circuits/releases/tag/v0.10.3) for the release log.
+
+#### Audits
+
+- [OpenZeppelin](https://blog.openzeppelin.com/scroll-eip-4844-support-audit)
+- TrailofBits (will be posted soon)
+
+### Compatibility
+
+#### Sequencer and follower nodes (l2geth)
+
+This upgrade is a hard fork as it introduces the new blob data type and the SHA2-256 precompiled contract. Operators running an `l2geth` node are required to upgrade before the hard fork block. See the [node releases](https://github.com/scroll-tech/go-ethereum/releases) for more information.
+
+#### Indexers and Bridges
+
+This upgrade changes the format that Scroll uses to publish data to Ethereum. Projects that rely on this data should carefully review [the new data format](/en/technology/chain/rollup/#codec), and check whether their decoders need to be adjusted. A summary of the new format:
+
+- The format of [`BlockContext`](https://github.com/scroll-tech/scroll/blob/5362e28f744093495c1c09a6b68fc96a3264278b/common/types/encoding/codecv1/codecv1.go#L125) will not change.
+- `Chunks` will [no longer include](https://github.com/scroll-tech/scroll/blob/5362e28f744093495c1c09a6b68fc96a3264278b/common/types/encoding/codecv1/codecv1.go#L162) the L2 transaction data. This will instead be [stored in a blob](https://github.com/scroll-tech/scroll/blob/5362e28f744093495c1c09a6b68fc96a3264278b/common/types/encoding/codecv1/codecv1.go#L284) attached to the `commitBatch` transaction.
+- `BatchHeader` now contains one new field, [`BlobVersionedHash`](https://github.com/scroll-tech/scroll/blob/5362e28f744093495c1c09a6b68fc96a3264278b/common/types/encoding/codecv1/codecv1.go#L405). 
+
+#### Provers
+
+This upgrade involves a breaking change in [zkevm-circuits](https://github.com/scroll-tech/zkevm-circuits). Operators running a prover node are required to upgrade.
+
+
+## Bridge Upgrade
 
 ### Overview
 
@@ -56,7 +114,7 @@ To reduce bridging costs, we implemented several gas optimizations on our bridge
 - In `ScrollChain`, change `messageQueue` and `verifier` to `immutable`.
 - In `L1ScrollMessenger`, change `counterpart`, `rollup`, and `messageQueue` to `immutable`.
 - In all token gateways, change `counterpart`, `router`, and `messenger` to `immutable`.
-- Merge `L1MessageQueue` and `L2GasPriceOracle` into a single contract `L1MessageQueueWithGasPriceOracle` (deployed on the same address as the previous `L1MessageQueue`). In this contract we also change `messenger` and `scrollChain` to `immutable`, and simplify `calculateIntrinsicGasFee`.
+- Merge `L1MessageQueue` and `L2GasPriceOracle` into a single contract `L1MessageQueueWithGasPriceOracle` (deployed on the same address as the previous `L1MessageQueue`). In this contract, we also change `messenger` and `scrollChain` to `immutable`, and simplify `calculateIntrinsicGasFee`.
 
 **Changes to L2 contracts:**
 
