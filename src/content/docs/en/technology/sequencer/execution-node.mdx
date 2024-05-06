@@ -4,12 +4,12 @@ date: Last Modified
 title: "Execution Node"
 lang: "en"
 permalink: "technology/sequencer/execution-node"
-whatsnext: { "Rollup Node": "/technology/sequencer/rollup-node/" }
+whatsnext: { "Rollup Node": "/en/technology/sequencer/rollup-node/" }
 ---
 
 import Aside from "../../../../../components/Aside.astro"
 
-The execution node is one of the core components in the Scroll protocol: it is responsible for maintaining the L2 blockchain. The execution node also ensures that the user and developer experience on Scroll closely resemble those on Ethereum. It achieves this by maintaining EVM and RPC behaviour that is directly inherited from Ethereum, with very few modifications.
+The execution node is one of the core components in the Scroll protocol: it is responsible for maintaining the L2 blockchain. The execution node also ensures that the user and developer experience on Scroll closely resembles that on Ethereum. It achieves this by maintaining EVM and RPC behavior that is directly inherited from Ethereum, with very few modifications.
 
 The primary functions of Scroll's execution node are:
 - Collect transactions from L2 and L1.
@@ -24,7 +24,7 @@ The secondary functions of Scroll's execution node are:
 
 The execution node, being a fork of [go-ethereum](https://github.com/ethereum/go-ethereum), inherits most of its functionality from Ethereum. This includes transaction and block data structures, EVM execution, RPC and p2p protocols. As these were not reimplemented but were directly inherited from `go-ethereum`, we can have a very high certainty of Scroll's compatibility with Ethereum.
 
-The following sections will introduce the main components of the execution node, the additional validation rules, and summary of modification details.
+The following sections will introduce the main components of the execution node, the additional validation rules, and a summary of modification details.
 
 ## `l2geth` Components
 
@@ -45,7 +45,7 @@ During block creation, if the next transaction would lead to proof overflow, the
 
 Skipping L2 transactions means simply discarding them. In this case, the user needs to submit another transaction with the same nonce that does not lead to proof overflow in order to proceed.
 
-Skipping L1 messages is a more explicit process. Both the `ScrollChain` contract on L1 and the zkEVM verifies that each L1 transaction in `L1MessageQueue` was either included and executed, or skipped. While the batch encoding does not contain L1 transactions, it does include a *skip bitmap* that indicates to `ScrollChain` which L1 messages were skipped. If an L1 deposit message is skipped, the user can get their tokens refunded on L1.
+Skipping L1 messages is a more explicit process. Both the `ScrollChain` contract on L1 and the zkEVM verify that each L1 transaction in `L1MessageQueue` was either included and executed, or skipped. While the batch encoding does not contain L1 transactions, it does include a *skip bitmap* that indicates to `ScrollChain` which L1 messages were skipped. If an L1 deposit message is skipped, the user can get their tokens refunded on L1.
 
 <Aside type="note" title="Note">
   {" "}
@@ -70,9 +70,9 @@ Scroll adds a few validation rules in addition to Ethereum's block validation ru
 
 ## Summary of Modifications
 
-The Scroll execution node inherits most of Ethereum's behaviours. However, we needed to make some breaking changes to `l2geth` to enable more efficient proving. This section provides a non-exhaustive list of the modifications, along with their rationale.
+The Scroll execution node inherits most of Ethereum's behaviors. However, we needed to make some breaking changes to `l2geth` to enable more efficient proving. This section provides a non-exhaustive list of the modifications, along with their rationale.
 
-- **State and storage tree**: Ethereum uses the MPT (Merkle-Partricia Trie) as its state and contract storage data structure. This trie's structure and the fact that it uses Keccak hash would make it prohibitively expensive for ZK circuits. `l2geth` instead uses [zkTrie](/technology/sequencer/zktrie): a binary Merkle trie with Poseidon hash for its state and contract storage.
+- **State and storage tree**: Ethereum uses the MPT (Merkle-Patricia Trie) as its state and contract storage data structure. This trie's structure and the fact that it uses Keccak hash would make it prohibitively expensive for ZK circuits. `l2geth` instead uses [zkTrie](/technology/sequencer/zktrie): a binary Merkle trie with Poseidon hash for its state and contract storage.
 - **StateAccount**: The modification of state account is described in the [Accounts and State](/technology/chain/accounts).
 - **EVM**: The modifications are described in the [EVM Differences from Ethereum](/technology/chain/differences)
 - **Transaction fees**

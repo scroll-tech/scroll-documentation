@@ -5,7 +5,7 @@ title: "KZG Commitment Scheme"
 lang: "en"
 permalink: "learn/zero-knowledge/kzg-commitment-scheme"
 excerpt: "KZG is used Ethereum’s Proto-Danksharding, and is also used in Scroll’s proof system. This article will give an overview of the KZG commitment scheme."
-whatsnext: { "Additional Resources": "/learn/zero-knowledge/additional-zk-learning-resources" }
+whatsnext: { "Additional Resources": "/en/learn/zero-knowledge/additional-zk-learning-resources" }
 ---
 
 One of the most widely used polynomial commitment schemes is the KZG commitment scheme. The scheme was originally [published](https://www.iacr.org/archive/asiacrypt2010/6477178/6477178.pdf) in 2010 by Kate, Zaverucha, and Goldberg.
@@ -51,7 +51,7 @@ There are established methods of conducting trusted setup ceremonies with weak t
 
 - Given a commitment $c = [P(\tau)]_1$, an evaluation $P(a) = b$, and a proof $\pi = [Q(\tau)]_1$
 - Verify that $e(\pi, [\tau - a]_2) = e(c - [b]_1, h)$
-  - Some algebra shows that this is equivalent to checking that that the quotient polynomial is correctly formed at $\tau$: $Q(\tau) = \frac{P(\tau) -b}{\tau-a}$
+  - Some algebra shows that this is equivalent to checking that the quotient polynomial is correctly formed at $\tau$: $Q(\tau) = \frac{P(\tau) -b}{\tau-a}$
     $$
     \begin{align*}
     & e(\pi, [\tau - a]_2) = e(c - [b]_1, h) \\ \iff

@@ -4,7 +4,7 @@ date: Last Modified
 title: "Transaction Fees on Scroll"
 lang: "en"
 permalink: "developers/transaction-fees-on-scroll"
-whatsnext: { "Contract Deployment Tutorial": "/developers/guides/contract-deployment-tutorial/" }
+whatsnext: { "Contract Deployment Tutorial": "/en/developers/guides/contract-deployment-tutorial/" }
 excerpt: "Understand how L1 and L2 transaction fees work on Scroll "
 ---
 
@@ -178,7 +178,7 @@ On Sepolia, an upgraded `L1MessageQueueWithGasPriceOracle` should be used, deplo
 If your system supports off-chain mechanisms, you can also call `eth_estimateGas` and `eth_gasPrice` on any Scroll RPC node to get an estimate of the gas required for a given transaction.
 
 <Aside type="danger" title="Upgrade Notice">
-After the February 2024 Bridge Upgrade, `L1GasPriceOracle` will be deprecated in favor of `L1MessageQueueWithGasPriceOracle`, which will be available at [`0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B`](https://etherscan.io/address/0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B).
+After the February 2024 Bridge Upgrade, `L2GasPriceOracle` will be deprecated in favor of `L1MessageQueueWithGasPriceOracle`, which will be available at [`0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B`](https://etherscan.io/address/0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B).
 
 The upgrade is expected to be finalized on February 21, 2024, after a two-week timelock. Scroll Sepolia has already undergone this upgrade. Read more [here](https://scroll.io/blog/protocol-upgrade-bridging-cost-reduction).
 

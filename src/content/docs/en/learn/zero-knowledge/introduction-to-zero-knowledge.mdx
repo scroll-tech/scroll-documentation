@@ -4,7 +4,7 @@ date: Last Modified
 title: "Introduction to Zero Knowledge"
 lang: "en"
 permalink: "learn/zero-knowledge/introduction-to-zero-knowledge"
-whatsnext: { "Polynomial Commitment Schemes": "/learn/zero-knowledge/polynomial-commitment-schemes" }
+whatsnext: { "Polynomial Commitment Schemes": "/en/learn/zero-knowledge/polynomial-commitment-schemes" }
 excerpt: 'Over the past decade, a field of cryptography called "zero knowledge" has been rapidly advancing. It promises new ways to build applications and enables protocols to increase efficiency, security, and privacy.'
 ---
 
@@ -38,9 +38,9 @@ The above properties of ZKPs are extremely useful in the context of verifiabilit
 
 In practice, ZKPs can be quite complex to implement into a system, but at a high level, you’ll want to understand that zero knowledge proofs have a few components: a circuit, a proof, and a verifier.
 
-The circuit is a program that takes in input data, and asserts that the input data is valid according to some “constraints” that the input data must satisfy. The input data can be public (known to everyone), private (know to only the prover), or mixed (some inputs are public and some are private).
+The circuit is a program that takes in input data and asserts that the input data is valid according to some “constraints” that the input data must satisfy. The input data can be public (known to everyone), private (known to only the prover), or mixed (some inputs are public and some are private).
 
-A proof can be generated, claiming that an input satisfies the circuit. The proof reveals no information about the private inputs, and is quite small in size.
+A proof can be generated, claiming that an input satisfies the circuit. The proof reveals no information about the private inputs and is quite small in size.
 
 The verifier can check (1) that the proof is valid, (2) that the proof matches the constraints laid out by the circuit (and isn’t just a phony proof), and (3) that the public inputs used to generate the proof match those being used by the verifier. Note that this check performed by the verifier is generally a cheap computation.
 
@@ -62,7 +62,7 @@ The proof, along with the puzzle, could be passed to Bob, who could then use a *
 
 ## Zero Knowledge Proofs and Blockchains
 
-One of the primary motivations for recent advances in ZKPs is its application to blockchains. Two of the key challenges that decentralized blockchains face are privacy and scalability - all the data is public, and every node in the network has to re-run every computation on the network. ZKPs can help solve both these challenges.
+One of the primary motivations for recent advances in ZKPs is its application to blockchains. Two of the key challenges that decentralized blockchains face are privacy and scalability - all the data is public, and every node in the network has to re-run every computation on the network. ZKPs can help solve both of these challenges.
 
 While there are several projects utilizing the zero knowledge property of ZKPs to build privacy-preserving applications, we at Scroll use only the succinctness property of ZKPs to scale Ethereum.
 
