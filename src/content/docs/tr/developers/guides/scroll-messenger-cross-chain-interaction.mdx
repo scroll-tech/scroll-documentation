@@ -1,0 +1,146 @@
+---
+section: developers
+date: Last Modified
+title: "Scroll Messenger ile Zincirler Arası Etkileşim"
+lang: "tr"
+permalink: "developers/guides/scroll-messenger-cross-chain-interaction"
+whatsnext: { "Özel Ağ Geçidi üzerinden ERC20 köprüleyin": "/tr/developers/guides/bridge-erc20-through-the-custom-gateway" }
+excerpt: "Bu örnekte, Sepolia veya Scroll Sepolia test ağında bir kukla akıllı sözleşme oluşturacağız ve onunla karşı zincirden etkileşime geçeceğiz."
+---
+
+
+import Aside from "../../../../../components/Aside.astro"
+
+
+Bu örnekte, Sepolia veya Scroll üzerinde bir sahte akıllı sözleşme başlatacağız ve onunla karşı zincirden etkileşime geçeceğiz. Hem Sepolia'da hem de Scroll'da dağıtılmış olan "ScrollMessenger"ı kullanacağız.
+
+
+## Sözleşmelerin Dağıtılması
+
+
+### Hedef Akıllı Sözleşme
+
+
+Hedef akıllı sözleşmeyi dağıtarak başlayalım. Bu örnek için Greeter sözleşmesini kullanacağız, ancak siz başka herhangi bir sözleşmeyi kullanabilirsiniz. Sepolia veya Scroll'a dağıtabilirsiniz. Scroll'da L1 ve L2 aynı API'ı kullanır, dolayısıyla karar size bağlıdır.
+
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.16;
+
+
+// This Greeter contract will be interacted with through the ScrollMessenger across the bridge
+contract Greeter {
+ string public greeting = "Hello World!";
+
+
+ // This function will be called by executeFunctionCrosschain on the Operator Smart Contract
+ function setGreeting(string memory greeting_) public {
+   greeting = greeting_;
+ }
+}
+```
+
+
+Artık setGreeting'i zincirler arası bir şekilde yürüteceğiz.
+
+
+### Operatör Akıllı Sözleşmesi
+
+
+Diğer zincire geçin ve 'GreeterOperator'ı dağıtın. Eğer "Greeter" sözleşmesini L1'de dağıttıysanız, "GreeterOperator"ı L2'de dağıtın veya tam tersini uygulayın.
+
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.16;
+
+
+// The Scroll Messenger interface is the same on both L1 and L2, it allows sending cross-chain transactions
+// Let's import it directly from the Scroll Contracts library
+import "@scroll-tech/contracts@0.1.0/libraries/IScrollMessenger.sol";
+
+
+// The GreeterOperator is capable of executing the Greeter function through the bridge
+contract GreeterOperator {
+ // This function will execute setGreeting on the Greeter contract
+ function executeFunctionCrosschain(
+   address scrollMessengerAddress,
+   address targetAddress,
+   uint256 value,
+   string memory greeting,
+   uint32 gasLimit
+ ) public payable {
+   IScrollMessenger scrollMessenger = IScrollMessenger(scrollMessengerAddress);
+   // sendMessage is able to execute any function by encoding the abi using the encodeWithSignature function
+   scrollMessenger.sendMessage{ value: msg.value }(
+     targetAddress,
+     value,
+     abi.encodeWithSignature("setGreeting(string)", greeting),
+     gasLimit,
+     msg.sender
+   );
+ }
+}
+```
+
+
+## Zincirler Arası Fonksiyon Çağırma
+
+
+Mesajı `executeFunctionCrosschain` komutunu çalıştırıp aşağıdaki parametreleri ileterek iletiyoruz:
+
+
+- `scrollMessengerAddress`: Bu, "GreeterOperator" sözleşmesini nereye uyguladığınıza bağlı olacaktır.
+ - Sepolia'ya dağıttıysanız '0x50c7d3e7f7c656493D1D76aaa1a836CedfCBB16A', Scroll Sepolia'ya dağıttıysanız '0xBa50f5340FB9F3Bd074bD638c9BE13eCB36E603d' adreslerini kullanın.
+- `targetAddress`: Karşı zincirdeki 'Greeter' sözleşmesinin adresi.
+- `value`: Bu durumda '0'dır çünkü 'setGreeting' payable bir fonksiyon değil.
+- `greeting`: Mesaj yoluyla gönderilecek parametredir. `"Bu mesaj zincirler arasıydı!"` olarak ayarlayıp iletmeyi deneyin
+- `gasLimit`:
+ - L1'den L2'ye mesaj gönderiyorsanız '1000000' civarındaki gas limiti fazlasıyla yeterli olacaktır. Bununla birlikte, eğer çok yüksek ayarlarsanız ve "msg.value", "gasLimit" * "baseFee"yi karşılamıyorsa, işlem geri alınacaktır. 'msg.value' gaz ücretinden fazla ise kullanılmayan kısım iade edilecektir.
+ - L2'den L1'e mesaj gönderiyorsanız '0'ı değerini geçirin, çünkü işleminiz L1 üzerinde ek bir işlem yapılarak tamamlanacaktır.
+
+
+### L2'den L1'e gönderirken Mesajı Aktarın
+
+
+L2'den L1'e bir işlem geçtiğinde, L1 üzerinde ek bir "para çekimi gerçekleştirme işlemi" gönderilmelidir. Bunu yapmak için EOA cüzdanından L1 Scroll Messenger sözleşmesindeki 'relayMessageWithProof'u çağırmalısınız.
+
+
+
+
+Doğrudan [Etherscan Sepolia](https://sepolia.etherscan.io/address/0x50c7d3e7f7c656493d1d76aaa1a836cedfcbb16a#writeProxyContract#F3) üzerinden yapabilirsiniz.
+Bunu yapmak için köprülenmiş işlem ve diğer parametreler için bir Merkle dahil olma kanıtını iletmeniz gerekecektir. Bunları Scroll Köprü API'ını kullanarak sorgulayacaksınız.
+
+
+{/* TODO: finish looking into API issues */}
+
+
+API özelliklerini son haline getirmeye çalışıyoruz ancak şimdilik aşağıdaki uç noktayı getirin veya curl'leyin:
+
+
+```bash
+curl "https://sepolia-api-bridge.scroll.io/api/claimable?page_size=10&page=1&address=GREETER_OPERATOR_ADDRESS_ON_L2"
+```
+
+
+'GREETER_OPERATOR_ADDRESS_ON_L2' kısmını L2'de oluşturduğunuz GreeterOperator sözleşmesinin adresiyle değiştirin. [Scroll Messenger](/tr/developers/l1-and-l2-bridging/the-scroll-messenger) makalesinde Para Çekme Gerçekleştirme işlemlerini yürütme hakkında daha fazla bilgi edinin.
+
+
+<Aside type="danger" title="Deneysel API">
+ Bu API Bridge kullanıcı arayüzümüz için yapıldı. Henüz son haline ulaşmamıştır ve gelecekte değişebilir. API tamamlandığında bu kılavuzu güncelleyeceğiz.
+</Aside>
+
+
+<Aside type="caution" title="L2 → L1 Mesajınızı Herkes Yürütebilir">
+ `relayMessageWithProof` tamamen izin gerektirmeyen bir yapıdadır (permissionless), dolayısıyla L1 gas ücretlerini ödemeye istekli olan herkes sizin adınıza onu çağırabilir. Bu özellik, uygulamalar ve kullanıcılar için bu süreci otomatikleştirmeye yönelik araçlar da dahil olmak üzere ek destek altyapısına olanak tanır.
+</Aside>
+
+
+İşlemi hem L1 hem de L2'de yürütüp onayladıktan sonra, "Greeter" sözleşmesindeki "greeting"in yeni durumu “This message was cross-chain!” olmalıdır. Bir zincirden diğerine mesaj göndermek, işlem zincirinde onaylandıktan sonra yaklaşık 20 dakika sürecektir.
+
+
+Tebrikler, yerel köprümüzü kullanarak bir zincirden diğerine işlem gerçekleştirmiş oldunuz!
+
+
+

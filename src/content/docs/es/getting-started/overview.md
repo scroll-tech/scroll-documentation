@@ -12,7 +12,7 @@ whatsnext: { "Guía de Usuario": "/es/user-guide/", "Construyendo en Scroll": "/
 
 Scroll es una solución de escalabilidad centrada en la seguridad de Ethereum, que utiliza innovaciones en el diseño de escalado y pruebas de “zero-knowledge” para construir una nueva capa en Ethereum. La red de Scroll es más accesible, más receptiva y puede soportar a más usuarios a la vez que Ethereum por sí solo, y si alguna vez has utilizado o desarrollado una aplicación en Ethereum, te sentirás como en casa.
 
-¿Quieres probar la Scroll Sepolia Testnet? Echa un vistazo a nuestra. [Guía de Usuario](/es/user-guide/).
+¿Quieres probar la Scroll Sepolia Testnet con monedas y activos grátis? Echa un vistazo a nuestra. [Guía de Usuario](/es/user-guide/).
 
 ## ¿Qué está construyendo Scroll?
 
@@ -30,15 +30,12 @@ Para obtener más información sobre nuestra arquitectura, consulta. [Arquitectu
 
 ## ¿Puedo usar Scroll hoy?
 
-Nuestra Scroll Sepolia testnet está funcionando. Aunque tenemos una [guía completa](/es/user-guide/), si estás familiarizado/a con el uso de Ethereum, puedes comenzar en minutos:
+Scroll mainnet ya lanzó! También tenemos la Scroll Sepolia testnet, una testnet corriendo encima de Ethereum Sepolia. Aunque tenemos una [guía completa](/es/user-guide/), si estás familiarizado/a con el uso de Ethereum, puedes comenzar en minutos:
 
-- Visita nuestro [Bridge](https://scroll.io/bridge) y conecta tu wallet
-- Envía tokens de Ethereum Sepolia Testnet a la Scroll Sepolia Testnet
-  (o usa un [faucet](/es/user-guide/faucet))
-- Prueba una aplicación descentralizada (dapp) con nuestra [Uniswap Showcase](http://uniswap-showcase.sepolia.scroll.xyz/) -- ¡solo asegúrate de seleccionar la red Scroll Sepolia!
-
-<!-- TODO: Add Aave after Sepolia goes live -->
+- Visita nuestro [Bridge](https://scroll.io/bridge) o nuestro [Bridge de Scroll Sepolia](https://sepolia.scroll.io/bridge) y conecta tu wallet
+- Envía tokens de Ethereum a Scroll (o usa un [faucet](/es/user-guide/faucet))
+- Prueba una aplicación descentralizada (dapp) con nuestra [Uniswap Showcase](http://uniswap-showcase.sepolia.scroll.xyz/) o [Aave](https://app.aave.com/) -- ¡solo asegúrate de seleccionar la red Scroll Sepolia!
 
 ## ¿Hacia dónde se dirige Scroll?
 
-Actualmente nos encontramos en nuestra red de pruebas final antes de lanzar nuestra mainnet en Ethereum. A continuación, descentralizaremos cada componente de la infraestructura. Echa un vistazo a [nuestro roadmap](https://scroll.io), síguenos en [nuestro Discord](https://discord.gg/scroll) o en [Twitter](https://twitter.com/scroll_zkp) para estar al tanto.
+Hemos lanzado nuestra mainnet en Ethereum, pero todavía hay bastante trabajo por hacer. A continuación, descentralizaremos cada componente de la infraestructura. Para mantenerte actualizado, echa un vistazo a [nuestro blog](https://scroll.io/blog), síguenos en [nuestro Discord](https://discord.gg/scroll) o en [Twitter](https://twitter.com/scroll_zkp) para estar al tanto.

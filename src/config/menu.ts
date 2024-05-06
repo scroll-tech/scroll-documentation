@@ -37,4 +37,14 @@ export const MENU: MenuItems = {
     { text: "Tecnología", link: "/es/technology", section: "technology" },
     { text: "Aprende", link: "/es/learn", section: "learn" },
   ],
+  tr: [
+    {
+      text: "Başla",
+      link: "/tr/getting-started/overview",
+      section: "gettingStarted",
+    },
+    { text: "Geliştiriciler", link: "/tr/developers", section: "developers" },
+    { text: "Teknoloji", link: "/tr/technology", section: "technology" },
+    { text: "Öğren", link: "/tr/learn", section: "learn" },
+  ],
 }

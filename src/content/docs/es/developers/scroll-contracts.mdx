@@ -9,92 +9,227 @@ excerpt: "The network info and contract addresses you need to start with Scroll 
 ---
 
 import Aside from "../../../../components/Aside.astro"
+import ToggleElement from "../../../../components/ToggleElement.astro"
+
+En este artículo encotrarás información útil sobre los addresses de Scroll y de protocolos usados frecuentemente. Visita la sección a continuación para información sobre [Scroll Sepolia](#scroll-sepolia-testnet).
 
 ## Información de la Red
 
-| Nombre de Red       | Scroll Sepolia Testnet                                                        | Sepolia Testnet                                                              |
+Usa la tabla a continuación para configurar tus herramientas de Ethereum en Scroll mainnet.
+
+| Nombre de Red      | Scroll                                             | Ethereum Mainnet                                     |
+| ------------------ | -------------------------------------------------- | ---------------------------------------------------- |
+| RPC URL            | [https://rpc.scroll.io/](https://rpc.scroll.io/)   | [https://eth.llamarpc.com](https://eth.llamarpc.com) |
+| Chain ID           | 534352                                             | 1                                                    |
+| Currency Symbol    | ETH                                                | ETH                                                  |
+| Block Explorer URL | [https://scrollscan.com/](https://scrollscan.com/) | [https://etherscan.io](https://etherscan.io)         |
+
+<ToggleElement anchor="mainnet-additional-infra">
+  <div slot="title">RPCs e Infraestructura adicional en Scroll Mainnet</div>
+  - [Bridge Nativo de Scroll](https://scroll.io/bridge)
+  - [Scanner del Rollup de Scroll](https://scroll.io/rollupscan)
+  - [Proveedores de RPC en Scroll en ChainList.org](https://chainlist.org/chain/534352)
+  - [Proveedores de RPC de Ethereum en ChainList.org](https://chainlist.org/chain/1)
+  {/* - Block Explorers Adicionales:
+    - [Dora](https://www.ondora.xyz/network/scroll/interactions)
+    - [L2Scan](https://scroll.l2scan.co/) */}
+
+</ToggleElement>
+
+## Contratos de Scroll
+
+### Rollup
+
+- Rollup en L1 (Scroll Chain): [`0xa13BAF47339d63B743e7Da8741db5456DAc1E556`](https://etherscan.io/address/0xa13BAF47339d63B743e7Da8741db5456DAc1E556)
+
+### Bridge de ETH y ERC20
+
+- Gateway Router de ERC20 en L1: [`0xF8B1378579659D8F7EE5f3C929c2f3E332E41Fd6`](https://etherscan.io/address/0xF8B1378579659D8F7EE5f3C929c2f3E332E41Fd6)
+- Gateway Router de ERC20 en L2: [`0x4C0926FF5252A435FD19e10ED15e5a249Ba19d79`](https://scrollscan.com/address/0x4C0926FF5252A435FD19e10ED15e5a249Ba19d79)
+
+### Contratos de Bridge Avanzados
+
+- Messenger de Scroll
+  - Messenger en L1: [`0x6774Bcbd5ceCeF1336b5300fb5186a12DDD8b367`](https://etherscan.io/address/0x6774Bcbd5ceCeF1336b5300fb5186a12DDD8b367)
+  - Messenger en L2: [`0x781e90f1c8Fc4611c9b7497C3B47F99Ef6969CbC`](https://scrollscan.com/address/0x781e90f1c8Fc4611c9b7497C3B47F99Ef6969CbC)
+- Bridge de ETH
+  - Gateway de ETH en L1: [`0x7F2b8C31F88B6006c382775eea88297Ec1e3E905`](https://etherscan.io/address/0x7F2b8C31F88B6006c382775eea88297Ec1e3E905)
+  - Gateway de ETH en L2: [`0x6EA73e05AdC79974B931123675ea8F78FfdacDF0`](https://scrollscan.com/address/0x6EA73e05AdC79974B931123675ea8F78FfdacDF0)
+  - Gateway de WETH en L1: [`0x7AC440cAe8EB6328de4fA621163a792c1EA9D4fE`](https://etherscan.io/address/0x7AC440cAe8EB6328de4fA621163a792c1EA9D4fE)
+  - Gateway de WETH en L2: [`0x7003E7B7186f0E6601203b99F7B8DECBfA391cf9`](https://scrollscan.com/address/0x7003E7B7186f0E6601203b99F7B8DECBfA391cf9)
+- Bridge de ERC20
+  - Gateway Estándar de ERC20 en L1: [`0xD8A791fE2bE73eb6E6cF1eb0cb3F36adC9B3F8f9`](https://etherscan.io/address/0xD8A791fE2bE73eb6E6cF1eb0cb3F36adC9B3F8f9)
+  - Gateway Estándar de ERC20 en L2: [`0xE2b4795039517653c5Ae8C2A9BFdd783b48f447A`](https://scrollscan.com/address/0xE2b4795039517653c5Ae8C2A9BFdd783b48f447A)
+  - Gateway Custom de ERC20 en L1: [`0xb2b10a289A229415a124EFDeF310C10cb004B6ff`](https://etherscan.io/address/0xb2b10a289A229415a124EFDeF310C10cb004B6ff)
+  - Gateway Custom de ERC20 en L2: [`0x64CCBE37c9A82D85A1F2E74649b7A42923067988`](https://scrollscan.com/address/0x64CCBE37c9A82D85A1F2E74649b7A42923067988)
+- Bridge de ERC721
+  - Gateway de ERC721 en L1: [`0x6260aF48e8948617b8FA17F4e5CEa2d21D21554B`](https://etherscan.io/address/0x6260aF48e8948617b8FA17F4e5CEa2d21D21554B)
+  - Gateway de ERC721 en L2: [`0x7bC08E1c04fb41d75F1410363F0c5746Eae80582`](https://scrollscan.com/address/0x7bC08E1c04fb41d75F1410363F0c5746Eae80582)
+- Bridge de ERC1155
+  - Gateway de ERC1155 en L1: [`0xb94f7F6ABcb811c5Ac709dE14E37590fcCd975B6`](https://etherscan.io/address/0xb94f7F6ABcb811c5Ac709dE14E37590fcCd975B6)
+  - Gateway de ERC1155 en L2: [`0x62597Cc19703aF10B58feF87B0d5D29eFE263bcc`](https://scrollscan.com/address/0x62597Cc19703aF10B58feF87B0d5D29eFE263bcc)
+- Oráculo de Gas
+  - Oráculo de Gas en L2 (deployado en Mainnet): [`0x987e300fDfb06093859358522a79098848C33852`](https://scrollscan.com/address/0x987e300fDfb06093859358522a79098848C33852)
+
+### Predeploys en L2
+
+- Cola de Mensajes: [`0x5300000000000000000000000000000000000000`](https://scrollscan.com/address/0x5300000000000000000000000000000000000000)
+- Oráculo de Precio del Gas: [`0x5300000000000000000000000000000000000002`](https://scrollscan.com/address/0x5300000000000000000000000000000000000002)
+- Whitelist: [`0x5300000000000000000000000000000000000003`](https://scrollscan.com/address/0x5300000000000000000000000000000000000003)
+- WETH en L2: [`0x5300000000000000000000000000000000000004`](https://scrollscan.com/address/0x5300000000000000000000000000000000000004)
+- Bóveda de Comisiones de Transacción: [`0x5300000000000000000000000000000000000005`](https://scrollscan.com/address/0x5300000000000000000000000000000000000005)
+
+## Protocols en Scroll Mainnet
+
+### Uniswap v3
+
+- Contratos Principales
+  - Core Factory: [`0x70C62C8b8e801124A4Aa81ce07b637A3e83cb919`](https://scrollscan.com/address/0x70C62C8b8e801124A4Aa81ce07b637A3e83cb919)
+  - NFT Position Manager: [`0xB39002E4033b162fAc607fc3471E205FA2aE5967`](https://scrollscan.com/address/0xB39002E4033b162fAc607fc3471E205FA2aE5967)
+  - Router: [`0xfc30937f5cDe93Df8d48aCAF7e6f5D8D8A31F636`](https://scrollscan.com/address/0xfc30937f5cDe93Df8d48aCAF7e6f5D8D8A31F636)
+- Contratos Adicionales
+  - multicall2Address: [`0xC1D2e074C38FdD5CA965000668420C80316F0915`](https://scrollscan.com/address/0xC1D2e074C38FdD5CA965000668420C80316F0915)
+  - proxyAdminAddress: [`0x1E6dcAb806A42055098f23E2B3ac72D6E195F967`](https://scrollscan.com/address/0x1E6dcAb806A42055098f23E2B3ac72D6E195F967)
+  - tickLensAddress: [`0x85780e12e90D2a684eB8E7404c985b5B5c8ce7E9`](https://scrollscan.com/address/0x85780e12e90D2a684eB8E7404c985b5B5c8ce7E9)
+  - nftDescriptorLibraryAddressV1_3_0: [`0xAeE9c206ba89F3DA25EEe4636208519e0B86965B`](https://scrollscan.com/address/0xAeE9c206ba89F3DA25EEe4636208519e0B86965B)
+  - nonfungibleTokenPositionDescriptorAddressV1_3_0: [`0xACcf12204b7591B2ECCEFe737440B0f53748B191`](https://scrollscan.com/address/0xACcf12204b7591B2ECCEFe737440B0f53748B191)
+  - descriptorProxyAddress: [`0x675DD953225D296A44790dC1390a1E7eF378f464`](https://scrollscan.com/address/0x675DD953225D296A44790dC1390a1E7eF378f464)
+  - v3MigratorAddress: [`0xF00577B5Dd0DA227298E954Ed11356F264Cf93d4`](https://scrollscan.com/address/0xF00577B5Dd0DA227298E954Ed11356F264Cf93d4)
+  - v3StakerAddress: [`0xFdFbE973c9ecB036Ecfb7af697FcACe789D3f928`](https://scrollscan.com/address/0xFdFbE973c9ecB036Ecfb7af697FcACe789D3f928)
+  - quoterV2Address: [`0x2566e082Cb1656d22BCbe5644F5b997D194b5299`](https://scrollscan.com/address/0x2566e082Cb1656d22BCbe5644F5b997D194b5299)
+
+#### Ethereum Attestation Service (EAS)
+
+- EAS: [`0xC47300428b6AD2c7D03BB76D05A176058b47E6B0`](https://scrollscan.com/address/0xC47300428b6AD2c7D03BB76D05A176058b47E6B0)
+- SchemaRegistry: [`0xD2CDF46556543316e7D34e8eDc4624e2bB95e3B6`](https://scrollscan.com/address/0xD2CDF46556543316e7D34e8eDc4624e2bB95e3B6)
+- EIP712Proxy: [`0x77b7DA1c40762Cd8AFfE2069b575328EfD4D9801`](https://scrollscan.com/address/0x77b7DA1c40762Cd8AFfE2069b575328EfD4D9801)
+- Indexador: `Not deployed yet`
+
+## Contratos Útiles Adicionales
+
+- Multicall3: [`0xcA11bde05977b3631167028862bE2a173976CA11`](https://scrollscan.com/address/0xcA11bde05977b3631167028862bE2a173976CA11)
+
+## Tokens
+
+<Aside type="note" title="">
+  Los tokens transferidos desde Ethereum Mainnet utilizando el bridge nativo pueden añadirse al repositorio
+  [token-list](https://github.com/scroll-tech/token-list).
+</Aside>
+
+{" "}
+
+<br />
+
+---
+
+## Scroll Sepolia Testnet
+
+### Información de la Red
+
+Usa la tabla a continuación para configurar tus herramientas de Ethereum en Scroll Sepolia testnet.
+
+| Nombre de Red      | Scroll Sepolia Testnet                                                        | Sepolia Testnet                                                              |
 | ------------------ | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
 | RPC URL            | [https://sepolia-rpc.scroll.io/](https://sepolia-rpc.scroll.io/)              | [https://eth-sepolia-public.unifra.io](https://eth-sepolia-public.unifra.io) |
 | Chain ID           | 534351                                                                        | 11155111                                                                     |
 | Currency Symbol    | ETH                                                                           | ETH                                                                          |
 | Block Explorer URL | [https://sepolia-blockscout.scroll.io](https://sepolia-blockscout.scroll.io/) | [https://sepolia.etherscan.io](https://sepolia.etherscan.io)                 |
 
-## Contratos de Scroll Sepolia
+<ToggleElement anchor="mainnet-additional-infra">
+  <div slot="title">RPCs e Infraestructura adicional en Scroll Sepolia</div>
+  - [Bridge Nativo de Scroll](https://sepolia.scroll.io/bridge)
+  - [Scanner del Rollup de Scroll](https://sepolia.scroll.io/rollupscan)
+  - [Proveedores de RPC en Scroll en ChainList.org](https://chainlist.org/chain/534351)
+  - [Proveedores de RPC de Ethereum en ChainList.org](https://chainlist.org/chain/11155111)
+  {/* - Block Explorers Adicionales:
+    - [Dora](https://www.ondora.xyz/network/scroll-sepolia/interactions)
+    - [L2Scan](https://scroll.l2scan.co/) */}
 
-### Rollup
+</ToggleElement>
 
-- L1 Rollup (Scroll Chain): `0x2D567EcE699Eabe5afCd141eDB7A4f2D0D6ce8a0`
+### Contratos en Scroll Sepolia
 
-### ETH y ERC20 Bridge
+#### Rollup
 
-- L1 ERC20 Gateway Router: `0x13FBE0D0e5552b8c9c4AE9e2435F38f37355998a`
-- L2 ERC20 Gateway Router: `0x9aD3c5617eCAa556d6E166787A97081907171230`
+- Rollup en L1 (Scroll Chain): [`0x2D567EcE699Eabe5afCd141eDB7A4f2D0D6ce8a0`](https://sepolia.etherscan.io/address/0x2D567EcE699Eabe5afCd141eDB7A4f2D0D6ce8a0)
 
-### Contratos de Bridge Avanzados
+#### ETH and ERC20 Bridge
 
-- Scroll Messenger
-  - L1 Messenger: `0x50c7d3e7f7c656493D1D76aaa1a836CedfCBB16A`
-  - L2 Messenger: `0xBa50f5340FB9F3Bd074bD638c9BE13eCB36E603d`
-- ETH Bridge
-  - L1 ETH Gateway: `0x8A54A2347Da2562917304141ab67324615e9866d`
-  - L2 ETH Gateway: `0x91e8ADDFe1358aCa5314c644312d38237fC1101C`
-  - L1 WETH Gateway: `0x3dA0BF44814cfC678376b3311838272158211695`
-  - L2 WETH Gateway: `0x481B20A927206aF7A754dB8b904B052e2781ea27`
-- ERC20 Bridge
-  - L1 ERC20 Standard Gateway: `0x65D123d6389b900d954677c26327bfc1C3e88A13`
-  - L2 ERC20 Standard Gateway: `0xaDcA915971A336EA2f5b567e662F5bd74AEf9582`
-  - L1 ERC20 Custom Gateway: `0x31C994F2017E71b82fd4D8118F140c81215bbb37`
-  - L2 ERC20 Custom Gateway: `0x058dec71E53079F9ED053F3a0bBca877F6f3eAcf`
-- ERC721 Bridge
-  - L1 ERC721 Gateway: `0xEF27A5E63aa3f1B8312f744b9b4DcEB910Ba77AC`
-  - L2 ERC721 Gateway: `0x179B9415194B67DC3c0b8760E075cD4415785c97`
-- ERC1155 Bridge
-  - L1 ERC1155 Gateway: `0xa5Df8530766A85936EE3E139dECE3bF081c83146`
-  - L2 ERC1155 Gateway: `0xe17C9b9C66FAF07753cdB04316D09f52144612A5`
-- Gas Oracle
-  - L2 Gas Oracle (Implementado en Sepolia): `0x247969F4fad93a33d4826046bc3eAE0D36BdE548`
+- Gateway Router de ERC20 en L1: [`0x13FBE0D0e5552b8c9c4AE9e2435F38f37355998a`](https://sepolia.etherscan.io/address/0x13FBE0D0e5552b8c9c4AE9e2435F38f37355998a)
+- Gateway Router de ERC20 en L2: [`0x9aD3c5617eCAa556d6E166787A97081907171230`](https://sepolia.scrollscan.com/address/0x9aD3c5617eCAa556d6E166787A97081907171230)
 
-### L2 Predeploys
+#### Contratos de Bridge Avanzados
 
-- Message Queue: `0x5300000000000000000000000000000000000000`
-- Gas Price Oracle: `0x5300000000000000000000000000000000000002`
-- Whitelist: `0x5300000000000000000000000000000000000003`
-- WETH L2: `0x5300000000000000000000000000000000000004`
-- Transaction Fee Vault: `0x5300000000000000000000000000000000000005`
+- Messenger de Scroll
+  - Messenger en L1: [`0x50c7d3e7f7c656493D1D76aaa1a836CedfCBB16A`](https://sepolia.etherscan.io/address/0x50c7d3e7f7c656493D1D76aaa1a836CedfCBB16A)
+  - Messenger en L2: [`0xBa50f5340FB9F3Bd074bD638c9BE13eCB36E603d`](https://sepolia.scrollscan.com/address/0xBa50f5340FB9F3Bd074bD638c9BE13eCB36E603d)
+- Bridge de ETH
+  - Gateway de ETH en L1: [`0x8A54A2347Da2562917304141ab67324615e9866d`](https://sepolia.etherscan.io/address/0x8A54A2347Da2562917304141ab67324615e9866d)
+  - Gateway de ETH en L2: [`0x91e8ADDFe1358aCa5314c644312d38237fC1101C`](https://sepolia.scrollscan.com/address/0x91e8ADDFe1358aCa5314c644312d38237fC1101C)
+  - Gateway en WETH en L1: [`0x3dA0BF44814cfC678376b3311838272158211695`](https://sepolia.etherscan.io/address/0x3dA0BF44814cfC678376b3311838272158211695)
+  - Gateway en WETH en L2: [`0x481B20A927206aF7A754dB8b904B052e2781ea27`](https://sepolia.scrollscan.com/address/0x481B20A927206aF7A754dB8b904B052e2781ea27)
+- Bridge de ERC20
+  - Gateway Estándar en ERC20 en L1: [`0x65D123d6389b900d954677c26327bfc1C3e88A13`](https://sepolia.etherscan.io/address/0x65D123d6389b900d954677c26327bfc1C3e88A13)
+  - Gateway Estándar en ERC20 en L2: [`0xaDcA915971A336EA2f5b567e662F5bd74AEf9582`](https://sepolia.scrollscan.com/address/0xaDcA915971A336EA2f5b567e662F5bd74AEf9582)
+  - Gateway Custom de ERC20 en L1: [`0x31C994F2017E71b82fd4D8118F140c81215bbb37`](https://sepolia.etherscan.io/address/0x31C994F2017E71b82fd4D8118F140c81215bbb37)
+  - Gateway Custom de ERC20 en L2: [`0x058dec71E53079F9ED053F3a0bBca877F6f3eAcf`](https://sepolia.scrollscan.com/address/0x058dec71E53079F9ED053F3a0bBca877F6f3eAcf)
+- Bridge de ERC721
+  - Gateway de ERC721 en L1: [`0xEF27A5E63aa3f1B8312f744b9b4DcEB910Ba77AC`](https://sepolia.etherscan.io/address/0xEF27A5E63aa3f1B8312f744b9b4DcEB910Ba77AC)
+  - Gateway de ERC721 en L2: [`0x179B9415194B67DC3c0b8760E075cD4415785c97`](https://sepolia.scrollscan.com/address/0x179B9415194B67DC3c0b8760E075cD4415785c97)
+- Bridge de ERC1155
+  - Gateway de ERC1155 en L1: [`0xa5Df8530766A85936EE3E139dECE3bF081c83146`](https://sepolia.etherscan.io/address/0xa5Df8530766A85936EE3E139dECE3bF081c83146)
+  - Gateway de ERC1155 en L2: [`0xe17C9b9C66FAF07753cdB04316D09f52144612A5`](https://sepolia.scrollscan.com/address/0xe17C9b9C66FAF07753cdB04316D09f52144612A5)
+- Oráculo de Gas
+  - Oráculo de Gas en L2 (deployado en Sepolia): [`0x247969F4fad93a33d4826046bc3eAE0D36BdE548`](https://sepolia.scrollscan.com/address/0x247969F4fad93a33d4826046bc3eAE0D36BdE548)
 
-## Protocolos en Sepolia
+#### Predeploys en L2
 
-### Uniswap v3
+- Cola de Mensajes: [`0x5300000000000000000000000000000000000000`](https://sepolia.scrollscan.com/address/0x5300000000000000000000000000000000000000)
+- Oráculo de Precio de Gas: [`0x5300000000000000000000000000000000000002`](https://sepolia.scrollscan.com/address/0x5300000000000000000000000000000000000002)
+- Whitelist: [`0x5300000000000000000000000000000000000003`](https://sepolia.scrollscan.com/address/0x5300000000000000000000000000000000000003)
+- WETH en L2: [`0x5300000000000000000000000000000000000004`](https://sepolia.scrollscan.com/address/0x5300000000000000000000000000000000000004)
+- Bóveda de Comisiones de Transacciones: [`0x5300000000000000000000000000000000000005`](https://sepolia.scrollscan.com/address/0x5300000000000000000000000000000000000005)
 
-- Frontend website: [https://uniswap-showcase.sepolia.scroll.xyz/](https://uniswap-showcase.sepolia.scroll.xyz/)
-- Main Contracts
-  - Core Factory: `0xB856587fe1cbA8600F75F1b1176E44250B11C788`
-  - NFT Position Manager: `0xbbAd0e891922A8A4a7e9c39d4cc0559117016fec`
-  - Router: `0x17AFD0263D6909Ba1F9a8EAC697f76532365Fb95`
-- Additional Contracts
-  - multicall2Address: `0x8c181f4B9040F1a2C941EfD3b608712cF86F1957`
-  - proxyAdminAddress: `0xD4A9910732b6f301F6F210Ebe7a3dBf16d9E9DD4`
-  - tickLensAddress: `0x9804Da978427a49929f2E6Ea32A9594F03f9296e`
-  - nftDescriptorLibraryAddressV1_3_0: `0x45Bd3B62B7A3aA53371c98049b0f7A9C1A4B5a6c`
-  - nonfungibleTokenPositionDescriptorAddressV1_3_0: `0x24d4E4a572Dc1e0dbF92a0d7768Ac80df516b2C2`
-  - descriptorProxyAddress: `0xa8986417d0EAe50607696b9b0cb7ec5aFBE67765`
-  - v3MigratorAddress: `0x38E33D067F03a5cDc02C301b2c306cb0414549Bf`
-  - v3StakerAddress: `0xe7b82794Cab21e665a3e6f8ea562d392AA6E0619`
-  - quoterV2Address: `0xd5dd33650Ef1DC6D23069aEDC8EAE87b0D3619B2`
+### Protocols
 
-### Aave
+#### Uniswap v3
 
-Observa este [Github gist](https://gist.github.com/dghelm/7fe68f0a524f30846e1142721c081d84).
+- Sitio Web: [https://uniswap-showcase.sepolia.scroll.xyz/](https://uniswap-showcase.sepolia.scroll.xyz/)
+- Contratos Principales
+  - Core Factory: [`0xB856587fe1cbA8600F75F1b1176E44250B11C788`](https://sepolia.scrollscan.com/address/0xB856587fe1cbA8600F75F1b1176E44250B11C788)
+  - NFT Position Manager: [`0xbbAd0e891922A8A4a7e9c39d4cc0559117016fec`](https://sepolia.scrollscan.com/address/0xbbAd0e891922A8A4a7e9c39d4cc0559117016fec)
+  - Router: [`0x17AFD0263D6909Ba1F9a8EAC697f76532365Fb95`](https://sepolia.scrollscan.com/address/0x17AFD0263D6909Ba1F9a8EAC697f76532365Fb95)
+- Contratos Adicionales
+  - multicall2Address: [`0x8c181f4B9040F1a2C941EfD3b608712cF86F1957`](https://sepolia.scrollscan.com/address/0x8c181f4B9040F1a2C941EfD3b608712cF86F1957)
+  - proxyAdminAddress: [`0xD4A9910732b6f301F6F210Ebe7a3dBf16d9E9DD4`](https://sepolia.scrollscan.com/address/0xD4A9910732b6f301F6F210Ebe7a3dBf16d9E9DD4)
+  - tickLensAddress: [`0x9804Da978427a49929f2E6Ea32A9594F03f9296e`](https://sepolia.scrollscan.com/address/0x9804Da978427a49929f2E6Ea32A9594F03f9296e)
+  - nftDescriptorLibraryAddressV1_3_0: [`0x45Bd3B62B7A3aA53371c98049b0f7A9C1A4B5a6c`](https://sepolia.scrollscan.com/address/0x45Bd3B62B7A3aA53371c98049b0f7A9C1A4B5a6c)
+  - nonfungibleTokenPositionDescriptorAddressV1_3_0: [`0x24d4E4a572Dc1e0dbF92a0d7768Ac80df516b2C2`](https://sepolia.scrollscan.com/address/0x24d4E4a572Dc1e0dbF92a0d7768Ac80df516b2C2)
+  - descriptorProxyAddress: [`0xa8986417d0EAe50607696b9b0cb7ec5aFBE67765`](https://sepolia.scrollscan.com/address/0xa8986417d0EAe50607696b9b0cb7ec5aFBE67765)
+  - v3MigratorAddress: [`0x38E33D067F03a5cDc02C301b2c306cb0414549Bf`](https://sepolia.scrollscan.com/address/0x38E33D067F03a5cDc02C301b2c306cb0414549Bf)
+  - v3StakerAddress: [`0xe7b82794Cab21e665a3e6f8ea562d392AA6E0619`](https://sepolia.scrollscan.com/address/0xe7b82794Cab21e665a3e6f8ea562d392AA6E0619)
+  - quoterV2Address: [`0xd5dd33650Ef1DC6D23069aEDC8EAE87b0D3619B2`](https://sepolia.scrollscan.com/address/0xd5dd33650Ef1DC6D23069aEDC8EAE87b0D3619B2)
 
-## Contratos Útiles Adicionales
+#### Aave
 
-- Multicall3: `0xcA11bde05977b3631167028862bE2a173976CA11`
+Mira este [gist](https://gist.github.com/dghelm/7fe68f0a524f30846e1142721c081d84).
 
-## Tokens
+#### Ethereum Attestation Service (EAS)
+
+- EAS: [`0xaEF4103A04090071165F78D45D83A0C0782c2B2a`](https://sepolia.scrollscan.com/address/0xaEF4103A04090071165F78D45D83A0C0782c2B2a)
+- SchemaRegistry: [`0x55D26f9ae0203EF95494AE4C170eD35f4Cf77797`](https://sepolia.scrollscan.com/address/0x55D26f9ae0203EF95494AE4C170eD35f4Cf77797)
+- EIP712Proxy: [`0xB3574f76b1720E61FdA98702c7016674CD6Eaa7b`](https://sepolia.scrollscan.com/address/0xB3574f76b1720E61FdA98702c7016674CD6Eaa7b)
+- Indexador: [`0x7C2cb1eDC328491da52de2a0afc44D3B0Ae7ee17`](https://sepolia.scrollscan.com/address/0x7C2cb1eDC328491da52de2a0afc44D3B0Ae7ee17)
+
+### Contratos Útiles Adicionales
+
+- Multicall3: [`0xcA11bde05977b3631167028862bE2a173976CA11`](https://sepolia.scrollscan.com/address/0xcA11bde05977b3631167028862bE2a173976CA11)
+
+### Tokens
 
 <Aside type="note" title="">
   Los tokens transferidos desde Sepolia utilizando el bridge nativo pueden añadirse al repositorio
-  [token-list](https://github.com/scroll-tech/token-list).
+  [token-list](https://github.com/scroll-tech/token-list/tree/sepolia) en la branch `sepolia`.
 </Aside>
 
-- Gho Token: `0xD9692f1748aFEe00FACE2da35242417dd05a8615`
+- Token de Gho: [`0xD9692f1748aFEe00FACE2da35242417dd05a8615`](https://sepolia.scrollscan.com/address/0xD9692f1748aFEe00FACE2da35242417dd05a8615)

@@ -1,0 +1,196 @@
+---
+section: developers
+date: Last Modified
+title: "ETH 和 ERC20 代币跨链桥"
+lang: "zh"
+permalink: "developers/l1-and-l2-bridging/eth-and-erc20-token-bridge"
+whatsnext: { "ERC721 NFT 跨链桥": "/zh/developers/l1-and-l2-bridging/erc721-nft-bridge/" }
+excerpt: "The Gateway Router allows ETH and ERC20 token bridging from L1 to L2 using the depositETH and depositERC20 functions respectively."
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+## 从 L1 存款 ETH 和 ERC20 代币
+
+Gateway Router 合约允许 ETH 和 ERC20 代币分别使用 `depositETH` 和 `depositERC20` 方法从 L1 桥接到 L2。Gateway Router 合约是部署在 L1 上的无需许可的跨链桥。请注意，ERC20 代币在 L2 上将具有不同的地址，您可以使用该 `getL2ERC20Address` 函数查询新地址。 
+
+<Aside type="tip" title="">
+  **`depositETH`** 和 **`depositERC20`** 是付款交易, 发送的ETH金额将用于支付L2费用。如果金额不够，交易将不会发送。所有多余的ETH将被发还给发件人。 `0.00001 ETH` 应该足以处理代币存款。
+</Aside>
+
+桥接ERC20代币时，你不必担心如何选择正确的网关。这是因为 `L1GatewayRouter` 将选择正确的入口来发送消息：
+
+- **`L1StandardERC20Gateway`:** 此网关允许人任意 ERC20 存款，并且被 `L1GatewayRouter` 选作不需要在 L2 上自定义逻辑的 ERC20 代币的默认网关。在第一次代币桥接时，将在L2上创建一个实现了 ScrollStandardERC20 的新代币。要桥接代币，请调用 `L1GatewayRouter` 上的 `depositERC20` 方案。
+- **`L1CustomERC20Gateway`:** 此网关将被 `L1GatewayRouter` 选作需要在 L2 上自定义逻辑的 ERC20 代币. 要使 L1/L2 代币对在Scroll自定义的 ERC20 跨链桥上工作，L2 代币合约必须实现 `IScrollStandardERC20`。此外，代币应包含对 `L2CustomERC20Gateway` 的 `mint` 或 `burn` 功能。请访问 [通过自定义网关桥接 ERC20 指南](/zh/developers/guides/bridge-erc20-through-the-custom-gateway)，获取有关如何桥接自定义代币的分步示例。
+
+所有网关合约都将形成消息，并将其发送到可以向L2发送任意消息的网关合约 `L1ScrollMessenger` 。`L1ScrollMessenger` 合约将消息传递给 `L1MessageQueue` .任何用户都可以将消息直接发送到Message 合约，以在L2上执行任意数据。这意味着他们可以通过跨链桥从 L1 上的交易在 L2 上执行任何方法。尽管应用程序可以直接将消息传递到现有代币合约，但网关抽象了细节并简化了传输和调用过程。
+
+<Aside type="tip" title="">
+  在未来的升级中，用户将能够绕过 L1ScrollMessenger 直接向 L1MessageQueue 发送消息。如果通过 L1MessageQueue 发送消息，交易的发送者将是发送交易的用户地址，而不是 L1ScrollMessenger 的地址。
+</Aside>
+
+当在 L1 上创建新区块时，观察器（Watcher）将检测到 `L1MessageQueue` 的消息并将其传递给中继器（Relayer）服务，后者将通过 l2geth 节点将交易提交到 L2。最后，l2geth节点将交易传递给 `L2ScrollMessagner` 合约，以便在L2上执行。
+
+## 从 L2 提款 ETH 和 ERC20 代币
+
+L2 Gateway合约与 L1 Gateway合约非常类似。我们可以使用 `withdrawETH` 和 `withdrawERC20` 方法将 ETH 和 ERC20 代币提取回 L1。合约地址部署在L2上。我们使用 `getL1ERC20Address` 来获取 L1 上的代币地址。
+
+<Aside type="tip" title="">
+  **`withdrawETH`** 和 **`withdrawERC20`** 是付款交易, 发送的 ETH 金额将用于支付 L1 费用。如果金额不够，交易将不会发送。所有多余的ETH将被发还给发件人。费用将取决于L1活动程度，但 `0.005 ETH` 一般足以处理代币提取。
+</Aside>
+
+<Aside type="caution" title="">
+  从L2发送交易时**确保其不会在 L1 上回退**. 如果交易在L1上回退，将没有办法恢复跨链的代币和NFT。当交易发送时，所有的资产在 Scroll 上被销毁，并且无法再次铸造它们
+</Aside>
+
+## 在 L2 上创建自定义逻辑的 ERC20 代币
+
+如果代币需要 L2 上的自定义逻辑，则需要分别通过 `L1CustomERC20Gateway` 和 `L2CustomERC20Gateway` 桥接。L2 上的自定义代币需要向 Gateway 合约授予权限，以便在存款发生时铸造新代币，并在代币提取时销毁
+
+部署与 L2 `L2CustomERC20Gateway` 合约兼容的代币需要以下接口 `IScrollStandardERC20`
+
+```solidity
+interface IScrollStandardERC20 {
+  /// @notice Return the address of Gateway the token belongs to.
+  function gateway() external view returns (address);
+
+  /// @notice Return the address of counterpart token.
+  function counterpart() external view returns (address);
+
+  /// @dev ERC677 Standard, see https://github.com/ethereum/EIPs/issues/677
+  /// Defi can use this method to transfer L1/L2 token to L2/L1,
+  /// and deposit to L2/L1 contract in one transaction
+  function transferAndCall(address receiver, uint256 amount, bytes calldata data) external returns (bool success);
+
+  /// @notice Mint some token to recipient's account.
+  /// @dev Gateway Utilities, only gateway contract can call
+  /// @param _to The address of recipient.
+  /// @param _amount The amount of token to mint.
+  function mint(address _to, uint256 _amount) external;
+
+  /// @notice Mint some token from account.
+  /// @dev Gateway Utilities, only gateway contract can call
+  /// @param _from The address of account to burn token.
+  /// @param _amount The amount of token to mint.
+  function burn(address _from, uint256 _amount) external;
+}
+```
+
+### 将自定义的 L2 ERC20 代币添加到Scroll跨链桥
+
+代币可以通过任何开发者部署的Gateway合约安全且无需许可地桥接。但是，Scroll还管理着 ERC20 Router 和 Gateway合约，欢迎社区创建的所有代币。成为 Scroll 托管网关的一部分意味着无需部署 Gateway 合约，代币将显示在 Scroll 前端中。要成为Scroll Gateway的一部分，您必须联系 Scroll 团队，将代币添加到 L1 和 L2 跨链桥合约中。为此，请按照[代币列表](https://github.com/scroll-tech/token-list) 仓库内的说明将新代币添加到Scroll官方前端。
+
+
+## L1 Gateway API
+
+请访问 [npm 库](https://www.npmjs.com/package/@scroll-tech/contracts?activeTab=code) 来获取完整的 Scroll 合约 API 文档。
+
+### depositETH
+
+```solidity
+function depositETH(address _to, uint256 _amount, uint256 _gasLimit) public payable;
+```
+
+将 ETH 从 L1 发送至 L2.
+
+| 参数 | 描述                                                                                                                |
+| --------- | --------------------------------------------------------------------------------------------------------------------------- |
+| to        | L2 上收款人账户的地址                                                                                   |
+| amount    | 要转移的代币数量，以 wei 为单位。                                                                                 |
+| gasLimit  | 在L2上完成存款所需的gas上限。从4000到10000的gas上限应该足以处理交易。 |
+
+### depositERC20
+
+```solidity
+function depositERC20(address _token, address _to, uint256 _amount, uint256 _gasLimit) payable;
+```
+
+将 ERC20代币 从 L1 发送至 L2.
+
+| 参数 | 描述                                                                                                                 |
+| --------- | --------------------------------------------------------------------------------------------------------------------------- |
+| token     | L1 上的代币地址                                                                                                    |
+| to        | L2 上收款人账户的地址                                                                                |
+| amount    | 要转移的代币数量，以 wei 为单位。                                                                                 |
+| gasLimit  | 在L2上完成存款所需的gas上限。从4000到10000的gas上限应该足以处理交易。 |
+
+### getL2ERC20Address
+
+```solidity
+function getL2ERC20Address(address _l1Token) external view returns (address);
+```
+
+返回给定 L1 代币地址的相应 L2 代币地址。
+
+| 参数 | 描述             |
+| --------- | ------------------------ |
+| \_l1Token | L1代币的地址 |
+
+### updateTokenMapping
+
+```solidity
+function updateTokenMapping(address _l1Token, address _l2Token) external;
+```
+
+更新 ERC20 代币从 L1 到 L2 的映射。
+
+| 参数 | 描述                                    |
+| --------- | ----------------------------------------------- |
+| \_l1Token | L1 中 ERC20 代币的地址          |
+| \_l2Token | L2 中相应 ERC20 代币的地址 |
+
+## L2 Gateway API
+
+### withdrawETH
+
+```solidity
+function withdrawETH(address to, uint256 amount, uint256 gasLimit) external payable;
+```
+
+将 ETH 从 L2 发送到 L1。
+
+| 参数 | 描述                                                                                             |
+| --------- | ------------------------------------------------------------------------------------------------------- |
+| to        | L1 上收款人账户的地址                                                              |
+| amount    | 要转移的代币数量，以 wei 为单位                                                               |
+| gasLimit  | 在L1上完成存款所需的gas上限。这是可选的，如果您不想设置它，请发送 0 |
+
+### withdrawERC20
+
+```solidity
+function withdrawERC20(address token, address to, uint256 amount, uint256 gasLimit) external payable;
+```
+
+将 ERC20 代币从 L2 发送到 L1。
+
+| 参数 | 描述                                                                                            |
+| --------- | ------------------------------------------------------------------------------------------------------- |
+| token     | L2 上代币的地址                                                                               |
+| to        | L1 上收款人账户的地址                                                                |
+| amount    | 要转移的代币数量，以 wei 为单位                                                               |
+| gasLimit  | 在L1上完成存款所需的gas上限。这是可选的，如果您不想设置它，请发送 0 |
+
+### getL1ERC20Address
+
+```solidity
+function getL1ERC20Address(address l2Token) external view returns (address);
+```
+
+返回给定 L2 代币地址的相应 L1 代币地址。
+
+| 参数 | 描述                 |
+| --------- | ---------------------------- |
+| l2Token   | L2 上代币的地址 |
+
+### updateTokenMapping
+
+```solidity
+function updateTokenMapping(address _l1Token, address _l2Token) external;
+```
+
+更新 ERC20 代币从 L2 到 L1 的映射。
+
+| 参数 | 描述                                     |
+| --------- | ----------------------------------------------- |
+| \_l2Token | L2 中 ERC20 代币的地址            |
+| \_l1Token | L1 中相应 ERC20 代币的地址 |

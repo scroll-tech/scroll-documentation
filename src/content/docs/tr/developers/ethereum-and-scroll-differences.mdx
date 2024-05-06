@@ -1,0 +1,97 @@
+---
+section: developers
+date: Last Modified
+title: "Ethereum ve Scroll Farkları"
+lang: "tr"
+permalink: "developers/ethereum-and-scroll-differences"
+whatsnext: { "L1 & L2 Köprüleme": "/tr/developers/l1-and-l2-bridging/" }
+excerpt: "Ethereum ana ağının EVM'si ile Scroll'un zkEVM için değiştirmiş olduğu tasarımı arasında farklılık gösteren bir dizi teknik ayrıntı vardır. Aşağıda bu farklılıkları şu anda mevcut oldukları haliyle görebilirsiniz."
+---
+
+import Aside from "../../../../components/Aside.astro"
+
+Ethereum ana ağının EVM'i ile Scroll'un zkEVM için değiştirmiş olduğu tasarımı arasında bir dizi teknik ayrıntı farklılık göstermektedir. Aşağıda Scroll ve Scroll Sepolia'da mevcut olan bu farklılıkları görebilirsiniz.
+
+Açık kaynak katkıda bulunanlar ve altyapı oluşturucular, daha fazla destek için lütfen ekibimizle iletişime geçin.
+
+<Aside type="tip" title="Endişelenme!">
+  Ortalama bir Solidity geliştiricisi için bu ayrıntılar geliştirme deneyiminizi etkilemeyecektir.
+</Aside>
+
+## EVM Opcode'ları
+
+| Opcode                      | Solidity dengi      | Scroll Davranışı                                                                                           |
+| --------------------------- | ------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `BLOCKHASH`                 | `block.blockhash`   | Son 256 blok için `keccak(chain_id \|\| block_number)'ı döndürür.                                      |
+| `COINBASE`                  | `block.coinbase`    | Önceden dağıtılan ücret kasası sözleşme adresini döndürür. Bkz. [Scroll Sözleşmeleri](/tr/developers/scroll-contracts). |
+| `DIFFICULTY` / `PREVRANDAO` | `block.difficulty`  | 0 değerini döndürür.                                                                                                 |
+| `BASEFEE`                   | `block.basefee`     | Devre dışı.[^eip1559] Opcode ile karşılaşılırsa işlem geri alınacaktır.                       |
+| `SELFDESTRUCT`              | `selfdestruct`      | Engelli. Opcode ile karşılaşılırsa işlem geri döndürülecektir.[^willadpot]                      |
+
+[^eip1559]: Şu anda Scroll'da EIP-1559'u devre dışı bıraktık.
+[^willadpot]: Gelecekte Ethereum'un çözümünü benimsemek için değişecek.
+
+## EVM Ön Derlemeleri
+
+'SHA2-256' (adress '0x2'), 'RIPEMD-160' (adress '0x3') ve 'blake2f' (adress '0x9') ön derlemeleri şu anda desteklenmemektedir. Bu ön derlenmiş sözleşmelere yapılan çağrılar geri alınacaktır. Bu üç ön derlemeyi gelecekteki bir hard fork'ta etkinleştirmeyi planlıyoruz.
+
+'Modexp' ön derlemesi destekleniyor ancak yalnızca 32 bytea eşit veya daha küçük boyuttaki girişleri destekliyor (ör. 'u256').
+
+'ecPairing' ön derlemesi destekleniyor, fakat nokta sayısı (kümeler, çiftler) 6 yerine 4 ile sınırlıdır.
+
+Diğer EVM ön derlemelerinin tümü desteklenir: `ecRecover`, `identity`, `ecAdd`, `ecMul`.
+
+## Durum Hesabı
+
+### **İlave Alanlar**
+
+Mevcut `StateAccount` nesnesine iki alan ekledik: `PoseidonCodehash` ve `CodeSize`.
+
+```go
+type StateAccount struct {
+	Nonce    uint64
+	Balance  *big.Int
+	Root     common.Hash // merkle root of the storage trie
+	KeccakCodeHash []byte // still the Keccak codehash
+	// added fields
+	PoseidonCodeHash []byte // the Poseidon codehash
+	CodeSize uint64
+}
+```
+
+### **CodeHash**
+
+Bununla ilgili olarak, her sözleşme bytecode'u için iki tür kod hash'i sağlarız: Keccak hash'i ve Poseidon hash'i.
+
+'KeccakCodeHash', 'EXTCODEHASH' uyumluluğunu korumak için tutulur. Poseidon hash işleminin çok daha verimli olduğu zkEVM'ye yüklenen bytecodeların doğruluğunu doğrulamak için "PoseidonCodeHash" kullanılır.
+
+### CodeSize
+
+'EXTCODESIZE' doğrulanırken tüm sözleşme verilerinin zkEVM'ye yüklenmesi pahalıdır. Bunun yerine sözleşme boyutunu sözleşme oluşturma sırasında depolama alanında saklıyoruz. Bu şekilde kodu yüklememize gerek kalmaz; bu opcode'u doğrulamak için bir depolama kanıtı yeterlidir.
+
+## Blok Zamanı
+
+Scroll, 3 saniyelik sabit bir blok süresini hedefler. Bu, ideal koşullar altında Ethereum'da kullanılan 12 saniyeden daha kısa ve daha tutarlıdır.
+
+Blok süresinin bu şekilde seçilmesinin iki nedeni var:
+
+- Daha hızlı ve sabit blok süresine sahip olmak, daha hızlı geri bildirim ve daha iyi bir kullanıcı deneyimi sağlar.
+- Test ağlarımızdaki zkEVM devrelerini optimize ederken, blok veya parti başına daha küçük bir gas limitini korusak bile, yine de Ethereum'dan daha yüksek verime ulaşabiliriz.
+
+## Gelecekteki EIP'ler
+
+Ethereum tarafından benimsenen tüm yeni EIP'leri yakından takip ediyoruz ve uygun olduğunda bunları benimsiyoruz. Daha fazla ayrıntıyla ilgileniyorsanız, [topluluk forumumuzdan](https://community.scroll.io) veya [Scroll Discord'dan](https://discord.gg/scroll) bize ulaşın.
+
+## İşlem ücretleri
+
+Scroll işlemlerinden alınan ücret iki bölümden oluşur:
+
+- **L2 gaz ücreti:** L1'e benzer şekilde, L2 işlem ücreti miktarı "L2_gas_price * L2_gas_used" değerine eşittir ve aşağıdaki maliyetleri kapsar:
+   - L2 sıralayıcı yürütme ve depolama maliyeti
+   - L1'de geçerlilik kanıtı doğrulama ve sonuçlandırma maliyeti
+   - Kanıtlayıcı maliyeti
+- **L1 veri ücreti:** L2 gaz ücretine ek olarak ek ücret. L1 veri ücreti yalnızca L2 tarafından başlatılan işlemlerden alınır, L1 tarafından başlatılan işlemlerden alınmaz. Ücret, veri kullanılabilirliği için L1'e veri gönderme maliyetini kapsar. Tx verilerini L1'e yuvarladığımız için L1 rollup ücreti, tx verilerinin boyutuna göre hesaplanır.
+
+Daha fazla bilgi için, bkz. [Scroll'da İşlem Ücretleri](/tr/developers/transaction-fees-on-scroll).
+
+---

@@ -7,6 +7,8 @@ excerpt: "Learn more about Ethereum scalability and zero knowledge cryptography.
 ---
 
 import NavCard from "../../../../components/NavCard.astro"
+import TechnologySvg from "../../../../assets/svgs/home/home-technology.svg?raw"
+import LearnSvg from "../../../../assets/svgs/home/home-learn.svg?raw"
 
 Scroll pulls together research and engineering from Blockchain Protocols and Zero Knowledge Cryptography. If you want to dive deeper, keep reading and check out the additional resources.
 
@@ -14,13 +16,13 @@ Want to see a specific topic covered? Create [an issue](https://github.com/scrol
 
 <div class="navs" class="flex flex-col flex-wrap items-center md:flex-row md:gap-8 md:items-start">
   <NavCard
-    icon="/svgs/home-technology.svg"
+    icon={TechnologySvg}
     name="Ethereum & Protocols"
     content="Understand the Ethereum ecosystem and how Scroll fits in."
     link="/en/learn/the-scalability-problem"
   />
   <NavCard
-    icon="/svgs/home-learn.svg"
+    icon={LearnSvg}
     name="Zero Knowledge"
     content="Learn about zero knowledge cryptography and its applications."
     link="/en/learn/zero-knowledge/introduction-to-zero-knowledge"

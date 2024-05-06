@@ -1,0 +1,452 @@
+---
+section: developers
+date: Last Modified
+title: "Özel Ağ Geçidi üzerinden ERC20 köprüleyin"
+lang: "tr"
+permalink: "developers/guides/bridge-erc20-through-the-custom-gateway"
+excerpt: "Bu kılavuz, Özel Ağ Geçidini kullanarak özel işlevlere ihtiyaç duyan ERC20'ler için Scroll köprüsünün nasıl kullanılacağını açıklayacaktır."
+---
+
+
+import Aside from "../../../../../components/Aside.astro"
+
+
+Bu kılavuz, Özel Ağ Geçidini kullanarak özel işlevlere ihtiyaç duyan ERC20'ler için Scroll köprüsünün nasıl kullanılacağını açıklayacaktır.
+
+
+<Aside type="tip" title="Özel mantığa ihtiyacınız var mı?">
+ Unutmayın, birçok durumda, tokenınıza veya tokenınızın köprüleme mantığına ek özellikler eklemek için Özel Ağ Geçidini kullanmanıza gerek olmayacaktır. Daha fazla bilgi için [ETH ve ERC20 Token Köprüsü](/tr/developers/l1-and-l2-bridge/eth-and-erc20-token-bridge#deposit-eth-and-erc20-tokens-from-l1) hakkındaki makaleye bakın .
+</Aside>
+
+
+## 1. Adım: Sepolia'da bir token başlatın
+
+
+Öncelikle köprüleyecek bir tokena ihtiyacımız var. Bir tokenın L2 ile uyumlu olması için belirli bir ERC20 uygulamasına gerek yoktur. Zaten bir tokenınız varsa bu adımı atlayabilirsiniz. Yeni bir token dağıtmak istiyorsanız, başlatıldığında dağıtıcıya 1 milyon token basan basit bir ERC20 tokenının aşağıdaki sözleşmesini kullanın.
+
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.16;
+
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+
+
+contract L1Token is ERC20 {
+ constructor() ERC20("My Token L1", "MTL1") {
+   _mint(msg.sender, 1_000_000 ether);
+ }
+}
+```
+
+
+## Adım 2: Scroll Sepolia test ağında muadil tokenı başlatın
+
+
+Sıradaki adımda, Sepolia'daki orijinal tokenı temsil edecek olan bir karşılık tokenını Scroll üzerinde başlatacaksınız. Bu token, L1 tokenınınkiyle eşleşmek için özel mantık uygulayabilir hatta L1 tokenının ötesinde ek özellikler ekleyebilir.
+
+
+Bunun çalışması için:
+
+
+- Tokenın köprüyle uyumlu olabilmesi için "IScrollStandardERC20" arayüzünü uygulaması gerekir.
+- Sözleşme, "gateway()" ve "counterpart()" fonksiyonları altında ağ geçidi adresini ve karşılık gelen token adreslerini (yeni başlattığımız L1 token) sağlamalıdır. Ayrıca L2 ağ geçidinin, bir token yatırıldığında ve çekildiğinde 'mint()' ve 'burn()' işlevlerini çağırmasına da izin vermelidir.
+
+
+Aşağıda köprüyle uyumlu bir tokenın tam bir örneği bulunmaktadır. Yapıcıya(constructor) resmi Scroll Özel Ağ Geçidi adresini (`0x058dec71E53079F9ED053F3a0bBca877F6f3eAcf`) ve Sepolia'da oluşturulan tokenın adresini ileteceksiniz.
+
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.16;
+
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@scroll-tech/contracts@0.1.0/libraries/token/IScrollERC20Extension.sol";
+
+
+contract L2Token is ERC20, IScrollERC20Extension {
+ // We store the gateway and the L1 token address to provide the gateway() and counterpart() functions which are needed from the Scroll Standard ERC20 interface
+ address _gateway;
+ address _counterpart;
+
+
+ // In the constructor we pass as parameter the Custom L2 Gateway and the L1 token address as parameters
+ constructor(address gateway_, address counterpart_) ERC20("My Token L2", "MTL2") {
+   _gateway = gateway_;
+   _counterpart = counterpart_;
+ }
+
+
+ function gateway() public view returns (address) {
+   return _gateway;
+ }
+
+
+ function counterpart() external view returns (address) {
+   return _counterpart;
+ }
+
+
+ // We allow minting only to the Gateway so it can mint new tokens when bridged from L1
+ function transferAndCall(address receiver, uint256 amount, bytes calldata data) external returns (bool success) {
+   transfer(receiver, amount);
+   data;
+   return true;
+ }
+
+
+ // We allow minting only to the Gateway so it can mint new tokens when bridged from L1
+ function mint(address _to, uint256 _amount) external onlyGateway {
+   _mint(_to, _amount);
+ }
+
+
+ // Similarly to minting, the Gateway is able to burn tokens when bridged from L2 to L1
+ function burn(address _from, uint256 _amount) external onlyGateway {
+   _burn(_from, _amount);
+ }
+
+
+ modifier onlyGateway() {
+   require(gateway() == _msgSender(), "Ownable: caller is not the gateway");
+   _;
+ }
+}
+```
+
+
+## Adım 3: Token'ı Scroll Köprüsü'ne ekleyin
+
+
+Token'ı Scroll'daki "L2CustomERC20Gateway" sözleşmesine ve L1'deki "L1CustomERC20Gateway" sözleşmesine eklemek için Scroll ekibiyle iletişime geçmeniz gerekiyor. Ayrıca tokenınızı Scroll resmi köprü kullanıcı arayüzüne eklemek için [token listeleri](https://github.com/scroll-tech/token-list) deposundaki talimatları izleyin.
+
+
+## Adım 4: Tokenları yatırın
+
+
+Tokenınız Scroll ekibi tarafından onaylandıktan sonra L1'den token yatırabilirsiniz. Bunu yapmak için öncelikle Sepolia'daki 'L1CustomGateway' sözleşme adresine onay vermeniz gerekir ('0x31C994F2017E71b82fd4D8118F140c81215bbb37'). Ardından, 'L1CustomGateway' sözleşmesindeki 'depositERC20' fonksiyonunu çağırarak tokenları yatırın. Bu, [köprü kullanıcı arayüzümüz](https://scroll.io/bridge), [Etherscan Sepolia](https://sepolia.etherscan.io/address/0x31C994F2017E71b82fd4D8118F140c81215bbb37#writeProxyContract) veya bir akıllı sözleşme kullanılarak yapılabilir.
+
+
+## Adım 5: Tokenları çekin
+
+
+Tokenları L2'den L1'e geri göndermek için benzer adımları izleyeceksiniz. Öncelikle, 'L2CustomGateway' adresine ('0x058dec71E53079F9ED053F3a0bBca877F6f3eAcf') onay verin ve ardından 'L2CustomGateway' sözleşmesinden 'drawERC20'yi çağırarak tokenları çekin.
+
+
+## Alternatif Yaklaşım: Özel bir L1 Ağ Geçidi sözleşmesi başlatın ve ayarlayın
+
+
+Tokenları Scroll'a ve Scroll'dan köprülemek için önerilen yöntem (yukarıda açıklandığı gibi) tokenınızı Scroll resmi köprüsüne eklemektir. Bu yaklaşım, onların daha kolay bulunmasını sağlayacak ve sahipleri için daha güvenli olmalarını sağlayacaktır. Ancak bunun için Scroll ekibinin onayı gereklidir. Resmi onay süreci olmadan özel bir token başlatmak istiyorsanız kendiniz özel bir ağ geçidi oluşturabilirsiniz. Bunu yapmak için L1'de bir "L1CustomERC20Gateway" sözleşmesi ve L2'de bir "L2CustomERC20Gateway" dağıtmanız gerekecektir.
+
+
+### Özel bir L1 Ağ Geçidi başlatın
+
+
+Sepolia'da aşağıdaki sözleşmeyi başlatarak işe koyulalım.
+
+
+```solidity
+// SPDX-License-Identifier: MIT
+
+
+// Although it's possible to use other Solidity versions, we recommend using version 0.8.16 because that's where our contracts were audited
+pragma solidity =0.8.16;
+
+
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+
+import { IL2ERC20Gateway } from "@scroll-tech/contracts@0.1.0/L2/gateways/IL2ERC20Gateway.sol";
+import { IL1ScrollMessenger } from "@scroll-tech/contracts@0.1.0/L1/IL1ScrollMessenger.sol";
+import { IL1ERC20Gateway } from "@scroll-tech/contracts@0.1.0/L1/gateways/IL1ERC20Gateway.sol";
+
+
+import { ScrollGatewayBase } from "@scroll-tech/contracts@0.1.0/libraries/gateway/ScrollGatewayBase.sol";
+import { L1ERC20Gateway } from "@scroll-tech/contracts@0.1.0/L1/gateways/L1ERC20Gateway.sol";
+
+
+// This contract will be used to send and receive tokens from L2
+contract L1CustomERC20Gateway is L1ERC20Gateway, Ownable {
+ // Tokens must be mapped to "bind" them to a token that represents the original token on the original. This event will be emitted when the token mapping for ERC20 token is updated.
+ event UpdateTokenMapping(address indexed l1Token, address indexed oldL2Token, address indexed newL2Token);
+
+
+ mapping(address => address) public tokenMapping;
+
+
+ constructor() {}
+
+
+ // This function must be called once after both the L1 and L2 contract was deployed
+ function initialize(address _counterpart, address _router, address _messenger) external {
+   require(_router != address(0), "zero router address");
+
+
+   ScrollGatewayBase._initialize(_counterpart, _router, _messenger);
+ }
+
+
+ /// This function returns the address of the token on L2
+ function getL2ERC20Address(address _l1Token) public view override returns (address) {
+   return tokenMapping[_l1Token];
+ }
+
+
+ // Updates the token mapping that "binds" a token with another one on the other chain
+ function updateTokenMapping(address _l1Token, address _l2Token) external onlyOwner {
+   require(_l2Token != address(0), "token address cannot be 0");
+
+
+   address _oldL2Token = tokenMapping[_l1Token];
+   tokenMapping[_l1Token] = _l2Token;
+
+
+   emit UpdateTokenMapping(_l1Token, _oldL2Token, _l2Token);
+ }
+
+
+ // Callback called before a token is withdrawn on L1
+ function _beforeFinalizeWithdrawERC20(
+   address _l1Token,
+   address _l2Token,
+   address,
+   address,
+   uint256,
+   bytes calldata
+ ) internal virtual override {
+   require(msg.value == 0, "nonzero msg.value");
+   require(_l2Token != address(0), "token address cannot be 0");
+   require(_l2Token == tokenMapping[_l1Token], "l2 token mismatch");
+ }
+
+
+ // Token bridged can be "canceled" or dropped. This callback is called before that happens.
+ function _beforeDropMessage(address, address, uint256) internal virtual override {
+   require(msg.value == 0, "nonzero msg.value");
+ }
+
+
+ // Internal function holding the deposit logic
+ function _deposit(
+   address _token,
+   address _to,
+   uint256 _amount,
+   bytes memory _data,
+   uint256 _gasLimit
+ ) internal virtual override nonReentrant {
+   address _l2Token = tokenMapping[_token];
+   require(_l2Token != address(0), "no corresponding l2 token");
+
+
+   // 1. Transfer token into this contract.
+   address _from;
+   (_from, _amount, _data) = _transferERC20In(_token, _amount, _data);
+
+
+   // 2. Generate message passed to L2CustomERC20Gateway.
+   bytes memory _message = abi.encodeCall(
+     IL2ERC20Gateway.finalizeDepositERC20,
+     (_token, _l2Token, _from, _to, _amount, _data)
+   );
+
+
+   // 3. Send message to L1ScrollMessenger.
+   IL1ScrollMessenger(messenger).sendMessage{ value: msg.value }(counterpart, 0, _message, _gasLimit, _from);
+
+
+   emit DepositERC20(_token, _l2Token, _from, _to, _amount, _data);
+ }
+}
+```
+
+
+### Özel bir L2 Ağ Geçidi başlatın
+
+
+Şimdi Scroll'da muadil sözleşmeyi başlatalım.
+
+
+```solidity
+// SPDX-License-Identifier: MIT
+
+
+pragma solidity =0.8.16;
+
+
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+
+import "@scroll-tech/contracts@0.1.0/L2/gateways/L2ERC20Gateway.sol";
+import { IL2ScrollMessenger } from "@scroll-tech/contracts@0.1.0/L2/IL2ScrollMessenger.sol";
+import { IL1ERC20Gateway } from "@scroll-tech/contracts@0.1.0/L1/gateways/IL1ERC20Gateway.sol";
+import { ScrollGatewayBase } from "@scroll-tech/contracts@0.1.0/libraries/gateway/ScrollGatewayBase.sol";
+import "@scroll-tech/contracts@0.1.0/libraries/token/IScrollERC20Extension.sol";
+
+
+import { IL2ERC20Gateway } from "@scroll-tech/contracts@0.1.0/L2/gateways/IL2ERC20Gateway.sol";
+
+
+// This contract will be used to send and receive tokens from L1
+contract L2CustomERC20Gateway is L2ERC20Gateway, ScrollGatewayBase, Ownable {
+ event UpdateTokenMapping(address indexed l2Token, address indexed oldL1Token, address indexed newL1Token);
+
+
+ // solhint-disable-next-line var-name-mixedcase
+ mapping(address => address) public tokenMapping;
+
+
+ constructor() {}
+
+
+ // Like with the L1 version of the Gateway, this must be called once after both the L1 and L2 gateways are deployed
+ function initialize(address _counterpart, address _router, address _messenger) external {
+   require(_router != address(0), "zero router address");
+
+
+   ScrollGatewayBase._initialize(_counterpart, _router, _messenger);
+ }
+
+
+ /// Returns the address of the token representing the token on L2
+ function getL1ERC20Address(address _l2Token) external view override returns (address) {
+   return tokenMapping[_l2Token];
+ }
+
+
+ // This returns the L2 token address
+ function getL2ERC20Address(address) public pure override returns (address) {
+   revert("unimplemented");
+ }
+
+
+ // This function finalizes the token deposit on L2 when the deposit was not finalized due to not enough gas sent from L1
+ function finalizeDepositERC20(
+   address _l1Token,
+   address _l2Token,
+   address _from,
+   address _to,
+   uint256 _amount,
+   bytes calldata _data
+ ) external payable override onlyCallByCounterpart nonReentrant {
+   require(msg.value == 0, "nonzero msg.value");
+   require(_l1Token != address(0), "token address cannot be 0");
+   require(_l1Token == tokenMapping[_l2Token], "l1 token mismatch");
+
+
+   IScrollERC20Extension(_l2Token).mint(_to, _amount);
+
+
+   _doCallback(_to, _data);
+
+
+   emit FinalizeDepositERC20(_l1Token, _l2Token, _from, _to, _amount, _data);
+ }
+
+
+ // Same as in the L1 version of this contract, this function "binds" a token with a token on the other chain
+ function updateTokenMapping(address _l2Token, address _l1Token) external onlyOwner {
+   require(_l1Token != address(0), "token address cannot be 0");
+
+
+   address _oldL1Token = tokenMapping[_l2Token];
+   tokenMapping[_l2Token] = _l1Token;
+
+
+   emit UpdateTokenMapping(_l2Token, _oldL1Token, _l1Token);
+ }
+
+
+ // Internal function holding the withdraw logic
+ function _withdraw(
+   address _token,
+   address _to,
+   uint256 _amount,
+   bytes memory _data,
+   uint256 _gasLimit
+ ) internal virtual override nonReentrant {
+   address _l1Token = tokenMapping[_token];
+   require(_l1Token != address(0), "no corresponding l1 token");
+
+
+   require(_amount > 0, "withdraw zero amount");
+
+
+   // 1. Extract real sender if this call is from L2GatewayRouter.
+   address _from = msg.sender;
+   if (router == msg.sender) {
+     (_from, _data) = abi.decode(_data, (address, bytes));
+   }
+
+
+   // 2. Burn token.
+   IScrollERC20Extension(_token).burn(_from, _amount);
+
+
+   // 3. Generate message passed to L1StandardERC20Gateway.
+   bytes memory _message = abi.encodeCall(
+     IL1ERC20Gateway.finalizeWithdrawERC20,
+     (_l1Token, _token, _from, _to, _amount, _data)
+   );
+
+
+   // 4. send message to L2ScrollMessenger
+   IL2ScrollMessenger(messenger).sendMessage{ value: msg.value }(counterpart, 0, _message, _gasLimit);
+
+
+   emit WithdrawERC20(_l1Token, _token, _from, _to, _amount, _data);
+ }
+}
+```
+
+
+### Sepolia'da Ağ Geçidi sözleşmenizi kurun
+
+
+Sözleşmeler dağıtıldıktan sonra, sözleşmeleri başlatmak ve bunları karşılık gelen tokenlara ve köprünün diğer tarafındaki ağ geçidine bağlamak için aşağıdaki işlevleri çağırın.
+
+
+İlk olarak, aşağıdaki parametrelerle 'MyL1Gateway' sözleşmesindeki 'initialize' fonksiyonunu çağırın:
+
+
+- `_counterpart`: Scroll'da yeni başlattığımız `MyL2Gateway`in adresi.
+- `_router`: Sepolia'daki `L1GatewayRouter` sözleşmesi olan `0x13FBE0D0e5552b8c9c4AE9e2435F38f37355998a` olarak ayarlayın.
+- `_messenger`: Sepolia'daki `L1ScrollMessenger` sözleşmesi olan `0x50c7d3e7f7c656493D1D76aaa1a836CedfCBB16A` olarak ayarlayın.
+
+
+Özel bir ağ geçidi birden fazla token köprüsüne ev sahipliği yapabilir. Ama biz örneğimizde, 'MyL1Gateway' sözleşmesindeki 'updateTokenMapping''i aşağıdaki parametrelerle çağırarak yalnızca L1Token ve L2Token arasında köprü kurulmasına izin vereceğiz:
+
+
+- `_l1Token`: Daha önce Sepolia'da başlattığımız `L1Token` sözleşmesinin adresi.
+- `_l2Token`: Daha önce Scroll'da başlattığımız `L2Token` sözleşmesinin adresi.
+
+
+### Scroll'da Ağ Geçidi sözleşmenizi kurun
+
+
+Şimdi Scroll zincirine geçelim ve benzer adımları izleyerek `MyL2Gateway`i başlatalım.
+
+
+İlk olarak, `MyL2Gateway`den `initialize` fonksiyonunu çağırın:
+
+
+- `_counterpart`: Sepolia'da yeni başlattığımız `MyL1Gateway`in adresi.
+- `_router`: Scroll'daki `L2GatewayRouter` sözleşmesi olan `0x9aD3c5617eCAa556d6E166787A97081907171230` olarak ayarlayın.
+- `_messenger`: Scroll'daki `L2ScrollMessenger` sözleşmesi olan `0xBa50f5340FB9F3Bd074bD638c9BE13eCB36E603d`yi ayarlayın.
+
+
+Daha sonra, 'MyL2Gateway' sözleşmesinde 'updateTokenMapping'i çağırın:
+
+
+- `_l2Token`: Daha önce Scroll'da başlattığımız `L2Token` sözleşmesinin adresi.
+- `_l1Token`: Daha önce Sepolia'da başlattığımız `L1Token` sözleşmesinin adresi.
+
+
+### Tokenları köprüleme
+
+
+Artık tıpkı resmi Scroll köprüsünde olduğu gibi "MyL1Gateway"den "depositERC20"yi ve "MyL2Gateway"den "withdrawERC20"yi çağırabiliriz.
+
+
+

@@ -48,9 +48,12 @@
       }
     },
     "NewsletterCTA": {
-      "title": "Stay updated on the latest Scroll news",
-      "placeholder": "Enter your email address",
-      "buttonText": "Sign up"
+      "title": "Stay up-to-date on the latest Scroll Developer news",
+      "text": "Roadmap updates, virtual and live events, ecosystem opportunities and more",
+      "placeholder": "your email address here",
+      "thankYouForSubscribing": "Thank you for subscribing!",
+      "correctEmail": "Please use a correct email address.",
+      "pleaseInsertEmail": "Please insert your email."
     }
   },
   "sidebar": {
@@ -66,6 +69,8 @@
       "commonErrors": "Common Errors",
       "rollupExplorer": "Rollup Explorer",
       "scrollSepoliaBlockExplorer": "Scroll Sepolia Explorer",
+      "scrollMainnet": "Scroll Mainnet",
+      "scrollscan": "Scrollscan Block Explorer",
       "sepoliaBlockExplorer": "Sepolia Explorer",
       "community": "Community",
       "discord": "Discord",
@@ -91,19 +96,25 @@
       "guides": "Guides",
       "contractDeploymentTutorial": "Contract Deployment Tutorial",
       "crossChainInteraction": "Scroll Messenger Cross-chain Interaction",
+      "runningNode": "Running a Scroll Node",
       "bridgingERC20TokenThroughCustomGateway": "Bridge an ERC20 through the Custom Gateway",
       "bridgingERC721NftThroughCustomGateway": "Bridging ERC721 NFT through Custom Gateway",
       "bridgingERC1155ThroughCustomGateway": "Bridging ERC1155 through Custom Gateway",
       "estimatingGasAndTxFees": "Estimating Gas & Tx Fees",
       "resources": "Resources",
+      "mainnetResources": "Mainnet Resources",
+      "sepoliaResources": "Sepolia Resources",
+      "scrollBlockExplorer": "Scrollscan Explorer",
       "rollupExplorer": "Rollup Explorer",
       "scrollSepoliaBlockExplorer": "Scroll Sepolia Explorer",
-      "sepoliaBlockExplorer": "Sepolia Explorer"
+      "sepoliaRollupExplorer": "Rollup Explorer",
+      "sepoliaBlockExplorer": "Scrollscan Explorer"
     },
     "technology": {
       "introduction": "Introduction",
       "principles": "Principles",
       "scrollArchitecture": "Scroll Architecture",
+      "scrollUpgrades": "Scroll Upgrades",
       "overview": "Overview",
 
       "scrollChain": "Scroll Chain",
@@ -129,7 +140,11 @@
       "bridgeOverview": "Bridge Overview",
       "prover": "Prover",
       "proofGeneration": "Proof Generation",
-      "cpuProverRepo": "CPU Prover Repo"
+      "cpuProverRepo": "CPU Prover Repo",
+
+      "security": "Security",
+      "auditsAndBugBounty": "Audits & Bug Bounty",
+      "l2BeatAssessment": "L2Beat Assessment"
     },
     "learn": {
       "ethereumAndProtocols": "Ethereum & Protocols",
@@ -141,6 +156,41 @@
       "kzgCommitmentScheme": "KZG Commitment Scheme",
       "additionalResources": "Additional Resources"
     }
+  },
+  "footer": {
+    "aboutScroll": {
+      "title": "About Scroll",
+      "bugBounty": "Bug Bounty",
+      "joinUs": "Join Us",
+      "healthStatus": "Health Status",
+      "privacyPolicy": "Privacy Policy",
+      "termsAndConditions": "Terms and Conditions"
+    },
+    "resources": {
+      "title": "Resources",
+      "scrollDocsURL": "https://docs.scroll.io/",
+      "blog": "Blog",
+      "documentation": "Documentation",
+      "brandKit": "Brand Kit",
+      "audits": "Audits"
+    },
+    "followUs": {
+      "title": "Follow Us"
+    }
+  },
+  "pageNotFound": {
+    "title": "Page not found",
+    "text": "We're sorry, but we couldn't find the page you were looking for."
+  },
+  "rpcTable": {
+    "rpcServerAddress": "RPC Server Address",
+    "height": "Height",
+    "latency": "Latency",
+    "score": "Score",
+    "privacy": "Privacy",
+    "addNetwork": "Add Network",
+    "connect": "Connect",
+    "sorting": "Sorting"
   },
   "notTranslated": {
     "notTranslated": "This page has not been translated yet."

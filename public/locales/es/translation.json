@@ -48,9 +48,12 @@
       }
     },
     "NewsletterCTA": {
-      "title": "Stay updated on the latest Scroll news",
-      "placeholder": "Enter your email address",
-      "buttonText": "Sign up"
+      "title": "Mantente actualizado con las más recientes noticias sobre el Desarrollo de Scroll",
+      "text": "Roadmap, actualizaciones, eventos virtuales y presenciales, oportunidades en el ecosistema y más",
+      "placeholder": "tu correo electrónico aquí",
+      "thankYouForSubscribing": "¡Gracias por suscribirte!",
+      "correctEmail": "Por favor usa un correo electrónico válido.",
+      "pleaseInsertEmail": "Por favor ingresa tu correo electrónico."
     }
   },
   "sidebar": {
@@ -66,6 +69,8 @@
       "commonErrors": "Errores Comunes",
       "rollupExplorer": "Rollup Explorer",
       "scrollSepoliaBlockExplorer": "Scroll Sepolia Explorer",
+      "scrollMainnet": "Scroll Mainnet",
+      "scrollscan": "Explorador Scrollscan",
       "sepoliaBlockExplorer": "Sepolia Explorer",
       "community": "Comunidad",
       "discord": "Discord",
@@ -96,9 +101,13 @@
       "bridgingERC1155ThroughCustomGateway": "Bridging de un ERC1155 a través de una Gateway Personalizada",
       "estimatingGasAndTxFees": "Estimación de las Tarifas de Gas y Tx",
       "resources": "Recursos",
+      "mainnetResources": "Recursos de Mainnet",
+      "sepoliaResources": "Recursos de Sepolia",
+      "scrollBlockExplorer": "Explorador Scrollscan",
       "rollupExplorer": "Rollup Explorer",
       "scrollSepoliaBlockExplorer": "Scroll Sepolia Explorer",
-      "sepoliaBlockExplorer": "Sepolia Explorer"
+      "sepoliaRollupExplorer": "Explorador de Rollup",
+      "sepoliaBlockExplorer": "Explorador de bloques Scrollscan"
     },
     "technology": {
       "introduction": "Introducción",
@@ -129,7 +138,11 @@
       "bridgeOverview": "Vista General del Bridge",
       "prover": "Prover",
       "proofGeneration": "Proof Generation",
-      "cpuProverRepo": "CPU Prover Repo"
+      "cpuProverRepo": "Repo de probador de CPU",
+
+      "security": "Seguridad",
+      "auditsAndBugBounty": "Auditorías y recompenzas por encontrar bugs",
+      "l2BeatAssessment": "Análisis de L2Beat"
     },
     "learn": {
       "ethereumAndProtocols": "Ethereum y Protocolos",
@@ -142,7 +155,33 @@
       "additionalResources": "Recursos Adicionales"
     }
   },
+  "footer": {
+    "aboutScroll": {
+      "title": "Acerca de Scroll",
+      "bugBounty": "Cazarecompensas de bugs",
+      "joinUs": "Únete a nosotros",
+      "healthStatus": "Estado de servicios",
+      "privacyPolicy": "Políticas de privacidad",
+      "termsAndConditions": "Terminos y condiciones"
+    },
+    "resources": {
+      "title": "Recursos",
+      "scrollDocsURL": "https://docs.scroll.io/es",
+      "blog": "Blog",
+      "documentation": "Documentación",
+      "brandKit": "Kit de Marca",
+      "audits": "Auditorías"
+    },
+    "followUs": {
+      "title": "Síguenos"
+    }
+  },
+  "pageNotFound": {
+    "title": "Página no encontrada",
+    "text": "Lo sentimos, pero no pudimos encontrar la página que buscas."
+  },
   "notTranslated": {
     "notTranslated": "Esta página no ha sido traducida aún."
-  }
+  },
+  "This email cannot be added to this list. Please enter a different email address.": "Este correo electrónico no puede ser añadido a la lista. Por favor ingresa uno diferente."
 }
