@@ -1,0 +1,82 @@
+---
+section: technology
+date: Last Modified
+title: "Yürütme Düğümü"
+lang: "tr"
+permalink: "technology/sequencer/execution-node"
+whatsnext: { "Rollup Düğümü": "/tr/technology/sequencer/rollup-node/" }
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+Yürütme düğümü, Scroll protokolündeki temel bileşenlerden biridir, L2 blokzincirinin devamlılığından sorumludur. Yürütme düğümü sayesinde Scroll'daki kullanıcı ve geliştirici deneyimi Ethereum'daki kullanıcı ve geliştirici deneyimine benzer. Bu benzerliği doğrudan Ethereum'dan miras aldığı EVM ve RPC davranışını minimal değişiklikle koruyarak başarır.
+
+Scroll'un yürütme düğümünün ana işlevleri şunlardır:
+- L1 ve L2'den işlemleri toplar.
+- İşlemleri doğrular ve bu işlemleri L2 bloklarına paketler.
+- Blokları yürütür ve L2 zinciri sürdürür.
+
+L1'den L2'ye token ve mesaj köprülemenin de yürütme düğümünün sorumluluğunda olduğunu vurgulamakta fayda var. Öte yandan L2'den L1'e gerçekleşen mesajlar L1'deki herhangi bir kullanıcı tarafından yürütülebilir.
+
+Scroll'un yürütme düğümünün ikincil işlevleri şunlardır:
+- Standart Ethereum RPC API'leri ve bazı Scroll eklenti API'leri sunar.
+- Eşlerin (takipçi düğümlerinin), Ethereum'un eşler arası protokolünü kullanarak blokzincirini senkronize etmesine olanak sağlar.
+
+[go-ethereum](https://github.com/ethereum/go-ethereum)'un bir çatallanması olan yürütme düğümü, işlevlerinin çoğunu Ethereum'dan devralır. Buna işlem ve blok veri yapıları, EVM yürütme, RPC ve p2p protokolleri dahildir. Bu veri yapıları ve protokoller doğrudan `go-ethereum`dan miras alındığı için, Scroll'un Ethereum ile uyumluluğu konusunda çok yüksek bir kesinliğe sahip olabiliriz.
+
+Aşağıdaki bölümlerde yürütme düğümünün ana bileşenleri, ek doğrulama kuralları ve değişiklik ayrıntılarının özeti tanıtılacaktır.
+
+## `l2geth` Bileşenleri
+
+[`l2geth`](https://github.com/scroll-tech/go-ethereum), Scroll'un [go-ethereum](https://github.com/ethereum/go-ethereum) çatallanmasıdır. Blokların oluşturulmasından, yürütülmesinden ve blokzincir durumunun sürdürülmesinden sorumludur. `l2geth`, aşağıda listelenen bazı önemli farklılıklarla birlikte, işlevlerinin çoğunu Ethereum'dan devralmaktadır. `l2geth` aşağıdaki alt modüllere sahiptir (kapsamlı liste değildir):
+- **Storage**: LevelDB kullanılarak uygulanan defter ve durum depolaması.
+- **EVM**: Ethereum'un durum geçiş kuralları.
+- **Worker:** Yeni L2 blokları oluşturmaktan sorumludur.
+- **L1 SyncService**: L1 mesajlarını `l2geth` yerel veritabanında senkronize eder ve saklar.
+- **API katmanı**: Standart Ethereum RPC ve p2p arayüzleri.
+- **Transaction pool**: L2 işlemleri için mempool.
+- **Circuit capacity checker**: bir işlemin veya bloğun devre kapasitesi sınırını aşıp aşmadığını kontrol eder.
+
+### Devre Kapasitesi Denetleyicisi
+
+Scroll'un mevcut zkEVM devreleri ile zkEVM devresine uymadığı için kanıtlanamayan işlem ve bloklar oluşturmak mümkün. Biz buna *kanıt taşması* diyoruz. Bunu önlemek için l2geth'in parçası olarak bir *devre kapasitesi denetleyicisi* modülü uyguladık. Devre kapasitesi denetleyicisi hem blok oluşturma hem de blok doğrulama sırasında kullanılır.
+
+Blok oluşturma sırasında eğer bir sonraki işlem kanıt taşmasına neden olacaksa bloğu mühürleyip işlemi bir sonraki bloğa bırakıyoruz. Tek bir işlem kanıt taşmasına yol açarsa l2geth bunu iptal eder. Bu mekanizmaya *atlama* diyoruz.
+
+L2 işlemlerini atlamak, onları basitçe atmak anlamına gelir. Bu durumda, kullanıcının devam edebilmesi için kanıt taşmasına yol açmayacak aynı nonce ile başka bir işlem göndermesi gerekir.
+
+L1 mesajlarını atlamak daha açık bir süreçtir. Hem L1'deki `ScrollChain` sözleşmesi hem de zkEVM, `L1MessageQueue`daki her L1 işleminin ya dahil edildiğini ve yürütüldüğünü ya da atlandığını doğrular. Toplu kodlama L1 işlemlerini içermese de, hangi L1 mesajlarının atlandığını `ScrollChain`e gösteren bir *atlama bit eşlemi* içerir. Bir L1 depozito mesajı atlanırsa, kullanıcı L1'de tokenlarının iadesini alabilir.
+
+<Aside type="note" title="Not">
+  {" "}
+  Kanıt taşması ve dolayısıyla atlama, kötü niyetli aktiviteyi akla getirir; normal para yatırma işlemlerinde bu asla gerçekleşmeyecektir.  {" "}
+</Aside>
+
+zkEVM kanıtlama birimi yığın olduğundan, yığınlar için de kanıt taşmasından kaçınılmalıdır.
+Bu, asla kanıtlanamaz parçalar önermediğinden emin olmak için devre kapasitesi denetleyicisinin rollup rölesine dahil edilmesiyle elde edilir.
+
+## Doğrulama Kuralları
+
+Scroll, Ethereum'un blok doğrulama kurallarına ek olarak birkaç doğrulama kuralı ekler. Bu yeni kurallar, L1 mesajının dahil edilmesinin L2 davranışını ve zkEVM devre kapasitesi limitini kısıtlar.
+
+- Yukarıda özetlenen [devre kapasitesi denetleyicisi](/es/technology/sequencer/execution-node/#devre-kapasitesi-denetleyicisi) modülü
+ bloğun zkEVM devresinin devre alanı kapasitesine sığabileceğini doğrular.
+- L1 mesajlarıyla ilgili kurallar:
+    - Bir bloktaki L1 mesajları bitişik ve bloğun önünde olmalıdır.
+    - Bir bloktaki L1 mesajları `L1MessageQueue`daki sırasına göre dahil edilmelidir, yani artan `QueueIndex` ile dahil edilmelidir.
+    - Bir bloktaki L1 mesajları `L1MessageQueue` sözleşmesindekilerle eşleşmelidir.
+- Bu kuralların çoğu hem blok oluşturma hem de blok doğrulama sırasında dikkate alınır. Sonuç olarak, eğer blok öneren düğüm bu kurallardan herhangi birini ihlal ederse, takipçi düğümler bloklarını reddedecektir.
+
+## Değişikliklerin Özeti
+
+Scroll yürütme düğümü, Ethereum'un davranışlarının çoğunu devralır. Ancak daha verimli kanıtlamayı mümkün kılmak için `l2geth`te bazı önemli değişiklikler yapmamız gerekiyordu. Bu bölümde, gerekçeleriyle birlikte değişikliklerin kapsamlı olmayan bir listesi sunulmaktadır.
+
+- **State and storage tree**: Ethereum, durum ve sözleşme depolama veri yapısı olarak MPT'yi (Merkle-Partricia Trie) kullanır. Bu trie'nin yapısı ve Keccak hash değerini kullanması, onu ZK devreleri için aşırı derecede pahalı hale getirecektir. `l2geth` bunun yerine [zkTrie](/tr/technology/sequencer/zktrie) kullanır: durumu ve sözleşme depolaması için Poseidon hash değerine sahip ikili bir Merkle trie'si.
+- **StateAccount**: Durum hesabının değiştirilmesi [Hesaplar ve Durum] bölümünde açıklanmıştır(/tr/technology/chain/accounts).
+- **EVM**: Değişiklikler [Ethereum'dan EVM Farkları] bölümünde açıklanmıştır(/tr/technology/chain/differences).
+- **İşlem ücretleri**
+    - L2'de toplanan tüm ücretler, Scroll tarafından korunan bir L2 ücret kasası sözleşmesine gönderilir.    
+    - L1 ücreti: L2 blok alanı ve uygulama masraflarını kapsayan L2 gaz ücretine ek olarak, işlemin L1'e gerçekleştirilme masraflarını kapsayan bir L1 ücreti de alıyoruz. Bu ücret, RLP kodlu işlemin boyutuyla orantılıdır. Gerçek maliyet, L2'deki `L1GasOracle` sözleşmesinde saklanan mevcut ayarlara bağlıdır. Bu ücret doğrudan gönderenin bakiyesinden kesilir (gaz ödeneğinden değil).
+- **L1MessageTx**: Yeni bir işlem türü olan 'L1MessageTx'i tanıttık. Ayrıca bu tür işlemleri ve ilgili meta verileri depolamak için veritabanı arayüzleri de ekledik.
+- **SyncService**: L1'deki sonlandırılmış blokları izler ve bunlardan L1 mesajlarını toplar.
+- **New API**: `l2geth`, kanıtlayıcıların kanıt oluşturmak amacıyla izleme bilgilerini sorgulaması için bir izleme API'si olan `scroll_traceBlockByNumberOrHash` sunar.

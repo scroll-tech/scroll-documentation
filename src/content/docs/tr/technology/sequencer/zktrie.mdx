@@ -1,0 +1,204 @@
+---
+section: technology
+date: Last Modified
+title: "zkTrie"
+lang: "tr"
+permalink: "technology/sequencer/zktrie"
+whatsnext: { "zkEVM": "/tr/technology/zkevm/intro-to-zkevm/" }
+excerpt: "zkTrie, Poseidon hashi kullanılarak oluşturulmuş seyrek bir ikili (binary) Merkle Patricia Trie'dir."
+---
+
+import Aside from "../../../../../components/Aside.astro"
+import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import zktrie1 from "../_images/zktrie-arch.png"
+import zktrie2 from "../_images/zktrie-insertion.png"
+import zktrie3 from "../_images/zktrie-deletion.png"
+
+Bu belgede, anahtar/değer çiftlerini verimli bir şekilde depolamak için kullanılan seyrek bir ikili Merkle Patricia Trie olan zkTrie açıklanmaktadır. Ekleme ve silme de dahil olmak üzere ağaç yapısını, yapımını, düğüm hash işlemini ve ağaç işlemlerini açıklar.
+
+Ayrıca [zktrie repomuzu](https://github.com/scroll-tech/zktrie) de inceleyebilirsiniz.
+
+## Ağaç Yapısı
+
+zkTrie, aşağıdaki şekilde gösterildiği şekilde seyrek bir ikili Merkle Patricia Trie'dir.
+Seyrek İkili Merkle Patricia Trie konusuna dalmadan önce Merkle Trees ve Patricia Tries'e kısaca değinelim.
+* **Merkle Tree**: Merkle Tree, her yaprak düğümünün bir veri bloğunun hash değerini temsil ettiği ve yaprak olmayan her düğümün, alt düğümlerinin hash değerini temsil ettiği bir ağaçtır.
+* **Patricia Trie**: Patricia Trie, anahtar/değer çiftlerini verimli bir şekilde depolamak için kullanılan bir tür taban ağacı veya sıkıştırılmış trie'dir. Yolun düğüm anahtarının değeri tarafından belirlendiği ortak yolu paylaşmak için düğümleri aynı anahtar önekiyle kodlar.
+
+Şekil 1'de gösterildiği gibi zkTrie'de üç tip düğüm vardır.
+- Dal Düğümü: zkTrie'nin ikili bir ağaç olduğu göz önüne alındığında, bir dal düğümünün iki alt düğümü vardır.
+- Yaprak Düğümü: Bir yaprak düğümü, bir anahtar/değer çiftinin verilerini tutar.
+- Boş Düğüm: Boş bir düğüm, aynı öneki paylaşan alt grubun boş olduğunu belirten özel bir düğüm türüdür.
+
+zkTrie'de, düğüm hash değerini hesaplamak için Poseidon hash değerini kullanırız çünkü bunu zk devresinde kanıtlamak daha kolay ve verimlidir.
+
+<ClickToZoom src={zktrie1} alt="zkTrie Structure" caption="Figure 1. zkTrie Structure" />
+
+## Ağaç Yapımı
+
+Bir anahtar/değer çifti verildiğinde, ilk önce Poseidon hash işlevini kullanarak orijinal anahtarı (yani hesap adresi ve depolama anahtarının) hashleyerek ilgili yaprak düğüm için bir *güvenli anahtar* hesaplarız. Bu, anahtarın anahtar alanı üzerinde tekdüze (uniform) dağıtılmasını sağlar. Düğüm anahtarı hash yöntemi, aşağıdaki [Node Hashing](#node-hashing) bölümünde açıklanmaktadır.
+
+Yeni bir yaprak düğümün yolunu, güvenli anahtarı En Az Önemli Bit'ten (LSB) En Önemli Bit'e (MSB) geçerek kodluyoruz. Her adımda, eğer bit 0 ise sol alt düğüme; aksi halde sağ alt düğüme geçiyoruz.
+
+ZkTrie'nin maksimum derinliğini 248 ile sınırlandırıyoruz; bu, ağacın anahtarın yalnızca alt 248 bitini geçeceği anlamına gelir. Güvenli anahtar alanı, Poseidon hashi tarafından kullanılan ve $2^{256}$ aralığının tamamını kaplamayan sonlu bir alan olduğundan, anahtarın bit temsili sonlu alanda belirsiz olabilir ve bu nedenle, zk devresinde bir sağlamlık sorunuyla sonuçlanır.
+
+Yalnızca bir yaprak düğümü olan bir alt ağacı tek bir yaprak düğümüne daraltarak ağaç derinliğini azaltacak bir optimizasyon uyguluyoruz. Örneğin, Şekil 1'de ağacın toplamda '0100', '0010' ve '1010' tuşlarına sahip üç düğümü vardır. '00' son ekine sahip yalnızca bir düğüm olduğundan, '0100' anahtarının yaprak düğümü yalnızca '00' son ekini geçer ve 4 derinliğine neden olacak anahtarını tam olarak genişletmez.
+
+## Ağaç İşlemleri
+
+### Ekleme
+
+<ClickToZoom src={zktrie2} alt="zkTrie Structure" caption="Figure 2. Insert a new leaf node to zkTrie" />
+
+Bir zkTrie'ye yeni bir yaprak düğüm eklediğimizde, Şekil 2'de gösterilen iki durum vardır.
+
+1. Düğüm anahtarının yolunu izlerken boş bir düğüme ulaşılıyor (Şekil 2a). Bu durumda, bu boş düğümü bu yaprak düğümle değiştirmemiz ve dal düğümlerinin merkle hashini köke kadar güncellemek için yolu geriye doğru izlememiz gerekiyor.
+2. Düğüm anahtarının yolunu kat ederken başka bir yaprak düğüm olan 'b'ye ulaşır (Şekil 2b). Bu durumda, iki yaprak düğümün düğüm anahtarlarındaki bir sonraki bit farklılaşana kadar mevcut yaprak düğümü 'b'yi aşağı itmemiz gerekir. Her aşağı itme adımında, dal düğümüne boş bir kardeş düğüm eklememiz gerekir. Bitlerin farklı olduğu seviyeye ulaştığımızda, bitlerine bağlı olarak sol alt düğüm ve sağ alt düğüm olarak iki yaprak düğümü 'b' ve 'd' yerleştiririz. Sonunda yolu geriye doğru izleriz ve tüm dal düğümlerinin Merkle hashini güncelleriz.
+
+### Silme
+
+<ClickToZoom src={zktrie3} alt="zkTrie Structure" caption="Figure 3. Delete a leaf node from the zkTrie" />
+
+Bir yaprak düğümün silinmesi ekleme işlemine benzer. Şekil 3'te gösterilen iki durum vardır.
+
+1. Silinecek yaprak düğümün kardeş düğümü,
+dal düğümü (Şekil 3a). Bu durumda, 'a' düğümünü boş bir düğümle değiştirebilir ve atalarının düğüm hash değerini kök düğüme kadar güncelleyebiliriz.
+2. Silinecek yaprak düğümün kardeş düğümü bir yaprak düğümdür (Şekil 3b). Durum 1'e benzer şekilde, önce yaprak düğümü boş bir düğümle değiştiririz ve kardeş düğümü boş bir düğüm olmayana kadar kardeş düğümünü yukarı doğru daraltmaya başlarız. Örneğin, Şekil 3b'de 'b' yaprak düğümünü boş bir düğümle değiştiriyoruz. 'c' düğümünün kardeşi artık boş bir düğüm haline geldiğinden, 'c' düğümünü bir seviye yukarı taşımamız ve ebeveynini değiştirmemiz gerekiyor. 'C' düğümünün yeni kardeşi 'e' düğümü hâlâ boş bir düğümdür. Böylece yine 'c' düğümünü yukarı doğru hareket ettiriyoruz. Artık 'c' düğümünün kardeşi bir yaprak düğüm olan 'a' düğümü olduğuna göre, silme işlemi tamamlanmıştır.
+
+Geçerli bir zkTrie'deki yaprak düğümün kardeşinin boş bir düğüm olamayacağını unutmayın. Aksi halde her zaman alt ağacı budamalı ve yaprak düğümünü yukarı doğru hareket ettirmeliyiz.
+
+## Düğüm Hash İşlemi
+
+Bu bölümde yaprak güvenlik anahtarının ve düğüm Merkle hash'inin nasıl hesaplandığını anlatacağız. Her iki hash hesaplaması için arity 2 ile Poseidon hash değerini kullanıyoruz. Scroll'da, Poseidon hash işlevi her seferinde iki alan öğesi girişi ve etki alanı ayırma için başlangıç ​​bağlamı olarak aşağıda belirtilen bir `domain_value` alacak şekilde yapılandırılmıştır.
+```
+h{domain_value}(input1, input2)
+```
+
+### Boş Düğüm
+
+Boş bir düğümün düğüm hashi 0'dır.
+
+### Dal Düğümü
+
+Dal düğümü hashi aşağıdaki şekilde hesaplanır:
+
+```go
+branchNodeHash = h{BranchNodeType}(leftChildHash, rightChildHash)
+```
+
+### Yaprak düğümü
+
+Bir yaprak düğümün düğüm hashi aşağıdaki şekilde hesaplanır:
+
+```go
+leafNodeHash = h{LeafNodeType}(nodeKey, valueHash)
+```
+
+Hesaplama, `nodeKey` ve `valueHash` olmak üzere iki alanı içerir.
+- `nodeKey` orijinal anahtardan hashe dönüştürülür. Poseidon hashinde kullanılan alan adı değeri 256'dır.
+- `valueHash`, yaprak düğüm değerinin hashlenmesiyle hesaplanır. Poseidon hashinde kullanılan etki alanı değeri '256 * n'dir; burada 'n', yaprak düğüm değerindeki öğelerin sayısıdır.
+
+İki tür yaprak düğüm vardır: Ethereum hesapları ve depolama anahtar/değer çiftleri. Daha sonra, her bir yaprak düğüm türü için sırasıyla düğüm anahtarının ve değer hashinin hesaplama yöntemini açıklayacağız.
+
+#### Ethereum Hesabı Yaprak Düğümü
+Bir Ethereum Hesabı Yaprak Düğümü, bir Ethereum adresinden ve bir durum hesabı veri yapısından oluşur. Güvenli anahtar Ethereum adresinden türetilir.
+```go
+var address byte[20] // 20 bytes in big-endian
+valHi := address[0:16]
+valLo := address[16:20] * 2^96 // padding 12 bytes of 0 at the end
+nodeKey := h{256}(valHi, valLo)
+```
+
+Scroll'daki bir durum hesabı yapısı aşağıdaki alanlardan oluşur ('Fr' sonlu alanı belirtir ve 254 bitlik bir değerdir)
+
+- `Nonce`: u64
+- `Balance`: u256, ancak Fr olarak kabul edilir
+- `StorageRoot`: Fr
+- `KeccakCodeHash`: u256
+- `PoseidonCodeHash`: Fr
+- `CodeSize`: u64
+
+Değer hashini hesaplamadan önce, durum hesabı ilk olarak `u256` değerlerinin yer aldığı bir listeye sıralanır. Sıralama şeması
+
+```text
+(The following scheme assumes the big-endian encoding)
+[0:32]
+	[0:16] Reserved with all 0
+	[16:24] CodeSize, uint64 in big-endian
+	[24:32] Nonce, uint64 in big-endian
+[32:64] Balance
+[64:96] StorageRoot
+[96:128] KeccakCodeHash
+[128:160] PoseidonCodehash
+(total 160 bytes)
+```
+
+Marshal işlevi aynı zamanda `u256` değerlerinden oluşan bir vektörle birlikte bir `flag` değeri de döndürür. `Flag`, bir `u256` değerinin alan öğesi (Fr) olarak değerlendirilip değerlendirilemeyeceğini belirten bir bit eşlemdir. Durum hesabı için `flag` değeri aşağıda gösterildiği gibi 8'dir.
+
+```
+         +--------------------+---------+------+----------+----------+
+ index   |          0         |    1    |   2  |     3    |     4    |
+         +--------------------+---------+------+----------+----------+
+  u256   | nonce||codesize||0 | balance | root |  keccak  | poseidon |
+         +--------------------+---------+------+----------+----------+
+flag bit |          0         |    0    |   0  |     1    |     0    |
+         +--------------------+---------+------+----------+----------+
+         (LSB)                                                   (MSB)
+```
+
+Değer hashi iki adımda hesaplanır:
+1. Poseidon hashinin alan öğesi olarak temsil edilemeyen değerini alan öğesine dönüştürün.
+2. Ağaç kökü değer hashi olarak ele alınana kadar alan öğelerini ikili ağaç yapısında birleştirin.
+
+İlk adımda, `flag`daki bit, alan elemanı olarak değerlendirilemeyen `u256` değerini belirten 1 olduğunda, değeri yüksek 128 bitlik değere ve düşük-128 bitlik değere bölüyoruz ve ardından bunları bir alan öğesi değeri üretmek için Poseidon hashine dönüştürüyoruz.
+
+```go
+// convert Keccak codehash to a field element
+compressedKeccakCodeHash := h{512}(keccakCodeHash[0:16], keccakCodeHash[16:32])
+```
+
+İkinci olarak değer hashi şu şekilde hesaplanır.
+
+```go
+domain := 256 * 5  // 5 elements to compute the valueHash
+valueHash :=
+    h{domain}(
+        h{domain}(
+            h{domain}(nonce||codesize||0, balance),
+            h{domain}(
+                storageRoot,
+                compressedKeccakCodeHash,
+            ),
+        ),
+        poseidonCodeHash,
+    )
+```
+
+#### Depolama Yaprak Düğümü
+
+Depolama Yaprağı Düğümü, hem anahtar hem de değerin `u256` değerleri olduğu bir anahtar/değer çiftini kodlar. Bu yaprak düğümün güvenli anahtarı, depolama anahtarından türetilir.
+
+```go
+var storageKey byte[32]  // 32 bytes in big-endian
+valHi := storageKey[0:16]
+valLo := storageKey[16:32]
+nodeKey := h{256}(valHi, valLo)
+```
+
+Depolama değeri bir `u256` değeridir. Depolama değeri için `flag` aşağıda gösterilen 1'dir.
+
+```
+         +--------------+
+  index  |      0       |
+         +--------------+
+  u256   | storageValue |
+         +--------------+
+flag bit |      1       |
+         +--------------+
+```
+
+Değer hashi aşağıdaki şekilde hesaplanır
+
+```go
+valueHash = h{512}(storageValue[0:16], storageValue[16:32])
+```
