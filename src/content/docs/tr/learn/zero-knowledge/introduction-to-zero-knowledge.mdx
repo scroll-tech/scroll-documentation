@@ -1,0 +1,73 @@
+---
+section: learn
+date: Last Modified
+title: "Zero Knowledge'a Giriş"
+lang: "en"
+permalink: "learn/zero-knowledge/introduction-to-zero-knowledge"
+whatsnext: { "Polynomial Commitment Schemes": "/learn/zero-knowledge/polynomial-commitment-schemes" }
+excerpt: 'Over the past decade, a field of cryptography called "zero knowledge" has been rapidly advancing. It promises new ways to build applications and enables protocols to increase efficiency, security, and privacy.'
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+Son on yılda, "zero knowledge" olarak adlandırılan kriptografi alanı hızla ilerlemektedir. Zero knowledge, uygulama oluşturmanın yeni yollarını vaat ediyor ve protokollerin verimliliği, güvenliği ve gizliliği artırmasını sağlıyor.
+
+Zero knowledge kanıtları alanını bu kadar heyecan verici kılan şeyin ne olduğuna ve mühendislerin hangi sorunları çözmesine yardımcı olduğuna bakalım.
+
+## Güven Gerektirmeyen Blokzincirler ve Doğrulanabilirlik
+
+Blokzincirler genellikle kullanıcılar tarafından gönderilen işlemleri işleyerek çalışır. Bu işlemler genellikle blokzincirin gerçekleştirmesi için bazı hesaplamaları tetikler.
+
+Blokzincirin güven gerektirmemesi (yani bireysel bir tarafa güvenmeye bağlı olmaması) için ağdaki katılımcıların işlemlerin geçerli olduğunu ve sonuçta ortaya çıkan hesaplamaların doğru şekilde yapıldığını doğrulaması gerekir.
+
+İşlemin geçerli olduğunu doğrulamak için genellikle dijital imza doğrulaması gerekir; bu, işlemin bildirilen göndericisinin gerçekten işlemin yazarı olduğunu doğrular. Bir işlemin hesaplamasının doğru bir şekilde gerçekleştirildiğinin doğrulanması genellikle işlemin yerel olarak yeniden yürütülmesini gerektirir.
+
+## Doğrulanabilirliğe İlişkin Sınırlamalar
+
+Her bir işlemi doğrulamaya yönelik bu metodoloji, bir katılımcının hesaplamayı yeniden çalıştıramadığı durumlarda bozulur. Bir katılımcı birkaç nedenden dolayı hesaplamayı yeniden gerçekleştiremeyebilir: (1) belirli verilerin kullanıma sunulmaması gerekebilir (gizlilik nedenleriyle) veya (2) belirli bir veri için çok pahalı olabilir. Katılımcı bilgisayarın tüm işlemleri yeniden yürütmesi - bu ikinci neden, özellikle saniyede çok sayıda işlem gerçekleştiren yüksek verimli blokzincirler söz konusu olduğunda geçerlidir.
+
+## Zero Knowledge Kanıtlarının Gücü
+
+Zero knowledge kanıtları (ZKP'ler) bu sınırlamaların üstesinden gelme gücüne sahiptir.
+
+ZKP'ler, (1) hesaplamada kullanılan hassas verilerin gizliliğini korurken ve (2) doğrulamanın, hesaplamanın yeniden yürütülmesinden önemli ölçüde daha ucuz olmasını sağlayarak katılımcıların bir hesaplamanın sonuçlarını doğrulamasına olanak tanır. ZKP'lerin bu iki özelliğine sırasıyla **zero knowledge** ve **özlülük** denir.
+
+ZKP'lerin yukarıdaki özellikleri, güven gerektirmeyen blokzincirlerin doğrulanabilirliği bağlamında son derece faydalıdır. ZKP'ler olmadan katılımcıların her işlemin sonuç hesaplamasını yeniden yürütmesi gerekir. Bu, tüm katılımcıların her hesaplamada kullanılan tüm (potansiyel olarak hassas) verileri görmesini gerektirir ve aynı zamanda tüm sistemin verimini de sınırlar. ZKP'lerle bir taraf hesaplamayı gerçekleştirebilir ve ardından hesaplamanın doğru yapıldığına dair bir kanıt oluşturabilir. Diğer katılımcılar, hesaplamayı kendileri yeniden yürütmek yerine, _kanıtın geçerli olduğunu doğrulayarak_ hesaplamanın doğru şekilde yapıldığını doğrulayabilirler. Kanıtın doğrulanması (1) orijinal hesaplamada kullanılan hassas veriler hakkında bilgi sızdırmaz ve (2) hesaplama açısından orijinal hesaplamanın tekrar gerçekleştirilmesinden büyük oranda daha ucuzdur. Bu iki özellik, güven gerektirmeyen blokzincirler için gizlilik ve ölçeklenebilirlik sağlama potansiyeline sahiptir.
+
+## Devreler, Kanıtlar ve Doğrulayıcılar
+
+Pratikte ZKP'lerin bir sisteme uygulanması oldukça karmaşık olabilir, ancak yüksek düzeyde zero knowledge kanıtlarının birkaç bileşene sahip olduğunu anlamak isteyeceksiniz: bir devre, bir kanıt ve bir doğrulayıcı.
+
+Devre, giriş verilerini alan ve giriş verilerinin karşılaması gereken bazı "kısıtlamalara" göre giriş verilerinin geçerli olduğunu ileri süren bir programdır. Giriş verileri genel (herkes tarafından bilinir), özel (yalnızca kanıtlayan tarafından bilinir) veya karışık (bazı girişler genel, bazıları özel) olabilir.
+
+Bir girişin devreyi karşıladığını iddia eden bir kanıt üretilebilir. Kanıt, özel girdiler hakkında hiçbir bilgi ortaya çıkarmaz ve boyutu oldukça küçüktür.
+
+Doğrulayıcı, (1) kanıtın geçerli olup olmadığını, (2) kanıtın devre tarafından ortaya konan kısıtlamalarla eşleştiğini (ve sadece sahte bir kanıt olmadığını) ve (3) kanıtı oluşturmak için kullanılan genel girdilerin denetleyici tarafından kullanılanlarla eşleştiğini kontrol edebilir. Kanıt, doğrulayıcı tarafından kullanılanlarla eşleşir. Doğrulayıcı tarafından gerçekleştirilen bu kontrolün genellikle ucuz bir hesaplama olduğunu unutmayın.
+
+<Aside type="tip" title="">
+  Doğrulayıcının "geçerli kanıt" veya "geçersiz kanıt" dışında bir çıktısı olmadığını fark edebilirsiniz. Doğrulayıcının yalnızca diğer hesaplamaları doğruladığını unutmayın; pratikte bir fonksiyonun "çıkışları" aslında bir devreye ve doğrulayıcıya ek girdiler haline gelebilir.
+</Aside>
+
+### Devreler, Kanıt ve Doğrulayıcılar — bir örnek
+
+Örnek olarak Sudoku'yu ele alalım. Diyelim ki bir Sudoku bulmacası var ve Alice Bob'a bulmacanın çözümünü bildiğini kanıtlamak istiyor ancak çözümün ne olduğunu açıklamak istemiyor.
+
+Bu durumda, söz konusu bulmaca genel bir girdi olacaktır (hem Alice hem de Bob bunu biliyor) ve çözüm de özel bir girdi olacaktır (Alice bunu biliyor ancak bunu Bob'tan gizli tutacak). **Devre** bu girdilerin her ikisini de alır ve çözümü standart yöntemle, satır satır, sütun sütun vb. kontrol ederek çözümün doğru olduğunu iddia eder. Bu devre, özel girdi çözümünün gerçekten genel girdi bulmacası için geçerli bir çözüm olduğunu "kısıtlar" ve yalnızca çözüm kontrolü geçtiğinde yalnızca "doğrulanır".
+
+Daha sonra Alice'in belirli bir bulmaca için devreyi karşılayan bir girdiyi (genel girdi) bildiğini belirten bir **kanıt** oluşturulabilir.
+
+Kanıt, bulmacayla birlikte Bob'a iletilebilir; o da daha sonra kanıtın geçerli olup olmadığını değerlendirmek için Sudoku kontrol devresine karşılık gelen bir **doğrulayıcı** kullanabilir ve böylece Alice gerçekten bulmacanın çözümünü bilir. . İşin kritik tarafı Bob, Alice'in çözümü hakkında herhangi bir bilgi sahibi değil ama yine de Alice'in geçerli bir çözüm bildiğini doğrulayabiliyor!
+
+## Zero Knowledge Kanıtları ve Blokzincirler
+
+ZKP'lerdeki son gelişmelerin temel motivasyonlarından biri, bunun blokzincirlere uygulanmasıdır. Merkezi olmayan blokzincirlerin karşılaştığı en önemli zorluklardan ikisi gizlilik ve ölçeklenebilirliktir; tüm veriler halka açıktır ve ağdaki her düğüm, ağdaki her hesaplamayı yeniden çalıştırmak zorundadır. ZKP'ler bu iki zorluğun da çözülmesine yardımcı olabilir.
+
+Gizliliği koruyan uygulamalar oluşturmak için ZKP'lerin zero knowledge özelliğini kullanan çeşitli projeler olsa da, biz Scroll olarak Ethereum'u ölçeklendirmek için ZKP'lerin yalnızca kısa ve öz özelliğini kullanıyoruz.
+
+## Scroll ve Zero Knowledge Kanıtları
+
+Scroll'a güç veren fikir oldukça basit. Peki ya Ethereum'un başka bir versiyonunun tüm hesaplamalarını doğrulamak için bir Ethereum akıllı sözleşmesi kullanabilseydik? Ethereum Sanal Makinesine ("EVM") daha hızlı ve daha ucuz erişim sağlayan başka bir ağ çalıştırabiliriz ve Ethereum'un kendisi de tüm hesaplamaların doğrulanması ve bu diğer ağın EVM kurallarını ihlal etmediğinden emin olmak için gereken güvenliği sağlayacaktır.
+
+Öğrenme ve Teknoloji bölümlerinin geri kalanı bunun nasıl çalıştığını daha ayrıntılı olarak ele alıyor ancak basit bir düzeyde, zero knowledge'ın bir devre, kanıt ve doğrulayıcıya sahip olmaya bağlı olduğunu unutmayın.
+
+Bizim yapımızda, devre (aslında bir devreler kümesi), zincir durumuna göre girdi işlemlerinin işlenmesi için kabul edilebilir davranışı "kısıtlamak" amacıyla EVM kurallarını kodlar. Bu "zkEVM"yi kullanan bir GPU ağı, işlemleri bir dizi blok için alır ve bir kanıt oluşturur. Ethereum'a dönersek, akıllı bir sözleşme, bir dizi işlem için bu kanıtın akıllı sözleşmede yer alan devreyle eşleştiğini doğrular. Eğer öyleyse, bu işlemler "kesinleşmiş" olarak değerlendirilebilir, ağ ileriye doğru hareket eder ve biz de Ethereum'u büyütmek için hızlı, güvenli ve uygun fiyatlı blok alanı yaratmış oluruz.

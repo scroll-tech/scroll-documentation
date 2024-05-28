@@ -1,0 +1,90 @@
+---
+section: technology
+date: Last Modified
+title: "Scroll Yükseltmeleri"
+lang: "tr"
+permalink: "technology/overview/scroll-upgrades"
+---
+
+Ekip Scroll'un yol haritası üzerinde ilerlemeye devam ettikçe, Scroll ağını yeni özellikler ve iyileştirmeler içerecek şekilde yükselteceğiz.
+
+Aşağıdaki sözleşmeler, yükseltmeleri başlatmak ve iki haftalık zaman kilitleme süresinden sonra yükseltmeleri yürütmek için kullanılır:
+
+| Kontrat         | Ağ                                                      | Adres | 
+| ------------------------ | ------- | - | 
+| L1 Scroll Multisig | Ethereum| [`0xEfc9D1096fb65c832207E5e7F13C2D1102244dbe`](https://etherscan.io/address/0xEfc9D1096fb65c832207E5e7F13C2D1102244dbe)| 
+| L1 Timelock |  Ethereum| [`0x1A658B88fD0a3c82fa1a0609fCDbD32e7dd4aB9C`](https://etherscan.io/address/0x1A658B88fD0a3c82fa1a0609fCDbD32e7dd4aB9C)| 
+| L2 Scroll Multisig | Scroll| [`0xEfc9D1096fb65c832207E5e7F13C2D1102244dbe`](https://scrollscan.com/address/0xEfc9D1096fb65c832207E5e7F13C2D1102244dbe)|
+| L2 Timelock | Scroll | [`0xf6069DB81239E5194bb53f83aF564d282357bc99`](https://scrollscan.com/address/0xf6069DB81239E5194bb53f83aF564d282357bc99)|
+
+## Şubat 2024 Köprü Yükseltmesi
+
+### Genel Bakış
+
+Köprüleme maliyetlerini azaltmak için köprü ve rollup sözleşme paketimizde çeşitli gas optimizasyonları uyguladık. Kullanılan optimizasyon teknikleri aşağıdakileri içerir:
+
+- Artık bazı tamamlayıcı sözleşme adreslerini depolamak için depolama değişkenleri yerine sabitleri kullanacağız. Bu değerlerin (neredeyse) asla değişmemesi gerektiğinden bu mümkündür. Bu değişiklikle birkaç depolama yükleme işleminden tasarruf edebiliriz.
+- `L1MessageQueue`daki içsel gas tahminini, kesin bir hesaplama yerine basit bir üst sınır kullanacak şekilde güncelledik. Çoğu köprü işlemi için iki sonuç benzer olacaktır ancak yeni uygulama önemli ölçüde daha ucuzdur.
+- Bir sözleşmeden diğerine çağrı maliyetlerinden tasarruf etmek için iki sözleşme `L1MessageQueue` ve `L2GasPriceOracle`yı birleştirdik.
+
+### Zaman çizelgesi
+
+
+- **Scroll Sepolia:**
+- Ağ Yükseltmesi: 19 Ocak 2024
+- **Scroll Ana Ağ:**
+- Yükseltme Başlatma: 7 Şubat 2024
+- Zaman Kilidinin Tamamlanması ve Yükseltilmesi: 21 Şubat 2024
+
+
+### Teknik detaylar
+
+#### Kod Değişiklikleri
+- [Köprü Maliyet Optimizasyonu](https://github.com/scroll-tech/scroll/pull/1011)
+- [Denetim Düzeltmeleri](https://github.com/scroll-tech/scroll/pulls?q=OZ+is%3Apr+created%3A2024-01-27..2024-02-10)
+- [Önceden dağıtılan sürüm](https://github.com/scroll-tech/scroll/tree/ff380141a8cbcc214dc65f17ffa44faf4be646b6) ('ff380141a8cbcc214dc65f17ffa44faf4be646b6' işlemini gerçekleştirin)
+- [Sürüm dağıtıldı](https://github.com/scroll-tech/scroll/tree/6030927680a92d0285c2c13e6bb27ed27d1f32d1) ('6030927680a92d0285c2c13e6bb27ed27d1f32d1' işlemini gerçekleştirin)
+
+#### Denetimler
+
+- [OpenZeppelin](https://blog.openzeppelin.com/scroll-bridge-gas-optimizations-audit)
+
+#### Değişiklik Listesi
+
+**L1 sözleşmelerindeki değişiklikler:**
+
+- `ScrollChain`de, `messageQueue` ve `verifier`ı `immutable` yaptık.
+- `L1ScrollMessenger`da, `counterpart`, `rollup`, ve `messageQueue`yu `immutable` yaptık.
+- Tüm token ağ geçitlerinde, `counterpart`, `router`, ve `messenger`ı `immutable` yaptık.
+- `L1MessageQueue` ve `L2GasPriceOracle`ı tek bir `L1MessageQueueWithGasPriceOracle` sözleşmesinde birleştirdik (önceki `L1MessageQueue` ile aynı adrese konuşlandırıldı). Bu sözleşmede ayrıca `messenger` ve `scrollChain`i `değişmez` olarak değiştiriyoruz ve `calculateIntrinsicGasFee`yi basitleştiriyoruz.
+
+**L2 sözleşmelerindeki değişiklikler:**
+
+- `L2ScrollMessenger`da `counterpart`ı `immutable` olacak şekilde değiştirdik.
+- Tüm token ağ geçitlerinde, `counterpart`, `router`, ve `messenger`ı to `immutable` olacak şekilde değiştirdik.
+
+**Etkilenen sözleşmeler:**
+
+- **L1:** `L1MessageQueue`, `L2GasPriceOracle`, `ScrollChain`, `L1WETHGateway`, `L1StandardERC20Gateway`, `L1GatewayRouter`, `L1ScrollMessenger`, `L1CustomERC20Gateway`, `L1ERC721Gateway`, `L1ERC1155Gateway`.
+- **L2:** `L2ScrollMessenger`, `L2WETHGateway`, `L2StandardERC20Gateway`, `L2GatewayRouter`, `L2CustomERC20Gateway`, `L2ERC721Gateway`, `L2ERC1155Gateway`.
+
+#### Uyumluluk
+
+##### Sıralayıcı ve takipçi düğümleri (l2geth)
+
+`l2geth` düğümü çalıştıran operatörlerin yükseltme yapmasına gerek yoktur. Bu yükseltmedeki değişiklikler `l2geth`i etkilemeyecektir.
+
+##### Dapp'ler ve indexer'lar
+
+Sözleşmeleri sorgulayan veya sözleşme arayüzlerine dayanan dapp'lerin ve indeksleyicilerin (ve benzer zincir dışı altyapının) çoğu durumda değiştirilmesine gerek yoktur. Sözleşme değişikliklerinin çoğunluğu dahili ve/veya geriye dönük olarak uyumludur.
+
+Uygulamanız, Scroll'un L1'deki L2 gas fiyatını nasıl takip ettiğini izlemek için [`L2GasPriceOracle`](https://etherscan.io/address/0x987e300fDfb06093859358522a79098848C33852)'ye bağlıysa yükseltme blok numarasından izlemeye başlamanız gerekir [`L1MessageQueueWithGasPriceOracle`](https://etherscan.io/address/0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B).
+
+Orijinal gas fiyatı oracle sözleşmesi kullanımdan kaldırılacak: artık Scroll köprüsü tarafından güncellenmeyecek veya kullanılmayacaktır.
+
+- Ethereum:
+	- `L2GasPriceOracle`: [`0x987e300fDfb06093859358522a79098848C33852`](https://etherscan.io/address/0x987e300fDfb06093859358522a79098848C33852)
+	- `L1MessageQueueWithGasPriceOracle`: [`0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B`](https://etherscan.io/address/0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B)
+- Sepolia:
+	- `L2GasPriceOracle`: [`0x247969F4fad93a33d4826046bc3eAE0D36BdE548`](https://sepolia.etherscan.io/address/0x247969F4fad93a33d4826046bc3eAE0D36BdE548)
+	- `L1MessageQueueWithGasPriceOracle`: [`0xF0B2293F5D834eAe920c6974D50957A1732de763`](https://sepolia.etherscan.io/address/0xF0B2293F5D834eAe920c6974D50957A1732de763)

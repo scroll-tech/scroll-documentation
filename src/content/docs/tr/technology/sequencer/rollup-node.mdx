@@ -1,0 +1,33 @@
+---
+section: technology
+date: Last Modified
+title: "Rollup Düğümü"
+lang: "tr"
+permalink: "technology/sequencer/rollup-node"
+whatsnext: { "zkTrie": "/tr/technology/sequencer/zktrie/" }
+---
+
+Rollup düğümü, Scroll blokzincirini L1'de kanıtlama ve taahhüt için uygun bölümlere bölmekten sorumludur. Bunun iki ana birimi *parçalar* ve *yığınlar*dır.
+* Bir parça, L2 defterinin bitişik bir bölümüdür, L2 bloklarının bir koleksiyonudur ve parçalar, zkEVM kanıtlama birimidir.
+* Öte yandan bir yığın, toplu bir kanıtla birlikte L1'e gönderilen parçaların bir koleksiyonudur.
+
+Rollup düğümü aşağıdaki alt modüllere sahiptir:
+- Parça Önerici: L2 bloklarını toplar ve belirli sınırları zorlayarak parçaları önerir (aşağıya bakın).
+- Yığın Önerici: belirli sınırları uygulayarak parçaları toplayın ve yığınları önerir (aşağıya bakın).
+- Aktarıcı: Yığın verilerini ve yığın kanıtlarını L1'e gönderir.
+
+## Parça ve yığın kısıtlamaları
+
+Yürütme düğümüyle karşılaştırıldığında rollup düğümü çok daha basit ve basit bir bileşendir.
+L2 bloklarını toplar, parçalar ve yığınlar oluşturur ve bunları L1'e gönderir.
+Bu bölümde, parça ve yığın oluşturma sırasında rollup düğümünün uygulaması gereken ana sınırları özetlemekteyiz.
+
+Parçalardaki kısıtlamalar:
+- **Kanıt taşması:** Devre kapasitesi denetleyicisini kullanarak, bir parçaya, yine de kanıt taşmasına yol açmayacak kadar çok bloğun dahil edildiğinden emin oluruz.
+- **L1 yükü:** Yığın önericiden devralınan kısıtlamalar; işlem yükü 128 KB'yi aşamaz.
+
+Yığınlardaki kısıtlamalar:
+- **L1 yükü:** Ethereum'un işlem yükü boyutunda sabit kodlanmış 128 KB sınırı vardır.
+- **L1 işleme gas maliyeti:** Bir yığını işlemenin gas maliyeti, içindeki blokların ve işlemlerin sayısıyla orantılıdır. Bu maliyetin L1 blok gas limitini aşmadığından emin olmalıyız.
+- **Parça sayısı:** Bir yığın, rollup kanıtlayıcısı için en uygun sayıda parçayı içerir.
+

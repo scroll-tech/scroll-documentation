@@ -1,0 +1,76 @@
+---
+section: developers
+date: Last Modified
+title: "Scroll Üzerinde Geliştirmek"
+lang: "tr"
+permalink: "developers/"
+excerpt: "Scroll üzerinde inşa etmek tıpkı Ethereum'daki gibi hissettirir, en sevdiğiniz araçları ve sözleşmeleri yanınızda getirebilirsiniz."
+whatsnext: { "Geliştirici Hızlı Başlangıcı": "/tr/developers/developer-quickstart" }
+---
+
+import Aside from "../../../../components/Aside.astro"
+import ToggleElement from "../../../../components/ToggleElement.astro"
+
+**Scroll geliştirici belgelerine hoş geldiniz!**
+
+Scroll, Ethereum üzerine kurulu kendi Katman 2 ağıdır (daha spesifik olarak bir "zero knowledge rollup'ı").
+
+Ethereum üzerinde geliştirme yapma konusunda deneyimliyseniz kodunuz, bağımlılıklarınız ve araçlarınız olduğu gibi Scroll üzerinde çalışabilmektedir. Bunun mümkün olmasının sebebi ağımızın EVM bayt koduyla uyumlu ve tıpkı Ethereum üzerinde geliştirme yapıyormuş gibi bir deneyim sunacak şekilde tasarlanmış olmasıdır.
+
+<Aside type="tip" title="Zero knowledge (ZK) rollup’larını ilk defa mı duydunuz?">
+Scroll, işlemlerini zincir dışında yürüterek ve aynı zamanda işlemlerin doğru şekilde yürütüldüğüne dair kriptografik bir kanıt üreterek güvenliğini ve hızını kazanır. Bu kriptografik kanıt, Katman 1'deki akıllı bir sözleşmeyle doğrulanır ve Scroll'un Katman 2'sinde yürütülen tüm kodların, Ethereum Katman 1'de yürütülüyormuş gibi davranmasını sağlar.
+
+[Scroll'un mimarisi hakkında daha fazla bilgi edinin →](/tr/technology)
+
+</Aside>
+
+## Başlarken
+
+**Scroll üzerinde geliştirme mi yapmak istiyorsunuz?**
+
+- Temel bilgiler için: [Geliştirici Hızlı Başlangıcı](/tr/developers/developer-quickstart) sayfasına göz atın
+- Scroll'da ilk akıllı sözleşmenizin dağıtımını açıklayan bir eğitim için [sözleşme dağıtım eğitimimizi](/tr/developers/guides/contract-deployment-tutorial) okuyun
+- Ayrıca üzerinde geliştirme yapabileceğiniz bir dizi [sözleşme adreslerimiz](/tr/developers/scroll-contracts) var.
+
+## ## Neden Scroll Üzerinde Geliştirilmeli?
+
+<ToggleElement anchor="throughput">
+  <div slot="title">Verim – Scroll, Ethereum için daha güvenli blok alanı oluşturur.</div>
+  <p>
+    ZK Rollup'lar ağda daha fazla etkinliğe izin vererek kalabalıklığı en aza indirir. Zero knowledge kanıtlarını kullanarak ağın davranışını doğrulayan Ethereum'un güvenliğini devralan Scroll; merkeziyetsizlikten ödün vermeden daha fazla işlem gerçekleştirebilir.
+  </p>
+</ToggleElement>
+
+<ToggleElement anchor="cost">
+  <div slot="title">Maliyet — Scroll, kullanıcıların gaz ücretlerinden tasarruf etmesini sağlar.</div>
+  <p>
+    Ethereum'da blok alanı için rekabet, her işlem bir sonraki bloğa dahil olmak için teklif verildiğinden işlem başına daha yüksek maliyetlerle sonuçlanır. Scroll, güvenli blok alanını büyük ölçüde arttırmak ve kullanıcılar için işlem maliyetlerini en aza indirmek için zero knowledge kanıtları ve donanım hızlandırma alanındaki son buluşlardan yararlanıyor.
+  </p>
+</ToggleElement>
+<ToggleElement anchor="speed">
+  <div slot="title">Hız — Scroll, kullanıcılara daha hızlı geri dönüş sağlar.</div>
+  <p>
+    Birleşmeden sonra Ethereum blokları her 12 saniyede bir güvenilir bir şekilde onaylanır. Scroll blokları her 3 saniyede bir basılıyor ve daha düşük riskli operasyonlar için, işlemlerin bir bloğa dahil edildikten sonra nihai olduğu varsayılabilir. Bu, sosyal uygulamalarda ve oyun uygulamalarında zincir içi etkileşim için yeni olanaklar açar.
+  </p>
+</ToggleElement>
+<ToggleElement anchor="alignment">
+  <div slot="title">Uyum - Scroll, Ethereum'un vizyonuna dayanır.</div>
+  <p>
+    Scroll, Ethereum'un vizyonuna dayanıyor. Bizim ilkelerimiz Ethereum'dan ayrışmak değil, onu inşa etmektir. Merkeziyetsiz yönetim, izinsizlik, sansüre karşı direnç ve topluluk sahipliği yaptığımız işin ve oluşturduğumuz yol haritasının temelini oluşturuyor. Açık kaynaklı yazılıma inanıyoruz ve bir gün Ethereum'un kalbi olabilecek zkEVM üzerindeki çalışmalarını desteklemek için Ethereum Vakfı'nın Gizlilik ve Ölçeklendirme Araştırmaları ekibiyle yakın işbirliği içinde çalışıyoruz.
+  </p>
+  <p>
+    Ayrıca uygulamalar dağıtılırken, ister kamu mallarında, ister temel altyapıda, ister yeni nesil zero knowledge kullanım senaryolarında olsun, etkilerini artırmak için çalıştığımızdan emin olmak için yönetişim DAO'ları ve diğer açık kaynak protokolleriyle de çalışıyoruz.
+  </p>
+</ToggleElement>
+<ToggleElement anchor="community">
+  <div slot="title">Topluluk — Scroll, kullanıcıları ve geliştiricileri bir araya getirir.</div>
+  <p>
+    Açık kaynaklı bir şekilde geliştirmenin ve kullanıcı etkileşimi sağlamanın zorluklarını biliyoruz! Scroll'un gelişen bir kullanıcı ve geliştirici topluluğu var ve test ağımızdaki veya ana ağımızdaki uygulamaları denemek isteyen 500.000'den fazla üyeden oluşan Discord topluluğumuzla, geliştiricileri gerçek dünyadan geri bildirim sağlayabilecek kullanıcılarla buluşturmaktan heyecan duyuyoruz.
+  </p>
+</ToggleElement>
+
+## Bizimle birlikte inşa ettiğiniz için teşekkür ederiz.
+
+Ağa daha fazla entegrasyon ve destek altyapısı getirmek için çabalıyor ve ana ağ sürümümüz için heyecanla çalışıyoruz.
+
+Büyüyen geliştirici topluluğumuza katılın. Bizi [Discord](https://discord.gg/scroll) adresinde bulabilir, [tartışma forumumuza](https://community.scroll.io/) katılabilir veya ilerlememizi [Twitter](https://twitter.com/Scroll_ZKP) üzerinde takip edebilirsiniz.

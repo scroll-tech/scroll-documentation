@@ -1,0 +1,71 @@
+---
+section: technology
+date: Last Modified
+title: "Denetimler ve Hata Ödül Programı"
+lang: "tr"
+permalink: "technology/security/audits-and-bug-bounty"
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+Scroll, güvenliği birinci öncelik olarak ele alır.
+
+Sıkı testlerin, dahili bir güvenlik ekibinin ve kapsamlı kod incelemelerinin yanı sıra, kod tabanımızda denetimler gerçekleştirmek için birden fazla güvenlik denetim firmasıyla da görüştük. Topluluğumuzun protokolümüzün güvenliğine katılmasını teşvik etmek için bir hata ödül programı da başlattık.
+
+<Aside type="danger" title="">
+  Denetimler güvenlik açıklarının bulunmadığını garanti etmez. Blokzincirlerini kullanmak risk taşır ve Scroll da bir istisna değildir. Kullanıcılara protokolü dikkatli ve riskleri kendilerine ait olacak şekilde kullanmalarını öneriyoruz.
+</Aside>
+
+## Bağımsız Denetimler
+
+Scroll, kod tabanımızı incelemek için sektör lideri birkaç güvenlik denetim firmasıyla birlikte çalıştı; [Trail of Bits](https://www.trailofbits.com/), [OpenZeppelin](https://www.openzeppelin.com/), [Zellic](https://www.zellic.io/) ve [KALOS](https://www.kalos.xyz/).
+
+- Trail of Bits, Zellic ve KALOS zkEVM devrelerimizi inceledi
+- OpenZeppelin ve Zellic köprü ve rollup sözleşmelerimizde bağımsız denetimler gerçekleştirdi
+- Trail of Bits, düğüm uygulamamızı analiz etti
+
+### zkEVM devreleri
+
+- Trail of Bits
+   - [1. Dalga](https://github.com/trailofbits/publications/blob/master/reviews/2023-04-scroll-zkEVM-wave1-securityreview.pdf)
+   - [2. Dalga](https://github.com/trailofbits/publications/blob/master/reviews/2023-08-scroll-zkEVM-wave2-securityreview.pdf)
+   - [3. Dalga](https://github.com/trailofbits/publications/blob/master/reviews/2023-09-scroll-zkEVM-wave3-securityreview.pdf)
+- Zellic ve Kalos
+   - [1. Dalga](https://github.com/Zellic/publications/blob/master/Scroll%20zkEVM%20-%20Part%201%20-%20Audit%20Report.pdf)
+   - [2. Dalga](https://github.com/Zellic/publications/blob/master/Scroll%20zkEVM%20-%20Part%202%20-%20Audit%20Report.pdf)
+
+### Düğüm uygulaması
+
+- Trail of Bits
+   - [zkTrie](https://github.com/trailofbits/publications/blob/master/reviews/2023-07-scroll-zktrie-securityreview.pdf)
+   - [L2geth](https://github.com/trailofbits/publications/blob/master/reviews/2023-08-scrollL2geth-initial-securityreview.pdf)
+   - [L2geth diff](https://github.com/trailofbits/publications/blob/master/reviews/2023-08-scrollL2geth-securityreview.pdf)
+
+### Köprü ve rollup sözleşmesi
+
+- OpenZeppelin
+   - [1. Aşama](https://blog.openzeppelin.com/scroll-layer-1-audit-1)
+   - [2. Aşama](https://blog.openzeppelin.com/scroll-phase-2-audit)
+   - [GasSwap, Multiple Verifier, Wrapped Ether ve Diff](https://blog.openzeppelin.com/scroll-gasswap-multiple-verifier-wrapped-ether-and-diff-audit)
+   - [ScrollOwner and Rate Limiter](https://blog.openzeppelin.com/scrollowner-and-rate-limiter-audit)
+   - [USDC Ağ Geçidi](https://blog.openzeppelin.com/scroll-usdc-gateway-audit)
+   - [Contract diff](https://blog.openzeppelin.com/scroll-diff-audit-report)
+- Zellic
+   - [Rapor 1](https://github.com/Zellic/publications/blob/master/Scroll%20-%2005.26.23%20Zellic%20Audit%20Report.pdf)
+   - [Rapor 2](https://github.com/Zellic/publications/blob/master/Scroll%20-%2009.27.23%20Zellic%20Audit%20Report.pdf)
+
+## Hata Ödül Programı
+
+Scroll'un, önde gelen bir hata ödül platformu olan aktif bir [Immunefi'de Hata Ödül Programı](https://immunefi.com/bounty/scroll/) vardır. Program herkese açık olup, herkesi katılmaya davet ediyoruz.
+
+Ödüller, bildirilen güvenlik açıklarının ciddiyetine bağlıdır:
+
+- **Kritik**: 1.000.000$'a kadar
+- **Yüksek**: 10.000$ - 50.000$
+- **Orta**: 5.000$
+
+### Kapsam
+
+Hata ödül programının kapsamı, blokzincir altyapısını ve köprüleme ve rolluplara yönelik akıllı sözleşmeleri kapsıyor. Hata kategorilerinin ayrıntılı bir dökümü için lütfen hata ödülü sayfasına bakın.
+
+Hata ödül programında listelenen kapsamların yanı sıra, tespit edilen tüm güvenlik açıklarının Immunefi'ye bildirilmesini de teşvik ediyoruz; bunları ödül olarak değerlendirmeye devam edeceğiz. Hata ödül programının kapsamı dışındaki kritik güvenlik açıklarının keşfi için lütfen security@scroll.io adresine de rapor gönderin.
