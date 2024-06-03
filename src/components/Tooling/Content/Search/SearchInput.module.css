@@ -1,0 +1,80 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
+  flex-shrink: 0;
+  overflow: hidden;
+
+  flex: 1;
+  height: 40px;
+  border-radius: 20px;
+  padding: unset;
+  margin-right: 30px;
+}
+
+.input {
+  margin: 0;
+  font-size: 16px;
+  width: 100%;
+  outline: none;
+  display: block;
+  appearance: none;
+  flex-grow: 1;
+  padding-left: 36px;
+  border-bottom: 1px solid #000;
+  border-radius: 0;
+  background: url(/assets/search.svg) left 12px top 50% / 17px no-repeat;
+  border: none;
+  height: 35px;
+  line-height: 35px;
+  padding-bottom: 0;
+  @apply text-black border-black;
+}
+.input.large {
+  height: 48px;
+  border-bottom: none;
+  padding-bottom: 0;
+  background: transparent url(/svgs/search.svg) left center no-repeat;
+  background-size: 20px auto;
+}
+
+.input::placeholder {
+  font-style: italic;
+}
+
+.input:focus {
+  outline: none;
+  border-radius: 0;
+}
+
+.closeButton {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  display: none;
+  height: 25px;
+}
+
+@media (max-width: 50em) {
+  .wrapper {
+    margin-right: 16px;
+  }
+
+  .input {
+    @apply pl-[40px];
+  }
+
+  .input:focus {
+    @apply rounded-primary;
+  }
+
+  .closeButton {
+    display: block;
+  }
+
+  .closeButtonMobile {
+    display: none;
+  }
+}
