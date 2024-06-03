@@ -116,10 +116,6 @@ article > section iframe {
   position: relative;
 }
 
-.main-section :is(h1, h2, h3) {
-  font-family: var(--font-family-text);
-}
-
 .main-section .remix-callout {
   margin-top: 30px;
 }
