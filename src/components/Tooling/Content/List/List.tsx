@@ -24,7 +24,7 @@ const List = ({ tools, onChange, selectedTool }) => {
               <div className={styles.toolName}>
                 {tool.remarkPluginFrontmatter.name}
                 <svg
-                  className="ml-[8px] mr-[25px]"
+                  className="ml-[8px] mr-[25px] hover:opacity-70"
                   xmlns="http://www.w3.org/2000/svg"
                   width="12"
                   height="15"

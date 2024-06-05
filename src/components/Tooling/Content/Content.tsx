@@ -62,7 +62,7 @@ const Content = ({ tools, toolsMarkdown }) => {
   }, [selectedTool])
 
   const filteredTools = useMemo(() => {
-    setSelectedTool(null)
+    // setSelectedTool(null)
     return tools.filter((tool) => {
       const categoryMatch =
         searchParams.category.length === 0 ||
