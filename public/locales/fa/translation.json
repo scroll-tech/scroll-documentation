@@ -1,0 +1,198 @@
+{
+  "rightSidebar": {
+    "onThisPage": "در این صفحه",
+    "more": "بیشتر",
+    "editThisPage": "ویرایش این صفحه",
+    "joinOurCommunity": "به جامعه ما بپیوندید",
+    "feedback": "بازخورد"
+  },
+  "ui": {
+    "whatsNext": "بعدی چیست",
+    "readMore": "بیشتر بخوانید"
+  },
+  "landing": {
+    "test": "تست",
+    "search": {
+      "title": "به مستندات اسکرول خوش آمدید",
+      "placeholder": "جستجو در مستندات اسکرول..."
+    },
+    "newUserCTA": {
+      "title": "جدید در اسکرول و رولآپ های ZK؟",
+      "description": "مبانی را در راهنمای شروع به کار بیاموزید."
+    },
+    "resourcesCTA": {
+      "title": "منابع مفید"
+    },
+    "nodesCTA": {
+      "title": "نیاز به اجرای نود اسکرول خود دارید؟",
+      "description": "راهنمای اپراتور نود را ببینید تا درباره شروع و نگهداری نودهای اسکرول بیاموزید.",
+      "buttonText": "راهنمای اپراتور نود"
+    },
+    "TutorialsCTA": {
+      "title": "آموزش‌ها را تماشا کنید",
+      "description": "بیشتر درباره فناوری که ما در حال ساخت آن هستیم بیاموزید. ما به طور مداوم ویدیوهای جدیدی به کانال یوتیوب خود بارگذاری می‌کنیم.",
+      "buttonText": "تماشای آموزش‌ها"
+    },
+    "LinksCTA": {
+      "card1": {
+        "title": "نیاز به پشتیبانی ادغام دارید؟",
+        "description": "با یک متخصص صحبت کنید که به زودی آدرس URL اضافه خواهد شد."
+      },
+      "card2": {
+        "title": "دیسکورد",
+        "description": "به جامعه بپیوندید"
+      },
+      "card3": {
+        "title": "به زودی: گفتگوی عمومی",
+        "description": "واقعاً، به جامعه بپیوندید"
+      }
+    },
+    "NewsletterCTA": {
+      "title": "با آخرین اخبار توسعه‌دهندگان اسکرول به‌روز باشید",
+      "text": "به‌روزرسانی‌های نقشه راه، رویدادهای مجازی و زنده، فرصت‌های اکوسیستم و بیشتر",
+      "placeholder": "آدرس ایمیل شما",
+      "thankYouForSubscribing": "با تشکر از شما برای اشتراک!",
+      "correctEmail": "لطفاً از یک آدرس ایمیل صحیح استفاده کنید.",
+      "pleaseInsertEmail": "لطفاً ایمیل خود را وارد کنید."
+    }
+  },
+  "sidebar": {
+    "gettingStarted": {
+      "gettingStarted": "شروع به کار",
+      "overview": "بررسی اجمالی",
+      "scrollSepoliaTestnet": "شبکه آزمایشی Scroll Sepolia",
+      "userGuide": "راهنمای کاربر",
+      "setup": "تنظیمات",
+      "faucet": "فاست",
+      "bridge": "بریج",
+      "transferTokens": "انتقال توکن‌ها",
+      "commonErrors": "خطاهای متداول",
+      "rollupExplorer": "اکسبریجورر رولآپ",
+      "scrollSepoliaBlockExplorer": "اکسبریجورر Scroll Sepolia",
+      "scrollMainnet": "شبکه اصلی اسکرول",
+      "scrollscan": "اکسبریجورر Scrollscan",
+      "sepoliaBlockExplorer": "اکسبریجورر Sepolia",
+      "community": "جامعه",
+      "discord": "دیسکورد",
+      "communityForum": "انجمن جامعه"
+    },
+    "developers": {
+      "developers": "توسعه‌دهندگان",
+      "buildingOnScroll": "ساخت روی اسکرول",
+      "developerQuickstart": "شروع سریع توسعه‌دهنده",
+      "verifyingSmartContracts": "تأیید قراردادهای هوشمند",
+      "scrollContracts": "قراردادهای اسکرول",
+      "ethereumAndScrollDifferences": "تفاوت‌های اتریوم و اسکرول",
+      "l1AndL2Bridging": "بریج زدن L1 و L2",
+      "ethAndErc20TokenBridge": "بریج توکن‌های ETH و ERC20",
+      "erc721NftBridge": "بریج NFT های ERC721",
+      "erc1155TokenBridge": "بریج توکن‌های ERC1155",
+      "theScrollMessenger": "پیام‌رسان اسکرول",
+      "transactionFeesOnScroll": "کارمزد تراکنش‌ها در اسکرول",
+      "l2Fee": "کارمزد L2",
+      "l1Fee": "کارمزد L1",
+      "gasOracle": "اوراکل گس",
+      "future": "آینده",
+      "guides": "راهنماها",
+      "contractDeploymentTutorial": "آموزش استقرار قرارداد",
+      "crossChainInteraction": "تعامل بین زنجیره‌ای پیام‌رسان اسکرول",
+      "runningNode": "اجرای نود اسکرول",
+      "bridgingERC20TokenThroughCustomGateway": "بریج کردن توکن ERC20 از طریق دروازه سفارشی",
+      "bridgingERC721NftThroughCustomGateway": "بریج کردن NFT های ERC721 از طریق دروازه سفارشی",
+      "bridgingERC1155ThroughCustomGateway": "بریج کردن توکن‌های ERC1155 از طریق دروازه سفارشی",
+      "estimatingGasAndTxFees": "تخمین گس و کارمزد تراکنش‌ها",
+      "resources": "منابع",
+      "mainnetResources": "منابع شبکه اصلی",
+      "sepoliaResources": "منابع Sepolia",
+      "scrollBlockExplorer": "اکسبریجورر Scrollscan",
+      "rollupExplorer": "اکسبریجورر رولآپ",
+      "scrollSepoliaBlockExplorer": "اکسبریجورر Scroll Sepolia",
+      "sepoliaRollupExplorer": "اکسبریجورر رولآپ Sepolia",
+      "sepoliaBlockExplorer": "اکسبریجورر Scrollscan"
+    },
+    "technology": {
+      "introduction": "مقدمه",
+      "principles": "اصول",
+      "scrollArchitecture": "معماری اسکرول",
+      "scrollUpgrades": "به‌روزرسانی‌های اسکرول",
+      "overview": "بررسی اجمالی",
+      
+      "scrollChain": "زنجیره اسکرول",
+      "accountsAndState": "حساب‌ها و حالت",
+      "blocks": "بلوک‌ها",
+      "transactions": "تراکنش‌ها",
+      "rollupProcess": "فرآیند رولآپ",
+      "evmDifferencesFromEthereum": "تفاوت‌های EVM با اتریوم",
+      
+      "bridge": "بریج",
+      "crossDomainMessaging": "پیام‌رسانی بین دامنه‌ای",
+      "depositGateways": "دروازه‌های واریز",
+      "withdrawGateways": "دروازه‌های برداشت",
+      
+      "sequencer": "سکانسر",
+      "executionNode": "نود اجرا",
+      "rollupNode": "نود رولآپ",
+      "zkTrie": "zkTrie",
+      
+      "zkevm": "zkEVM",
+      "introToZkevm": "مقدمه‌ای بر zkEVM",
+      "zkevmOverview": "بررسی اجمالی zkEVM",
+      "bridgeOverview": "بررسی اجمالی بریج",
+      "prover": "اثبات‌کننده",
+      "proofGeneration": "تولید اثبات",
+      "cpuProverRepo": "مخزن اثبات‌کننده CPU",
+      
+      "security": "امنیت",
+      "auditsAndBugBounty": "ممیزی‌ها و جایزه باگ‌ها",
+      "l2BeatAssessment": "ارزیابی L2Beat"
+    },
+    "learn": {
+      "ethereumAndProtocols": "اتریوم و پروتکل‌ها",
+      "theScalabilityProblem": "مشکل مقیاس‌پذیری",
+      "introToRollups": "مقدمه‌ای بر رولآپ‌ها",
+      "zeroKnowledge": "دانش صفر",
+      "introToZeroKnowledge": "مقدمه‌ای بر دانش صفر",
+      "polynomialCommitmentSchemes": "طرح‌های تعهد چندجمله‌ای",
+      "kzgCommitmentScheme": "طرح تعهد KZG",
+      "additionalResources": "منابع اضافی"
+    }
+  },
+  "footer": {
+    "aboutScroll": {
+      "title": "درباره اسکرول",
+      "bugBounty": "جایزه باگ",
+      "joinUs": "به ما بپیوندید",
+      "healthStatus": "وضعیت سلامت",
+      "privacyPolicy": "سیاست حفظ حریم خصوصی",
+      "termsAndConditions": "شرایط و ضوابط"
+    },
+    "resources": {
+      "title": "منابع",
+      "scrollDocsURL": "https://docs.scroll.io/",
+      "blog": "وبلاگ",
+      "documentation": "مستندات",
+      "brandKit": "کیت برند",
+      "audits": "ممیزی‌ها"
+    },
+    "followUs": {
+      "title": "ما را دنبال کنید"
+    }
+  },
+  "pageNotFound": {
+    "title": "صفحه پیدا نشد",
+    "text": "متاسفیم، اما نتوانستیم صفحه مورد نظر شما را پیدا کنیم."
+  },
+  "rpcTable": {
+    "rpcServerAddress": "آدرس سرور RPC",
+    "height": "ارتفاع",
+    "latency": "تأخیر",
+    "score": "امتیاز",
+    "privacy": "حریم خصوصی",
+    "addNetwork": "افزودن شبکه",
+    "connect": "اتصال",
+    "sorting": "مرتب‌سازی"
+  },
+  "notTranslated": {
+    "notTranslated": "این صفحه هنوز ترجمه نشده است."
+  }
+}
