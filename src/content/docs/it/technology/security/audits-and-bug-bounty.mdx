@@ -1,0 +1,75 @@
+---
+section: technology
+date: Last Modified
+title: "Audits & Programma di Bug Bounty"
+lang: "it"
+permalink: "technology/security/audits-and-bug-bounty"
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+Per Scroll, la sicurezza è la massima priorità.
+
+Oltre a test rigorosi, a un team di sicurezza interno e a revisioni approfondite del codice, abbiamo collaborato con diverse società di audit di sicurezza per condurre audit sul nostro codice. Abbiamo anche avviato un programma di bounty per il rilevamento di bug per incentivare la comunità a partecipare alla sicurezza del nostro protocollo.
+
+<Aside type="danger" title="">
+Gli audit non garantiscono l'assenza di vulnerabilità di sicurezza. L'uso delle blockchain comporta rischi, e Scroll non fa eccezione. Incoraggiamo gli utenti a utilizzare il protocollo con cautela e a proprio rischio.
+</Aside>
+
+## Audit Indipendenti
+
+Scroll ha collaborato con diverse importanti società di audit di sicurezza per esaminare il nostro codice, e il codice critico è stato revisionato da più team, tra cui [Trail of Bits](https://www.trailofbits.com/), [OpenZeppelin](https://www.openzeppelin.com/), [Zellic](https://www.zellic.io/), e [KALOS](https://www.kalos.xyz/).
+
+- Trail of Bits, Zellic e KALOS hanno revisionato i nostri circuiti della zkEVM
+- OpenZeppelin e Zellic hanno condotto audit indipendenti sui nostri contratti del bridge e del rollup
+- Trail of Bits ha analizzato la nostra implementazione del nostro nodo
+
+<Aside type="tip" title="">
+Stiamo ancora lavorando con i nostri progetti partner per pubblicare tutti i nostri rapporti. Aggiorneremo questa pagina con i link man mano che saranno disponibili.
+</Aside>
+
+### Circuiti della zkEVM
+
+- Trail of Bits
+  - Wave 1
+  - Wave 2
+  - Wave 3
+- Zellic e Kalos
+  - [Wave 1](https://github.com/Zellic/publications/blob/master/Scroll%20zkEVM%20-%20Part%201%20-%20Audit%20Report.pdf)
+  - [Wave 2](https://github.com/Zellic/publications/blob/master/Scroll%20zkEVM%20-%20Part%202%20-%20Audit%20Report.pdf)
+
+### Implementazione del Nodo
+
+- Trail of Bits
+  - [zkTrie](https://github.com/trailofbits/publications/blob/master/reviews/2023-07-scroll-zktrie-securityreview.pdf)
+  - L2geth
+  - [L2geth diff](https://github.com/trailofbits/publications/blob/master/reviews/2023-08-scrollL2geth-securityreview.pdf)
+
+### Bridge e Contratto del Rollup
+
+- OpenZeppelin
+  - [Fase 1](https://blog.openzeppelin.com/scroll-layer-1-audit-1)
+  - [Fase 2](https://blog.openzeppelin.com/scroll-phase-2-audit)
+  - [GasSwap, Verifier Multiplo, Wrapped Ether e Diff](https://blog.openzeppelin.com/scroll-gasswap-multiple-verifier-wrapped-ether-and-diff-audit)
+  - [ScrollOwner e Rate Limiter](https://blog.openzeppelin.com/scrollowner-and-rate-limiter-audit)
+  - [Gateway di USDC](https://blog.openzeppelin.com/scroll-usdc-gateway-audit)
+  - [Diff di Contratto](https://blog.openzeppelin.com/scroll-diff-audit-report)
+- Zellic
+  - [Reporte 1](https://github.com/Zellic/publications/blob/master/Scroll%20-%2005.26.23%20Zellic%20Audit%20Report.pdf)
+  - [Reporte 2](https://github.com/Zellic/publications/blob/master/Scroll%20-%2009.27.23%20Zellic%20Audit%20Report.pdf)
+
+## Programma di Bug Bounty
+
+Scroll ha un programma di [Bug Bounty su Immunefi](https://immunefi.com/bounty/scroll/), una piattaforma leader per la caccia alle vulnerabilità. Il programma è aperto al pubblico e incoraggiamo tutti a partecipare.
+
+Le ricompense dipendono dalla gravità delle vulnerabilità:
+
+- **Critica**: fino a $1,000,000
+- **Alta**: $10,000 - $50,000
+- **Media**: $5,000
+
+### Scopo
+
+Il programma di Bug Bounty copre l'infrastruttura della blockchain e i contratti del bridge e del rollup. Per una descrizione dettagliata delle categorie di bug, consulta la pagina del programma di Bug Bounty.
+
+Oltre agli ambiti menzionati nel programma di Bug Bounty, incoraggiamo anche a segnalare qualsiasi vulnerabilità identificata a Immunefi, dove saranno gestite le ricompense. Per eventuali scoperte di vulnerabilità critiche al di fuori dell'ambito del programma, invia i rapporti a security@scroll.io.

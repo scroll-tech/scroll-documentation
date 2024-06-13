@@ -1,0 +1,248 @@
+---
+section: technology
+date: Last Modified
+title: "Messaggistica Cross-Dominio"
+lang: "it"
+permalink: "/it/technology/bridge/cross-domain-messaging"
+whatsnext: { "Gateway di Deposito": "/it/technology/bridge/deposit-gateways/" }
+---
+
+import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import Aside from "../../../../../components/Aside.astro"
+import ToggleElement from "../../../../../components/ToggleElement.astro"
+
+import L1ToL2 from "../_images/L1-to-L2.png"
+import L2ToL1 from "../_images/L2-to-L1.png"
+import WithdrawTrie from "../_images/withdraw-trie.png"
+
+
+Scroll ha un bridge per il passaggio di messaggi arbitrari che consente il bridge di token e permette alle dapp di comunicare tra il livello 1 e il livello 2. Ciò significa che le dapp del livello 1 possono attivare funzioni di contratto nel livello 2, e viceversa. Qui di seguito spiegheremo come avviene il trasferimento dei messaggi tra il livello 1 e il livello 2.
+
+## Inoltro di Messaggi da L1 a L2
+
+<ClickToZoom src={L1ToL2} alt="Flusso di lavoro da L1 a L2" caption="Figura 1. Flusso di lavoro per il relè di messaggi da L1 a L2" />
+
+Esistono due approcci principali per inviare un messaggio da L1 a L2: inviare messaggi arbitrari tramite `L1ScrollMessenger` e inviare transazioni forzate tramite `EnforcedTxGateway`. Entrambi gli approcci consentono agli utenti di iniziare una transazione L2 su L1 e chiamare contratti arbitrari su L2. Nel caso dei messaggi arbitrari, il mittente delle transazioni L2 è l'indirizzo alias "L1ScrollMessenger". Per le transazioni forzate, il mittente su L2 è un account di proprietà esterna (EOA). Inoltre, forniamo diversi bridge di token standard per facilitare agli utenti il deposito di ETH e altri token standard, inclusi ERC-20, ERC-677, ERC-721 e ERC-1155. In sostanza, questi bridges codificano i depositi di token in un messaggio e lo inviano ai loro corrispondenti su L2 tramite il contratto `L1ScrollMessenger`. Puoi trovare ulteriori dettagli sui bridges di deposito di L1 a [bridges di Deposito](/it/technology/bridge/deposit-gateways/).
+
+Come mostrato nella Figura 1, sia i messaggi arbitrari che le transazioni forzate vengono aggiunti alla coda dei messaggi archiviata nel contratto `L1MessageQueue`. Il contratto `L1MessageQueue` fornisce due funzioni `appendCrossDomainMessage` e `appendEnforcedTransaction` per aggiungere rispettivamente messaggi arbitrari e transazioni forzate.
+
+```solidity
+/// @notice Append an arbitrary L1-to-L2 message into this contract.
+/// @param target The target address on L2.
+/// @param gasLimit The maximum gas can be used for this transaction on L2.
+/// @param data The calldata of the L1-initiated transaction.
+function appendCrossDomainMessage(
+    address target,
+    uint256 gasLimit,
+    bytes calldata data
+) external;
+
+/// @notice Append an enforced transaction to this contract.
+/// @param sender The sender address of this transaction.
+/// @param target The target address of this transaction.
+/// @param value The value to be transferred on L2.
+/// @param gasLimit The maximum gas should be used for this transaction on L2.
+/// @param data The calldata of the L1-initiated transaction.
+function appendEnforcedTransaction(
+    address sender,
+    address target,
+    uint256 value,
+    uint256 gasLimit,
+    bytes calldata data
+) external;
+```
+
+Entrambe le funzioni costruiscono una transazione avviata da L1 con un nuovo tipo di transazione `L1MessageTx` introdotto nella catena Scroll e calcolano l'hash della transazione (vedi ulteriori dettagli in [Transazione di Messaggio L1](/es/technology/chain/transactions#l1-message-transaction)). Successivamente, `L1MessageQueue` aggiunge l'hash della transazione alla coda dei messaggi ed emette l'evento `QueueTransaction(sender, target, value, queueIndex, gasLimit, calldata)`. La differenza tra `appendCrossDomainMessage` e `appendEnforcedTransaction` nella costruzione delle transazioni di messaggio L1 è:
+
+- `appendCrossDomainMessage` può essere chiamato solo da `L1ScrollMessenger` e utilizza l'[Address Alias](#address-alias) di `msg.sender`, che sarà l'indirizzo di `L1ScrollMessenger`, come mittente della transazione.
+- La funzione `appendEnforcedTransaction` può essere chiamata solo da `EnforcedTxGateway` e utilizza il parametro `sender` della funzione come mittente della transazione. Questo consente agli utenti di eseguire un prelievo o un trasferimento di ETH dai loro account L2 direttamente tramite il ponte L1.
+
+Dopo che la transazione è stata eseguita con successo su L1, il watcher nel sequencer Scroll che monitora il contratto `L1MessageQueue` raccoglie i nuovi eventi `QueueTransaction` dai blocchi su L1. Il sequencer costruisce quindi una nuova transazione `L1MessageTx` per ogni evento e le aggiunge alla sua coda locale di transazioni su L1. Quando costruisce un nuovo blocco su L2, il sequencer include le transazioni sia dalla sua coda di transazioni su L1 che dal suo mempool su L2. Tieni presente che le transazioni di messaggio su L1 devono essere incluse in modo sequenziale in base all'ordine della coda dei messaggi su L1 nel contratto `L1MessageQueue`. Le transazioni `L1MessageTx` vanno sempre prima nei blocchi su L2 seguite dalle transazioni su L2. Attualmente, limitiamo il numero di transazioni `L1MessageTx` in un blocco su L2 a `NumL1MessagesPerBlock` (attualmente fissato a 10).
+
+Successivamente, approfondiremo il processo specifico di invio di messaggi arbitrari tramite `L1ScrollMessenger` e l'invio di transazioni forzate tramite `EnforcedTxGateway`.
+
+
+### Invio di Messaggi Arbitrari
+
+Il contratto `L1ScrollMessenger` fornisce due funzioni `sendMessage` per inviare messaggi arbitrari. L'unica differenza è che la seconda consente agli utenti di specificare un indirizzo di rimborso diverso dall'indirizzo del mittente per ricevere un rimborso della commissione.
+
+<ToggleElement anchor="sendMessage funzioni di firme">
+<div slot="title"><code>sendMessage</code> funzioni di firme</div>
+```solidity
+/// @param target The target address on L2.
+/// @param value The value to deposit to L2 from `msg.value`.
+/// @param message The message passed to target contract.
+/// @param gasLimit The maximum gas can be used for this transaction on L2.
+function sendMessage(
+    address target,
+    uint256 value,
+    bytes memory message,
+    uint256 gasLimit
+) external payable;
+
+/// @param target The target address on L2.
+/// @param value The value to deposit to L2 from `msg.value`.
+/// @param message The message passed to target contract.
+/// @param gasLimit The maximum gas can be used for this transaction on L2.
+/// @param refundAddress The address to refund excessive fee on L1.
+function sendMessage(
+    address target,
+    uint256 value,
+    bytes calldata message,
+    uint256 gasLimit,
+    address refundAddress
+) external payable;
+````
+</ToggleElement>
+
+
+Entrambe le funzioni richiedono agli utenti di fornire un limite di gas per la transazione `L1MessageTx` corrispondente su L2 e di prepagare la [commissione di rilancio del messaggio](#message-relay-fee) su L1, calcolata in base all'importo del limite di gas. La commissione viene raccolta in un contratto `feeVault` su L1. Nel caso in cui la transazione fallisca su L2 perché l'utente non ha impostato il limite di gas corretto per il proprio messaggio su L1, l'utente può ripetere lo stesso messaggio con un limite di gas superiore. Puoi trovare ulteriori dettagli nella sezione [Riprova messaggi falliti](#retrying-failed-messages), ma poiché qualsiasi parte inutilizzata di queste commissioni viene rimborsata all'utente, non c'è penalità per un sovrastima del limite di gas.
+
+Le funzioni `sendMessage` codificano gli argomenti in un messaggio tra domini (vedi il frammento di codice sotto riportato), dove il nonce del messaggio è l'indice successivo nella coda dei messaggi L1. I dati codificati vengono quindi utilizzati come calldata nella transazione `L1MessageTx` eseguita su L2. Nota che tali messaggi tra domini chiamano sempre la funzione `relayMessage` del contratto `L2ScrollMessenger` su L2.
+
+```solidity
+abi.encodeWithSignature(
+    "relayMessage(address,address,uint256,uint256,bytes)",
+    _sender,
+    _target,
+    _value,
+    _messageNonce,
+    _message
+)
+````
+
+Il valore di ETH depositato pari all'importo `value` è bloccato nel contratto `L1ScrollMessenger`. Se l'importo di ETH nel messaggio non può coprire la commissione di rilancio del messaggio e l'importo depositato, la transazione verrà annullata. Il contratto `L1ScrollMessenger` rimborserà l'importo in eccesso al `refundAddress` designato o al mittente della transazione in caso contrario. Infine, `L1ScrollMessenger` aggiunge il messaggio tra domini alla `L1MessageQueue` tramite il metodo `appendCrossDomainMessage`.
+
+### Invio di Transazioni Forzate
+
+<Aside type="danger" title="">
+Le Transazioni Forzate non sono ancora abilitate su Scroll. In futuri aggiornamenti, gli utenti potranno utilizzare questa funzionalità per bypassare `L1ScrollMessenger` e inviare messaggi direttamente a `L1MessageQueue`.
+</Aside>
+
+Il contratto `EnforcedTxGateway` fornisce due funzioni `sendTransaction` per inviare una transazione forzata. Nella prima funzione, il mittente della transazione `L1MessageTx` generata è il mittente della transazione. Dall'altra parte, la seconda funzione utilizza l'indirizzo `sender` passato come mittente della transazione `L1MessageTx`. Questo consente a un terzo di inviare una transazione forzata per conto dell'utente e pagare la commissione di rilancio. Nota che la seconda funzione richiede di fornire una firma valida della transazione `L1MessageTx` generata che corrisponda all'indirizzo `sender`. Entrambe le funzioni `sendTransaction` impongono che il mittente sia un account EOA (Externally Owned Account).
+
+<ToggleElement anchor="sendTransaction funzioni di firme">
+<div slot="title"><code>sendTransaction</code> funzioni di firme</div>
+
+```solidity
+/// @param target The target address on L2.
+/// @param value The value to withdraw from the `tx.origin` address on L2.
+/// @param gasLimit The maximum gas can be used for this transaction on L2.
+/// @param data The calldata passed to target contract.
+function sendTransaction(
+    address target,
+    uint256 value,
+    uint256 gasLimit,
+    bytes calldata data
+) external payable;
+
+/// @param sender The sender address who will initiate this transaction on L2.
+/// @param target The target address on L2.
+/// @param value The value to withdraw from the `sender` address on L2.
+/// @param gasLimit The maximum gas can be used for this transaction on L2.
+/// @param data The calldata passed to target contract.
+/// @param signature The signature for the corresponding `L1MessageTx` transaction.
+/// @param refundAddress The address to refund excessive fee on L1.
+function sendTransaction(
+    address sender,
+    address target,
+    uint256 value,
+    uint256 gasLimit,
+    bytes calldata data,
+    bytes memory signature,
+    address refundAddress
+) external payable;
+```
+
+</ToggleElement>
+
+Similmente al rilancio di messaggi arbitrari, `sendTransaction` deduce la commissione di rilancio del messaggio e la trasferisce all'account `feeVault` su L1. Ma una differenza fondamentale è che il valore `value` passato alla funzione indica l'importo di ETH da trasferire dall'account mittente su L2, non su L1. Pertanto, `msg.value` deve coprire solo la [commissione di rilancio del messaggio](#message-relay-fee). Se l'importo di ETH nel messaggio non può coprire la commissione, la transazione fallirà. Eventuali commissioni in eccesso sono rimborsate al mittente della transazione nella prima funzione e all'`refundAddress` nella seconda funzione. Infine, `EnforcedTxGateway` chiama `L1MessageQueue.appendEnforcedTransaction` per aggiungere la transazione alla coda dei messaggi.
+
+### Riprova dei Messaggi Falliti
+
+Se una transazione `L1MessageTx` fallisce su L2 a causa di gas insufficiente, gli utenti possono riprovare il messaggio con un gas limit superiore. `L1ScrollMessenger` fornisce il metodo `replayMessage` che consente agli utenti di inviare le stesse informazioni del messaggio precedente fallito con un gas limit maggiore. Questo messaggio diventerà una nuova transazione `L1MessageTx` su L2. Nota che non verrà rimborsata la commissione di gas per la transazione precedente fallita in quanto è già stata elaborata su L2.
+
+
+<ToggleElement anchor="replayMessage function signature">
+<div slot="title"><code>replayMessage</code> function signature</div>
+
+```solidity
+/// @param from The address of the sender of the message.
+/// @param to The address of the recipient of the message.
+/// @param value The msg.value passed to the message call.
+/// @param queueIndex The queue index for the message to replay.
+/// @param message The content of the message.
+/// @param newGasLimit New gas limit to be used for this message.
+/// @param refundAddress The address of account who will receive the refunded fee.
+function replayMessage(
+    address from,
+    address to,
+    uint256 value,
+    uint256 queueIndex,
+    bytes memory message,
+    uint32 newGasLimit,
+    address refundAddress
+) external payable;
+```
+
+</ToggleElement>
+
+Poiché il contratto `L2ScrollMessenger` registra tutti i messaggi L1 che sono stati rilanciati con successo su L2, la transazione del messaggio riprodotto sarà annullata su L2 se il messaggio originale è stato completato con successo.
+
+### Commissione di Rilancio del Messaggio
+
+Il contratto `L2GasPriceOracle` deployato su L1 calcola la commissione di rilancio di un messaggio dato il suo limite di gas. Questo contratto conserva `l2BaseFee` nel suo storage, il quale è aggiornato da un relayer dedicato gestito attualmente da Scroll. La commissione di rilancio dei messaggi da L1 a L2 è `gasLimit * l2BaseFee`.
+
+
+<Aside type="tip" title="Upgrade Notice">
+Durante l'aggiornamento del ponte nel febbraio 2024, il contratto `L2GasPriceOracle` sarà deprecato e le sue funzionalità saranno trasferite al contratto `L1MessageQueueWithGasPriceOracle`.
+
+L'aggiornamento è previsto essere finalizzato il 21 febbraio 2024, dopo un periodo di due settimane di timelock. Scroll Sepolia ha già completato questo aggiornamento. Per ulteriori dettagli, consulta [qui](https://scroll.io/blog/protocol-upgrade-bridging-cost-reduction).
+
+</Aside>
+
+### Address Alias
+
+## Invio di messaggi da L2 a L1
+
+A causa del comportamento dell'opcode `CREATE`, è possibile che qualcuno distribuisca un contratto allo stesso indirizzo su L1 e L2 ma con bytecode diverso. Per evitare che utenti malintenzionati ne approfittino, il ponte applica un alias di indirizzo quando il mittente del messaggio è un contratto su L1. L'indirizzo del mittente aliasato della transazione del messaggio L1 è `l1_contract_address + offset` dove `offset` è `0x1111000000000000000000000000000000001111`.
+
+<ClickToZoom src={L2ToL1} alt="L2 to L1 workflow" caption="Figure 2. L2 to L1 message relay workflow" />
+
+Su L2, gli utenti possono inviare messaggi arbitrari tramite `L2ScrollMessenger` per prelevare token e chiamare contratti su L1. Similmente a L1, abbiamo creato diversi gateway standard per i token per facilitare l'inizializzazione dei prelievi dei token. Per ulteriori dettagli sui gateway dei token su L2, consulta la sezione sui [Withdraw Gateways](/it/technology/bridge/withdraw-gateways).
+
+Il contratto `L2ScrollMessenger` fornisce anche una funzione `sendMessage`. La differenza rispetto a `L1ScrollMessenger.sendMessage` è che il parametro `gasLimit` viene ignorato nella funzione perché la transazione di esecuzione del prelievo su L1 è presentata dagli utenti e la commissione di transazione è pagata direttamente su L1. Pertanto, la funzione `sendMessage` richiede che `msg.value` sia uguale al parametro `value`. La funzione codifica gli argomenti in un messaggio cross-domain seguendo lo stesso schema di `L1ScrollMessenger` (vedi [Invio di messaggi arbitrari](#sending-arbitrary-messages)).
+
+<ToggleElement anchor="sendMessage function signatures">
+<div slot="title"><code>sendMessage</code> function signatures</div>
+
+```solidity
+/// @param target The target address on L1.
+/// @param value The value to withdraw to L1 from `msg.value`.
+/// @param message The message passed to target contract.
+/// @param _gasLimit Ignored in the L2ScrollMessenger because the withdrawal execution on L1 is done by the user.
+function sendMessage(
+    address target,
+    uint256 value,
+    bytes memory message,
+    uint256 _gasLimit
+) external payable;
+```
+
+</ToggleElement>
+
+Successivamente, l'hash del messaggio cross-domain viene aggiunto a `L2MessageQueue` chiamando la sua funzione `appendMessage`. Il contratto `L2MessageQueue` mantiene il [Withdraw Trie](#withdraw-trie), un albero di Merkle ad appendice. Ogni volta che viene aggiunto un nuovo messaggio alla coda, il contratto lo inserisce nel Withdraw Trie e aggiorna l'hash radice dell'albero.
+
+Dopo che il batch di transazioni contenente i messaggi da L2 a L1 degli utenti è finalizzato sul contratto di rollup L1, gli utenti devono presentare transazioni di _Execute Withdrawal_ corrispondenti per chiamare il metodo `relayMessageWithProof` nel contratto `L1ScrollMessenger` che esegue il prelievo su L1. Grazie alle prove di Merkle, la finalizzazione delle transazioni di prelievo su L1 è trustless e può essere presentata dagli utenti stessi o da terze parti per conto degli utenti.
+
+Per facilitare la costruzione di un MIP di prelievo, Scroll mantiene un servizio chiamato Bridge History API. Bridge History API monitora gli eventi `SentMessage` emessi da `L2ScrollMessenger` e mantiene internamente un Withdraw Trie. Genera continuamente prove di Merkle per ogni messaggio di prelievo. Gli utenti e i servizi di terze parti possono interrogare le prove di Merkle da Bridge History API per includerle nelle transazioni di _Execute Withdrawal_.
+
+Si noti che le transazioni di esecuzione del prelievo possono essere presentate dagli utenti stessi o da un servizio di terze parti.
+
+### Trie di Prelievo
+
+<ClickToZoom src={WithdrawTrie} alt="Struttura del Withdraw Trie" caption="Figura 3. Struttura del Withdraw Trie" />
+
+Il Withdraw Trie è un albero di Merkle binario denso. L'hash di un nodo foglia eredita l'hash del messaggio, mentre l'hash di un nodo non foglia è il digest hash Keccak concatenato degli hash dei suoi due figli. La profondità del Withdraw Trie cresce dinamicamente in base al numero di messaggi aggiunti al trie.
+
+La Figura 3(a) mostra un esempio di un Withdraw Trie completo con 3 livelli. Quando il numero di foglie non può saturare un albero binario completo, riempiamo i nodi foglia con hash 0, come rappresentato nelle Figure 3(b) e 3(c). Quando viene aggiunto un nuovo messaggio a un Withdraw Trie non completo, il nodo di riempimento verrà sostituito da una nuova foglia con l'hash effettivo del messaggio.

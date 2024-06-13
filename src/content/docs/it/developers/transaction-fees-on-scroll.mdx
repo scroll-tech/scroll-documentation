@@ -1,0 +1,192 @@
+---
+section: developers
+date: Last Modified
+title: "Commissioni di Transazione su Scroll"
+lang: "it"
+permalink: "developers/transaction-fees-on-scroll"
+whatsnext: { "Tutorial sul Rilascio dei Contratti": "/it/developers/guides/contract-deployment-tutorial/" }
+excerpt: "Understand how L1 and L2 transaction fees work on Scroll "
+---
+
+import Aside from "../../../../components/Aside.astro"
+
+## Panoramica
+
+Le commissioni di Scroll sono notevolmente inferiori rispetto a quelle della sua layer sottostante. Per utenti e sviluppatori, le commissioni di transazione su Scroll sembrano funzionare in modo simile a quelle sulla mainnet di Ethereum, e gli strumenti, i portafogli e il codice esistente probabilmente funzioneranno come se fossero su Ethereum. Tuttavia, il costo della transazione mostrato nel portafoglio non è l'intera immagine a meno che il software non sia specificamente consapevole dei calcoli delle commissioni di Scroll.
+
+A causa del design dei rollup di L2, i costi delle transazioni dipendono dai costi dell'L1. Per sfruttare la sicurezza di Ethereum, Scroll deve tener conto del costo dei dati della transazione e delle prove che devono essere archiviati e verificati sull'L1.
+
+Rispetto alla mainnet di Ethereum, Scroll introduce alcune nuove dimensioni nel calcolo delle commissioni di transazione per fare ciò. Il costo finale di una transazione è costruito da diverse parti:
+
+- **Commissione L2**
+  - Calcolata allo stesso modo dell'L1, pari a `gas_price * gas_used`
+- **Commissione L1**
+  - Questa commissione aggiuntiva copre l'invio dei dati all'L1 per la disponibilità dei dati. Le transazioni avviate sull'L1 non pagano questa commissione.
+  - Viene calcolata in base alle dimensioni dei calldata della transazione.
+  - ETH viene automaticamente detratto dal saldo dell'utente su Scroll per la commissione.
+
+In sintesi, `totalTxFee = l2Fee + l1Fee`, entrambi denominati in ETH, il token gas nativo della rete Scroll.
+
+<Aside type="note" title="Dove vengono inviate le commissioni di transazione?">
+Tutte le commissioni di transazione vengono raccolte nel saldo del contratto `L2ScrollFeeVault`. Questo contratto tiene traccia anche dell'importo che è stato storicamente prelevato su L1 utilizzando `totalProcessed()(uint256)`.
+
+Il produttore del blocco non riceve alcuna ricompensa diretta, e l'istruzione `COINBASE` restituisce l'indirizzo del fee vault.
+
+</Aside>
+
+## Commissione L2
+
+Le transazioni su Scroll, come su Ethereum, devono pagare il costo di eseguire i loro calcoli e archiviare i dati che producono.
+
+### Calcolo della Commissione di Esecuzione
+
+
+```javascript
+l2TransactionExecutionFee = l2TransactionGasUsed * l2TransactionGasPrice
+```
+Il costo totale dipende da ciò che fa la transazione (`l2TransactionGasUsed`) e dalle condizioni di mercato attuali (`l2TransactionGasPrice`). Gli utenti impostano il prezzo del gas, e il "gas usato" viene valutato chiamando il punto di accesso `estimateGas` su un nodo di Scroll.
+
+In altre parole, la commissione di esecuzione è calcolata esattamente come su Ethereum prima dell'[EIP1559](https://eips.ethereum.org/EIPS/eip-1559).
+
+## Commissione L1
+
+Ogni calldata delle transazioni deve essere archiviato su Ethereum, il che comporta una commissione aggiuntiva, nota come "Commissione L1". Senza questo, Scroll non potrebbe essere ricostruito solo dai dati dell'L1.
+
+Le transazioni non vengono commesse una per una -- vengono raccolte in batch di blocchi (e blocchi di transazioni). Il costo di una singola transazione viene calcolato in base ai byte zero e non zero nel suo payload.
+
+### Stima della Commissione L1 per i Dati
+
+Scroll ha un oracolo `L1GasPriceOracle` pre-deployed a `0x5300000000000000000000000000000000000002`, accessibile sia su [Scroll Mainnet](https://scrollscan.com/address/0x5300000000000000000000000000000000000002) che su [Scroll Sepolia](https://sepolia.scrollscan.com/address/0x5300000000000000000000000000000000000002). Fornisce un metodo `getL1Fee` per stimare la commissione L1 per i dati grezzi di una determinata transazione.
+
+```solidity
+function getL1Fee(bytes memory _data) external view override returns (uint256);
+```
+<Aside type="note" title="Cosa succede se i prezzi del gas aumentano su L1?">
+
+Una volta che il sequencer ha elaborato una transazione, la commissione L1 dell'utente è fissata, e eventuali fluttuazioni non influenzeranno ciò che l'utente paga.
+
+<br />
+A causa dei brevi tempi di blocco di Scroll, eventuali cambiamenti nei costi del gas su L1 tra la presentazione di una transazione e la sua inclusione in un blocco dovrebbero essere minimi. Il sequencer assorbirà eventuali modifiche ai costi del gas su L1 tra l'inclusione della transazione in un blocco e il momento in cui il sequencer impegna i dati su L1.
+
+</Aside>
+
+### Calcolo della Commissione L1 per i Dati con Gas Oracle
+
+Come già menzionato, l'`L1GasPriceOracle` è utilizzato per stimare la commissione del gas L1 dati dato il raw transaction data. Questo è un **push oracle**, aggiornato da un relayer gestito da Scroll.
+
+La commissione dei dati si basa su diversi fattori:
+
+- I byte che sono `zero` e `nonzero` di una transazione codificata in RLP con firma
+- `l1BaseFee` - Il tasso di base corrente su L1
+- `overhead` - Overhead aggiuntivo del gas di una transazione di impegno dei dati
+- `scalingFactor` - Un fattore di scala utilizzato per contabilizzare i picchi di prezzo
+- `PRECISION` - Una costante utilizzata per scalare la commissione finale
+
+I seguenti passaggi vengono effettuati per calcolare la commissione dei dati L1:
+
+1. Leggi tre campi `l1BaseFee`, `overhead`, `scalar` dal contratto `L1GasPriceOracle`. Gli slot per questi campi nel contratto sono:
+
+   | Campo     | Slot |
+   | --------- | ---- |
+   | l1BaseFee | 1    |
+   | overhead  | 2    |
+   | scalar    | 3    |
+
+2. Conta il numero di byte a zero e non a zero dalla transazione.
+3. Calcola la tariffa dati L1, considerando `TX_DATA_ZERO_GAS = 4` e `TX_DATA_NON_ZERO_GAS = 16`[^eip-2028] e `PRECISION = 1e9`:
+
+   ```javascript
+   l1Gas = zeros * TX_DATA_ZERO_GAS + (nonzeros + 4) * TX_DATA_NON_ZERO_GAS
+   l1GasFee = ((l1Gas + overhead) * l1BaseFee * scalar) / PRECISION
+   ```
+
+   We reserve an additional 4 bytes in the non-zero bytes to store the number of bytes in the RLP-encoded transaction.
+
+[^eip-2028]: Vedi [EIP-2028](https://eips.ethereum.org/EIPS/eip-2028) per piu' informazioni.
+
+### L1GasPriceOracle API
+
+#### overhead
+
+```solidity
+function overhead() external view returns (uint256);
+```
+
+Restituisce il sovraccarico corrente della tariffa L1
+
+#### scalar
+
+```solidity
+function scalar() external view returns (uint256);
+```
+
+## Restituisce il fattore di scala corrente per la tariffa L1
+
+
+#### l1BaseFee
+
+```solidity
+function l1BaseFee() external view returns (uint256);
+```
+
+Restituisce l'ultima base fee L1 conosciuta
+
+#### getL1Fee
+
+```solidity
+function getL1Fee(bytes memory data) external view returns (uint256);
+```
+
+## Calcola la parte L1 della tariffa in base alle dimensioni della transazione codificata RLP, alla base fee corrente di L1 e ai vari parametri dinamici.
+
+Il metodo `calculateL1Fee` calcola la parte L1 della tariffa basata sulle dimensioni della transazione codificata RLP firmata, sulla base fee corrente di L1 e su vari parametri dinamici.
+
+| Parametro | Descrizione                                                 |
+| --------- | ----------------------------------------------------------- |
+| data      | Transazione completamente codificata RLP firmata per cui calcolare la tariffa L1. |
+
+#### getL1GasUsed
+
+```solidity
+function getL1GasUsed(bytes memory data) external view returns (uint256);
+```
+## Calcolo della quantità di gas L1 utilizzato per una transazione
+
+Il metodo `calculateL1GasUsed` calcola la quantità di gas L1 utilizzato per pubblicare una transazione su L1. Questo include l'aggiunta di un overhead che rappresenta il costo aggiuntivo di gas per pubblicare la transazione e gli state roots su L1, oltre all'aggiunta di 74 byte di padding per compensare il fatto che l'input della transazione non ha una firma.
+
+### Ritorna
+
+Quantità di gas L1 utilizzato per pubblicare la transazione.
+
+### Parametri
+
+| Parametro | Descrizione                                                 |
+| --------- | ----------------------------------------------------------- |
+| data      | Transazione completamente codificata RLP firmata per cui calcolare il gas L1 utilizzato. |
+
+## Transazioni originate su L1
+
+Quando si invia un messaggio da L1 a L2, l'utente paga tutte le commissioni di transazione su L1. L'utente paga le commissioni di gas L1, ma per questo motivo non è necessario pagare a Scroll una tassa di dati L1. Tuttavia, dovrà considerare le commissioni di esecuzione L2 nella sua transazione su L1 e sapere quanti gas L2 pagare.
+
+I contratti su L1 possono utilizzare un L2 Gas Price Oracle deployato su L1 per ottenere la tariffa di gas per una transazione specificata. L'oracle espone anche il corrente l2BaseFee e la tariffa stimata per i messaggi cross-domain per un determinato limite di gas.
+
+Su mainnet, il `L2GasPriceOracle` è deployato all'indirizzo [`0x987e300fDfb06093859358522a79098848C33852`](https://etherscan.io/address/0x987e300fDfb06093859358522a79098848C33852).
+
+Su Sepolia, è consigliabile utilizzare un `L1MessageQueueWithGasPriceOracle` aggiornato, deployato all'indirizzo [`0xF0B2293F5D834eAe920c6974D50957A1732de763`](https://sepolia.etherscan.io/address/0xF0B2293F5D834eAe920c6974D50957A1732de763).
+
+Se il tuo sistema supporta meccanismi off-chain, è anche possibile chiamare `eth_estimateGas` e `eth_gasPrice` su qualsiasi nodo Scroll RPC per ottenere una stima del gas richiesto per una transazione specificata.
+
+<Aside type="danger" title="Avviso di aggiornamento">
+Dopo l'aggiornamento del bridge nel febbraio 2024, il `L2GasPriceOracle` sarà deprecato a favore di `L1MessageQueueWithGasPriceOracle`, disponibile all'indirizzo [`0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B`](https://etherscan.io/address/0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B).
+
+L'aggiornamento è previsto per essere finalizzato il 21 febbraio 2024, dopo un timelock di due settimane. Scroll Sepolia ha già completato questo aggiornamento. Maggiori informazioni sono disponibili [qui](https://scroll.io/blog/protocol-upgrade-bridging-cost-reduction).
+</Aside>
+
+{/* TODO: Add full documentation of key methods */}
+
+## Percorso Futuro
+Attualmente, il calcolo richiesto per la generazione delle prove e il gas per la verifica delle prove su L1 è sussidiato da Scroll e da vari partner di prova. È parzialmente coperto impostando un limite inferiore al prezzo del gas L2.
+
+Con l'evoluzione verso una rete di provatori decentralizzata, sarà necessario incorporare incentivi per la generazione delle prove nel protocollo affinché il sistema sia sostenibile e scalabile.
+
+Ci aspettiamo che il costo finale del gas includa esplicitamente il costo di questa generazione delle prove. Con ulteriori ottimizzazioni del protocollo, questo costo per l'utente dovrebbe essere minimo, poiché ogni prova copre molte transazioni.

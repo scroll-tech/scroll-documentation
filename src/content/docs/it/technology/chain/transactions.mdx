@@ -1,0 +1,95 @@
+---
+section: technology
+date: Last Modified
+title: "Transazioni"
+lang: "it"
+permalink: "technology/chain/transactions"
+whatsnext: { "Blocchi": "/it/technology/chain/blocks/" }
+---
+
+import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import TransactionBatching from "../_images/batching.png"
+
+Una transazione è un messaggio firmato crittograficamente che avvia una transizione di stato nella chain. Può essere un semplice trasferimento di saldo o l'invocazione di un contratto intelligente, che a sua volta esegue un programma per alterare lo stato.
+
+## Tipi di Transazione
+
+Attualmente, Scroll supporta tre tipi di transazioni.
+
+- Transazione Pre-EIP-155: Questa è per supportare il contratto [Singleton Factory](https://eips.ethereum.org/EIPS/eip-2470).
+- Transazione Legacy (fare riferimento a [EIP-155](https://eips.ethereum.org/EIPS/eip-155))
+- Transazione Tipizzata `L1MessageTx` (Tipo: `0x7E`): Questa è una nuova transazione [EIP-2718](https://eips.ethereum.org/EIPS/eip-2718) introdotta in Scroll come descritto di seguito. Questo tipo di transazione è per le transazioni iniziate su L1.
+
+Nota che i tipi di transazione [EIP-2930](https://eips.ethereum.org/EIPS/eip-2930) e [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559) non sono attualmente supportati in Scroll. Scroll reintegrerà questi due tipi di transazione in futuro.
+
+### Transazione Messaggio L1
+
+Introduciamo un nuovo tipo di transazione `L1MessageTx` per le transazioni iniziate su L1. Questo tipo di transazione è iniziato sul contratto ponte L1. Ogni volta che un nuovo messaggio viene aggiunto al contratto `L1MessageQueue` su L1, il sequencer L2 creerà una corrispondente transazione `L1MessageTx` da includere nei blocchi L2. Poiché la firma è già stata implicitamente verificata quando gli utenti hanno inviato la transazione su L1, le transazioni `L1MessageTx` non hanno una firma.
+
+Il tipo di transazione `L1MessageTx` è `0x7E` e il suo payload è definito come segue.
+```go
+type L1MessageTx struct {
+	QueueIndex uint64          // The queue index of the message queue in L1 contract
+	Gas        uint64          // Gas limit
+	To         *common.Address // Cannot be nil, we do not allow contract creation from L1
+	Value      *big.Int
+	Data       []byte
+	Sender     common.Address
+}
+```
+
+# Codifica RLP delle transazioni `L1MessageTx` in Scroll
+
+Secondo la regola [EIP-2718](https://eips.ethereum.org/EIPS/eip-2718), la codifica RLP delle transazioni `L1MessageTx` in Scroll segue il formato `TransactionType || TransactionPayload`, dove `TransactionType` è `0x7E` e `TransactionPayload = RLP(L1MessageTx)`.
+
+Due comportamenti significativi delle transazioni `L1MessageTx` sono i seguenti:
+
+- Il `QueueIndex` nella transazione rappresenta l'indice di coda nella coda dei messaggi L1, diverso dal `Nonce` dell'account `Sender`. Tuttavia, il `Nonce` del mittente aumenterà comunque di 1 dopo la transazione.
+- Questo tipo di transazioni non pagano [tariffe L2](/developers/transaction-fees-on-scroll#l2-fee) né [tariffe L1](/developers/transaction-fees-on-scroll#l1-fee). Le tariffe L2 sono già pagate quando gli utenti inviano le transazioni su L1. Le tariffe L1 non sono addebitate perché i dati delle transazioni `L1MessageTx` sono già disponibili nel contratto ponte L1.
+
+## Ciclo di Vita della Transazione
+
+Il ciclo di vita delle transazioni in Scroll comprende tre fasi principali:
+
+1. **Confermata**: L'utente invia una transazione al contratto ponte L1 o al sequencer L2. La transazione diventa "Confermata" una volta eseguita e inclusa in un blocco L2.
+   
+2. **Committed**: Le transazioni vengono incluse in un batch e una "transazione di commit" contenente i dati di questo batch viene inviata a L1. Dopo che la transazione di commit è finalizzata nei blocchi L1, le transazioni in questo batch diventano "Committed".
+
+3. **Finalizzata**: Viene generata una prova di validità per questo batch e verificata su L1. Dopo che la "transazione di finalizzazione" è finalizzata su L1, lo stato della transazione diventa "Finalizzata" e diventa parte canonica della chain L2 di Scroll.
+
+### Invio delle Transazioni
+
+Gli utenti possono inviare transazioni a Scroll attraverso due punti di ingresso principali:
+
+- Invio diretto ai sequencer L2 configurando i portafogli e connettendosi al punto finale RPC di Scroll. Il sequencer convalida la transazione e la memorizza nel suo pool locale di transazioni.
+  
+- Transazioni di deposito ed enforce sono originate su L1 attraverso il contratto ponte L1 di Scroll, che fornisce tre punti di ingresso per inviare transazioni da L1. Tutti i messaggi inviati attraverso questi tre punti di ingresso verranno aggiunti al contratto `L1MessageQueue`.
+
+Questi includono:
+- Il contratto `ScrollGatewayRouter` e vari gateway standard di token consentono agli utenti e ai contratti di depositare token standard su L2. Per ulteriori dettagli, consulta [Deposit Token Gateways](/technology/bridge/deposit-gateways).
+- Il contratto `L1ScrollMessenger` permette agli utenti e ai contratti di inviare messaggi arbitrari a L2. Per ulteriori dettagli, consulta [Sending Arbitrary Messages](/technology/bridge/cross-domain-messaging#sending-arbitrary-messages).
+- Il contratto `EnforcedTxGateway` consente agli EOAs di avviare una transazione forzata dallo stesso indirizzo per ritirare token o chiamare altri contratti su L2. Per ulteriori dettagli, consulta [Sending Enforced Transaction](/technology/bridge/cross-domain-messaging#sending-enforced-transactions).
+
+Il sequencer di Scroll avvia periodicamente un nuovo lavoro di mining. Estrae i messaggi L1 dal contratto `L1MessageQueue` e le transazioni nel mempool L2, sigillando un blocco. Una volta inclusa una transazione in un blocco L2, il suo stato diventa "Confermata".
+
+### Dati della Transazione di Commit
+
+Il nodo di rollup raccoglie nuovi blocchi L2 e li impacchetta in chunk e batch (vedi ulteriori dettagli in [Transaction Batching](/technology/chain/transactions#transaction-batching)). Periodicamente invia una "transazione di commit" che pubblica i dati di un batch di transazioni al contratto `ScrollChain` su L1. Dopo che la "transazione di commit" è finalizzata in un blocco L1, lo stato delle transazioni in questo batch diventa "Committed". A questo punto, gli utenti possono ricostruire autonomamente lo stato L2 basandosi sui dati confermati dal contratto L1.
+
+### Finalizzazione delle Transazioni
+
+Dopo che la prova di validità è generata, il nodo di rollup invia una "transazione di finalizzazione" che include la prova di validità e il nuovo root state dopo questo batch per la verifica onchain. Una volta che la "transazione di finalizzazione" ha successo e viene confermata in un blocco L1, lo stato delle transazioni L2 in questo batch diventa "Finalizzato". Il nuovo root state può essere utilizzato in modo trustless da terze parti.
+
+## Batching delle Transazioni
+
+<ClickToZoom src={TransactionBatching} alt="Transaction Batching" />
+
+In Scroll, le transazioni sono raggruppate in batch su più livelli.
+
+1. Un gruppo di transazioni ordinate è impacchettato in un blocco.
+2. Una serie di blocchi contigui è raggruppata in un chunk. Il chunk è l'unità base per la generazione di prove nel circuito zkEVM.
+3. Una serie di chunk contigui è raggruppata in un batch. Il batch è l'unità base per il commit dei dati e la verifica delle prove su L1. La prova per un batch, o una "prova di batch", è una prova aggregata delle prove dei chunk in questo batch.
+
+L'obiettivo di questo schema di batching a più livelli è ridurre il costo del gas per il commit dei dati onchain e la verifica delle prove. Questo approccio aumenta la granularità delle unità di rollup su L1, considerando la capacità fissa del circuito. Di conseguenza, il batching riduce i dati da archiviare nel contratto e ammortizza il costo di verifica delle prove su più transazioni L2.
+
+Una volta creato un chunk, viene generato un compito di prova corrispondente e inviato a un prover zkEVM. All'atto della creazione di un nuovo batch, avvengono due azioni successive: (a) il nodo di rollup impegna i dati delle transazioni e le informazioni di blocco da questo batch al contratto L1, e (b) viene inviato un compito di prova del batch per aggregare le prove dei chunk a un prover aggregatore. Gli standard per proporre un chunk e un batch sono dettagliati nel [Rollup Node](/technology/sequencer/rollup-node).

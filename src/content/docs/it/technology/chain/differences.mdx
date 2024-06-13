@@ -1,0 +1,52 @@
+---
+section: technology
+date: Last Modified
+title: "Differenze con l'EVM di Ethereum"
+lang: "it"
+permalink: "technology/chain/differences"
+whatsnext: { "Bridge": "/it/technology/bridge/cross-domain-messaging/" }
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+## Codici Operativi
+
+| Codice Operativo            | Comportamento dello Scroll                                                                                       |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `BLOCKHASH`                 | Restituisce `keccak(chain_id \|\| block_number)` per gli ultimi 256 blocchi.                                      |
+| `COINBASE`                  | Restituisce l'indirizzo del vault delle commissioni (contratto pre-deployato `0x5300000000000000000000000000000000000005`). |
+| `DIFFICULTY` / `PREVRANDAO` | Restituiscono sempre 0.                                                                                           |
+| `BASEFEE`                   | Disabilitato perché attualmente abbiamo disabilitato EIP-1559. Se il codice operativo viene incontrato, la transazione verrà annullata. |
+| `SELFDESTRUCT`              | Disabilitato. Se il codice operativo viene incontrato, la transazione verrà annullata.                            |
+
+## Contratti Precompilati
+
+| Indirizzo | Nome          | Comportamento dello Scroll                                                                          |
+| --------- | ------------- | --------------------------------------------------------------------------------------------------- |
+| `0x03`    | `RIPEMD-160`  | Attualmente non supportato.                                                                         |
+| `0x05`    | `modexp`      | Restringe i valori di input `B, E, M` a interi senza segno inferiori a $2^{256}$.                    |
+| `0x08`    | `ecPairing`   | Gli input sono ancora multipli di 6 valori da 32 byte, ma limitano il numero di tuple ad un massimo di 4. |
+| `0x09`    | `blake2f`     | Attualmente non supportato.                                                                         |
+| `0x0a`    | `point evaluation` | Attualmente non supportato.                                                                         |
+
+I rimanenti contratti precompilati hanno lo stesso comportamento di Ethereum. Tuttavia, il loro utilizzo massimo all'interno di un blocco è limitato da un limite legato alla capacità del circuito zkEVM.
+
+## EIP
+
+Il nostro sequencer è stato sviluppato inizialmente basato sul fork di Londra. Abbiamo disabilitato alcuni EIP nel fork di Londra e introdotto alcuni EIP dal fork di Shanghai per migliorare la compatibilità.
+
+EIP disabilitati fino al fork di Londra:
+
+- [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559): Modifica del mercato delle commissioni e tipo di transazione EIP-1559
+- [EIP-2930](https://eips.ethereum.org/EIPS/eip-2930): Liste di accesso opzionali
+- [EIP-3198](https://eips.ethereum.org/EIPS/eip-3198): Codice operativo `BASEFEE`
+
+EIP importati dal fork di Shanghai:
+
+- [EIP-3651](https://eips.ethereum.org/EIPS/eip-3651): `COINBASE` "warm"
+- [EIP-3855](https://eips.ethereum.org/EIPS/eip-3855): Istruzione `PUSH0`
+- [EIP-3860](https://eips.ethereum.org/EIPS/eip-3860): Limitare e misurare il codice di inizializzazione
+
+<Aside type="tip" title="">
+I codici operativi dall'aggiornamento Cancun non sono ancora disponibili su Scroll, inclusi `MCOPY`, `TSTORE`, `TLOAD`, `BLOBHASH` e `BLOBBASEFEE`. Inoltre, [EIP-4788](https://eips.ethereum.org/EIPS/eip-4788) per accedere alla radice del blocco della Beacon Chain non è supportato.
+</Aside>

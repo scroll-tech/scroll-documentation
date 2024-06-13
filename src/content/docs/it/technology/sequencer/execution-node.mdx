@@ -1,0 +1,84 @@
+---
+section: technology
+date: Last Modified
+title: "Nodo di Esecuzione"
+lang: "it"
+permalink: "technology/sequencer/execution-node"
+whatsnext: { "Nodo Rollup": "/it/technology/sequencer/rollup-node/" }
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+Il nodo di esecuzione è uno dei componenti centrali del protocollo Scroll: si occupa di mantenere la blockchain L2. Il nodo di esecuzione garantisce anche che l'esperienza degli utenti e degli sviluppatori su Scroll sia molto simile a quella di Ethereum. A tale scopo, mantiene il comportamento EVM e RPC ereditato direttamente da Ethereum, con poche modifiche.
+
+Le principali funzioni del nodo di esecuzione di Scroll sono:
+- Raccolta delle transazioni da L2 e L1.
+- Validazione delle transazioni e aggregazione in blocchi su L2.
+- Esecuzione dei blocchi e mantenimento dello stato della blockchain L2.
+
+È importante notare che la trasmissione di messaggi e token da L1 a L2 (depositi) è anche responsabilità del nodo di esecuzione. I messaggi da L2 a L1 (ritiri), d'altra parte, possono essere eseguiti da qualsiasi utente su L1.
+
+Le funzioni secondarie del nodo di esecuzione di Scroll includono:
+- Offerta di API RPC standard di Ethereum e alcune API estese di Scroll.
+- Consentire ai nodi peer (nodi seguaci) di sincronizzare la blockchain utilizzando il protocollo peer-to-peer di Ethereum.
+
+Essendo un fork di [go-ethereum](https://github.com/ethereum/go-ethereum), il nodo di esecuzione eredita gran parte della sua funzionalità da Ethereum. Ciò include strutture dati per transazioni e blocchi, esecuzione EVM, RPC e protocolli p2p. Poiché questi elementi non sono stati reimplementati ma ereditati direttamente da `go-ethereum`, possiamo essere sicuri della alta compatibilità di Scroll con Ethereum.
+
+Le sezioni successive presenteranno i principali componenti del nodo di esecuzione, le regole di validazione aggiuntive e un riassunto dei dettagli delle modifiche.
+
+## Componenti di `l2geth`
+
+[`l2geth`](https://github.com/scroll-tech/go-ethereum) è un fork di Scroll di [go-ethereum](https://github.com/ethereum/go-ethereum). È responsabile della costruzione ed esecuzione dei blocchi e del mantenimento dello stato della blockchain. `l2geth` eredita gran parte della sua funzionalità da Ethereum, con alcune differenze significative elencate di seguito. `l2geth` comprende i seguenti sottomoduli (lista non esaustiva):
+- **Storage**: Ledger e archiviazione dello stato implementata utilizzando LevelDB.
+- **EVM**: Le regole di transizione dello stato di Ethereum.
+- **Worker**: Responsabile della creazione di nuovi blocchi su L2.
+- **L1 SyncService**: Sincronizza e archivia messaggi da L1 nel database locale `l2geth`.
+- **API Layer**: Interfacce RPC standard e p2p di Ethereum.
+- **Transaction pool**: Mempool per transazioni su L2.
+- **Circuit capacity checker**: Verifica se una transazione o un blocco supera il limite di capacità del circuito.
+
+### Verificatore di capacità del circuito
+
+Con i circuiti zkEVM attuali di Scroll, è possibile costruire transazioni e blocchi che non possono essere dimostrati perché non rientrano nel circuito zkEVM. Questo fenomeno è chiamato *proof overflow*. Per evitarlo, abbiamo implementato un modulo *circuit capacity checker* come parte di l2geth. Questo verificatore di capacità del circuito viene utilizzato sia durante la creazione che durante la validazione dei blocchi.
+
+Durante la creazione del blocco, se la transazione successiva potrebbe causare un proof overflow, sigilliamo il blocco e lasciamo che la transazione venga trattata nel blocco successivo. Se una transazione porta a un proof overflow, l2geth la scarta. Questo meccanismo è chiamato *skipping*.
+
+Omettere transazioni su L2 significa semplicemente scartarle. In questo caso, l'utente deve inviare un'altra transazione con lo stesso nonce che non provochi un proof overflow per continuare.
+
+Omettere messaggi su L1 è un processo più esplicito. Sia il contratto `ScrollChain` su L1 che il zkEVM verificano che ogni transazione su L1 nella `L1MessageQueue` sia stata inclusa ed eseguita, o omessa. Anche se il batching non contiene transazioni su L1, include un *skip bitmap* che indica a `ScrollChain` quali messaggi su L1 sono stati omessi. Se un messaggio di deposito su L1 viene omesso, l'utente può ottenere il rimborso dei propri token su L1.
+
+<Aside type="note" title="Nota">
+  {" "}
+  Un proof overflow e l'omissione suggeriscono attività malevola; per le transazioni di deposito normali, ciò non accadrà mai.
+  {" "}
+</Aside>
+
+Poiché l'unità di prova di zkEVM è il chunk, il proof overflow deve essere evitato anche per i chunk.
+Questo viene ottenuto incorporando il verificatore di capacità del circuito nel rollup-relayer per assicurarsi che non vengano mai proposti chunk non dimostrabili.
+
+## Regole di Validazione
+
+Scroll aggiunge alcune regole di validazione oltre alle regole di validazione dei blocchi di Ethereum. Queste nuove regole limitano il comportamento L2, inclusi i messaggi da L1 e il limite di capacità del circuito zkEVM.
+- Il modulo [Verificatore di capacità del circuito](/it/technology/sequencer/execution-node/#verificatore-di-capacità-del-circuito) descritto in precedenza verifica che il blocco possa rientrare nella capacità dello spazio del circuito zkEVM.
+- Regole relative ai messaggi su L1:
+    - I messaggi su L1 di un blocco devono essere contigui e devono essere posizionati all'inizio del blocco.
+    - I messaggi su L1 di un blocco devono essere inclusi nell'ordine in `L1MessageQueue`, cioè devono essere inclusi con `QueueIndex` crescente.
+    - I messaggi su L1 di un blocco devono corrispondere a quelli presenti nel contratto `L1MessageQueue`.
+- La maggior parte di queste regole viene considerata sia durante la creazione del blocco che durante la sua validazione. Di conseguenza, se il nodo proponente del blocco viola una qualsiasi di queste regole, i nodi seguaci respingeranno i loro blocchi.
+
+## Riassunto delle Modifiche
+
+Il nodo di esecuzione di Scroll eredita gran parte dei comportamenti da Ethereum. Tuttavia, abbiamo dovuto apportare alcune modifiche incompatibili con Ethereum in `l2geth` per consentire una prova più efficiente. Questa sezione fornisce un elenco non esaustivo delle modifiche, insieme alla loro giustificazione.
+
+- **State and storage tree**: Ethereum utilizza il MPT (Merkle-Patricia Trie) come struttura dati per lo storage di stato e contratti. La struttura di questo trie e l'uso del hash Keccak lo renderebbero proibitivamente costoso per i circuiti ZK. Invece, `l2geth` utilizza [zkTrie](/it/technology/sequencer/zktrie): un trie Merkle binario con hash Poseidon per lo storage di stato e contratti.
+- **StateAccount**: Le modifiche all'account di stato sono descritte in [Account e Stato](/technology/chain/accounts).
+- **EVM**: Le modifiche sono descritte nelle [Differenze dell'EVM rispetto a Ethereum](/it/technology/chain/differences).
+- **Commissioni di transazione**
+  - Tutte le commissioni raccolte su L2 vengono inviate a un contratto vault delle commissioni su L2 mantenuto da Scroll.
+  - Commissione L1: Oltre alla tassa di gas L2 che copre lo spazio del blocco L2 e i costi di esecuzione, applichiamo anche una tassa L1 che copre i costi di conferma della transazione su L1. Questa tassa è proporzionale alle dimensioni della transazione codificata in RLP. Il costo effettivo dipende dalla configurazione attuale memorizzata nel contratto `L1GasOracle` su L2. Questa tassa viene dedotta direttamente dal saldo del mittente (e non dall'allegato di gas).
+
+- **L1MessageTx**: Abbiamo introdotto un nuovo tipo di transazione chiamato `L1MessageTx`. Inoltre, abbiamo aggiunto interfacce di database per memorizzare tali transazioni e i relativi metadati.
+
+- **SyncService**: Monitora i blocchi finalizzati su L1 e raccoglie i messaggi da L1 correlati.
+
+- **Nuova API**: `l2geth` offre un'API di tracciamento chiamata `scroll_traceBlockByNumberOrHash`, che consente ai prover di consultare le informazioni di tracciamento per generare le prove.

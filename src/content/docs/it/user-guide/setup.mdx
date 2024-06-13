@@ -1,0 +1,39 @@
+---
+section: gettingStarted
+date: Last Modified
+title: "Configurazione"
+lang: "it"
+permalink: "user-guide/setup/"
+whatsnext: { "Ottieni Sepolia ETH da un faucet": "/it/user-guide/faucet" }
+excerpt: "Hai bisogno di un wallet per interagire con il Testnet di Scroll. Qui puoi trovare alcuni esempi di wallet e suggerimenti per la configurazione."
+---
+
+import Aside from "../../../../components/Aside.astro"
+
+## Wallet
+
+Hai bisogno di un wallet per interagire con le dApp sul testnet di Scroll Sepolia. Qui puoi trovare alcuni esempi di wallet e suggerimenti per la configurazione. La nostra app Bridge supporta MetaMask, Coinbase Wallet o qualsiasi wallet con supporto WalletConnect.
+
+### MetaMask
+
+Puoi installare MetaMask dal loro [sito ufficiale](https://metamask.io/download/).
+
+Puoi importare le configurazioni del testnet di Scroll Sepolia nel tuo wallet MetaMask. Per farlo, visita il [portale di Scroll Sepolia](https://sepolia.scroll.io/portal), quindi clicca il pulsante "Connetti wallet" e seleziona MetaMask. Successivamente, clicca sui pulsanti "Aggiungi a MetaMask" per il Testnet di Sepolia e il Testnet di Scroll Sepolia. Questo importerà l'ID della catena e gli URL RPC per il Testnet di Scroll Sepolia. Il Testnet di Sepolia è anche configurato su MetaMask per impostazione predefinita. Per mostrarlo, clicca su "Mostra/nascondi reti di test" nel menu a discesa di selezione della rete di MetaMask.
+
+### Configurazione manuale della rete (per altri wallet)
+
+I collegamenti **Aggiungi al Wallet** potrebbero non essere compatibili con tutti i wallet. Se riscontri problemi nell'usarli, potresti dover aggiungere manualmente la rete _Sepolia Testnet_ e _Scroll Sepolia_ inserendo i dettagli di configurazione dalla tabella qui sotto:
+
+| Nome Rete         | Testnet di Scroll Sepolia                                      | Testnet di Sepolia                                                     |
+| ----------------- | -------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| URL RPC           | [https://sepolia-rpc.scroll.io/](https://sepolia-rpc.scroll.io/) | [https://eth-sepolia-public.unifra.io](https://eth-sepolia-public.unifra.io) |
+| ID Catena         | 534351                                                         | 11155111                                                                |
+| Simbolo Valuta    | ETH                                                            | ETH                                                                     |
+| URL Esploratore Blocchi | [https://sepolia.scrollscan.com](https://sepolia.scrollscan.com) | [https://sepolia.etherscan.io](https://sepolia.etherscan.io)            |
+
+<Aside type="tip" title="Esploratori di Blocchi Aggiuntivi">
+  Per esaminare l'attività su Layer 1, utilizza l'[Esploratore Sepolia Testnet](https://sepolia.etherscan.io/) di Etherscan.
+
+Per un'esperienza alternativa degli esploratori di blocchi, Unifra ha sviluppato [L2Scan](https://scroll-sepolia.l2scan.co/), che consente agli utenti di esplorare ulteriori aspetti del Testnet di Scroll Sepolia. [Dora](https://www.ondora.xyz/network/scroll-sepolia/interactions) supporta anche Scroll Sepolia e fornisce una visione multi-chain dell'attività della blockchain.
+
+</Aside>

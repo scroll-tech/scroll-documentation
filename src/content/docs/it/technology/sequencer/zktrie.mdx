@@ -1,0 +1,214 @@
+---
+section: technology
+date: Last Modified
+title: "zkTrie"
+lang: "it"
+permalink: "technology/sequencer/zktrie"
+whatsnext: { "zkEVM": "/it/technology/zkevm/intro-to-zkevm/" }
+excerpt: "zkTrie è un Merkle Patricia Trie binario disperso costruito utilizzando l hash Poseidon.
+"
+---
+
+import Aside from "../../../../../components/Aside.astro"
+import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import zktrie1 from "../_images/zktrie-arch.png"
+import zktrie2 from "../_images/zktrie-insertion.png"
+import zktrie3 from "../_images/zktrie-deletion.png"
+
+# zkTrie: Un Merkle Patricia Trie Binario Disperso
+
+Questo documento descrive zkTrie, un Merkle Patricia Trie binario disperso utilizzato per memorizzare in modo efficiente coppie chiave-valore. Si spiega la struttura dell'albero, la sua costruzione, l'hash dei nodi e le operazioni sull'albero, inclusa l'inserzione e l'eliminazione dei dati.
+
+Puoi anche esplorare il nostro [repository zktrie](https://github.com/scroll-tech/zktrie).
+
+## Struttura dell'Albero
+
+zkTrie è un Merkle Patricia Trie binario disperso, come illustrato nella figura qui sotto. Prima di approfondire nel Merkle Patricia Trie binario disperso, è utile capire brevemente cosa sono i Merkle Trees e i Patricia Tries:
+
+- **Merkle Tree**: Un albero Merkle dove ogni nodo foglia rappresenta l'hash di un blocco di dati, e ogni nodo non foglia rappresenta l'hash dei suoi nodi figli.
+- **Patricia Trie**: Un tipo di albero radix o trie compresso utilizzato per memorizzare coppie chiave-valore in modo efficiente. Codifica i nodi con lo stesso prefisso della chiave per condividere il percorso comune, determinato dal valore della chiave del nodo.
+
+Come illustrato nella Figura 1, zkTrie è composto da tre tipi di nodi:
+- **Nodo di Ramo**: Un nodo che biforca l'albero in due figli, essendo zkTrie un sistema binario.
+- **Nodo Foglia**: Contiene i dati di una coppia chiave-valore.
+- **Nodo Vuoto**: Marcato appositamente per indicare che il sotto-albero con lo stesso prefisso è vuoto.
+
+In zkTrie, utilizziamo l'hash Poseidon per calcolare l'hash dei nodi, poiché è più compatibile ed efficiente per le prove nel circuito zk.
+
+
+<ClickToZoom src={zktrie1} alt="zkTrie Structure" caption="Figure 1. Struttura zkTrie" />
+
+## Costruzione dell'Albero
+
+Dato un coppia chiave-valore, prima calcoliamo una *secret key* per il nodo foglia corrispondente facendo l'hash della chiave originale (cioè, l'indirizzo dell'account e la chiave di archiviazione) usando la funzione hash Poseidon. Questo può distribuire uniformemente la chiave nello spazio delle chiavi. Il metodo di hashing della chiave del nodo è descritto nella sezione [Node Hashing](#node-hashing) qui sotto.
+
+Codifichiamo il percorso di un nuovo nodo foglia attraversando la secret key dal Bit Meno Significativo (LSB) al Bit Più Significativo (MSB). Ad ogni passaggio, se il bit è 0, procediamo al figlio sinistro; altrimenti, al figlio destro.
+
+Limitiamo la profondità massima di zkTrie a 248, il che significa che l'albero attraverserà solo i 248 bit inferiori della chiave. Poiché lo spazio della chiave sicura è un campo finito utilizzato dall'hash Poseidon che non occupa l'intero intervallo di $2^{256}$, la rappresentazione bit della chiave può essere ambigua nel campo finito e quindi comportare un problema di solidità nel circuito zk. Dopo aver troncato la chiave a 248 bit inferiori, lo spazio della chiave può occupare completamente l'intervallo di $2^{248}$ e non avrà ambiguità nella rappresentazione bit.
+
+Applichiamo un'ottimizzazione per ridurre la profondità dell'albero contrarre un sottoalbero che ha solo un nodo foglia a un singolo nodo foglia. Ad esempio, nella Figura 1, l'albero ha in totale tre nodi, con chiavi `0100`, `0010` e `1010`. Poiché c'è solo un nodo che ha una chiave con suffisso `00`, il nodo foglia per la chiave `0100` attraversa solo il suffisso `00` e non espande completamente la sua chiave, il che avrebbe comportato una profondità di 4.
+
+## Operazioni sull'Albero
+
+### Inserimento
+
+<ClickToZoom src={zktrie2} alt="zkTrie Structure" caption="Figure 2. Inserire un nodo foglia a zkTrie" />
+
+Quando inseriamo un nuovo nodo foglia in un zkTrie, ci sono due casi illustrati nella Figura 2.
+
+1. Durante il percorso della chiave del nodo, si raggiunge un nodo vuoto (Figura 2a). In questo caso, è sufficiente sostituire questo nodo vuoto con il nodo foglia e risalire il percorso per aggiornare l'hash Merkle dei nodi di ramo fino alla radice.
+
+2. Durante il percorso della chiave del nodo, si raggiunge un altro nodo foglia `b` (Figura 2b). In questo caso, è necessario spingere verso il basso il nodo foglia esistente `b` fino a quando il bit successivo nelle chiavi dei due nodi foglia differisce. Ad ogni passo di spinta verso il basso, è necessario inserire un nodo fratello vuoto nel nodo di ramo. Quando si raggiunge il livello in cui i bit sono diversi, si posizionano quindi due nodi foglia `b` e `d` come figlio sinistro e figlio destro in base ai loro bit. Infine, risaliamo il percorso e aggiorniamo l'hash Merkle di tutti i nodi di ramo.
+
+### Eliminazione
+
+<ClickToZoom src={zktrie3} alt="zkTrie Structure" caption="Figure 3. Eliminare un nodo foglia dal zkTrie" />
+
+## Eliminazione
+
+L'eliminazione di un nodo foglia è simile all'inserimento. Ci sono due casi illustrati nella Figura 3.
+
+1. Il nodo fratello del nodo foglia da eliminare è un nodo di ramo (Figura 3a). In questo caso, possiamo semplicemente sostituire il nodo `a` con un nodo vuoto e aggiornare l'hash del nodo dei suoi antenati fino al nodo radice.
+   
+2. Il nodo fratello del nodo foglia da eliminare è un nodo foglia (Figura 3b). Similmente al caso 1, sostituiamo prima il nodo foglia con un nodo vuoto e iniziamo a contrarre il nodo fratello verso l'alto fino a quando il suo nodo fratello non è più un nodo vuoto. Ad esempio, nella Figura 3b, sostituiamo il nodo foglia `b` con un nodo vuoto. Poiché il fratello del nodo `c` diventa ora un nodo vuoto, dobbiamo spostare il nodo `c` di un livello verso l'alto e sostituire il suo genitore. Il nuovo fratello del nodo `c`, il nodo `e`, è ancora un nodo vuoto. Quindi di nuovo spostiamo il nodo `c` verso l'alto. Ora che il fratello del nodo `c` è il nodo `a`, un nodo foglia, il processo di eliminazione è completato.
+
+Nota che il fratello di un nodo foglia in un zkTrie valido non può essere un nodo vuoto. In caso contrario, dovremmo sempre potare il sottoalbero e spostare il nodo foglia verso l'alto.
+
+## Hash dei Nodi
+
+In questa sezione, descriveremo come vengono calcolati la chiave sicura del nodo foglia e l'hash Merkle del nodo. Utilizziamo la funzione hash Poseidon con arità 2 per entrambi i calcoli di hash. In Scroll, la funzione hash Poseidon è configurata per prendere in input due elementi del campo ogni volta e un `domain_value` come contesto iniziale per la separazione del dominio, indicato come segue.
+
+```
+h{domain_value}(input1, input2)
+```
+
+### Nodo Vuoto
+
+L'hash del nodo vuoto è 0.
+
+### Nodo di Ramo
+
+L'hash del nodo di ramo è calcolato nel seguente modo:
+
+```go
+branchNodeHash = h{BranchNodeType}(leftChildHash, rightChildHash)
+```
+
+Nodo Foglia
+L'hash di un nodo foglia è calcolato come segue:
+
+
+```go
+leafNodeHash = h{LeafNodeType}(nodeKey, valueHash)
+```
+
+Il calcolo coinvolge due campi: `nodeKey` e `valueHash`.
+- `nodeKey` è ottenuto tramite hash dalla chiave originale. Il valore di dominio utilizzato nell'hash di Poseidon è 256.
+- `valueHash` è calcolato tramite hash del valore del nodo foglia. Il valore di dominio utilizzato nell'hash di Poseidon è `256 * n`, dove `n` è il numero di elementi nel valore del nodo foglia.
+
+Ci sono due tipi di nodi foglia: account Ethereum e coppie chiave-valore di archiviazione. Successivamente, descriveremo il metodo di calcolo della chiave del nodo e dell'hash del valore per ciascun tipo di nodo foglia.
+
+#### Nodo Foglia dell'Account Ethereum
+Un Nodo Foglia dell'Account Ethereum è composto da un indirizzo Ethereum e una struttura dati dello stato dell'account. La chiave sicura è derivata dall'indirizzo Ethereum.
+
+```go
+var address byte[20] // 20 bytes in big-endian
+valHi := address[0:16]
+valLo := address[16:20] * 2^96 // padding 12 bytes of 0 at the end
+nodeKey := h{256}(valHi, valLo)
+```
+
+In Scroll, una struttura di account di stato consiste nei seguenti campi (dove `Fr` indica il campo finito e rappresenta un valore di 254 bit):
+
+
+- `Nonce`: u64
+- `Balance`: u256, trattato come Fr
+- `StorageRoot`: Fr
+- `KeccakCodeHash`: u256
+- `PoseidonCodeHash`: Fr
+- `CodeSize`: u64
+
+Prima di calcolare l’hash del valore, l’account di stato viene prima convertito in una lista di valori `u256` values.  Lo schema di marshaling è
+
+```text
+(The following scheme assumes the big-endian encoding)
+[0:32]
+	[0:16] Reserved with all 0
+	[16:24] CodeSize, uint64 in big-endian
+	[24:32] Nonce, uint64 in big-endian
+[32:64] Balance
+[64:96] StorageRoot
+[96:128] KeccakCodeHash
+[128:160] PoseidonCodehash
+(total 160 bytes)
+```
+
+Il metodo di marshalling restituisce anche un valore `flag` insieme a un vettore di valori  `u256`. Il `flag` è una mappa di bit che indica se un valore `u256` non può essere trattato come elemento di campo (Fr). Il valore del `flag` per lo stato dell'account è 8, come mostrato di seguito:
+
+```
+         +--------------------+---------+------+----------+----------+
+ index   |          0         |    1    |   2  |     3    |     4    |
+         +--------------------+---------+------+----------+----------+
+  u256   | nonce||codesize||0 | balance | root |  keccak  | poseidon |
+         +--------------------+---------+------+----------+----------+
+flag bit |          0         |    0    |   0  |     1    |     0    |
+         +--------------------+---------+------+----------+----------+
+         (LSB)                                                   (MSB)
+```
+
+L'hash del valore viene calcolato in due passaggi:
+
+Convertire il valore che non può essere rappresentato come elemento di campo dell'hash Poseidon in un elemento di campo.
+Combinare gli elementi di campo in una struttura ad albero binario fino a quando la radice dell'albero è trattata come l'hash del valore.
+
+Nel primo passaggio, quando il bit nel `flag` è 1, indicando che il valore `u256` non può essere trattato come elemento di campo, dividiamo il valore in un valore alto di 128 bit e un valore basso di 128 bit, e poi li passiamo a un hash Poseidon per derivare un valore di elemento di campo, `h(valueHi, valueLo)`.
+
+```go
+// convert Keccak codehash to a field element
+compressedKeccakCodeHash := h{512}(keccakCodeHash[0:16], keccakCodeHash[16:32])
+```
+
+Secondo, l'hash del valore viene calcolato nel seguente modo:
+
+```go
+domain := 256 * 5  // 5 elements to compute the valueHash
+valueHash :=
+    h{domain}(
+        h{domain}(
+            h{domain}(nonce||codesize||0, balance),
+            h{domain}(
+                storageRoot,
+                compressedKeccakCodeHash,
+            ),
+        ),
+        poseidonCodeHash,
+    )
+```
+
+Nodo Foglia di Archiviazione
+Un Nodo Foglia di Archiviazione codifica una coppia chiave-valore in cui sia la chiave che il valore sono valori `u256`. La chiave sicura di questo nodo foglia è derivata dalla chiave di archiviazione.
+
+```go
+var storageKey byte[32]  // 32 bytes in big-endian
+valHi := storageKey[0:16]
+valLo := storageKey[16:32]
+nodeKey := h{256}(valHi, valLo)
+```
+
+Il valore di archiviazione è un valore `u256`. Il `flag` per il valore di archiviazione è 1, come mostrato di seguito:
+
+```
+         +--------------+
+  index  |      0       |
+         +--------------+
+  u256   | storageValue |
+         +--------------+
+flag bit |      1       |
+         +--------------+
+```
+
+Il valore del hash è calcolato nella seguente maniera
+
+```go
+valueHash = h{512}(storageValue[0:16], storageValue[16:32])
+```

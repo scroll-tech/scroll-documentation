@@ -1,0 +1,146 @@
+---
+section: technology
+date: Last Modified
+title: "Scroll Upgrades"
+lang: "it"
+permalink: "technology/overview/scroll-upgrades"
+---
+
+Mentre il team continua a progredire sulla roadmap di Scroll, aggiorneremo la chain di Scroll per includere nuove funzionalità e miglioramenti.
+
+I seguenti contratti sono utilizzati per avviare gli aggiornamenti ed eseguirli dopo il periodo di blocco di due settimane:
+
+| Contratto         | Chain                                                      | Indirizzo | 
+| ------------------------ | ------- | - | 
+| L1 Scroll Multisig | Ethereum| [0xEfc9D1096fb65c832207E5e7F13C2D1102244dbe](https://etherscan.io/address/0xEfc9D1096fb65c832207E5e7F13C2D1102244dbe)| 
+| L1 Timelock |  Ethereum| [0x1A658B88fD0a3c82fa1a0609fCDbD32e7dd4aB9C](https://etherscan.io/address/0x1A658B88fD0a3c82fa1a0609fCDbD32e7dd4aB9C)| 
+| L2 Scroll Multisig | Scroll| [0xEfc9D1096fb65c832207E5e7F13C2D1102244dbe](https://scrollscan.com/address/0xEfc9D1096fb65c832207E5e7F13C2D1102244dbe)|
+| L2 Timelock | Scroll | [0xf6069DB81239E5194bb53f83aF564d282357bc99](https://scrollscan.com/address/0xf6069DB81239E5194bb53f83aF564d282357bc99)|
+
+Puoi unirti al nostro [canale Telegram per gli aggiornamenti tecnici](https://t.me/scroll_tech_updates), che include annunci futuri di aggiornamento ed eventi di operazioni on-chain.
+
+## Aggiornamento Bernoulli
+
+### Panoramica
+
+Questo aggiornamento presenta una significativa riduzione dei costi delle transazioni introducendo il supporto per i blob dati EIP-4844 e il supporto per il contratto precompilato SHA2-256.
+
+### Tempistica
+
+- **Scroll Sepolia**
+	- Aggiornamento della chain: 15 aprile 2024
+- **Scroll Mainnet**
+	- Avvio dell'aggiornamento: 15 aprile 2024
+	- Completamento del blocco del timelock e aggiornamento: 29 aprile 2024
+
+### Dettagli Tecnici
+
+#### Cambiamenti nei contratti
+
+I cambiamenti contrattuali per questo aggiornamento sono in [questo PR](https://github.com/scroll-tech/scroll/pull/1179), insieme alle correzioni del audit [qui](https://github.com/scroll-tech/scroll/pulls?q=is%3Apr+created%3A2024-04-10..2024-04-11+fix+in%3Atitle+label%3Abug). I principali cambiamenti sono i seguenti:
+
+- `ScrollChain` ora accetta batch con codifica calldata o blob in `commitBatch`.
+- `ScrollChain` ora supporta il finalizzare batch codificati con blob tramite `finalizeBatchWithProof4844`.
+- `MultipleVersionRollupVerifier` ora può gestire diversi verificatori on-chain per ogni versione di codifica del batch.
+
+#### Cambiamenti nei nodi
+
+La nuova versione del nodo è `v5.3.0`. Consulta [qui](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.3.0) il log delle release.
+
+#### Cambiamenti nei circuiti zkEVM
+
+La nuova versione dei circuiti zkevm è `v0.10.3`. Consulta [qui](https://github.com/scroll-tech/zkevm-circuits/releases/tag/v0.10.3) il log delle release.
+
+#### Audit
+
+- [OpenZeppelin](https://blog.openzeppelin.com/scroll-eip-4844-support-audit)
+- TrailofBits (sarà pubblicato presto)
+
+### Compatibilità
+
+#### Nodi sequencer e follower (l2geth)
+
+Questo aggiornamento è una hard fork in quanto introduce il nuovo tipo di dato blob e il contratto precompilato SHA2-256. Gli operatori che eseguono un nodo `l2geth` devono aggiornare prima del blocco della hard fork. Consulta le [release del nodo](https://github.com/scroll-tech/go-ethereum/releases) per ulteriori informazioni.
+
+#### Indicizzatori e Bridge
+
+Questo aggiornamento cambia il formato che Scroll utilizza per pubblicare dati su Ethereum. I progetti che dipendono da questi dati dovrebbero esaminare attentamente [il nuovo formato dei dati](/en/technology/chain/rollup/#codec) e verificare se è necessario adattare i loro decoder. Ecco un riassunto del nuovo formato:
+
+- Il formato di [`BlockContext`](https://github.com/scroll-tech/scroll/blob/5362e28f744093495c1c09a6b68fc96a3264278b/common/types/encoding/codecv1/codecv1.go#L125) non cambierà.
+- `Chunks` non includerà più [i dati delle transazioni L2](https://github.com/scroll-tech/scroll/blob/5362e28f744093495c1c09a6b68fc96a3264278b/common/types/encoding/codecv1/codecv1.go#L162). Questi saranno invece [archiviati in un blob](https://github.com/scroll-tech/scroll/blob/5362e28f744093495c1c09a6b68fc96a3264278b/common/types/encoding/codecv1/codecv1.go#L284) allegato alla transazione `commitBatch`.
+- `BatchHeader` ora contiene un nuovo campo, [`BlobVersionedHash`](https://github.com/scroll-tech/scroll/blob/5362e28f744093495c1c09a6b68fc96a3264278b/common/types/encoding/codecv1/codecv1.go#L405). 
+
+#### Provatori
+
+Questo aggiornamento comporta un cambio significativo nei [circuiti zkevm](https://github.com/scroll-tech/zkevm-circuits). Gli operatori che eseguono un nodo provatore devono aggiornare.
+
+## Aggiornamento del Bridge
+
+### Panoramica
+
+Per ridurre i costi di bridging, abbiamo implementato diverse ottimizzazioni di gas sulla nostra suite di contratti di bridge e rollup. Le tecniche di ottimizzazione utilizzate includono quanto segue:
+
+- Ora useremo costanti per memorizzare alcuni indirizzi dei contratti associati, invece di utilizzare variabili di storage. Questo è possibile poiché questi valori non dovrebbero (quasi mai) cambiare. Con questo cambio possiamo risparmiare su alcune operazioni di caricamento da storage.
+- Abbiamo aggiornato la stima del gas intrinseco in `L1MessageQueue` utilizzando un limite superiore semplice invece di un calcolo esatto. I due risultati saranno simili per la maggior parte delle transazioni di bridge, ma la nuova implementazione è significativamente più economica.
+- Abbiamo unito due contratti `L1MessageQueue` e `L2GasPriceOracle` per risparmiare sui costi di chiamata da un contratto all'altro.
+
+### Tempistica
+
+- **Scroll Sepolia:**
+	- Aggiornamento della chain: 19 gennaio 2024
+- **Scroll Mainnet:**
+	- Avvio dell'aggiornamento: 7 febbraio 2024
+	- Completamento del blocco del timelock e aggiornamento: 21 febbraio 2024
+
+### Dettagli Tecnici
+
+#### Cambiamenti nel Codice
+
+- [Ottimizzazione dei costi del Bridge](https://github.com/scroll-tech/scroll/pull/1011)
+- [Correzioni delle Audit](https://github.com/scroll-tech/scroll/pulls?q=OZ+is%3Apr+created%3A2024-01-27..2024-02-10)
+- [Versione precedentemente deployata](https://github.com/scroll-tech/scroll/tree/ff380141a8cbcc214dc65f17ffa44faf4be646b6) (commit `ff380141a8cbcc214dc65f17ffa44faf4be646b6`)
+- [Versione deployata](https://github.com/scroll-tech/scroll/tree/6030927680a92d0285c2c13e6bb27ed27d1f32d1) (commit `6030927680a92d0285c2c13e6bb27ed27d1f32d1`)
+
+#### Audit
+
+- [OpenZeppelin](https://blog.openzeppelin.com/scroll-bridge-gas-optimizations-audit)
+
+#### Elenco dei Cambiamenti
+
+**Cambiamenti nei contratti L1:**
+
+- In `ScrollChain`, cambia `messageQueue` e `verifier` in `immutable`.
+- In `L1ScrollMessenger`, cambia `counterpart`, `rollup`, e `messageQueue` in `immutable`.
+- In tutti i gateway token, cambia `counterpart`, `router`, e `messenger` in `immutable`.
+- Unisci `L1MessageQueue` e `L2GasPriceOracle` in un unico contratto `L1MessageQueueWithGasPriceOracle` (deployato allo stesso indirizzo del precedente `L1MessageQueue`). In questo contratto, cambiamo anche `messenger` e `scrollChain` in `immutable`, e semplifichiamo `calculateIntrinsicGasFee`.
+
+**Cambiamenti nei contratti L2:**
+
+- In `L2ScrollMessenger`, cambia `counterpart` in `immutable`.
+- In tutti i gateway token, cambia `counterpart`, `router`, e `messenger` in `immutable`.
+
+**Contratti interessati:**
+
+- **L1:** `L1MessageQueue`, `L2GasPriceOracle`, `ScrollChain`, `L1WETHGateway`, `L1StandardERC20Gateway`, `L1GatewayRouter`, `L1ScrollMessenger`, `L1CustomERC20Gateway`, `L1ERC721Gateway`, `L1ERC1155Gateway`.
+- **L2:** `L2ScrollMessenger`, `L2WETHGateway`, `L2StandardERC20Gateway`, `L2GatewayRouter`, `L2CustomERC20Gateway`, `L2ERC721Gateway`, `L2ERC1155Gateway`.
+
+#### Compatibilità
+
+##### Nodi sequencer e follower (l2geth)
+
+Gli operatori che eseguono un nodo `l2geth` non hanno bisogno di aggiornare. I cambiamenti in questo aggiornamento non influenzeranno `l2geth`.
+
+##### Dapps e indicizzatori
+
+Le Dapps e gli indicizzatori (e infrastrutture simili off-chain) che interrogano contratti o dipendono dalle interfacce di contratto, nella maggior parte dei casi, non necessitano di modifiche. La maggior parte dei cambiamenti ai contratti sono interni e/o retrocompatibili.
+
+Se la tua applicazione dipende da [`L2GasPriceOracle`](https://etherscan.io/address/0x987e300fDfb06093859358522a79098848C33852) per monitorare come Scroll tiene traccia del prezzo del gas L2 su L1, a partire dal numero di blocco dell'aggiornamento dovrai iniziare a monitorare [`L1MessageQueueWithGasPriceOracle`](https://etherscan.io/address/0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B).
+
+Il contratto originale dell'oracolo del prezzo del gas sarà deprecato: non sarà più aggiornato o utilizzato dal bridge di Scroll.
+
+- Ethereum:
+	- `L2GasPriceOracle`: [`0x987e300fDfb06093859358522a79098848C33852`](https://etherscan.io/address/0x987e300fDfb06093859358522a79098848C33852)
+	- `L1MessageQueueWithGasPriceOracle`: [`0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B`](https://etherscan.io/address/0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B)
+- Sepolia:
+	- `L2GasPriceOracle`: [`0x247969F4fad93a33d4826046bc3eAE0D36BdE548`](https://sepolia.etherscan.io/address/0x247969F4fad93a33d4826046bc3eAE0D36BdE548)
+	- `L1MessageQueueWithGasPriceOracle`: [`0xF0B2293F5D834eAe920c6974D50957A1732de763`](https://sepolia.etherscan.io/address/0xF0B2293F5D834eAe920c6974D50957A1732de763)

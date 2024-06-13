@@ -1,0 +1,39 @@
+---
+section: technology
+date: Last Modified
+title: "Blocchi"
+lang: "it"
+permalink: "technology/chain/blocks"
+whatsnext: { "Processo di Rollup": "/it/technology/chain/rollup/" }
+---
+
+Un blocco è una raccolta di transazioni e collegamenti al blocco precedente che estende.
+
+## Header del Blocco
+
+L'header del blocco in Scroll rispecchia la struttura di quello di Ethereum. Tuttavia, alcuni campi nell'header del blocco sono stati modificati per adattarsi al contesto Layer 2, come dettagliato nella tabella seguente:
+
+| Campo               | Descrizione                                                        |
+| ------------------- | ------------------------------------------------------------------ |
+| `parentHash`        | L'hash del blocco genitore.                                        |
+| `uncleHash`         | Sempre `keccak256(rlp([]))`.                                       |
+| `coinbase`          | Le commissioni sono raccolte all'indirizzo del contratto del fee vault pre-distribuito `0x5300000000000000000000000000000000000005`. Nella maggior parte dei casi, il campo `"miner"` restituito dall'RPC è l'indirizzo zero `0x0000000000000000000000000000000000000000`. |
+| `stateRoot`         | L'hash radice del trie di stato. È il Poseidon                     |
+| `transactionsRoot`  | L'hash radice del trie delle transazioni.                          |
+| `receiptsRoot`      | L'hash radice del trie delle ricevute delle transazioni.           |
+| `logsBloom`         | La struttura dati contenente i log degli eventi.                   |
+| `difficulty`        | Sempre 1 o 2.                                                      |
+| `number`            | Il numero del blocco.                                              |
+| `gasLimit`          | Il massimo gas consentito nel blocco.                              |
+| `gasUsed`           | Il gas utilizzato nel blocco.                                      |
+| `timestamp`         | L'ora del blocco.                                                  |
+| `extraData`         | La firma del validatore del blocco, seguita da eventuali dati aggiuntivi arbitrari. |
+| `mixHash`           | Sempre 0.                                                          |
+| `nonce`             | Sempre 0.                                                          |
+| `baseFee`           | Attualmente vuoto in Scroll perché non abbiamo abilitato l'EIP-1559. |
+
+## Tempo del Blocco
+
+Il tempo del blocco si riferisce all'intervallo tra due blocchi consecutivi. In Scroll, il tempo del blocco è impostato a 3 secondi. Un tempo del blocco ridotto migliora l'esperienza utente e aumenta la scalabilità della chain Scroll.
+
+Il tempo del blocco di 3 secondi è mantenuto su base di miglior sforzo, non è garantito né imposto dal protocollo.
