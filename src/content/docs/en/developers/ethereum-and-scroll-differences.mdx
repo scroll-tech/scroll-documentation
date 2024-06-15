@@ -42,7 +42,7 @@ The `RIPEMD-160` (address `0x3`) `blake2f` (address `0x9`), and `point evaluatio
 
 The `modexp` precompile is supported but only supports inputs of size less than or equal to 32 bytes (i.e. `u256`).
 
-The `ecPairing` precompile is supported, but the number of points(sets, pairs) is limited to 4, instead of 6.
+The `ecPairing` precompile is supported, but the number of points(sets, pairs) is limited to 4 instead of 6.
 
 The other EVM precompiles are all supported: `ecRecover`, `identity`, `ecAdd`, `ecMul`.
 
@@ -83,7 +83,7 @@ type StateAccount struct {
 
 Related to this, we maintain two types of codehash for each contract bytecode: Keccak hash and Poseidon hash.
 
-`KeccakCodeHash` is kept to maintain compatibility for `EXTCODEHASH`. `PoseidonCodeHash` is used for verifying the correctness of bytecodes loaded in the zkEVM, where Poseidon hashing is far more efficient.
+`KeccakCodeHash` is kept to maintain compatibility for `EXTCODEHASH`. `PoseidonCodeHash` is used to verify the correctness of bytecodes loaded in the zkEVM, where Poseidon hashing is far more efficient.
 
 ### CodeSize
 

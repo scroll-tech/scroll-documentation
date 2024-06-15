@@ -1,12 +1,12 @@
 export const SITE = {
   title: "Scroll Documentation",
   description:
-    "Scroll is scaling Ethereum for the next generation of the builders and users using zero knowledge technologies.",
+    "Scroll is scaling Ethereum for the next generation of the builders and users using zero-knowledge technologies.",
   defaultLanguage: "en",
 }
 
 export const PAGE = {
-  titleFallback: "Ethereum scaled, using zero knowledge.",
+  titleFallback: "Ethereum scaled, using zero-knowledge.",
 }
 
 export const OPEN_GRAPH = {
