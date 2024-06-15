@@ -60,7 +60,7 @@ excerpt: "Translation of English terms into Spanish"
 | Router                                          | Enrutador                                    |
 | Scroll                                          | Scroll                                       |
 | Ethereum                                        | Ethereum                                     |
-| Zero-knowledge                                  | Conocimiento cero                            |
+| Zero-Knowledge                                  | Conocimiento cero                            |
 | Layer 2 rollup                                  | Rollup de capa 2                             |
 | Smart contracts                                 | Contratos inteligentes                       |
 | Mainnet                                         | Red principal                                |
