@@ -3,10 +3,6 @@ name: TyposCheck
 on:
   pull_request:
     types: [synchronize, opened, reopened, ready_for_review]
-    # Ignore when target branch is `main` and source branch is develop.
-    # It could avoid running twice. Since develop is set as `push` below.
-    branches-ignore:
-      - main
 
   push:
     branches:
