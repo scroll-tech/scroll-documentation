@@ -22,4 +22,3 @@ jobs:
       - uses: crate-ci/typos@v1.22.7
         with:
           config: ./typos.toml
-          isolated: true
