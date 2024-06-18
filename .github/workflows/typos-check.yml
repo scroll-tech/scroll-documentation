@@ -1,0 +1,25 @@
+name: TyposCheck
+
+on:
+  pull_request:
+    types: [synchronize, opened, reopened, ready_for_review]
+    # Ignore when target branch is `main` and source branch is develop.
+    # It could avoid running twice. Since develop is set as `push` below.
+    branches-ignore:
+      - main
+
+  push:
+    branches:
+      - develop
+
+jobs:
+  typos-check:
+    name: TyposCheck
+    timeout-minutes: 3
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: crate-ci/typos@v1.22.7
+        with:
+          config: ./typos.toml
+          isolated: true
