@@ -19,6 +19,71 @@ The following contracts are used to initiate upgrades and execute upgrades after
 
 You can join our [Telegram channel for technical updates](https://t.me/scroll_tech_updates), which includes future upgrade announcements and on-chain operation events.
 
+## Curie Upgrade
+
+### Overview
+
+This significant upgrade will reduce gas fees on the Scroll chain by 1.5x. Highlights include: 
+
+- Compresses the data stored in blobs using the [zstd](https://github.com/scroll-tech/da-codec/tree/main/libzstd) algorithm. This compression reduces the data size, allowing each blob to store more transactions, thereby reducing data availability cost per transaction.
+- Adopts a modified version of the EIP-1559 pricing model which is compatible with the EIP-1559 transaction interface, bringing beneftis such as more accurate transaction pricing and a more predictable and stable fee structure.
+- Support for new EVM opcodes `TLOAD`, `TSTORE`, and `MCOPY`. Users can safely use the latest Solidity compiler version `0.8.26` to build the contracts.
+- Introduces a dynamic block time. During periods of traffic congestion, a block will be packed when the number of transactions reaches the circuit limit instead of waiting for the 3-second interval.
+
+### Timeline
+
+- **Scroll Sepolia**
+	- Network Upgrade: June 17th, 2024
+- **Scroll Mainnet**
+	- Upgrade Initiation: June 20th, 2024
+	- Timelock Completion & Upgrade: June 27th, 2024
+
+### Technical Details
+
+#### Contract Changes
+
+The code changes for this upgrade are documented in the following PRs:
+
+- [PR 1317](https://github.com/scroll-tech/scroll/pull/1317)
+- [PR 1343](https://github.com/scroll-tech/scroll/pull/1343)
+- [PR 1354](https://github.com/scroll-tech/scroll/pull/1354)
+- [PR 1372](https://github.com/scroll-tech/scroll/pull/1372)
+
+The main changes are as follows:
+
+- The rollup contract (`ScrollChain`) will now accept batches with both versions 1 and 2. [Version 1](https://github.com/scroll-tech/da-codec/tree/main/encoding/codecv1) is used for uncompressed blobs (pre-Curie), while [version 2](https://github.com/scroll-tech/da-codec/tree/main/encoding/codecv2) is used for compressed blobs (post-Curie). 
+- The `L1GasPriceOracle` contract will be updated to change the data fee formula to account for blob DA, providing a more accurate estimation of DA costs:
+    - Original formula: `(l1GasUsed(txRlp) + overhead) * l1BaseFee * scalar`
+    - New formula: `l1BaseFee * commitScalar + len(txRlp) * l1BlobBaseFee * blobScalar`
+
+#### Node Changes
+
+The new node version is `v5.4.2`. See the [release notes](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.4.2) for the list of changes.
+
+#### zkEVM circuit changes
+
+The new version of zkevm circuits is `v0.11.0`. See [here](https://github.com/scroll-tech/zkevm-circuits/releases/tag/v0.11.0) for the release log.
+
+#### Audits
+
+- TrailofBits: coming soon!
+- Zellic: coming soon!
+
+### Compatibility
+
+#### Sequencer and Follower Nodes (l2geth)
+
+This upgrade is a hard fork, introducing the `TLOAD`, `TSTORE`, and `MCOPY` opcodes. Operators running an `l2geth` node are required to upgrade before the hard fork block. For more information, see the [node release note](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.4.2).
+
+#### Dapps and Indexers
+
+For dApps, this upgrade is backward compatible. Developers should adjust the gas fee settings to incorporate the EIP-1559 pricing model. Note that dApps can no longer rely on the fixed 3-second block time in the application logic.
+
+For indexers, the [data format](https://docs.scroll.io/en/technology/chain/rollup/#codec) remains the same. The will be however changes to the data content:
+
+- The `version` field in `BatchHeader` will be changed to 2 since Curie block.
+- The data stored in blob will be compressed and can be decompressed by [zstd v1.5.6](https://github.com/facebook/zstd/releases/tag/v1.5.6).
+
 ## Bernoulli Upgrade
 
 ### Overview
@@ -54,7 +119,7 @@ The new version of zkevm circuits is `v0.10.3`. See [here](https://github.com/sc
 #### Audits
 
 - [OpenZeppelin](https://blog.openzeppelin.com/scroll-eip-4844-support-audit)
-- TrailofBits (will be posted soon)
+- [TrailofBits](https://github.com/trailofbits/publications/blob/master/reviews/2024-04-scroll-4844-blob-securityreview.pdf)
 
 ### Compatibility
 
@@ -87,13 +152,11 @@ To reduce bridging costs, we implemented several gas optimizations on our bridge
 
 ### Timeline
 
-
 - **Scroll Sepolia:**
 	- Network Upgrade: January 19, 2024
 - **Scroll Mainnet:**
 	- Upgrade Initiation: February 7, 2024
 	- Timelock Completion & Upgrade: February 21, 2024
-
 
 ### Technical Details
 
