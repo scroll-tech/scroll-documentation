@@ -8,8 +8,8 @@
  * @version 1.0
  */
 
-code[class*="language-"],
-pre[class*="language-"] {
+code[data-language],
+pre[data-language] {
   color: #a9b7c6;
   font-family: var(--font-family-code);
   direction: ltr;
@@ -30,22 +30,22 @@ pre[class*="language-"] {
 }
 
 code,
-code[class*="language-"] *,
-pre[class*="language-"] * {
+code[data-language] *,
+pre[data-language] * {
   font-family: var(--font-family-code) !important;
   font-size: 16px;
 }
 
-pre[class*="language-"]::-moz-selection,
-pre[class*="language-"] ::-moz-selection,
-code[class*="language-"]::-moz-selection,
-code[class*="language-"] ::-moz-selection {
+pre[data-language]::-moz-selection,
+pre[data-language] ::-moz-selection,
+code[data-language]::-moz-selection,
+code[data-language] ::-moz-selection {
   color: inherit;
   background: rgba(33, 66, 131, 0.85);
 }
 
 /* Code blocks */
-pre[class*="language-"] {
+pre[data-language] {
   padding: 1em;
   margin: 0.5em 0;
   overflow: auto;
@@ -53,8 +53,8 @@ pre[class*="language-"] {
   margin-bottom: 2.2em;
 }
 
-:not(pre) > code[class*="language-"],
-pre[class*="language-"] {
+:not(pre) > code[data-language],
+pre[data-language] {
   background: #2b2b2b;
   border-radius: 27px;
   padding: 17px;
@@ -62,7 +62,7 @@ pre[class*="language-"] {
 }
 
 /* Inline code */
-:not(pre) > code[class*="language-"] {
+:not(pre) > code[data-language] {
   padding: 0.1em;
   border-radius: 0.3em;
 }
@@ -168,4 +168,40 @@ code.language-css .token.selector > .token.attribute,
 code.language-css .token.selector > .token.pseudo-class,
 code.language-css .token.selector > .token.pseudo-element {
   color: #ffc66d;
+}
+
+.frame {
+  overflow: hidden;
+}
+
+.expressive-code pre,
+.expressive-code code {
+  font-size: 16px !important;
+}
+
+.expressive-code.has-focused-lines .ec-line:not(.highlight) .code {
+  opacity: 0.7;
+  transition: filter 0.35s, opacity 0.35s;
+  filter: blur(0.095rem);
+}
+
+.expressive-code.has-focused-lines:hover .ec-line .code {
+  opacity: 1;
+  filter: none;
+}
+
+.expressive-code.has-focused-lines .ec-line.mark.highlight {
+  background: transparent;
+}
+
+.expressive-code div.copy button {
+  border-radius: 50%;
+}
+
+div.expressive-code pre::-webkit-scrollbar {
+  height: 0;
+}
+
+.expressive-code .ec-line div.code {
+  border-inline-start: unset;
 }
