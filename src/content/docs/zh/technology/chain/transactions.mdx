@@ -50,7 +50,7 @@ type L1MessageTx struct {
 
 Scroll 中的交易生命周期包含以下三个阶段：
 
-1. **已确认（Confirmed）**: 用户向 L1 跨链桥合约或 L2 排序器提交交易。交易执行并包含在 L2 区块中后变为 `已确认` 。
+1. **已确认（Pre-Confirmed）**: 用户向 L1 跨链桥合约或 L2 排序器提交交易。交易执行并包含在 L2 区块中后变为 `已确认` 。
 2. **已提交（Committed）**: 交易被包含在批次(batch)中，并且包含此批处理数据的 *承诺交易（commit transaction* 将提交到 L1。在 L1 区块中确认承诺事务后，此批处理中的交易变为`已提交`。
 3. **最终确认（Finalized）**: 该批次的证明生成并在L1上得到验证。在 *最终确认交易(finalize transaction)* 在 L1 上最终确认后，交易状态变为 `最终确认` 并成为 Scroll L2 链的一部分。
 
@@ -66,7 +66,7 @@ Scroll 中的交易生命周期包含以下三个阶段：
 - `L1ScrollMessenger` 合约允许用户和合约向 L2 发送任意消息。更多详细信息，请参阅[发送任意消息](/UPyw7afFQE6q-9CIdIRBag#Sending-Arbitrary-Messages)。
 - `EnforcedTxGateway` 合约允许EOA从同一地址发起强制交易，以提取代币或在L2上调用其他合约。更多详细信息，请参阅[发送强制交易](/UPyw7afFQE6q-9CIdIRBag#Sending-Enforced-Transactions)。
 
-Scroll 排序器会定期开始新的mining任务。它会从 `L1MessageQueue` 合约和 L2 内存池中的交易中提取 L1 消息并密封一个区块。一旦交易被包含在 L2 区块中，其状态将变为 `Confirmed` 。
+Scroll 排序器会定期开始新的mining任务。它会从 `L1MessageQueue` 合约和 L2 内存池中的交易中提取 L1 消息并密封一个区块。一旦交易被包含在 L2 区块中，其状态将变为 `Pre-Confirmed` 。
 
 ### 承诺交易数据
 

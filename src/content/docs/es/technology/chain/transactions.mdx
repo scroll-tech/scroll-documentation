@@ -50,7 +50,7 @@ Dos comportamientos notables de las transacciones `L1MessageTx`:
 
 El ciclo de vida de la transacción en Scroll contiene las tres fases:
 
-1. **Confirmed**: El usuario envía una transacción al contrato bridge en L1 o al secuenciador en L2. La transacción se convierte en `Confirmed` después de ser ejecutada e incluida en un bloque en L2.
+1. **Pre-Confirmed**: El usuario envía una transacción al contrato bridge en L1 o al secuenciador en L2. La transacción se convierte en `Confirmed` después de ser ejecutada e incluida en un bloque en L2.
 2. **Committed**: Las transacciones se incluyen en un lote y se envía a L1 una _commit transaction_ que contiene los datos de este lote. Después de que la commit transaction se finaliza en los bloques L1, las transacciones de este lote se convierten en `Committed`.
 3. **Finalized**: La prueba de validez de este lote se genera y verifica en el L1. Después de que la _finalize transaction_ se termina en el L1, el estado de la transacción es `Finalized` y se convierte en una parte canónica de la Scroll L2 chain.
 
@@ -66,7 +66,7 @@ En segundo lugar, las transacciones de depósito y ejecución originadas en L1. 
 - El contrato `L1ScrollMessenger` permite a los usuarios y contratos enviar mensajes arbitrarios a L2. Ver más detalles en [Envío de Mensajes Arbitrarios](/es/technology/bridge/cross-domain-messaging#envío-de-mensajes-arbitrarios).
 - El contrato `EnforcedTxGateway` permite a los EOA iniciar una transacción forzada desde la misma dirección para retirar tokens o llamar a otros contratos en L2. Ver más detalles en [Envío de Transacciones Forzadas](/es/technology/bridge/cross-domain-messaging#envío-de-transacciones-forzadas).
 
-El secuenciador de Scroll inicia periódicamente un nuevo trabajo de minería. Extrae los mensajes L1 del contrato `L1MessageQueue` y las transacciones en el mempool de L2 y sella un bloque. Una vez que una transacción se incluye en un bloque L2, su estado pasa a ser `Confirmed`.
+El secuenciador de Scroll inicia periódicamente un nuevo trabajo de minería. Extrae los mensajes L1 del contrato `L1MessageQueue` y las transacciones en el mempool de L2 y sella un bloque. Una vez que una transacción se incluye en un bloque L2, su estado pasa a ser `Pre-Confirmed`.
 
 ### Compilación de datos de transacciones
 

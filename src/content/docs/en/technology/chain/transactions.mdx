@@ -50,7 +50,7 @@ Two noticeable behaviors of the `L1MessageTx` transactions:
 
 The transaction life cycle in the Scroll contains the following three phases:
 
-1. **Confirmed**: Users submits a transaction to either the L1 bridge contract or L2 sequencer. The transaction becomes `Confirmed` after it gets executed and included in an L2 block.
+1. **Pre-Confirmed**: Users submits a transaction to either the L1 bridge contract or L2 sequencer. The transaction becomes `Pre-Confirmed` after it gets executed and included in an L2 block.
 2. **Committed**: The transactions are included in a batch and a _commit transaction_ that contains the data of this batch is submitted to L1. After the commit transaction is finalized in the L1 blocks, the transactions in this batch become `Committed`.
 3. **Finalized**: The validity proof of this batch is generated and verified on the L1. After the _finalize transaction_ is finalized on L1, the status of the transaction is `Finalized` and becomes a canonical part of the Scroll L2 chain.
 
@@ -66,7 +66,7 @@ Second, deposit and enforced transactions are originated on L1. Scroll L1 bridge
 - The `L1ScrollMessenger` contract allows users and contracts to send arbitrary messages to L2. See more details in the [Sending Arbitrary Messages](/technology/bridge/cross-domain-messaging#sending-arbitrary-messages).
 - The `EnforcedTxGateway` contract allows EOAs to initiate an enforced transaction from the same address to withdraw tokens or call other contracts on L2. See more details in the [Sending Enforced Transaction](/technology/bridge/cross-domain-messaging#sending-enforced-transactions).
 
-The Scroll sequencer periodically starts a new mining job. It pulls the L1 messages from the `L1MessageQueue` contract and transactions in the L2 mempool and seals a block. Once a transaction is included in a L2 block, its status becomes `Confirmed`.
+The Scroll sequencer periodically starts a new mining job. It pulls the L1 messages from the `L1MessageQueue` contract and transactions in the L2 mempool and seals a block. Once a transaction is included in a L2 block, its status becomes `Pre-Confirmed`.
 
 ### Commit Transaction Data
 
