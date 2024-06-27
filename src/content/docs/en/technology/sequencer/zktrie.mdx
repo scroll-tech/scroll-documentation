@@ -106,7 +106,7 @@ An Ethereum Account Leaf Node consists of an Ethereum address and a state accoun
 var address byte[20] // 20 bytes in big-endian
 valHi := address[0:16]
 valLo := address[16:20] * 2^96 // padding 12 bytes of 0 at the end
-nodeKey := h{256}(valHi, valLo)
+nodeKey := h{512}(valHi, valLo)
 ```
 
 A state account struct in the Scroll consists of the following fields (`Fr` indicates the finite field and is a 254-bit value)
@@ -182,7 +182,7 @@ A Storage Leaf Node encodes a key-value pair where both key and value are `u256`
 var storageKey byte[32]  // 32 bytes in big-endian
 valHi := storageKey[0:16]
 valLo := storageKey[16:32]
-nodeKey := h{256}(valHi, valLo)
+nodeKey := h{512}(valHi, valLo)
 ```
 
 The storage value is a `u256` value. The `flag` for the storage value is 1, shown below.
