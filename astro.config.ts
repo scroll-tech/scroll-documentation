@@ -13,10 +13,10 @@ import rehypeMermaid from "rehype-mermaidjs"
 import remarkGfm from "remark-gfm"
 import remarkMath from "remark-math"
 import AutoImport from "astro-auto-import"
-
 import sitemap from "@astrojs/sitemap"
-
 import tailwind from "@astrojs/tailwind"
+
+import expressiveCode from "astro-expressive-code"
 
 // https://astro.build/config
 export default defineConfig({
@@ -32,18 +32,17 @@ export default defineConfig({
     preact({
       compat: true,
     }),
-
     sitemap({
       changefreq: "daily",
     }),
     astroCallouts(),
     solidityRemixCode(),
+    expressiveCode(),
     mdx(),
     tailwind({
       applyBaseStyles: false,
       nesting: true,
     }),
-
     astroI18next(),
   ],
   vite: {
@@ -54,7 +53,12 @@ export default defineConfig({
     remarkPlugins: [remarkMath, remarkGfm],
     rehypePlugins: [
       rehypeSlug,
-      [rehypeMermaid, { strategy: "img-png" }],
+      [
+        rehypeMermaid,
+        {
+          strategy: "img-png",
+        },
+      ],
       [
         rehypeAutolinkHeadings,
         {
@@ -63,7 +67,9 @@ export default defineConfig({
           content: {
             type: "element",
             tagName: "span",
-            properties: { className: ["icon", "icon-link"] },
+            properties: {
+              className: ["icon", "icon-link"],
+            },
             children: [],
           },
         },
