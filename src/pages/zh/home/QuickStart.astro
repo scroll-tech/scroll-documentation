@@ -19,7 +19,11 @@ const toolList = [
 ---
 
 <div>
-  <SectionHeader title="开发者快速入门" content="开始使用您喜爱的工具在 Scroll 上进行智能合约的构建和测试" />
+  <SectionHeader title="开发者快速入门" content="开始使用您喜爱的工具在 Scroll 上进行智能合约的构建和测试">
+    <div slot="button" class="remix-callout">
+      <a href="">获取支持</a>
+    </div>
+  </SectionHeader>
   <div class="tools">
     {
       toolList.map(({ icon, name, quickstartAnchor, color }) => (
