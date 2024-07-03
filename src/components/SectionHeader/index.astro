@@ -8,7 +8,10 @@ const { title, content } = Astro.props as Props
 
 <>
   <p class="title">{title}</p>
-  <p class="content">{content}</p>
+  <div class="content-container">
+    <p class="content">{content}</p>
+    <slot name="button" />
+  </div>
 </>
 
 <style>
@@ -21,6 +24,13 @@ const { title, content } = Astro.props as Props
     line-height: 50px;
     margin-bottom: 25px;
   }
+  .content-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1.6rem;
+  }
   .content {
     font-size: 24px;
     line-height: 34px;
@@ -31,6 +41,9 @@ const { title, content } = Astro.props as Props
       font-size: 32px;
       line-height: 34px;
       margin-bottom: 22px;
+    }
+    .content-container {
+      flex-direction: column;
     }
     .content {
       font-size: 18px;

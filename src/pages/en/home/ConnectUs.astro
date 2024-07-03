@@ -4,6 +4,7 @@ import LinkArrowSvg from "~/assets/svgs/home/home-link-arrow.svg?raw"
 import DiscordSvg from "~/assets/svgs/home/Discord.svg?raw"
 import ForumSvg from "~/assets/svgs/home/Forum.svg?raw"
 import ContributeSvg from "~/assets/svgs/home/Contribute.svg?raw"
+import NoteSvg from "~/assets/svgs/home/Note.svg?raw"
 
 const mediaList = [
   {
@@ -11,6 +12,12 @@ const mediaList = [
     name: "Join our Discord",
     content: "Connect with other Scroll developers and users.",
     link: "https://discord.gg/scroll",
+  },
+  {
+    icon: NoteSvg,
+    name: "Get in touch",
+    content: "Reach out directly if you need more support for hour project.",
+    link: "",
   },
   {
     icon: ForumSvg,
@@ -60,7 +67,7 @@ const mediaList = [
 
   .medias {
     display: flex;
-    gap: 3rem;
+    gap: 1.6rem;
     margin-top: 90px;
   }
   .media-item {

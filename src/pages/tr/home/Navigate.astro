@@ -35,7 +35,12 @@ const navList = [
 ---
 
 <div class="navigate">
-  <SectionHeader title="Dokümantasyon'u gezin" content="Scroll'da geliştirmeye bugün başlayın." />
+  <SectionHeader title="Dokümantasyon'u gezin" content="Scroll'da geliştirmeye bugün başlayın.">
+    <div slot="button" class="remix-callout">
+      <a href="">İletişime geç</a>
+    </div>
+  </SectionHeader>
+
   <div class="navs">
     {navList.map(({ icon, name, content, link }) => <NavCard icon={icon} name={name} content={content} link={link} />)}
   </div>
