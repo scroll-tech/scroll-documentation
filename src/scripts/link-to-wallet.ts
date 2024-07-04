@@ -141,7 +141,7 @@ const switchToChain = async (chainId: string, ethereum: MetaMaskInpageProvider) 
     method: "wallet_switchEthereumChain",
     params: [{ chainId }],
   })
-  console.log(`Succesfully switched to chain ${chainId} in metamask`)
+  console.log(`Successfully switched to chain ${chainId} in metamask`)
 }
 
 /**
@@ -178,7 +178,7 @@ const addChainToWallet = async (chainId: string, ethereum: MetaMaskInpageProvide
     method: "wallet_addEthereumChain",
     params: [params, signerAddress],
   })
-  console.log(`Chains ${chainId} of params ${JSON.stringify(params)} succesfully added to wallet`)
+  console.log(`Chains ${chainId} of params ${JSON.stringify(params)} successfully added to wallet`)
 }
 
 /**
@@ -200,7 +200,7 @@ const validateLinkAddress = async (address: string, provider: Web3Provider) => {
     symbol = await linkContract.symbol()
     decimals = await linkContract.decimals()
   } catch (error) {
-    throw new Error(`Error occured while trying to fetch linkContract metadata  ${error}`)
+    throw new Error(`Error occurred while trying to fetch linkContract metadata  ${error}`)
   }
 
   let chainId: keyof typeof linkNameSymbol

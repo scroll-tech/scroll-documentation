@@ -319,7 +319,7 @@ In addition, a group of classes are `applied automatically to certain HTML tags`
 
 <br/>
 
-Classes available in CLDS acording to their use:
+Classes available in CLDS according to their use:
 
 ### [**Layout**](components/layout.css)
 
