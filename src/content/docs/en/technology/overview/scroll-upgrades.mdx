@@ -36,7 +36,7 @@ This significant upgrade will reduce gas fees on the Scroll chain by 1.5x. Highl
 	- Network Upgrade: June 17th, 2024
 - **Scroll Mainnet**
 	- Upgrade Initiation: June 20th, 2024
-	- Timelock Completion & Upgrade: June 27th, 2024
+	- Timelock Completion & Upgrade: July 3rd, 2024
 
 ### Technical Details
 
@@ -44,10 +44,10 @@ This significant upgrade will reduce gas fees on the Scroll chain by 1.5x. Highl
 
 The code changes for this upgrade are documented in the following PRs:
 
-- [PR 1317](https://github.com/scroll-tech/scroll/pull/1317)
-- [PR 1343](https://github.com/scroll-tech/scroll/pull/1343)
-- [PR 1354](https://github.com/scroll-tech/scroll/pull/1354)
-- [PR 1372](https://github.com/scroll-tech/scroll/pull/1372)
+- [Accept compressed batches](https://github.com/scroll-tech/scroll/pull/1317)
+- [Update `L1GasPriceOracle`](https://github.com/scroll-tech/scroll/pull/1343)
+- [Change `MAX_COMMIT_SCALAR` and `MAX_BLOB_SCALAR` to 1e18](https://github.com/scroll-tech/scroll/pull/1354)
+- [Remove batch index check when updating a verifier](https://github.com/scroll-tech/scroll/pull/1372)
 
 The main changes are as follows:
 
@@ -58,16 +58,16 @@ The main changes are as follows:
 
 #### Node Changes
 
-The new node version is `v5.4.2`. See the [release notes](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.4.2) for the list of changes.
+The new node version is `v5.5.0`. See the [release notes](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.5.0) for the list of changes.
 
 #### zkEVM circuit changes
 
-The new version of zkevm circuits is `v0.11.3`. See [here](https://github.com/scroll-tech/zkevm-circuits/releases/tag/v0.11.3) for the release log.
+The new version of zkevm circuits is `v0.11.4`. See [here](https://github.com/scroll-tech/zkevm-circuits/releases/tag/v0.11.4) for the release log.
 
 #### Audits
 
 - TrailofBits: coming soon!
-- Zellic: coming soon!
+- [Zellic](https://github.com/Zellic/publications/blob/master/Scroll%20zkEVM%20-%20Zellic%20Audit%20Report.pdf)
 
 ### Compatibility
 
