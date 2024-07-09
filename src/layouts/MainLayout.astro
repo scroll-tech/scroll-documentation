@@ -137,13 +137,18 @@ changeLanguage(content.lang)
           margin-right: 20px;
         }
 
-        .wider-content {
-          grid-template-columns: minmax(230px, 2fr) 8fr 2fr;
-        }
-
         #grid-right {
           grid-column: 3;
           display: flex;
+        }
+      }
+
+      @media screen and (max-width: 90em) and (min-width: 72em) {
+        .wider-content {
+          grid-template-columns: 1fr minmax(0, 68vw);
+        }
+        .wider-content #grid-right {
+          display: none;
         }
       }
     </style>
