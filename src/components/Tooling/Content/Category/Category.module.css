@@ -18,11 +18,8 @@
   margin-bottom: 10px;
   border-width: 1px;
   border-style: solid;
-  background: #ffffff;
-  @apply border-black dark:border-white;
 }
 .toolsCategory .item.active {
-  @apply text-white bg-black dark:text-black dark:bg-white;
 }
 @media screen and (max-width: 50em) {
   .toolsCategory .item {

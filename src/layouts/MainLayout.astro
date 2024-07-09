@@ -137,6 +137,10 @@ changeLanguage(content.lang)
           margin-right: 20px;
         }
 
+        .wider-content {
+          grid-template-columns: minmax(230px, 2fr) 8fr 2fr;
+        }
+
         #grid-right {
           grid-column: 3;
           display: flex;
@@ -213,7 +217,7 @@ changeLanguage(content.lang)
 
   <body>
     <Header frontmatter={content} />
-    <main class="layout">
+    <main class={`layout ${content.widerContent ? "wider-content" : ""}`}>
       <aside id="grid-left" class="grid-sidebar" title="Site Navigation">
         <LeftSidebar currentPage={currentPage} {content} />
       </aside>

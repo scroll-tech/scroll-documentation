@@ -17,7 +17,6 @@
   display: none;
 }
 .infoBox {
-  background: #fff;
   padding: 18px 20px;
   width: 100%;
 }
@@ -27,7 +26,6 @@
 }
 
 .title {
-  color: #101010;
   font-size: 18px;
   font-style: normal;
   font-weight: 600;

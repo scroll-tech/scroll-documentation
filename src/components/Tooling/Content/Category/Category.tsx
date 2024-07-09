@@ -7,7 +7,12 @@ const Category = ({ categories, value, onChange }) => {
     <ul className={styles.toolsCategory}>
       {categories.map((category) => (
         <li
-          className={clsx(styles.item, value.includes(category) ? styles.active : "")}
+          className={clsx(
+            styles.item,
+            value.includes(category)
+            ? "text-white bg-black border-white dark:text-black dark:bg-white  dark:border-black"
+            : "border-black bg-[#ffffff] dark:bg-black dark:border-white",
+          )}
           onClick={() => onChange(category)}
         >
           {category}

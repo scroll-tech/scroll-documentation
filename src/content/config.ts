@@ -18,6 +18,7 @@ const docsCollection = defineCollection({
     stub: z.string().optional(),
     ecosystem: z.string().optional(),
     l2healthflag: z.string().optional(),
+    widerContent: z.boolean().optional(),
 
     metadata: z
       .object({
@@ -36,7 +37,8 @@ const toolsCollection = defineCollection({
     name: z.string(),
     excerpt: z.string(),
     category: z.array(z.string()),
-    network: z.string().optional(),
+    // network: z.string().optional(),
+    network: z.array(z.string()).optional(),
     logo: z
       .object({
         src: z.string().optional(),

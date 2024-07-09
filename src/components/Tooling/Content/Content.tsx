@@ -68,7 +68,7 @@ const Content = ({ tools, toolsMarkdown }) => {
         searchParams.category.length === 0 ||
         searchParams.category.some((category) => tool.remarkPluginFrontmatter.category.includes(category))
       const networkMatch =
-        searchParams.network === "All networks" || tool.remarkPluginFrontmatter.network === searchParams.network
+        searchParams.network === "All networks" || tool.remarkPluginFrontmatter.network.includes(searchParams.network)
       const keywordMatch = tool.remarkPluginFrontmatter.name.toLowerCase().includes(searchParams.keyword.toLowerCase())
 
       return categoryMatch && networkMatch && keywordMatch
@@ -76,7 +76,7 @@ const Content = ({ tools, toolsMarkdown }) => {
   }, [searchParams])
 
   return (
-    <div className={styles.toolsContainer}>
+    <div className={clsx(styles.toolsContainer, 'bg-white dark:bg-dark-normal')}>
       <Category categories={categories} value={searchParams.category} onChange={handleChangeCategory} />
       <div className="flex">
         <SearchInput value={searchParams.keyword} onChange={handleChangeKeyword} />

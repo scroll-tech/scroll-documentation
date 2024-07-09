@@ -11,9 +11,6 @@ const SearchInput = ({ value, onChange }) => {
         className={clsx(
           styles.input,
           ".focus-visible",
-          "dark:text-white",
-          "dark:border-white",
-          "dark:!bg-[url(/assets/search-white.svg)]"
         )}
         onChange={onChange}
         ref={inputRef}

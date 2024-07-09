@@ -1,5 +1,4 @@
 .toolsContainerList {
-  background: #ffffff;
   border-radius: 15px;
   height: 532px;
   overflow: auto;
@@ -9,7 +8,8 @@
   padding: 20px;
 }
 
-.toolItem:hover {
+.toolItem:hover,
+.toolItem.active {
   background-color: #f9f9f9;
   cursor: pointer;
 }
@@ -55,7 +55,6 @@
 }
 
 .toolDescription {
-  color: #5b5b5b;
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
