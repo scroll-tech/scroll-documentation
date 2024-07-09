@@ -98,6 +98,12 @@ This was chosen for two reasons:
 - Having faster, constant block time results in quicker feedback and a better user experience.
 - As we optimize the zkEVM circuits in our testnets, even if we maintain a smaller gas limit per block or batch, we can still reach higher throughput than Ethereum.
 
+## Transaction Ordering
+
+Similarly to Ethereum, the Scroll sequencer aims to prioritize executable transactions based on their "tip" (priority fee). In most cases, transactions will be included in the next block in decreasing order of their tips.
+
+However, just like in Ethereum, this ordering is not guaranteed by the protocol, and some blocks might diverge from it. In particular, during periods of low mempool congestion, the sequencer will process transactions on a first-come-first-served basis, so some transactions might precede others with higher tip in the same block.
+
 ## Future EIPs
 
 We keep a close eye on all emerging EIPs adopted by Ethereum and adopt them when suitable. If you’re interested in more specifics, reach out in [our community forum](https://community.scroll.io) or on the [Scroll Discord](https://discord.gg/scroll).
