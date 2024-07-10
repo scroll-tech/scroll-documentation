@@ -16,7 +16,6 @@ import Aside from "../../../../../components/Aside.astro"
 | `BLOCKHASH`                 | Returns `keccak(chain_id \|\| block_number)` for the last 256 blocks.                                            |
 | `COINBASE`                  | Returns the fee vault address (predeployed contract `0x5300000000000000000000000000000000000005`).               |
 | `DIFFICULTY` / `PREVRANDAO` | Always return 0.                                                                                                 |
-| `BASEFEE`                   | Disabled because currently we disabled EIP-1559. If the opcode is encountered, the transaction will be reverted. |
 | `SELFDESTRUCT`              | Disabled. If the opcode is encountered, the transaction will be reverted.                                        |
 
 ## Precompiled Contracts
@@ -39,7 +38,6 @@ Disabled EIPs until the London fork:
 
 - [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559): Fee market change and EIP-1559 transaction type
 - [EIP-2930](https://eips.ethereum.org/EIPS/eip-2930): Optional access lists
-- [EIP-3198](https://eips.ethereum.org/EIPS/eip-3198): `BASEFEE` opcode
 
 EIPs imported from the Shanghai fork:
 
@@ -48,6 +46,6 @@ EIPs imported from the Shanghai fork:
 - [EIP-3860](https://eips.ethereum.org/EIPS/eip-3860): Limit and meter initcode
 
 
-<Aside type="tip" title="">
-Opcodes from the Cancun upgrade are not yet available on Scroll, including `MCOPY`, `TSTORE`, `TLOAD`, `BLOBHASH` and `BLOBBASEFEE`. Additionally, [EIP-4788](https://eips.ethereum.org/EIPS/eip-4788) for accessing the Beacon Chain block root is not supported.
+<Aside type="caution" title="">
+Opcodes related to EIP-4844, like `BLOBHASH` and `BLOBBASEFEE`, are not yet available on Scroll. Additionally, [EIP-4788](https://eips.ethereum.org/EIPS/eip-4788) for accessing the Beacon Chain block root is not supported.
 </Aside>
