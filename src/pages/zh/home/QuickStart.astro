@@ -1,6 +1,7 @@
 ---
 import SectionHeader from "~/components/SectionHeader/index.astro"
 import EtherSvg from "~/assets/svgs/home/EthersJS.svg?raw"
+import Web3JSSvg from "~/assets/svgs/home/Web3JS.svg?raw"
 
 const toolList = [
   { icon: "/svgs/Hardhat.svg", name: "Hardhat", link: "https://hardhat.org/", quickstartAnchor: "hardhat" },
@@ -15,6 +16,13 @@ const toolList = [
   },
   { icon: "/svgs/Brownie.svg", name: "Brownie", link: "https://github.com/eth-brownie", quickstartAnchor: "brownie" },
   { icon: "/svgs/Truffle.svg", name: "Truffle", link: "https://trufflesuite.com/", quickstartAnchor: "truffle" },
+  {
+    icon: Web3JSSvg,
+    color: "text-[#808285] dark:text-white",
+    name: "Web3JS",
+    link: "https://web3js.readthedocs.io/",
+    quickstartAnchor: "web3js",
+  },
 ]
 ---
 

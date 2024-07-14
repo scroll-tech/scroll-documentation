@@ -200,6 +200,17 @@ import { ethers } from "ethers"
 const provider = new ethers.providers.JsonRpcProvider("https://sepolia-rpc.scroll.io/")
 ```
 
+### web3.js
+
+Configuración de un proveedor de Scroll Sepolia Testnet en un script de `web3`:
+
+```jsx
+import { Web3 } from "web3";
+
+// set a provider in the scroll sepolia testnet using node rpc url
+const web3 = new Web3("https://sepolia-rpc.scroll.io/");
+```
+
 ### scaffold-eth
 
 Para desplegar usando Scaffold-eth, necesitarás dirigir tus configuraciones de Hardhat y React a la Testnet de Scroll Sepolia.
