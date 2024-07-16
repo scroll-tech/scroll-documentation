@@ -89,6 +89,7 @@
       "erc1155TokenBridge": "ERC1155 Token Bridge",
       "theScrollMessenger": "The Scroll Messenger",
       "transactionFeesOnScroll": "Transaction Fees on Scroll",
+      "toolingDeployedOnScroll": "Tooling deployed On Scroll",
       "l2Fee": "L2 Fee",
       "l1Fee": "L1 Fee",
       "gasOracle": "Gas Oracle",

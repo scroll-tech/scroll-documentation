@@ -1,0 +1,31 @@
+.toolsCategory {
+  display: flex;
+  flex-wrap: wrap;
+  padding-left: 0;
+}
+.toolsCategory .item {
+  display: inline-flex;
+  height: 44px;
+  padding: 0px 30px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  border-radius: 100px;
+  margin-top: 0;
+  cursor: pointer;
+  margin-right: 13px;
+  margin-bottom: 10px;
+  border-width: 1px;
+  border-style: solid;
+}
+.toolsCategory .item.active {
+}
+@media screen and (max-width: 50em) {
+  .toolsCategory .item {
+    height: 36px;
+    padding: 0px 20px;
+    margin-right: 12px;
+    margin-bottom: 12px;
+  }
+}
