@@ -11,7 +11,7 @@ const Category = ({ categories, value, onChange }) => {
             styles.item,
             value.includes(category)
             ? "text-white bg-black border-white dark:text-black dark:bg-white  dark:border-black"
-            : "border-black bg-[#ffffff] dark:bg-black dark:border-white",
+            : "border-black bg-[#ffffff] dark:bg-black dark:border-white-800",
           )}
           onClick={() => onChange(category)}
         >

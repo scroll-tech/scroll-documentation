@@ -210,7 +210,7 @@ table {
   margin: 0;
   border-collapse: collapse;
   line-height: 2;
-  @apply text-black dark:text-white font-text border-none bg-pure-white dark:bg-black;
+  @apply text-black dark:text-white-800 font-text border-none bg-pure-white dark:bg-black;
   border-radius: 10px;
   position: relative;
   z-index: 1;
@@ -245,7 +245,7 @@ table code {
 
 th {
   font-weight: bold;
-  @apply text-black dark:text-white;
+  @apply text-black dark:text-white-800;
 }
 td,
 th {
@@ -300,7 +300,7 @@ h2.heading {
   /* margin-left: 1rem; */
   /* border-color: var(--black-100); */
 
-  @apply border-0 border-l-[4px] border-solid border-black dark:border-white;
+  @apply border-0 border-l-[4px] border-solid border-black dark:border-white-800;
 }
 
 .header-link.active,
