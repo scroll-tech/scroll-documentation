@@ -1,0 +1,75 @@
+---
+section: learn
+date: Last Modified
+title: "Introduction to Zero Knowledge"
+lang: "en"
+permalink: "learn/zero-knowledge/introduction-to-zero-knowledge"
+whatsnext: { "Polynomial Commitment Schemes": "/en/learn/zero-knowledge/polynomial-commitment-schemes" }
+excerpt: 'Over the past decade, a field of cryptography called "zero knowledge" has been rapidly advancing. It promises new ways to build applications and enables protocols to increase efficiency, security, and privacy.'
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+Over the past decade, a field of cryptography called "zero knowledge" has been rapidly advancing. It promises new ways to build applications and enables protocols to increase efficiency, security, and privacy.
+
+Let's look at what makes the field of zero knowledge proofs so exciting and what problems it helps engineers solve.
+
+## Trustless Blockchains & Verifiability
+
+Blockchains generally work by processing transactions submitted by users. These transactions usually trigger some computation for the blockchain to perform.
+
+For the blockchain to be trustless (i.e. not reliant on trusting some individual party), participants in the network must verify that transactions are valid and that their resulting computations were performed correctly.
+
+Verifying that the transaction is valid generally requires digital signature verification - this verifies that the transaction’s reported sender is indeed the author of the transaction. Verifying that a transaction’s computation was performed correctly generally requires re-executing the transaction locally.
+
+## Limitations to Verifiability
+
+This methodology of verifying each transaction breaks down in situations where a participant can’t rerun the computation. A participant may not be able to re-execute the computation for a couple of reasons: (1) it could be that certain data shouldn’t be made available (for privacy reasons), or (2) it may be too expensive for a participating computer to re-execute all the transactions - this second reason is especially relevant when considering high-throughput blockchains with a large number of transactions per second.
+
+## The Power of Zero Knowledge Proofs
+
+Zero knowledge proofs (ZKPs) have the power to overcome these limitations.
+
+ZKPs allow participants to verify the results of a computation while (1) preserving the privacy of any sensitive data used in the computation, and (2) having the verification be significantly cheaper than re-executing the computation. These two properties of ZKPs are called **zero knowledge** and **succinctness**, respectively.
+
+The above properties of ZKPs are extremely useful in the context of verifiability for trustless blockchains. Without ZKPs, participants need to re-execute every transaction’s resulting computation. This requires all participants to see all the (potentially sensitive) data used in each computation, and it also limits the throughput of the entire system. With ZKPs, one party can perform the computation, and then generate a proof that the computation was performed correctly. Other participants can verify that the computation was performed correctly by _verifying that the proof is valid_, rather than re-executing the computation themselves. Verifying the proof (1) does not leak information about sensitive data used in the original computation, and (2) is significantly computationally cheaper than re-executing the original computation. These two properties have the potential to enable privacy and scalability for trustless blockchains.
+
+## Circuits, Proofs, and Verifiers
+
+In practice, ZKPs can be quite complex to implement into a system, but at a high level, you’ll want to understand that zero knowledge proofs have a few components: a circuit, a proof, and a verifier.
+
+The circuit is a program that takes in input data and asserts that the input data is valid according to some “constraints” that the input data must satisfy. The input data can be public (known to everyone), private (known to only the prover), or mixed (some inputs are public and some are private).
+
+A proof can be generated, claiming that an input satisfies the circuit. The proof reveals no information about the private inputs and is quite small in size.
+
+The verifier can check (1) that the proof is valid, (2) that the proof matches the constraints laid out by the circuit (and isn’t just a phony proof), and (3) that the public inputs used to generate the proof match those being used by the verifier. Note that this check performed by the verifier is generally a cheap computation.
+
+<Aside type="tip" title="">
+  You might notice that the verifier doesn’t have an output beyond “valid proof” or “invalid proof.” Remember, the
+  verifier just confirms other computations — in practice, the “outputs” of a function might actually end up being
+  additional inputs to a circuit and verifier.
+</Aside>
+
+### Circuits, Proof, and Verifiers — an example
+
+Let’s take Sudoku as an example. Suppose that there’s a Sudoku puzzle, and Alice wants to prove to Bob that she knows a solution to the puzzle, but does not want to reveal what the solution is.
+
+In this case, the particular puzzle will be a public input (both Alice and Bob know about it), and the solution is a private input (Alice knows it, but will keep it private from Bob). The **circuit** would take both these inputs and assert that the solution is correct by checking it in the standard way, row-by-row, column-by-column, etc. The circuit in this way “constrains” that the private input solution really is a valid solution for the public input puzzle, and is “satisfied” only when the solution check passes.
+
+A **proof** can then be generated that states that Alice knows an input that satisfies the circuit for the particular puzzle (the public input).
+
+The proof, along with the puzzle, could be passed to Bob, who could then use a **verifier** corresponding to the Sudoku-checking circuit to assess if the proof is valid, and thereby that Alice indeed knows a solution to the puzzle. Critically, Bob doesn’t gain any knowledge of Alice’s solution, but he can still verify that she knows a valid solution!
+
+## Zero Knowledge Proofs and Blockchains
+
+One of the primary motivations for recent advances in ZKPs is its application to blockchains. Two of the key challenges that decentralized blockchains face are privacy and scalability - all the data is public, and every node in the network has to re-run every computation on the network. ZKPs can help solve both of these challenges.
+
+While there are several projects utilizing the zero knowledge property of ZKPs to build privacy-preserving applications, we at Scroll use only the succinctness property of ZKPs to scale Ethereum.
+
+## Scroll & Zero Knowledge Proofs
+
+The idea that powers Scroll is quite simple. What if we could use an Ethereum smart contract to verify all of the computation of another version of Ethereum? We could run another network that provides faster and cheaper access to an Ethereum Virtual Machine (”EVM”), and Ethereum itself would provide the security needed for validating all the computation and making sure this other network isn’t breaking the EVM rules.
+
+The rest of the Learn and Technology sections break down how this works in greater detail, but at a simple level, remember that zero knowledge relies on having a circuit, proof, and verifier.
+
+In our construction, the circuit (actually a set of circuits) encodes the rules of the EVM to “constrain” acceptable behavior for processing input transactions relative to the chain state. Using this “zkEVM”, a network of GPUs takes the transactions for a set of blocks and generates a proof. And back on Ethereum, a smart contract verifies that, for a set of transactions, this proof matches the circuit enshrined in the smart contract. If it does, those transactions can be considered “finalized,” the network moves forward, and we’ve created fast, secure, and affordable blockspace for growing Ethereum.

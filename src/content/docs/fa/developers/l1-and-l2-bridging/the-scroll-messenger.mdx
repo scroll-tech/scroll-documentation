@@ -1,0 +1,148 @@
+---
+section: developers
+date: Last Modified
+title: "The Scroll Messenger"
+lang: "en"
+permalink: "developers/l1-and-l2-bridging/the-scroll-messenger"
+whatsnext: { "Transaction Fees on Scroll": "/en/developers/transaction-fees-on-scroll/" }
+excerpt: "The Scroll Messenger documentation for arbitrary message passing between L1 and L2."
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+The Scroll Messenger contracts allow for sending arbitrary messages from L1 to L2 or vice versa. This enables executing functions on another chain in a secure and permissionless way. To send a message from L1 to L2, use
+the messenger smart contract deployed on L1, `L1ScrollMessenger`. To send a message from L2 to L1, use the contract deployed on L2, `L2ScrollMessenger`.
+
+<Aside type="caution" title="">
+  When sending a transaction through the **Scroll Messenger** deployed on L1 and L2, the resulting transaction sender
+  (`CALLER` or `msg.sender`) will be the Messenger Contract address deployed on the receiving chain.
+  <br />
+  In future Scroll versions, enforced transactions from the L1 will allow setting the sender on L2 as the original EOA
+  on L1. It will also allow 3rd parties to relay signed transactions securely.
+</Aside>
+
+## Finalizing transactions on L1
+
+Any upcoming transactions from L2 need to be finalized using the `relayMessageWithProof` function on the Scroll Messenger
+contract. We call this process "submitting an Execute Withdrawal transaction," and it is required for both sending arbitrary messages and transferring assets through a gateway or the router. When you use `relayMessageWithProof`, you'll have to provide a Merkle inclusion proof showing your transaction is included in the trie of "withdrawal" messages, along with other parameters. Producing this proof and these values can be done locally and permissionlessly, but at the moment, the easiest way to retrieve these parameters is through our backend APIs:
+
+- Scroll Sepolia API: https://sepolia-api-bridge-v2.scroll.io/api/
+- Scroll API: https://mainnet-api-bridge-v2.scroll.io/api/
+
+<Aside type="danger" title="Experimental API">
+  This API was made for our Bridge UI. It is not yet finalized and may change in the future. We will update this guide
+  when the API is finalized. Additionally, all examples below use the Sepolia API service -- the calls should be easily
+  adapted to work on mainnet.
+</Aside>
+
+Supply the address of the EOA or contract responsible for initiating the original transaction on L2 to the `/claimable`
+endpoint. The API backend will provide you with all the necessary information to successfully conclude the transaction on L1.
+Take a look at the following example:
+
+```bash
+https://sepolia-api-bridge.scroll.io/api/claimable?address=0x031407eaaffFB4f1EC2c999bE4477E52C81de3c5&page_size=10&page=1
+```
+
+The API should return your transaction data in the following format:
+
+```json
+{
+  "errcode": 0,
+  "errmsg": "",
+  "data": {
+    "result": [
+      {
+        "hash": "0xa476850306d6ee52b127628ded34dcf2343570873cce9c5383bd497db48d4f9b",
+        "amount": "",
+        "to": "",
+        "isL1": false,
+        "l1Token": "",
+        "l2Token": "",
+        "blockNumber": 748,
+        "blockTimestamp": null,
+        "finalizeTx": {
+          "hash": "",
+          "amount": "",
+          "to": "",
+          "isL1": false,
+          "blockNumber": 0,
+          "blockTimestamp": null
+        },
+        "claimInfo": {
+          "from": "0x031407eaaffFB4f1EC2c999bE4477E52C81de3c5",
+          "to": "0x1039057185CFe192d16c03F5656225821A193FD5",
+          "value": "0",
+          "nonce": "9",
+          "batch_hash": "0x49a18d72dbceeb957f918947b532db452c031f528e7e6bf329007066638c5e50",
+          "message": "0xa413686200000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000005686f6c6973000000000000000000000000000000000000000000000000000000",
+          "proof": "0x69b4ee6cf9a38bed79668ddd347fef2bdff44c3760c9309fa41decfd60202d22ad3228b676f7d3cd4284a5443f17f1962b36e491b30a40b2405849e597ba5fb5b4c11951957c6f8f642c4af61cd6b24640fec6dc7fc607ee8206a99e92410d3079f53171df5c0661d2afe86c4d97b6f34278daf6a0ea9baff5b4fc979d5629a5",
+          "batch_index": "93"
+        },
+        "createdTime": null
+      }
+    ],
+    "total": 1
+  }
+}
+```
+
+The `claimInfo` object under the `result` json returned has all the information needed to execute your transaction on L1. The
+parameters needed by the `relayMessageWithProof` are: `from`, `to`, `value`, `nonce`, `message` and `proof`. Supply these to
+the `relayMessageWithProof` function on L1 to execute and finalize your transaction on L1.
+
+<Aside type="tip" title="">
+  All L2 transactions are bundled into batches – you have to wait for the batch that includes your transaction to
+  finalize before calling `relayMessageWithProof`. Your transaction batch index is returned in the `batch_index` value
+  on the `/claimable` endpoint, and you can follow the progress on the [Scroll Rollup
+  Explorer](https://scroll.io/rollupscan?page=1&per_page=10).
+</Aside>
+
+## Messenger API
+
+Please visit the [npm library](https://www.npmjs.com/package/@scroll-tech/contracts?activeTab=code) for the complete Scroll contract API documentation.
+
+### sendMessage
+
+```solidity
+function sendMessage(
+  address target,
+  uint256 value,
+  bytes calldata message,
+  uint256 gasLimit,
+  address refundAddress
+) external payable;
+```
+
+Sends arbitrary data from one chain to another. It allows us to execute functions cross-chain.
+
+| Parameter     | Description                                                                                                         |
+| ------------- | ------------------------------------------------------------------------------------------------------------------- |
+| target        | The address of the account that receives the message. The receiver can be either a smart contract or an EOA wallet. |
+| value         | The amount of ether passed when calling the target contract.                                                        |
+| message       | The content of the message. This is the arbitrary calldata to be executed.                                          |
+| gasLimit      | Gas limit required to complete the message relay on the corresponding chain.                                        |
+| refundAddress | The address of the account that will receive the refunded fee.                                                      |
+
+### relayMessageWithProof
+
+```solidity
+function relayMessageWithProof(
+  address from,
+  address to,
+  uint256 value,
+  uint256 nonce,
+  bytes memory message,
+  L2MessageProof memory proof
+) external;
+```
+
+Relay a L2 => L1 message with message proof.
+
+| Parameter | Description                                                  |
+| --------- | ------------------------------------------------------------ |
+| from      | The address of the sender of the message.                    |
+| to        | The address of the recipient of the message.                 |
+| value     | The msg.value passed to the message call.                    |
+| nonce     | The nonce of the message to avoid replay attack.             |
+| message   | The content of the message.                                  |
+| proof     | The proof used to verify the correctness of the transaction. |

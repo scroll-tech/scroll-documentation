@@ -1,0 +1,91 @@
+---
+section: developers
+date: Last Modified
+title: "Building on Scroll"
+lang: "en"
+permalink: "developers/"
+excerpt: "Building on Scroll feels just like Ethereum, and you can bring your favorite tooling and contracts with you."
+whatsnext: { "Developer Quickstart": "/en/developers/developer-quickstart" }
+---
+
+import Aside from "../../../../components/Aside.astro"
+import ToggleElement from "../../../../components/ToggleElement.astro"
+
+**Welcome to the Scroll developer documentation!**
+
+Scroll is its own Layer 2 network built on Ethereum (more specifically, a “zero knowledge rollup”).
+
+If you’re experienced in building on Ethereum, your code, dependencies, and tooling work with Scroll out of the box. This is possible because our network is compatible with EVM bytecode and designed to feel just like developing on Ethereum.
+
+<Aside type="tip" title="New to zero knowledge rollups?">
+Scroll gains its security and speed by executing transactions off-chain, and also producing a cryptographic proof that
+the transactions were executed correctly. This cryptographic proof is verified in a smart contract on Layer 1,
+ensuring that all code executed on the Scroll Layer 2 behaves just as if it were executed on Ethereum Layer 1.
+
+[Learn more about Scroll’s architecture →](/technology)
+
+</Aside>
+
+## Getting Started
+
+**Looking to build on the Scroll?**
+
+- For the essentials: Check out the [Developer Quickstart](/developers/developer-quickstart)
+- For a tutorial walking through deploying your first smart contract on Scroll, read our [contract deployment tutorial](/developers/guides/contract-deployment-tutorial)
+- We also have a number of [deployed contract addresses](/developers/scroll-contracts) to build on.
+
+## Why Build on Scroll?
+
+<ToggleElement anchor="throughput">
+  <div slot="title">Throughput — Scroll creates more secure blockspace for Ethereum.</div>
+  <p>
+    ZK Rollups allow for more activity on the network, minimizing congestion. By inheriting the security of Ethereum,
+    which verifies the behavior of the network using zero knowledge proofs, Scroll can process more transactions without
+    compromising on decentralization.
+  </p>
+</ToggleElement>
+
+<ToggleElement anchor="cost">
+  <div slot="title">Cost — Scroll saves users gas fees.</div>
+  <p>
+    On Ethereum, competition for blockspace results in higher costs per transaction, as each transaction makes a bid to
+    be included in the next block. Scroll leverages recent breakthroughs in zero knowledge proofs and hardware
+    acceleration to vastly increase secure blockspace and minimize transaction costs for users.
+  </p>
+</ToggleElement>
+<ToggleElement anchor="speed">
+  <div slot="title">Speed — Scroll delivers feedback to users, faster.</div>
+  <p>
+    After the merge, Ethereum blocks reliably confirm every 12 seconds. Scroll blocks are minted every 3 seconds, and
+    for the sake of lower-risk operations, transactions can be assumed to be final once included in a block. This opens
+    up new possibilities for on-chain interaction in social and gaming applications.
+  </p>
+</ToggleElement>
+<ToggleElement anchor="alignment">
+  <div slot="title">Alignment — Scroll builds on Ethereum's vision.</div>
+  <p>
+    Scroll builds on Ethereum’s vision. Our ethos is to build Ethereum, not to splinter it. Decentralization,
+    permissionlessness, censorship-resistance, and community ownership are the core of what we do and the roadmap we’re
+    building. We believe in open-source software, and we work closely with the Ethereum Foundation’s Privacy and Scaling
+    Explorations team to support their work on a zkEVM that might someday be the heart of Ethereum.
+  </p>
+  <p>
+    We also work with governance DAOs and other open-source protocols to make sure that as applications are deployed,
+    we’re working to grow their impact — whether that be in public goods, core infrastructure, or the next generation of
+    zero knowledge use cases.
+  </p>
+</ToggleElement>
+<ToggleElement anchor="community">
+  <div slot="title">Community — Scroll brings together users and builders.</div>
+  <p>
+    We know the challenges of building in the open and getting user engagement! Scroll has a blossoming community of
+    users and builders, and with a Discord community of over 500,000 members eager to try out applications on our
+    testnet or mainnet, we’re excited to connect builders with users who can provide real-world feedback.
+  </p>
+</ToggleElement>
+
+## Thank you for building with us.
+
+Our mainnet is now live, and we're diligently working to bring more integrations and support infrastructure to the network.
+
+Join our growing developer community. You can find us on [Discord](https://discord.gg/scroll), join our [discussion forum](https://community.scroll.io/), or follow our progress on [Twitter](https://twitter.com/Scroll_ZKP).

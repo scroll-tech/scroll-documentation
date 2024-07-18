@@ -1,0 +1,41 @@
+---
+section: technology
+date: Last Modified
+title: "EVM Differences from Ethereum"
+lang: "en"
+permalink: "technology/chain/differences"
+whatsnext: { "Bridge": "/en/technology/bridge/cross-domain-messaging/" }
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+## Opcodes
+
+| Opcode                      | Scroll Behavior                                                                                                  |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `BLOCKHASH`                 | Returns `keccak(chain_id \|\| block_number)` for the last 256 blocks.                                            |
+| `COINBASE`                  | Returns the fee vault address (predeployed contract `0x5300000000000000000000000000000000000005`).               |
+| `DIFFICULTY` / `PREVRANDAO` | Always return 0.                                                                                                 |
+| `SELFDESTRUCT`              | Disabled. If the opcode is encountered, the transaction will be reverted.                                        |
+
+## Precompiled Contracts
+
+| Address | Name         | Scroll behavior                                                                                 |
+| ------- | ------------ | ----------------------------------------------------------------------------------------------- |
+| `0x03`  | `RIPEMD-160` | Currently not supported.                                                                        |
+| `0x05`  | `modexp`     | Restrict the input values `B, E, M` to unsigned integers less than $2^{256}$.                   |
+| `0x08`  | `ecPairing`  | The inputs are still multiple of 6 32-byte values, but limit the number of tuples to at most 4. |
+| `0x09`  | `blake2f`    | Currently not supported.                                                                        |
+| `0x0a`  | `point evaluation`    | Currently not supported.                                                                        |
+
+The remaining precompiled contracts have the same behavior as Ethereum. However, their maximum usage within a block is constrained by a limit tied to the zkEVM circuit capacity.
+
+## EIPs
+
+Our sequencer was developed based on the London fork initially. Since then we have adopted most features from London, Shanghai, and Cancun.
+
+Our EIP-1559 fee market behaves differently: the sequencer sets the L2 base fee (based on the L1 base fee), and we don't burn ETH.
+
+<Aside type="caution" title="">
+Opcodes related to EIP-4844, like `BLOBHASH` and `BLOBBASEFEE`, are not yet available on Scroll. Additionally, [EIP-4788](https://eips.ethereum.org/EIPS/eip-4788) for accessing the Beacon Chain block root is not supported.
+</Aside>

@@ -1,0 +1,40 @@
+---
+section: gettingStarted
+date: Last Modified
+title: "Setup"
+lang: "fa"
+permalink: "user-guide/setup/"
+whatsnext: { "دریافت اتریوم Sepolia از یک Faucet": "/fa/user-guide/faucet" }
+excerpt: "برای تعامل با شبکه آزمایشی Scroll باید یک کیف پول داشته باشید. در اینجا می‌توانید نمونه‌هایی از کیف پول‌ها و نکات پیکربندی را پیدا کنید."
+---
+
+import Aside from "../../../../components/Aside.astro"
+
+## کیف پول
+
+برای تعامل با dAppها در شبکه آزمایشی Scroll Sepolia باید یک کیف پول داشته باشید. در زیر می‌توانید نمونه‌هایی از کیف پول‌ها و نکات پیکربندی را پیدا کنید. برنامه پل ما از MetaMask، Coinbase Wallet، یا هر کیف پولی که از WalletConnect پشتیبانی می‌کند، پشتیبانی می‌کند.
+
+### MetaMask
+
+می‌توانید MetaMask را از [وب‌سایت رسمی آن](https://metamask.io/download/) نصب کنید.
+
+می‌توانید تنظیمات شبکه آزمایشی Scroll Sepolia را به کیف پول MetaMask خود وارد کنید. برای این کار، به [پرتال Scroll Sepolia](https://sepolia.scroll.io/portal) بروید، سپس روی دکمه "Connect Wallet" کلیک کنید و MetaMask را انتخاب کنید. سپس روی دکمه‌های "Add to MetaMask" برای Sepolia Testnet و Scroll Sepolia Testnet کلیک کنید. این کار شناسه زنجیره و URLهای RPC برای شبکه آزمایشی Scroll Sepolia را وارد می‌کند. شبکه آزمایشی Sepolia نیز به‌طور پیش‌فرض در MetaMask پیکربندی شده است. برای نمایش آن، در منوی کشویی انتخاب شبکه MetaMask روی "Show/hide test networks" کلیک کنید.
+
+### پیکربندی دستی شبکه (برای کیف پول‌های دیگر)
+
+لینک‌های **افزودن به کیف پول** ممکن است با هر کیف پولی سازگار نباشند. اگر در استفاده از آن‌ها با مشکل مواجه شدید، ممکن است نیاز داشته باشید که شبکه _Sepolia Testnet_ و _Scroll Sepolia_ را به صورت دستی با وارد کردن جزئیات پیکربندی از جدول زیر اضافه کنید:
+
+| نام شبکه          | شبکه آزمایشی Scroll Sepolia                                       | شبکه آزمایشی Sepolia                                                          |
+| ----------------- | ------------------------------------------------------------------ | ----------------------------------------------------------------------------- |
+| URL RPC           | [https://sepolia-rpc.scroll.io/](https://sepolia-rpc.scroll.io/)  | [https://eth-sepolia-public.unifra.io](https://eth-sepolia-public.unifra.io)  |
+| شناسه زنجیره      | 534351                                                             | 11155111                                                                      |
+| نماد ارز          | ETH                                                                | ETH                                                                           |
+| URL مرورگر بلاک   | [https://sepolia.scrollscan.com](https://sepolia.scrollscan.com)  | [https://sepolia.etherscan.io](https://sepolia.etherscan.io)                  |
+
+<Aside type="tip" title="مرورگرهای بلاک اضافی">
+  برای بررسی فعالیت در لایه ۱، از مرورگر [شبکه آزمایشی Sepolia Etherscan](https://sepolia.etherscan.io) استفاده کنید.
+
+برای تجربه مرورگر بلاک جایگزین، Unifra یک [L2Scan](https://scroll-sepolia.l2scan.co/) ساخته است که به کاربران اجازه می‌دهد جنبه‌های اضافی شبکه آزمایشی Scroll Sepolia را کاوش کنند.
+[Dora](https://www.ondora.xyz/network/scroll-sepolia/interactions) نیز از Scroll Sepolia پشتیبانی می‌کند و نمای چند زنجیره‌ای از فعالیت‌های بلاکچین را ارائه می‌دهد.
+
+</Aside>

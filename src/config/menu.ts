@@ -47,4 +47,14 @@ export const MENU: MenuItems = {
     { text: "Teknoloji", link: "/tr/technology", section: "technology" },
     { text: "Öğren", link: "/tr/learn", section: "learn" },
   ],
+  fa: [
+    {
+      text: "شروع کنید",
+      link: "/fa/getting-started/overview",
+      section: "gettingStarted",
+    },
+    { text: "توسعه دهندگان", link: "/fa/developers", section: "developers" },
+    { text: "تکنولوژی", link: "/fa/technology", section: "technology" },
+    { text: "یادگیری", link: "/fa/learn", section: "learn" },
+  ],
 }
