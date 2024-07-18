@@ -1,0 +1,24 @@
+.toolsContainer {
+  border-radius: 27px;
+  /* background: #fff8f3; */
+  padding: 30px;
+  margin-bottom: 30px;
+}
+
+.toolsList {
+  display: grid;
+  grid-template-columns: 1fr minmax(424px, 1fr);
+  /* grid-template-columns:  8fr 2fr; */
+  gap: 30px;
+  margin-top: 30px;
+}
+
+.toolsList > div {
+  overflow: scroll;
+}
+
+@media screen and (max-width: 1300px) {
+  .toolsList {
+    grid-template-columns: 1fr;
+  }
+}
