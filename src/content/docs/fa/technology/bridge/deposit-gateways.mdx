@@ -1,38 +1,38 @@
 ---
 section: technology
 date: Last Modified
-title: "Deposit Gateways"
-lang: "en"
+title: "درگاه های واریز"
+lang: "fa"
 permalink: "technology/bridge/deposit-gateways"
-whatsnext: { "Withdraw Gateways": "/en/technology/bridge/withdraw-gateways/" }
+whatsnext: { "درگاه های برداشت": "/fa/technology/bridge/withdraw-gateways/" }
 ---
 
 import ClickToZoom from "../../../../../components/ClickToZoom.astro"
 import DepositWorkflow from "../_images/deposit.png"
 
-This document describes how users and developers can utilize gateways to deposit tokens from L1 to L2. We provide several gateways for standard tokens and a gateway router on L1, listed in the table below.
+این سند نحوه استفاده کاربران و توسعه‌دهندگان از دروازه‌ها برای واریز توکن‌ها از L1 به L2 را توضیح می‌دهد. ما چندین دروازه برای توکن‌های استاندارد و یک روتر دروازه در L1 ارائه می‌دهیم که در جدول زیر فهرست شده‌اند.
 
-| Gateway Contract         | Description                                                      |
-| ------------------------ | ---------------------------------------------------------------- |
-| `L1GatewayRouter`        | The gateway router supports the deposit of ETH and ERC20 tokens. |
-| `L1ETHGateway`           | The gateway to deposit ETH.                                      |
-| `L1StandardERC20Gateway` | The gateway for standard ERC20 token deposits.                   |
-| `L1CustomERC20Gateway`   | The gateway for custom ERC20 token deposits.                     |
-| `L1WETHGateway`          | The gateway for Wrapped ETH deposits.                            |
-| `L1ERC721Gateway`        | The gateway for ERC-721 token deposits.                          |
-| `L1ERC1155Gateway`       | The gateway for ERC-1155 token deposits.                         |
+| قرارداد دروازه          | توضیحات                                                        |
+| ------------------------ | --------------------------------------------------------------- |
+| `L1GatewayRouter`        | روتر دروازه واریز ETH و توکن‌های ERC20 را پشتیبانی می‌کند.      |
+| `L1ETHGateway`           | دروازه برای واریز ETH.                                        |
+| `L1StandardERC20Gateway` | دروازه برای واریز توکن‌های استاندارد ERC20.                   |
+| `L1CustomERC20Gateway`   | دروازه برای واریز توکن‌های سفارشی ERC20.                     |
+| `L1WETHGateway`          | دروازه برای واریز ETH Wrapped.                                |
+| `L1ERC721Gateway`        | دروازه برای واریز توکن‌های ERC-721.                            |
+| `L1ERC1155Gateway`       | دروازه برای واریز توکن‌های ERC-1155.                          |
 
-## Overview
+## مرور کلی
 
-<ClickToZoom src={DepositWorkflow} alt="Deposit Workflow" />
+<ClickToZoom src={DepositWorkflow} alt="روند واریز" />
 
-The figure depicts the deposit workflow from L1 to L2. Users call the gateways to initialize the token deposit. The deposit is then encoded into a message sent to the `L1ScrollMessenger` contract and a corresponding L1-initiated transaction is appended to the `L1MessageQueue`. To finalize the deposits on L2, the L2 sequencer collects the new L1 transaction events and includes the corresponding transactions in the L2 blocks it creates. The subsequent sections describe the details of how different tokens are deposited. You can find more details about the L1-to-L2 message relay workflow in the [Cross-Domain Messaging](/technology/bridge/cross-domain-messaging#sending-messages-from-l1-to-l2).
+این شکل روند واریز از L1 به L2 را به تصویر می‌کشد. کاربران با فراخوانی دروازه‌ها، واریز توکن را آغاز می‌کنند. واریز سپس به یک پیام رمزگذاری شده و به قرارداد `L1ScrollMessenger` ارسال می‌شود و یک تراکنش مربوط به L1 به صف تراکنش‌های `L1MessageQueue` اضافه می‌شود. برای نهایی‌سازی واریزها در L2، توالی‌کننده L2 رویدادهای تراکنش جدید L1 را جمع‌آوری کرده و تراکنش‌های مربوطه را در بلوک‌های L2 که ایجاد می‌کند، قرار می‌دهد. بخش‌های بعدی جزئیات نحوه واریز توکن‌های مختلف را شرح می‌دهند. شما می‌توانید جزئیات بیشتری در مورد روند ارسال پیام از L1 به L2 را در [پیام‌رسانی بین‌دامنه‌ای](/technology/bridge/cross-domain-messaging#sending-messages-from-l1-to-l2) پیدا کنید.
 
-## Depositing ETH
+## واریز ETH
 
-Scroll treats ETH as its native token. We pre-allocate a sufficient amount of ETH to the `L2ScrollMessenger` contract in the genesis block so that it can transfer native ETH token to L2 accounts without minting. Depositing ETH works as follows.
+اسکرول ETH را به عنوان توکن بومی خود در نظر می‌گیرد. ما مقدار کافی ETH را در بلوک شروع به قرارداد `L2ScrollMessenger` اختصاص داده‌ایم تا بتواند توکن ETH بومی را به حساب‌های L2 منتقل کند بدون اینکه به صورت جداگانه ضرب شود. واریز ETH به شرح زیر است.
 
-1. `L1GatewayRouter` provides three functions to deposit ETH from L1 to L2. The `depositETHAndCall` function can transfer ETH and execute a contract call at the same time.
+1. `L1GatewayRouter` سه تابع برای واریز ETH از L1 به L2 ارائه می‌دهد. تابع `depositETHAndCall` می‌تواند ETH را منتقل کند و همزمان یک تماس به قرارداد را اجرا کند.
 
     ```solidity
     function depositETH(uint256 _amount, uint256 _gasLimit) external payable;
@@ -47,24 +47,24 @@ Scroll treats ETH as its native token. We pre-allocate a sufficient amount of ET
     ) external payable;
     ```
 
-2. All three `depositETH` functions call into `L1ETHGateway`. `L1ETHGateway` encodes the deposit into a message sent to the `L1ScrollMessenger` contract.
+2. هر سه تابع `depositETH` به `L1ETHGateway` فراخوانی می‌شوند. `L1ETHGateway` واریز را به یک پیام رمزگذاری شده و به قرارداد `L1ScrollMessenger` ارسال می‌کند.
 
-3. The ETH of the deposit amount is locked in the `L1ScrollMessenger` contract. `L1ScrollMessenger` appends the message to the message queue in the `L1MessageQueue` contract.
+3. ETH مقدار واریز در قرارداد `L1ScrollMessenger` قفل می‌شود. `L1ScrollMessenger` پیام را به صف پیام در قرارداد `L1MessageQueue` اضافه می‌کند.
 
-4. After the deposit transaction is finalized on the L1, the sequencer will include a corresponding L2 transaction in the L2 block to finalize the deposit and transfer ETH to the recipient address on L2.
+4. پس از نهایی شدن تراکنش واریز در L1، توالی‌کننده تراکنش معادل را در بلوک L2 برای نهایی‌سازی واریز و انتقال ETH به آدرس گیرنده در L2 درج خواهد کرد.
 
-5. The L2 transaction calls the `L2ScrollMessenger.relayMessage` function, which executes the relayed message.
-   In the case of ETH deposit, the `relayMessage` function calls `L2ETHGateway.finalizeDepositETH` to transfer ETH to the recipient account on L2.
+5. تراکنش L2 تابع `L2ScrollMessenger.relayMessage` را فراخوانی می‌کند که پیام منتقل‌شده را اجرا می‌کند.
+   در مورد واریز ETH، تابع `relayMessage` تابع `L2ETHGateway.finalizeDepositETH` را فراخوانی می‌کند تا ETH را به حساب گیرنده در L2 منتقل کند.
 
-6. If the user calls `depositETHAndCall` on L1, `finalizeDepositETH` in the `L2ETHGateway` contract will forward the additional data to the target L2 contract.
+6. اگر کاربر تابع `depositETHAndCall` را در L1 فراخوانی کند، تابع `finalizeDepositETH` در قرارداد `L2ETHGateway` داده‌های اضافی را به قرارداد هدف L2 منتقل خواهد کرد.
 
-## Depositing ERC20 Tokens
+## واریز توکن‌های ERC20
 
-Several ERC20 gateway contracts are provided to bridge different kinds of ERC20 tokens, such as standard ERC20 tokens, custom ERC20 tokens, and Wrapped ETH token. `L1GatewayRouter` records the canonical mapping of ERC20 tokens to the corresponding ERC20 gateway on the L1. The `L1GatewayRouter` uses `StandardERC20Gateway` as the default ERC20 gateway for new ERC20 tokens unless a custom gateway is already set up.
+چندین قرارداد دروازه ERC20 برای پل‌زدن انواع مختلف توکن‌های ERC20، مانند توکن‌های استاندارد ERC20، توکن‌های سفارشی ERC20 و توکن Wrapped ETH ارائه شده است. `L1GatewayRouter` نگاشت استاندارد توکن‌های ERC20 به دروازه‌های مربوطه در L1 را ثبت می‌کند. `L1GatewayRouter` از `StandardERC20Gateway` به عنوان دروازه پیش‌فرض ERC20 برای توکن‌های جدید ERC20 استفاده می‌کند، مگر اینکه دروازه سفارشی قبلاً تنظیم شده باشد.
 
-The deposit of ERC20 tokens works as follows.
+واریز توکن‌های ERC20 به شرح زیر است.
 
-1. To deposit ERC20 tokens from L1 to L2, users can use `L1GatewayRouter.depositERC20` and `L1GatewayRouter.depositERC20AndCall` shown below.
+1. برای واریز توکن‌های ERC20 از L1 به L2، کاربران می‌توانند از `L1GatewayRouter.depositERC20` و `L1GatewayRouter.depositERC20AndCall` استفاده کنند که در زیر نشان داده شده است.
 
     ```solidity
     function depositERC20(address _token, uint256 _amount, uint256 _gasLimit) external payable;
@@ -80,43 +80,45 @@ The deposit of ERC20 tokens works as follows.
     ) public payable;
     ```
 
-2. Based on the mapping from ERC20 tokens to gateway, the `L1GatewayRouter` calls to the corresponding gateway: `L1StandardERC20Gateway`, `L1CustomERC20Gateway`, or `L1WETHGateway`. The remaining steps will be described separately.
+2. بر اساس نگاشت توکن‌های ERC20 به دروازه، `L1GatewayRouter` به دروازه مربوطه مانند `L1StandardERC20Gateway`، `L1CustomERC20Gateway` یا `L1WETHGateway` فراخوانی می‌کند. مراحل بعدی به طور جداگانه توضیح داده خواهد شد.
 
-### Standard ERC20 Tokens
+### توکن‌های استاندارد ERC20
 
-Standard ERC20 tokens are tokens that do not require any custom logic. For such tokens, their L2 ERC20 token contracts are created by `L2StandardERC20Gateway`. The remaining steps for standard ERC20 token deposit are:
+توکن‌های استاندارد ERC20 توکن‌هایی هستند که نیاز به منطق سفارشی ندارند. برای چنین توکن‌هایی، قراردادهای توکن ERC20 در L2 توسط `L2StandardERC20Gateway` ایجاد می‌شود. مراحل باقی‌مانده برای واریز توکن ERC20 استاندارد به شرح زیر است:
 
-3. The `L1StandardERC20Gateway` contract locks the ERC20 tokens by transferring them from the sender to itself.
-4. If this ERC20 token hasn't been withdrawn through `L1StandardERC20Gateway` before, `L1StandardERC20Gateway` will compute a deterministic L2 ERC20 token address and appends the token metadata (symbol, name, and decimals) to the message for the potential contract deployment on L2. If the L2 token address is already stored in the `tokenMapping`, `L1StandardERC20Gateway` will directly load the L2 token address from the mapping.
-5. `L1StandardERC20Gateway` encodes the token deposit message and calls `L1ScrollMessenger` to send the message.
-6. The corresponding L2 transaction calls the `L2ScrollMessenger.relayMessage` function to finalize the deposit on L2. In the case of standard ERC20 token deposits, the transaction then calls `L2StandardERC20Gateway.finalizeDepositERC20`.
-7. If this ERC20 token contract hasn't been deployed on L2, `L2StandardERC20Gateway` will extract the token metadata from the message and calls `ScrollStandardERC20Factory` to deploy the standard ERC20 token on L2.
-8. `L2StandardERC20Gateway` calls the mint function on the corresponding L2 ERC20 token contract.
-9. If the user calls `depositERC20AndCall` on L1, the `L2StandardERC20Gateway` will call the target L2 contract with additional data.
+3. قرارداد `L1StandardERC20Gateway` توکن‌های ERC20 را با انتقال آنها از فرستنده به خود قفل می‌کند.
+4. اگر این توکن ERC20 قبلاً از طریق `L1StandardERC20Gateway` برداشت نشده باشد، `L1StandardERC20Gateway` یک آدرس توکن ERC20 در L2 به صورت قطعی محاسبه کرده و متاداده توکن (نماد، نام و دقت) را به پیام برای احتمال پیاده‌سازی قرارداد در L2 اضافه می‌کند. اگر آدرس توکن L2 قبلاً در `tokenMapping` ذخیره شده باشد، `L1StandardERC20Gateway` مستقیماً آدرس توکن L2 را از نگاشت بارگذاری می‌کند.
+5. `L1StandardERC20Gateway` پیام واریز توکن را رمزگذاری کرده و به `L1ScrollMessenger` برای ارسال پیام فراخوانی می‌کند.
+6. تراکنش معادل در L2 تابع `L2ScrollMessenger.relayMessage` را برای نهایی‌سازی واریز در L2 فراخوانی می‌کند. در مورد واریز توکن‌های استاندارد ERC20، تراکنش سپس تابع `L2StandardERC20Gateway.finalizeDepositERC20` را فراخوانی می‌کند.
+7. اگر قرارداد توکن ERC20 در L2 هنوز پیاده‌سازی نشده باشد، `L2StandardERC20Gateway` متاداده توکن را از پیام استخراج کرده و تابع `ScrollStandardERC20Factory` را برای پیاده‌سازی توکن استاندارد ERC20 در L2 فراخوانی می‌کند.
+8. `L2StandardERC20Gateway` تابع mint را روی قرارداد توکن ERC20 مربوطه در L2 فراخوانی می‌کند.
+9. اگر کاربر تابع `depositERC20AndCall` را در L1 فراخوانی کند، `L2StandardERC20Gateway` قرارداد هدف L2 را با داده‌های اضافی فراخوانی خواهد کرد.
 
-### Custom ERC20 Tokens
+### توکن‌های سفارشی ERC20
 
-In comparison to standard ERC20 tokens, the L2 contract of custom ERC20 tokens is deployed by the token owner. The remaining steps for custom ERC20 token deposit are:
+در مقایسه با توکن‌های استاندارد ERC20، قرارداد L2 توکن‌های سفارشی ERC20 توسط مالک توکن پیاده‌سازی می‌شود. مراحل باقی‌مانده برای واریز توکن‌های ERC20 سفارشی به شرح زیر است:
 
-3. The `L1CustomERC20Gateway` contract locks the ERC20 tokens on L1 by transferring them from the sender to itself.
-4. `L1CustomERC20Gateway` requires an L2 ERC20 token address present in the `tokenMapping`. It retrieves the corresponding ERC20 token address, encodes the token deposit message, and forwards it to `L1ScrollMessenger`.
-5. The corresponding L2 transaction calls the `L2ScrollMessenger.relayMessage` function to finalize the deposit on L2. In the case of custom ERC20 token deposits, the transaction calls `L2CustomERC20Gateway.finalizeDepositERC20`.
-6. `L2CustomERC20Gateway` calls the mint function on the corresponding L2 ERC20 token contract. It is required that the L2 ERC20 token contract grants mint permissions to the `L2CustomERC20Gateway` contract.
-7. If the user calls `depositERC20AndCall` on L1, the `L2CustomERC20Gateway` will call the target L2 contract with additional data.
+3. قرارداد `L1CustomERC20Gateway` توکن‌های
 
-### WETH Token
+ ERC20 را در L1 با انتقال آنها از فرستنده به خود قفل می‌کند.
+4. `L1CustomERC20Gateway` نیاز به وجود آدرس توکن ERC20 در L2 در `tokenMapping` دارد. این آدرس ERC20 مربوطه را بازیابی کرده و پیام واریز توکن را رمزگذاری کرده و به `L1ScrollMessenger` ارسال می‌کند.
+5. تراکنش معادل در L2 تابع `L2ScrollMessenger.relayMessage` را برای نهایی‌سازی واریز در L2 فراخوانی می‌کند. در مورد واریز توکن‌های ERC20 سفارشی، تراکنش تابع `L2CustomERC20Gateway.finalizeDepositERC20` را فراخوانی می‌کند.
+6. `L2CustomERC20Gateway` تابع mint را روی قرارداد توکن ERC20 مربوطه در L2 فراخوانی می‌کند. لازم است که قرارداد توکن ERC20 در L2 مجوزهای mint را به قرارداد `L2CustomERC20Gateway` اعطا کند.
+7. اگر کاربر تابع `depositERC20AndCall` را در L1 فراخوانی کند، `L2CustomERC20Gateway` قرارداد هدف L2 را با داده‌های اضافی فراخوانی خواهد کرد.
 
-We provide a custom gateway `L1WETHGateway` for Wrapped ETH token on L1 and record the gateway address in the `L1GatewayRouter`. The deposit of WETH token works as follows.
+### توکن WETH
 
-3. `L1WETHGateway` locks the WETH tokens by transferring them from the sender to itself and unwrapping the WETH token to native ETH token. The ETH token and `msg.value` (for paying the relay fee) are then sent to the `L1ScrollMessenger` contract together.
-4. `L1WETHGateway` encodes the token deposit message and forwards it to `L1ScrollMessenger`.
-5. The corresponding L2 transaction calls the `L2ScrollMessenger.relayMessage` function to finalize the deposit on L2. In the case of WETH token deposit, the transaction calls `L2WETHGateway.finalizeDepositERC20`.
-6. `L2WETHGateway` wraps the deposited ETH to L2 WETH token again and transfers it to the recipient address on L2.
-7. If the user calls `depositERC20AndCall` on L1, the `L2WETHGateway` will call the target L2 contract with additional data.
+ما یک دروازه سفارشی `L1WETHGateway` برای توکن Wrapped ETH در L1 ارائه می‌دهیم و آدرس دروازه را در `L1GatewayRouter` ثبت می‌کنیم. واریز توکن WETH به شرح زیر است.
 
-## Depositing ERC-721/ERC-1155 Tokens
+3. `L1WETHGateway` توکن‌های WETH را با انتقال آنها از فرستنده به خود قفل می‌کند و توکن WETH را به ETH بومی تبدیل می‌کند. سپس توکن ETH و `msg.value` (برای پرداخت هزینه انتقال) به قرارداد `L1ScrollMessenger` ارسال می‌شود.
+4. `L1WETHGateway` پیام واریز توکن را رمزگذاری کرده و به `L1ScrollMessenger` ارسال می‌کند.
+5. تراکنش معادل در L2 تابع `L2ScrollMessenger.relayMessage` را برای نهایی‌سازی واریز در L2 فراخوانی می‌کند. در مورد واریز توکن WETH، تراکنش تابع `L2WETHGateway.finalizeDepositERC20` را فراخوانی می‌کند.
+6. `L2WETHGateway` توکن ETH واریز شده را دوباره به توکن WETH در L2 تبدیل کرده و آن را به آدرس گیرنده در L2 منتقل می‌کند.
+7. اگر کاربر تابع `depositERC20AndCall` را در L1 فراخوانی کند، `L2WETHGateway` قرارداد هدف L2 را با داده‌های اضافی فراخوانی خواهد کرد.
 
-The deposit of ERC-721 or ERC-1155 tokens works very similar to ERC20 tokens. One can use the gateways `L1ERC721Gateway` or `L1ERC1155Gateway` to deposit ERC-721 /ERC-1155 tokens from L1.
+## واریز توکن‌های ERC-721/ERC-1155
+
+واریز توکن‌های ERC-721 یا ERC-1155 بسیار مشابه با توکن‌های ERC20 است. برای واریز توکن‌های ERC-721 /ERC-1155 از L1، می‌توان از دروازه‌های `L1ERC721Gateway` یا `L1ERC1155Gateway` استفاده کرد.
 
 ```solidity
 function depositERC721(
@@ -148,7 +150,7 @@ function depositERC1155(
 ) external payable;
 ```
 
-To facilitate a large amount of ERC-721 or ERC-1155 token deposits, we also provide batch deposit functions in the `L1ERC721Gateway` and `L1ERC1155Gateway` contract via the following functions:
+برای تسهیل در واریز حجم زیادی از توکن‌های ERC-721 یا ERC-1155، ما همچنین توابع واریز دسته‌ای را در قراردادهای `L1ERC721Gateway` و `L1ERC1155Gateway` از طریق توابع زیر ارائه می‌دهیم:
 
 ```solidity
 function batchDepositERC721(
@@ -180,4 +182,4 @@ function batchDepositERC1155(
 ) external payable;
 ```
 
-The L2 counterpart contracts for ERC-721 or ERC-1155 tokens are `L2ERC721Gateway` and `L2ERC1155Gateway`. These are used to finalize deposits on L2.
+قرارداد‌های معادل L2 برای توکن‌های ERC-721 یا ERC-1155 `L2ERC721Gateway` و `L2ERC1155Gateway` هستند. این قراردادها برای نهایی‌سازی واریزها در L2 استفاده می‌شوند.

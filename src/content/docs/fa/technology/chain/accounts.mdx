@@ -1,29 +1,29 @@
 ---
 section: technology
 date: Last Modified
-title: "Accounts and State"
-lang: "en"
+title: "حساب‌ها و حالت"
+lang: "fa"
 permalink: "technology/chain/accounts-and-state"
-whatsnext: { "Transactions": "/en/technology/chain/transactions/" }
+whatsnext: { "تراکنش ها": "/fa/technology/chain/transactions/" }
 ---
 
-## Accounts
+## حساب‌ها
 
-Same as Ethereum, Scroll has two account types: Externally-owned account (EOA) and contract account that holds the smart contract and additional storage.
+همانند اتریوم، Scroll دو نوع حساب دارد: حساب‌های خارجی (EOA) و حساب‌های قراردادی که قرارداد هوشمند و ذخیره‌سازی اضافی را نگه می‌دارند.
 
-Scroll stores additional information of the contract bytecode in the account to facilitate the zkEVM circuit to prove the state transition more efficiently.
+Scroll اطلاعات اضافی مربوط به بایت‌کد قرارداد را در حساب ذخیره می‌کند تا مدارک zkEVM بتوانند انتقال وضعیت را به صورت کارآمدتر اثبات کنند.
 
-The account in Scroll contains the following fields:
+حساب در Scroll شامل فیلدهای زیر است:
 
-- `nonce`: A counter that indicates the number of transactions sent by the sender.
-- `balance`: The balance of `ETH` token in the account (unit in wei).
-- `storageRoot`: The root hash of the storage trie. Since Scroll uses the [zkTrie](/technology/sequencer/zktrie) for the storage trie, the `storageRoot` stores the Poseidon hash digest in a 256-bit integer.
-- `codeHash`: The Keccak hash digest of the contract bytecode.
-- `PoseidonCodeHash` (**new field**): The Poseidon hash digest of the contract bytecode in a 256-bit integer.
-- `CodeSize` (**new field**): The size of the contract bytecode in bytes.
+- `nonce`: شمارنده‌ای که تعداد معاملات ارسال شده توسط فرستنده را نشان می‌دهد.
+- `balance`: موجودی توکن `ETH` در حساب (واحد به wei).
+- `storageRoot`: ریشه هش trie ذخیره‌سازی. از آنجا که Scroll از [zkTrie](/technology/sequencer/zktrie) برای trie ذخیره‌سازی استفاده می‌کند، `storageRoot` هش Poseidon را در یک عدد ۲۵۶ بیتی ذخیره می‌کند.
+- `codeHash`: هش Keccak از بایت‌کد قرارداد.
+- `PoseidonCodeHash` (**فیلد جدید**): هش Poseidon از بایت‌کد قرارداد در یک عدد ۲۵۶ بیتی.
+- `CodeSize` (**فیلد جدید**): اندازه بایت‌کد قرارداد بر حسب بایت.
 
-## State
+## وضعیت
 
-The state of a blockchain is a collection of account data. The _state trie_ encodes account data and their corresponding addresses to a [Merkle tree](https://en.wikipedia.org/wiki/Merkle_tree) data structure. The root of tree, or the state of the blockchain, is a cryptographic digest of all the account data contained in the tree.
+وضعیت یک بلاکچین مجموعه‌ای از داده‌های حساب است. _وضعیت trie_ داده‌های حساب و آدرس‌های مربوطه را به یک ساختار داده [Merkle tree](https://en.wikipedia.org/wiki/Merkle_tree) کدگذاری می‌کند. ریشه درخت، یا وضعیت بلاکچین، یک هش رمزنگاری از تمامی داده‌های حساب موجود در درخت است.
 
-Ethereum uses a data structure called [Patricia Merkle Trie](https://ethereum.org/en/developers/docs/data-structures-and-encoding/patricia-merkle-trie/) for both the state trie and the storage trie that stores the key-value entries stored in a smart contract. In Scroll, we replace the Patricia Merkle Trie with a more zk-friendly data structure, called zkTrie, for both state trie and storage trie. At a high level, the zkTrie data structure is a sparse binary Merkle tree with the [Poseidon hash](https://eprint.iacr.org/2019/458.pdf), a zk-friendly hash function. The [zkTrie](/technology/sequencer/zktrie) document describes more details about this data structure.
+اتریوم از یک ساختار داده به نام [Patricia Merkle Trie](https://ethereum.org/en/developers/docs/data-structures-and-encoding/patricia-merkle-trie/) برای هر دو trie وضعیت و trie ذخیره‌سازی که ورودی‌های کلید-مقدار ذخیره شده در یک قرارداد هوشمند را ذخیره می‌کند، استفاده می‌کند. در Scroll، ما Patricia Merkle Trie را با یک ساختار داده‌ای که بیشتر برای zk مناسب است، به نام zkTrie، برای هر دو trie وضعیت و trie ذخیره‌سازی جایگزین می‌کنیم. در یک سطح بالا، ساختار داده zkTrie یک درخت مرکل باینری پراکنده با [هش Poseidon](https://eprint.iacr.org/2019/458.pdf)، یک تابع هش مناسب برای zk است. مستندات [zkTrie](/technology/sequencer/zktrie) جزئیات بیشتری درباره این ساختار داده توصیف می‌کند.

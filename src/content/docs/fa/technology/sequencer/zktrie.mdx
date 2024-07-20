@@ -2,10 +2,10 @@
 section: technology
 date: Last Modified
 title: "zkTrie"
-lang: "en"
+lang: "fa"
 permalink: "technology/sequencer/zktrie"
-whatsnext: { "zkEVM": "/en/technology/zkevm/intro-to-zkevm/" }
-excerpt: "zkTrie is a sparse binary Merkle Patricia Trie built using Poseidon hash."
+whatsnext: { "مقدمه ای بر zkEVM": "/fa/technology/zkevm/intro-to-zkevm/" }
+excerpt: "zkTrie یک درخت مرکل پاتریشیا باینری نازک ساخته شده با هش پوزیدون است."
 ---
 
 import Aside from "../../../../../components/Aside.astro"
@@ -14,126 +14,128 @@ import zktrie1 from "../_images/zktrie-arch.png"
 import zktrie2 from "../_images/zktrie-insertion.png"
 import zktrie3 from "../_images/zktrie-deletion.png"
 
-This document describes zkTrie, a sparse binary Merkle Patricia Trie used to store key-value pairs efficiently. It explains the tree structure, construction, node hashing, and tree operations, including insertion and deletion.
+این سند به بررسی zkTrie می‌پردازد، که یک درخت مرکل پاتریشیا باینری نازک است و برای ذخیره‌ی مؤثر جفت‌های کلید-مقدار استفاده می‌شود. این سند ساختار درخت، ساخت، هش گره‌ها و عملیات‌های درخت، از جمله درج و حذف را توضیح می‌دهد.
 
-You can also explore our [zktrie repo](https://github.com/scroll-tech/zktrie).
+شما می‌توانید به [مخزن zktrie](https://github.com/scroll-tech/zktrie) نیز مراجعه کنید.
 
-## Tree Structure
+## ساختار درخت
 
-zkTrie is a sparse binary Merkle Patricia Trie, depicted in the below figure.
-Before diving into the Sparse Binary Merkle Patricia Trie, let's briefly touch on Merkle Trees and Patricia Tries.
-* **Merkle Tree**: A Merkle Tree is a tree where each leaf node represents a hash of a data block, and each non-leaf node represents the hash of its child nodes.
-* **Patricia Trie**: A Patricia Trie is a type of radix tree or compressed trie used to store key-value pairs efficiently. It encodes the nodes with same prefix of the key to share the common path, where the path is determined by the value of the node key.
+zkTrie یک درخت مرکل پاتریشیا باینری نازک است که در شکل زیر به تصویر کشیده شده است.
+قبل از بررسی دقیق درخت مرکل پاتریشیا نازک، بیایید به طور مختصر به درختان مرکل و پاتریشیا بپردازیم.
+* **درخت مرکل**: درختی است که در آن هر برگ نشان‌دهنده‌ی هش یک بلوک داده است و هر گره غیر برگ نشان‌دهنده‌ی هش گره‌های فرزند خود است.
+* **درخت پاتریشیا**: نوعی درخت رادیکس یا درخت فشرده است که برای ذخیره‌ی مؤثر جفت‌های کلید-مقدار استفاده می‌شود. این درخت گره‌های با پیشوند یکسان را برای اشتراک مسیر مشترک رمزگذاری می‌کند، که مسیر با توجه به مقدار کلید گره تعیین می‌شود.
 
-As illustrated in Figure 1, there are three types of nodes in the zkTrie.
-- Branch Node: Given the zkTrie is a binary tree, a branch node has two children.
-- Leaf Node: A leaf node holds the data of a key-value pair.
-- Empty Node: An empty node is a special type of node, indicating the sub-trie that shares the same prefix is empty.
+همانطور که در شکل ۱ نشان داده شده است، در zkTrie سه نوع گره وجود دارد:
+- **گره شاخه**: از آنجا که zkTrie یک درخت باینری است، گره شاخه دارای دو فرزند است.
+- **گره برگ**: یک گره برگ داده‌های یک جفت کلید-مقدار را در خود نگه می‌دارد.
+- **گره خالی**: یک نوع خاص از گره است که نشان‌دهنده‌ی زیر درختی است که پیشوند مشترک دارد و خالی است.
 
-In zkTrie, we use Poseidon hash to compute the node hash because it's more friendly and efficient to prove it in the zk circuit.
+در zkTrie، ما از هش پوزیدون برای محاسبه‌ی هش گره استفاده می‌کنیم، زیرا این روش برای اثبات در مدار zk کارآمدتر و مناسب‌تر است.
 
-<ClickToZoom src={zktrie1} alt="zkTrie Structure" caption="Figure 1. zkTrie Structure" />
+<ClickToZoom src={zktrie1} alt="ساختار zkTrie" caption="شکل ۱. ساختار zkTrie" />
 
-## Tree Construction
+## ساخت درخت
 
-Given a key-value pair, we first compute a *secure key* for the corresponding leaf node by hashing the original key (i.e., account address and storage key) using the Poseidon hash function. This can make the key uniformly distributed over the key space. The node key hashing method is described in the [Node Hashing](#node-hashing) section below.
+برای یک جفت کلید-مقدار، ابتدا یک *کلید امن* برای گره برگ مربوطه با استفاده از تابع هش پوزیدون محاسبه می‌کنیم. این کار باعث می‌شود که کلید به طور یکنواخت در فضای کلید توزیع شود. روش هش گره‌ها در بخش [هش گره](#node-hashing) توضیح داده شده است.
 
-We encode the path of a new leaf node by traversing the secure key from Least Significant Bit (LSB) to the Most Significant Bit (MSB). At each step, if the bit is 0, we will traverse to the left child; otherwise, traverse to the right child.
+مسیر گره برگ جدید را با عبور از کلید امن از کم‌اهمیت‌ترین بیت (LSB) تا مهم‌ترین بیت (MSB) رمزگذاری می‌کنیم. در هر مرحله، اگر بیت ۰ باشد، به فرزند چپ حرکت می‌کنیم؛ در غیر این صورت، به فرزند راست حرکت می‌کنیم.
 
-We limit the maximum depth of zkTrie to 248, meaning that the tree will only traverse the lower 248 bits of the key. Because the secure key space is a finite field used by Poseidon hash that doesn't occupy the full range of $2^{256}$, the bit representation of the key can be ambiguous in the finite field and thus results in a soundness issue in the zk circuit. After we truncate the key to lower 248 bits, the key space can fully occupy the range of $2^{248}$ and won't have the ambiguity in the bit representation.
+ما حداکثر عمق zkTrie را به ۲۴۸ محدود می‌کنیم، به این معنی که درخت تنها از بیت‌های پایین‌تر ۲۴۸ کلید عبور می‌کند. زیرا فضای کلید امن یک میدان محدود است که توسط هش پوزیدون استفاده می‌شود و تمام محدوده $2^{256}$ را اشغال نمی‌کند، نمایه بیت کلید می‌تواند مبهم باشد و بنابراین باعث مشکل صحت در مدار zk می‌شود. پس از اینکه کلید را به ۲۴۸ بیت پایین‌تر برش می‌دهیم، فضای کلید می‌تواند به طور کامل محدوده $2^{248}$ را اشغال کند و در نمایه بیت مبهم نباشد.
 
-We apply an optimization to reduce the tree depth by contracting a subtree that has only one leaf node to a single leaf node. For example, in Figure 1, the tree has three nodes in total, with keys `0100`, `0010`, and `1010`. Because there is only one node that has a key with suffix `00`, the leaf node for key `0100` only traverses the suffix `00` and doesn't fully expand its key which would have resulted in a depth of 4.
+ما یک بهینه‌سازی برای کاهش عمق درخت با فشرده‌سازی زیر درختی که تنها یک گره برگ دارد به یک گره برگ واحد انجام می‌دهیم. به عنوان مثال، در شکل ۱، درخت در مجموع سه گره دارد، با کلیدهای `0100`، `0010` و `1010`. زیرا تنها یک گره با کلید `00` وجود دارد، گره برگ برای کلید `0100` فقط پیشوند `00` را طی می‌کند و به طور کامل گسترش نمی‌یابد که منجر به عمق ۴ شود.
 
-## Tree Operations
+## عملیات‌های درخت
 
-### Insertion
+### درج
 
-<ClickToZoom src={zktrie2} alt="zkTrie Structure" caption="Figure 2. Insert a new leaf node to zkTrie" />
+<ClickToZoom src={zktrie2} alt="درج یک گره برگ جدید به zkTrie" caption="شکل ۲. درج یک گره برگ جدید به zkTrie" />
 
-When we insert a new leaf node into a zkTrie, there are two cases illustrated in Figure 2.
+هنگامی که یک گره برگ جدید به zkTrie اضافه می‌شود، دو حالت وجود دارد که در شکل ۲ نشان داده شده است.
 
-1. When traversing the path of the node key, it reaches an empty node (Figure 2a). In this case, we just need to replace this empty node by this leaf node and backtrace the path to update the merkle hash of branch nodes till the root.
-2. When traversing the path of the node key, it reaches another leaf node `b` (Figure 2b). In this case, we need to push down the existing leaf node `b` until the next bit in the node keys of two leaf nodes differs. At each push-down step, we need to insert an empty sibling node into the branch node. When we reach the level where the bits differ, we then place two leaf nodes `b` and `d` as the left child and the right child depending on their bits. At last, we backtrace the path and update the Merkle hash of all branch nodes.
+1. هنگامی که در مسیر کلید گره عبور می‌کنیم و به یک گره خالی می‌رسیم (شکل ۲الف). در این حالت، تنها کافی است که این گره خالی را با گره برگ جایگزین کنیم و مسیر را تا ریشه به‌روزرسانی کنیم.
+2. هنگامی که در مسیر کلید گره عبور می‌کنیم و به گره برگ دیگری `b` می‌رسیم (شکل ۲ب). در این حالت، باید گره برگ موجود `b` را به پایین فشار دهیم تا زمانی که بیت‌های کلیدهای دو گره برگ متفاوت شوند. در هر مرحله فشردن به پایین، باید یک گره خالی خواهر در گره شاخه اضافه کنیم. هنگامی که به سطحی می‌رسیم که بیت‌ها تفاوت دارند، سپس دو گره برگ `b` و `d` را به عنوان فرزند چپ و راست با توجه به بیت‌های آنها قرار می‌دهیم. در آخر، مسیر را به عقب می‌رویم و هش مرکل همه گره‌های شاخه را به‌روزرسانی می‌کنیم.
 
-### Deletion
+### حذف
 
-<ClickToZoom src={zktrie3} alt="zkTrie Structure" caption="Figure 3. Delete a leaf node from the zkTrie" />
+<ClickToZoom src={zktrie3} alt="حذف یک گره برگ از zkTrie" caption="شکل ۳. حذف یک گره برگ از zkTrie" />
 
-The deletion of a leaf node is similar to the insertion. There are two cases illustrated in Figure 3.
+حذف یک گره برگ مشابه درج است. دو حالت وجود دارد که در شکل ۳ نشان داده شده است.
 
-1. The sibling node of the to-be-deleted leaf node is a
-branch node (Figure 3a). In this case, we can simply replace the node `a` with an empty node and update the node hash of its ancestors till the root node.
-2. The sibling node of the to-be-deleted leaf node is a leaf node (Figure 3b). Similarly to case 1, we first replace the leaf node with an empty node and start to contract its sibling node upwards until its sibling node is not an empty node. For example, in Figure 3b, we replace the leaf node `b` with an empty node. Because the sibling of node `c` now becomes an empty node, we need to move node `c` one level upward and replace its parent. The new sibling of node `c`, node `e`, is still an empty node. So again we move node `c` upward. Now that the sibling of node `c` is node `a`, a leaf node, the deletion process is finished.
+1. خواهر گره برگ که باید حذف شود یک گره شاخه است (شکل ۳الف). در این حالت، می‌توانیم به سادگی گره `a` را با یک گره خالی جایگزین کنیم و هش گره‌های والدین آن را تا ریشه به‌روزرسانی کنیم.
+2. خواهر گره برگ که باید حذف شود یک گره برگ است (شکل ۳ب). مشابه به حالت ۱، ابتدا گره برگ را با گره خالی جایگزین می‌کنیم و شروع به فشرده‌سازی گره خواهر به سمت بالا می‌کنیم تا زمانی که گره خواهر دیگر گره خالی نباشد. برای مثال، در شکل ۳ب، ما گره برگ `b` را با گره خالی جایگزین می‌کنیم. زیرا خواهر گره `c` اکنون تبدیل به گره خالی شده است، باید گره `c` را یک سطح به سمت بالا حرکت داده و والدین آن را جایگزین کنیم. خواهر جدید گره `c`، گره `e`، هنوز گره خالی است. بنابراین دوباره گره `c` را به سمت بالا حرکت می‌دهیم. اکنون که خواهر گره `c`، گره `a`، یک گره برگ است، فرآیند حذف تمام شده است.
 
-Note that the sibling of a leaf node in a valid zkTrie cannot be an empty node. Otherwise, we should always prune the subtree and move the leaf node upwards.
+توجه داشته باشید که خواهر یک گره برگ در zkTrie معتبر نمی‌تواند یک گره خالی باشد. در غیر این صورت، باید همیشه زیر درخت را هرس کرده و گره برگ را به سمت بالا حرکت دهیم.
 
-## Node Hashing
+## هش گره‌ها
 
-In this section, we will describe how the leaf secure key and node Merkle hash are computed. We use Poseidon hash with arity 2 for both hashing computations. In Scroll, the Poseidon hash function is configured to take two field element inputs each time and a `domain_value` as the initial context for domain separation, denoted as follows.
+در این بخش، نحوه محاسبه کلید امن برگ و هش مرکل گره را توضیح خواهیم داد. ما از هش پوزیدون با ارایت ۲ برای هر دو محاسبات هش استفاده می‌کنیم. در Scroll، تابع هش پوزیدون به گونه‌ای تنظیم شده است که هر بار دو ورودی عنصر میدان و یک `domain_value` به عنوان زمینه اولیه برای تفکیک دامنه را دریافت کند، به صورت زیر:
 ```
 h{domain_value}(input1, input2)
 ```
 
-### Empty Node
+### گره خالی
 
-The node hash of an empty node is 0.
+هش گره یک گره خالی برابر با ۰ است.
 
-### Branch Node
+### گره شاخه
 
-The branch node hash is computed as follows
+هش گره شاخه به صورت زیر محاسبه می‌شود:
 
 ```go
 branchNodeHash = h{BranchNodeType}(leftChildHash, rightChildHash)
 ```
 
-### Leaf Node
+### گره برگ
 
-The node hash of a leaf node is computed as follows.
+هش گره برگ به صورت زیر
+
+ محاسبه می‌شود.
 
 ```go
 leafNodeHash = h{LeafNodeType}(nodeKey, valueHash)
 ```
 
-The computation involves two fields `nodeKey` and `valueHash`.
-- `nodeKey` is hashed from the original key. The domain value used in the Poseidon hash is 256.
-- `valueHash` is calculated by hashing the leaf node value. The domain value used in the Poseidon hash is `256 * n`, where `n` is the number of elements in the leaf node value.
+این محاسبه شامل دو میدان `nodeKey` و `valueHash` است.
+- `nodeKey` از کلید اصلی هش شده است. مقدار دامنه‌ای که در هش پوزیدون استفاده می‌شود ۲۵۶ است.
+- `valueHash` با هش کردن مقدار گره برگ محاسبه می‌شود. مقدار دامنه‌ای که در هش پوزیدون استفاده می‌شود `256 * n` است، که `n` تعداد عناصر در مقدار گره برگ است.
 
-There are two types of leaf nodes: Ethereum accounts and storage key-value pairs. Next, we will describe the calculation method of the node key and value hash for each leaf node type respectively.
+دو نوع گره برگ وجود دارد: حساب‌های اتریوم و جفت‌های کلید-مقدار ذخیره‌سازی. در ادامه، روش محاسبه کلید گره و هش مقدار برای هر نوع گره برگ به طور جداگانه توضیح داده شده است.
 
-#### Ethereum Account Leaf Node
-An Ethereum Account Leaf Node consists of an Ethereum address and a state account data structure. The secure key is derived from the Ethereum address.
+#### گره برگ حساب اتریوم
+
+یک گره برگ حساب اتریوم شامل یک آدرس اتریوم و یک ساختار داده‌ای حساب است. کلید امن از آدرس اتریوم استخراج می‌شود.
 ```go
-var address byte[20] // 20 bytes in big-endian
+var address byte[20] // ۲۰ بایت در big-endian
 valHi := address[0:16]
-valLo := address[16:20] * 2^96 // padding 12 bytes of 0 at the end
+valLo := address[16:20] * 2^96 // افزودن ۱۲ بایت ۰ در انتها
 nodeKey := h{512}(valHi, valLo)
 ```
 
-A state account struct in the Scroll consists of the following fields (`Fr` indicates the finite field and is a 254-bit value)
+یک ساختار داده‌ای حساب در Scroll شامل فیلدهای زیر است (فرم نشان‌دهنده مقدار میدان و یک مقدار ۲۵۴ بیتی است):
 
 - `Nonce`: u64
-- `Balance`: u256, but treated as Fr
+- `Balance`: u256، اما به عنوان Fr در نظر گرفته می‌شود
 - `StorageRoot`: Fr
 - `KeccakCodeHash`: u256
 - `PoseidonCodeHash`: Fr
 - `CodeSize`: u64
 
-Before computing the value hash, the state account is first marshaled into a list of `u256` values. The marshaling scheme is
+قبل از محاسبه هش مقدار، ساختار داده‌ای حساب به لیستی از مقادیر `u256` تبدیل می‌شود. طرح مارشالینگ به صورت زیر است:
 
 ```text
-(The following scheme assumes the big-endian encoding)
+(طرح به ترتیب big-endian)
 [0:32]
-	[0:16] Reserved with all 0
-	[16:24] CodeSize, uint64 in big-endian
-	[24:32] Nonce, uint64 in big-endian
+	[0:16] رزرو شده با تمام ۰
+	[16:24] CodeSize، uint64 در big-endian
+	[24:32] Nonce، uint64 در big-endian
 [32:64] Balance
 [64:96] StorageRoot
 [96:128] KeccakCodeHash
 [128:160] PoseidonCodehash
-(total 160 bytes)
+(مجموع ۱۶۰ بایت)
 ```
 
-The marshal function also returns a `flag` value along with a vector of `u256` values. The `flag` is a bitmap that indicates whether a `u256` value cannot be treated as a field element (Fr). The `flag` value for state account is 8, shown below.
+تابع مارشالینگ همچنین یک مقدار `flag` را همراه با یک وکتور از مقادیر `u256` بازمی‌گرداند. مقدار `flag` یک بیت‌مپ است که نشان‌دهنده این است که آیا یک مقدار `u256` نمی‌تواند به عنوان عنصر میدان (Fr) در نظر گرفته شود. مقدار `flag` برای حساب‌های دولتی ۸ است، به شرح زیر:
 
 ```
          +--------------------+---------+------+----------+----------+
@@ -146,21 +148,21 @@ flag bit |          0         |    0    |   0  |     1    |     0    |
          (LSB)                                                   (MSB)
 ```
 
-The value hash is computed in two steps:
-1. Convert the value that cannot be represented as a field element of the Poseidon hash to the field element.
-2. Combine field elements in a binary tree structure till the tree root is treated as the value hash.
+هش مقدار در دو مرحله محاسبه می‌شود:
+1. تبدیل مقدارهایی که نمی‌توانند به عنوان عنصر میدان هش پوزیدون در نظر گرفته شوند به عنصر میدان.
+2. ترکیب عناصر میدان در یک ساختار درخت باینری تا ریشه درخت به عنوان هش مقدار در نظر گرفته شود.
 
-In the first step, when the bit in the `flag` is 1 indicating the `u256` value that cannot be treated as a field element, we split the value into a high-128bit value and a low-128bit value, and then pass them to a Poseidon hash to derive a field element value, `h(valueHi, valueLo)`.
+در مرحله اول، زمانی که بیت در `flag` ۱ است که نشان‌دهنده مقدار `u256` است که نمی‌تواند به عنوان عنصر میدان در نظر گرفته شود، مقدار را به یک مقدار بالایی ۱۲۸ بیتی و یک مقدار پایینی ۱۲۸ بیتی تقسیم می‌کنیم و سپس آنها را به هش پوزیدون می‌دهیم تا یک مقدار عنصر میدان به دست آوریم، `h(valueHi, valueLo)`.
 
 ```go
-// convert Keccak codehash to a field element
+// تبدیل Keccak codehash به یک عنصر میدان
 compressedKeccakCodeHash := h{512}(keccakCodeHash[0:16], keccakCodeHash[16:32])
 ```
 
-Second, the value hash is computed as follows.
+دوم، هش مقدار به صورت زیر محاسبه می‌شود:
 
 ```go
-domain := 256 * 5  // 5 elements to compute the valueHash
+domain := 256 * 5  // ۵ عنصر برای محاسبه valueHash
 valueHash :=
     h{domain}(
         h{domain}(
@@ -174,18 +176,18 @@ valueHash :=
     )
 ```
 
-#### Storage Leaf Node
+#### گره برگ ذخیره‌سازی
 
-A Storage Leaf Node encodes a key-value pair where both key and value are `u256` values. The secure key of this leaf node is derived from the storage key.
+یک گره برگ ذخیره‌سازی جفتی از کلید-مقدار را رمزگذاری می‌کند که هر دو کلید و مقدار مقادیر `u256` هستند. کلید امن این گره برگ از کلید ذخیره‌سازی استخراج می‌شود.
 
 ```go
-var storageKey byte[32]  // 32 bytes in big-endian
+var storageKey byte[32]  // ۳۲ بایت در big-endian
 valHi := storageKey[0:16]
 valLo := storageKey[16:32]
 nodeKey := h{512}(valHi, valLo)
 ```
 
-The storage value is a `u256` value. The `flag` for the storage value is 1, shown below.
+مقدار ذخیره‌سازی یک مقدار `u256` است. مقدار `flag` برای مقدار ذخیره‌سازی ۱ است، به شرح زیر:
 
 ```
          +--------------+
@@ -197,7 +199,7 @@ flag bit |      1       |
          +--------------+
 ```
 
-The value hash is computed as follows
+هش مقدار به صورت زیر محاسبه می‌شود:
 
 ```go
 valueHash = h{512}(storageValue[0:16], storageValue[16:32])

@@ -1,30 +1,30 @@
 ---
 section: technology
 date: Last Modified
-title: "Intro to zkEVM"
-lang: "en"
+title: "مقدمه ای بر zkEVM"
+lang: "fa"
 permalink: "technology/intro-to-zkevm"
-excerpt: "ZK rollups are widely recognized as the ideal scaling solution for Ethereum."
-whatsnext: { "zkEVM Overview": "/en/technology/zkevm/zkevm-overview" }
+excerpt: "ZK رول‌آپ‌ها به عنوان راه‌حل مقیاس‌پذیری ایده‌آل برای اتریوم شناخته می‌شوند."
+whatsnext: { "zkEVM بررسی اجمالی": "/fa/technology/zkevm/zkevm-overview" }
 ---
 
-## Introduction and motivation
+## مقدمه و انگیزه
 
-ZK rollups are widely recognized as the ideal scaling solution for Ethereum. They inherit the strong security of Ethereum Layer 1 and offer the fastest transaction finality compared to other Layer 2 solutions.
+ZK رول‌آپ‌ها به عنوان بهترین راه‌حل مقیاس‌پذیری برای اتریوم شناخته می‌شوند. آنها از امنیت قوی لایه ۱ اتریوم بهره می‌برند و از نظر سرعت نهایی تراکنش‌ها نسبت به دیگر راه‌حل‌های لایه ۲، سریع‌ترین هستند.
 
-The basic idea of a ZK rollup is to execute transactions off-chain and to generate succinct proofs of the execution’s validity. These succinct proofs can then be posted and verified on Ethereum Layer 1. ZK rollups improve scalability since verifying the proof for a batch of transactions is much cheaper than re-executing the batch of transactions.
+ایده اصلی یک ZK رول‌آپ این است که تراکنش‌ها به‌طور آفلاین اجرا شوند و سپس اثبات‌های مختصری از صحت اجرای تراکنش‌ها تولید شود. این اثبات‌های مختصر سپس در لایه ۱ اتریوم ارسال و تأیید می‌شوند. ZK رول‌آپ‌ها مقیاس‌پذیری را بهبود می‌بخشند زیرا تأیید اثبات برای یک دسته از تراکنش‌ها بسیار ارزان‌تر از اجرای دوباره‌ی دسته تراکنش‌ها است.
 
-ZK rollups can be categorized into application-specific and general-purpose rollups, based on the types of transactions they support. Application-specific ZK rollups are designed for particular transaction sets, such as payments and swaps, or a player’s action set for an on-chain game. In these cases, rollups only need to generate proofs attesting to the correctness of the supported primitives, such as valid state transitions for game players.
+ZK رول‌آپ‌ها می‌توانند به دو دسته تقسیم شوند: رول‌آپ‌های مخصوص به برنامه و رول‌آپ‌های عمومی، بر اساس انواع تراکنش‌هایی که پشتیبانی می‌کنند. رول‌آپ‌های مخصوص به برنامه برای مجموعه‌های خاصی از تراکنش‌ها طراحی شده‌اند، مانند پرداخت‌ها و مبادلات، یا مجموعه اقدامات یک بازیکن برای یک بازی زنجیره‌ای. در این موارد، رول‌آپ‌ها فقط باید اثبات‌هایی تولید کنند که درستی اصول پشتیبانی شده، مانند انتقال‌های صحیح وضعیت برای بازیکنان بازی، را تأیید کنند.
 
-On the other hand, general-purpose ZK rollups support a wider range of transactions and computations. These rollups use a virtual machine (VM) to execute assembly code, and then generate a proof to show that the execution was done correctly according to the VM's specifications. The particular VM that a ZK rollup uses for its computation differs across the many ZK rollup projects. Some projects elect to build their own VM, optimized for fast proof generation. Other projects elect to use the EVM, for optimal compatibility with the Ethereum ecosystem.
+از سوی دیگر، رول‌آپ‌های عمومی از طیف وسیع‌تری از تراکنش‌ها و محاسبات پشتیبانی می‌کنند. این رول‌آپ‌ها از یک ماشین مجازی (VM) برای اجرای کد اسمبلی استفاده می‌کنند و سپس یک اثبات تولید می‌کنند تا نشان دهند که اجرا به درستی طبق مشخصات VM انجام شده است. ماشین مجازی خاصی که یک رول‌آپ ZK برای محاسبات خود استفاده می‌کند، در پروژه‌های مختلف ZK رول‌آپ متفاوت است. برخی از پروژه‌ها تصمیم می‌گیرند ماشین مجازی خود را بسازند که بهینه‌سازی شده برای تولید سریع اثبات باشد. دیگر پروژه‌ها تصمیم می‌گیرند از EVM استفاده کنند، برای سازگاری بهتر با اکوسیستم اتریوم.
 
-Scroll is a general-purpose ZK rollup that uses the EVM for off-chain computations. Scroll’s execution layer functions similarly to Ethereum’s - transactions are batched into blocks, and then the blocks are executed according to the [EVM](https://ethereum.org/en/developers/docs/evm/) specs (we actually use a slightly [modified version](https://github.com/scroll-tech/go-ethereum) of [Geth](https://geth.ethereum.org/)). This means that users can interact with Scroll in the same way that they would interact with Ethereum. It also means that developers can develop on top of Scroll just as they would develop on top of Ethereum.
+Scroll یک رول‌آپ عمومی ZK است که از EVM برای محاسبات آفلاین استفاده می‌کند. لایه اجرایی Scroll به طور مشابه با اتریوم عمل می‌کند - تراکنش‌ها به بلوک‌ها گروه‌بندی می‌شوند و سپس بلوک‌ها طبق مشخصات [EVM](https://ethereum.org/en/developers/docs/evm/) اجرا می‌شوند (ما در واقع از نسخه‌ی [اصلاح‌شده‌ای](https://github.com/scroll-tech/go-ethereum) از [Geth](https://geth.ethereum.org/) استفاده می‌کنیم). این بدان معناست که کاربران می‌توانند با Scroll به همان شیوه‌ای که با اتریوم تعامل دارند، تعامل کنند. همچنین به این معناست که توسعه‌دهندگان می‌توانند به همان شیوه‌ای که بر روی اتریوم توسعه می‌دهند، بر روی Scroll نیز توسعه دهند.
 
-However, achieving Ethereum compatibility with a ZK rollup poses a large challenge - the rollup must be able to generate a proof proving that an off-chain EVM computation was executed correctly. This is essentially what a “zkEVM” is: **a zkEVM is a system that proves the correct execution of the EVM**.
+با این حال، دستیابی به سازگاری با اتریوم در یک رول‌آپ ZK چالش بزرگی است - رول‌آپ باید قادر باشد اثباتی تولید کند که نشان دهد محاسبات EVM آفلاین به درستی اجرا شده است. این به طور اساسی همان چیزی است که "zkEVM" است: **یک zkEVM سیستمی است که صحت اجرای EVM را اثبات می‌کند**.
 
-The EVM was originally designed without ZK rollups in mind, and it turns out that it is quite challenging to build a zkEVM. However, we at Scroll are undeterred by the challenge, and have been working hard in collaboration with the [Ethereum Privacy and Scaling Explorations](https://appliedzkp.org/) team to make the zkEVM a reality.
+EVM به طور اصلی بدون در نظر گرفتن ZK رول‌آپ‌ها طراحی شده بود و ساخت یک zkEVM به نظر می‌رسد چالش‌برانگیز است. با این حال، ما در Scroll از این چالش منصرف نشده‌ایم و با همکاری تیم [Ethereum Privacy and Scaling Explorations](https://appliedzkp.org/) به سختی در حال کار برای تحقق zkEVM هستیم.
 
-## Learn more
+## بیشتر بیاموزید
 
-- [Blog post](https://scroll.io/blog/zkEVM) introducing zkEVM
-- [zkEVM overview](https://youtu.be/NHwd-gJ8xg4) - Haichen Shen
+- [پست وبلاگ](https://scroll.io/blog/zkEVM) معرفی zkEVM
+- [مروری بر zkEVM](https://youtu.be/NHwd-gJ8xg4) - هایچن شِن

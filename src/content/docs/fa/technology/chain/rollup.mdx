@@ -1,58 +1,58 @@
 ---
 section: technology
 date: Last Modified
-title: "Rollup Process"
-lang: "en"
+title: "فرآیند رول‌آپ"
+lang: "fa"
 permalink: "technology/chain/rollup"
-whatsnext: { "EVM Differences from Ethereum": "/en/technology/chain/differences/" }
+whatsnext: { "تفاوت‌های EVM با Ethereum": "/fa/technology/chain/differences/" }
 ---
 
 import ClickToZoom from "../../../../../components/ClickToZoom.astro"
 import RollupProcess from "../_images/rollup.png"
 import { Tabs } from "../../../../../components/Tabs/Tabs.tsx"
 
-This document describes the rollup process in Scroll.
+این سند فرآیند رول‌آپ در Scroll را توصیف می‌کند.
 
-## Workflow
+## روند کار
 
-<ClickToZoom src={RollupProcess} alt="Rollup Process" />
+<ClickToZoom src={RollupProcess} alt="فرآیند رول‌آپ" />
 
-The figure illustrates the rollup workflow. The L2 sequencer contains three modules:
+شکل، روند کار رول‌آپ را نشان می‌دهد. توالی‌کننده L2 شامل سه ماژول است:
 
-- **Sync service** subscribes to the event issued from the L1 bridge contract. Once it detects any newly appended messages to the L1 inbox, the Sync Service will generate a new `L1MessageTx` transaction accordingly and add it to the local L1 transaction queue.
-- **Mempool** collects the transactions that are directly submitted to the L2 sequencer.
-- **Executor** pulls the transactions from both the L1 transaction queue and L2 mempool, executes them to construct a new L2 block.
+- **خدمات هماهنگ‌سازی** به رویدادهای صادر شده از قرارداد پل L1 مشترک می‌شود. به محض اینکه رویدادهای جدیدی به صندوق ورودی L1 اضافه می‌شود، خدمات هماهنگ‌سازی یک تراکنش جدید `L1MessageTx` ایجاد کرده و آن را به صف تراکنش‌های محلی L1 اضافه می‌کند.
+- **Mempool** تراکنش‌هایی را که به طور مستقیم به توالی‌کننده L2 ارسال می‌شود، جمع‌آوری می‌کند.
+- **اجراکننده** تراکنش‌ها را از هر دو صف تراکنش L1 و Mempool L2 کش می‌آورد و آنها را اجرا می‌کند تا یک بلوک جدید L2 را بسازد.
 
-The rollup node contains three modules:
+گره رول‌آپ شامل سه ماژول است:
 
-- **Relayer** submits the commit transactions and finalizes transactions to the rollup contract for data availability and finality.
-- **Chunk Proposer** and **Batch Proposer** propose new chunks and new batches following the constraints described in the [Transaction Batching](/technology/chain/transactions#transaction-batching).
+- **انتقال‌دهنده** تراکنش‌های تأیید و نهایی‌سازی را به قرارداد رول‌آپ برای دسترسی به داده‌ها و نهایی‌سازی ارسال می‌کند.
+- **پیشنهاددهنده بخش** و **پیشنهاددهنده دسته** بخش‌ها و دسته‌های جدید را با توجه به محدودیت‌های توصیف شده در [تجمع تراکنش‌ها](/technology/chain/transactions#transaction-batching) پیشنهاد می‌دهند.
 
-The rollup process can be broken down into three phases: transaction execution, batching and data commitment, and proof generation and finalization.
+فرآیند رول‌آپ را می‌توان به سه مرحله تقسیم کرد: اجرای تراکنش، تجمع و تعهد داده، و تولید و نهایی‌سازی اثبات.
 
-### Phase 1. Transaction Execution
+### مرحله 1. اجرای تراکنش
 
-1. Users submit transactions to L1 bridge contract or L2 sequencers.
-2. The Sync Service in the L2 sequencer fetches the latest appended L1 transactions from the bridge contract.
-3. The L2 sequencer processes the transactions from both the L1 message queue and the L2 mempool to construct L2 blocks.
+1. کاربران تراکنش‌ها را به قرارداد پل L1 یا توالی‌کننده‌های L2 ارسال می‌کنند.
+2. خدمات هماهنگ‌سازی در توالی‌کننده L2 جدیدترین تراکنش‌های اضافه شده به L1 را از قرارداد پل دریافت می‌کند.
+3. توالی‌کننده L2 تراکنش‌ها را از هر دو صف پیام L1 و Mempool L2 پردازش کرده و بلوک‌های L2 را می‌سازد.
 
-### Phase 2. Batching and Data Commitment
+### مرحله 2. تجمع و تعهد داده
 
-4. The rollup node monitors the latest L2 blocks and fetches the transaction data.
-5. If the criterion (described in the [Transaction Batching](/technology/chain/transactions#transaction-batching)) are met, the rollup node proposes a new chunk or a batch and writes it to the database. Otherwise, the rollup node keeps waiting for more blocks or chunks.
-6. Once a new batch is created, the rollup relayer collects the transaction data in this batch and submits a Commit Transaction to the rollup contract for data availability.
+4. گره رول‌آپ جدیدترین بلوک‌های L2 را نظارت کرده و داده‌های تراکنش را دریافت می‌کند.
+5. اگر معیارهای (توصیف شده در [تجمع تراکنش‌ها](/technology/chain/transactions#transaction-batching)) برآورده شود، گره رول‌آپ یک بخش یا دسته جدید پیشنهاد می‌دهد و آن را در پایگاه داده ثبت می‌کند. در غیر این صورت، گره رول‌آپ منتظر بلوک‌ها یا بخش‌های بیشتری می‌ماند.
+6. پس از ایجاد یک دسته جدید، انتقال‌دهنده رول‌آپ داده‌های تراکنش‌های این دسته را جمع‌آوری کرده و یک تراکنش تأیید به قرارداد رول‌آپ برای دسترسی به داده‌ها ارسال می‌کند.
 
-### Phase 3. Proof Generation and Finalization
+### مرحله 3. تولید و نهایی‌سازی اثبات
 
-7. Once the coordinator polls a new chunk or batch from the database:
-   - Upon a new chunk, the coordinator will query the execution traces of all blocks in this chunk from the L2 sequencer and then send a chunk proving task to a randomly selected zkEVM prover.
-   - Upon a new batch, the coordinator will collect the chunk proofs of all chunks in this batch from the database and dispatch a batch proving task to a randomly selected aggregator prover.
-8. Upon the coordinator receives a chunk or batch proofs from a prover, it will write the proof to the database.
-9. Once the rollup relayer polls a new batch proof from the database, it will submit a Finalize Transaction to the rollup contract to verify the proof.
+7. هنگامی که هماهنگ‌کننده یک بخش یا دسته جدید از پایگاه داده بررسی می‌کند:
+   - در مورد یک بخش جدید، هماهنگ‌کننده از توالی‌کننده L2 برای همه بلوک‌های این بخش، ردپای اجرای آنها را جستجو کرده و سپس یک وظیفه اثبات بخش را به یک اثبات‌کننده zkEVM به طور تصادفی انتخاب شده ارسال می‌کند.
+   - در مورد یک دسته جدید، هماهنگ‌کننده اثبات‌های بخش همه بخش‌های این دسته را از پایگاه داده جمع‌آوری کرده و یک وظیفه اثبات دسته را به یک اثبات‌کننده تجمیع‌کننده به طور تصادفی انتخاب شده ارسال می‌کند.
+8. هنگامی که هماهنگ‌کننده اثبات‌های بخش یا دسته را از اثبات‌کننده دریافت می‌کند، آن را به پایگاه داده می‌نویسد.
+9. هنگامی که انتقال‌دهنده رول‌آپ یک اثبات دسته جدید از پایگاه داده بررسی می‌کند، یک تراکنش نهایی‌سازی به قرارداد رول‌آپ برای تأیید اثبات ارسال می‌کند.
 
-## Commit Transaction
+## تراکنش تأیید
 
-The Commit Transaction submits the block information and transaction data to L1 for data availability. The transaction includes the parent batch header, chunk data, and a bitmap of skipped L1 messages. The parent batch header designates the previous batch that this batch links to. The parent batch must be committed before; otherwise, the transaction will be reverted. See the `commitBatch` function signature below.
+تراکنش تأیید اطلاعات بلوک و داده‌های تراکنش‌ها را به L1 برای دسترسی به داده‌ها ارسال می‌کند. این تراکنش شامل هدر دسته والد، داده‌های بخش و یک نقشه بیت از پیام‌های L1 رد شده است. هدر دسته والد نشان‌دهنده دسته قبلی است که این دسته به آن پیوند دارد. دسته والد باید قبلاً تأیید شده باشد؛ در غیر این صورت، تراکنش برگشت داده خواهد شد. در زیر امضای تابع `commitBatch` آمده است.
 
 ```solidity
 function commitBatch(
@@ -63,19 +63,19 @@ function commitBatch(
 ) external override OnlySequencer
 ```
 
-After the `commitBatch` function verifies the parent batch is committed before, it constructs the batch header of the batch and stores the hash of the batch header in the `ScrollChain` contract.
+پس از اینکه تابع `commitBatch` تأیید کرد که دسته والد قبلاً تأیید شده است، هدر دسته جدید را می‌سازد و هش هدر دسته را در قرارداد `ScrollChain` ذخیره می‌کند.
 
 ```solidity
 mapping(uint256 => bytes32) public committedBatches;
 ```
 
-The encoding of batch header and chunk data are described in the [Codec](#codec) section. Most fields in the batch header are straightforward to derive from the chunk data. One important field to note is `dataHash` which will become part of the public input to verify the validity proof. Assuming that a batch contains `n` chunks, its `dataHash` is computed as follows
+کدگذاری هدر دسته و داده‌های بخش در بخش [Codec](#codec) توصیف شده است. بیشتر فیلدهای هدر دسته به سادگی از داده‌های بخش استنتاج می‌شوند. یک فیلد مهم که باید به آن توجه کرد `dataHash` است که بخشی از ورودی عمومی برای تأیید اعتبار اثبات خواهد بود. فرض کنید که یک دسته شامل `n` بخش است، `dataHash` آن به شرح زیر محاسبه می‌شود
 
 ```
 batch.dataHash := keccak(chunk[0].dataHash || ... || chunk[n-1].dataHash)
 ```
 
-Assuming that a chunk contains `k` blocks, its `dataHash` is computed as follows
+فرض کنید که یک بخش شامل `k` بلوک است، `dataHash` آن به شرح زیر محاسبه می‌شود
 
 ```
 chunk.dataHash := keccak(blockContext[0] || ... || blockContext[k-1] ||
@@ -83,13 +83,13 @@ chunk.dataHash := keccak(blockContext[0] || ... || blockContext[k-1] ||
                          block[k-1].l1TxHashes || block[k-1].l2TxHashes)
 ```
 
-, where `block.l1TxHashes` are the concatenated transaction hashes of the L1 transactions in this block and `block.l2TxHashes` are the concatenated transaction hashes of the L2 transactions in this block. Note that the transaction hashes of L1 transactions are not uploaded by the rollup node, but instead directly loaded from the `L1MessageQueue` contract given the index range of included L1 messages in this block. The L2 transaction hashes are calculated from the RLP-encoded bytes in the `l2Transactions` field in the [`Chunk`](#Chunk-Codec).
+که در آن `block.l1TxHashes` هش‌های تراکنش‌های L1 در این بلوک هستند و `block.l2TxHashes` هش‌های تراکنش‌های L2 در این بلوک هستند. توجه داشته باشید که هش‌های تراکنش‌های L1 توسط گره رول‌آپ بارگذاری نمی‌شود، بلکه مستقیماً از قرارداد `L1MessageQueue` با توجه به محدوده شاخص پیام‌های L1 گنجانده شده در این بلوک بارگذاری می‌شود. هش‌های تراکنش‌های L2 از بایت‌های کدگذاری شده RLP در فیلد `l2Transactions` در [بخش](#Chunk-Codec) محاسبه می‌شود.
 
-In addition, the `commitBatch` function contains a bitmap of skipped L1 messages. Unfortunately, this is due to the problem of proof overflow. If the L1 transaction corresponding to an L1 message exceeds the circuit capacity limit, we won't be able to generate a valid proof for this transaction and thus cannot finalize it on L1. Scroll is working actively to eliminate the proof overflow problem through upgrades to our proving system.
+علاوه بر این، تابع `commitBatch` شامل یک نقشه بیت از پیام‌های L1 رد شده است. متأسفانه، این به دلیل مشکل سرریز اثبات است. اگر تراکنش L1 مربوط به یک پیام L1 از محدودیت ظرفیت مدار فراتر برود، نمی‌توانیم اثبات معتبری برای این تراکنش تولید کنیم و بنابراین نمی‌توانیم آن را در L1 نهایی کنیم. Scroll به طور فعال در حال کار برای حذف مشکل سرریز اثبات از طریق به‌روزرسانی‌های سیستم اثبات ما است.
 
-## Finalize Transaction
+## تراکنش نهایی‌سازی
 
-The Finalize Transaction finalizes the previously-committed batch with a validity proof. The transaction also submits the state root and the withdraw root after the batch. Here is the function signature of `finalizeBatchWithProof`:
+تراکنش نهایی‌سازی دسته‌ای که قبلاً تأیید شده را با یک اثبات اعتبار نهایی می‌کند. این تراکنش همچنین ریشه وضعیت و ریشه برداشت بعد از دسته را ارسال می‌کند. در زیر امضای تابع `finalizeBatchWithProof` آمده است:
 
 ```solidity
 function finalizeBatchWithProof(
@@ -101,108 +101,108 @@ function finalizeBatchWithProof(
 ) external override OnlyProver
 ```
 
-The `finalizeBatchWithProof` function first verifies if the batch has been committed in the contract. It then calculates the public input hash as follows
+تابع `finalizeBatchWithProof` ابتدا بررسی می‌کند که آیا دسته در قرارداد تأیید شده است. سپس ورودی عمومی را به شرح زیر محاسبه می‌کند
 
 ```
 publicInputHash := keccak(chainId || prevStateRoot || postStateRoot || withdrawRoot || batch.dataHash)
 ```
 
-The public input hash and the validity proof are sent to the plonk solidity verifier. Once the verification passes, the new state root and withdraw root are stored in the `ScrollChain` contract.
+هش ورودی عمومی و اثبات اعتبار به تأییدکننده plonk solidity ارسال می‌شود. هنگامی که تأیید موفقیت‌آمیز است، ریشه وضعیت و ریشه برداشت جدید در قرارداد `ScrollChain` ذخیره می‌شود.
 
 ```solidity
 mapping(uint256 => bytes32) public override finalizedStateRoots;
 mapping(uint256 => bytes32) public override withdrawRoots;
 ```
 
-At this stage, the state root of the latest finalized batch can be used trustlessly and the withdrawal transactions in that batch can be executed on L1 using the Merkle proof to the withdraw root.
+در این مرحله، ریشه وضعیت جدیدترین دسته نهایی‌شده می‌تواند به صورت قابل اعتماد استفاده شود و تراکنش‌های برداشت در آن دسته می‌توانند با استفاده از اثبات مرکل به ریشه برداشت، بر روی L1 اجرا شوند.
 
 ## Codec
 
-This section describes the codec of three data structures in the Rollup contract: `BatchHeader`, `Chunk`, and `BlockContext`.
+این بخش Codec سه ساختار داده‌ای در قرارداد رول‌آپ: `BatchHeader`، `Chunk` و `BlockContext` را توصیف می‌کند.
 
-The latest update to the codec was introduced in the [Bernoulli upgrade](/technology/overview/scroll-upgrades#bernoulli-upgrade).
+آخرین به‌روزرسانی به Codec در [ارتقاء برنولی](/technology/overview/scroll-upgrades#bernoulli-upgrade) معرفی شد.
 
 <Tabs sharedStore="upgrades" client:visible>
-<Fragment slot="tab.bernoulli">bernoulli</Fragment>
-<Fragment slot="tab.archimedes">archimedes</Fragment>
+<Fragment slot="tab.bernoulli">برنولی</Fragment>
+<Fragment slot="tab.archimedes">آرشمیدس</Fragment>
   <Fragment slot="panel.bernoulli">
     <slot name="bernoulli" />
 
-    This data format is still applicable post-Curie upgrade, and has not been changed.
+    این فرمت داده‌ای پس از ارتقاء کوری، همچنان قابل اجرا است و تغییری نکرده است.
 
-    #### `BatchHeader` Codec
+    #### Codec `BatchHeader`
 
-    | Field                    | Bytes   | Type        | Offset | Description                                                     |
+    | فیلد                    | بایت‌ها | نوع        | آفست | توضیحات                                                     |
     | ------------------------ | ------- | ----------- | ------ | --------------------------------------------------------------- |
-    | `version`                | 1       | `uint8`     | 0      | The batch header version                                        |
-    | `batchIndex`             | 8       | `uint64`    | 1      | The index of the batch                                          |
-    | `l1MessagePopped`        | 8       | `uint64`    | 9      | The number of L1 messages popped in the batch                    |
-    | `totalL1MessagePopped`   | 8       | `uint64`    | 17     | The number of total L1 messages popped after the batch          |
-    | `dataHash`               | 32      | `bytes32`   | 25     | The data hash of the batch                                      |
-    | `blobVersionedHash`      | 32      | `bytes32`   | 57     | The versioned hash of the blob with this batch’s data           |
-    | `parentBatchHash`        | 32      | `bytes32`   | 89     | The parent batch hash                                           |
-    | `skippedL1MessageBitmap` | dynamic | `uint256[]` | 121    | A bitmap to indicate which L1 messages are skipped in the batch |
+    | `version`                | 1       | `uint8`     | 0      | نسخه هدر دسته                                               |
+    | `batchIndex`             | 8       | `uint64`    | 1      | ایندکس دسته                                                  |
+    | `l1MessagePopped`        | 8       | `uint64`    | 9      | تعداد پیام‌های L1 که در دسته قرار گرفته‌اند                  |
+    | `totalL1MessagePopped`   | 8       | `uint64`    | 17     | تعداد کل پیام‌های L1 که بعد از دسته قرار گرفته‌اند          |
+    | `dataHash`               | 32      | `bytes32`   | 25     | هش داده‌های دسته                                             |
+    | `blobVersionedHash`      | 32      | `bytes32`   | 57     | هش نسخه‌دار blob با داده‌های این دسته                          |
+    | `parentBatchHash`        | 32      | `bytes32`   | 89     | هش دسته والد                                                 |
+    | `skippedL1MessageBitmap` | دینامیک | `uint256[]` | 121    | نقشه بیت برای نشان دادن پیام‌های L1 که در دسته نادیده گرفته شده‌اند |
 
-    #### `Chunk` Codec
+    #### Codec `Chunk`
 
-    | Field            | Bytes   | Type           | Offset    | Description                                                                                                                                       |
+    | فیلد            | بایت‌ها | نوع           | آفست    | توضیحات                                                                                                                                       |
     | ---------------- | ------- | -------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-    | `numBlocks`      | 1       | `uint8`        | 0         | The number of blocks in the chunk                                                                                                                 |
-    | `block[0]`       | 60      | `BlockContext` | 1         | The block information of the 1st block                                                                                                            |
+    | `numBlocks`      | 1       | `uint8`        | 0         | تعداد بلوک‌ها در بخش                                                                                                                 |
+    | `block[0]`       | 60      | `BlockContext` | 1         | اطلاعات بلوک 1م                                                                                                            |
     | ...              | ...     | ...            | ...       | ...                                                                                                                                               |
-    | `block[i]`       | 60      | `BlockContext` | `60*i+1`  | The block information of `i+1`-th block                                                                                                           |
+    | `block[i]`       | 60      | `BlockContext` | `60*i+1`  | اطلاعات بلوک `i+1`ام                                                                                                           |
     | ...              | ...     | ...            | ...       | ...                                                                                                                                               |
-    | `block[n-1]`     | 60      | `BlockContext` | `60*n-59` | The block information of the last block                                                                                                           |
+    | `block[n-1]`     | 60      | `BlockContext` | `60*n-59` | اطلاعات بلوک آخر                                                                                                           |
 
-    #### `BlockContext` Codec
+    #### Codec `BlockContext`
 
-    | Field             | Bytes | Type      | Offset | Description                                                                         |
+    | فیلد             | بایت‌ها | نوع      | آفست | توضیحات                                                                         |
     | ----------------- | ----- | --------- | ------ | ----------------------------------------------------------------------------------- |
-    | `blockNumber`     | 8     | `uint64`  | 0      | The block number                                                                    |
-    | `timestamp`       | 8     | `uint64`  | 8      | The block time                                                                      |
-    | `baseFee`         | 32    | `uint256` | 16     | The base fee of this block. Currently, it is always 0, because we disable EIP-1559. |
-    | `gasLimit`        | 8     | `uint64`  | 48     | The gas limit of this block                                                         |
-    | `numTransactions` | 2     | `uint16`  | 56     | The number of transactions in this block, including both L1 & L2 txs                |
-    | `numL1Messages`   | 2     | `uint16`  | 58     | The number of L1 messages in this block    
-  
+    | `blockNumber`     | 8     | `uint64`  | 0      | شماره بلوک                                                                    |
+    | `timestamp`       | 8     | `uint64`  | 8      | زمان بلوک                                                                      |
+    | `baseFee`         | 32    | `uint256` | 16     | هزینه پایه این بلوک. در حال حاضر همیشه 0 است، زیرا EIP-1559 غیرفعال است. |
+    | `gasLimit`        | 8     | `uint64`  | 48     | محدودیت گس این بلوک                                                         |
+    | `numTransactions` | 2     | `uint16`  | 56     | تعداد تراکنش‌ها در این بلوک، شامل تراکنش‌های L1 و L2                |
+    | `numL1Messages`   | 2     | `uint16`  | 58     | تعداد پیام‌های L1 در این بلوک    
+
   </Fragment>
 
   <Fragment slot="panel.archimedes">
     <slot name="archimedes" />
-    #### `BatchHeader` Codec
+    #### Codec `BatchHeader`
 
-    | Field                    | Bytes   | Type        | Offset | Description                                                     |
+    | فیلد                    | بایت‌ها | نوع        | آفست | توضیحات                                                     |
     | ------------------------ | ------- | ----------- | ------ | --------------------------------------------------------------- |
-    | `version`                | 1       | `uint8`     | 0      | The batch header version                                        |
-    | `batchIndex`             | 8       | `uint64`    | 1      | The index of the batch                                          |
-    | `l1MessagePopped`        | 8       | `uint64`    | 9      | The number of L1 messages popped in the batch                    |
-    | `totalL1MessagePopped`   | 8       | `uint64`    | 17     | The number of total L1 messages popped after the batch          |
-    | `dataHash`               | 32      | `bytes32`   | 25     | The data hash of the batch                                      |
-    | `parentBatchHash`        | 32      | `bytes32`   | 57     | The parent batch hash                                           |
-    | `skippedL1MessageBitmap` | dynamic | `uint256[]` | 89     | A bitmap to indicate which L1 messages are skipped in the batch |
+    | `version`                | 1       | `uint8`     | 0      | نسخه هدر دسته                                               |
+    | `batchIndex`             | 8       | `uint64`    | 1      | ایندکس دسته                                                  |
+    | `l1MessagePopped`        | 8       | `uint64`    | 9      | تعداد پیام‌های L1 که در دسته قرار گرفته‌اند                  |
+    | `totalL1MessagePopped`   | 8       | `uint64`    | 17     | تعداد کل پیام‌های L1 که بعد از دسته قرار گرفته‌اند          |
+    | `dataHash`               | 32      | `bytes32`   | 25     | هش داده‌های دسته                                             |
+    | `parentBatchHash`        | 32      | `bytes32`   | 57     | هش دسته والد                                                 |
+    | `skippedL1MessageBitmap` | دینامیک | `uint256[]` | 89     | نقشه بیت برای نشان دادن پیام‌های L1 که در دسته نادیده گرفته شده‌اند |
 
-    #### `Chunk` Codec
+    #### Codec `Chunk`
 
-    | Field            | Bytes   | Type           | Offset    | Description                                                                                                                                       |
+    | فیلد            | بایت‌ها | نوع           | آفست    | توضیحات                                                                                                                                       |
     | ---------------- | ------- | -------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-    | `numBlocks`      | 1       | `uint8`        | 0         | The number of blocks in the chunk                                                                                                                 |
-    | `block[0]`       | 60      | `BlockContext` | 1         | The block information of the 1st block                                                                                                            |
+    | `numBlocks`      | 1       | `uint8`        | 0         | تعداد بلوک‌ها در بخش                                                                                                                 |
+    | `block[0]`       | 60      | `BlockContext` | 1         | اطلاعات بلوک 1م                                                                                                            |
     | ...              | ...     | ...            | ...       | ...                                                                                                                                               |
-    | `block[i]`       | 60      | `BlockContext` | `60*i+1`  | The block information of `i+1`-th block                                                                                                           |
+    | `block[i]`       | 60      | `BlockContext` | `60*i+1`  | اطلاعات بلوک `i+1`ام                                                                                                           |
     | ...              | ...     | ...            | ...       | ...                                                                                                                                               |
-    | `block[n-1]`     | 60      | `BlockContext` | `60*n-59` | The block information of the last block  
-    | `l2Transactions` | dynamic | `bytes`        | `60*n+1`  | The concatenated RLP encoding of L2 transactions with signatures. The byte length (`uint32`) of RLP encoding is inserted before each transaction. |                                                                                                         |
+    | `block[n-1]`     | 60      | `BlockContext` | `60*n-59` | اطلاعات بلوک آخر                                                                                                           |
+    | `l2Transactions` | دینامیک | `bytes`        | `60*n+1`  | کدگذاری شده RLP تراکنش‌های L2 با امضاها. طول بایت (`uint32`) کدگذاری RLP قبل از هر تراکنش درج شده است. |                                                                                                         |
 
-    #### `BlockContext` Codec
+    #### Codec `BlockContext`
 
-    | Field             | Bytes | Type      | Offset | Description                                                                         |
+    | فیلد             | بایت‌ها | نوع      | آفست | توضیحات                                                                         |
     | ----------------- | ----- | --------- | ------ | ----------------------------------------------------------------------------------- |
-    | `blockNumber`     | 8     | `uint64`  | 0      | The block number                                                                    |
-    | `timestamp`       | 8     | `uint64`  | 8      | The block time                                                                      |
-    | `baseFee`         | 32    | `uint256` | 16     | The base fee of this block. Currently, it is always 0, because we disable EIP-1559. |
-    | `gasLimit`        | 8     | `uint64`  | 48     | The gas limit of this block                                                         |
-    | `numTransactions` | 2     | `uint16`  | 56     | The number of transactions in this block, including both L1 & L2 txs                |
-    | `numL1Messages`   | 2     | `uint16`  | 58     | The number of L1 messages in this block    
+    | `blockNumber`     | 8     | `uint64`  | 0      | شماره بلوک                                                                    |
+    | `timestamp`       | 8     | `uint64`  | 8      | زمان بلوک                                                                      |
+    | `baseFee`         | 32    | `uint256` | 16     | هزینه پایه این بلوک. در حال حاضر همیشه 0 است، زیرا EIP-1559 غیرفعال است. |
+    | `gasLimit`        | 8     | `uint64`  | 48     | محدودیت گس این بلوک                                                         |
+    | `numTransactions` | 2     | `uint16`  | 56     | تعداد تراکنش‌ها در این بلوک، شامل تراکنش‌های L1 و L2                |
+    | `numL1Messages`   | 2     | `uint16`  | 58     | تعداد پیام‌های L1 در این بلوک    
 
   </Fragment>
 </Tabs>

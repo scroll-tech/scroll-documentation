@@ -1,211 +1,143 @@
 ---
 section: technology
 date: Last Modified
-title: "Scroll Upgrades"
-lang: "en"
+title: "ارتقاء‌های Scroll"
+lang: "fa"
 permalink: "technology/overview/scroll-upgrades"
 ---
 
-As the team continues to progress on Scroll's roadmap, we will be upgrading the Scroll network to include new features and improvements.
+با پیشرفت تیم در نقشه راه اسکرول، شبکه اسکرول را برای افزودن ویژگی‌ها و بهبود‌های جدید ارتقاء خواهیم داد.
 
-The following contracts are used to initiate upgrades and execute upgrades after the two-week timelock period:
+قراردادهای زیر برای شروع و اجرای ارتقاء پس از دوره‌ی دو هفته‌ای تایملوک استفاده می‌شوند:
 
-| Contract         | Network                                                      | Address | 
+| قرارداد         | شبکه                                                      | آدرس | 
 | ------------------------ | ------- | - | 
-| L1 Scroll Multisig | Ethereum| [`0xEfc9D1096fb65c832207E5e7F13C2D1102244dbe`](https://etherscan.io/address/0xEfc9D1096fb65c832207E5e7F13C2D1102244dbe)| 
-| L1 Timelock |  Ethereum| [`0x1A658B88fD0a3c82fa1a0609fCDbD32e7dd4aB9C`](https://etherscan.io/address/0x1A658B88fD0a3c82fa1a0609fCDbD32e7dd4aB9C)| 
-| L2 Scroll Multisig | Scroll| [`0xEfc9D1096fb65c832207E5e7F13C2D1102244dbe`](https://scrollscan.com/address/0xEfc9D1096fb65c832207E5e7F13C2D1102244dbe)|
-| L2 Timelock | Scroll | [`0xf6069DB81239E5194bb53f83aF564d282357bc99`](https://scrollscan.com/address/0xf6069DB81239E5194bb53f83aF564d282357bc99)|
+| مولتی‌سیگ اسکرول L1 | اتریوم | [`0xEfc9D1096fb65c832207E5e7F13C2D1102244dbe`](https://etherscan.io/address/0xEfc9D1096fb65c832207E5e7F13C2D1102244dbe)| 
+| تایملوک L1 |  اتریوم | [`0x1A658B88fD0a3c82fa1a0609fCDbD32e7dd4aB9C`](https://etherscan.io/address/0x1A658B88fD0a3c82fa1a0609fCDbD32e7dd4aB9C)| 
+| مولتی‌سیگ اسکرول L2 | اسکرول | [`0xEfc9D1096fb65c832207E5e7F13C2D1102244dbe`](https://scrollscan.com/address/0xEfc9D1096fb65c832207E5e7F13C2D1102244dbe)|
+| تایملوک L2 | اسکرول | [`0xf6069DB81239E5194bb53f83aF564d282357bc99`](https://scrollscan.com/address/0xf6069DB81239E5194bb53f83aF564d282357bc99)|
 
-You can join our [Telegram channel for technical updates](https://t.me/scroll_tech_updates), which includes future upgrade announcements and on-chain operation events.
+می‌توانید به [کانال تلگرام ما برای به‌روزرسانی‌های فنی](https://t.me/scroll_tech_updates) بپیوندید، که شامل اعلامیه‌های ارتقاء آینده و رویدادهای عملیات زنجیره‌ای است.
 
-## Curie Upgrade
+## ارتقاء Curie
 
-### Overview
+### مروری
 
-This significant upgrade will reduce gas fees on the Scroll chain by 1.5x. Highlights include: 
+این ارتقاء مهم هزینه‌های گس را در زنجیره اسکرول 1.5 برابر کاهش می‌دهد. نکات برجسته عبارتند از:
 
-- Compresses the data stored in blobs using the [zstd](https://github.com/scroll-tech/da-codec/tree/main/libzstd) algorithm. This compression reduces the data size, allowing each blob to store more transactions, thereby reducing data availability cost per transaction.
-- Adopts a modified version of the EIP-1559 pricing model which is compatible with the EIP-1559 transaction interface, bringing beneftis such as more accurate transaction pricing and a more predictable and stable fee structure.
-- Support for new EVM opcodes `TLOAD`, `TSTORE`, and `MCOPY`. Users can safely use the latest Solidity compiler version `0.8.26` to build the contracts.
-- Introduces a dynamic block time. During periods of traffic congestion, a block will be packed when the number of transactions reaches the circuit limit instead of waiting for the 3-second interval.
+- فشرده‌سازی داده‌های ذخیره‌شده در بلوک‌ها با استفاده از الگوریتم [zstd](https://github.com/scroll-tech/da-codec/tree/main/libzstd). این فشرده‌سازی اندازه داده‌ها را کاهش می‌دهد و به هر بلوک امکان می‌دهد تراکنش‌های بیشتری ذخیره کند و در نتیجه هزینه دسترسی به داده‌ها برای هر تراکنش کاهش یابد.
+- استفاده از نسخه‌ی اصلاح‌شده مدل قیمت‌گذاری EIP-1559 که با رابط تراکنش EIP-1559 سازگار است، مزایایی مانند قیمت‌گذاری دقیق‌تر تراکنش‌ها و ساختار هزینه پیش‌بینی‌پذیرتر و پایدارتر را به ارمغان می‌آورد.
+- پشتیبانی از اپکدهای جدید EVM `TLOAD`، `TSTORE` و `MCOPY`. کاربران می‌توانند با اطمینان از آخرین نسخه کامپایلر Solidity `0.8.26` برای ساخت قراردادها استفاده کنند.
+- معرفی زمان بلوک پویا. در دوره‌های ترافیک شلوغ، یک بلوک هنگامی بسته می‌شود که تعداد تراکنش‌ها به حد مدار برسد و نه انتظار برای بازه‌ی 3 ثانیه.
 
-### Timeline
+### جدول زمانی
 
 - **Scroll Sepolia**
-	- Network Upgrade: June 17th, 2024
+	- ارتقاء شبکه: 17 ژوئن 2024
 - **Scroll Mainnet**
-	- Upgrade Initiation: June 20th, 2024
-	- Timelock Completion & Upgrade: July 3rd, 2024
+	- شروع ارتقاء: 20 ژوئن 2024
+	- تکمیل تایملوک و ارتقاء: 3 ژوئیه 2024
 
-### Technical Details
+### جزئیات فنی
 
-#### Contract Changes
+#### تغییرات قرارداد
 
-The code changes for this upgrade are documented in the following PRs:
+تغییرات کد برای این ارتقاء در PRهای زیر مستند شده‌اند:
 
-- [Accept compressed batches](https://github.com/scroll-tech/scroll/pull/1317)
-- [Update `L1GasPriceOracle`](https://github.com/scroll-tech/scroll/pull/1343)
-- [Change `MAX_COMMIT_SCALAR` and `MAX_BLOB_SCALAR` to 1e18](https://github.com/scroll-tech/scroll/pull/1354)
-- [Remove batch index check when updating a verifier](https://github.com/scroll-tech/scroll/pull/1372)
+- [پذیرش دسته‌های فشرده‌شده](https://github.com/scroll-tech/scroll/pull/1317)
+- [به‌روزرسانی `L1GasPriceOracle`](https://github.com/scroll-tech/scroll/pull/1343)
+- [تغییر `MAX_COMMIT_SCALAR` و `MAX_BLOB_SCALAR` به 1e18](https://github.com/scroll-tech/scroll/pull/1354)
+- [حذف بررسی شاخص دسته هنگام به‌روزرسانی یک تأییدکننده](https://github.com/scroll-tech/scroll/pull/1372)
 
-The main changes are as follows:
+تغییرات اصلی به شرح زیر است:
 
-- The rollup contract (`ScrollChain`) will now accept batches with both versions 1 and 2. [Version 1](https://github.com/scroll-tech/da-codec/tree/main/encoding/codecv1) is used for uncompressed blobs (pre-Curie), while [version 2](https://github.com/scroll-tech/da-codec/tree/main/encoding/codecv2) is used for compressed blobs (post-Curie). 
-- The `L1GasPriceOracle` contract will be updated to change the data fee formula to account for blob DA, providing a more accurate estimation of DA costs:
-    - Original formula: `(l1GasUsed(txRlp) + overhead) * l1BaseFee * scalar`
-    - New formula: `l1BaseFee * commitScalar + len(txRlp) * l1BlobBaseFee * blobScalar`
+- قرارداد رول‌آپ (`ScrollChain`) اکنون دسته‌هایی با هر دو نسخه 1 و 2 را قبول خواهد کرد. [نسخه 1](https://github.com/scroll-tech/da-codec/tree/main/encoding/codecv1) برای بلوک‌های بدون فشرده‌سازی (پیش از Curie)، و [نسخه 2](https://github.com/scroll-tech/da-codec/tree/main/encoding/codecv2) برای بلوک‌های فشرده‌شده (پس از Curie) استفاده می‌شود.
+- قرارداد `L1GasPriceOracle` به‌روزرسانی خواهد شد تا فرمول هزینه داده را برای حساب کردن بلوک DA تغییر دهد، ارائه برآورد دقیق‌تر از هزینه‌های DA:
+    - فرمول اصلی: `(l1GasUsed(txRlp) + overhead) * l1BaseFee * scalar`
+    - فرمول جدید: `l1BaseFee * commitScalar + len(txRlp) * l1BlobBaseFee * blobScalar`
 
-#### Node Changes
+#### تغییرات گره
 
-The new node version is `v5.5.0`. See the [release notes](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.5.0) for the list of changes.
+نسخه جدید گره `v5.5.0` است. برای مشاهده فهرست تغییرات، به [یادداشت‌های نسخه](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.5.0) مراجعه کنید.
 
-#### zkEVM circuit changes
+#### تغییرات مدار zkEVM
 
-The new version of zkevm circuits is `v0.11.4`. See [here](https://github.com/scroll-tech/zkevm-circuits/releases/tag/v0.11.4) for the release log.
+نسخه جدید مدارهای zkevm `v0.11.4` است. برای مشاهده گزارش نسخه، [اینجا](https://github.com/scroll-tech/zkevm-circuits/releases/tag/v0.11.4) را ببینید.
 
-#### Audits
+#### ممیزی‌ها
 
-- TrailofBits: coming soon!
+- TrailofBits: به زودی!
 - [Zellic](https://github.com/Zellic/publications/blob/master/Scroll%20zkEVM%20-%20Zellic%20Audit%20Report.pdf)
 
-### Compatibility
+### سازگاری
 
-#### Sequencer and Follower Nodes (l2geth)
+#### گره‌های ترتیب‌دهنده و دنبال‌کننده (l2geth)
 
-This upgrade is a hard fork, introducing the `TLOAD`, `TSTORE`, and `MCOPY` opcodes. Operators running an `l2geth` node are required to upgrade before the hard fork block. For more information, see the [node release note](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.4.2).
+این ارتقاء یک فورک سخت است که اپکدهای `TLOAD`، `TSTORE` و `MCOPY` را معرفی می‌کند. اپراتورهایی که گره `l2geth` را اجرا می‌کنند باید قبل از بلوک فورک سخت، به‌روزرسانی کنند. برای اطلاعات بیشتر، به [یادداشت‌های نسخه گره](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.4.2) مراجعه کنید.
 
-#### Dapps and Indexers
+#### dApps و شاخص‌ها
 
-For dApps, this upgrade is backward compatible. Developers should adjust the gas fee settings to incorporate the EIP-1559 pricing model. Note that dApps can no longer rely on the fixed 3-second block time in the application logic.
+برای dApps، این ارتقاء با نسخه‌های قبلی سازگار است. توسعه‌دهندگان باید تنظیمات هزینه گس را برای تطبیق با مدل قیمت‌گذاری EIP-1559 تنظیم کنند. توجه داشته باشید که dApps نمی‌توانند دیگر بر زمان بلوک ثابت 3 ثانیه در منطق برنامه اعتماد کنند.
 
-For indexers, the [data format](https://docs.scroll.io/en/technology/chain/rollup/#codec) remains the same. The will be however changes to the data content:
+برای شاخص‌ها، [فرمت داده](https://docs.scroll.io/en/technology/chain/rollup/#codec) همچنان یکسان باقی می‌ماند. با این حال، تغییراتی در محتوای داده وجود خواهد داشت:
 
-- The `version` field in `BatchHeader` will be changed to 2 since Curie block.
-- The data stored in blob will be compressed and can be decompressed by [zstd v1.5.6](https://github.com/facebook/zstd/releases/tag/v1.5.6).
+- فیلد `version` در `BatchHeader` از بلوک Curie به بعد به 2 تغییر خواهد کرد.
+- داده‌های ذخیره‌شده در بلوک فشرده خواهند شد و می‌توانند با استفاده از [zstd v1.5.6](https://github.com/facebook/zstd/releases/tag/v1.5.6) از حالت فشرده خارج شوند.
 
-## Bernoulli Upgrade
+## ارتقاء برنولی
 
-### Overview
+### مروری
 
-This upgrade features a significant reduction in transaction costs by introducing support for EIP-4844 data blobs and supporting the SHA2-256 precompile. 
+این ارتقاء شامل کاهش چشمگیر هزینه‌های تراکنش با معرفی پشتیبانی از داده‌های بلوک EIP-4844 و پشتیبانی از پیش‌کامپایل SHA2-256 است.
 
-### Timeline
+### جدول زمانی
 
 - **Scroll Sepolia**
-	- Network Upgrade: April 15th, 2024
+	- ارتقاء شبکه: 15 آوریل 2024
 - **Scroll Mainnet**
-	- Upgrade Initiation: April 15th, 2024
-	- Timelock Completion & Upgrade: April 29th, 2024
+	- شروع ارتقاء: 15 آوریل 2024
+	- تکمیل تایملوک و ارتقاء: 29 آوریل 2024
 
-### Technical Details
+### جزئیات فنی
 
-#### Contract changes
+#### تغییرات قرارداد
 
-The contract changes for this upgrade are in [this PR](https://github.com/scroll-tech/scroll/pull/1179), along with the audit fixes [here](https://github.com/scroll-tech/scroll/pulls?q=is%3Apr+created%3A2024-04-10..2024-04-11+fix+in%3Atitle+label%3Abug). The main changes are as follows: 
+تغییرات قرارداد برای این ارتقاء در [این PR](https://github.com/scroll-tech/scroll/pull/1179) مستند شده‌اند، به همراه رفع خطاهای ممیزی [اینجا](https://github.com/scroll-tech/scroll/pulls?q=is%3Apr+created%3A2024-04-10..2024-04-11+fix+in%3Atitle+label%3Abug). تغییرات اصلی به شرح زیر است:
 
-- `ScrollChain` now accepts batches with either calldata or blob encoding in `commitBatch`.
-- `ScrollChain` now supports finalizing blob-encoded batches through `finalizeBatchWithProof4844`.
-- `MultipleVersionRollupVerifier` can now manage different on-chain verifiers for each batch encoding version.
+- `ScrollChain` اکنون دسته‌هایی با هر دو رمزنگاری داده یا بلوک را در `commitBatch` قبول می‌کند.
+- `
 
-#### Node changes
+L1GasPriceOracle` برای استفاده از فرمول هزینه داده‌های بلوک به‌روزرسانی شده است:
+    - فرمول اصلی: `(l1GasUsed(txRlp) + overhead) * l1BaseFee * scalar`
+    - فرمول جدید: `l1GasUsed(txRlp) * l1BaseFee * scalar`
 
-The new node version is `v5.3.0`. See [here](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.3.0) for the release log.
+#### تغییرات گره
 
-#### zkEVM circuit changes
+نسخه جدید گره `v5.4.2` است. برای فهرست تغییرات، به [یادداشت‌های نسخه](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.4.2) مراجعه کنید.
 
-The new version of zkevm circuits is `v0.10.3`. See [here](https://github.com/scroll-tech/zkevm-circuits/releases/tag/v0.10.3) for the release log.
+#### تغییرات مدار zkEVM
 
-#### Audits
+نسخه جدید مدارهای zkevm `v0.10.3` است. برای گزارش نسخه، [اینجا](https://github.com/scroll-tech/zkevm-circuits/releases/tag/v0.10.3) را ببینید.
 
-- [OpenZeppelin](https://blog.openzeppelin.com/scroll-eip-4844-support-audit)
-- [TrailofBits](https://github.com/trailofbits/publications/blob/master/reviews/2024-04-scroll-4844-blob-securityreview.pdf)
+#### ممیزی‌ها
 
-### Compatibility
+- [Quarkslab](https://github.com/Quarkslab/publications/blob/master/Scroll%20zkEVM%20-%20Quarkslab%20Audit%20Report.pdf)
+- [Zellic](https://github.com/Zellic/publications/blob/master/Scroll%20zkEVM%20-%20Zellic%20Audit%20Report.pdf)
 
-#### Sequencer and follower nodes (l2geth)
+### سازگاری
 
-This upgrade is a hard fork as it introduces the new blob data type and the SHA2-256 precompiled contract. Operators running an `l2geth` node are required to upgrade before the hard fork block. See the [node releases](https://github.com/scroll-tech/go-ethereum/releases) for more information.
+#### گره‌های ترتیب‌دهنده و دنبال‌کننده (l2geth)
 
-#### Indexers and Bridges
+این ارتقاء یک فورک سخت است که پیش‌کامپایل SHA2-256 را معرفی می‌کند. اپراتورهایی که گره `l2geth` را اجرا می‌کنند باید قبل از بلوک فورک سخت، به‌روزرسانی کنند. برای اطلاعات بیشتر، به [یادداشت‌های نسخه گره](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.4.2) مراجعه کنید.
 
-This upgrade changes the format that Scroll uses to publish data to Ethereum. Projects that rely on this data should carefully review [the new data format](/en/technology/chain/rollup/#codec), and check whether their decoders need to be adjusted. A summary of the new format:
+#### dApps و شاخص‌ها
 
-- The format of [`BlockContext`](https://github.com/scroll-tech/scroll/blob/5362e28f744093495c1c09a6b68fc96a3264278b/common/types/encoding/codecv1/codecv1.go#L125) will not change.
-- `Chunks` will [no longer include](https://github.com/scroll-tech/scroll/blob/5362e28f744093495c1c09a6b68fc96a3264278b/common/types/encoding/codecv1/codecv1.go#L162) the L2 transaction data. This will instead be [stored in a blob](https://github.com/scroll-tech/scroll/blob/5362e28f744093495c1c09a6b68fc96a3264278b/common/types/encoding/codecv1/codecv1.go#L284) attached to the `commitBatch` transaction.
-- `BatchHeader` now contains one new field, [`BlobVersionedHash`](https://github.com/scroll-tech/scroll/blob/5362e28f744093495c1c09a6b68fc96a3264278b/common/types/encoding/codecv1/codecv1.go#L405). 
+برای dApps، این ارتقاء با نسخه‌های قبلی سازگار است. توسعه‌دهندگان باید تنظیمات هزینه گس را برای تطبیق با مدل قیمت‌گذاری EIP-1559 تنظیم کنند. توجه داشته باشید که dApps نمی‌توانند دیگر بر زمان بلوک ثابت 3 ثانیه در منطق برنامه اعتماد کنند.
 
-#### Provers
+برای شاخص‌ها، [فرمت داده](https://docs.scroll.io/en/technology/chain/rollup/#codec) همچنان یکسان باقی می‌ماند. با این حال، تغییراتی در محتوای داده وجود خواهد داشت:
 
-This upgrade involves a breaking change in [zkevm-circuits](https://github.com/scroll-tech/zkevm-circuits). Operators running a prover node are required to upgrade.
+- فیلد `version` در `BatchHeader` از بلوک Curie به بعد به 2 تغییر خواهد کرد.
+- داده‌های ذخیره‌شده در بلوک فشرده خواهند شد و می‌توانند با استفاده از [zstd v1.5.6](https://github.com/facebook/zstd/releases/tag/v1.5.6) از حالت فشرده خارج شوند.
 
+---
 
-## Bridge Upgrade
-
-### Overview
-
-To reduce bridging costs, we implemented several gas optimizations on our bridge and rollup contract suite. The optimization techniques used include the following:
-
-- We will now use constants to store some companion contract addresses, instead of using storage variables. This is possible since these values should (almost) never change. With this change we can save on a few storage load operations.
-- We updated the intrinsic gas estimation in `L1MessageQueue` to use a simple upper bound instead of an exact calculation. The two results will be similar for most bridge transactions but the new implementation is significantly cheaper.
-- We merged two contracts `L1MessageQueue` and `L2GasPriceOracle` to save on call costs from one contract to the other.
-
-### Timeline
-
-- **Scroll Sepolia:**
-	- Network Upgrade: January 19, 2024
-- **Scroll Mainnet:**
-	- Upgrade Initiation: February 7, 2024
-	- Timelock Completion & Upgrade: February 21, 2024
-
-### Technical Details
-
-#### Code Changes
-- [Bridge Cost Optimization](https://github.com/scroll-tech/scroll/pull/1011)
-- [Audit Fixes](https://github.com/scroll-tech/scroll/pulls?q=OZ+is%3Apr+created%3A2024-01-27..2024-02-10)
-- [Previously deployed version](https://github.com/scroll-tech/scroll/tree/ff380141a8cbcc214dc65f17ffa44faf4be646b6) (commit `ff380141a8cbcc214dc65f17ffa44faf4be646b6`)
-- [Version deployed](https://github.com/scroll-tech/scroll/tree/6030927680a92d0285c2c13e6bb27ed27d1f32d1) (commit `6030927680a92d0285c2c13e6bb27ed27d1f32d1`)
-
-#### Audits
-
-- [OpenZeppelin](https://blog.openzeppelin.com/scroll-bridge-gas-optimizations-audit)
-
-#### List of Changes
-
-**Changes to L1 contracts:**
-
-- In `ScrollChain`, change `messageQueue` and `verifier` to `immutable`.
-- In `L1ScrollMessenger`, change `counterpart`, `rollup`, and `messageQueue` to `immutable`.
-- In all token gateways, change `counterpart`, `router`, and `messenger` to `immutable`.
-- Merge `L1MessageQueue` and `L2GasPriceOracle` into a single contract `L1MessageQueueWithGasPriceOracle` (deployed on the same address as the previous `L1MessageQueue`). In this contract, we also change `messenger` and `scrollChain` to `immutable`, and simplify `calculateIntrinsicGasFee`.
-
-**Changes to L2 contracts:**
-
-- In `L2ScrollMessenger`, change `counterpart` to `immutable`.
-- In all token gateways, change `counterpart`, `router`, and `messenger` to `immutable`.
-
-**Contracts affected:**
-
-- **L1:** `L1MessageQueue`, `L2GasPriceOracle`, `ScrollChain`, `L1WETHGateway`, `L1StandardERC20Gateway`, `L1GatewayRouter`, `L1ScrollMessenger`, `L1CustomERC20Gateway`, `L1ERC721Gateway`, `L1ERC1155Gateway`.
-- **L2:** `L2ScrollMessenger`, `L2WETHGateway`, `L2StandardERC20Gateway`, `L2GatewayRouter`, `L2CustomERC20Gateway`, `L2ERC721Gateway`, `L2ERC1155Gateway`.
-
-#### Compatibility
-
-##### Sequencer and follower nodes (l2geth)
-
-Operators running an `l2geth` node do not need to upgrade. The changes in this upgrade will not affect `l2geth`.
-
-##### Dapps and indexers
-
-Dapps and indexers (and similar off-chain infrastructure) that query contracts or rely on contract interfaces would, in most cases, not need to be changed. The majority of the contract changes are internal and/or backward compatible.
-
-If your application depends on [`L2GasPriceOracle`](https://etherscan.io/address/0x987e300fDfb06093859358522a79098848C33852) to monitor how Scroll keeps track of the L2 gas price on L1, from the upgrade block number you will need to start monitoring [`L1MessageQueueWithGasPriceOracle`](https://etherscan.io/address/0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B).
-
-The original gas price oracle contract will be deprecated: it will no longer be updated or used by the Scroll bridge.
-
-- Ethereum:
-	- `L2GasPriceOracle`: [`0x987e300fDfb06093859358522a79098848C33852`](https://etherscan.io/address/0x987e300fDfb06093859358522a79098848C33852)
-	- `L1MessageQueueWithGasPriceOracle`: [`0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B`](https://etherscan.io/address/0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B)
-- Sepolia:
-	- `L2GasPriceOracle`: [`0x247969F4fad93a33d4826046bc3eAE0D36BdE548`](https://sepolia.etherscan.io/address/0x247969F4fad93a33d4826046bc3eAE0D36BdE548)
-	- `L1MessageQueueWithGasPriceOracle`: [`0xF0B2293F5D834eAe920c6974D50957A1732de763`](https://sepolia.etherscan.io/address/0xF0B2293F5D834eAe920c6974D50957A1732de763)

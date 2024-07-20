@@ -1,83 +1,83 @@
 ---
 section: technology
 date: Last Modified
-title: "Execution Node"
-lang: "en"
+title: "نود اجرایی"
+lang: "fa"
 permalink: "technology/sequencer/execution-node"
-whatsnext: { "Rollup Node": "/en/technology/sequencer/rollup-node/" }
+whatsnext: { "نود Rollup": "/fa/technology/sequencer/rollup-node/" }
 ---
 
 import Aside from "../../../../../components/Aside.astro"
 
-The execution node is one of the core components in the Scroll protocol: it is responsible for maintaining the L2 blockchain. The execution node also ensures that the user and developer experience on Scroll closely resembles that on Ethereum. It achieves this by maintaining EVM and RPC behavior that is directly inherited from Ethereum, with very few modifications.
+نود اجرایییکی از اجزای اصلی پروتکل Scroll است: مسئول نگهداری از بلاک‌چین L2 می‌باشد. نود اجراییهمچنین اطمینان حاصل می‌کند که تجربه کاربری و توسعه‌دهنده در Scroll به طور نزدیکی به آنچه در Ethereum است، شباهت داشته باشد. این کار را با حفظ رفتار EVM و RPC که مستقیماً از Ethereum به ارث برده شده است، با تغییرات بسیار کم، به انجام می‌رساند.
 
-The primary functions of Scroll's execution node are:
-- Collect transactions from L2 and L1.
-- Validate transactions and pack them into L2 blocks.
-- Execute blocks and maintain the L2 blockchain state.
+عملکردهای اصلی نود اجراییدر Scroll عبارتند از:
+- جمع‌آوری تراکنش‌ها از L2 و L1.
+- اعتبارسنجی تراکنش‌ها و بسته‌بندی آنها در بلاک‌های L2.
+- اجرای بلاک‌ها و نگهداری از وضعیت بلاک‌چین L2.
 
-It is worth highlighting that bridging messages and tokens from L1 to L2 (deposits) is also the execution node's responsibility. Messages from L2 to L1 (withdraws), on the other hand, can be executed by any user on L1.
+قابل توجه است که پیام‌ها و توکن‌های پل‌زده از L1 به L2 (سپرده‌ها) نیز به عهده نود اجراییاست. از طرف دیگر، پیام‌ها از L2 به L1 (برداشت‌ها) می‌توانند توسط هر کاربری در L1 اجراییشوند.
 
-The secondary functions of Scroll's execution node are:
-- Offer standard Ethereum RPC APIs and some Scroll extension APIs.
-- Allow peers (follower nodes) to sync the blockchain using Ethereum's peer-to-peer protocol.
+عملکردهای ثانویه نود اجراییدر Scroll عبارتند از:
+- ارائه API‌های استاندارد Ethereum و برخی از API‌های افزونه Scroll.
+- اجازه دادن به همتایان (نود‌های پیرو) برای همگام‌سازی بلاک‌چین با استفاده از پروتکل همتا به همتای Ethereum.
 
-The execution node, being a fork of [go-ethereum](https://github.com/ethereum/go-ethereum), inherits most of its functionality from Ethereum. This includes transaction and block data structures, EVM execution, RPC and p2p protocols. As these were not reimplemented but were directly inherited from `go-ethereum`, we can have a very high certainty of Scroll's compatibility with Ethereum.
+نود اجراییکه یک نسخه از [go-ethereum](https://github.com/ethereum/go-ethereum) است، بیشتر عملکردهای خود را از Ethereum به ارث برده است. این شامل ساختارهای داده تراکنش و بلاک، اجرای EVM، پروتکل‌های RPC و p2p است. از آنجایی که اینها مجدداً پیاده‌سازی نشده‌اند و مستقیماً از `go-ethereum` به ارث برده شده‌اند، می‌توانیم با اطمینان بسیار بالا از سازگاری Scroll با Ethereum اطمینان داشته باشیم.
 
-The following sections will introduce the main components of the execution node, the additional validation rules, and a summary of modification details.
+بخش‌های بعدی اجزای اصلی نود اجرا، قوانین اعتبارسنجی اضافی و خلاصه‌ای از جزئیات تغییرات را معرفی خواهند کرد.
 
-## `l2geth` Components
+## اجزای `l2geth`
 
-[`l2geth`](https://github.com/scroll-tech/go-ethereum) is Scroll's fork of [go-ethereum](https://github.com/ethereum/go-ethereum). It is responsible for building and executing blocks and maintaining the blockchain state. `l2geth` inherits most of its functionality from Ethereum, with some notable differences listed below. `l2geth` has the following submodules (not exhaustive list):
-- **Storage**: Ledger and state storage implemented using LevelDB.
-- **EVM**: The state transition rules of Ethereum.
-- **Worker:** Responsible for creating new L2 blocks.
-- **L1 SyncService**: Sync and store L1 messages in `l2geth` local database.
-- **API layer**: Standard Ethereum RPC and p2p interfaces.
-- **Transaction pool**: Mempool for L2 transactions.
-- **Circuit capacity checker**: checks if a transaction or a block exceeds the circuit capacity limit.
+[`l2geth`](https://github.com/scroll-tech/go-ethereum) نسخه Scroll از [go-ethereum](https://github.com/ethereum/go-ethereum) است. این مسئول ساخت و اجرای بلاک‌ها و نگهداری از وضعیت بلاک‌چین است. `l2geth` بیشتر عملکردهای خود را از Ethereum به ارث برده است، با برخی تفاوت‌های قابل توجه که در زیر فهرست شده‌اند. `l2geth` شامل زیرماژول‌های زیر است (فهرست جامع نیست):
+- **ذخیره‌سازی**: ذخیره‌سازی دفتر کل و وضعیت با استفاده از LevelDB پیاده‌سازی شده است.
+- **EVM**: قوانین انتقال وضعیت Ethereum.
+- **کارگر**: مسئول ایجاد بلاک‌های جدید L2.
+- **خدمات همگام‌سازی L1**: همگام‌سازی و ذخیره پیام‌های L1 در پایگاه داده محلی `l2geth`.
+- **لایه API**: رابط‌های RPC و p2p استاندارد Ethereum.
+- **پول تراکنش**: Mempool برای تراکنش‌های L2.
+- **بازرسان ظرفیت مدار**: بررسی می‌کند که آیا یک تراکنش یا بلاک از حد ظرفیت مدار فراتر می‌رود یا خیر.
 
-### Circuit Capacity Checker
+### بازرسان ظرفیت مدار
 
-With Scroll's current zkEVM circuits, it is possible to construct transactions and blocks that cannot be proven because they do not fit into the zkEVM circuit. We call this *proof overflow*. To avoid this, we implemented a *circuit capacity checker* module as part of l2geth. The circuit capacity checker is used both during block creation and block validation.
+با مدارهای zkEVM فعلی Scroll، ممکن است تراکنش‌ها و بلاک‌هایی بسازید که نمی‌توان آنها را اثبات کرد زیرا در مدار zkEVM جا نمی‌شوند. این را *سرریز اثبات* می‌نامیم. برای جلوگیری از این امر، ما ماژول *بازرسان ظرفیت مدار* را به عنوان بخشی از l2geth پیاده‌سازی کرده‌ایم. بازرسان ظرفیت مدار هم در هنگام ایجاد بلاک و هم در هنگام اعتبارسنجی بلاک استفاده می‌شود.
 
-During block creation, if the next transaction would lead to proof overflow, then we seal the block and leave the transaction for the next block. If a single transaction leads to proof overflow, l2geth discards it. We call this mechanism *skipping*.
+در حین ایجاد بلاک، اگر تراکنش بعدی به سرریز اثبات منجر شود، ما بلاک را مهر و موم کرده و تراکنش را برای بلاک بعدی می‌گذاریم. اگر یک تراکنش منفرد باعث سرریز اثبات شود، l2geth آن را کنار می‌گذارد. این مکانیزم را *رد کردن* می‌نامیم.
 
-Skipping L2 transactions means simply discarding them. In this case, the user needs to submit another transaction with the same nonce that does not lead to proof overflow in order to proceed.
+رد کردن تراکنش‌های L2 به سادگی به معنای کنار گذاشتن آنها است. در این صورت، کاربر باید تراکنش دیگری با همان nonce که به سرریز اثبات منجر نمی‌شود، ارسال کند تا ادامه یابد.
 
-Skipping L1 messages is a more explicit process. Both the `ScrollChain` contract on L1 and the zkEVM verify that each L1 transaction in `L1MessageQueue` was either included and executed, or skipped. While the batch encoding does not contain L1 transactions, it does include a *skip bitmap* that indicates to `ScrollChain` which L1 messages were skipped. If an L1 deposit message is skipped, the user can get their tokens refunded on L1.
+رد کردن پیام‌های L1 فرآیند صریح‌تری است. هم قرارداد `ScrollChain` در L1 و هم zkEVM تأیید می‌کنند که هر تراکنش L1 در `L1MessageQueue` یا شامل و اجراییشده است، یا کنار گذاشته شده است. در حالی که کدگذاری دسته‌ای شامل تراکنش‌های L1 نیست، اما شامل یک *نقشه پرش* است که به `ScrollChain` نشان می‌دهد کدام پیام‌های L1 کنار گذاشته شده‌اند. اگر یک پیام سپرده L1 کنار گذاشته شود، کاربر می‌تواند توکن‌های خود را در L1 پس بگیرد.
 
-<Aside type="note" title="Note">
+<Aside type="note" title="یادداشت">
   {" "}
-  Proof overflow and thus skipping suggests malicious activity; for normal deposit transactions, this will never happen.
+  سرریز اثبات و در نتیجه کنار گذاشتن نشان‌دهنده فعالیت مخرب است؛ برای تراکنش‌های سپرده عادی، این هرگز اتفاق نخواهد افتاد.
   {" "}
 </Aside>
 
-As the unit of zkEVM proving is the chunk, proof overflow must be avoided for chunks as well.
-This is achieved by incorporating the circuit capacity checker into the rollup-relayer to make sure that it never proposes unprovable chunks.
+از آنجایی که واحد اثبات zkEVM، بخش است، باید از سرریز اثبات برای بخش‌ها نیز جلوگیری کرد.
+این با گنجاندن بازرسان ظرفیت مدار در رول‌آپ‌ریلییر حاصل می‌شود تا اطمینان حاصل شود که هرگز بخش‌هایی که نمی‌توان آنها را اثبات کرد، پیشنهاد نمی‌شوند.
 
-## Validation Rules
+## قوانین اعتبارسنجی
 
-Scroll adds a few validation rules in addition to Ethereum's block validation rules. These new rules constrain the L2 behavior of L1 message inclusion and zkEVM circuit capacity limit.
-- The [circuit capacity checker](#circuit-capacity-checker) module outlined above
- verifies the block can fit into the circuit space capacity of the zkEVM circuit.
-- Rules related to L1 messages:
-    - L1 messages in a block must be contiguous and at the front of the block.
-    - L1 messages in a block must be included following their order in `L1MessageQueue`, i.e., they must be included with increasing `QueueIndex`.
-    - L1 messages in a block must match those in the `L1MessageQueue` contract.
-- Most of these rules are considered both during block creation and block validation. As a result, if the block proposer node violates any of these rules, follower nodes will reject its blocks.
+Scroll چند قانون اعتبارسنجی اضافی به قوانین اعتبارسنجی بلاک‌های Ethereum اضافه می‌کند. این قوانین جدید رفتار L2 در مورد گنجاندن پیام‌های L1 و محدودیت ظرفیت مدار zkEVM را محدود می‌کنند.
+- ماژول [بازرسان ظرفیت مدار](#circuit-capacity-checker) که در بالا توضیح داده شد، اعتبارسنجی می‌کند که آیا بلاک می‌تواند در ظرفیت فضای مدار zkEVM جا بگیرد یا خیر.
+- قوانین مربوط به پیام‌های L1:
+    - پیام‌های L1 در یک بلاک باید متوالی و در ابتدای بلاک باشند.
+    - پیام‌های L1 در یک بلاک باید طبق ترتیب آنها در `L1MessageQueue` گنجانده شوند، یعنی آنها باید با افزایش `QueueIndex` گنجانده شوند.
+    - پیام‌های L1 در یک بلاک باید با آنهایی که در قرارداد `L1MessageQueue` هستند، مطابقت داشته باشند.
+- اکثر این قوانین در هنگام ایجاد بلاک و اعتبارسنجی بلاک در نظر گرفته می‌شوند. به همین دلیل، اگر نود پیشنهادی بلاک هر یک از این قوانین را نقض کند، نود‌های پیرو بلاک‌های آن را رد خواهند کرد.
 
+## خلاصه تغییرات
 
-## Summary of Modifications
+نود اجراییدر Scroll بیشتر رفتارهای Ethereum را به ارث برده است. با این حال، برای فعال‌سازی اثبات مؤثرتر، ما مجبور شدیم تغییرات شکاف‌زا را در `l2geth` ایجاد کنیم. این بخش فهرستی غیرجامع از تغییرات و دلایل آنها را ارائه می‌دهد.
 
-The Scroll execution node inherits most of Ethereum's behaviors. However, we needed to make some breaking changes to `l2geth` to enable more efficient proving. This section provides a non-exhaustive list of the modifications, along with their rationale.
+- **درخت وضعیت و ذخیره‌سازی**: Ethereum از MPT (Merkle-Patricia Trie) به عنوان ساختار داده‌های وضعیت و ذخیره‌سازی قرارداد استفاده می‌کند. ساختار این درخت و این واقعیت که از هش Keccak استفاده می‌کند، باعث می‌شود که برای مدارهای ZK به شدت گران‌قیمت باشد. `l2geth` به جای آن از [zkTrie](/technology/sequencer/zktrie): یک درخت مرکل دودویی با هش Poseidon برای وضعیت و ذخیره‌سازی قرارداد استفاده می‌کند.
+- **حساب‌های وضعیت**: تغییرات حساب وضعیت در [حساب‌ها و وضعیت](/technology/chain/accounts) توصیف شده است.
+- **EVM**: تغییرات در [تفاوت‌های EVM با Ethereum](/technology/chain/differences) توصیف شده است.
+- **هزینه‌های تراکنش**
+    - تمام هزینه‌های جمع‌آوری‌شده در L2 به یک قرارداد خزانه هزینه L2 که توسط Scroll نگهداری می‌شود، ارسال می‌شود.
+    - هزینه L1: علاوه بر هزینه گس L2 که هزینه‌های فضای بلاک و اجرای بلاک L2 را پوشش می‌دهد، ما همچنین هزینه L1 را جمع‌آوری می‌کنیم که هزینه‌های متعهد کردن تراکنش به L1 را پوشش می‌دهد. این هزینه به اندازه تراکنش کدگذاری شده به صورت RLP متناسب است. هزینه واقعی بستگی به تنظیمات فعلی ذخیره شده در قرارداد `L1GasOracle` در L
 
-- **State and storage tree**: Ethereum uses the MPT (Merkle-Patricia Trie) as its state and contract storage data structure. This trie's structure and the fact that it uses Keccak hash would make it prohibitively expensive for ZK circuits. `l2geth` instead uses [zkTrie](/technology/sequencer/zktrie): a binary Merkle trie with Poseidon hash for its state and contract storage.
-- **StateAccount**: The modification of state account is described in the [Accounts and State](/technology/chain/accounts).
-- **EVM**: The modifications are described in the [EVM Differences from Ethereum](/technology/chain/differences)
-- **Transaction fees**
-    - All fees collected on L2 are sent to a Scroll-maintained L2 fee vault contract.
-    - L1 fee: In addition to the L2 gas fee that covers L2 block space and execution costs, we also collect an L1 fee that covers the costs of committing the transaction to L1. This fee is proportional to the size of the RLP-encoded transaction. The actual cost depends on the current settings stored in the `L1GasOracle` contract on L2. This fee is deducted from the sender balance directly (and not from the gas allowance).
-- **L1MessageTx**: We introduced a new transaction type `L1MessageTx`. We also added DB interfaces for storing such transactions and related metadata.
-- **SyncService**: monitors finalized blocks on L1 and collects L1 messages from these.
-- **New API**: The `l2geth` offers a trace API `scroll_traceBlockByNumberOrHash` for provers to query the trace information to generate proofs.
+2 دارد. این هزینه مستقیماً از موجودی فرستنده کسر می‌شود (و نه از مجوز گس).
+- **L1MessageTx**: ما نوع تراکنش جدیدی به نام `L1MessageTx` معرفی کردیم. ما همچنین رابط‌های DB جدیدی برای ذخیره چنین تراکنش‌ها و متاداده مربوطه اضافه کردیم.
+- **خدمات همگام‌سازی**: بلاک‌های نهایی‌شده در L1 را نظارت می‌کند و پیام‌های L1 را از این‌ها جمع‌آوری می‌کند.
+- **API جدید**: `l2geth` یک API پیگیری `scroll_traceBlockByNumberOrHash` ارائه می‌دهد تا پرووِرها بتوانند اطلاعات پیگیری را برای تولید اثبات‌ها جستجو کنند.

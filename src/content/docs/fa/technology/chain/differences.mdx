@@ -1,41 +1,41 @@
 ---
 section: technology
 date: Last Modified
-title: "EVM Differences from Ethereum"
-lang: "en"
+title: "تفاوت‌های EVM با Ethereum"
+lang: "fa"
 permalink: "technology/chain/differences"
-whatsnext: { "Bridge": "/en/technology/bridge/cross-domain-messaging/" }
+whatsnext: { "Bridge": "/fa/technology/bridge/cross-domain-messaging/" }
 ---
 
 import Aside from "../../../../../components/Aside.astro"
 
-## Opcodes
+## اوپ‌کدها
 
-| Opcode                      | Scroll Behavior                                                                                                  |
-| --------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `BLOCKHASH`                 | Returns `keccak(chain_id \|\| block_number)` for the last 256 blocks.                                            |
-| `COINBASE`                  | Returns the fee vault address (predeployed contract `0x5300000000000000000000000000000000000005`).               |
-| `DIFFICULTY` / `PREVRANDAO` | Always return 0.                                                                                                 |
-| `SELFDESTRUCT`              | Disabled. If the opcode is encountered, the transaction will be reverted.                                        |
+| اوپ‌کد                      | رفتار اسکرول                                                                                                   |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `BLOCKHASH`                 | برای آخرین ۲۵۶ بلوک، مقدار `keccak(chain_id \|\| block_number)` را باز می‌گرداند.                                  |
+| `COINBASE`                  | آدرس خزانه کارمزد را باز می‌گرداند (قرارداد پیش‌استقرار یافته `0x5300000000000000000000000000000000000005`).      |
+| `DIFFICULTY` / `PREVRANDAO` | همیشه مقدار ۰ را باز می‌گرداند.                                                                                   |
+| `SELFDESTRUCT`              | غیرفعال است. اگر این اوپ‌کد یافت شود، تراکنش برگشت داده می‌شود.                                                   |
 
-## Precompiled Contracts
+## قراردادهای پیش‌کامپایل‌شده
 
-| Address | Name         | Scroll behavior                                                                                 |
-| ------- | ------------ | ----------------------------------------------------------------------------------------------- |
-| `0x03`  | `RIPEMD-160` | Currently not supported.                                                                        |
-| `0x05`  | `modexp`     | Restrict the input values `B, E, M` to unsigned integers less than $2^{256}$.                   |
-| `0x08`  | `ecPairing`  | The inputs are still multiple of 6 32-byte values, but limit the number of tuples to at most 4. |
-| `0x09`  | `blake2f`    | Currently not supported.                                                                        |
-| `0x0a`  | `point evaluation`    | Currently not supported.                                                                        |
+| آدرس  | نام            | رفتار اسکرول                                                                                             |
+| ------ | --------------- | --------------------------------------------------------------------------------------------------------- |
+| `0x03` | `RIPEMD-160`    | در حال حاضر پشتیبانی نمی‌شود.                                                                            |
+| `0x05` | `modexp`        | مقادیر ورودی `B، E، M` را به اعداد صحیح بدون علامت کمتر از $2^{256}$ محدود می‌کند.                     |
+| `0x08` | `ecPairing`     | ورودی‌ها همچنان چندگانه‌ای از ۶ مقدار ۳۲ بایتی هستند، اما تعداد گروه‌ها را به حداکثر ۴ محدود می‌کند.    |
+| `0x09` | `blake2f`       | در حال حاضر پشتیبانی نمی‌شود.                                                                            |
+| `0x0a` | `point evaluation` | در حال حاضر پشتیبانی نمی‌شود.                                                                            |
 
-The remaining precompiled contracts have the same behavior as Ethereum. However, their maximum usage within a block is constrained by a limit tied to the zkEVM circuit capacity.
+قراردادهای پیش‌کامپایل‌شده باقی‌مانده همان رفتار اتریوم را دارند. با این حال، حداکثر استفاده از آن‌ها در یک بلوک به محدودیت مرتبط با ظرفیت مدار zkEVM بستگی دارد.
 
-## EIPs
+## EIPها
 
-Our sequencer was developed based on the London fork initially. Since then we have adopted most features from London, Shanghai, and Cancun.
+سریال‌ساز ما ابتدا بر اساس فورک لندن توسعه یافته است. از آن زمان، بیشتر ویژگی‌های فورک‌های لندن، شانگهای و کانوکن را پذیرفته‌ایم.
 
-Our EIP-1559 fee market behaves differently: the sequencer sets the L2 base fee (based on the L1 base fee), and we don't burn ETH.
+بازار هزینه EIP-1559 ما رفتار متفاوتی دارد: سریال‌ساز هزینه پایه L2 را تنظیم می‌کند (بر اساس هزینه پایه L1) و ETH را نمی‌سوزاند.
 
 <Aside type="caution" title="">
-Opcodes related to EIP-4844, like `BLOBHASH` and `BLOBBASEFEE`, are not yet available on Scroll. Additionally, [EIP-4788](https://eips.ethereum.org/EIPS/eip-4788) for accessing the Beacon Chain block root is not supported.
+اوپ‌کدهای مربوط به EIP-4844، مانند `BLOBHASH` و `BLOBBASEFEE`، در حال حاضر در Scroll در دسترس نیستند. علاوه بر این، [EIP-4788](https://eips.ethereum.org/EIPS/eip-4788) برای دسترسی به ریشه بلوک Beacon Chain پشتیبانی نمی‌شود.
 </Aside>

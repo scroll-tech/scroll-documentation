@@ -1,39 +1,39 @@
 ---
 section: technology
 date: Last Modified
-title: "Blocks"
-lang: "en"
+title: "بلوک‌ها"
+lang: "fa"
 permalink: "technology/chain/blocks"
-whatsnext: { "Rollup Process": "/en/technology/chain/rollup/" }
+whatsnext: { "فرآیند Rollup": "/fa/technology/chain/rollup/" }
 ---
 
-A block is a collection of transactions and links to the previous block it extends.
+یک بلوک مجموعه‌ای از معاملات است و به بلوک قبلی که به آن افزوده شده است، لینک می‌شود.
 
-## Block Header
+## هدر بلوک
 
-The block header in Scroll mirrors the structure of Ethereum's. However, certain fields in the block header have been modified to accommodate the Layer 2 context, as detailed in the following table:
+هدر بلوک در Scroll ساختار مشابهی با اتریوم دارد. با این حال، برخی از فیلدهای هدر بلوک برای تطبیق با زمینه لایه 2 تغییر یافته‌اند، که در جدول زیر به تفصیل آمده است:
 
-| Field               | Description                                                        |
+| فیلد               | توضیحات                                                             |
 | ------------------- | ------------------------------------------------------------------ |
-| `parentHash`        | The hash of the parent block.                                      |
-| `uncleHash`         | Always `keccak256(rlp([]))`.                                       |
-| `coinbase`          | Fees are collected to the pre-deployed fee vault contract address `0x5300000000000000000000000000000000000005`. In most cases, the RPC return field `"miner"` is the zero-address `0x0000000000000000000000000000000000000000`. |
-| `stateRoot`         | The root hash of the state trie. It is the Poseidon                |
-| `transactionsRoot ` | The root hash of the transaction trie.                             |
-| `receiptsRoot `     | The root hash of the transaction receipts trie.                    |
-| `logsBloom`         | The data structure containing event logs.                          |
-| `difficulty`        | Always 1 or 2.                                                     |
-| `number`            | The block number.                                                  |
-| `gasLimit`          | The maximum gas allowed in the block.                              |
-| `gasUsed`           | The gas used in the block.                                         |
-| `timestamp`         | The block time.                                                    |
-| `extraData`         | Signature by the block's signer, followed by arbitrary additional data. |
-| `mixHash`           | Always 0.                                                          |
-| `nonce`             | Always 0.                                                          |
-| `baseFee`           | Currently empty in Scroll because we haven't enabled the EIP-1559. |
+| `parentHash`        | هش بلوک والد.                                                       |
+| `uncleHash`         | همیشه `keccak256(rlp([]))`.                                        |
+| `coinbase`          | هزینه‌ها به آدرس قرارداد پیش‌توسعه یافته جمع‌آوری می‌شود: `0x5300000000000000000000000000000000000005`. در بیشتر موارد، فیلد `"miner"` در بازگشت RPC آدرس صفر `0x0000000000000000000000000000000000000000` است. |
+| `stateRoot`         | هش ریشه درخت وضعیت. این هش Poseidon است.                           |
+| `transactionsRoot`  | هش ریشه درخت معاملات.                                               |
+| `receiptsRoot`      | هش ریشه درخت رسیدهای معاملات.                                       |
+| `logsBloom`         | ساختار داده‌ای که شامل لاگ‌های رویداد است.                          |
+| `difficulty`        | همیشه 1 یا 2.                                                        |
+| `number`            | شماره بلوک.                                                          |
+| `gasLimit`          | حداکثر گس مجاز در بلوک.                                             |
+| `gasUsed`           | گس استفاده شده در بلوک.                                            |
+| `timestamp`         | زمان بلوک.                                                           |
+| `extraData`         | امضا توسط امضاکننده بلوک، به همراه داده‌های اضافی دلخواه.            |
+| `mixHash`           | همیشه 0.                                                             |
+| `nonce`             | همیشه 0.                                                             |
+| `baseFee`           | در حال حاضر در Scroll خالی است زیرا EIP-1559 فعال نشده است.          |
 
-## Block Time
+## زمان بلوک
 
-Block time refers to the interval between two consecutive blocks. In Scroll, the block time is set at 3s. A reduced block time elevates the user experience and augments the Scroll chain's scalability.
+زمان بلوک به فاصله بین دو بلوک متوالی اشاره دارد. در Scroll، زمان بلوک بر روی ۳ ثانیه تنظیم شده است. کاهش زمان بلوک تجربه کاربری را بهبود می‌بخشد و مقیاس‌پذیری زنجیره Scroll را افزایش می‌دهد.
 
-The 3-second block time is maintained on a best-effort basis, it is not guaranteed or enforced by the protocol.
+زمان بلوک ۳ ثانیه به صورت تلاش بهترین حالت حفظ می‌شود و توسط پروتکل تضمین یا اجرا نمی‌شود.

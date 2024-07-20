@@ -1,10 +1,10 @@
 ---
 section: technology
 date: Last Modified
-title: "zkEVM Overview"
-lang: "en"
+title: "بررسی اجمالی zkEVM"
+lang: "fa"
 permalink: "technology/zkevm-overview"
-excerpt: "In order to understand how to build a zkEVM, which proves the execution of the EVM, we need to first look at the EVM itself."
+excerpt: "برای درک نحوه ساخت یک zkEVM که اجرای EVM را اثبات می‌کند، ابتدا باید به خود EVM نگاه کنیم."
 ---
 
 import ClickToZoom from "../../../../../components/ClickToZoom.astro"
@@ -12,45 +12,45 @@ import zkevm1 from "../_images/zkevm1.png"
 import zkevm2 from "../_images/zkevm2.png"
 import zkevm3 from "../_images/zkevm3.png"
 
-## The EVM
+## EVM چیست؟
 
-In order to understand how to build a zkEVM, which proves the execution of the EVM, we need to first look at the EVM itself.
+برای درک نحوه ساخت یک zkEVM که اجرای EVM را اثبات می‌کند، ابتدا باید به خود EVM نگاه کنیم.
 
-The EVM can be modeled as a state transition function. It specifies a transition function `f` that, given an initial world state `S` and a transaction `T`, outputs a new world state `S’`: `f(S,T) = S'`.
+EVM می‌تواند به عنوان یک تابع تغییر وضعیت مدل‌سازی شود. این تابع تغییر وضعیت `f` را مشخص می‌کند که، با توجه به وضعیت اولیه جهانی `S` و یک تراکنش `T`، وضعیت جهانی جدید `S'` را خروجی می‌دهد: `f(S,T) = S'`.
 
-The “world state” is modeled as a [modified Merkle-Patricia Trie](https://ethereum.org/en/developers/docs/data-structures-and-encoding/patricia-merkle-trie/) (MPT). This trie contains all of the network’s persistent data. This includes the information of all externally-owned accounts (EOAs) and smart contract accounts. Smart contract accounts have sub-tries that hold the smart contract’s bytecode and persistent storage.
+"وضعیت جهانی" به عنوان یک [پریتیچایز-مرکل درخت](https://ethereum.org/en/developers/docs/data-structures-and-encoding/patricia-merkle-trie/) (MPT) مدل‌سازی می‌شود. این درخت شامل تمام داده‌های پایدار شبکه است. این شامل اطلاعات تمام حساب‌های خارجی (EOAs) و حساب‌های قراردادهای هوشمند است. حساب‌های قرارداد هوشمند دارای زیر درخت‌هایی هستند که کد بایت و ذخیره‌سازی پایدار قرارداد هوشمند را نگه می‌دارند.
 
-The EVM processes a new transaction by executing its resulting computations and making changes to the world state accordingly. EVM computation works over transient data stores (stack and memory) as well as persistent data stores (contract bytecode and storage).
+EVM یک تراکنش جدید را با اجرای محاسبات آن و انجام تغییرات مربوطه در وضعیت جهانی پردازش می‌کند. محاسبات EVM بر روی داده‌های موقت (پشته و حافظه) و همچنین داده‌های پایدار (کد بایت و ذخیره‌سازی قرارداد) انجام می‌شود.
 
 <ClickToZoom src={zkevm1} />
 
-The computation triggered by an individual transaction is broken down into small machine instructions called “opcodes,” which the EVM can directly understand and execute. The behavior of each opcode is specified in the [Ethereum Yellow Paper](https://ethereum.github.io/yellowpaper/paper.pdf). The execution of a transaction can therefore be summarized by an “execution trace,” which is simply an ordered list of opcode executions. Ethereum execution clients, such as [Geth](https://geth.ethereum.org/), can explicitly output a step-by-step execution trace for the computation it has performed.
+محاسبات تحریک شده توسط یک تراکنش فردی به دستورات ماشینی کوچکی به نام "opcodes" تقسیم می‌شود که EVM می‌تواند به طور مستقیم آنها را درک و اجرا کند. رفتار هر opcode در [کاغذ زرد اتریوم](https://ethereum.github.io/yellowpaper/paper.pdf) مشخص شده است. اجرای یک تراکنش بنابراین می‌تواند با یک "ردیف اجرای" خلاصه شود، که به سادگی یک لیست مرتب از اجرای opcodes است. کلاینت‌های اجرایی اتریوم، مانند [Geth](https://geth.ethereum.org/)، می‌توانند به وضوح یک ردیف اجرای مرحله به مرحله را برای محاسباتی که انجام داده‌اند، تولید کنند.
 
 <ClickToZoom src={zkevm2} />
 
-As the opcodes are executed, the state trie is altered. This results in a new state trie, with a new state root.
+با اجرای opcodes، درخت وضعیت تغییر می‌کند. این منجر به یک درخت وضعیت جدید با یک ریشه وضعیت جدید می‌شود.
 
-## Proving an EVM execution
+## اثبات اجرای EVM
 
-The goal of a zkEVM is to generate a proof attesting to the validity of a transaction’s execution. In other words, given an initial world state `S`, a transaction `T`, and a resulting world state `S'`, the zkEVM must generate a proof that `f(S,T) = S'`, where `f` is the state transition function specified in the Ethereum Yellow Paper.
+هدف از zkEVM تولید یک اثبات است که به درستی اجرای یک تراکنش را تأیید کند. به عبارت دیگر، با توجه به وضعیت جهانی اولیه `S`، یک تراکنش `T`، و وضعیت جهانی نتیجه‌گیری شده `S'`، zkEVM باید اثباتی تولید کند که `f(S,T) = S'`، جایی که `f` تابع تغییر وضعیت مشخص شده در کاغذ زرد اتریوم است.
 
-In order to prove the validity of the transition function execution, we break down the execution into its step-by-step execution trace. The execution of `f(S,T)` is expanded into a list of its sequential opcode executions. The execution trace serves as a “witness” attesting to the correctness of the state transition `f(S,T) = S'` - the trace in a sense a step-by-step explanation of how the state transitions from `S` to `S'`.
+برای اثبات صحت اجرای تابع تغییر وضعیت، اجرای آن به ردیف اجرای مرحله به مرحله خود تقسیم می‌شود. اجرای `f(S,T)` به لیستی از اجرای‌های متوالی opcodes گسترش می‌یابد. ردیف اجرای به عنوان یک "شاهد" که صحت تغییر وضعیت `f(S,T) = S'` را تأیید می‌کند، عمل می‌کند - این ردیف به نوعی توضیح مرحله به مرحله از نحوه تغییر وضعیت از `S` به `S'` است.
 
-The problem is then reduced to proving the following:
+مسئله به اثبات موارد زیر کاهش می‌یابد:
 
-- The execution trace is _correct_.
-  - Each individual opcode is correctly executed according to the Ethereum Yellow Paper spec.
-    - For example, the `ADD` opcode must result in popping two values off the stack, and pushing their sum to the stack.
-    - A proof must show that each opcode was executed with the proper behavior, including any alterations to transient data stores (stack and memory) or persistent data stores (contract bytecode and storage).
-  - The ordered list of opcodes being executed is in fact the correct list of opcodes triggered by the transaction.
-    - This includes correctly loading the initial transaction calldata, and the bytecode for any invoked contracts.
-- The execution trace starts with initial state `S` and results in state `S'`.
+- ردیف اجرای _درست_ است.
+  - هر opcode به درستی طبق مشخصات کاغذ زرد اتریوم اجرا شده است.
+    - به عنوان مثال، opcode `ADD` باید منجر به خارج کردن دو مقدار از پشته و اضافه کردن جمع آنها به پشته شود.
+    - یک اثبات باید نشان دهد که هر opcode با رفتار صحیحی اجرا شده است، از جمله هرگونه تغییر در داده‌های موقت (پشته و حافظه) یا داده‌های پایدار (کد بایت و ذخیره‌سازی قرارداد).
+  - لیست مرتب opcodes در حال اجرا در واقع لیست صحیح opcodes است که توسط تراکنش تحریک شده است.
+    - این شامل بارگذاری صحیح کد اولیه تراکنش و کد بایت برای هر قرارداد فراخوانی شده است.
+- ردیف اجرای با وضعیت اولیه `S` شروع می‌شود و به وضعیت `S'` منتهی می‌شود.
 
 <ClickToZoom src={zkevm3} />
 
-In subsequent sections, we will dive into the details of how the correctness of EVM execution traces can be proved.
+در بخش‌های بعدی، ما به جزئیات نحوه اثبات صحت ردیف‌های اجرای EVM خواهیم پرداخت.
 
-## Learn more
+## بیشتر بیاموزید
 
-- Cypherpunks [GitBook chapter](https://cypherpunks-core.github.io/ethereumbook/13evm.html) on the EVM
-- [zkEVM overview](https://youtu.be/NHwd-gJ8xg4) - Haichen Shen
+- [فصل GitBook](https://cypherpunks-core.github.io/ethereumbook/13evm.html) از Cypherpunks درباره EVM
+- [بررسی اجمالی zkEVM](https://youtu.be/NHwd-gJ8xg4) - هایچن شِن

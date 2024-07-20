@@ -1,11 +1,11 @@
 ---
 section: technology
 date: Last Modified
-title: "Scroll Architecture"
-lang: "en"
+title: "معماری Scroll"
+lang: "fa"
 permalink: "technology"
 whatsnext:
-  { "Scroll Chain": "/en/technology/chain/accounts", "Bridge": "/en/technology/bridge/cross-domain-messaging", "Sequencer": "/en/technology/sequencer/execution-node", "zkEVM": "/en/technology/zkevm/zkevm-overview" }
+  { "زنجیره اسکرول": "/fa/technology/chain/accounts", "پل": "/fa/technology/bridge/cross-domain-messaging", "ترتیب‌دهنده": "/fa/technology/sequencer/execution-node", "zkEVM": "/fa/technology/zkevm/zkevm-overview" }
 ---
 
 import ClickToZoom from "../../../../components/ClickToZoom.astro"
@@ -13,12 +13,12 @@ import Architecture from "./_images/arch.png"
 
 <ClickToZoom src={Architecture} alt="Architecture" />
 
-As illustrated in the figure above, Scroll chain consists of three layers:
+همان‌طور که در شکل بالا نشان داده شده است، زنجیره اسکرول از سه لایه تشکیل شده است:
 
-- **Settlement Layer**: provides data availability and ordering for the canonical Scroll chain, verifies validity proofs, and allows users and dapps to send messages and assets between Ethereum and Scroll. We use Ethereum as the Settlement Layer and deploy the bridge and rollup contract onto Ethereum.
-- **Sequencing Layer**: contains an *Execution Node* that executes the transactions submitted to the Scroll sequencer and the transactions submitted to the L1 bridge contract and produces L2 blocks, and a *Rollup Node* that batches transactions, posts transaction data and block information to Ethereum for data availability, and submits validity proofs to Ethereum for finality.
-- **Proving Layer**: consists of a pool of provers that are responsible for generating the zkEVM validity proofs that verify the correctness of L2 transactions, and a coordinator that dispatches the proving tasks to provers and relays the proofs to the Rollup Node to finalize on Ethereum.
+- **لایه تسویه**: دسترسی به داده و ترتیب‌دهی برای زنجیره اسکرول اصلی را فراهم می‌کند، اثبات اعتبار را تأیید می‌کند و به کاربران و dapp‌ها اجازه می‌دهد پیام‌ها و دارایی‌ها را بین اتریوم و اسکرول ارسال کنند. ما از اتریوم به عنوان لایه تسویه استفاده می‌کنیم و پل و قرارداد رول‌آپ را روی اتریوم پیاده‌سازی می‌کنیم.
+- **لایه ترتیب‌دهی**: شامل یک *گره اجرا* است که تراکنش‌های ارسال شده به ترتیب‌دهنده اسکرول و تراکنش‌های ارسال شده به قرارداد پل L1 را اجرا می‌کند و بلوک‌های L2 را تولید می‌کند، و یک *گره رول‌آپ* که تراکنش‌ها را دسته‌بندی می‌کند، داده‌های تراکنش و اطلاعات بلوک را برای دسترسی به داده به اتریوم ارسال می‌کند و اثبات‌های اعتبار را برای نهایی شدن به اتریوم ارسال می‌کند.
+- **لایه اثبات**: شامل یک استخر اثبات‌کننده است که مسئول تولید اثبات‌های اعتبار zkEVM هستند که درستی تراکنش‌های L2 را تأیید می‌کنند، و یک هماهنگ‌کننده که وظایف اثبات را به اثبات‌کننده‌ها اختصاص می‌دهد و اثبات‌ها را به گره رول‌آپ ارسال می‌کند تا در اتریوم نهایی شود.
 
-This section of the documentation provides comprehensive information on the Scroll protocol specification, bridging protocol, sequencer, and zkEVM circuit.
+این بخش از مستندات اطلاعات جامعی درباره مشخصات پروتکل اسکرول، پروتکل پل، ترتیب‌دهنده، و مدار zkEVM ارائه می‌دهد.
 
-*In the remainder of this section, L1 will refer to Ethereum, while L2 will refer to Scroll.*
+*در ادامه این بخش، L1 به اتریوم و L2 به اسکرول اشاره خواهد کرد.*

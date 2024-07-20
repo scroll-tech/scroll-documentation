@@ -116,7 +116,7 @@
       "principles": "اصول",
       "scrollArchitecture": "معماری Scroll",
       "scrollUpgrades": "ارتقاءهای Scroll",
-      "overview": "نمای کلی",
+      "overview": "بررسی اجمالی",
 
       "scrollChain": "زنجیره Scroll",
       "accountsAndState": "حساب‌ها و حالت",
@@ -137,8 +137,8 @@
 
       "zkevm": "zkEVM",
       "introToZkevm": "مقدمه‌ای بر zkEVM",
-      "zkevmOverview": "نمای کلی zkEVM",
-      "bridgeOverview": "نمای کلی Bridge",
+      "zkevmOverview": "بررسی اجمالی zkEVM",
+      "bridgeOverview": "بررسی اجمالی Bridge",
       "prover": "Prover",
       "proofGeneration": "تولید اثبات",
       "cpuProverRepo": "مخزن CPU Prover",
