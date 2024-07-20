@@ -1,0 +1,21 @@
+[files]
+ignore-files = true
+ignore-hidden = false
+extend-exclude = [
+    ".git/",
+    "**/es/",
+    "**/tr/",
+    "**/zh/",
+]
+
+
+[default]
+extend-ignore-re=[
+    "advices",
+    "[Dd]arcula",
+]
+check-filename = true
+
+
+
+
