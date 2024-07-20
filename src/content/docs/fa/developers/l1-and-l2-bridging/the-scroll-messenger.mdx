@@ -1,49 +1,41 @@
 ---
 section: developers
 date: Last Modified
-title: "The Scroll Messenger"
-lang: "en"
+title: "پیام‌رسان Scroll"
+lang: "fa"
 permalink: "developers/l1-and-l2-bridging/the-scroll-messenger"
-whatsnext: { "Transaction Fees on Scroll": "/en/developers/transaction-fees-on-scroll/" }
-excerpt: "The Scroll Messenger documentation for arbitrary message passing between L1 and L2."
+whatsnext: { "هزینه‌های تراکنش در Scroll": "/fa/developers/transaction-fees-on-scroll/" }
+excerpt: "مستندات پیام‌رسان Scroll برای ارسال پیام‌های دلخواه بین L1 و L2."
 ---
 
 import Aside from "../../../../../components/Aside.astro"
 
-The Scroll Messenger contracts allow for sending arbitrary messages from L1 to L2 or vice versa. This enables executing functions on another chain in a secure and permissionless way. To send a message from L1 to L2, use
-the messenger smart contract deployed on L1, `L1ScrollMessenger`. To send a message from L2 to L1, use the contract deployed on L2, `L2ScrollMessenger`.
+قراردادهای پیام‌رسان Scroll امکان ارسال پیام‌های دلخواه از L1 به L2 یا بالعکس را فراهم می‌کنند. این امکان به شما اجازه می‌دهد تا توابع را در زنجیره دیگر به‌صورت ایمن و بدون نیاز به مجوز اجرا کنید. برای ارسال پیام از L1 به L2، از قرارداد پیام‌رسان مستقر شده در L1، یعنی `L1ScrollMessenger` استفاده کنید. برای ارسال پیام از L2 به L1، از قرارداد مستقر شده در L2، یعنی `L2ScrollMessenger` استفاده کنید.
 
 <Aside type="caution" title="">
-  When sending a transaction through the **Scroll Messenger** deployed on L1 and L2, the resulting transaction sender
-  (`CALLER` or `msg.sender`) will be the Messenger Contract address deployed on the receiving chain.
+  هنگام ارسال تراکنش از طریق **پیام‌رسان Scroll** که در L1 و L2 مستقر است، فرستنده تراکنش (یعنی `CALLER` یا `msg.sender`) آدرس قرارداد پیام‌رسان است که در زنجیره دریافت‌کننده مستقر شده است.
   <br />
-  In future Scroll versions, enforced transactions from the L1 will allow setting the sender on L2 as the original EOA
-  on L1. It will also allow 3rd parties to relay signed transactions securely.
+  در نسخه‌های آینده Scroll، تراکنش‌های اجباری از L1 به شما این امکان را می‌دهند که فرستنده در L2 را به عنوان EOA اصلی در L1 تنظیم کنید. همچنین این امکان را فراهم می‌کند که اشخاص ثالث به‌طور ایمن تراکنش‌های امضا شده را انتقال دهند.
 </Aside>
 
-## Finalizing transactions on L1
+## نهایی‌سازی تراکنش‌ها در L1
 
-Any upcoming transactions from L2 need to be finalized using the `relayMessageWithProof` function on the Scroll Messenger
-contract. We call this process "submitting an Execute Withdrawal transaction," and it is required for both sending arbitrary messages and transferring assets through a gateway or the router. When you use `relayMessageWithProof`, you'll have to provide a Merkle inclusion proof showing your transaction is included in the trie of "withdrawal" messages, along with other parameters. Producing this proof and these values can be done locally and permissionlessly, but at the moment, the easiest way to retrieve these parameters is through our backend APIs:
+تراکنش‌های آینده از L2 نیاز به نهایی‌سازی از طریق تابع `relayMessageWithProof` در قرارداد پیام‌رسان Scroll دارند. این فرآیند "ارسال تراکنش برداشت" نامیده می‌شود و برای ارسال پیام‌های دلخواه و انتقال دارایی‌ها از طریق گیت‌وی یا روتر ضروری است. هنگام استفاده از `relayMessageWithProof`، باید یک مدرک گنجایش Merkle ارائه دهید که نشان‌دهنده گنجاندن تراکنش شما در درخت "برداشت" پیام‌ها باشد، به همراه سایر پارامترها. تولید این مدرک و مقادیر مربوطه می‌تواند به‌صورت محلی و بدون نیاز به مجوز انجام شود، اما در حال حاضر، ساده‌ترین راه برای دریافت این پارامترها از طریق APIهای پشتیبان ما است:
 
-- Scroll Sepolia API: https://sepolia-api-bridge-v2.scroll.io/api/
-- Scroll API: https://mainnet-api-bridge-v2.scroll.io/api/
+- API Scroll Sepolia: https://sepolia-api-bridge-v2.scroll.io/api/
+- API Scroll: https://mainnet-api-bridge-v2.scroll.io/api/
 
-<Aside type="danger" title="Experimental API">
-  This API was made for our Bridge UI. It is not yet finalized and may change in the future. We will update this guide
-  when the API is finalized. Additionally, all examples below use the Sepolia API service -- the calls should be easily
-  adapted to work on mainnet.
+<Aside type="danger" title="API آزمایشی">
+  این API برای رابط کاربری بریج ما ایجاد شده است. هنوز نهایی نشده و ممکن است در آینده تغییر کند. ما این راهنما را زمانی که API نهایی شد به‌روزرسانی خواهیم کرد. علاوه بر این، تمام نمونه‌های زیر از سرویس API Sepolia استفاده می‌کنند -- درخواست‌ها باید به راحتی برای کار در مین نت تطبیق داده شوند.
 </Aside>
 
-Supply the address of the EOA or contract responsible for initiating the original transaction on L2 to the `/claimable`
-endpoint. The API backend will provide you with all the necessary information to successfully conclude the transaction on L1.
-Take a look at the following example:
+آدرس EOA یا قراردادی را که مسئول آغاز تراکنش اصلی در L2 است به نقطه پایانی `/claimable` ارسال کنید. API پشتیبان تمام اطلاعات لازم برای نهایی‌سازی موفقیت‌آمیز تراکنش در L1 را به شما ارائه خواهد داد. به مثال زیر نگاهی بیندازید:
 
 ```bash
 https://sepolia-api-bridge.scroll.io/api/claimable?address=0x031407eaaffFB4f1EC2c999bE4477E52C81de3c5&page_size=10&page=1
 ```
 
-The API should return your transaction data in the following format:
+API باید داده‌های تراکنش شما را به شکل زیر بازگرداند:
 
 ```json
 {
@@ -86,20 +78,15 @@ The API should return your transaction data in the following format:
 }
 ```
 
-The `claimInfo` object under the `result` json returned has all the information needed to execute your transaction on L1. The
-parameters needed by the `relayMessageWithProof` are: `from`, `to`, `value`, `nonce`, `message` and `proof`. Supply these to
-the `relayMessageWithProof` function on L1 to execute and finalize your transaction on L1.
+شیء `claimInfo` در زیر JSON `result` تمامی اطلاعات لازم برای اجرای تراکنش شما در L1 را دارد. پارامترهای لازم برای `relayMessageWithProof` شامل: `from`, `to`, `value`, `nonce`, `message` و `proof` هستند. این‌ها را به تابع `relayMessageWithProof` در L1 ارائه دهید تا تراکنش خود را اجرا و نهایی کنید.
 
 <Aside type="tip" title="">
-  All L2 transactions are bundled into batches – you have to wait for the batch that includes your transaction to
-  finalize before calling `relayMessageWithProof`. Your transaction batch index is returned in the `batch_index` value
-  on the `/claimable` endpoint, and you can follow the progress on the [Scroll Rollup
-  Explorer](https://scroll.io/rollupscan?page=1&per_page=10).
+  تمامی تراکنش‌های L2 به صورت گروهی جمع‌آوری می‌شوند – باید صبر کنید تا گروهی که شامل تراکنش شما است نهایی شود قبل از اینکه `relayMessageWithProof` را فراخوانی کنید. شاخص گروه تراکنش شما در مقدار `batch_index` در نقطه پایانی `/claimable` بازگردانده می‌شود و می‌توانید پیشرفت آن را در [کاوشگر Scroll Rollup](https://scroll.io/rollupscan?page=1&per_page=10) پیگیری کنید.
 </Aside>
 
-## Messenger API
+## API پیام‌رسان
 
-Please visit the [npm library](https://www.npmjs.com/package/@scroll-tech/contracts?activeTab=code) for the complete Scroll contract API documentation.
+لطفاً برای مستندات کامل API قرارداد Scroll به [کتابخانه npm](https://www.npmjs.com/package/@scroll-tech/contracts?activeTab=code) مراجعه کنید.
 
 ### sendMessage
 
@@ -113,15 +100,15 @@ function sendMessage(
 ) external payable;
 ```
 
-Sends arbitrary data from one chain to another. It allows us to execute functions cross-chain.
+ارسال داده‌های دلخواه از یک زنجیره به زنجیره دیگر. این امکان را فراهم می‌کند که توابع را به‌صورت بین‌زنجیره‌ای اجرا کنیم.
 
-| Parameter     | Description                                                                                                         |
-| ------------- | ------------------------------------------------------------------------------------------------------------------- |
-| target        | The address of the account that receives the message. The receiver can be either a smart contract or an EOA wallet. |
-| value         | The amount of ether passed when calling the target contract.                                                        |
-| message       | The content of the message. This is the arbitrary calldata to be executed.                                          |
-| gasLimit      | Gas limit required to complete the message relay on the corresponding chain.                                        |
-| refundAddress | The address of the account that will receive the refunded fee.                                                      |
+| پارامتر      | توضیحات                                                                                                                   |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------- |
+| target       | آدرس حسابی که پیام را دریافت می‌کند. دریافت‌کننده می‌تواند یک قرارداد هوشمند یا یک کیف پول EOA باشد.                 |
+| value        | مقدار اتر که هنگام فراخوانی قرارداد هدف ارسال می‌شود.                                                                     |
+| message      | محتوای پیام. این داده دلخواهی است که باید اجرا شود.                                                                       |
+| gasLimit     | محدودیت گس مورد نیاز برای تکمیل انتقال پیام در زنجیره مربوطه.                                                            |
+| refundAddress| آدرس حسابی که هزینه‌های بازپرداخت به آن ارسال خواهد شد.                                                                    |
 
 ### relayMessageWithProof
 
@@ -136,13 +123,13 @@ function relayMessageWithProof(
 ) external;
 ```
 
-Relay a L2 => L1 message with message proof.
+انتقال پیام از L2 به L1 با استفاده از مدرک پیام.
 
-| Parameter | Description                                                  |
-| --------- | ------------------------------------------------------------ |
-| from      | The address of the sender of the message.                    |
-| to        | The address of the recipient of the message.                 |
-| value     | The msg.value passed to the message call.                    |
-| nonce     | The nonce of the message to avoid replay attack.             |
-| message   | The content of the message.                                  |
-| proof     | The proof used to verify the correctness of the transaction. |
+| پارامتر | توضیحات                                                   |
+| ------- | --------------------------------------------------------- |
+| from    | آدرس فرستنده پیام.                                        |
+| to      | آدرس دریافت‌کننده پیام.                                   |
+| value   | مقدار msg.value که به تماس پیام اضافه شده است.            |
+| nonce   | نانس پیام برای جلوگیری از حملات تکراری.                   |
+| message | محتوای پیام.                                              |
+| proof   | مدرکی که برای تأیید صحت تراکنش استفاده می‌شود.             |

@@ -1,11 +1,11 @@
 ---
 section: developers
 date: Last Modified
-title: "Verifying Smart Contracts"
-lang: "en"
+title: "تایید قراردادهای هوشمند"
+lang: "fa"
 permalink: "developers/verifying-smart-contracts"
-whatsnext: { "Scroll Contracts": "/en/developers/scroll-contracts" }
-excerpt: "Easily verify your smart contracts with Scroll-supported developer tooling"
+whatsnext: { "قراردادهای Scroll": "/fa/developers/scroll-contracts" }
+excerpt: "به‌راحتی قراردادهای هوشمند خود را با ابزارهای توسعه‌دهنده پشتیبانی‌شده توسط Scroll تأیید کنید"
 ---
 
 import Aside from "../../../../components/Aside.astro"
@@ -13,24 +13,24 @@ import ClickToZoom from "../../../../components/ClickToZoom.astro"
 import verify1 from "./_images/verify1.png"
 import CodeSample from "../../../../components/CodeSample/CodeSample.astro"
 
-After deploying your smart contracts, it's important to verify your code on a block explorer. This can be done in an automated way using your developer tooling or the Web UI.
+بعد از استقرار قراردادهای هوشمند خود، مهم است که کد خود را در یک کاوشگر بلاک تأیید کنید. این کار می‌تواند به صورت خودکار با استفاده از ابزارهای توسعه‌دهنده شما یا رابط کاربری وب انجام شود.
 
-## Using Developer Tools
+## استفاده از ابزارهای توسعه‌دهنده
 
-Most smart contract tooling has plugins for verifying your contracts easily on Etherscan. 
+بیشتر ابزارهای قرارداد هوشمند پلاگین‌هایی برای تأیید آسان قراردادهای شما در Etherscan دارند.
 
 - Scroll Mainnet: https://api.scrollscan.com/api   
 - Scroll Sepolia: https://api-sepolia.scrollscan.com/api
 
-<Aside type="tip" title="Using the Scrollscan API">
-  When using Scrollscan, you will need to [register an account](https://scrollscan.com/register) and create an API key. The same key can be used for both Scroll Sepolia and mainnet. After creating your API key, please wait a few minutes before it comes into effect.
+<Aside type="tip" title="استفاده از API Scrollscan">
+  هنگام استفاده از Scrollscan، باید [یک حساب کاربری ثبت کنید](https://scrollscan.com/register) و یک کلید API ایجاد کنید. همان کلید می‌تواند برای هر دو Scroll Sepolia و شبکه اصلی استفاده شود. بعد از ایجاد کلید API، لطفاً چند دقیقه صبر کنید تا فعال شود.
 </Aside>
 
 ### Hardhat
 
-Modify `hardhat.config.ts` to point to Scroll's RPC and block explorer API. 
+فایل `hardhat.config.ts` را اصلاح کنید تا به RPC و API کاوشگر بلاک Scroll اشاره کند.
 
-For example, the config for Scroll Sepolia will look like this:
+به عنوان مثال، تنظیمات برای Scroll Sepolia به این صورت خواهد بود:
 ```javascript
 ...
 
@@ -45,7 +45,7 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: {
-      scrollSepolia: <YOUR API KEY>,
+      scrollSepolia: '<YOUR API KEY>',
     },
     customChains: [
       {
@@ -63,32 +63,32 @@ const config: HardhatUserConfig = {
 ...
 ```
 
-Now you can verify the smart contract by running the following command.
+حال می‌توانید قرارداد هوشمند را با اجرای دستور زیر تأیید کنید.
 
 ```solidity
 npx hardhat verify --network scrollSepolia <contract address> <space separated constructor parameters>
 ```
 
-For example, this is how a smart contract that receives two uint parameters in the constructor should look:
+به عنوان مثال، این گونه باید قرارداد هوشمندی که دو پارامتر uint در سازنده دریافت می‌کند، باشد:
 
 ```solidity
 npx hardhat verify --network scrollSepolia 0xD9880690bd717189cC3Fbe7B9020F27fae7Ac76F 123 456
 ```
 
-<Aside type="danger" title="Warning">
-  You may receive an error stating `etherscan.apiKey.trim is not a function`. If so, you need to update
-  `@nomiclabs/hardhat-etherscan` to be able to support custom chains. Try running `npm update
-  @nomiclabs/hardhat-etherscan`
+<Aside type="danger" title="هشدار">
+  ممکن است خطایی با عنوان `etherscan.apiKey.trim is not a function` دریافت کنید. در این صورت، نیاز به به‌روزرسانی
+  `@nomiclabs/hardhat-etherscan` دارید تا بتواند زنجیره‌های سفارشی را پشتیبانی کند. سعی کنید دستور `npm update
+  @nomiclabs/hardhat-etherscan` را اجرا کنید.
 </Aside>
 
 ### Foundry
 
-When using Foundry, the `verify-contract` command helps automate the process of verifying contracts. If your contract has constructor arguments, you can specify these in ABI-encoded form with the `--constructor-args` option. For example, if your constructor takes two `uint256` variables:
+هنگام استفاده از Foundry، دستور `verify-contract` به شما کمک می‌کند تا فرآیند تأیید قراردادها را خودکار کنید. اگر قرارداد شما آرگومان‌های سازنده دارد، می‌توانید این‌ها را به صورت فرم ABI-encoded با گزینه `--constructor-args` مشخص کنید. به عنوان مثال، اگر سازنده شما دو متغیر `uint256` می‌گیرد:
 ```bash
  --constructor-args $(cast abi-encode "constructor(uint256,uint256)" 0 7)
 ```
 
-Refer to the [Foundry documentation](https://book.getfoundry.sh/reference/forge/forge-verify-contract) for further options you can specify.
+به مستندات [Foundry](https://book.getfoundry.sh/reference/forge/forge-verify-contract) برای گزینه‌های بیشتر که می‌توانید مشخص کنید، مراجعه کنید.
 
 ```bash
 forge verify-contract <contract address> <contract name> \
@@ -96,6 +96,6 @@ forge verify-contract <contract address> <contract name> \
   --etherscan-api-key <your Scrollscan API key> \
   --constructor-args <your constructor arguments>
 ```
-<Aside type="caution" title="Caution">
-  Do not specify the chain ID.
+<Aside type="caution" title="احتیاط">
+  شناسه زنجیره را مشخص نکنید.
 </Aside>

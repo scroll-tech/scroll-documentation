@@ -1,91 +1,76 @@
 ---
 section: developers
 date: Last Modified
-title: "Building on Scroll"
-lang: "en"
+title: "ساختن بر روی Scroll"
+lang: "fa"
 permalink: "developers/"
-excerpt: "Building on Scroll feels just like Ethereum, and you can bring your favorite tooling and contracts with you."
-whatsnext: { "Developer Quickstart": "/en/developers/developer-quickstart" }
+excerpt: "ساختن روی Scroll دقیقا مثل اتریوم است، و شما می‌توانید ابزارها و قراردادهای مورد علاقه‌تان را با خود بیاورید."
+whatsnext: { "شروع سریع برای توسعه‌دهندگان": "/fa/developers/developer-quickstart" }
 ---
 
 import Aside from "../../../../components/Aside.astro"
 import ToggleElement from "../../../../components/ToggleElement.astro"
 
-**Welcome to the Scroll developer documentation!**
+**به مستندات توسعه‌دهندگان Scroll خوش آمدید!**
 
-Scroll is its own Layer 2 network built on Ethereum (more specifically, a “zero knowledge rollup”).
+Scroll شبکه لایه دوم خود را بر روی اتریوم ساخته است (بیشتر مشخصا، یک “رول‌آپ دانش صفر”).
 
-If you’re experienced in building on Ethereum, your code, dependencies, and tooling work with Scroll out of the box. This is possible because our network is compatible with EVM bytecode and designed to feel just like developing on Ethereum.
+اگر در ساختن روی اتریوم تجربه دارید، کد، وابستگی‌ها و ابزارهای شما به صورت خودکار با Scroll کار می‌کنند. این امکان پذیر است زیرا شبکه ما با بایت‌کد EVM سازگار است و به گونه‌ای طراحی شده است که درست مثل توسعه روی اتریوم احساس شود.
 
-<Aside type="tip" title="New to zero knowledge rollups?">
-Scroll gains its security and speed by executing transactions off-chain, and also producing a cryptographic proof that
-the transactions were executed correctly. This cryptographic proof is verified in a smart contract on Layer 1,
-ensuring that all code executed on the Scroll Layer 2 behaves just as if it were executed on Ethereum Layer 1.
+<Aside type="tip" title="جدید به رول‌آپ‌های دانش صفر؟">
+Scroll امنیت و سرعت خود را با اجرای تراکنش‌ها خارج از زنجیره، و همچنین تولید یک اثبات رمزنگاری که تراکنش‌ها به درستی اجرا شده‌اند، به دست می‌آورد. این اثبات رمزنگاری در یک قرارداد هوشمند بر روی لایه 1 تأیید می‌شود، که اطمینان می‌دهد تمام کدهای اجرا شده روی لایه دوم Scroll درست مثل اینکه روی لایه اول اتریوم اجرا شده‌اند، رفتار می‌کنند.
 
-[Learn more about Scroll’s architecture →](/technology)
+[بیشتر در مورد معماری Scroll بیاموزید →](/technology)
 
 </Aside>
 
-## Getting Started
+## شروع به کار
 
-**Looking to build on the Scroll?**
+**به دنبال ساختن روی Scroll هستید؟**
 
-- For the essentials: Check out the [Developer Quickstart](/developers/developer-quickstart)
-- For a tutorial walking through deploying your first smart contract on Scroll, read our [contract deployment tutorial](/developers/guides/contract-deployment-tutorial)
-- We also have a number of [deployed contract addresses](/developers/scroll-contracts) to build on.
+- برای اصول اولیه: به [شروع سریع برای توسعه‌دهندگان](/developers/developer-quickstart) مراجعه کنید.
+- برای یک آموزش قدم به قدم در مورد استقرار اولین قرارداد هوشمندتان روی Scroll، آموزش [استقرار قرارداد](/developers/guides/contract-deployment-tutorial) ما را بخوانید.
+- ما همچنین تعدادی [آدرس قرارداد مستقر شده](/developers/scroll-contracts) داریم که می‌توانید روی آنها ساخت و ساز کنید.
 
-## Why Build on Scroll?
+## چرا ساختن روی Scroll؟
 
 <ToggleElement anchor="throughput">
-  <div slot="title">Throughput — Scroll creates more secure blockspace for Ethereum.</div>
+  <div slot="title">توان عملیاتی — Scroll فضای بلاک امن‌تری برای اتریوم ایجاد می‌کند.</div>
   <p>
-    ZK Rollups allow for more activity on the network, minimizing congestion. By inheriting the security of Ethereum,
-    which verifies the behavior of the network using zero knowledge proofs, Scroll can process more transactions without
-    compromising on decentralization.
+    رول‌آپ‌های دانش صفر امکان فعالیت بیشتر در شبکه را فراهم می‌کنند و ازدحام را به حداقل می‌رسانند. با به ارث بردن امنیت اتریوم، که رفتار شبکه را با استفاده از اثبات‌های دانش صفر تأیید می‌کند، Scroll می‌تواند تراکنش‌های بیشتری را پردازش کند بدون اینکه بر تمرکززدایی تأثیر بگذارد.
   </p>
 </ToggleElement>
 
 <ToggleElement anchor="cost">
-  <div slot="title">Cost — Scroll saves users gas fees.</div>
+  <div slot="title">هزینه — Scroll هزینه‌های گس کاربران را کاهش می‌دهد.</div>
   <p>
-    On Ethereum, competition for blockspace results in higher costs per transaction, as each transaction makes a bid to
-    be included in the next block. Scroll leverages recent breakthroughs in zero knowledge proofs and hardware
-    acceleration to vastly increase secure blockspace and minimize transaction costs for users.
+    در اتریوم، رقابت برای فضای بلاک منجر به هزینه‌های بالاتر در هر تراکنش می‌شود، زیرا هر تراکنش پیشنهاد می‌دهد که در بلاک بعدی گنجانده شود. Scroll از پیشرفت‌های اخیر در اثبات‌های دانش صفر و شتاب‌دهی سخت‌افزاری استفاده می‌کند تا فضای بلاک امن‌تری را به شدت افزایش دهد و هزینه‌های تراکنش را برای کاربران به حداقل برساند.
   </p>
 </ToggleElement>
 <ToggleElement anchor="speed">
-  <div slot="title">Speed — Scroll delivers feedback to users, faster.</div>
+  <div slot="title">سرعت — Scroll بازخورد به کاربران را سریع‌تر تحویل می‌دهد.</div>
   <p>
-    After the merge, Ethereum blocks reliably confirm every 12 seconds. Scroll blocks are minted every 3 seconds, and
-    for the sake of lower-risk operations, transactions can be assumed to be final once included in a block. This opens
-    up new possibilities for on-chain interaction in social and gaming applications.
+    پس از ادغام، بلاک‌های اتریوم به طور مداوم هر 12 ثانیه یک بار تأیید می‌شوند. بلاک‌های Scroll هر 3 ثانیه یک بار ضرب می‌شوند، و برای عملیات‌های کم‌ریسک‌تر، تراکنش‌ها می‌توانند به محض گنجانده شدن در یک بلاک نهایی تلقی شوند. این امکان‌های جدیدی برای تعاملات زنجیره‌ای در برنامه‌های اجتماعی و بازی باز می‌کند.
   </p>
 </ToggleElement>
 <ToggleElement anchor="alignment">
-  <div slot="title">Alignment — Scroll builds on Ethereum's vision.</div>
+  <div slot="title">هم‌راستایی — Scroll بر اساس چشم‌انداز اتریوم ساخته شده است.</div>
   <p>
-    Scroll builds on Ethereum’s vision. Our ethos is to build Ethereum, not to splinter it. Decentralization,
-    permissionlessness, censorship-resistance, and community ownership are the core of what we do and the roadmap we’re
-    building. We believe in open-source software, and we work closely with the Ethereum Foundation’s Privacy and Scaling
-    Explorations team to support their work on a zkEVM that might someday be the heart of Ethereum.
+    Scroll بر اساس چشم‌انداز اتریوم ساخته شده است. اخلاق ما ساختن اتریوم است، نه تجزیه آن. تمرکززدایی، بدون مجوز بودن، مقاومت در برابر سانسور و مالکیت جامعه‌ای هسته آنچه که ما انجام می‌دهیم و نقشه راهی که می‌سازیم را تشکیل می‌دهند. ما به نرم‌افزار متن‌باز باور داریم، و به طور نزدیک با تیم اکتشافات حریم خصوصی و مقیاس‌پذیری بنیاد اتریوم کار می‌کنیم تا از کار آنها بر روی یک zkEVM که روزی ممکن است قلب اتریوم باشد، پشتیبانی کنیم.
   </p>
   <p>
-    We also work with governance DAOs and other open-source protocols to make sure that as applications are deployed,
-    we’re working to grow their impact — whether that be in public goods, core infrastructure, or the next generation of
-    zero knowledge use cases.
+    ما همچنین با DAOهای حاکمیتی و پروتکل‌های متن‌باز دیگر همکاری می‌کنیم تا اطمینان حاصل کنیم که به عنوان برنامه‌ها مستقر می‌شوند، ما در حال کار برای افزایش تأثیر آنها هستیم — چه در مورد کالاهای عمومی، زیرساخت‌های اصلی، یا نسل بعدی موارد استفاده دانش صفر.
   </p>
 </ToggleElement>
 <ToggleElement anchor="community">
-  <div slot="title">Community — Scroll brings together users and builders.</div>
+  <div slot="title">جامعه — Scroll کاربران و سازندگان را گرد هم می‌آورد.</div>
   <p>
-    We know the challenges of building in the open and getting user engagement! Scroll has a blossoming community of
-    users and builders, and with a Discord community of over 500,000 members eager to try out applications on our
-    testnet or mainnet, we’re excited to connect builders with users who can provide real-world feedback.
+    ما چالش‌های ساختن در محیط باز و جلب مشارکت کاربران را می‌دانیم! Scroll یک جامعه پررونق از کاربران و سازندگان دارد، و با یک جامعه Discord بیش از 500,000 عضوی که مشتاق به آزمایش برنامه‌ها در شبکه آزمایشی یا شبکه اصلی ما هستند، ما هیجان‌زده هستیم که سازندگان را با کاربرانی که می‌توانند بازخورد واقعی ارائه دهند، متصل کنیم.
   </p>
 </ToggleElement>
 
-## Thank you for building with us.
+## از شما بابت ساختن با ما سپاسگزاریم.
 
-Our mainnet is now live, and we're diligently working to bring more integrations and support infrastructure to the network.
+شبکه اصلی ما اکنون زنده است و ما با دقت در حال کار برای آوردن ادغام‌ها و زیرساخت‌های پشتیبانی بیشتر به شبکه هستیم.
 
-Join our growing developer community. You can find us on [Discord](https://discord.gg/scroll), join our [discussion forum](https://community.scroll.io/), or follow our progress on [Twitter](https://twitter.com/Scroll_ZKP).
+به جامعه توسعه‌دهندگان در حال رشد ما بپیوندید. می‌توانید ما را در [Discord](https://discord.gg/scroll) پیدا کنید، به [فروم بحث](https://community.scroll.io/) ما بپیوندید، یا پیشرفت ما را در [توییتر](https://twitter.com/Scroll_ZKP) دنبال کنید.

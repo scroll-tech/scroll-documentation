@@ -1,11 +1,11 @@
 ---
 section: developers
 date: Last Modified
-title: "L1 and L2 Bridging"
-lang: "en"
+title: "بریج L1 و L2"
+lang: "fa"
 permalink: "developers/l1-and-l2-bridging"
-whatsnext: { "ETH & ERC20 Token Bridge": "/en/developers/l1-and-l2-bridging/eth-and-erc20-token-bridge/" }
-excerpt: "An overview of Scroll's Bridging architecture"
+whatsnext: { "بریج توکن‌های ETH و ERC20": "/fa/developers/l1-and-l2-bridging/eth-and-erc20-token-bridge/" }
+excerpt: "مروری بر معماری بریج Scroll"
 ---
 
 import ClickToZoom from "../../../../components/ClickToZoom.astro"
@@ -13,25 +13,24 @@ import Aside from "../../../../components/Aside.astro"
 import L1GatewayWHITE from "../../../../assets/images/developers/L1GatewayWHITE.png"
 import withdrawWHITE from "../../../../assets/images/developers/withdrawWHITE.png"
 
-The Scroll bridge enables the transfer of ETH, ERC20 tokens, NFTs, and arbitrary messages between L1 and L2. It serves as a secure mechanism for moving various digital assets across L1 and L2.
+بریج Scroll امکان انتقال ETH، توکن‌های ERC20، NFT‌ها و پیام‌های دلخواه بین L1 و L2 را فراهم می‌کند. این بریج به عنوان یک مکانیزم امن برای جابجایی دارایی‌های دیجیتال مختلف بین L1 و L2 عمل می‌کند.
 
-To facilitate the transfer of ETH and ERC20 tokens, the Scroll bridge utilizes the Gateway Router. This contract ensures the smooth passage of these assets between L1 and L2, allowing users to transfer their Ethereum-based tokens seamlessly.
+برای تسهیل انتقال ETH و توکن‌های ERC20، بریج Scroll از Gateway Router استفاده می‌کند. این قرارداد اطمینان می‌دهد که دارایی‌ها به طور روان بین L1 و L2 منتقل شوند و به کاربران اجازه می‌دهد توکن‌های مبتنی بر Ethereum را به راحتی جابجا کنند.
 
-The ERC721 and ERC1155 Gateway enables the transfer of non-fungible assets between the two networks, allowing users to move their NFTs across L1 and L2.
+Gateway ERC721 و ERC1155 امکان انتقال دارایی‌های غیرقابل تعویض بین دو شبکه را فراهم می‌کند و به کاربران این امکان را می‌دهد که NFTهای خود را بین L1 و L2 منتقل کنند.
 
-In addition to token transfers, the Scroll Messenger contract enables cross-chain contract interaction. This means that contracts on one network can interact with contracts on the other network through the Scroll Messenger contract. This functionality expands the possibilities for decentralized applications and smart contracts to operate seamlessly across both networks.
+علاوه بر انتقال توکن‌ها، قرارداد Scroll Messenger امکان تعامل قراردادهای بین زنجیره‌ای را فراهم می‌کند. به این معنی که قراردادهای موجود در یک شبکه می‌توانند با قراردادهای موجود در شبکه دیگر از طریق قرارداد Scroll Messenger تعامل داشته باشند. این قابلیت امکانات را برای برنامه‌های غیرمتمرکز و قراردادهای هوشمند برای عمل کردن به طور روان در هر دو شبکه گسترش می‌دهد.
 
-## L1 Gateway architecture
-
+## معماری L1 Gateway
 
 <ClickToZoom src={L1GatewayWHITE} />
 
-There are many entry points from the user to the Scroll bridge. This will depend on what you want to do and how you want to do it. If you want to send ETH or ERC20 tokens, you should use the `GatewayRouter`. If you want to send NFTs, you should use the `L1ERC721Gateway` or `L1ERC1155Gateway`. If you want to send arbitrary data, you should use the `L1ScrollMessenger`. All Gateway transfers use the Scroll Messenger to send assets cross-chain, whose job is to append the transactions to the Message Queue for L2 inclusion.
+ورودی‌های زیادی از سمت کاربر به بریج Scroll وجود دارد. این بستگی به این دارد که چه کاری می‌خواهید انجام دهید و چگونه می‌خواهید آن را انجام دهید. اگر می‌خواهید ETH یا توکن‌های ERC20 ارسال کنید، باید از `GatewayRouter` استفاده کنید. اگر می‌خواهید NFT ارسال کنید، باید از `L1ERC721Gateway` یا `L1ERC1155Gateway` استفاده کنید. اگر می‌خواهید داده‌های دلخواه ارسال کنید، باید از `L1ScrollMessenger` استفاده کنید. تمام انتقال‌های Gateway از Scroll Messenger برای ارسال دارایی‌ها به صورت بین زنجیره‌ای استفاده می‌کنند، که وظیفه آن افزودن تراکنش‌ها به صف پیام برای درج در L2 است.
 
-## L2 Gateway architecture
+## معماری L2 Gateway
 
 <ClickToZoom src={withdrawWHITE} />
 
-Regarding possible permissionlessly callable entry points, the L2 Gateway Architecture is very similar to L1. The difference is that when sending a message from L2, calling the `appendMessage` function will store the message in an append-only binary merkle tree (aka withdraw tree) in the `L2MessageQueue`. When a new message is sent to the `L2MessageQueue`, the relayer will detect it and store it in the database. When the block is finalized, it will generate a proof of the new merkle path and pass it to the L1geth node to execute on `L1ScrollMessenger`. All finalized withdraw roots will be stored in the rollup contract so we can verify the proof against them. In the next Scroll versions, the Relayer won't be needed since all users will be able to finalize the transaction on L1.
+در مورد نقاط ورودی قابل فراخوانی بدون مجوز، معماری L2 Gateway بسیار شبیه به L1 است. تفاوت این است که هنگام ارسال پیام از L2، فراخوانی تابع `appendMessage` پیام را در یک درخت مرکل باینری اضافه‌شونده (معروف به درخت برداشت) در `L2MessageQueue` ذخیره می‌کند. هنگامی که پیام جدیدی به `L2MessageQueue` ارسال می‌شود، Relayer آن را شناسایی کرده و در پایگاه داده ذخیره می‌کند. هنگامی که بلوک نهایی شد، اثباتی از مسیر مرکل جدید تولید کرده و به گره L1geth منتقل می‌کند تا در `L1ScrollMessenger` اجرا شود. تمام ریشه‌های برداشت نهایی شده در قرارداد رول‌آپ ذخیره خواهند شد تا بتوانیم اثبات را در برابر آنها بررسی کنیم. در نسخه‌های آینده Scroll، نیاز به Relayer نخواهد بود زیرا تمام کاربران قادر خواهند بود تراکنش را در L1 نهایی کنند.
 
-In the upcoming sections, we will explore the technical aspects of the bridge, including the smart contract API required to utilize its capabilities. Detailed guides with code examples are provided in the Developer Guides section to assist developers and users in understanding and implementing these functionalities.
+در بخش‌های آینده، ما جنبه‌های فنی بریج را بررسی خواهیم کرد، از جمله API قراردادهای هوشمند مورد نیاز برای استفاده از قابلیت‌های آن. راهنماهای دقیق با مثال‌های کد در بخش راهنماهای توسعه‌دهندگان ارائه شده است تا به توسعه‌دهندگان و کاربران در درک و پیاده‌سازی این قابلیت‌ها کمک کند.

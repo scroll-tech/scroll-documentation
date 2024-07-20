@@ -1,96 +1,88 @@
 ---
 section: developers
 date: Last Modified
-title: "ETH and ERC20 Token Bridge"
-lang: "en"
+title: "بریج توکن‌های ETH و ERC20"
+lang: "fa"
 permalink: "developers/l1-and-l2-bridging/eth-and-erc20-token-bridge"
-whatsnext: { "ERC721 NFT Bridge": "/en/developers/l1-and-l2-bridging/erc721-nft-bridge/" }
-excerpt: "The Gateway Router allows ETH and ERC20 token bridging from L1 to L2 using the depositETH and depositERC20 functions respectively."
+whatsnext: { "بریج ERC721 NFT": "/fa/developers/l1-and-l2-bridging/erc721-nft-bridge/" }
+excerpt: "Gateway Router امکان بریج ETH و توکن‌های ERC20 از L1 به L2 را با استفاده از توابع depositETH و depositERC20 به ترتیب فراهم می‌کند."
 ---
 
 import Aside from "../../../../../components/Aside.astro"
 
-## Deposit ETH and ERC20 tokens from L1
+## واریز ETH و توکن‌های ERC20 از L1
 
-The Gateway Router allows ETH and ERC20 token bridging from L1 to L2 using the `depositETH` and `depositERC20` functions respectively. It is a permissionless bridge deployed on L1. Notice that ERC20 tokens will have a different address on L2, you can use the `getL2ERC20Address` function to query the new address.
+Gateway Router امکان بریج ETH و توکن‌های ERC20 از L1 به L2 را با استفاده از توابع `depositETH` و `depositERC20` به ترتیب فراهم می‌کند. این یک پل بدون مجوز است که بر روی L1 مستقر شده است. توجه داشته باشید که توکن‌های ERC20 در L2 آدرس متفاوتی خواهند داشت، شما می‌توانید از تابع `getL2ERC20Address` برای پرس‌وجو از آدرس جدید استفاده کنید.
 
 <Aside type="tip" title="">
-  **`depositETH`** and **`depositERC20`** are payable functions, the amount of ETH sent to these functions will be used
-  to pay for L2 fees. If the amount is not enough, the transaction will not be sent. All excess ETH will be sent back to
-  the sender. `0.00001 ETH` should be more than enough to process a token deposit.
+  **`depositETH`** و **`depositERC20`** توابع پرداختی هستند، مقدار ETH ارسال‌شده به این توابع برای پرداخت هزینه‌های L2 استفاده خواهد شد. اگر مقدار کافی نباشد، تراکنش ارسال نخواهد شد. تمام ETH اضافی به فرستنده برمی‌گردد. `0.00001 ETH` باید برای پردازش واریز توکن کافی باشد.
 </Aside>
 
-When bridging ERC20 tokens, you don’t have to worry about selecting the right Gateway. This is because the `L1GatewayRouter` will choose the correct underlying entry point to send the message:
+هنگام بریج توکن‌های ERC20، نیازی به نگرانی در مورد انتخاب Gateway مناسب ندارید. این به این دلیل است که `L1GatewayRouter` نقطه ورودی صحیح را برای ارسال پیام انتخاب خواهد کرد:
 
-- **`L1StandardERC20Gateway`:** This Gateway permits any ERC20 deposit and will be selected as the default by the L1GatewayRouter for an ERC20 token that doesn’t need custom logic on L2. On the very first token bridging, a new token will be created on L2 that implements the ScrollStandardERC20. To bridge a token, call the `depositERC20` function on the `L1GatewayRouter`.
-- **`L1CustomERC20Gateway`:** This Gateway will be selected by the `L1GatewayRouter` for tokens with custom logic. For an L1/L2 token pair to work on the Scroll Custom ERC20 Bridge, the L2 token contract has to implement `IScrollStandardERC20`. Additionally, the token should grant `mint` or `burn` capability to the `L2CustomERC20Gateway`. Visit the [Bridge an ERC20 through the Custom Gateway](/developers/guides/bridge-erc20-through-the-custom-gateway) guide for a step-by-step example of how to bridge a custom token.
+- **`L1StandardERC20Gateway`:** این Gateway اجازه می‌دهد هر واریزی از ERC20 انجام شود و به عنوان پیش‌فرض توسط L1GatewayRouter برای توکن‌های ERC20 که نیاز به منطق خاص در L2 ندارند انتخاب خواهد شد. در اولین بریج توکن، توکن جدیدی در L2 ایجاد می‌شود که `ScrollStandardERC20` را پیاده‌سازی می‌کند. برای بریج یک توکن، تابع `depositERC20` را بر روی `L1GatewayRouter` فراخوانی کنید.
+- **`L1CustomERC20Gateway`:** این Gateway توسط `L1GatewayRouter` برای توکن‌هایی با منطق خاص انتخاب خواهد شد. برای اینکه یک جفت توکن L1/L2 در بریج سفارشی ERC20 Scroll کار کند، قرارداد توکن L2 باید `IScrollStandardERC20` را پیاده‌سازی کند. علاوه بر این، توکن باید به `L2CustomERC20Gateway` مجوز `mint` یا `burn` را اعطا کند. برای یک مثال مرحله به مرحله از بریج توکن سفارشی، راهنمای [بریج ERC20 از طریق Gateway سفارشی](/developers/guides/bridge-erc20-through-the-custom-gateway) را مشاهده کنید.
 
-All Gateway contracts will form the message and send it to the `L1ScrollMessenger` which can send arbitrary messages to L2. The `L1ScrollMessenger` passes the message to the `L1MessageQueue`. Any user can send messages directly to the Messenger to execute arbitrary data on L2. This means they can execute any function on L2 from a transaction made on L1 via the bridge. Although an application could directly pass messages to existing token contracts, the Gateway abstracts the specifics and simplifies making transfers and calls.
+تمام قراردادهای Gateway پیام را فرموله کرده و به `L1ScrollMessenger` ارسال می‌کنند که می‌تواند پیام‌های دلخواه را به L2 ارسال کند. `L1ScrollMessenger` پیام را به `L1MessageQueue` منتقل می‌کند. هر کاربری می‌تواند پیام‌ها را مستقیماً به Messenger ارسال کند تا داده‌های دلخواه را در L2 اجرا کند. به این معنی که آنها می‌توانند هر تابعی را در L2 از طریق تراکنش‌های انجام شده در L1 از طریق پل اجرا کنند. اگرچه یک برنامه می‌تواند مستقیماً پیام‌ها را به قراردادهای توکن موجود منتقل کند، Gateway جزییات را انتزاع کرده و انتقالات و فراخوانی‌ها را ساده می‌کند.
 
 <Aside type="tip" title="">
-  In future upgrades, users will be able to bypass the `L1ScrollMessenger` and send messages directly to the `L1MessageQueue`. If a message is sent
-  via the `L1MessageQueue`, the transaction's sender will be the address of the user sending the transaction, not the
-  address of the `L1ScrollMessenger`. 
+  در به‌روزرسانی‌های آینده، کاربران قادر خواهند بود `L1ScrollMessenger` را دور بزنند و پیام‌ها را مستقیماً به `L1MessageQueue` ارسال کنند. اگر پیامی از طریق `L1MessageQueue` ارسال شود، فرستنده تراکنش، آدرس کاربری است که تراکنش را ارسال کرده است، نه آدرس `L1ScrollMessenger`.
 </Aside>
 
-When a new block gets created on L1, the Watcher will detect the message on the `L1MessageQueue` and will pass it to the Relayer service, which will submit the transaction to the L2 via the l2geth node. Finally, the l2geth node will pass the transaction to the `L2ScrollMessenger` contract for execution on L2.
+زمانی که بلوک جدیدی در L1 ایجاد می‌شود، Watcher پیام را در `L1MessageQueue` شناسایی کرده و آن را به سرویس Relayer منتقل می‌کند که تراکنش را به L2 از طریق گره l2geth ارسال می‌کند. در نهایت، گره l2geth تراکنش را به قرارداد `L2ScrollMessenger` برای اجرا در L2 منتقل می‌کند.
 
-## Withdraw ETH and ERC20 tokens from L2
+## برداشت ETH و توکن‌های ERC20 از L2
 
-The L2 Gateway is very similar to the L1 Gateway. We can withdraw ETH and ERC20 tokens back to L1 using the `withdrawETH` and `withdrawERC20` functions. The contract address is deployed on L2. We use the `getL1ERC20Address` to retrieve the token address on L1.
+L2 Gateway بسیار شبیه به L1 Gateway است. ما می‌توانیم ETH و توکن‌های ERC20 را با استفاده از توابع `withdrawETH` و `withdrawERC20` به L1 برداشت کنیم. آدرس قرارداد بر روی L2 مستقر است. ما از `getL1ERC20Address` برای بازیابی آدرس توکن در L1 استفاده می‌کنیم.
 
 <Aside type="tip" title="">
-  **`withdrawETH`** and **`withdrawERC20`** are payable functions, and the amount of ETH sent to these functions will be
-  used to pay for L1 fees. If the amount is not enough, the transaction will not be sent. All excess ETH will be sent
-  back to the sender. Fees will depend on L1 activity but `0.005 ETH` should be enough to process a token withdrawal.
+  **`withdrawETH`** و **`withdrawERC20`** توابع پرداختی هستند و مقدار ETH ارسال‌شده به این توابع برای پرداخت هزینه‌های L1 استفاده خواهد شد. اگر مقدار کافی نباشد، تراکنش ارسال نخواهد شد. تمام ETH اضافی به فرستنده برمی‌گردد. هزینه‌ها بستگی به فعالیت L1 دارد اما `0.005 ETH` باید برای پردازش برداشت توکن کافی باشد.
 </Aside>
 
 <Aside type="caution" title="">
-  **Make sure the transactions won't revert on L1** while sending from L2. There is no way to recover bridged ETH,
-  tokens, or NFTs if your transaction reverts on L1. All assets are burnt on Scroll when the transaction is sent, and
-  it's impossible to mint them again.
+  **مطمئن شوید که تراکنش‌ها در L1 بازنگردند** در حالی که از L2 ارسال می‌شود. هیچ راهی برای بازیابی ETH، توکن‌ها یا NFTهای بریج شده وجود ندارد اگر تراکنش شما در L1 بازگردد. تمام دارایی‌ها در Scroll هنگام ارسال تراکنش سوزانده می‌شوند و غیرممکن است دوباره آنها را ضرب کرد.
 </Aside>
 
-## Creating an ERC20 token with custom logic on L2
+## ایجاد توکن ERC20 با منطق سفارشی در L2
 
-If a token needs custom logic on L2, it will need to be bridged through an `L1CustomERC20Gateway` and `L2CustomERC20Gateway` respectively. The custom token on L2 will need to give permission to the Gateway to mint new tokens when a deposit occurs and to burn when tokens are withdrawn
+اگر یک توکن نیاز به منطق خاص در L2 داشته باشد، باید از طریق `L1CustomERC20Gateway` و `L2CustomERC20Gateway` به ترتیب بریج شود. توکن سفارشی در L2 باید به Gateway اجازه دهد تا توکن‌های جدید را هنگام واریز و هنگام برداشت توکن‌ها بسوزاند.
 
-The following interface is the `IScrollStandardERC20` needed for deploying tokens compatible with the `L2CustomERC20Gateway` on L2.
+رابط زیر `IScrollStandardERC20` است که برای استقرار توکن‌های سازگار با `L2CustomERC20Gateway` در L2 نیاز است.
 
 ```solidity
 interface IScrollStandardERC20 {
-  /// @notice Return the address of Gateway the token belongs to.
+  /// @notice آدرس Gateway متعلق به توکن را برمی‌گرداند.
   function gateway() external view returns (address);
 
-  /// @notice Return the address of counterpart token.
+  /// @notice آدرس توکن همتای توکن را برمی‌گرداند.
   function counterpart() external view returns (address);
 
-  /// @dev ERC677 Standard, see https://github.com/ethereum/EIPs/issues/677
-  /// Defi can use this method to transfer L1/L2 token to L2/L1,
-  /// and deposit to L2/L1 contract in one transaction
+  /// @dev استاندارد ERC677، به https://github.com/ethereum/EIPs/issues/677 مراجعه کنید
+  /// دیفای می‌تواند از این روش برای انتقال توکن L1/L2 به L2/L1 استفاده کند،
+  /// و واریز به قرارداد L2/L1 را در یک تراکنش انجام دهد
   function transferAndCall(address receiver, uint256 amount, bytes calldata data) external returns (bool success);
 
-  /// @notice Mint some token to recipient's account.
-  /// @dev Gateway Utilities, only gateway contract can call
-  /// @param _to The address of recipient.
-  /// @param _amount The amount of token to mint.
+  /// @notice مقداری توکن به حساب گیرنده اضافه می‌کند.
+  /// @dev ابزارهای Gateway، فقط قرارداد Gateway می‌تواند فراخوانی کند
+  /// @param _to آدرس گیرنده.
+  /// @param _amount مقدار توکن برای اضافه کردن.
   function mint(address _to, uint256 _amount) external;
 
-  /// @notice Burn some token from account.
-  /// @dev Gateway Utilities, only gateway contract can call
-  /// @param _from The address of account to burn token.
-  /// @param _amount The amount of token to mint.
+  /// @notice مقداری توکن از حساب می‌سوزاند.
+  /// @dev ابزارهای Gateway، فقط قرارداد Gateway می‌تواند فراخوانی کند
+  /// @param _from آدرس حساب برای سوزاندن توکن.
+  /// @param _amount مقدار توکن برای اضافه کردن.
   function burn(address _from, uint256 _amount) external;
 }
 ```
 
-### Adding a Custom L2 ERC20 token to the Scroll Bridge
+### افزودن توکن ERC20 سفارشی به پل Scroll
 
-Tokens can be bridged securely and permissionlessly through Gateway contracts deployed by any developer. However, Scroll also manages an ERC20 Router and a Gateway where all tokens created by the community are welcome. Being part of the Scroll-managed Gateway means you won't need to deploy the Gateway contracts, and your token will appear in the Scroll frontend. To be part of the Scroll Gateway, you must contact the Scroll team to add the token to both L1 and L2 bridge contracts. To do so, follow the instructions on the [token lists](https://github.com/scroll-tech/token-list) repository to add your new token to the official Scroll frontend.
+توکن‌ها می‌توانند از طریق قراردادهای Gateway که توسط هر توسعه‌دهنده‌ای مستقر شده‌اند، به صورت امن و بدون مجوز بریج شوند. با این حال، Scroll همچنین یک روتر ERC20 و یک Gateway را مدیریت می‌کند که تمام توکن‌های ایجاد شده توسط جامعه را خوش‌آمد می‌گوید. عضویت در Gateway مدیریت شده Scroll به این معنی است که نیازی به استقرار قراردادهای Gateway نخواهید داشت و توکن شما در نمای جلویی Scroll ظاهر خواهد شد. برای عضویت در Gateway Scroll، باید با تیم Scroll تماس بگیرید تا توکن را به قراردادهای پل L1 و L2 اضافه کنید. برای این کار، دستورالعمل‌های موجود در مخزن [فهرست توکن‌ها](https://github.com/scroll-tech/token-list) را دنبال کنید تا توکن جدید خود را به نمای رسمی Scroll اضافه کنید.
 
-## L1 Gateway API
+## API Gateway L1
 
-Please visit the [npm library](https://www.npmjs.com/package/@scroll-tech/contracts?activeTab=code) for the complete Scroll contract API documentation.
+لطفاً برای مستندات کامل API قرارداد Scroll به [کتابخانه npm](https://www.npmjs.com/package/@scroll-tech/contracts?activeTab=code) مراجعه کنید.
 
 ### depositETH
 
@@ -98,13 +90,15 @@ Please visit the [npm library](https://www.npmjs.com/package/@scroll-tech/contra
 function depositETH(address _to, uint256 _amount, uint256 _gasLimit) public payable;
 ```
 
-Sends ETH from L1 to L2.
+ETH را از L
 
-| Parameter | Description                                                                                                                 |
-| --------- | --------------------------------------------------------------------------------------------------------------------------- |
-| to        | The address of recipient's account on L2.                                                                                   |
-| amount    | The amount of token to transfer, in wei.                                                                                    |
-| gasLimit  | Gas limit required to complete the deposit on L2. 170000 should be enough to process the transaction, but unused funds are refunded. |
+1 به L2 ارسال می‌کند.
+
+| پارامتر | توضیحات                                                                                                                     |
+| ------- | --------------------------------------------------------------------------------------------------------------------------- |
+| to      | آدرس حساب گیرنده در L2.                                                                                                     |
+| amount  | مقدار توکن برای انتقال، به واحد wei.                                                                                       |
+| gasLimit| محدودیت گس مورد نیاز برای تکمیل واریز در L2. 170000 باید برای پردازش تراکنش کافی باشد، اما وجوه استفاده نشده برگردانده می‌شود. |
 
 ### depositERC20
 
@@ -112,14 +106,14 @@ Sends ETH from L1 to L2.
 function depositERC20(address _token, address _to, uint256 _amount, uint256 _gasLimit) payable;
 ```
 
-Sends ERC20 tokens from L1 to L2.
+توکن‌های ERC20 را از L1 به L2 ارسال می‌کند.
 
-| Parameter | Description                                                                                                                 |
-| --------- | --------------------------------------------------------------------------------------------------------------------------- |
-| token     | The token address on L1.                                                                                                    |
-| to        | The address of recipient's account on L2.                                                                                   |
-| amount    | The amount of token to transfer, in wei.                                                                                    |
-| gasLimit  | Gas limit required to complete the deposit on L2. 200000 should be enough to process the transaction, depending on the Gateway, but unused funds are refunded. |
+| پارامتر | توضیحات                                                                                                                     |
+| ------- | --------------------------------------------------------------------------------------------------------------------------- |
+| token   | آدرس توکن در L1.                                                                                                            |
+| to      | آدرس حساب گیرنده در L2.                                                                                                     |
+| amount  | مقدار توکن برای انتقال، به واحد wei.                                                                                       |
+| gasLimit| محدودیت گس مورد نیاز برای تکمیل واریز در L2. 200000 باید برای پردازش تراکنش کافی باشد، بسته به Gateway، اما وجوه استفاده نشده برگردانده می‌شود. |
 
 ### getL2ERC20Address
 
@@ -127,11 +121,11 @@ Sends ERC20 tokens from L1 to L2.
 function getL2ERC20Address(address _l1Token) external view returns (address);
 ```
 
-Returns the corresponding L2 token address given L1 token address.
+آدرس توکن مربوطه در L2 را با توجه به آدرس توکن در L1 برمی‌گرداند.
 
-| Parameter | Description              |
-| --------- | ------------------------ |
-| \_l1Token | The address of l1 token. |
+| پارامتر | توضیحات              |
+| ------- | -------------------- |
+| \_l1Token | آدرس توکن L1.       |
 
 ### updateTokenMapping
 
@@ -139,14 +133,14 @@ Returns the corresponding L2 token address given L1 token address.
 function updateTokenMapping(address _l1Token, address _l2Token) external;
 ```
 
-Update the mapping that connects an ERC20 token from L1 to L2.
+نگاشت توکن ERC20 از L1 به L2 را به‌روزرسانی می‌کند.
 
-| Parameter | Description                                     |
-| --------- | ----------------------------------------------- |
-| \_l1Token | The address of the ERC20 token in L1.           |
-| \_l2Token | The address of corresponding ERC20 token in L2. |
+| پارامتر | توضیحات                                   |
+| ------- | ----------------------------------------- |
+| \_l1Token | آدرس توکن ERC20 در L1.                    |
+| \_l2Token | آدرس توکن مربوطه در L2.                   |
 
-## L2 Gateway API
+## API Gateway L2
 
 ### withdrawETH
 
@@ -154,13 +148,13 @@ Update the mapping that connects an ERC20 token from L1 to L2.
 function withdrawETH(address to, uint256 amount, uint256 gasLimit) external payable;
 ```
 
-Sends ETH from L2 to L1.
+ETH را از L2 به L1 ارسال می‌کند.
 
-| Parameter | Description                                                                                             |
-| --------- | ------------------------------------------------------------------------------------------------------- |
-| to        | The address of recipient's account on L1.                                                               |
-| amount    | The amount of token to transfer, in wei.                                                                |
-| gasLimit  | Gas limit required to complete the deposit on L1. This is optional, send 0 if you don’t want to set it. |
+| پارامتر | توضیحات                                                                                             |
+| ------- | --------------------------------------------------------------------------------------------------- |
+| to      | آدرس حساب گیرنده در L1.                                                                            |
+| amount  | مقدار توکن برای انتقال، به واحد wei.                                                              |
+| gasLimit| محدودیت گس مورد نیاز برای تکمیل واریز در L1. این اختیاری است، اگر نمی‌خواهید آن را تنظیم کنید، مقدار 0 ارسال کنید. |
 
 ### withdrawERC20
 
@@ -168,14 +162,14 @@ Sends ETH from L2 to L1.
 function withdrawERC20(address token, address to, uint256 amount, uint256 gasLimit) external payable;
 ```
 
-Sends ERC20 tokens from L2 to L1.
+توکن‌های ERC20 را از L2 به L1 ارسال می‌کند.
 
-| Parameter | Description                                                                                             |
-| --------- | ------------------------------------------------------------------------------------------------------- |
-| token     | The token address on L2.                                                                                |
-| to        | The address of recipient's account on L1.                                                               |
-| amount    | The amount of token to transfer, in wei.                                                                |
-| gasLimit  | Gas limit required to complete the deposit on L1. This is optional, send 0 if you don’t want to set it. |
+| پارامتر | توضیحات                                                                                             |
+| ------- | --------------------------------------------------------------------------------------------------- |
+| token   | آدرس توکن در L2.                                                                                  |
+| to      | آدرس حساب گیرنده در L1.                                                                            |
+| amount  | مقدار توکن برای انتقال، به واحد wei.                                                              |
+| gasLimit| محدودیت گس مورد نیاز برای تکمیل واریز در L1. این اختیاری است، اگر نمی‌خواهید آن را تنظیم کنید، مقدار 0 ارسال کنید. |
 
 ### getL1ERC20Address
 
@@ -183,11 +177,11 @@ Sends ERC20 tokens from L2 to L1.
 function getL1ERC20Address(address l2Token) external view returns (address);
 ```
 
-Returns the corresponding L1 token address given an L2 token address.
+آدرس توکن مربوطه در L1 را با توجه به آدرس توکن در L2 برمی‌گرداند.
 
-| Parameter | Description                  |
-| --------- | ---------------------------- |
-| l2Token   | The address of the L2 token. |
+| پارامتر | توضیحات                  |
+| ------- | ------------------------ |
+| l2Token | آدرس توکن L2.            |
 
 ### updateTokenMapping
 
@@ -195,9 +189,9 @@ Returns the corresponding L1 token address given an L2 token address.
 function updateTokenMapping(address _l1Token, address _l2Token) external;
 ```
 
-Update the mapping that connects an ERC20 contract from L2 to L1.
+نگاشت توکن ERC20 از L2 به L1 را به‌روزرسانی می‌کند.
 
-| Parameter | Description                                     |
-| --------- | ----------------------------------------------- |
-| \_l2Token | The address of the ERC20 token in L2.           |
-| \_l1Token | The address of corresponding ERC20 token in L1. |
+| پارامتر | توضیحات                                   |
+| ------- | ----------------------------------------- |
+| \_l2Token | آدرس توکن ERC20 در L2.                    |
+| \_l1Token | آدرس توکن مربوطه در L1.                   |

@@ -1,118 +1,117 @@
 ---
 section: developers
 date: Last Modified
-title: "Ethereum & Scroll Differences"
-lang: "en"
+title: "تفاوت‌های Ethereum و Scroll"
+lang: "fa"
 permalink: "developers/ethereum-and-scroll-differences"
-whatsnext: { "L1 & L2 Bridging": "/en/developers/l1-and-l2-bridging/" }
-excerpt: "There are a number of technical details that differ between Ethereum mainnet's EVM and Scroll's modified design for a zkEVM. Below you can see those differences as they exist now."
+whatsnext: { "بریج L1 و L2": "/fa/developers/l1-and-l2-bridging/" }
+excerpt: "تعدادی از جزئیات فنی بین EVM اصلی Ethereum و طراحی اصلاح‌شده Scroll برای zkEVM متفاوت است. در زیر می‌توانید این تفاوت‌ها را همان‌طور که در حال حاضر وجود دارند، مشاهده کنید."
 ---
 
 import Aside from "../../../../components/Aside.astro"
 
-A number of technical details differ between Ethereum mainnet's EVM and Scroll's modified design for a zkEVM. Below you can see those differences as they exist on Scroll and Scroll Sepolia.
+تعدادی از جزئیات فنی بین EVM اصلی Ethereum و طراحی اصلاح‌شده Scroll برای zkEVM متفاوت است. در زیر می‌توانید این تفاوت‌ها را همان‌طور که در حال حاضر وجود دارند، مشاهده کنید.
 
-For open-source contributors and infrastructure builders, please contact our team for additional support.
+برای مشارکت‌کنندگان متن‌باز و سازندگان زیرساخت، لطفاً با تیم ما برای دریافت پشتیبانی بیشتر تماس بگیرید.
 
-<Aside type="tip" title="Don't Worry!">
-  For the average Solidity developer, these details won't affect your development experience.
+<Aside type="tip" title="نگران نباشید!">
+برای توسعه‌دهنده‌های معمولی Solidity، این جزئیات بر تجربه توسعه شما تأثیر نخواهد گذاشت.
 </Aside>
 
-## EVM Opcodes
+## کدهای عملیات EVM
 
-
-| Opcode                      | Solidity equivalent | Scroll Behavior                                                                                            |
-| --------------------------- | ------------------- | ---------------------------------------------------------------------------------------------------------- |
-| `BLOCKHASH`                 | `block.blockhash`   | Returns `keccak(chain_id \|\| block_number)` for the last 256 blocks.                                      |
-| `COINBASE`                  | `block.coinbase`    | Returns the pre-deployed fee vault contract address. See [Scroll Contracts](/developers/scroll-contracts). |
-| `DIFFICULTY` / `PREVRANDAO` | `block.difficulty`  | Returns 0.                                                                                                 |
-| `SELFDESTRUCT`              | `selfdestruct`      | Disabled. If the opcode is encountered, the transaction will be reverted.[^willadpot]                      |
+| کد عملیات                    | معادل Solidity       | رفتار Scroll                                                                                         |
+| ----------------------------- | --------------------- | ----------------------------------------------------------------------------------------------------- |
+| `BLOCKHASH`                   | `block.blockhash`     | مقدار `keccak(chain_id \|\| block_number)` را برای آخرین ۲۵۶ بلوک بازمی‌گرداند.                     |
+| `COINBASE`                    | `block.coinbase`      | آدرس قرارداد کیف پول هزینه از پیش مستقر شده را برمی‌گرداند. به [قراردادهای Scroll](/developers/scroll-contracts) مراجعه کنید. |
+| `DIFFICULTY` / `PREVRANDAO`   | `block.difficulty`    | مقدار ۰ را برمی‌گرداند.                                                                              |
+| `SELFDESTRUCT`                | `selfdestruct`        | غیرفعال شده است. اگر کد عملیات مشاهده شود، تراکنش برگردانده خواهد شد.[^willadpot]                  |
 
 <Aside type="caution" title="">
-Opcodes related to EIP-4844, like `BLOBHASH` and `BLOBBASEFEE`, are not yet available on Scroll. Additionally, [EIP-4788](https://eips.ethereum.org/EIPS/eip-4788) for accessing the Beacon Chain block root is not supported.
+کدهای عملیات مربوط به EIP-4844، مانند `BLOBHASH` و `BLOBBASEFEE`، هنوز در Scroll در دسترس نیستند. علاوه بر این، [EIP-4788](https://eips.ethereum.org/EIPS/eip-4788) برای دسترسی به ریشه بلوک Beacon Chain پشتیبانی نمی‌شود.
 </Aside>
 
-We support the `cancun` EVM target and the latest Solidity version `0.8.26`.
+ما از هدف EVM `cancun` و آخرین نسخه Solidity `0.8.26` پشتیبانی می‌کنیم.
 
-[^willadpot]: Will change to adopt Ethereum’s solution in the future.
+[^willadpot]: در آینده برای پذیرش راه‌حل Ethereum تغییر خواهد کرد.
 
-## EVM Precompiles
+## پیش‌کامپایل‌های EVM
 
-The `RIPEMD-160` (address `0x3`) `blake2f` (address `0x9`), and `point evaluation` (address `0x0a`) precompiles are currently not supported. Calls to unsupported precompiled contracts will revert. We plan to enable these precompiles in future hard forks.
+پیش‌کامپایل‌های `RIPEMD-160` (آدرس `0x3`)، `blake2f` (آدرس `0x9`) و `point evaluation` (آدرس `0x0a`) در حال حاضر پشتیبانی نمی‌شوند. تماس‌ها با قراردادهای پیش‌کامپایل نشده برمی‌گردند. ما قصد داریم این پیش‌کامپایل‌ها را در هاردفورک‌های آینده فعال کنیم.
 
-The `modexp` precompile is supported but only supports inputs of size less than or equal to 32 bytes (i.e. `u256`).
+پیش‌کامپایل `modexp` پشتیبانی می‌شود اما تنها ورودی‌های با اندازه کمتر یا مساوی ۳۲ بایت (یعنی `u256`) را پشتیبانی می‌کند.
 
-The `ecPairing` precompile is supported, but the number of points(sets, pairs) is limited to 4, instead of 6.
+پیش‌کامپایل `ecPairing` پشتیبانی می‌شود، اما تعداد نقاط (مجموعه‌ها، جفت‌ها) به ۴ محدود است، به جای ۶.
 
-The other EVM precompiles are all supported: `ecRecover`, `identity`, `ecAdd`, `ecMul`.
+سایر پیش‌کامپایل‌های EVM کاملاً پشتیبانی می‌شوند: `ecRecover`، `identity`، `ecAdd`، `ecMul`.
 
-### Precompile Limits
+### محدودیت‌های پیش‌کامپایل
 
-Because of a bounded size of the zkEVM circuits, there is an upper limit on the number of calls that can be made for some precompiles. These transactions will not revert, but simply be skipped by the sequencer if they cannot fit into the space of the circuit. Read more about the [Circuit Capacity Checker](/en/technology/sequencer/execution-node#circuit-capacity-checker). 
+به دلیل اندازه محدود مدارهای zkEVM، یک حد بالایی برای تعداد تماس‌هایی که می‌توان برای برخی پیش‌کامپایل‌ها انجام داد وجود دارد. این تراکنش‌ها برنخواهند گشت، اما اگر نتوانند در فضای مدار جا شوند، توسط Sequencer نادیده گرفته خواهند شد. درباره [Circuit Capacity Checker](/en/technology/sequencer/execution-node#circuit-capacity-checker) بیشتر بخوانید.
 
-| Precompile / Opcode | Limit | 
-| ------------------- | ----- |
-| `keccak256`         | 3157  |
-| `ecRecover`         | 119   |
-| `modexp`            | 23    |
-| `ecAdd`             | 50    |
-| `ecMul`             | 50    |
-| `ecPairing`         | 2     |
+| پیش‌کامپایل / کد عملیات | محدودیت | 
+| ----------------------- | ------- |
+| `keccak256`             | 3157    |
+| `ecRecover`             | 119     |
+| `modexp`                | 23      |
+| `ecAdd`                 | 50      |
+| `ecMul`                 | 50      |
+| `ecPairing`             | 2       |
 {/* TODO: Add SHA256 after upgrade */}
 
 
-## State Account
+## حساب حالت
 
-### **Additional Fields**
+### **فیلدهای اضافی**
 
-We added two fields in the current `StateAccount` object: `PoseidonCodehash` and `CodeSize`.
+ما دو فیلد اضافی در شیء `StateAccount` کنونی اضافه کرده‌ایم: `PoseidonCodehash` و `CodeSize`.
 
 ```go
 type StateAccount struct {
 	Nonce    uint64
 	Balance  *big.Int
-	Root     common.Hash // merkle root of the storage trie
-	KeccakCodeHash []byte // still the Keccak codehash
-	// added fields
-	PoseidonCodeHash []byte // the Poseidon codehash
+	Root     common.Hash // ریشه مرکل از trie ذخیره‌سازی
+	KeccakCodeHash []byte // هنوز هش کد Keccak
+	// فیلدهای اضافه شده
+	PoseidonCodeHash []byte // هش کد Poseidon
 	CodeSize uint64
 }
 ```
 
-### **CodeHash**
+### **کد هش**
 
-Related to this, we maintain two types of codehash for each contract bytecode: Keccak hash and Poseidon hash.
+در این رابطه، ما دو نوع کد هش برای هر بایت‌کد قرارداد نگهداری می‌کنیم: هش Keccak و هش Poseidon.
 
-`KeccakCodeHash` is kept to maintain compatibility for `EXTCODEHASH`. `PoseidonCodeHash` is used for verifying the correctness of bytecodes loaded in the zkEVM, where Poseidon hashing is far more efficient.
+`KeccakCodeHash` برای حفظ سازگاری با `EXTCODEHASH` نگهداری می‌شود. `PoseidonCodeHash` برای تأیید صحت بایت‌کدهای بارگذاری شده در zkEVM استفاده می‌شود، جایی که هش Poseidon بسیار کارآمدتر است.
 
-### CodeSize
+### اندازه کد
 
-When verifying `EXTCODESIZE`, it is expensive to load the whole contract data into the zkEVM. Instead, we store the contract size in storage during contract creation. This way, we do not need to load the code — a storage proof is sufficient to verify this opcode.
+هنگام تأیید `EXTCODESIZE`، بارگذاری تمام داده‌های قرارداد به zkEVM پرهزینه است. در عوض، اندازه قرارداد در زمان ایجاد قرارداد در ذخیره‌سازی ذخیره می‌شود. به این ترتیب، نیازی به بارگذاری کد نیست — یک اثبات ذخیره‌سازی برای تأیید این کد عملیات کافی است.
 
-## Block Time
+## زمان بلوک
 
-To improve the throughput of the Scroll chain, we introduced a dynamic block time in our [Curie upgrade](/technology/overview/scroll-upgrades#curie-upgrade). During the congestion period, a block will be sealed once the transactions in the block reach the circuit limit instead of waiting for the 3-second interval. During normal hours, blocks will still be sealed at 3-second interval to ensure a consistent user experience.
+برای بهبود توان عملیاتی زنجیره Scroll، ما زمان بلوک دینامیک را در [ارتقاء Curie](/technology/overview/scroll-upgrades#curie-upgrade) معرفی کردیم. در طول دوره‌های شلوغی، بلوک زمانی مهر و موم می‌شود که تراکنش‌های موجود در بلوک به حد مدار برسند به جای انتظار برای فاصله زمانی ۳ ثانیه. در ساعات عادی، بلوک‌ها هنوز هم در فاصله زمانی ۳ ثانیه مهر و موم خواهند شد تا تجربه کاربری ثابتی را تضمین کنند.
 
-## Transaction Ordering
+## ترتیب تراکنش‌ها
 
-Similarly to Ethereum, the Scroll sequencer aims to prioritize executable transactions based on their "tip" (priority fee). In most cases, transactions will be included in the next block in decreasing order of their tips.
+مشابه Ethereum، Sequencer در Scroll سعی می‌کند تراکنش‌های قابل اجرا را بر اساس "tip" (هزینه اولویت) آنها اولویت‌بندی کند. در اکثر موارد، تراکنش‌ها در بلوک بعدی به ترتیب نزولی tips آن‌ها گنجانده خواهند شد.
 
-However, just like in Ethereum, this ordering is not guaranteed by the protocol, and some blocks might diverge from it. In particular, during periods of low mempool congestion, the sequencer will process transactions on a first-come-first-served basis, so some transactions might precede others with higher tip in the same block.
+با این حال، مشابه Ethereum، این ترتیب توسط پروتکل تضمین نشده است و برخی بلوک‌ها ممکن است از آن منحرف شوند. به ویژه، در دوره‌های کم ازدحام mempool، Sequencer تراکنش‌ها را بر اساس ترتیب ورود به بلوک پردازش خواهد کرد، بنابراین برخی تراکنش‌ها ممکن است قبل از تراکنش‌های با tip بالاتر در همان بلوک قرار گیرند.
 
-## Future EIPs
+## EIP‌های آینده
 
-We keep a close eye on all emerging EIPs adopted by Ethereum and adopt them when suitable. If you’re interested in more specifics, reach out in [our community forum](https://community.scroll.io) or on the [Scroll Discord](https://discord.gg/scroll).
+ما به دقت بر روی تمامی EIP‌های در حال ظهور که توسط Ethereum پذیرفته شده‌اند نظارت می‌کنیم و آنها را در صورت مناسب بودن به‌کار می‌بریم. اگر به جزئیات بیشتری علاقه‌مندید، در [انجمن جامعه ما](https://community.scroll.io) یا در [Discord Scroll](https://discord.gg/scroll) با ما تماس بگیرید.
 
-## Transaction Fees
+## هزینه‌های تراکنش
 
-The fee charged to Scroll transactions contains two parts:
+هزینه‌ای که به تراکنش‌های Scroll تعلق می‌گیرد شامل دو بخش است:
 
-- **L2 gas fee:** similar to L1, the amount of L2 execution fee equals to `L2_gas_price * L2_gas_used`, covering the following costs:
-  - L2 sequencer execution & storage cost
-  - Validity proof verification and finalization cost on L1
-  - Prover cost
-- **L1 data fee:** additional fee on top of L2 gas fee. The L1 data fee is only charged to L2-initiated transactions, not to L1-initiated transactions. The fee covers the cost of sending data to L1 for data availability. Because we roll up the tx data to L1, the L1 rollup fee is calculated based on the size of tx data.
+- **هزینه گس L2:** مشابه L1، مقدار هزینه اجرای L2 برابر است با `L2_gas_price * L2_gas_used` که شامل هزینه‌های زیر است:
+  - هزینه اجرای Sequencer L2 و هزینه ذخیره‌سازی
+  - هزینه تأیید و نهایی‌سازی اعتبار در L1
+  - هزینه اثبات‌کننده
+- **هزینه داده L1:** هزینه اضافی بر روی هزینه گس L2. هزینه داده L1 فقط برای تراکنش‌های آغاز شده از L2، نه برای تراکنش‌های آغاز شده از L1، دریافت می‌شود. این هزینه به هزینه ارسال داده به L1 برای در دسترس بودن داده‌ها مربوط می‌شود. به دلیل اینکه ما داده‌های تراکنش را به L1 منتقل می‌کنیم، هزینه رول‌آپ L1 بر اساس اندازه داده‌های تراکنش محاسبه می‌شود.
 
-For more information, see [Transaction Fees on Scroll](/developers/transaction-fees-on-scroll).
+برای اطلاعات بیشتر، به [هزینه‌های تراکنش در Scroll](/developers/transaction-fees-on-scroll) مراجعه کنید.
 
 ---

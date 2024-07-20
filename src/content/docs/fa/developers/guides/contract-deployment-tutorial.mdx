@@ -1,28 +1,25 @@
 ---
-section: developers
-date: Last Modified
-title: "Contract Deployment Tutorial"
-lang: "en"
-permalink: "developers/guides/contract-deployment-tutorial"
-excerpt: "The Scroll Sepolia Testnet allows the community to deploy smart contracts on Scroll. In this tutorial, we will teach you how to deploy a contract on Scroll Sepolia."
-whatsnext: { "Scroll Messenger Cross-chain Interaction": "/en/developers/guides/scroll-messenger-cross-chain-interaction/" }
+section: developers  
+date: Last Modified  
+title: "آموزش Deploy قرارداد"  
+lang: "fa"  
+permalink: "developers/guides/contract-deployment-tutorial"  
+excerpt: "شبکه آزمایشی Scroll Sepolia به جامعه این امکان را می‌دهد تا قراردادهای هوشمند را در Scroll مستقر کند. در این آموزش، به شما خواهیم آموخت که چگونه یک قرارداد را در Scroll Sepolia مستقر کنید."  
+whatsnext: { "تعامل میان زنجیره‌ای Scroll Messenger": "/fa/developers/guides/scroll-messenger-cross-chain-interaction/" }  
 ---
 
-import Aside from "../../../../../components/Aside.astro"
+import Aside from "../../../../../components/Aside.astro"  
 
-The Scroll Sepolia Testnet allows anyone to deploy a smart contract on Scroll. In this tutorial, you will learn how to deploy a contract on Scroll Sepolia using common tools for developing on Ethereum. This [demo repo](https://github.com/scroll-tech/scroll-guides/tree/main/contract-deploy-demo) illustrates contract deployment with [Hardhat](https://hardhat.org/) and [Foundry](https://github.com/foundry-rs/foundry).
+شبکه آزمایشی Scroll Sepolia به هر کسی این امکان را می‌دهد که یک قرارداد هوشمند را در Scroll مستقر کند. در این آموزش، شما خواهید آموخت که چگونه یک قرارداد را در Scroll Sepolia با استفاده از ابزارهای رایج برای توسعه در اتریوم مستقر کنید. این [پروژه دمو](https://github.com/scroll-tech/scroll-guides/tree/main/contract-deploy-demo) نحوه Deploy قرارداد را با استفاده از [Hardhat](https://hardhat.org/) و [Foundry](https://github.com/foundry-rs/foundry) نشان می‌دهد.
 
-<Aside type="tip" title="Got Testnet ETH?">
-  Before you start deploying the contract, you need to request test tokens from a Sepolia faucet and use the
-  [bridge](https://scroll.io/bridge) to transfer some test ETH from _Sepolia_ to _Scroll Sepolia_. Alternatively, you
-  could acquire Scroll Sepolia ETH directly. See our [Faucet](/user-guide/faucet/) and [Bridge](/user-guide/bridge/)
-  guides for help.
+<Aside type="tip" title="ETH آزمایشی دارید؟">
+  قبل از شروع به Deploy قرارداد، باید توکن‌های آزمایشی را از یک faucet Sepolia درخواست کنید و از [بریج](https://scroll.io/bridge) برای انتقال مقداری ETH آزمایشی از _Sepolia_ به _Scroll Sepolia_ استفاده کنید. به طور جایگزین، می‌توانید ETH Scroll Sepolia را مستقیماً به دست آورید. برای کمک به این موارد، به راهنماهای [Faucet](/user-guide/faucet/) و [Bridge](/user-guide/bridge/) ما مراجعه کنید.
 </Aside>
 
-## Deploy contracts with Hardhat
+## Deploy قراردادها با Hardhat
 
-1. If you haven't already, install [nodejs](https://nodejs.org/en/download/) and [yarn](https://classic.yarnpkg.com/lang/en/docs/install).
-2. Clone the repo and install dependencies:
+1. اگر هنوز نصب نکرده‌اید، [nodejs](https://nodejs.org/en/download/) و [yarn](https://classic.yarnpkg.com/lang/en/docs/install) را نصب کنید.
+2. مخزن را کلون کرده و وابستگی‌ها را نصب کنید:
 
    ```shell
    git clone https://github.com/scroll-tech/scroll-guides.git
@@ -30,33 +27,33 @@ The Scroll Sepolia Testnet allows anyone to deploy a smart contract on Scroll. I
    yarn install
    ```
 
-3. Create a `.env` file following the example `.env.example` in the root directory. Change `PRIVATE_KEY` to your own account private key in the `.env`.
+3. یک فایل `.env` ایجاد کنید که مطابق با نمونه `.env.example` در دایرکتوری ریشه باشد. `PRIVATE_KEY` را به کلید خصوصی حساب خود در `.env` تغییر دهید.
 
-4. Run `yarn compile` to compile the contract.
+4. دستور `yarn compile` را برای کامپایل قرارداد اجرا کنید.
 
-5. Run `yarn deploy:scrollTestnet` to deploy the contract on the Scroll Sepolia Testnet.
+5. دستور `yarn deploy:scrollTestnet` را برای Deploy قرارداد در شبکه آزمایشی Scroll Sepolia اجرا کنید.
 
-6. Run `yarn test` for hardhat tests.
+6. برای تست‌های hardhat، دستور `yarn test` را اجرا کنید.
 
-## Deploy contracts with Foundry
+## Deploy قراردادها با Foundry
 
-1. Clone the repo:
+1. مخزن را کلون کنید:
 
    ```shell
    git clone https://github.com/scroll-tech/scroll-guides.git
    cd scroll-guides/contract-deploy-demo
    ```
 
-2. Install Foundry:
+2. Foundry را نصب کنید:
 
    ```shell
    curl -L https://foundry.paradigm.xyz | bash
    foundryup
    ```
 
-3. Run `forge build` to build the project.
+3. با اجرای دستور `forge build` پروژه را بسازید.
 
-4. Deploy your contract with Foundry:
+4. قرارداد خود را با Foundry مستقر کنید:
 
    ```bash
    forge create --rpc-url https://sepolia-rpc.scroll.io/ \
@@ -66,10 +63,10 @@ The Scroll Sepolia Testnet allows anyone to deploy a smart contract on Scroll. I
      contracts/Lock.sol:Lock
    ```
 
-   - `<lock_amount>` is the amount of test `ETH` to be locked in the contract. Try setting this to some small amount, like `0.0000001ether`.&#x20;
-   - `<unlock_time>` is the Unix timestamp after which the funds locked in the contract will become available for withdrawal. Try setting this to some Unix timestamp in the future, like `1696118400` (this Unix timestamp corresponds to October 1, 2023).
+   - `<lock_amount>` مقداری از ETH آزمایشی است که در قرارداد قفل می‌شود. سعی کنید این مقدار را به مقداری کوچک مانند `0.0000001ether` تنظیم کنید.
+   - `<unlock_time>` زمان یونیکس است که پس از آن، وجوه قفل شده در قرارداد برای برداشت در دسترس خواهند بود. سعی کنید این مقدار را به زمان یونیکس در آینده، مانند `1696118400` (که به 1 اکتبر 2023 میلادی معادل است) تنظیم کنید.
 
-   For example:
+   به عنوان مثال:
 
    ```bash
    forge create --rpc-url https://sepolia-rpc.scroll.io/ \
@@ -79,6 +76,7 @@ The Scroll Sepolia Testnet allows anyone to deploy a smart contract on Scroll. I
      contracts/Lock.sol:Lock
    ```
 
-## Questions and Feedback
+## سوالات و بازخوردها
 
-Thank you for participating in and developing on the Scroll Sepolia Testnet! If you encounter any issues, join our [Discord](https://discord.gg/scroll) and ask us in the `#testnet-devs` channel.
+از مشارکت و توسعه در شبکه آزمایشی Scroll Sepolia سپاسگزاریم! اگر با مشکلی مواجه شدید، به [Discord](https://discord.gg/scroll) ما بپیوندید و در کانال `#testnet-devs` از ما بپرسید.
+

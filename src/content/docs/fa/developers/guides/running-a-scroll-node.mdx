@@ -1,67 +1,67 @@
 ---
 section: developers
 date: Last Modified
-title: "Running a Scroll L2geth Node"
-lang: "en"
+title: "اجرای نود L2geth Scroll"
+lang: "fa"
 permalink: "developers/guides/running-a-scroll-node"
-excerpt: "This guide contains instructions on how to run your own node on the Scroll network."
+excerpt: "این راهنما شامل دستورالعمل‌هایی برای اجرای نود خود در شبکه Scroll است."
 ---
 
 import Aside from "../../../../../components/Aside.astro"
 import ToggleElement from "../../../../../components/ToggleElement.astro"
 
-For most developers, using [our official RPC endpoint](/en/developers/developer-quickstart#network-configuration) or one offered by other RPC providers in the ecosystem is the easiest way to get started on Scroll. For those looking to maintain their own node, this guide provides instructions on how to run a "follower node" that participates in the public mempool of transactions, but does not participate in consensus or block building. Scroll nodes are a fork of geth, using the clique protocol for consensus, which we call l2geth.
+برای بیشتر توسعه‌دهندگان، استفاده از [نقطه پایانه RPC رسمی ما](/fa/developers/developer-quickstart#network-configuration) یا یکی از ارائه‌دهندگان RPC دیگر در اکوسیستم ساده‌ترین راه برای شروع در Scroll است. برای کسانی که به دنبال نگهداری نود خود هستند، این راهنما دستورالعمل‌هایی برای اجرای یک "نود دنبال‌کننده" که در ممپول عمومی تراکنش‌ها شرکت می‌کند، اما در اجماع یا ساخت بلوک‌ها مشارکت نمی‌کند، ارائه می‌دهد. نودهای Scroll فورکی از geth هستند که از پروتکل Clique برای اجماع استفاده می‌کنند که ما آن را l2geth می‌نامیم.
 
-## Prerequisites
+## پیش‌نیازها
 
-### Finding the latest version
+### یافتن آخرین نسخه
 
-We recommend using the latest release at https://github.com/scroll-tech/go-ethereum/releases. The required version for Scroll Mainnet is `scroll-v5.5.0` or higher, and for Scroll Sepolia it is `scroll-v5.4.2` or higher. If you'd like to keep up with new node releases, go to https://github.com/scroll-tech/go-ethereum, click on **Watch**, **Custom**, and make sure that **Releases** is selected.
+ما توصیه می‌کنیم از آخرین نسخه منتشر شده در [رابطه‌نامه‌های گیت‌هاب Scroll](https://github.com/scroll-tech/go-ethereum/releases) استفاده کنید. نسخه مورد نیاز برای Scroll Mainnet `scroll-v5.5.0` یا بالاتر است و برای Scroll Sepolia `scroll-v5.4.2` یا بالاتر. اگر می‌خواهید از انتشارهای جدید گره‌ها مطلع شوید، به [مخزن گیت‌هاب Scroll](https://github.com/scroll-tech/go-ethereum) بروید، روی **Watch** کلیک کنید، **Custom** را انتخاب کنید و اطمینان حاصل کنید که **Releases** انتخاب شده است.
 
-For the remainder of this guide, `VERSION` will denote the version tag. For example, `scroll-v5.5.0`.
+برای بقیه این راهنما، `VERSION` به برچسب نسخه اشاره خواهد کرد. به عنوان مثال، `scroll-v5.5.0`.
 
-### Hardware Requirements
+### الزامات سخت‌افزاری
 
-**Minimum**
+**حداقل**
 
-- Machine comparable to AWS `t3.large` [instance](https://aws.amazon.com/ec2/instance-types/t3/).
-- 500GB SSD storage.
+- ماشین معادل با نمونه AWS `t3.large` [instance](https://aws.amazon.com/ec2/instance-types/t3/).
+- فضای ذخیره‌سازی SSD به اندازه 500GB.
 
-**Recommended**
+**پیشنهاد شده**
 
-- Machine comparable to AWS `t3.2xlarge` [instance](https://aws.amazon.com/ec2/instance-types/t3/).
-- 1TB SSD storage.
+- ماشین معادل با نمونه AWS `t3.2xlarge` [instance](https://aws.amazon.com/ec2/instance-types/t3/).
+- فضای ذخیره‌سازی SSD به اندازه 1TB.
 
-### L1 RPC Node 
+### نود RPC L1 
 
-You will need access to a fully-synced **Ethereum Mainnet** or **Ethereum Sepolia** RPC endpoint before running `l2geth`, depending on if you would like to run a Scroll Mainnet or Scroll Sepolia node. You can maintain your own node or choose to use a 3rd-party provider that supports the standard Ethereum RPC APIs. Define your L1 node’s HTTP RPC API at `L2GETH_L1_ENDPOINT` (ie. `L2GETH_L1_ENDPOINT="https://my-node.com:8545"`).
+شما به یک نقطه پایانه RPC کاملاً همگام‌شده **Ethereum Mainnet** یا **Ethereum Sepolia** نیاز خواهید داشت قبل از اجرای `l2geth`، بسته به اینکه آیا می‌خواهید یک نود Scroll Mainnet یا Scroll Sepolia را اجرا کنید. می‌توانید نود خود را نگهداری کنید یا از ارائه‌دهندگان شخص ثالثی که از APIهای استاندارد Ethereum RPC پشتیبانی می‌کنند استفاده کنید. نقطه پایانه HTTP RPC نود L1 خود را با `L2GETH_L1_ENDPOINT` تعریف کنید (برای مثال، `L2GETH_L1_ENDPOINT="https://my-node.com:8545"`).
 
 ---
 
-## Build and Run From Source
+## ساخت و اجرای از منبع
 
-### Download and Build L2geth
+### دانلود و ساخت L2geth
 
-1. Clone the latest version of `l2geth`. 
+1. آخرین نسخه از `l2geth` را کلون کنید.
 
     ```bash
     $ git clone https://github.com/scroll-tech/go-ethereum l2geth-source
     $ cd l2geth-source
     $ git checkout VERSION
     ```    
-2. Ensure that you are using version 1.20 of `go`.
-3. Install the gcc compiler: `sudo apt install build-essential`.
-4. Build `l2geth`: `make nccc_geth`. The binary is now in `build/bin/geth`.
-5. Define a command alias: `alias l2geth=./build/bin/geth`.
+2. اطمینان حاصل کنید که از نسخه 1.20 `go` استفاده می‌کنید.
+3. کامپایلر gcc را نصب کنید: `sudo apt install build-essential`.
+4. `l2geth` را بسازید: `make nccc_geth`. باینری اکنون در `build/bin/geth` است.
+5. یک نام مستعار برای دستور تعریف کنید: `alias l2geth=./build/bin/geth`.
 
-### Run L2geth
+### اجرای L2geth
 
 <Aside type="tip">
-Please consider opening port `30303`(UDP & TCP) and enabling discovery so that other nodes can sync data from your node.
+لطفاً در نظر داشته باشید که پورت `30303` (UDP و TCP) را باز کرده و کشف را فعال کنید تا سایر نودها بتوانند داده‌ها را از نود شما همگام‌سازی کنند.
 </Aside>
 
-1. Run `l2geth`.
-    
+1. `l2geth` را اجرا کنید.
+
     ```bash
     $ l2geth --scroll \
         --datadir "./l2geth-datadir" \
@@ -69,18 +69,18 @@ Please consider opening port `30303`(UDP & TCP) and enabling discovery so that o
         --http --http.addr "0.0.0.0" --http.port 8545 --http.api "eth,net,web3,debug,scroll" \
         --l1.endpoint "$L2GETH_L1_ENDPOINT" --rollup.verify
     ```
-    For Scroll Sepolia, use `--scroll-sepolia` instead of `--scroll`
+    برای Scroll Sepolia، به جای `--scroll` از `--scroll-sepolia` استفاده کنید
     
-    For additional configuration options, please refer to the [go-ethereum docs](https://geth.ethereum.org/docs/interface/command-line-options).
+    برای گزینه‌های پیکربندی اضافی، لطفاً به [مستندات go-ethereum](https://geth.ethereum.org/docs/interface/command-line-options) مراجعه کنید.
     
-    <Aside type="caution" >
-        Make sure the L1 endpoint is fully synced
+    <Aside type="caution">
+        اطمینان حاصل کنید که نقطه پایانه L1 کاملاً همگام‌شده است
     </Aside>
     
-    The node might seem unresponsive while it is syncing blocks from Ethereum (from `l1.sync.startblock`, configured automatically, up until the latest finalized block). This catch-up phase only happens during the first sync, or if the node was offline for a long time. Check the node logs to see sync progress.
+    نود ممکن است در حین همگام‌سازی بلوک‌ها از Ethereum (از `l1.sync.startblock`، که به طور خودکار پیکربندی می‌شود، تا آخرین بلوک نهایی‌شده) غیرقابل پاسخ‌دهی به نظر برسد. این مرحله همگام‌سازی فقط در حین اولین همگام‌سازی یا اگر نود برای مدت طولانی آفلاین بوده است اتفاق می‌افتد. برای مشاهده پیشرفت همگام‌سازی نود، لاگ‌های نود را بررسی کنید.
     
-2. In a separate shell, you can now attach to `l2geth`.
-    
+2. در یک شل جداگانه، می‌توانید به `l2geth` متصل شوید.
+
     ```bash
     $ l2geth attach "./l2geth-datadir/geth.ipc"
     
@@ -93,23 +93,23 @@ Please consider opening port `30303`(UDP & TCP) and enabling discovery so that o
 
 ---
 
-## Build and Run Using Docker
+## ساخت و اجرای با استفاده از Docker
 
 <Aside type="caution" title="Warning">
-Running the node in Docker might have a significant impact on node performance.
+اجرای نود در Docker ممکن است تأثیر قابل توجهی بر عملکرد نود داشته باشد.
 </Aside>
 
-### Build L2geth Image
+### ساخت تصویر L2geth
 
-1. Build the image using `make mockccc_docker`. This will produce the image `scrolltech/l2geth:latest`.
+1. تصویر را با استفاده از `make mockccc_docker` بسازید. این تصویر `scrolltech/l2geth:latest` را تولید خواهد کرد.
     
-    Alternatively, you can download the `l2geth` Docker image using `docker pull scrolltech/l2geth:VERSION`. In this case, substitute this image name in the commands below.
+    به طور جایگزین، می‌توانید تصویر `l2geth` را با استفاده از `docker pull scrolltech/l2geth:VERSION` دانلود کنید. در این صورت، نام این تصویر را در دستورات زیر جایگزین کنید.
     
 
-### Run L2geth
+### اجرای L2geth
 
-1. Run the `l2geth` container using the name `l2geth-docker`:
-    
+1. کانتینر `l2geth` را با نام `l2geth-docker` اجرا کنید.
+
     ```bash
     $ docker run --rm --name l2geth-docker -v $(pwd):/volume -p 8545:8545 -e RUST_LOG="info" -e CHAIN_ID="534352" scrolltech/l2geth:latest \
         --scroll \
@@ -118,10 +118,10 @@ Running the node in Docker might have a significant impact on node performance.
         --http --http.addr "0.0.0.0" --http.port 8545 --http.api "eth,net,web3,debug,scroll" \
         --l1.endpoint "$L2GETH_L1_ENDPOINT" --rollup.verify
     ```
-    For Scroll Sepolia, set the chain ID to 534351.
+    برای Scroll Sepolia، شناسه زنجیره را به 534351 تنظیم کنید.
 
-2. In a separate shell, you can now attach to `l2geth`.
-    
+2. در یک شل جداگانه، می‌توانید به `l2geth` متصل شوید.
+
     ```bash
     $ docker exec -it l2geth-docker geth attach "/volume/l2geth-datadir/geth.ipc"
     
@@ -133,13 +133,13 @@ Running the node in Docker might have a significant impact on node performance.
     ```
     
 
-### Interacting with the L2geth Container
+### تعامل با کانتینر L2geth
 
-- Check logs: `docker logs --tail 10 -f l2geth-docker`
-- Stop the container: `docker stop l2geth-docker`
+- بررسی لاگ‌ها: `docker logs --tail 10 -f l2geth-docker`
+- توقف کانتینر: `docker stop l2geth-docker`
 
 ---
-## Configuration Reference
+## مرجع پیکربندی
 
 ### Scroll Mainnet
 
@@ -147,10 +147,12 @@ Running the node in Docker might have a significant impact on node performance.
 - `SCROLL_L2_NETWORK_ID_L2=534352`
 - `SCROLL_L2_GENESIS_HASH="0xbbc05efd412b7cd47a2ed0e5ddfcf87af251e414ea4c801d78b6784513180a80"`
 
-Bootnodes:
+نودهای بوت:
 ```bash
 enode://c6ac91f43df3d63916ac1ae411cdd5ba249d55d48a7bec7f8cd5bb351a31aba437e5a69e8a1de74d73fdfeba8af1cfe9caf9846ecd3abf60d1ffdf4925b55b23@54.186.123.248:30303
-enode://fdcc807b5d1353f3a1e98b90208ce6ef1b7d446136e51eaa8ad657b55518a2f8b37655e42375d61622e6ea18f3faf9d070c9bbdf012cf5484bcbad33b7a15fb1@44.227.91.206:30303
+enode://fdcc807b5d1353f3a1e98b90208ce6ef1b7d446136e51eaa8ad657b55518a2f8b37655
+
+e42375d61622e6ea18f3faf9d070c9bbdf012cf5484bcbad33b7a15fb1@44.227.91.206:30303
 enode://6beb5a3efbb39be73d17630b6da48e94c0ce7ec665172111463cb470197b20c12faa1fa6f835b81c28571277d1017e65c4e426cc92a46141cf69118ecf28ac03@44.237.194.52:30303
 enode://7cf893d444eb8e129dca0f6485b3df579911606e7c728be4fa55fcc5f155a37c3ce07d217ccec5447798bde465ac2bdba2cb8763d107e9f3257e787579e9f27e@52.35.203.107:30303
 enode://c7b2d94e95da343db6e667a01cef90376a592f2d277fbcbf6e9c9186734ed8003d01389571bd10cdbab7a6e5adfa6f0c7b55644d0db24e0b9deb4ec80f842075@54.70.236.187:30303
@@ -264,7 +266,7 @@ enode://c7b2d94e95da343db6e667a01cef90376a592f2d277fbcbf6e9c9186734ed8003d013895
 - `SCROLL_SEPOLIA_L2_NETWORK_ID_L2=534351`
 - `SCROLL_SEPOLIA_L2_GENESIS_HASH="0xaa62d1a8b2bffa9e5d2368b63aae0d98d54928bd713125e3fd9e5c896c68592c"`
 
-Bootnodes:
+نودهای بوت:
 ```bash
 enode://ceb1636bac5cbb262e5ad5b2cd22014bdb35ffe7f58b3506970d337a63099481814a338dbcd15f2d28757151e3ecd40ba38b41350b793cd0d910ff0436654f8c@35.85.84.250:30303
 enode://29cee709c400533ae038a875b9ca975c8abef9eade956dcf3585e940acd5c0ae916968f514bd37d1278775aad1b7db30f7032a70202a87fd7365bd8de3c9f5fc@44.242.39.33:30303
