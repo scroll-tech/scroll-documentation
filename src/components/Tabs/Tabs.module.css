@@ -11,7 +11,7 @@
 
 button.primary,
 button.contentTabPrimary {
-  @apply text-link border-link border-0 border-b-4 border-solid;
+  @apply !text-link border-link border-0 border-b-4 border-solid;
 }
 
 button.secondary {

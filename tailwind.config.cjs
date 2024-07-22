@@ -175,7 +175,7 @@ module.exports = {
 
         white: {
           DEFAULT: "#FFF8F3",
-          800: "#BEBEBE",
+          800: "#DADADA",
           900: "#EDEDED",
         },
 
