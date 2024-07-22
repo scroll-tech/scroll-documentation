@@ -41,7 +41,7 @@ export default defineConfig({
     astroCallouts(),
     solidityRemixCode(),
     expressiveCode({
-      themes: ["slack-dark"],
+      themes: ["dark-plus"],
       defaultProps: {
         frame: "code",
       },
