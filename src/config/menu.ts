@@ -16,6 +16,7 @@ export const MENU: MenuItems = {
     { text: "Developers", link: "/en/developers", section: "developers" },
     { text: "Technology", link: "/en/technology", section: "technology" },
     { text: "Learn", link: "/en/learn", section: "learn" },
+    { text: "SDK", link: "/en/sdk", section: "sdk" },
   ],
   zh: [
     {

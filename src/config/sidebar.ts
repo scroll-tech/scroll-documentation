@@ -336,5 +336,54 @@ export const getSidebar = () => {
         ],
       },
     ],
+    sdk: [
+      {
+        section: t("sidebar.sdk.overview"),
+        contents: [
+          {
+            title: t("sidebar.sdk.scrollSdk"),
+            url: "sdk/",
+          },
+          {
+            title: t("sidebar.sdk.earlyAccessProgram"),
+            url: "sdk/early-access-program",
+          },
+        ],
+      },
+      {
+        section: t("sidebar.sdk.technicalStack"),
+        contents: [
+          {
+            title: t("sidebar.sdk.stackOverview"),
+            url: formatUrl("sdk/technical-stack/"),
+          },
+          {
+            title: t("sidebar.sdk.services"),
+            url: formatUrl("sdk/technical-stack/services"),
+          },
+          {
+            title: t("sidebar.sdk.smartContracts"),
+            url: formatUrl("sdk/technical-stack/contracts"),
+          },
+          {
+            title: t("sidebar.sdk.proofGeneration"),
+            url: formatUrl("sdk/technical-stack/proof-generation"),
+          },
+          {
+            title: t("sidebar.sdk.customization"),
+            url: formatUrl("sdk/technical-stack/customization"),
+          },
+        ],
+      },
+      {
+        section: t("sidebar.sdk.guides"),
+        contents: [
+          {
+            title: t("sidebar.sdk.runOnArm64Mac"),
+            url: formatUrl("sdk/guides/run-on-arm64-mac"),
+          },
+        ],
+      },
+    ],
   }
 }

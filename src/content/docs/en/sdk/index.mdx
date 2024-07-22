@@ -1,0 +1,43 @@
+---
+section: sdk
+title: "Scroll SDK"
+lang: "en"
+permalink: "sdk/"
+excerpt: "Learn more about how to depoly your own rollup using Scroll's zkEVM"
+---
+
+import NavCard from "../../../../components/NavCard.astro"
+import TechnologySvg from "../../../../assets/svgs/home/home-technology.svg?raw"
+import LearnSvg from "../../../../assets/svgs/home/home-learn.svg?raw"
+import DevelopSvg from "../../../../assets/svgs/home/home-develop.svg?raw"
+
+
+Scroll SDK allows anyone to quickly deploy an instance of the Scroll zkEVM and its rollup architecture for deploying an L2 on Ethereum.
+
+Although we haven't publicly launched the repo, we're working with a number of clients, technology parters, and service providers to build the most robust ZK stack for Ethereum.
+
+In the short-term, you'll be able to run and L2 on Ethereum with a similar configuration to Scroll's mainnet.
+
+In the medium term, Scroll SDK will allow for robust customization of an L2 or L3, including customizing its DA layer, base/settlement layer, native gas token, bridge logic, and more. Our goal is to build a robust stack focused on sovereignty and adaptability, with simple upgradability and flexible proof generation, all without locking new chains into shared governance, common asset pools, or business-source licensing.
+Scroll pulls together research and engineering from Blockchain Protocols and Zero Knowledge Cryptography. If you want to dive deeper, keep reading and check out the additional resources.
+
+<div class="navs" class="flex flex-col flex-wrap items-center md:flex-row md:gap-8 md:items-start">
+  <NavCard
+    icon={TechnologySvg}
+    name="Early Access Program"
+    content="Get your hands dirty and give us feedback."
+    link="/en/sdk/early-access-program"
+  />
+  <NavCard
+    icon={DevelopSvg}
+    name="Technical Stack"
+    content="Learn more about the specifics of running Scroll SDK"
+    link="/en/sdk/early-access-program"
+  />
+  <NavCard
+    icon={LearnSvg}
+    name="Run on ARM64 Mac"
+    content="Get started by running a devnet on your local machine."
+    link="/en/sdk/guides/run-on-arm64-mac"
+  />
+</div>

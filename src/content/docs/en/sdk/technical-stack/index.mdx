@@ -1,0 +1,71 @@
+---
+section: sdk
+title: "Overview of Scroll SDK Stack"
+lang: "en"
+permalink: "sdk/technical-stack"
+excerpt: "An overview of the architecture and components making up Scroll SDK"
+---
+
+import Steps from '../../../../../components/Steps/Steps.astro';
+import Aside from "../../../../../components/Aside.astro"
+
+## Stack Technical Overview
+
+The architecture of a Scroll SDK chain is based on Scroll, and the architecture specifics of a Scroll SDK chain will match what Scroll's network. For more information on how Scroll works, please see the [Technology](/en/technology) section.
+
+The articles in this section will be focus on the various parts a Scroll SDK chain operator will need to deploy and run.
+
+## Scroll SDK Repo
+
+Scroll SDK can be found [on GitHub](https://github.com/scroll-tech/scroll-sdk). The repo is private, so please ask a member of the Scroll team for access.
+
+The repo consists of these major components:
+1. Helm charts for deploying the necessary services and contracts *(see [Services](/en/sdk/technical-stack/services))*
+2. A docker image for building the correct configuration files for these services *(see [Smart Contracts](/en/sdk/technical-stack/contracts))*
+3. An Ansible playbook for setting up a zk prover *(see [Proof Generation](/en/sdk/technical-stack/proof-generation))*
+4. Example config files for various customizations *(see [Customization](/en/sdk/technical-stack/customization))*
+
+## Deployment Process
+
+<Aside type="danger" title="On-going issues with arm64">
+As of July 22, 2024, if using `arm64` architecture, you will likely have issues with some services, including `rollup-explorer-backend`. You can follow our [ARM64 on Mac Guide](/en/sdk/guides/run-on-arm64-mac), but some services will not be supported.
+</Aside>
+
+### PreReqs
+
+To run a local devnet with all services running on a single machine (using minikube), you’ll want the following items installed from a base Ubuntu installation:
+
+Before getting started, be sure to install the following:
+
+- [Docker Engine](https://docs.docker.com/engine/install/) (or Docker Desktop)
+- [kubectl](https://kubernetes.io/docs/tasks/tools/)
+- [minikube](https://minikube.sigs.k8s.io/docs/start/) (for local dev cluster)
+- [Helm](https://helm.sh/docs/intro/install/)
+
+
+### Deployment
+
+<Steps>
+1. Modify `./charts/scroll-stack/config.toml` with your settings and accounts.
+
+    For more information on modifying config.toml, see [Customization](/en/sdk/technical-stack/customization).
+
+2. Modify `./charts/scroll-stack/values.yaml` to disable any unneeded services.
+
+    For more information on which services to set `enable:true`, see [Services](/en/sdk/technical-stack/services).
+
+3. Bootstrap all Helm dependencies and config files by running:
+
+   ```bash
+   make bootstrap
+   ```
+
+4. Launch the Scroll SDK services by running:
+   ```bash
+   make install
+   ```
+
+5. Wait for services to start and contracts to deploy, and you've got a new Scroll SDK chain!
+
+</Steps>
+

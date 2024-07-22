@@ -156,6 +156,19 @@
       "polynomialCommitmentSchemes": "Polynomial Commitment Schemes",
       "kzgCommitmentScheme": "KZG Commitment Scheme",
       "additionalResources": "Additional Resources"
+    },
+    "sdk": {
+      "overview": "Overview",
+      "scrollSdk": "Scroll SDK Introduction",
+      "earlyAccessProgram": "Early Access Program",
+      "technicalStack": "Technical Stack",
+      "stackOverview": "Stack Overview",
+      "services": "Services",
+      "smartContracts": "Smart Contracts",
+      "proofGeneration": "Proof Generation",
+      "customization": "Customization",
+      "guides": "Guides",
+      "runOnArm64Mac": "Run on ARM64 Mac"
     }
   },
   "footer": {
