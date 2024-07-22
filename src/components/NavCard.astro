@@ -20,9 +20,9 @@ const { icon, name, content, link } = Astro.props as Props
   </span>
   <span class="navs-item-title">{name}</span>
   <span class="navs-item-content">{content}</span>
-  <a class="navs-item-link text-[#C58D49] dark:text-white" href={link}>
+  <a class="navs-item-link text-[#C58D49] dark:text-white-800" href={link}>
     {t("ui.readMore")}
-    <span class="link-icon text-[#C58D49] dark:text-white">
+    <span class="link-icon text-[#C58D49] dark:text-white-800">
       <Fragment set:html={LinkSvg} />
     </span>
   </a>
@@ -42,7 +42,7 @@ const { icon, name, content, link } = Astro.props as Props
     width: 35px;
     height: 35px;
     align-items: center;
-    @apply text-black dark:text-white;
+    @apply text-black dark:text-white-800;
   }
 
   .navs-item-title {

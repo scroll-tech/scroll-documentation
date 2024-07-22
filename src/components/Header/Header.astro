@@ -53,7 +53,7 @@ const section = frontmatter?.section ?? ""
       <a href={localizePath("/home")}>
         <span
           class={clsx(
-            "inline-block w-[144px] h-[22px]  dark:bg-[url('/scroll-docs-white.svg')] bg-contain bg-no-repeat bg-center",
+            "inline-block w-[144px] h-[22px]  dark:bg-[url('/scroll-docs-white-800.svg')] bg-contain bg-no-repeat bg-center",
             dark ? "bg-[url('/scroll-docs-white.svg')]" : "bg-[url('/scroll-docs.svg')]"
           )}></span>
       </a>
@@ -83,7 +83,7 @@ const section = frontmatter?.section ?? ""
         <a href="https://github.com/scroll-tech/scroll-documentation" class="github-url" target="_blank" rel="nofollow">
           <span
             class={clsx(
-              "inline-block w-[35px] h-[35px] dark:bg-[url('/assets/github-white.svg')] bg-contain bg-no-repeat bg-center",
+              "inline-block w-[35px] h-[35px] dark:bg-[url('/assets/github-white-800.svg')] bg-contain bg-no-repeat bg-center",
               dark ? "bg-[url('/assets/github-white.svg')]" : "bg-[url('/assets/github.svg')]"
             )}></span>
         </a>
@@ -113,7 +113,7 @@ const section = frontmatter?.section ?? ""
   .nav-link {
     line-height: 32px;
     padding-top: 7px;
-    @apply text-black dark:text-white;
+    @apply text-black dark:text-white-800;
     color: var(--textColor);
     white-space: nowrap;
   }

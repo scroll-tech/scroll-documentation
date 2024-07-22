@@ -32,9 +32,9 @@ const EmailInput = (props) => {
         onKeyDown={handleEnter}
         className={clsx(
           styles.inputBase,
-          "dark:text-white",
+          "dark:text-white-800",
           "dark:bg-black",
-          "dark:border-white",
+          "dark:border-white-800",
           "placeholder:text-[#dcdcdc]",
           "placeholder:dark:text-[#FFF8F366]",
           "focus:outline-none"
