@@ -163,10 +163,10 @@
       "earlyAccessProgram": "Early Access Program",
       "technicalStack": "Technical Stack",
       "stackOverview": "Stack Overview",
+      "configuration": "Configuration",
       "services": "Services",
       "smartContracts": "Smart Contracts",
       "proofGeneration": "Proof Generation",
-      "customization": "Customization",
       "guides": "Guides",
       "runOnArm64Mac": "Run on ARM64 Mac"
     }

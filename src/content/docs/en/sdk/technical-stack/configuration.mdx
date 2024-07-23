@@ -1,0 +1,205 @@
+---
+section: sdk
+date: Last Modified
+title: "Scroll SDK Configuration"
+lang: "en"
+permalink: "sdk/technical-stack/configuration"
+excerpt: "Information on configuring and customizing a Scroll SDK deployment."
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+Initial change configuration is made by modifying `config.toml`. All other config files are auto-generated from this file. To modify which services to run, see [Services](/en/sdk/technical-stack/services).
+
+In the future, we'll also provide and examples folder for various configurations.
+
+<Aside type="note">
+Although most values don't need modified between subsequent deployments, you may want change the contracts section's `DEPLOYMENT_SALT` in order to have newly initialized contracts on your basechain.
+</Aside>
+
+## Local Devnet (Default)
+
+### General
+
+| Config Variable | Description | Default Value |
+|-----------------|-------------|---------------|
+| L1_RPC_ENDPOINT | Specifies the HTTP endpoint for the L1 RPC server. | `http://l1-devnet:8545` |
+| L1_RPC_ENDPOINT_WEBSOCKET | Specifies the WebSocket endpoint for the L1 RPC server. | `ws://l1-devnet:8546` |
+| L2_RPC_ENDPOINT | Specifies the HTTP endpoint for the L2 RPC server. | `http://l2-sequencer:8545` |
+| CHAIN_ID_L1 | Defines the chain ID for the L1 network. | 111111 |
+| CHAIN_ID_L2 | Defines the chain ID for the L2 network. | 221122 |
+| MAX_TX_IN_CHUNK | Sets the maximum number of transactions in a chunk. | 100 |
+| MAX_BLOCK_IN_CHUNK | Sets the maximum number of blocks in a chunk. | 100 |
+| MAX_L1_MESSAGE_GAS_LIMIT | Defines the maximum gas limit for L1 messages. | 10000000 |
+| L1_CONTRACT_DEPLOYMENT_BLOCK | Specifies the block number at which L1 contracts were deployed. | 0 |
+| TEST_ENV_MOCK_FINALIZE_ENABLED | Enables mock finalization for testing environments. | true |
+| TEST_ENV_MOCK_FINALIZE_TIMEOUT_SEC | Sets the timeout for mock finalization in seconds. | 3600 |
+
+### Accounts
+
+| Config Variable | Description | Default Value |
+|-----------------|-------------|---------------|
+| DEPLOYER_PRIVATE_KEY | Private key for the deployer account. | `0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80` |
+| OWNER_PRIVATE_KEY | Private key for the owner account. | `0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80` |
+| L1_COMMIT_SENDER_PRIVATE_KEY | Private key for the L1 commit sender account. | `0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d` |
+| L1_FINALIZE_SENDER_PRIVATE_KEY | Private key for the L1 finalize sender account. | `0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a` |
+| L1_GAS_ORACLE_SENDER_PRIVATE_KEY | Private key for the L1 gas oracle sender account. | `0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6` |
+| L2_GAS_ORACLE_SENDER_PRIVATE_KEY | Private key for the L2 gas oracle sender account. | `0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80` |
+| DEPLOYER_ADDR | Address of the deployer account. | `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266` |
+| OWNER_ADDR | Address of the owner account. | `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266` |
+| L1_COMMIT_SENDER_ADDR | Address of the L1 commit sender account. | `0x70997970C51812dc3A010C7d01b50e0d17dc79C8` |
+| L1_FINALIZE_SENDER_ADDR | Address of the L1 finalize sender account. | `0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC` |
+| L1_GAS_ORACLE_SENDER_ADDR | Address of the L1 gas oracle sender account. | `0x90F79bf6EB2c4f870365E785982E1f101E93b906` |
+| L2_GAS_ORACLE_SENDER_ADDR | Address of the L2 gas oracle sender account. | `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266` |
+| L2GETH_SIGNER_0_ADDRESS | Address of the L2 Geth signer account. | `0x756EA06BDEe36de11F22DCca45a31d8a178eF3c6` |
+
+### Database
+
+| Config Variable | Description | Default Value |
+|-----------------|-------------|---------------|
+| DATABASE_HOST | Specifies the host for the PostgreSQL database. | `postgresql` |
+| DATABASE_PORT | Specifies the port for the PostgreSQL database. | 5432 |
+| SCROLL_DB_CONNECTION_STRING | Connection string for the Scroll database. | `postgres://postgres:qwerty12345@postgresql:5432/scroll?sslmode=disable` |
+| BLOCKSCOUT_DB_CONNECTION_STRING | Connection string for the Blockscout database. | `postgresql://postgres:qwerty12345@postgresql:5432/blockscout` |
+| BRIDGE_HISTORY_DB_CONNECTION_STRING | Connection string for the Bridge History database. | `postgres://postgres:qwerty12345@postgresql:5432/scroll?sslmode=disable` |
+| CHAIN_MONITOR_DB_CONNECTION_STRING | Connection string for the Chain Monitor database. | `postgres://postgres:qwerty12345@postgresql:5432/scroll?sslmode=disable` |
+| EVENT_WATCHER_DB_CONNECTION_STRING | Connection string for the Event Watcher database. | `postgres://postgres:qwerty12345@postgresql:5432/scroll?sslmode=disable` |
+| GAS_ORACLE_DB_CONNECTION_STRING | Connection string for the Gas Oracle database. | `postgres://postgres:qwerty12345@postgresql:5432/scroll?sslmode=disable` |
+| L1_EXPLORER_DB_CONNECTION_STRING | Connection string for the L1 Explorer database. | `postgresql://postgres:qwerty12345@postgresql:5432/l1-explorer` |
+| ROLLUP_NODE_DB_CONNECTION_STRING | Connection string for the Rollup Node database. | `postgres://postgres:qwerty12345@postgresql:5432/scroll?sslmode=disable` |
+
+### Genesis
+
+| Config Variable | Description | Default Value |
+|-----------------|-------------|---------------|
+| L2_MAX_ETH_SUPPLY | Sets the maximum ETH supply for the L2 network. | `226156424291633194186662080095093570025917938800079226639565593765455331328` |
+| L2_DEPLOYER_INITIAL_BALANCE | Sets the initial balance for the L2 deployer account. | 1000000000000000000 |
+
+### Contracts
+
+| Config Variable | Description | Default Value |
+|-----------------|-------------|---------------|
+| DEPLOYMENT_SALT | Salt used for contract deployment. | `""` |
+| L1_FEE_VAULT_ADDR | Address of the L1 fee vault contract. | `0x0000000000000000000000000000000000000001` |
+| L1_PLONK_VERIFIER_ADDR | Address of the L1 PLONK verifier contract. | `0x0000000000000000000000000000000000000001` |
+
+### Contracts Overrides
+
+| Config Variable | Description | Default Value |
+|-----------------|-------------|---------------|
+| L2_MESSAGE_QUEUE | Override address for the L2 message queue contract. | `0x5300000000000000000000000000000000000000` |
+| L1_GAS_PRICE_ORACLE | Override address for the L1 gas price oracle contract. | `0x5300000000000000000000000000000000000002` |
+| L2_WHITELIST | Override address for the L2 whitelist contract. | `0x5300000000000000000000000000000000000003` |
+| L2_WETH | Override address for the L2 WETH contract. | `0x5300000000000000000000000000000000000004` |
+| L2_TX_FEE_VAULT | Override address for the L2 transaction fee vault contract. | `0x5300000000000000000000000000000000000005` |
+
+### Coordinator
+
+| Config Variable | Description | Default Value |
+|-----------------|-------------|---------------|
+| COORDINATOR_JWT_SECRET_KEY | Secret key used for JWT authentication in the coordinator. | `e788b62d39254928a821ac1c76b274a8c835aa1e20ecfb6f50eb10e87847de44` |
+
+## Sepolia Deployment
+
+The following example uses Sepolia as the basechain for a testnet deployment. You will need to generate new wallets for the various missing accounts and provide a Sepolia RPC endpoint with generous limits.
+
+### Example Config
+
+```toml
+
+[general]
+
+# Provide your own Sepolia endpoint, being cautious of rate-limited RPCs
+L1_RPC_ENDPOINT = ""
+L1_RPC_ENDPOINT_WEBSOCKET = ""
+L2_RPC_ENDPOINT = "http://l2-sequencer:8545"
+
+CHAIN_ID_L1 = 11155111
+CHAIN_ID_L2 = 221122
+
+MAX_TX_IN_CHUNK = 100
+MAX_BLOCK_IN_CHUNK = 100
+MAX_L1_MESSAGE_GAS_LIMIT = 10000000
+
+# Use a recent Sepolia block
+L1_CONTRACT_DEPLOYMENT_BLOCK = 6359048
+TEST_ENV_MOCK_FINALIZE_ENABLED = true
+TEST_ENV_MOCK_FINALIZE_TIMEOUT_SEC = 3600
+
+[accounts]
+
+# Generate a two new accounts and fund them with Sepolia ETH
+# TODO: Which are auto-funded?
+DEPLOYER_PRIVATE_KEY = ""
+OWNER_PRIVATE_KEY = ""
+
+# Use the public addresses corresponding to the above private keys
+DEPLOYER_ADDR = ""
+OWNER_ADDR = ""
+
+# Generate four new accounts
+# TODO: do these need funded?
+L1_COMMIT_SENDER_PRIVATE_KEY = ""
+L1_FINALIZE_SENDER_PRIVATE_KEY = ""
+L1_GAS_ORACLE_SENDER_PRIVATE_KEY = ""
+L2_GAS_ORACLE_SENDER_PRIVATE_KEY = ""
+
+# Use the public addresses correstponding to the above private keys
+L1_COMMIT_SENDER_ADDR = ""
+L1_FINALIZE_SENDER_ADDR = ""
+L1_GAS_ORACLE_SENDER_ADDR = ""
+L2_GAS_ORACLE_SENDER_ADDR = ""
+
+# TODO: What's up with this?
+L2GETH_SIGNER_0_ADDRESS = "0x756EA06BDEe36de11F22DCca45a31d8a178eF3c6"
+
+[db]
+
+SCROLL_DB_CONNECTION_STRING = "postgres://postgres:qwerty12345@postgresql:5432/scroll?sslmode=disable"
+BLOCKSCOUT_DB_CONNECTION_STRING = "postgresql://postgres:qwerty12345@postgresql:5432/blockscout"
+BRIDGE_HISTORY_DB_CONNECTION_STRING = "postgres://postgres:qwerty12345@postgresql:5432/scroll?sslmode=disable"
+CHAIN_MONITOR_DB_CONNECTION_STRING = "postgres://postgres:qwerty12345@postgresql:5432/scroll?sslmode=disable"
+EVENT_WATCHER_DB_CONNECTION_STRING = "postgres://postgres:qwerty12345@postgresql:5432/scroll?sslmode=disable"
+GAS_ORACLE_DB_CONNECTION_STRING = "postgres://postgres:qwerty12345@postgresql:5432/scroll?sslmode=disable"
+L1_EXPLORER_DB_CONNECTION_STRING = "postgresql://postgres:qwerty12345@postgresql:5432/l1-explorer"
+ROLLUP_NODE_DB_CONNECTION_STRING = "postgresql://postgres:qwerty12345@postgresql:5432/scroll?sslmode=disable"
+
+[genesis]
+
+L2_MAX_ETH_SUPPLY = "226156424291633194186662080095093570025917938800079226639565593765455331328"
+L2_DEPLOYER_INITIAL_BALANCE = 1000000000000000000
+
+
+[contracts]
+
+DEPLOYMENT_SALT = "sepolia-deployment-test-00"
+
+# contracts deployed outside this script
+# TODO: Is this the right description here? For Sepolia should this be something else?
+L1_FEE_VAULT_ADDR = "0x0000000000000000000000000000000000000001"
+L1_PLONK_VERIFIER_ADDR = "0x0000000000000000000000000000000000000001"
+
+[contracts.overrides]
+# set to 0x00 if running on l1 devnet without WETH deployment
+L1_WETH = "0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14"
+
+L2_MESSAGE_QUEUE = "0x5300000000000000000000000000000000000000"
+L1_GAS_PRICE_ORACLE = "0x5300000000000000000000000000000000000002"
+L2_WHITELIST = "0x5300000000000000000000000000000000000003"
+L2_WETH = "0x5300000000000000000000000000000000000004"
+L2_TX_FEE_VAULT = "0x5300000000000000000000000000000000000005"
+
+
+[coordinator]
+
+COORDINATOR_JWT_SECRET_KEY = "e788b62d39254928a821ac1c76b274a8c835aa1e20ecfb6f50eb10e87847de44"
+
+```
+
+### Generating Accounts
+
+To generate new test accounts quickly, run the following command on a machine with Foundry installed.
+
+```bash
+cast wallet new --number 6 --json
+```

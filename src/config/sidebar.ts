@@ -358,6 +358,10 @@ export const getSidebar = () => {
             url: formatUrl("sdk/technical-stack/"),
           },
           {
+            title: t("sidebar.sdk.configuration"),
+            url: formatUrl("sdk/technical-stack/configuration"),
+          },
+          {
             title: t("sidebar.sdk.services"),
             url: formatUrl("sdk/technical-stack/services"),
           },
@@ -368,10 +372,6 @@ export const getSidebar = () => {
           {
             title: t("sidebar.sdk.proofGeneration"),
             url: formatUrl("sdk/technical-stack/proof-generation"),
-          },
-          {
-            title: t("sidebar.sdk.customization"),
-            url: formatUrl("sdk/technical-stack/customization"),
           },
         ],
       },
