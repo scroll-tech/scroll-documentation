@@ -29,7 +29,7 @@ const List = ({ tools, onChange, selectedTool }) => {
           />
           <div className={styles.toolInfo}>
             <div className="flex justify-between items-center mb-[7px]">
-              <div className={clsx(styles.toolName, "dark:text-white dark:hover:text-white")}>
+              <div className={clsx(styles.toolName, "dark:text-white-800 dark:hover:text-white")}>
                 {tool.remarkPluginFrontmatter.name}
                 <svg
                   className="ml-[8px] mr-[25px] hover:opacity-70"

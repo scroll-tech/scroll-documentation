@@ -18,6 +18,8 @@ import sitemap from "@astrojs/sitemap"
 
 import tailwind from "@astrojs/tailwind"
 
+import expressiveCode from "astro-expressive-code"
+
 // https://astro.build/config
 export default defineConfig({
   site: "https://docs.scroll.io",
@@ -38,6 +40,21 @@ export default defineConfig({
     }),
     astroCallouts(),
     solidityRemixCode(),
+    expressiveCode({
+      themes: ["dark-plus"],
+      defaultProps: {
+        frame: "code",
+      },
+      styleOverrides: {
+        borderRadius: "27px",
+        borderColor: "transparent",
+        frames: {
+          shadowColor: "transparent",
+          editorTabBorderRadius: "0.5rem",
+          editorBackground: "#2b2b2b",
+        },
+      },
+    }),
     mdx(),
     tailwind({
       applyBaseStyles: false,

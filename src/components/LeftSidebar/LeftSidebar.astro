@@ -153,7 +153,7 @@ const processedSidebarSections = sidebarSections.map((section) => {
   .menu-separator {
     width: calc(100vw - 40px);
 
-    @apply border-0 border-t-[1px] border-solid border-black dark:border-white;
+    @apply border-0 border-t-[1px] border-solid border-black dark:border-white-800;
   }
   .sidebar-nav-groups.nav-groups > :first-child {
     @apply pt-[15px];
@@ -246,6 +246,8 @@ const processedSidebarSections = sidebarSections.map((section) => {
 
   .nav-link.open + ul {
     display: block;
+    border-left-width: 1px;
+    border-left-style: solid;
   }
 
   .nested {

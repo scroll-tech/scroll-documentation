@@ -38,7 +38,7 @@ const AdditionalInfo = ({ data, selectedTool, onClose }) => {
 
           {status === Status.HAS_ADDITIONAL_INFO && (
             <div className={clsx(styles.infoBox, 'bg-[#ffffff] dark:bg-black')}>
-              <div className={clsx(styles.title, "text-[#101010] dark:text-white")}>{selectedTool.remarkPluginFrontmatter.name}</div>
+              <div className={clsx(styles.title, "text-[#101010] dark:text-white-800")}>{selectedTool.remarkPluginFrontmatter.name}</div>
               <div className={styles.content}>{data}</div>
             </div>
           )}
