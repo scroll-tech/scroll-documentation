@@ -15,7 +15,9 @@ Scroll SDK is composed of various services that work together to create a functi
 
 We'll start by listing the services required for a minimal deployment, followed by a detailed description of each service. This information will help you understand the components of Scroll SDK and make informed decisions about which services to enable or disable based on your specific needs.
 
-This covers the full list of items in [values.yaml](https://github.com/scroll-tech/scroll-stack/blob/develop/charts/scroll-stack/values.yaml), which allows for enabling or disabling of specific services. New to Scroll’s Architecture? Check out [this article](/en/technology/chain/rollup/) for more info.
+This covers the full list of items in [values.yaml](https://github.com/scroll-tech/scroll-stack/blob/develop/charts/scroll-stack/values.yaml), which allows for enabling or disabling of specific services.
+
+**New to Scroll’s Architecture?** Check out [this article](/en/technology/chain/rollup/) for more general info.
 
 ## Helm & Kubernetes
 
@@ -185,3 +187,96 @@ The Kube Prometheus Stack is a collection of Kubernetes manifests, Grafana dashb
 #### Database Configuration (`db`)
 
 Allows configurations for a DB outside of the default postgres service included in the stack. This provides flexibility in database setup and management for various services within the Scroll SDK ecosystem.
+
+## Cross-Service Communication
+
+<span class="mermaid-diagram">
+```mermaid
+graph LR
+	subgraph K[Key]
+		direction LR
+		SS[Single Service]
+		RL1{{"Hex Shape: Reads from L1"}}
+		RL2[Dashed Border: Reads from L2 Sequencer]:::L2S
+		SS -.p2p connection.- RL1
+		RL1 <-- "Writes to L1" --> RL2
+	end
+
+	classDef L2S stroke:#77b,stroke-width:2px,stroke-dasharray: 7 4 2 4
+```
+```mermaid
+%%{ init: { 'flowchart': { 'curve': 'monotoneX' } } }%%
+flowchart LR
+	L1[l1-devnet / L1 Full Node]
+
+	L1 <----> GO
+	L1 <----> RN
+	L1 <-.via browser and wallet.-> F
+
+	subgraph SSC["Scroll SDK Chain"]
+		direction LR
+
+		DB[(DB)]
+		L2{{L2-sequencer}}
+		RN{{rollup-node}}:::L2S
+		GO{{gas-oracle}}:::L2S
+
+		EW{{event-watcher}}:::L2S
+		CM{{chain-monitor}}:::L2S
+		BHF{{bridge-history-fetcher}}:::L2S
+		CC[coordinator-cron]
+
+		L2R{{l2-rpc}}
+		L2B{{l2-bootnode}}
+		L2 -.- L2R
+		L2 -.- L2B
+
+		DB --> GO
+		DB --> EW
+		DB --> CC
+		DB --> CM
+		DB --> BHF
+		DB --> RN
+		DB --> REB
+
+		CC --> CA
+		BHF --> BHA
+
+		subgraph EXT["External APIs"]
+			BHA{{bridge-history-api}}:::L2S
+			CA[coordinator-api]
+			REB[rollup-explorer-backend]
+			RG
+			BHA
+		end
+	end
+
+
+
+
+	L2R --> RG[rpc-gateway]
+
+
+
+	F{{frontends}}:::L2S
+	PR[prover]
+
+	BHA --> F
+	REB --> F
+	RG --> F
+	CA --> PR
+
+	classDef L2S stroke:#77b,stroke-width:2px,stroke-dasharray: 7 4 2 4
+	style EXT fill:#FFE0B2
+    
+```
+
+{/* TODO: Assess is we want Aux services here */}
+	{/* subgraph AUX["Aux Services"]
+		direction TB
+		BC{{balance-checker}}
+		BS[blockscout]
+		GR[grafana]
+		LKI[loki]
+	end */}
+</span>

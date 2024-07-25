@@ -62,9 +62,11 @@ nav ul {
 :where(a:hover) {
   @apply text-link-hover;
 }
+
 :where(a:focus) {
   @apply text-link-pressed;
 }
+
 article > section :is(ul, ol) > * + * {
   margin-top: 0.75rem;
 }
@@ -102,6 +104,7 @@ article > section ::marker {
   font-weight: bold;
   @apply text-marker;
 }
+
 .dark article > section ::marker {
   @apply text-dark-marker;
 }
@@ -247,6 +250,7 @@ th {
   font-weight: bold;
   @apply text-black dark:text-white-800;
 }
+
 td,
 th {
   padding: 8px 30px;
@@ -309,13 +313,16 @@ h2.heading {
   border-color: var(--orange-500);
   color: var(--orange-500);
 }
+
 .header-link:focus-within {
   border-left-color: hsla(var(--color-gray-40), 1);
   @apply text-light;
 }
+
 .header-link:hover svg {
   color: var(--orange-500);
 }
+
 .header-link:hover span {
   color: var(--orange-500);
 }
@@ -330,6 +337,7 @@ h2.heading {
 .header-link.depth-3 {
   padding-left: 2rem;
 }
+
 .header-link.depth-4 {
   padding-left: 3rem;
 }
@@ -339,6 +347,7 @@ h2.heading {
   color: inherit;
   text-decoration: none;
 }
+
 .header-link a span {
   font-size: 16px;
   line-height: normal;
@@ -387,9 +396,11 @@ h2.heading {
     --max-width: 46em;
     --fullwidth-max-width: 80rem;
   }
+
   .header-link {
     margin-left: 1rem;
   }
+
   h2.heading {
     font-size: 16px;
     padding: 0.1rem 1rem;
@@ -403,4 +414,8 @@ h2.heading {
   height: var(--space-4x);
   display: inline-block;
   margin-left: var(--space-2x);
+}
+
+.mermaid-diagram > img {
+  height: auto;
 }
