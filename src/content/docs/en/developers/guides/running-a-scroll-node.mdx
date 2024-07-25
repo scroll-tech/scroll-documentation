@@ -115,7 +115,7 @@ Running the node in Docker might have a significant impact on node performance.
         --scroll \
         --datadir "/volume/l2geth-datadir" \
         --gcmode archive --cache.noprefetch \
-        --http --http.addr "0.0.0.0" --http.port 8545 --http.api "eth,net,web3,debug,scroll" \
+        --http --http.addr "0.0.0.0" --http.port 8545 --http.api "eth,net,web3,debug,scroll" --http.vhosts=* \
         --l1.endpoint "$L2GETH_L1_ENDPOINT" --rollup.verify
     ```
     For Scroll Sepolia, set the chain ID to 534351.
