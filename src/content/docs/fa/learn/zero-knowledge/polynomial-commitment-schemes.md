@@ -1,35 +1,36 @@
 ---
 section: learn
 date: Last Modified
-title: "Polynomial Commitment Schemes"
-lang: "en"
+title: "طرح‌های تعهد چندجمله‌ای"
+lang: "fa"
+dir: "rtl"
 permalink: "learn/zero-knowledge/polynomial-commitment-schemes"
-excerpt: "Polynomial commitment schemes are a core building block of zero knowledge proof system"
-whatsnext: { "KZG Commitment Scheme": "/en/learn/zero-knowledge/kzg-commitment-scheme" }
+excerpt: "طرح‌های تعهد چندجمله‌ای یکی از اجزای اصلی سیستم اثبات دانش صفر هستند"
+whatsnext: { "طرح تعهد KZG": "/fa/learn/zero-knowledge/kzg-commitment-scheme" }
 ---
 
-Polynomial commitment schemes are a core building block of zero knowledge proof systems (as well as other cryptographic protocols).
+طرح‌های تعهد چندجمله‌ای یکی از اجزای اصلی سیستم‌های اثبات دانش صفر (و همچنین سایر پروتکل‌های رمزنگاری) هستند.
 
-As the name suggests, polynomial commitment schemes are commitment schemes where the object to be committed is a polynomial. These schemes also have a special property where an evaluation of the polynomial can be verified with access only to the polynomial’s commitment.
+همانطور که از نام آن پیداست، طرح‌های تعهد چندجمله‌ای، طرح‌های تعهدی هستند که در آن موضوع تعهد یک چندجمله‌ای است. این طرح‌ها همچنین دارای ویژگی خاصی هستند که ارزیابی یک چندجمله‌ای می‌تواند فقط با دسترسی به تعهد چندجمله‌ای تأیید شود.
 
-## Commitment schemes
+## طرح‌های تعهد
 
-A **[commitment scheme](https://en.wikipedia.org/wiki/Commitment_scheme)** is a cryptographic primitive involving two parties: a _committer_ and a _verifier_. The committer commits to a value $v$ by computing a commitment $c$ and revealing it to the verifier. At a later point in time, the committer can reveal the original value, and the verifier can verify that the commitment corresponds to this revealed value.
+یک **[طرح تعهد](https://en.wikipedia.org/wiki/Commitment_scheme)** یک سازوکار رمزنگاری است که شامل دو طرف می‌شود: یک _متعهد_ و یک _تأییدکننده_. متعهد به یک مقدار $v$ تعهد می‌کند با محاسبه یک تعهد $c$ و آشکار کردن آن به تأییدکننده. در زمانی بعد، متعهد می‌تواند مقدار اصلی را فاش کند و تأییدکننده می‌تواند تأیید کند که تعهد مربوط به این مقدار فاش شده است.
 
-Secure commitment schemes have two properties:
+طرح‌های تعهد امن دو ویژگی دارند:
 
-1. **Binding**: once publishing the commitment $c$, the committer should not be able to find some other value $v’$ distinct from $v$ that also corresponds to $c$. I.e., the commitment $c$ binds the committer to the original value $v$.
-2. **Hiding**: the verifier should not be able to learn any information about the original value $v$ from the commitment $c$. I.e., the commitment $c$ hides all information about the original value $v$.
+1. **بستگی**: پس از انتشار تعهد $c$، متعهد نباید بتواند مقداری دیگر $v’$ پیدا کند که از $v$ متفاوت باشد و همچنین به $c$ مربوط باشد. یعنی تعهد $c$ متعهد را به مقدار اصلی $v$ می‌بندد.
+2. **پنهان‌سازی**: تأییدکننده نباید بتواند هیچ اطلاعاتی در مورد مقدار اصلی $v$ از تعهد $c$ بیاموزد. یعنی تعهد $c$ همه اطلاعات در مورد مقدار اصلی $v$ را پنهان می‌کند.
 
-## Polynomial commitment schemes
+## طرح‌های تعهد چندجمله‌ای
 
-A **polynomial commitment scheme** is a commitment scheme where the committer commits to a polynomial $P(x)$ by computing a commitment $c$. As in normal commitment schemes, the committer can later reveal the original polynomial, and the verifier can check that the commitment corresponds to the revealed polynomial. However, polynomial commitment schemes have an additional property: the committer can prove particular evaluations of the committed polynomial without revealing the polynomial itself. For example, the committer can prove that $P(a) = b$, and the verifier can verify such a proof using just the commitment $c$.
+یک **طرح تعهد چندجمله‌ای** یک طرح تعهد است که در آن متعهد به یک چندجمله‌ای $P(x)$ با محاسبه یک تعهد $c$ تعهد می‌کند. مانند طرح‌های تعهد معمولی، متعهد می‌تواند بعداً چندجمله‌ای اصلی را فاش کند و تأییدکننده می‌تواند بررسی کند که تعهد به چندجمله‌ای فاش شده مربوط است. با این حال، طرح‌های تعهد چندجمله‌ای دارای ویژگی اضافی هستند: متعهد می‌تواند ارزیابی‌های خاصی از چندجمله‌ای تعهد شده را بدون فاش کردن چندجمله‌ای خود اثبات کند. به عنوان مثال، متعهد می‌تواند اثبات کند که $P(a) = b$، و تأییدکننده می‌تواند چنین اثباتی را با استفاده از تعهد $c$ تأیید کند.
 
-Polynomial commitment schemes are extremely useful for zero knowledge applications. A prover can use such a scheme to prove that he knows some polynomial which satisfies certain properties (e.g. that it passes through a certain point $(a,b)$), without revealing the underlying polynomial.
+طرح‌های تعهد چندجمله‌ای برای کاربردهای دانش صفر بسیار مفید هستند. یک اثبات‌کننده می‌تواند از چنین طرحی استفاده کند تا اثبات کند که او یک چندجمله‌ای را می‌داند که ویژگی‌های خاصی را برآورده می‌کند (مثلاً اینکه از یک نقطه خاص $(a,b)$ عبور می‌کند) بدون فاش کردن چندجمله‌ای زیرین.
 
-Another reason why polynomial schemes are useful is that the commitment $c$ is generally much smaller than the polynomial it represents, and can thus be thought of as a **compression** of the polynomial $P(x)$. The magnitude of compression depends on the particular scheme. For example, in the KZG polynomial commitment scheme, a polynomial of arbitrarily large degree can be compressed down to a commitment consisting of a single group element.
+دلیل دیگر مفید بودن طرح‌های چندجمله‌ای این است که تعهد $c$ به طور کلی بسیار کوچکتر از چندجمله‌ای است که نمایانگر آن است، و بنابراین می‌توان آن را به عنوان یک **فشرده‌سازی** از چندجمله‌ای $P(x)$ در نظر گرفت. اندازه فشرده‌سازی بستگی به طرح خاص دارد. به عنوان مثال، در طرح تعهد چندجمله‌ای KZG، یک چندجمله‌ای با درجه دلخواه بزرگ می‌تواند به یک تعهد شامل یک عنصر گروه فشرده شود.
 
-## Learn more
+## بیشتر بدانید
 
 - [https://en.wikipedia.org/wiki/Commitment_scheme](https://en.wikipedia.org/wiki/Commitment_scheme)
 - [https://learn.0xparc.org/materials/halo2/miscellaneous/polynomial-commitment](https://learn.0xparc.org/materials/halo2/miscellaneous/polynomial-commitment)

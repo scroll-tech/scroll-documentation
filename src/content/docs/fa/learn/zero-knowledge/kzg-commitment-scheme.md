@@ -1,69 +1,70 @@
 ---
 section: learn
 date: Last Modified
-title: "KZG Commitment Scheme"
-lang: "en"
+title: "طرح تعهد KZG"
+lang: "fa"
+dir: "rtl"
 permalink: "learn/zero-knowledge/kzg-commitment-scheme"
-excerpt: "KZG is used Ethereum’s Proto-Danksharding, and is also used in Scroll’s proof system. This article will give an overview of the KZG commitment scheme."
-whatsnext: { "Additional Resources": "/en/learn/zero-knowledge/additional-zk-learning-resources" }
+excerpt: "طرح KZG در Proto-Danksharding اتریوم استفاده می‌شود و همچنین در سیستم اثبات Scroll به کار می‌رود. این مقاله به بررسی طرح تعهد KZG می‌پردازد."
+whatsnext: { "منابع اضافی": "/fa/learn/zero-knowledge/additional-zk-learning-resources" }
 ---
 
-One of the most widely used polynomial commitment schemes is the KZG commitment scheme. The scheme was originally [published](https://www.iacr.org/archive/asiacrypt2010/6477178/6477178.pdf) in 2010 by Kate, Zaverucha, and Goldberg.
+یکی از پرکاربردترین طرح‌های تعهد چندجمله‌ای، طرح تعهد KZG است. این طرح اولین بار در سال ۲۰۱۰ توسط Kate، Zaverucha، و Goldberg منتشر شد.
 
-KZG is used in Ethereum’s [Proto-Danksharding](https://notes.ethereum.org/@vbuterin/proto_danksharding_faq), and is also used in Scroll's proof system.
+KZG در [Proto-Danksharding](https://notes.ethereum.org/@vbuterin/proto_danksharding_faq) اتریوم استفاده می‌شود و همچنین در سیستم اثبات Scroll به کار می‌رود.
 
-This article will give an overview of the KZG commitment scheme.
+این مقاله به بررسی طرح تعهد KZG می‌پردازد.
 
-## Preliminaries and notation
+## مقدمات و نوتیشن
 
-Recall the premise of polynomial commitment schemes. We have some polynomial $P(x)$ that we would like to commit to. We’ll assume the polynomial has a degree less than $l$.
+به یاد داشته باشید که فرضیه طرح‌های تعهد چندجمله‌ای این است که ما یک چندجمله‌ای $P(x)$ داریم که می‌خواهیم به آن تعهد کنیم. فرض می‌کنیم که درجه چندجمله‌ای کمتر از $l$ است.
 
-KZG commitments rely on [elliptic curve pairings](https://vitalik.ca/general/2017/01/14/exploring_ecp.html). Let $\mathbb{G}_1$ and $\mathbb{G}_2$ be two elliptic curve groups of order $p$, with a non-trivial [bilinear mapping](https://en.wikipedia.org/wiki/Bilinear_map) $e: \mathbb{G}_1 \times \mathbb{G}_2 \rightarrow \mathbb{G}_T$. Let $g$ be a generator of $\mathbb{G}_1$, and $h$ a generator of $\mathbb{G}_2$. We will use the notation $[x]_1 := x \cdot g$ and $[x]_2 := x \cdot h$, where $x \in \mathbb{F}_p$.
+تعهدات KZG به [جفت‌های منحنی بیضوی](https://vitalik.ca/general/2017/01/14/exploring_ecp.html) متکی هستند. بگذارید $\mathbb{G}_1$ و $\mathbb{G}_2$ دو گروه منحنی بیضوی با مرتبه $p$ باشند، با یک [نگاشت خطی غیرتبعیضی](https://en.wikipedia.org/wiki/Bilinear_map) $e: \mathbb{G}_1 \times \mathbb{G}_2 \rightarrow \mathbb{G}_T$. بگذارید $g$ یک تولیدکننده از $\mathbb{G}_1$ و $h$ یک تولیدکننده از $\mathbb{G}_2$ باشد. از نوتیشن $[x]_1 := x \cdot g$ و $[x]_2 := x \cdot h$ استفاده خواهیم کرد، جایی که $x \in \mathbb{F}_p$.
 
-## 1. Trusted setup
+## ۱. تنظیمات مورد اعتماد
 
-Before computing any KZG commitments, a one-time trusted setup must be performed. Once the trusted setup is completed, it can be reused to commit and reveal as many different polynomials as desired. The trusted setup works as follows:
+قبل از محاسبه هر تعهد KZG، باید یک تنظیمات مورد اعتماد انجام شود. پس از اتمام تنظیمات مورد اعتماد، می‌توان از آن برای تعهد و فاش کردن هر تعداد چندجمله‌ای که بخواهید استفاده کرد. تنظیمات مورد اعتماد به شرح زیر است:
 
-- Pick some random field element $\tau \in \mathbb{F}_p$
-- Let $l \in \mathbb{Z}$ be the maximum degree of the polynomials we want to commit to
-  - The trusted setup will only enable commitments to polynomials of degree $\leq l$
-- Compute $([\tau^0]_1,[\tau^1]_1,[\tau^{2}]_1\ldots,[\tau^{l}]_1)$ and $([\tau]_2)$, and release these values publicly.
+- انتخاب یک عنصر تصادفی از میدان $\tau \in \mathbb{F}_p$
+- بگذارید $l \in \mathbb{Z}$ حداکثر درجه چندجمله‌ای‌هایی باشد که می‌خواهیم به آن‌ها تعهد کنیم
+  - تنظیمات مورد اعتماد تنها تعهد به چندجمله‌ای‌هایی با درجه $\leq l$ را فعال می‌کند
+- محاسبه و انتشار مقادیر $([\tau^0]_1,[\tau^1]_1,[\tau^{2}]_1\ldots,[\tau^{l}]_1)$ و $([\tau]_2)$ به صورت عمومی.
 
-Note that $\tau$ should not be revealed - it is a secret parameter of the setup, and should be discarded after the trusted setup ceremony is completed so that nobody can figure out its value.
+توجه داشته باشید که $\tau$ نباید فاش شود - این یک پارامتر مخفی از تنظیمات است و باید پس از پایان مراسم تنظیمات مورد اعتماد دور انداخته شود تا هیچ‌کس نتواند مقدار آن را مشخص کند.
 
-There are established methods of conducting trusted setup ceremonies with weak trust assumptions (1-out-of-N trust assumption) using [multi-party computation](https://en.wikipedia.org/wiki/Secure_multi-party_computation) (MPC). For more on how trusted setups work, see this [post](https://vitalik.ca/general/2022/03/14/trustedsetup.html) by Vitalik.
+روش‌های معتبری برای برگزاری مراسم تنظیمات مورد اعتماد با فرضیات ضعیف اعتماد (فرض اعتماد ۱-از-N) با استفاده از [محاسبات چند‌جانبه امن](https://en.wikipedia.org/wiki/Secure_multi-party_computation) (MPC) وجود دارد. برای اطلاعات بیشتر در مورد نحوه کارکرد تنظیمات مورد اعتماد، به این [پست](https://vitalik.ca/general/2022/03/14/trustedsetup.html) از Vitalik مراجعه کنید.
 
-## 2. Committing to a polynomial
+## ۲. تعهد به یک چندجمله‌ای
 
-- Given a polynomial $P(x) = \sum_{i=0}^{l} p_i x^i$
-- Compute and output the commitment $c = [P(\tau)]_1$
-  - Although the committer cannot compute $P(\tau)$ directly (since he doesn’t know $\tau$), he can compute it using the output of the trusted setup:
+- با داشتن یک چندجمله‌ای $P(x) = \sum_{i=0}^{l} p_i x^i$
+- محاسبه و انتشار تعهد $c = [P(\tau)]_1$
+  - اگرچه متعهد نمی‌تواند مستقیماً $P(\tau)$ را محاسبه کند (چون $\tau$ را نمی‌داند)، اما می‌تواند آن را با استفاده از خروجی تنظیمات مورد اعتماد محاسبه کند:
     - $[P(\tau)]_1 = [\sum_{i=0}^{l} p_i \tau^i]_1 = \sum_{i=0}^{l} p_i [\tau^i]_1$
 
-## 3. Prove an evaluation
+## ۳. اثبات یک ارزیابی
 
-- Given an evaluation $P(a) = b$
-- Compute and output the proof $\pi = [Q(\tau)]_1$
-  - Where $Q(x) := \frac{P(x)-b}{x-a}$
-    - This is called the “quotient polynomial.”Note that such a $Q(x)$ exists if and only if $P(a) = b$. The existence of this quotient polynomial therefore serves as a proof of the evaluation.
+- با داشتن یک ارزیابی $P(a) = b$
+- محاسبه و انتشار اثبات $\pi = [Q(\tau)]_1$
+  - جایی که $Q(x) := \frac{P(x)-b}{x-a}$
+    - این به نام "چندجمله‌ای سهمی" شناخته می‌شود. توجه داشته باشید که چنین $Q(x)$ تنها در صورتی وجود دارد که $P(a) = b$. بنابراین وجود این چندجمله‌ای سهمی به عنوان اثباتی از ارزیابی عمل می‌کند.
 
-## 4. Verify an evaluation proof
+## ۴. تأیید اثبات ارزیابی
 
-- Given a commitment $c = [P(\tau)]_1$, an evaluation $P(a) = b$, and a proof $\pi = [Q(\tau)]_1$
-- Verify that $e(\pi, [\tau - a]_2) = e(c - [b]_1, h)$
-  - Some algebra shows that this is equivalent to checking that the quotient polynomial is correctly formed at $\tau$: $Q(\tau) = \frac{P(\tau) -b}{\tau-a}$
+- با داشتن یک تعهد $c = [P(\tau)]_1$، یک ارزیابی $P(a) = b$، و یک اثبات $\pi = [Q(\tau)]_1$
+- تأیید کنید که $e(\pi, [\tau - a]_2) = e(c - [b]_1, h)$
+  - برخی محاسبات نشان می‌دهد که این معادل با بررسی این است که چندجمله‌ای سهمی به درستی در $\tau$ فرم‌بندی شده است: $Q(\tau) = \frac{P(\tau) -b}{\tau-a}$
     $$
     \begin{align*}
     & e(\pi, [\tau - a]_2) = e(c - [b]_1, h) \\ \iff
     & e([Q(\tau)]_1, [\tau -a]_2) = e([P(\tau)]_1 - [b]_1, h) \\ \iff
-    &  Q(\tau) \cdot (\tau - a) \cdot e(g, h) = (P(\tau)-b) \cdot e(g,h) \\ \iff
+    & Q(\tau) \cdot (\tau - a) \cdot e(g, h) = (P(\tau)-b) \cdot e(g,h) \\ \iff
     & Q(\tau) \cdot (\tau -a) = P(\tau) - b
     \end{align*}
     $$
-  - The bilinear mapping $e$ enables us to check this property without knowing the secret setup parameter $\tau$
-- Once this verification is complete, we can conclude that (with overwhelmingly high probability) the quotient polynomial is correctly formed, and therefore that the evaluation is correct.
+  - نگاشت خطی $e$ به ما این امکان را می‌دهد که این خاصیت را بدون دانستن پارامتر مخفی تنظیمات $\tau$ بررسی کنیم
+- پس از تکمیل این تأیید، می‌توانیم نتیجه بگیریم که (با احتمال بسیار زیاد) چندجمله‌ای سهمی به درستی فرم‌بندی شده است و بنابراین ارزیابی صحیح است.
 
-## Learn more
+## بیشتر بدانید
 
 - [https://dankradfeist.de/ethereum/2020/06/16/kate-polynomial-commitments.html](https://dankradfeist.de/ethereum/2020/06/16/kate-polynomial-commitments.html)
 - [https://alinush.github.io/2020/05/06/kzg-polynomial-commitments.html](https://alinush.github.io/2020/05/06/kzg-polynomial-commitments.html)

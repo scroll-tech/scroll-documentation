@@ -1,75 +1,78 @@
 ---
 section: learn
 date: Last Modified
-title: "Introduction to Zero Knowledge"
-lang: "en"
+title: "مقدمه‌ای بر دانش صفر"
+lang: "fa"
+dir:    "rtl"
 permalink: "learn/zero-knowledge/introduction-to-zero-knowledge"
-whatsnext: { "Polynomial Commitment Schemes": "/en/learn/zero-knowledge/polynomial-commitment-schemes" }
-excerpt: 'Over the past decade, a field of cryptography called "zero knowledge" has been rapidly advancing. It promises new ways to build applications and enables protocols to increase efficiency, security, and privacy.'
+whatsnext: { "طرح‌های تعهد چندجمله‌ای": "/fa/learn/zero-knowledge/polynomial-commitment-schemes" }
+excerpt: 'در طول دهه گذشته، زمینه‌ای از رمزنگاری به نام "دانش صفر" به سرعت در حال پیشرفت بوده است. این حوزه روش‌های جدیدی برای ساخت برنامه‌ها و پروتکل‌ها ارائه می‌دهد که کارایی، امنیت و حریم خصوصی را افزایش می‌دهد.'
 ---
 
 import Aside from "../../../../../components/Aside.astro"
 
-Over the past decade, a field of cryptography called "zero knowledge" has been rapidly advancing. It promises new ways to build applications and enables protocols to increase efficiency, security, and privacy.
+در طول دهه گذشته، زمینه‌ای از رمزنگاری به نام "دانش صفر" به سرعت در حال پیشرفت بوده است. این حوزه روش‌های جدیدی برای ساخت برنامه‌ها و پروتکل‌ها ارائه می‌دهد که کارایی، امنیت و حریم خصوصی را افزایش می‌دهد.
 
-Let's look at what makes the field of zero knowledge proofs so exciting and what problems it helps engineers solve.
+بیایید نگاهی بیاندازیم به اینکه چه چیزی باعث می‌شود که زمینه اثبات‌های دانش صفر بسیار هیجان‌انگیز باشد و چه مشکلاتی را به مهندسان کمک می‌کند تا حل کنند.
 
-## Trustless Blockchains & Verifiability
+## بلاکچین‌های بدون اعتماد و قابل تأیید
 
-Blockchains generally work by processing transactions submitted by users. These transactions usually trigger some computation for the blockchain to perform.
+بلاکچین‌ها به طور کلی با پردازش تراکنش‌هایی که توسط کاربران ارسال می‌شود کار می‌کنند. این تراکنش‌ها معمولاً باعث می‌شوند که بلاکچین برخی محاسبات را انجام دهد.
 
-For the blockchain to be trustless (i.e. not reliant on trusting some individual party), participants in the network must verify that transactions are valid and that their resulting computations were performed correctly.
+برای اینکه بلاکچین بدون اعتماد باشد (یعنی نیازی به اعتماد به یک فرد خاص نداشته باشد)، شرکت‌کنندگان در شبکه باید تأیید کنند که تراکنش‌ها معتبر هستند و محاسبات مربوط به آنها به درستی انجام شده است.
 
-Verifying that the transaction is valid generally requires digital signature verification - this verifies that the transaction’s reported sender is indeed the author of the transaction. Verifying that a transaction’s computation was performed correctly generally requires re-executing the transaction locally.
+تأیید معتبر بودن تراکنش به طور کلی نیاز به تأیید امضای دیجیتال دارد - این کار تأیید می‌کند که فرستنده گزارش شده تراکنش در واقع نویسنده تراکنش است. تأیید اینکه محاسبه تراکنش به درستی انجام شده است به طور کلی نیاز به اجرای مجدد تراکنش به صورت محلی دارد.
 
-## Limitations to Verifiability
+## محدودیت‌های تأییدپذیری
 
-This methodology of verifying each transaction breaks down in situations where a participant can’t rerun the computation. A participant may not be able to re-execute the computation for a couple of reasons: (1) it could be that certain data shouldn’t be made available (for privacy reasons), or (2) it may be too expensive for a participating computer to re-execute all the transactions - this second reason is especially relevant when considering high-throughput blockchains with a large number of transactions per second.
+این روش تأیید هر تراکنش در شرایطی که یک شرکت‌کننده نمی‌تواند محاسبه را دوباره اجرا کند، خراب می‌شود. ممکن است یک شرکت‌کننده نتواند محاسبه را دوباره اجرا کند به دو دلیل: (1) ممکن است که برخی داده‌ها نباید در دسترس قرار گیرند (به دلایل حریم خصوصی)، یا (2) ممکن است خیلی گران باشد که یک کامپیوتر شرکت‌کننده همه تراکنش‌ها را دوباره اجرا کند - این دلیل دوم به ویژه وقتی که بلاکچین‌های پر سرعت با تعداد زیادی تراکنش در ثانیه در نظر گرفته شوند، مرتبط است.
 
-## The Power of Zero Knowledge Proofs
+## قدرت اثبات‌های دانش صفر
 
-Zero knowledge proofs (ZKPs) have the power to overcome these limitations.
+اثبات‌های دانش صفر (ZKPs) قادر به غلبه بر این محدودیت‌ها هستند.
 
-ZKPs allow participants to verify the results of a computation while (1) preserving the privacy of any sensitive data used in the computation, and (2) having the verification be significantly cheaper than re-executing the computation. These two properties of ZKPs are called **zero knowledge** and **succinctness**, respectively.
+ZKPs به شرکت‌کنندگان اجازه می‌دهند که نتایج یک محاسبه را تأیید کنند در حالی که (1) حریم خصوصی هر داده حساس استفاده شده در محاسبه را حفظ می‌کنند، و (2) تأیید آن به طور قابل توجهی ارزان‌تر از اجرای مجدد محاسبه است. این دو ویژگی از ZKPs به ترتیب **دانش صفر** و **اختصار** نامیده می‌شوند.
 
-The above properties of ZKPs are extremely useful in the context of verifiability for trustless blockchains. Without ZKPs, participants need to re-execute every transaction’s resulting computation. This requires all participants to see all the (potentially sensitive) data used in each computation, and it also limits the throughput of the entire system. With ZKPs, one party can perform the computation, and then generate a proof that the computation was performed correctly. Other participants can verify that the computation was performed correctly by _verifying that the proof is valid_, rather than re-executing the computation themselves. Verifying the proof (1) does not leak information about sensitive data used in the original computation, and (2) is significantly computationally cheaper than re-executing the original computation. These two properties have the potential to enable privacy and scalability for trustless blockchains.
+ویژگی‌های فوق‌العاده ZKPs در زمینه تأییدپذیری برای بلاکچین‌های بدون اعتماد بسیار مفید هستند. بدون ZKPs، شرکت‌کنندگان نیاز دارند که هر محاسبه نتیجه‌ی هر تراکنش را دوباره اجرا کنند. این نیاز به این دارد که همه شرکت‌کنندگان همه داده‌های (احتمالاً حساس) استفاده شده در هر محاسبه را ببینند، و همچنین سرعت اجرای کل سیستم را محدود می‌کند. با ZKPs، یک طرف می‌تواند محاسبه را انجام دهد و سپس یک اثبات تولید کند که محاسبه به درستی انجام شده است. شرکت‌کنندگان دیگر می‌توانند تأیید کنند که محاسبه به درستی انجام شده است با **تأیید اینکه اثبات معتبر است**، به جای اجرای مجدد محاسبه به صورت خود. تأیید اثبات (1) اطلاعاتی درباره داده‌های حساس استفاده شده در محاسبه اصلی فاش نمی‌کند، و (2) به طور قابل توجهی از نظر محاسباتی ارزان‌تر از اجرای مجدد محاسبه اصلی است. این دو ویژگی پتانسیل دارند که حریم خصوصی و مقیاس‌پذیری را برای بلاکچین‌های بدون اعتماد امکان‌پذیر کنند.
 
-## Circuits, Proofs, and Verifiers
+## مدارها، اثبات‌ها و تأییدکنندگان
 
-In practice, ZKPs can be quite complex to implement into a system, but at a high level, you’ll want to understand that zero knowledge proofs have a few components: a circuit, a proof, and a verifier.
+در عمل، ZKPs می‌توانند به شدت پیچیده باشند که در یک سیستم پیاده‌سازی شوند، اما در سطح بالا، شما باید درک کنید که اثبات‌های دانش صفر چند جزء دارند: یک مدار، یک اثبات و یک تأییدکننده.
 
-The circuit is a program that takes in input data and asserts that the input data is valid according to some “constraints” that the input data must satisfy. The input data can be public (known to everyone), private (known to only the prover), or mixed (some inputs are public and some are private).
+مدار یک برنامه است که داده‌های ورودی را دریافت می‌کند و تأیید می‌کند که داده‌های ورودی بر اساس برخی "محدودیت‌ها" که باید داده‌های ورودی را برآورده کنند معتبر هستند. داده‌های ورودی می‌توانند عمومی (شناخته شده برای همه)، خصوصی (فقط شناخته شده برای اثبات‌کننده)، یا ترکیبی (برخی ورودی‌ها عمومی و برخی خصوصی) باشند.
 
-A proof can be generated, claiming that an input satisfies the circuit. The proof reveals no information about the private inputs and is quite small in size.
+یک اثبات می‌تواند تولید شود که ادعا کند یک ورودی مدار را برآورده می‌کند. اثبات هیچ اطلاعاتی درباره ورودی‌های خصوصی فاش نمی‌کند و اندازه آن بسیار کوچک است.
 
-The verifier can check (1) that the proof is valid, (2) that the proof matches the constraints laid out by the circuit (and isn’t just a phony proof), and (3) that the public inputs used to generate the proof match those being used by the verifier. Note that this check performed by the verifier is generally a cheap computation.
+تأییدکننده می‌تواند (1) بررسی کند که اثبات معتبر است، (2) اینکه اثبات با محدودیت‌های تعیین شده توسط مدار مطابقت دارد (و فقط یک اثبات جعلی نیست)، و (3) اینکه ورودی‌های عمومی استفاده شده برای تولید اثبات با آن‌هایی که توسط تأییدکننده استفاده می‌شوند مطابقت دارند. توجه داشته باشید که این بررسی انجام شده توسط تأییدکننده به طور کلی یک محاسبه ارزان است.
 
 <Aside type="tip" title="">
-  You might notice that the verifier doesn’t have an output beyond “valid proof” or “invalid proof.” Remember, the
-  verifier just confirms other computations — in practice, the “outputs” of a function might actually end up being
-  additional inputs to a circuit and verifier.
+  ممکن است متوجه شوید که تأییدکننده خروجی به جز "اثبات معتبر" یا "اثبات نامعتبر" ندارد. به یاد داشته باشید،
+  تأییدکننده فقط محاسبات دیگر را تأیید می‌کند - در عمل، "خروجی‌های" یک تابع ممکن است در واقع به ورودی‌های
+  اضافی یک مدار و تأییدکننده تبدیل شوند.
 </Aside>
 
-### Circuits, Proof, and Verifiers — an example
+### مدارها، اثبات‌ها و تأییدکنندگان — یک مثال
 
-Let’s take Sudoku as an example. Suppose that there’s a Sudoku puzzle, and Alice wants to prove to Bob that she knows a solution to the puzzle, but does not want to reveal what the solution is.
+بیایید سودوکو را به عنوان یک مثال بگیریم. فرض کنید که یک معمای سودوکو وجود دارد، و آلیس می‌خواهد به باب ثابت کند که او یک راه‌حل برای معما دارد، اما نمی‌خواهد راه‌حل را فاش کند.
 
-In this case, the particular puzzle will be a public input (both Alice and Bob know about it), and the solution is a private input (Alice knows it, but will keep it private from Bob). The **circuit** would take both these inputs and assert that the solution is correct by checking it in the standard way, row-by-row, column-by-column, etc. The circuit in this way “constrains” that the private input solution really is a valid solution for the public input puzzle, and is “satisfied” only when the solution check passes.
+در این مورد، معمای خاص یک ورودی عمومی خواهد بود (هر دو آلیس و باب از آن مطلع هستند)، و راه‌حل یک ورودی خصوصی خواهد بود (آلیس آن را می‌داند، اما از باب پنهان می‌دارد). **مدار** این ورودی‌ها را دریافت می‌کند و تأیید می‌کند که راه‌حل صحیح است با بررسی آن به روش استاندارد، سطر به سطر، ستون به ستون، و غیره. مدار به این ترتیب محدودیت می‌کند که راه‌حل ورودی خصوصی واقعاً یک راه‌حل معتبر برای معمای ورودی عمومی است، و فقط زمانی که بررسی راه‌حل موفق باشد "راضی" می‌شود.
 
-A **proof** can then be generated that states that Alice knows an input that satisfies the circuit for the particular puzzle (the public input).
+سپس می‌توان یک **اثبات** تولید کرد که بیان کند آلیس یک ورودی را می‌داند که مدار را برای معمای خاص (ورودی عمومی) برآورده می‌کند.
 
-The proof, along with the puzzle, could be passed to Bob, who could then use a **verifier** corresponding to the Sudoku-checking circuit to assess if the proof is valid, and thereby that Alice indeed knows a solution to the puzzle. Critically, Bob doesn’t gain any knowledge of Alice’s solution, but he can still verify that she knows a valid solution!
+اثبات، همراه با معما، می‌تواند به باب داده شود، که سپس می‌تواند از یک **تأییدکننده** مربوط به مدار بررسی‌کننده سودوکو استفاده کند تا ارزیابی کند آیا اثبات معتبر است، و بنابراین آلیس واقعاً یک راه‌حل برای معما دارد. به طور مهم، باب هیچ دانشی درباره راه‌حل آلیس به دست نمی‌آورد، اما او همچنان می‌تواند تأیید کند که او یک راه‌حل معتبر را می‌داند!
 
-## Zero Knowledge Proofs and Blockchains
+## اثبات‌های دانش صفر و بلاکچین‌ها
 
-One of the primary motivations for recent advances in ZKPs is its application to blockchains. Two of the key challenges that decentralized blockchains face are privacy and scalability - all the data is public, and every node in the network has to re-run every computation on the network. ZKPs can help solve both of these challenges.
+یکی از انگیزه‌های اصلی برای پیشرفت‌های اخیر در ZKPs کاربرد آن در بلاکچین‌ها است. دو چالش کلیدی که بلاکچین‌های غیرمتمرکز با آن مواجه هستند حریم خصوصی و مقیاس‌پذیری است - همه داده‌ها عمومی هستند و هر نود در شبکه باید هر محاسبه در شبکه را دوباره اجرا کند. ZKPs می‌توانند به حل هر دو این چالش‌ها کمک کنند.
 
-While there are several projects utilizing the zero knowledge property of ZKPs to build privacy-preserving applications, we at Scroll use only the succinctness property of ZKPs to scale Ethereum.
+در حالی که چندین پروژه از ویژگی دانش صفر ZKPs برای ساخت برنامه‌های حفظ حریم خصوصی استفاده می‌کنند، ما در Scroll فقط از ویژگی اختصار ZKPs برای مقیاس‌دهی اتریوم استفاده می‌کنیم.
 
-## Scroll & Zero Knowledge Proofs
+## Scroll و اثبات‌های دانش صفر
 
-The idea that powers Scroll is quite simple. What if we could use an Ethereum smart contract to verify all of the computation of another version of Ethereum? We could run another network that provides faster and cheaper access to an Ethereum Virtual Machine (”EVM”), and Ethereum itself would provide the security needed for validating all the computation and making sure this other network isn’t breaking the EVM rules.
+ایده‌ای که Scroll را قدرت می‌دهد بسیار ساده است. چه می‌شود اگر بتوانیم از یک قرارداد هوشمند اتریوم برای تأیید همه محاسبات یک نسخه دیگر از اتریوم استفاده کنیم؟ ما می‌توانیم یک شبکه دیگر ایجاد کنیم که دسترسی سریع‌تر و ارزان‌تر به یک ماشین مجازی اتریوم
 
-The rest of the Learn and Technology sections break down how this works in greater detail, but at a simple level, remember that zero knowledge relies on having a circuit, proof, and verifier.
+ (”EVM”) را فراهم می‌کند، و خود اتریوم امنیت لازم برای تأیید همه محاسبات و اطمینان از اینکه این شبکه دیگر قوانین EVM را نمی‌شکند، فراهم می‌کند.
 
-In our construction, the circuit (actually a set of circuits) encodes the rules of the EVM to “constrain” acceptable behavior for processing input transactions relative to the chain state. Using this “zkEVM”, a network of GPUs takes the transactions for a set of blocks and generates a proof. And back on Ethereum, a smart contract verifies that, for a set of transactions, this proof matches the circuit enshrined in the smart contract. If it does, those transactions can be considered “finalized,” the network moves forward, and we’ve created fast, secure, and affordable blockspace for growing Ethereum.
+بخش‌های باقی‌مانده در قسمت‌های یادگیری و فناوری به طور جزئی‌تری توضیح می‌دهند که این چگونه کار می‌کند، اما به طور ساده، به یاد داشته باشید که دانش صفر به داشتن یک مدار، اثبات و تأییدکننده تکیه می‌کند.
+
+در ساختار ما، مدار (در واقع مجموعه‌ای از مدارها) قوانین EVM را برای "محدود کردن" رفتار قابل قبول برای پردازش تراکنش‌های ورودی نسبت به حالت زنجیره رمزگذاری می‌کند. با استفاده از این "zkEVM"، یک شبکه از GPU‌ها تراکنش‌ها را برای مجموعه‌ای از بلوک‌ها می‌گیرد و یک اثبات تولید می‌کند. و در اتریوم، یک قرارداد هوشمند تأیید می‌کند که، برای مجموعه‌ای از تراکنش‌ها، این اثبات با مداری که در قرارداد هوشمند تعبیه شده است مطابقت دارد. اگر اینطور باشد، آن تراکنش‌ها می‌توانند "نهایی" در نظر گرفته شوند، شبکه به جلو حرکت می‌کند، و ما فضایی سریع، امن و مقرون به صرفه برای رشد اتریوم ایجاد کرده‌ایم.

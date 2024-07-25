@@ -3,6 +3,7 @@ section: gettingStarted
 date: Last Modified
 title: "بررسی اجمالی Scroll"
 lang: "fa"
+dir: "rtl"
 permalink: "docs/conceptual-overview/"
 excerpt: "ZK Rollups و Scroll"
 whatsnext: { "راهنمای کاربر": "/fa/user-guide/", "ساختن بر روی Scroll": "/fa/developers/" }

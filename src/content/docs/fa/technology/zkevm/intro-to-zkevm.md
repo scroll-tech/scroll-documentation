@@ -3,6 +3,7 @@ section: technology
 date: Last Modified
 title: "مقدمه ای بر zkEVM"
 lang: "fa"
+dir: "rtl"
 permalink: "technology/intro-to-zkevm"
 excerpt: "ZK رول‌آپ‌ها به عنوان راه‌حل مقیاس‌پذیری ایده‌آل برای اتریوم شناخته می‌شوند."
 whatsnext: { "zkEVM بررسی اجمالی": "/fa/technology/zkevm/zkevm-overview" }

@@ -12,7 +12,7 @@ changeLanguage("fa")
 <HomeLayout>
   <div class="header bg-black">
     <div class="inner">
-      <p class="header-title text-white">به مستندات اسکرول خوش آمدید</p>
+      <p class="header-title text-white dark:!text-white-900">به مستندات اسکرول خوش آمدید</p>
       <Search client:visible />
     </div>
   </div>
@@ -26,6 +26,9 @@ changeLanguage("fa")
 </HomeLayout>
 
 <style>
+  body {
+    direction: rtl;
+  }
   .header {
     height: 390px;
     padding: 70px 60px 110px;

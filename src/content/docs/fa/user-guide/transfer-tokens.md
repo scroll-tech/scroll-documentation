@@ -3,6 +3,7 @@ section: gettingStarted
 date: Last Modified
 title: "انتقال توکن‌ها"
 lang: "fa"
+dir: "rtl"
 permalink: "user-guide/transfer-tokens/"
 excerpt: "می‌توانید از کیف پول خود به صورت معمول برای انتقال توکن‌ها در شبکه آزمایشی Scroll Sepolia استفاده کنید."
 ---

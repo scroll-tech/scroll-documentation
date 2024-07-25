@@ -1,27 +1,28 @@
 ---
 section: learn
 date: Last Modified
-title: "The Scalability Problem"
-lang: "en"
+title: "مسئله مقیاس‌پذیری"
+lang: "fa"
+dir: "rtl"
 permalink: "learn/intro-to-rollups"
-excerpt: "Ethereum’s strong decentralization and security come at the cost of sacrificing scalability: to ensure that all the participating nodes can keep up with the network, the network’s throughput is limited. This limit ultimately results in higher costs and latencies for users."
-whatsnext: { "Intro to Rollups": "/en/learn/intro-to-rollups" }
+excerpt: "تمرکز قوی و امنیت اتریوم با هزینه قربانی کردن مقیاس‌پذیری همراه است: برای اطمینان از این که تمامی نودهای شرکت‌کننده بتوانند با شبکه هماهنگ باشند، توان عملیاتی شبکه محدود شده است. این محدودیت در نهایت منجر به هزینه‌ها و تأخیرات بالاتر برای کاربران می‌شود."
+whatsnext: { "مقدمه‌ای بر رول‌آپ‌ها": "/fa/learn/intro-to-rollups" }
 ---
 
-## Ethereum’s scaling problem
+## مشکل مقیاس‌پذیری اتریوم
 
-[Ethereum](https://ethereum.org/en/developers/docs/intro-to-ethereum/#what-is-ethereum) is a general-purpose blockchain that supports the deployment and execution of [smart contracts](https://ethereum.org/en/developers/docs/intro-to-ethereum/#what-are-smart-contracts).
+[اتریوم](https://ethereum.org/en/developers/docs/intro-to-ethereum/#what-is-ethereum) یک بلاک‌چین چندمنظوره است که از استقرار و اجرای [قراردادهای هوشمند](https://ethereum.org/en/developers/docs/intro-to-ethereum/#what-are-smart-contracts) پشتیبانی می‌کند.
 
-One of the defining features of Ethereum is its unwavering commitment to security and decentralization. Ethereum is designed such that computers all across the world (even cheap ones, like a [Raspberry Pi](https://ethereum-on-arm-documentation.readthedocs.io/)) can participate in the network, running local copies of the blockchain and processing new transactions.
+یکی از ویژگی‌های برجسته اتریوم تعهد تزلزل‌ناپذیر آن به امنیت و تمرکززدایی است. اتریوم به گونه‌ای طراحی شده که کامپیوترهایی در سراسر جهان (حتی کامپیوترهای ارزان‌قیمتی مانند یک [Raspberry Pi](https://ethereum-on-arm-documentation.readthedocs.io/)) می‌توانند در شبکه شرکت کنند، نسخه‌های محلی بلاک‌چین را اجرا کنند و تراکنش‌های جدید را پردازش کنند.
 
-However, Ethereum’s strong decentralization and security come at the cost of sacrificing scalability: to ensure that all the participating nodes can keep up with the network, the network’s throughput is limited. This limit ultimately results in higher costs and latencies for users.
+با این حال، تمرکززدایی و امنیت قوی اتریوم به هزینه قربانی کردن مقیاس‌پذیری می‌آید: برای اطمینان از این که تمامی نودهای شرکت‌کننده بتوانند با شبکه هماهنگ باشند، توان عملیاتی شبکه محدود شده است. این محدودیت در نهایت منجر به هزینه‌ها و تأخیرات بالاتر برای کاربران می‌شود.
 
-## Scaling solutions
+## راه‌حل‌های مقیاس‌پذیری
 
-Ethereum’s scaling solutions aim to increase the throughput of the network without sacrificing decentralization or security.
+راه‌حل‌های مقیاس‌پذیری اتریوم هدفشان افزایش توان عملیاتی شبکه بدون قربانی کردن تمرکززدایی یا امنیت است.
 
-There are primarily two types of scaling solutions: layer 1 scaling solutions and layer 2 scaling solutions.
+به طور کلی دو نوع اصلی از راه‌حل‌های مقیاس‌پذیری وجود دارد: راه‌حل‌های مقیاس‌پذیری لایه 1 و راه‌حل‌های مقیاس‌پذیری لایه 2.
 
-**Layer 1** (or **L1**) scaling solutions attempt to scale the network by making modifications to the Ethereum blockchain directly. The term “layer 1” here refers to the main Ethereum blockchain. In general, it is very difficult to design layer 1 scaling solutions that increase throughput and at the same time preserve high levels of security and decentralization. Thus, recent scaling efforts have shifted away from layer 1 solutions and towards layer 2 solutions.
+**لایه 1** (یا **L1**) راه‌حل‌های مقیاس‌پذیری سعی دارند با ایجاد تغییرات در بلاک‌چین اتریوم به صورت مستقیم، شبکه را مقیاس‌پذیر کنند. اصطلاح "لایه 1" در اینجا به بلاک‌چین اصلی اتریوم اشاره دارد. به طور کلی، طراحی راه‌حل‌های مقیاس‌پذیری لایه 1 که توان عملیاتی را افزایش دهد و در عین حال سطوح بالایی از امنیت و تمرکززدایی را حفظ کند، بسیار دشوار است. بنابراین، تلاش‌های اخیر در زمینه مقیاس‌پذیری از راه‌حل‌های لایه 1 دور شده و به سمت راه‌حل‌های لایه 2 حرکت کرده است.
 
-**Layer 2** (or **L2**) scaling solutions are networks that live **on top** of Ethereum layer 1 - they are essentially separate blockchains that are “anchored” to the underlying Ethereum blockchain in some way. These layer 2 networks can generally process transactions at a higher rate than the underlying layer 1 network, as they are not subject to the same limitations. The “anchoring” mechanism, the specifics of which differ across various layer 2s, enables the layer 2 network to inherit the strong security and decentralization properties of Ethereum layer 1.
+**لایه 2** (یا **L2**) راه‌حل‌های مقیاس‌پذیری شبکه‌هایی هستند که **روی** لایه 1 اتریوم زندگی می‌کنند - این‌ها به‌طور اساسی بلاک‌چین‌های جداگانه‌ای هستند که به نوعی به بلاک‌چین اتریوم متصل شده‌اند. این شبکه‌های لایه 2 می‌توانند به طور کلی تراکنش‌ها را با نرخ بالاتری نسبت به شبکه لایه 1 اصلی پردازش کنند، زیرا محدودیت‌های مشابهی ندارند. مکانیزم "اتصال" که جزئیات آن در بین لایه 2‌های مختلف متفاوت است، به شبکه لایه 2 امکان می‌دهد تا ویژگی‌های امنیتی و تمرکززدایی قوی لایه 1 اتریوم را به ارث ببرند.

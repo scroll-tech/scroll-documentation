@@ -1,51 +1,52 @@
 ---
 section: learn
 date: Last Modified
-title: "Intro to Rollups"
-lang: "en"
+title: "مقدمه‌ای بر رول‌آپ‌ها"
+lang: "fa"
+dir: "rtl"
 permalink: "learn/intro-to-rollups"
-excerpt: "Rollups are the most predominant layer 2 scaling solution in the Ethereum ecosystem."
-whatsnext: { "Scroll Rollup Process": "/en/technology/chain/rollup" }
+excerpt: "رول‌آپ‌ها برجسته‌ترین راه‌حل مقیاس‌پذیری لایه ۲ در اکوسیستم اتریوم هستند."
+whatsnext: { "فرآیند رول‌آپ اسکرول": "/fa/technology/chain/rollup" }
 ---
 
-## What’s a rollup?
+## رول‌آپ چیست؟
 
-Rollups are the most predominant layer 2 scaling solution in the Ethereum ecosystem and are viewed as a [central part](https://ethereum-magicians.org/t/a-rollup-centric-ethereum-roadmap/4698) of the Ethereum roadmap.
+رول‌آپ‌ها برجسته‌ترین راه‌حل مقیاس‌پذیری لایه ۲ در اکوسیستم اتریوم هستند و به عنوان [جزء مرکزی](https://ethereum-magicians.org/t/a-rollup-centric-ethereum-roadmap/4698) نقشه راه اتریوم دیده می‌شوند.
 
-A rollup processes batches of transactions off-chain (i.e. not on layer 1), and then posts the resulting data on-chain (i.e. on layer 1).
+رول‌آپ تراکنش‌ها را به صورت دسته‌ای خارج از زنجیره (یعنی نه در لایه ۱) پردازش می‌کند و سپس داده‌های حاصل را در زنجیره (یعنی در لایه ۱) منتشر می‌کند.
 
-The execution of each transaction is performed off-chain, and does not need to be re-executed layer 1 nodes. This allows for high transaction throughput, without impacting the decentralization of layer 1.
+اجرای هر تراکنش به صورت خارج از زنجیره انجام می‌شود و نیازی به اجرای مجدد توسط نودهای لایه ۱ ندارد. این امر امکان توان عملیاتی بالای تراکنش‌ها را بدون تاثیر بر تمرکززدایی لایه ۱ فراهم می‌کند.
 
-In order for a rollup to be secure, it must prove that its off-chain computation (the processing of transactions) was performed correctly. There are predominantly two mechanisms to prove the validity of off-chain computation: validity proofs and fraud proofs.
+برای اینکه یک رول‌آپ امن باشد، باید ثابت کند که محاسبات خارج از زنجیره‌اش (پردازش تراکنش‌ها) به درستی انجام شده است. به طور کلی دو مکانیزم برای اثبات صحت محاسبات خارج از زنجیره وجود دارد: اثبات‌های صحت و اثبات‌های تقلب.
 
-## What’s an optimistic rollup?
+## رول‌آپ خوش‌بینانه چیست؟
 
-An optimistic rollup is a rollup that uses fraud proofs to assert the validity of its computation.
+رول‌آپ خوش‌بینانه یک رول‌آپ است که از اثبات‌های تقلب برای تأیید صحت محاسبات خود استفاده می‌کند.
 
-Fraud proofs are a mechanism that allows users to challenge and prove the invalidity of any computation performed on the L2. If a fraud proof is successfully submitted, the L2 can be rolled back to a previous state and the invalid computation can be corrected. Fraud proofs depend on at least one honest party checking that the L2 transactions have been correctly executed.
+اثبات‌های تقلب مکانیزمی هستند که به کاربران اجازه می‌دهند تا به چالش بکشند و نادرستی هر محاسبات انجام شده در لایه ۲ را اثبات کنند. اگر یک اثبات تقلب با موفقیت ارائه شود، لایه ۲ می‌تواند به حالت قبلی بازگردانده شده و محاسبات نادرست اصلاح شود. اثبات‌های تقلب به حداقل یک طرف صادق وابسته هستند که بررسی کند تراکنش‌های لایه ۲ به درستی اجرا شده‌اند.
 
-## What’s a ZK rollup?
+## رول‌آپ ZK چیست؟
 
-A ZK rollup is a rollup that uses validity proofs to assert the validity of its computation.
+رول‌آپ ZK یک رول‌آپ است که از اثبات‌های صحت برای تأیید صحت محاسبات خود استفاده می‌کند.
 
-When a ZK rollup executes a batch of transactions and posts the resulting state to L1, it also posts a validity proof. This mathematical proof proves that the resulting state is indeed the state that results from correctly executing the batch of transactions.
+وقتی یک رول‌آپ ZK یک دسته از تراکنش‌ها را اجرا می‌کند و حالت حاصل را به لایه ۱ ارسال می‌کند، همچنین یک اثبات صحت را نیز منتشر می‌کند. این اثبات ریاضی ثابت می‌کند که حالت حاصل، در واقع همان حالتی است که از اجرای صحیح دسته تراکنش‌ها به دست آمده است.
 
-Today, there are multiple types of ZK rollups, broadly defined as either zkVMs (zk Virtual Machines) or zkEVMs (zk Ethereum Virtual Machines).
+امروزه، انواع مختلفی از رول‌آپ‌های ZK وجود دارد که به طور کلی به عنوان zkVMها (ماشین‌های مجازی zk) یا zkEVMها (ماشین‌های مجازی اتریوم zk) تعریف می‌شوند.
 
-zkVMs are designed from the ground up to work well with ZK circuits and require different development workflows compared to a zkEVM. Some examples of these include Starkware and Aztec.
+zkVMها از ابتدا برای کار با مدارهای ZK طراحی شده‌اند و نیاز به گردش کارهای توسعه متفاوتی نسبت به zkEVMها دارند. برخی از این نمونه‌ها شامل Starkware و Aztec هستند.
 
-zkEVMs are designed to emulate the EVM. There are two major types of zkEVMs: bytecode-compatible, and language-compatible. Bytecode-compatible zkEVMs emulate the EVM at a very low level, allowing for a near-identical development and user experience compared to Ethereum Layer 1. Language-compatible zkEVMs compile Solidity and other high-level languages down into different bytecode, which can result in changes to workflow. zkSync is the most popular language-compatible zkEVM.
+zkEVMها برای شبیه‌سازی EVM طراحی شده‌اند. دو نوع عمده از zkEVMها وجود دارد: سازگار با بایت‌کد و سازگار با زبان. zkEVMهای سازگار با بایت‌کد EVM را در سطح بسیار پایین شبیه‌سازی می‌کنند، که اجازه می‌دهد تجربه توسعه و کاربری تقریباً مشابهی با لایه ۱ اتریوم داشته باشند. zkEVMهای سازگار با زبان، سالیدیتی و سایر زبان‌های سطح بالا را به بایت‌کد مختلف کامپایل می‌کنند، که می‌تواند منجر به تغییراتی در گردش کار شود. zkSync محبوب‌ترین zkEVM سازگار با زبان است.
 
-Scroll is bytecode-compatible. This approach was chosen because it brings certain benefits:
+اسکرول با بایت‌کد سازگار است. این رویکرد به دلیل مزایای خاصی انتخاب شده است:
 
-- Solidity, Vyper, and Huff work out of the box
-- No re-auditing necessary
-- Most existing tooling is inherited
-- Near-identical UX and DevX as Ethereum
+- سالیدیتی، وایپر و هاف به‌طور کامل کار می‌کنند
+- نیازی به ممیزی مجدد نیست
+- بیشتر ابزارهای موجود به ارث برده می‌شوند
+- تجربه کاربری و توسعه تقریباً مشابه با اتریوم
 
-More detail on Scroll’s approach is found in the Technology section.
+جزئیات بیشتر در مورد رویکرد اسکرول در بخش فناوری آمده است.
 
-## Further reading
+## مطالعات بیشتر
 
-- [An Incomplete Guide to Rollups](https://vitalik.ca/general/2021/01/05/rollup.html) - Vitalik Buterin
-- [Scaling](https://ethereum.org/en/developers/docs/scaling/) - Ethereum Docs
+- [راهنمای ناقص رول‌آپ‌ها](https://vitalik.ca/general/2021/01/05/rollup.html) - ویتالیک بوترین
+- [مقیاس‌پذیری](https://ethereum.org/en/developers/docs/scaling/) - مستندات اتریوم
