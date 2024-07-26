@@ -52,29 +52,29 @@ Below, we describe three configurations for services:
 
 | Service                 | Default | Minimal | Production |
 | ----------------------- | :---------------------: | :--------------------: | :------------------------------------------------: |
-| l1-devnet               | ✅                       |                        |                                                    |
+| balance-checker         |                         |                        |  ⚠️                                                 |
 | blockscout              | ✅                       |                        |                                                    |
+| blockscout-sc-verifier  | ❔ |                        |                                                    |
 | bridge-history-api [^1]     | ✅                       | ✅                | ✅                                                  |
 | bridge-history-fetcher [^1] | ✅                       | ✅             | ✅                                                  |
-| balance-checker         |                         |                        |  ⚠️                                                 |
 | chain-monitor           |                         |                        | ✅                                                  |
 | coordinator-api [^2]                           |                         | | ✅                                                  |
 | coordinator-cron [^2]       |                         |                        | ✅                                                  |
 | event-watcher           | ✅                       | ❔  | ❔                                                  |
 | frontends               | ✅                       |                        | ⚠️                                                  |
 | gas-oracle              | ✅                       | ✅                      | ✅                                                  |
-| grafana                 | ✅                       |                        |                                                    |
+| grafana                 | ✅                       |                        |  ⚠️                                                  |
+| kube-prometheus-stack   | ✅                       |                        |                                                    |
+| l1-devnet               | ✅                       |                        |                                                    |
+| l1-explorer             | ✅                       |                        |                                                    |
+| l2-bootnode             | ❔  |                        | ✅                                                  |
+| l2-rpc                  | ✅                       |                        | ✅                                                  |
+| l2-sequencer            | ✅                       | ✅                      | ✅                                                  |
+| loki-stack              | ✅                       |                        | ⚠️ |
+| postgresql              | ✅                       | ⚠️                      | ⚠️   |
 | rollup-explorer-backend | ✅             |                        |                                                    |
 | rollup-node             | ✅                       | ✅                      | ✅                                                  |
-| l1-explorer             | ✅                       |                        |                                                    |
-| l2-sequencer            | ✅                       | ✅                      | ✅                                                  |
-| l2-rpc                  | ✅                       |                        | ✅                                                  |
-| l2-bootnode             | ❔  |                        | ✅                                                  |
-| loki-stack              | ✅                       |                        | ⚠️ |
-| blockscout-sc-verifier  | ❔ |                        |                                                    |
 | rpc-gateway             | ✅                       |                        | ✅                                                  |
-| postgresql              | ✅                       | ⚠️                      | ⚠️   |
-| kube-prometheus-stack   | ✅                       |                        |                                                    |
 
 {/* | contracts               | ✅                       | ✅ [^2]                 | ✅                                                  | */}
 
