@@ -26,6 +26,7 @@
     "@astrojs/partytown": "^2.0.4",
     "@astrojs/prism": "^3.0.0",
     "@astrojs/tailwind": "^5.1.0",
+    "@cookbookdev/docsbot": "^4.21.5",
     "@nanostores/preact": "^0.3.1",
     "astro-auto-import": "^0.4.2",
     "astro-expressive-code": "^0.35.3",

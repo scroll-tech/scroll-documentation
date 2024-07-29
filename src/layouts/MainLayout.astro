@@ -10,6 +10,7 @@ import * as CONFIG from "../config"
 import Footer from "~/components/Footer/Footer.astro"
 import { changeLanguage } from "i18next"
 import { ViewTransitions } from "astro:transitions"
+import AskCookbook from "~/components/AskCookbook.astro"
 
 const { content = {}, frontmatter } = Astro.props
 // Astro.props?.headings is for .mdx pages, Astro.props?.content?.astro.headings is for .md pages
@@ -248,5 +249,6 @@ changeLanguage(content.lang)
         import("../scripts/link-to-wallet.ts")
       }
     </script> -->
+    <AskCookbook />
   </body>
 </html>
