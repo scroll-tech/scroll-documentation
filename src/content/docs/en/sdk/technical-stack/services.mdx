@@ -57,10 +57,9 @@ Below, we describe three configurations for services:
 | blockscout-sc-verifier  | ❔ |                        |                                                    |
 | bridge-history-api [^1]     | ✅                       | ✅                | ✅                                                  |
 | bridge-history-fetcher [^1] | ✅                       | ✅             | ✅                                                  |
-| chain-monitor           |                         |                        | ✅                                                  |
+| chain-monitor           | ✅                        | ✅                       | ✅                                                  |
 | coordinator-api [^2]                           |                         | | ✅                                                  |
 | coordinator-cron [^2]       |                         |                        | ✅                                                  |
-| event-watcher           | ✅                       | ❔  | ❔                                                  |
 | frontends               | ✅                       |                        | ⚠️                                                  |
 | gas-oracle              | ✅                       | ✅                      | ✅                                                  |
 | grafana                 | ✅                       |                        |  ⚠️                                                  |
@@ -77,6 +76,7 @@ Below, we describe three configurations for services:
 | rpc-gateway             | ✅                       |                        | ✅                                                  |
 
 {/* | contracts               | ✅                       | ✅ [^2]                 | ✅                                                  | */}
+{/* | event-watcher           | ✅                       | ❔  | ❔                                                  | */}
 
 [^1]: Services necessary for claiming funds bridged from L2 to L1 and used by bridge frontend. Could be replaced by [Bridge History SDK](https://github.com/scroll-tech/scroll-bridge-sdk) for other usage.
 [^2]: Only necessary for chains after testnet, when proof generation is needed.
@@ -124,7 +124,7 @@ The [Coordinator API](https://github.com/scroll-tech/scroll/tree/develop/coordin
 
 The [Coordinator Cron](https://github.com/scroll-tech/scroll/tree/develop/coordinator) is a background job that monitors proving tasks for timeout and marks batches (aggregation tasks) as ready once all sub-proofs are ready.
 
-#### Event Watcher (`event-watcher`)
+#### Event Watcher (`event-watcher`) *(deprecated)*
 
 The Event Watcher is an Indexer that monitors rollup events on L1. It keeps track of important events occurring on the base layer. TODO: what are these events?
 

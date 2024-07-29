@@ -96,7 +96,7 @@ curl --location 'http://l1-devnet.scrollsdk/' \
 
 <Aside type="tip">
 
-To fund an L2 address directly, you can run the command below, replacing the RPC and setting a private key of an account funded on L1 and a recipient address on L2.
+To fund an L2 address directly via the L1 bridge, you can run the command below, replacing the RPC and setting a private key of an account funded on L1 and a recipient address on L2.
 
 ```bash
 cast send --rpc-url https://rpc2.sepolia.org  --private-key "$PRIVATE_KEY" "$L1_GATEWAY_ROUTER_PROXY_ADDR" "depositETH(address,uint256,uint256)" "$L2_RECIPENT_ADDR" "1ether" "300000" --value "1.1ether"
