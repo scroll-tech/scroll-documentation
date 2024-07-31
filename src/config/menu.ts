@@ -47,13 +47,13 @@ export const MENU: MenuItems = {
     { text: "Teknoloji", link: "/tr/technology", section: "technology" },
     { text: "Öğren", link: "/tr/learn", section: "learn" },
   ],
-  pt_br: [
+  pt: [
     {
       text: "Primeiros Passos",
       link: "/en/getting-started/overview",
       section: "gettingStarted",
     },
-    { text: "Desenvolvedores", link: "/pt-br/developers", section: "developers" },
+    { text: "Desenvolvedores", link: "/pt/developers", section: "developers" },
     { text: "Tecnologia", link: "/en/technology", section: "technology" },
     { text: "Aprender", link: "/en/learn", section: "learn" },
   ]
