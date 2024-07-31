@@ -50,7 +50,7 @@ export const MENU: MenuItems = {
   pt_br: [
     {
       text: "Primeiros Passos",
-      link: "/pt-br/getting-started/overview",
+      link: "/en/getting-started/overview",
       section: "gettingStarted",
     },
     { text: "Desenvolvedores", link: "/pt-br/developers", section: "developers" },
