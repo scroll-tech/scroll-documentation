@@ -33,6 +33,8 @@ This guide does not include running the coordinator or a prover. The coordinator
   <div slot="title">Updates to the Guide</div>
   <span>
 
+  - July 31, 2024
+    - Adding additional `make` commands and `minikube` config
   - June 26, 2024
     - Minor typography fixes i.e. `docker v` to `docker -v`
   - June 19, 2024
@@ -61,12 +63,27 @@ This guide does not include running the coordinator or a prover. The coordinator
       - `brew install helm`
     - [docker-mac-net-connect](https://github.com/chipmk/docker-mac-net-connect)
       - `brew install chipmk/tap/docker-mac-net-connect`
-3. You should now be able to open a terminal and run the following:
+3. *Optional:* Install dependencies for example helper scripts
+    - [yq](https://mikefarah.gitbook.io/yq)
+      - `brew install yq`
+    - [Foundry](https://getfoundry.sh/)
+      - `curl -L https://foundry.paradigm.xyz | bash`
+4. You should now be able to open a terminal and run the following:
     - `docker -v`
     - `kubectl version`
     - `minikube status`
     - `helm version`
 </Steps>
+
+<Aside type="tip" note="Setting Default Resources for `minikube`">
+By default, minikube is allocated 2 CPU and 4GB RAM. For best performance, you can set higher resource limits before starting minikube.
+
+```bash
+minikube config set cpus 8
+minikube config set memory 8192
+```
+
+</Aside>
 
 ### Starting minikube
 
@@ -133,15 +150,39 @@ These are all a work-around for ingress-dns not working on arm MacOS and hopeful
 
 ## After Launching the Stack
 
+### Funding SDK Addresses
+
+You will need to provide funds to the following accounts:
+
+  - `DEPLOYER_ADDR` *(only needs funded on L1)*
+  - `L1_COMMIT_SENDER_ADDR`
+  - `L1_FINALIZE_SENDER_ADDR`
+  - `L1_GAS_ORACLE_SENDER_ADDR`
+  - `L2_GAS_ORACLE_SENDER_ADDR` *(funded after L2 chain deployment)*
+
+If you installed the necessary prerequisites, you can run the example script from the repo's base directory.
+
+```bash
+chmod +x examples/*.sh
+./example/anvil-fund-accounts.sh
+```
+
 ### Other Useful Commands
 
 `kubectl get pods` will show all the active pods and their status.
 
 `kubectl get ingress` will show all the exposed services and URIs.
 
-`helm uninstall scroll-stack` will stop all services.
+`make uninstall` will stop all services.
 
 `minikube dashboard` launches a WebUI for exploring the kubernetes cluster and the various pods, volumes and ingresses without learning all the CLI commands.
+
+Other example scripts can be used to generate traffic on the L1 or L2 to produce blocks more quickly. Try `./examples/l2-generate-txs.sh`.
+
+If you need to update a specific service's config file:
+  1. Make any necessary changes to the config or helm charts
+  2. Run `make upgrade`
+  3. Delete the running pod by running `kubectl delete pod [pod-name]`
 
 ### Pointing DNS Requests to the Cluster
 
@@ -149,14 +190,16 @@ Running `kubectl get ingress` should show all the domains setup within the clust
 
 ```
 ➜  scroll-stack git:(develop) ✗ kubectl get ingress
-NAME                 CLASS   HOSTS                          ADDRESS        PORTS   AGE
-blockscout           nginx   blockscout.scrollsdk           192.168.49.2   80      5h3m
-bridge-history-api   nginx   bridge-history-api.scrollsdk   192.168.49.2   80      5h3m
-frontends            nginx   frontends.scrollsdk            192.168.49.2   80      5h3m
-grafana              nginx   grafana.scrollsdk              192.168.49.2   80      5h3m
-l1-devnet            nginx   l1-devnet.scrollsdk            192.168.49.2   80      5h3m
-l1-explorer          nginx   l1-devnet-explorer.scrollsdk   192.168.49.2   80      5h3m
-l2-rpc               nginx   l2-rpc.scrollsdk               192.168.49.2   80      5h3m
+NAME                      CLASS   HOSTS                               ADDRESS        PORTS   AGE
+blockscout                nginx   blockscout.scrollsdk                192.168.49.2   80      5h3m
+bridge-history-api        nginx   bridge-history-api.scrollsdk        192.168.49.2   80      5h3m
+frontends                 nginx   frontends.scrollsdk                 192.168.49.2   80      5h3m
+grafana                   nginx   grafana.scrollsdk                   192.168.49.2   80      5h3m
+l1-devnet                 nginx   l1-devnet.scrollsdk                 192.168.49.2   80      5h3m
+l1-explorer               nginx   l1-devnet-explorer.scrollsdk        192.168.49.2   80      5h3m
+l2-rpc                    nginx   l2-rpc.scrollsdk                    192.168.49.2   80      5h3m
+rollup-explorer-backend   nginx   rollup-explorer-backend.scrollsdk   192.168.49.2   80      5h3m
+rpc-gateway               nginx   l2-rpc-gateway.scrollsdk            192.168.49.2   80      5h3m
 ```
 
 Now, we’ll follow the instructions from [the minikube docs](https://minikube.sigs.k8s.io/docs/handbook/addons/ingress-dns/#Mac) for setting up our local machine to use our cluster to resolve all `.scrollsdk` domain requests.
@@ -216,7 +259,6 @@ You should now be able to explore the stack on your local machine and using your
   - Bridging UI has a gas bug as of June 13, 2024
 - [Rollup Explorer](http://frontends.scrollsdk/rollupscan?page=1&per_page=10)
   - Shows committed batches and finalized batches
-  - **_API NOT CURRENTLY WORKING AS OF June 13, 2024_**
 - [Granfana Dashboards](http://grafana.scrollsdk/)
   - Login
     - User: `admin`

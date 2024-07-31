@@ -27,7 +27,7 @@ The Ansible playbook for running a prover is available in the GitHub repo [here]
 
 ### Prequisities
 
-- One ubuntu server with at least 350GB memory, 32 cores, and a GPU with at least 20GB memory.
+- One ubuntu server with at least 256GB memory, 32 cores, and a GPU with at least 20GB memory.
 - One user with `sudo` access, no password, and all permissions -- or you can change the [shared-vars.yaml](https://github.com/scroll-tech/scroll-sdk/blob/develop/ansible/playbooks/vars/shared-vars.yaml) to add the `ansible_become_password` variable in your file.
 
 ### Configuration
