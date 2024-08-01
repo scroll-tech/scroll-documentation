@@ -50,11 +50,11 @@ export const MENU: MenuItems = {
   pt: [
     {
       text: "Primeiros Passos",
-      link: "/en/getting-started/overview",
+      link: "/pt/getting-started/overview",
       section: "gettingStarted",
     },
     { text: "Desenvolvedores", link: "/pt/developers", section: "developers" },
-    { text: "Tecnologia", link: "/en/technology", section: "technology" },
-    { text: "Aprender", link: "/en/learn", section: "learn" },
+    { text: "Tecnologia", link: "/pt/technology", section: "technology" },
+    { text: "Aprender", link: "/pt/learn", section: "learn" },
   ]
 }
