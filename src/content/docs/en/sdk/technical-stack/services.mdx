@@ -57,7 +57,8 @@ Below, we describe three configurations for services:
 | blockscout-sc-verifier  | ❔ |                        |                                                    |
 | bridge-history-api [^1]     | ✅                       | ✅                | ✅                                                  |
 | bridge-history-fetcher [^1] | ✅                       | ✅             | ✅                                                  |
-| chain-monitor           | ✅                        | ✅                       | ✅                                                  |
+| chain-monitor           |                         | ✅                       | ✅                                                  |
+| contracts               | ✅                       | ✅                  | ✅                                                  |
 | coordinator-api [^2]                           |                         | | ✅                                                  |
 | coordinator-cron [^2]       |                         |                        | ✅                                                  |
 | frontends               | ✅                       |                        | ⚠️                                                  |
@@ -75,7 +76,6 @@ Below, we describe three configurations for services:
 | rollup-node             | ✅                       | ✅                      | ✅                                                  |
 | rpc-gateway             | ✅                       |                        | ✅                                                  |
 
-{/* | contracts               | ✅                       | ✅ [^2]                 | ✅                                                  | */}
 {/* | event-watcher           | ✅                       | ❔  | ❔                                                  | */}
 
 [^1]: Services necessary for claiming funds bridged from L2 to L1 and used by bridge frontend. Could be replaced by [Bridge History SDK](https://github.com/scroll-tech/scroll-bridge-sdk) for other usage.
@@ -108,12 +108,16 @@ The Balance Checker is a simple service to track and monitor the balances of som
 
 The [Chain Monitor](https://github.com/scroll-tech/chain-monitor) is a security service that short-circuits batch finalization if certain invariants are not satisfied. While optional, it is recommended for enhanced security.
 
+<Aside type="danger">
+As of July 31, 2024, `chain-monitor` does not allow for finalization in any context. This is a known issue that we're looking into.
+</Aside>
+
 #### Contracts (`contracts`)
 
 The Contracts service contains scripts to deploy necessary [chain contracts](https://github.com/scroll-tech/scroll-contracts) (rollup and bridge) on both L1 and L2. It ensures that the required smart contracts are in place for the Scroll SDK to function properly.
 
 <Aside type="tip">
-To be removed as a service and migrated to a docker image that runs once via Make command.
+In future iterations, this may be removed as a service and migrated to a docker image that runs once via Make command.
 </Aside>
 
 #### Coordinator API (`coordinator-api`)
@@ -151,6 +155,10 @@ The Rollup Node (also called the [Rollup Relayer](https://github.com/scroll-tech
 #### L1 Explorer (`l1-explorer`)
 
 The L1 Explorer is a [Blockscout]((https://docs.blockscout.com/)) instance for providing a block explorer interface for the L1 devnet service. It allows users to inspect transactions and blocks on the base layer when deployments are made to local networks.
+
+<Aside type="danger">
+L1 Explorer does not currently function correctly -- blocks and transactions are not successfully indexed and do not display on the site.
+</Aside>
 
 #### L2 Sequencer (`l2-sequencer`)
 
@@ -279,4 +287,4 @@ flowchart LR
 		GR[grafana]
 		LKI[loki]
 	end */}
-</span>
+

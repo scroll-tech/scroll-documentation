@@ -55,7 +55,9 @@ During deployment, a simulation is first done to determine what address a contra
 
 {/* <!-- TODO: modify URL to develop branch --> */}
 
-Then, after the `scroll-stack` chart is installed during `make install`, you will need to fund your SDK accounts and run `make deploy-contracts` to deploy all contracts on L1 and L2 using actual transactions.
+{/* Then, after the `scroll-stack` chart is installed during `make install`, you will need to fund your SDK accounts and run `make deploy-contracts` to deploy all contracts on L1 and L2 using actual transactions. */}
+
+Then, during `make install`, the `contracts` pod will connect to the cluster's RPCs and deploy the necessary contracts. 
 
 To view the complete logs from the deployment process, see the `broadcast` folder in `/charts/scroll-stack/`.
 
