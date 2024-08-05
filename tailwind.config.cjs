@@ -24,7 +24,7 @@ module.exports = {
       },
       backgroundColor: {
         normal: "#FFF0DD",
-        "dark-normal": "#262626",
+        "dark-normal": "#1D1D1D",
         highlight: "#FFDEB5",
         "dark-highlight": "#3b3b3b",
         "callout-note": "#FFF8F3",
@@ -171,7 +171,13 @@ module.exports = {
 
         // theme
         black: "#101010",
-        white: "#FFF8F3",
+        // white: "#FFF8F3",
+
+        white: {
+          DEFAULT: "#FFF8F3",
+          800: "#DADADA",
+          900: "#EDEDED",
+        },
 
         "pure-black": "#000",
         "pure-white": "#fff",

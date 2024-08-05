@@ -26,14 +26,14 @@ For open-source contributors and infrastructure builders, please contact our tea
 | `BLOCKHASH`                 | `block.blockhash`   | Returns `keccak(chain_id \|\| block_number)` for the last 256 blocks.                                      |
 | `COINBASE`                  | `block.coinbase`    | Returns the pre-deployed fee vault contract address. See [Scroll Contracts](/developers/scroll-contracts). |
 | `DIFFICULTY` / `PREVRANDAO` | `block.difficulty`  | Returns 0.                                                                                                 |
-| `BASEFEE`                   | `block.basefee`     | Disabled.[^eip1559] If the opcode is encountered, the transaction will be reverted.                        |
 | `SELFDESTRUCT`              | `selfdestruct`      | Disabled. If the opcode is encountered, the transaction will be reverted.[^willadpot]                      |
 
 <Aside type="caution" title="">
-Opcodes from the Cancun upgrade are not yet available on Scroll, including `MCOPY`, `TSTORE`, `TLOAD`, `BLOBHASH` and `BLOBBASEFEE`. Additionally, [EIP-4788](https://eips.ethereum.org/EIPS/eip-4788) for accessing the Beacon Chain block root is not supported. We recommend using `shanghai` as your EVM target and avoiding using a Solidity version higher than `0.8.23`.
+Opcodes related to EIP-4844, like `BLOBHASH` and `BLOBBASEFEE`, are not yet available on Scroll. Additionally, [EIP-4788](https://eips.ethereum.org/EIPS/eip-4788) for accessing the Beacon Chain block root is not supported.
 </Aside>
 
-[^eip1559]: We have currently disabled EIP-1559 on Scroll.
+We support the `cancun` EVM target and the latest Solidity version `0.8.26`.
+
 [^willadpot]: Will change to adopt Ethereum’s solution in the future.
 
 ## EVM Precompiles
@@ -91,12 +91,13 @@ When verifying `EXTCODESIZE`, it is expensive to load the whole contract data in
 
 ## Block Time
 
-Scroll aims for a constant block time of 3 seconds. This is shorter and more consistent than the 12 seconds used in the Ethereum under ideal conditions.
+To improve the throughput of the Scroll chain, we introduced a dynamic block time in our [Curie upgrade](/technology/overview/scroll-upgrades#curie-upgrade). During the congestion period, a block will be sealed once the transactions in the block reach the circuit limit instead of waiting for the 3-second interval. During normal hours, blocks will still be sealed at 3-second interval to ensure a consistent user experience.
 
-This was chosen for two reasons:
+## Transaction Ordering
 
-- Having faster, constant block time results in quicker feedback and a better user experience.
-- As we optimize the zkEVM circuits in our testnets, even if we maintain a smaller gas limit per block or batch, we can still reach higher throughput than Ethereum.
+Similarly to Ethereum, the Scroll sequencer aims to prioritize executable transactions based on their "tip" (priority fee). In most cases, transactions will be included in the next block in decreasing order of their tips.
+
+However, just like in Ethereum, this ordering is not guaranteed by the protocol, and some blocks might diverge from it. In particular, during periods of low mempool congestion, the sequencer will process transactions on a first-come-first-served basis, so some transactions might precede others with higher tip in the same block.
 
 ## Future EIPs
 

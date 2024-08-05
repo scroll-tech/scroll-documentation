@@ -4,6 +4,7 @@ import LinkArrowSvg from "~/assets/svgs/home/home-link-arrow.svg?raw"
 import DiscordSvg from "~/assets/svgs/home/Discord.svg?raw"
 import ForumSvg from "~/assets/svgs/home/Forum.svg?raw"
 import ContributeSvg from "~/assets/svgs/home/Contribute.svg?raw"
+import NoteSvg from "~/assets/svgs/home/Note.svg?raw"
 
 const mediaList = [
   {
@@ -11,6 +12,12 @@ const mediaList = [
     name: "Discord'umuza Katılın",
     content: "Diğer Scroll geliştiricileri ve kullanıcılarıyla bağlantı kurun.",
     link: "https://discord.gg/scroll",
+  },
+  {
+    icon: NoteSvg,
+    name: "İletişime geç",
+    content: "Projeniz için daha fazla desteğe ihtiyacınız olursa doğrudan bizimle iletişime geçin.",
+    link: "https://tally.so/r/waxLBW",
   },
   {
     icon: ForumSvg,
@@ -60,7 +67,7 @@ const mediaList = [
 
   .medias {
     display: flex;
-    gap: 3rem;
+    gap: 1.6rem;
     margin-top: 90px;
   }
   .media-item {
@@ -91,7 +98,7 @@ const mediaList = [
     height: 23px;
     background-size: contain;
     align-self: flex-end;
-    @apply text-black dark:text-white;
+    @apply text-black dark:text-white-800;
   }
 
   .media-item-icon {
@@ -110,7 +117,7 @@ const mediaList = [
   .media-item-content {
     font-size: 20px;
     line-height: normal;
-    height: 56px;
+    height: 84px;
   }
 
   @media screen and (max-width: 50em) {
