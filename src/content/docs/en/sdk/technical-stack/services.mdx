@@ -229,7 +229,6 @@ flowchart LR
 		RN{{rollup-node}}:::L2S
 		GO{{gas-oracle}}:::L2S
 
-		EW{{event-watcher}}:::L2S
 		CM{{chain-monitor}}:::L2S
 		BHF{{bridge-history-fetcher}}:::L2S
 		CC[coordinator-cron]
@@ -240,7 +239,6 @@ flowchart LR
 		L2 -.- L2B
 
 		DB --> GO
-		DB --> EW
 		DB --> CC
 		DB --> CM
 		DB --> BHF
@@ -288,3 +286,5 @@ flowchart LR
 		LKI[loki]
 	end */}
 
+
+</span>
