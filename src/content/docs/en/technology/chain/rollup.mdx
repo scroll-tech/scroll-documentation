@@ -123,8 +123,48 @@ This section describes the codec of three data structures in the Rollup contract
 The latest update to the codec was introduced in the [Bernoulli upgrade](/technology/overview/scroll-upgrades#bernoulli-upgrade).
 
 <Tabs sharedStore="upgrades" client:visible>
+<Fragment slot="tab.darwin">darwin</Fragment>
 <Fragment slot="tab.bernoulli">bernoulli</Fragment>
 <Fragment slot="tab.archimedes">archimedes</Fragment>
+  <Fragment slot="panel.darwin">
+    <slot name="darwin" />
+    #### `BatchHeader` Codec
+
+    | Field                    | Bytes   | Type         | Offset | Description                                                     |
+    | ------------------------ | ------- | -----------  | ------ | --------------------------------------------------------------- |
+    | `version`                | 1       | `uint8`      | 0      | The batch header version                                        |
+    | `batchIndex`             | 8       | `uint64`     | 1      | The index of the batch                                          |
+    | `l1MessagePopped`        | 8       | `uint64`     | 9      | The number of L1 messages popped in the batch                   |
+    | `totalL1MessagePopped`   | 8       | `uint64`     | 17     | The number of total L1 messages popped after the batch          |
+    | `dataHash`               | 32      | `bytes32`    | 25     | The data hash of the batch                                      |
+    | `blobVersionedHash`      | 32      | `bytes32`    | 57     | The versioned hash of the blob with this batch’s data           |
+    | `parentBatchHash`        | 32      | `bytes32`    | 89     | The parent batch hash                                           |
+    | `lastBlockTimestamp`     | 8       | `uint64`     | 121    | The timestamp of the last block in this batch                   |
+    | `blobDataProof`          | 64      | `bytes32[2]` | 129    | The KZG challenge point evaluation proof                        |
+
+    #### `Chunk` Codec
+
+    | Field            | Bytes   | Type           | Offset    | Description                                                                                                                                       |
+    | ---------------- | ------- | -------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | `numBlocks`      | 1       | `uint8`        | 0         | The number of blocks in the chunk                                                                                                                 |
+    | `block[0]`       | 60      | `BlockContext` | 1         | The block information of the 1st block                                                                                                            |
+    | ...              | ...     | ...            | ...       | ...                                                                                                                                               |
+    | `block[i]`       | 60      | `BlockContext` | `60*i+1`  | The block information of `i+1`-th block                                                                                                           |
+    | ...              | ...     | ...            | ...       | ...                                                                                                                                               |
+    | `block[n-1]`     | 60      | `BlockContext` | `60*n-59` | The block information of the last block                                                                                                           |
+
+    #### `BlockContext` Codec
+
+    | Field             | Bytes | Type      | Offset | Description                                                                         |
+    | ----------------- | ----- | --------- | ------ | ----------------------------------------------------------------------------------- |
+    | `blockNumber`     | 8     | `uint64`  | 0      | The block number                                                                    |
+    | `timestamp`       | 8     | `uint64`  | 8      | The block time                                                                      |
+    | `baseFee`         | 32    | `uint256` | 16     | The base fee of this block. Currently, it is always 0, because we disable EIP-1559. |
+    | `gasLimit`        | 8     | `uint64`  | 48     | The gas limit of this block                                                         |
+    | `numTransactions` | 2     | `uint16`  | 56     | The number of transactions in this block, including both L1 & L2 txs                |
+    | `numL1Messages`   | 2     | `uint16`  | 58     | The number of L1 messages in this block    
+  
+  </Fragment>
   <Fragment slot="panel.bernoulli">
     <slot name="bernoulli" />
 
