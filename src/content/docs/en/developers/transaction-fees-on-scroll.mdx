@@ -20,6 +20,7 @@ Compared to Ethereum mainnet, Scroll introduces some new dimensions to transacti
 
 - **L2 fee**
   - Calculated in the same manner as on the L1, equaling `gas_price * gas_used`
+  - `gas_price` is based on the `baseFeePerGas` of the block after the Curie upgrade, and `maxPriorityFeePerGas` supplied from the user.
 - **L1 fee**
   - This additional fee covers sending data to L1 for data availability. Transactions initiated on the L1 do not pay this fee.
   - It is calculated based on the size of the transaction's calldata
@@ -42,15 +43,17 @@ Transactions on Scroll, like on Ethereum, must pay the cost of executing their c
 
 ### Calculating the Execution Fee
 
+After the Curie Upgrade, Scroll transactions can take advantage of EIP-1559 like fees using `maxFeePerGas` and `maxPriorityFeePerGas`.
+
 The L2 execution fee is straightforward:
 
 ```javascript
-l2TransactionExecutionFee = l2TransactionGasUsed * l2TransactionGasPrice
+l2TransactionExecutionFee = l2TransactionGasUsed * (baseFeePerGas + maxPriorityFeePerGas)
 ```
 
-The total fee depends on what the transaction does (`l2TransactionGasUsed`) as well as the current market conditions (`l2TransactionGasPrice`). Users set the gas price, and the "gas used" is assessed by calling the `estimateGas` endpoint on a Scroll node.
+The total fee depends on what the transaction does (`l2TransactionGasUsed`) as well as the current market conditions (`baseFeePerGas + maxPriorityFeePerGas`).
 
-In other words, the execution fee is calculated precisely like pre-[EIP1559](https://eips.ethereum.org/EIPS/eip-1559) Ethereum.
+Users wishing to use Legacy transactions should set `gasPrice` to a combination of the `baseFee` and the estimated `maxPriorityFeePerGas`. Using `eth_gasPrice` will return an estimate for `maxPriorityFeePerGas` which itself could be too low to execute transactions.
 
 ## L1 Fee
 
