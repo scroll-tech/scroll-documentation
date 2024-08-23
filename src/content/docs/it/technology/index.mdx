@@ -1,0 +1,26 @@
+---
+section: technology
+date: Last Modified
+title: "Architettura di Scroll"
+lang: "it"
+permalink: "technology"
+whatsnext:
+  { "Chain di Scroll": "/it/technology/chain/accounts", "Bridge": "/it/technology/bridge/cross-domain-messaging", "Sequenziatore": "/it/technology/sequencer/execution-node", "zkEVM": "/it/technology/zkevm/zkevm-overview" }
+---
+
+import ClickToZoom from "../../../../components/ClickToZoom.astro"
+import Architecture from "./_images/arch.png"
+
+<ClickToZoom src={Architecture} alt="Architecture" />
+
+Come illustrato nella figura sopra, la chain Scroll è composta da tre livelli:
+
+- **Settlement Layer**: fornisce la disponibilità dei dati e l'ordinamento per la chain canonica di Scroll, verifica le prove di validità e consente agli utenti e alle dapp di inviare messaggi e asset tra Ethereum e Scroll. Utilizziamo Ethereum come Livello di Regolamento e implementiamo il contratto ponte e il rollup su Ethereum.
+  
+- **Sequencing Layer**: include un *Nodo di Esecuzione* che esegue le transazioni inviate al sequencer di Scroll e le transazioni inviate al contratto ponte L1, producendo blocchi L2, e un *Nodo di Rollup* che raggruppa le transazioni, pubblica i dati delle transazioni e le informazioni dei blocchi su Ethereum per la disponibilità dei dati, e invia prove di validità a Ethereum per la finalità.
+
+- **Proving Layer**: è composto da un pool di provers responsabili della generazione delle prove di validità zkEVM che verificano la correttezza delle transazioni L2, e da un coordinatore che assegna i compiti di prova ai provers e invia le prove al Nodo di Rollup per la finalizzazione su Ethereum.
+
+Questa sezione della documentazione fornisce informazioni complete sulla specifica del protocollo Scroll, sul protocollo di bridge, sul sequencer e sul circuito zkEVM.
+
+*Nel resto di questa sezione, L1 si riferirà a Ethereum, mentre L2 si riferirà a Scroll.*

@@ -1,0 +1,73 @@
+---
+section: learn
+date: Last Modified
+title: "Introduzione allo Zero Knowledge"
+lang: "it"
+permalink: "learn/zero-knowledge/introduction-to-zero-knowledge"
+whatsnext: { "Schemi di Commitments Polinomiali": "/it/learn/zero-knowledge/polynomial-commitment-schemes" }
+excerpt: 'Negli ultimi dieci anni, un campo della crittografia chiamato "zero-knowledge" Promette nuovi modi per costruire applicazioni e consente ai protocolli di aumentare l efficienza, la sicurezza e la privacy.'
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+Negli ultimi dieci anni, un campo della crittografia chiamato "zero knowledge" ha fatto rapidi progressi. Promette nuovi modi per costruire applicazioni e consente ai protocolli di aumentare l'efficienza, la sicurezza e la privacy.
+
+Vediamo cosa rende il campo delle prove di zero knowledge così entusiasmante e quali problemi aiuta a risolvere per gli ingegneri.
+
+## Blockchain senza fiducia e verificabilità
+
+Le blockchain generalmente funzionano elaborando le transazioni inviate dagli utenti. Queste transazioni di solito innescano alcuni calcoli che la blockchain deve eseguire.
+
+Affinché la blockchain sia trustless (cioè non dipendente dalla fiducia di una parte specifica), i partecipanti alla rete devono verificare che le transazioni siano valide e che i calcoli risultanti siano stati eseguiti correttamente.
+
+Verificare che la transazione sia valida richiede generalmente la verifica della firma digitale, che conferma che il mittente dichiarato della transazione sia effettivamente l'autore della transazione. Verificare che il calcolo di una transazione sia stato eseguito correttamente richiede generalmente di rieseguire la transazione localmente.
+
+## Limitazioni alla verificabilità
+
+Questa metodologia di verifica di ogni transazione si interrompe in situazioni in cui un partecipante non può rieseguire il calcolo. Un partecipante potrebbe non essere in grado di rieseguire il calcolo per un paio di ragioni: (1) potrebbe essere che determinati dati non debbano essere resi disponibili (per ragioni di privacy), oppure (2) potrebbe essere troppo costoso per un computer partecipante rieseguire tutte le transazioni - questa seconda ragione è particolarmente rilevante quando si considerano blockchain ad alta capacità con un gran numero di transazioni al secondo.
+
+## Il potere delle prove di zero knowledge
+
+Le prove di zero knowledge (ZKP) hanno il potere di superare queste limitazioni.
+
+Le ZKP consentono ai partecipanti di verificare i risultati di un calcolo mentre (1) preservano la privacy dei dati sensibili utilizzati nel calcolo, e (2) rendono la verifica significativamente più economica rispetto alla riesecuzione del calcolo. Queste due proprietà delle ZKP sono chiamate rispettivamente **zero knowledge** e **succintezza**.
+
+Le proprietà sopra descritte delle ZKP sono estremamente utili nel contesto della verificabilità per le blockchain trustless. Senza le ZKP, i partecipanti devono rieseguire ogni calcolo risultante da una transazione. Questo richiede che tutti i partecipanti vedano tutti i dati (potenzialmente sensibili) utilizzati in ogni calcolo e limita anche la capacità dell'intero sistema. Con le ZKP, una parte può eseguire il calcolo e quindi generare una prova che il calcolo è stato eseguito correttamente. Altri partecipanti possono verificare che il calcolo sia stato eseguito correttamente **verificando che la prova sia valida**, anziché rieseguire il calcolo essi stessi. Verificare la prova (1) non rivela informazioni sui dati sensibili utilizzati nel calcolo originale, e (2) è significativamente meno costoso dal punto di vista computazionale rispetto alla riesecuzione del calcolo originale. Queste due proprietà hanno il potenziale di consentire privacy e scalabilità per le blockchain trustless.
+
+## Circuiti, Prove e Verificatori
+
+In pratica, le ZKP possono essere abbastanza complesse da implementare in un sistema, ma a un livello alto, è importante capire che le prove di zero knowledge hanno alcuni componenti: un circuito, una prova e un verificatore.
+
+Il circuito è un programma che prende in input i dati e verifica che i dati siano validi secondo alcuni "vincoli" che i dati devono soddisfare. I dati di input possono essere pubblici (conosciuti da tutti), privati (conosciuti solo dal provante), o misti (alcuni input sono pubblici e altri privati).
+
+Si può generare una prova, sostenendo che un input soddisfi il circuito. La prova non rivela informazioni sugli input privati ed è di dimensioni piuttosto ridotte.
+
+Il verificatore può controllare (1) che la prova sia valida, (2) che la prova corrisponda ai vincoli stabiliti dal circuito (e non sia solo una prova fasulla), e (3) che gli input pubblici utilizzati per generare la prova corrispondano a quelli utilizzati dal verificatore. Si noti che questo controllo eseguito dal verificatore è generalmente un calcolo economico.
+
+<Aside type="tip" title="">
+Potresti notare che il verificatore non ha un output oltre a "prova valida" o "prova non valida". Ricorda, il verificatore conferma solo altre computazioni — in pratica, gli "output" di una funzione potrebbero effettivamente finire per essere input aggiuntivi a un circuito e verificatore.
+</Aside>
+
+### Circuiti, Prove e Verificatori — un esempio
+
+Prendiamo il Sudoku come esempio. Supponiamo che ci sia un puzzle di Sudoku e Alice voglia dimostrare a Bob che conosce una soluzione al puzzle, ma non vuole rivelare quale sia la soluzione.
+
+In questo caso, il puzzle specifico sarà un input pubblico (sia Alice che Bob lo conoscono) e la soluzione è un input privato (Alice lo conosce, ma lo terrà privato da Bob). Il **circuito** prenderebbe entrambi questi input e verificherebbe che la soluzione sia corretta controllandola nel modo standard, riga per riga, colonna per colonna, ecc. Il circuito in questo modo "vincola" che la soluzione dell'input privato sia effettivamente una soluzione valida per il puzzle dell'input pubblico, ed è "soddisfatto" solo quando il controllo della soluzione è superato.
+
+Si può quindi generare una **prova** che afferma che Alice conosce un input che soddisfa il circuito per il particolare puzzle (l'input pubblico).
+
+La prova, insieme al puzzle, potrebbe essere passata a Bob, che potrebbe quindi usare un **verificatore** corrispondente al circuito di verifica del Sudoku per valutare se la prova è valida e quindi se Alice conosce effettivamente una soluzione al puzzle. Criticamente, Bob non ottiene alcuna conoscenza della soluzione di Alice, ma può comunque verificare che lei conosca una soluzione valida!
+
+## Prove di zero knowledgee Blockchain
+
+Una delle principali motivazioni per i recenti progressi nelle ZKP è la loro applicazione alle blockchain. Due delle sfide chiave che le blockchain decentralizzate devono affrontare sono la privacy e la scalabilità: tutti i dati sono pubblici e ogni nodo della rete deve rieseguire ogni calcolo sulla rete. Le ZKP possono aiutare a risolvere entrambe queste sfide.
+
+Mentre ci sono diversi progetti che utilizzano la proprietà di zero knowledge delle ZKP per costruire applicazioni che preservano la privacy, noi di Scroll utilizziamo solo la proprietà di succintezza delle ZKP per scalare Ethereum.
+
+## Scroll e Prove a Conoscenza Zero
+
+L'idea che alimenta Scroll è abbastanza semplice. E se potessimo usare uno smart contract di Ethereum per verificare tutti i calcoli di un'altra versione di Ethereum? Potremmo eseguire un'altra rete che fornisca accesso più rapido e più economico a una Ethereum Virtual Machine (”EVM”), ed Ethereum stesso fornirebbe la sicurezza necessaria per validare tutti i calcoli e garantire che questa altra rete non infranga le regole dell'EVM.
+
+Il resto delle sezioni Apprendi e Tecnologia spiega come funziona in maggiore dettaglio, ma a un livello semplice, ricorda che la conoscenza zero si basa sull'avere un circuito, una prova e un verificatore.
+
+Nella nostra costruzione, il circuito (in realtà un insieme di circuiti) codifica le regole dell'EVM per "vincolare" un comportamento accettabile per l'elaborazione delle transazioni in input rispetto allo stato della catena. Usando questa "zkEVM", una rete di GPU prende le transazioni per un insieme di blocchi e genera una prova. E su Ethereum, uno smart contract verifica che, per un insieme di transazioni, questa prova corrisponda al circuito sancito nello smart contract. Se è così, quelle transazioni possono essere considerate "finalizzate", la rete avanza e abbiamo creato uno spazio di blocco veloce, sicuro e conveniente per far crescere Ethereum.

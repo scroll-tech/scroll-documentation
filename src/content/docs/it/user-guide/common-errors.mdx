@@ -1,0 +1,41 @@
+---
+section: gettingStarted
+date: Last Modified
+title: "Errori Comuni"
+lang: "it"
+permalink: "user-guide/common-errors/"
+excerpt: "Stai vedendo un errore quando provi a interagire con Scroll Sepolia Testnet? Ecco alcuni errori di configurazione comuni e come risolverli rapidamente."
+---
+
+## Errore di nonce non corretto durante l'invio di una transazione in MetaMask
+
+Incontrerai questo errore quando il nonce locale memorizzato nel tuo portafoglio MetaMask è diverso dal nonce nel nodo testnet di Scroll. Potrebbe essere dovuto alla presenza di una transazione pendente recente.
+
+Per risolvere questo problema, è necessario ripristinare il proprio account in MetaMask per il Testnet di Scroll Sepolia. I passaggi per ripristinare l'account sono:
+
+1. Apri l'estensione **MetaMask** nel browser
+2. Seleziona **Scroll Sepolia Testnet** nella parte superiore
+3. Fai clic sull'icona **account** rotonda nell'angolo in alto a destra
+4. Seleziona **Impostazioni**
+5. Vai su **Avanzate**
+6. Fai clic su **Ripristina account**
+
+Non perderai alcun asset durante il ripristino dell'account MetaMask.
+
+:::caution[Attenzione]
+Rimuovere e aggiungere nuovamente una rete NON è sufficiente per risolvere questo problema: è necessario ripristinare il proprio account.
+:::
+
+## Non succede nulla quando si conferma una transazione di ponte/scambio
+
+Se non viene visualizzato alcun errore o log di console, è probabile che si tratti di un problema di nonce, per favore ripristina il tuo account MetaMask come indicato sopra a [#errore-di-nonce-non-corretto-durante-linvio-di-una-transazione-in-metamask](#errore-di-nonce-non-corretto-durante-linvio-di-una-transazione-in-metamask).
+
+## Il Block Explorer mostra "Internal server erro"
+
+Usa una finestra in incognito, oppure apri la "Developer Console" del browser e rimuovi il cookie `_explorer_key` (o tutti i cookie). [Vedi questa guida su come rimuovere i cookie](https://www.contentstack.com/docs/developers/how-to-guides/clear-caches-and-cookies-in-different-browsers/).
+
+## L'invio della quantità massima di Ether in MetaMask si traduce in un errore "Failed"
+
+Quando si invia Ether utilizzando MetaMask, se si prova a inviare l'importo "Max", si otterrà un errore "Failed". Questo perché MetaMask non tiene conto della "Commissione L1" aggiuntiva che i rollup hanno oltre alle normali commissioni di gas e non fornisce un piccolo importo necessario per pagare il gas della transazione.
+
+Per risolvere questo problema, abbassa manualmente l'importo di ether in modo che sia leggermente più piccolo di quello suggerito e la transazione andrà a buon fine.

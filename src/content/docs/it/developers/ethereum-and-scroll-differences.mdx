@@ -1,0 +1,115 @@
+---
+section: developers
+date: Last Modified
+title: "Differenze tra Scroll ed Ethereum"
+lang: "it"
+permalink: "developers/ethereum-and-scroll-differences"
+whatsnext: { "Bridging L1 & L2": "/it/developers/l1-and-l2-bridging/" }
+excerpt: "There are a number of technical details that differ between Ethereum mainnet's EVM and Scroll's modified design for a zkEVM. Below you can see those differences as they exist now."
+---
+
+import Aside from "../../../../components/Aside.astro"
+
+Alcuni dettagli tecnici differiscono tra l'EVM della mainnet di Ethereum e il design modificato di Scroll per uno zkEVM. Di seguito puoi vedere queste differenze così come esistono su Scroll e Scroll Sepolia.
+
+Per i contributori open-source e i costruttori di infrastrutture, ti preghiamo di contattare il nostro team per ulteriore supporto.
+
+<Aside type="tip" title="Non preoccuparti!">
+  Per lo sviluppatore medio di Solidity, questi dettagli non influenzeranno la tua esperienza di sviluppo.
+</Aside>
+
+## Opcodes dell'EVM
+
+| Opcode                      | Equivalente in Solidity | Comportamento su Scroll                                                                                     |
+| --------------------------- | ----------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `BLOCKHASH`                 | `block.blockhash`       | Restituisce `keccak(chain_id \|\| block_number)` per gli ultimi 256 blocchi.                                 |
+| `COINBASE`                  | `block.coinbase`        | Restituisce l'indirizzo del contratto del vault delle commissioni pre-deployed. Vedi [Scroll Contracts](/developers/scroll-contracts). |
+| `DIFFICULTY` / `PREVRANDAO` | `block.difficulty`      | Restituisce 0.                                                                                                |
+| `BASEFEE`                   | `block.basefee`         | Disabilitato.[^eip1559] Se l'opcode viene incontrato, la transazione verrà revertata.                        |
+| `SELFDESTRUCT`              | `selfdestruct`          | Disabilitato. Se l'opcode viene incontrato, la transazione verrà revertata.[^willadpot]                       |
+
+<Aside type="caution" title="">
+Gli opcode dall'aggiornamento di Cancun non sono ancora disponibili su Scroll, inclusi `MCOPY`, `TSTORE`, `TLOAD`, `BLOBHASH` e `BLOBBASEFEE`. Inoltre, [EIP-4788](https://eips.ethereum.org/EIPS/eip-4788) per accedere alla radice del blocco della Beacon Chain non è supportato. Consigliamo di utilizzare `shanghai` come target EVM e di evitare di utilizzare una versione di Solidity superiore a `0.8.23`.
+</Aside>
+
+[^eip1559]: Attualmente abbiamo disabilitato EIP-1559 su Scroll.
+[^willadpot]: Cambierà per adottare la soluzione di Ethereum in futuro.
+
+## Precompiles dell'EVM
+
+I precompiles `RIPEMD-160` (indirizzo `0x3`), `blake2f` (indirizzo `0x9`), e `point evaluation` (indirizzo `0x0a`) non sono attualmente supportati. Le chiamate a contratti precompilati non supportati verranno revertate. Abbiamo pianificato di abilitare questi precompiles nelle future hard fork.
+
+Il precompile `modexp` è supportato ma supporta solo input di dimensioni minori o uguali a 32 byte (cioè `u256`).
+
+Il precompile `ecPairing` è supportato, ma il numero di punti (set, coppie) è limitato a 4, invece di 6.
+
+Gli altri precompiles dell'EVM sono tutti supportati: `ecRecover`, `identity`, `ecAdd`, `ecMul`.
+
+### Limiti dei Precompiles
+
+A causa delle dimensioni limitate dei circuiti zkEVM, c'è un limite superiore sul numero di chiamate che possono essere fatte per alcuni precompiles. Queste transazioni non verranno revertate, ma verranno semplicemente saltate dal sequencer se non riescono a entrare nello spazio del circuito. Leggi di più sul [Circuit Capacity Checker](/en/technology/sequencer/execution-node#circuit-capacity-checker).
+
+| Precompile / Opcode | Limite | 
+| ------------------- | ----- |
+| `keccak256`         | 3157  |
+| `ecRecover`         | 119   |
+| `modexp`            | 23    |
+| `ecAdd`             | 50    |
+| `ecMul`             | 50    |
+| `ecPairing`         | 2     |
+{/* TODO: Aggiungere SHA256 dopo l'aggiornamento */}
+
+## Stato dell'Account
+
+### **Campi Aggiuntivi**
+
+Abbiamo aggiunto due campi nell'oggetto `StateAccount` corrente: `PoseidonCodehash` e `CodeSize`.
+
+```go
+type StateAccount struct {
+	Nonce    uint64
+	Balance  *big.Int
+	Root     common.Hash // merkle root of the storage trie
+	KeccakCodeHash []byte // still the Keccak codehash
+	// added fields
+	PoseidonCodeHash []byte // the Poseidon codehash
+	CodeSize uint64
+}
+```
+
+### **CodeHash**
+
+In relazione a questo, manteniamo due tipi di codehash per ciascun bytecode del contratto: il Keccak hash e il Poseidon hash.
+
+Il `KeccakCodeHash` è mantenuto per garantire la compatibilità con `EXTCODEHASH`. Il `PoseidonCodeHash` è utilizzato per verificare la correttezza dei bytecodes caricati nello zkEVM, dove l'hashing di Poseidon è molto più efficiente.
+
+### CodeSize
+
+Quando si verifica `EXTCODESIZE`, è costoso caricare tutti i dati del contratto nello zkEVM. Invece, memorizziamo la dimensione del contratto nella memoria durante la creazione del contratto. In questo modo, non è necessario caricare il codice — una prova di memoria è sufficiente per verificare questo opcode.
+
+## Tempo di Blocco
+
+Scroll mira a un tempo di blocco costante di 3 secondi. Questo è più breve e più consistente rispetto ai 12 secondi utilizzati da Ethereum nelle condizioni ideali.
+
+Questo è stato scelto per due motivi:
+
+- Avere un tempo di blocco costante e più veloce porta a un feedback più rapido e a una migliore esperienza utente.
+- Ottimizzando i circuiti zkEVM nei nostri testnet, anche se manteniamo un limite di gas più piccolo per blocco o batch, possiamo comunque raggiungere una capacità superiore rispetto a Ethereum.
+
+## Futuri EIPs
+
+Stiamo monitorando da vicino tutti gli EIP emergenti adottati da Ethereum e li adottiamo quando appropriato. Se sei interessato a ulteriori dettagli, contattaci nel [nostro forum comunitario](https://community.scroll.io) o su [Scroll Discord](https://discord.gg/scroll).
+
+## Commissioni di Transazione
+
+La commissione addebitata per le transazioni di Scroll contiene due parti:
+
+- **Commissione gas L2:** simile a L1, l'importo della commissione di esecuzione L2 è pari a `L2_gas_price * L2_gas_used`, coprendo i seguenti costi:
+  - Costo di esecuzione e memorizzazione sequenziale L2
+  - Costo di verifica della prova di validità e finalizzazione su L1
+  - Costo del prover
+- **Commissione dati L1:** commissione aggiuntiva oltre alla commissione gas L2. La commissione dati L1 viene addebitata solo per le transazioni avviate da L2, non per quelle avviate da L1. La commissione copre il costo dell'invio dei dati a L1 per la disponibilità dei dati. Poiché raccogliamo i dati della tx su L1, la commissione di rollup L1 è calcolata sulla base della dimensione dei dati della tx.
+
+Per ulteriori informazioni, consulta [Commissioni di Transazione su Scroll](/developers/transaction-fees-on-scroll).
+
+---

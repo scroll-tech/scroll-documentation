@@ -1,0 +1,29 @@
+---
+section: technology
+date: Last Modified
+title: "Stati e Account"
+lang: "it"
+permalink: "technology/chain/accounts-and-state"
+whatsnext: { "Transazioni": "/it/technology/chain/transactions/" }
+---
+
+## Tipi di Account in Scroll
+
+Come Ethereum, Scroll ha due tipi di account: l'account esterno (EOA) e l'account contrattuale che contiene lo smart contract e archiviazione aggiuntiva.
+
+Scroll archivia informazioni aggiuntive del bytecode del contratto nell'account per facilitare al circuito zkEVM la prova della transizione di stato in modo più efficiente.
+
+L'account in Scroll contiene i seguenti campi:
+
+- `nonce`: Un contatore che indica il numero di transazioni inviate dal mittente.
+- `balance`: Il saldo del token `ETH` nell'account (unità in wei).
+- `storageRoot`: Il root hash del trie di storage. Poiché Scroll utilizza il [zkTrie](/it/technology/sequencer/zktrie) per il trie di storage, `storageRoot` memorizza il digest hash di Poseidon in un intero di 256 bit.
+- `codeHash`: Il digest hash di Keccak del bytecode del contratto.
+- `PoseidonCodeHash` (**nuovo campo**): Il digest hash di Poseidon del bytecode del contratto in un intero di 256 bit.
+- `CodeSize` (**nuovo campo**): La dimensione del bytecode del contratto in byte.
+
+## Stato
+
+Lo stato di una blockchain è una collezione di dati degli account. Il _trie di stato_ codifica i dati dell'account e i relativi indirizzi in una struttura dati [Merkle tree](https://en.wikipedia.org/wiki/Merkle_tree). Il root dell'albero, o lo stato della blockchain, è un digest crittografico di tutti i dati degli account contenuti nell'albero.
+
+Ethereum utilizza una struttura dati chiamata [Patricia Merkle Trie](https://ethereum.org/en/developers/docs/data-structures-and-encoding/patricia-merkle-trie/) sia per il trie di stato che per il trie di storage che memorizza le voci chiave-valore presenti in uno smart contract. In Scroll, sostituiamo il Patricia Merkle Trie con una struttura dati più compatibile con zk, chiamata zkTrie, sia per il trie di stato che per il trie di storage. A un livello elevato, la struttura dati zkTrie è un albero Merkle binario sparso con la funzione hash [Poseidon](https://eprint.iacr.org/2019/458.pdf), una funzione hash friendly per zk. Il documento [zkTrie](/it/technology/sequencer/zktrie) fornisce ulteriori dettagli su questa struttura dati.

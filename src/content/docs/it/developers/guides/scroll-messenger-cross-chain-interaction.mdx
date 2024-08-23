@@ -1,0 +1,108 @@
+---
+section: developers
+date: Last Modified
+title: "Interazione Cross-chain del Messaggero di Scroll"
+lang: "it"
+permalink: "developers/guides/scroll-messenger-cross-chain-interaction"
+whatsnext: { "Collegamento di un Token ERC20 tramite un Gateway Personalizzato": "/it/developers/guides/bridge-erc20-through-the-custom-gateway" }
+excerpt: "In this example, we will launch a dummy smart contract on either Sepolia or Scroll Sepolia testnet and interact with it from the opposite chain."
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+## Deploy dei Contratti
+
+### Smart Contract di Destinazione
+
+Iniziamo con il deploy del contratto intelligente di destinazione. Useremo il contratto Greeter per questo esempio, ma puoi utilizzare qualsiasi altro contratto. Deployalo su Sepolia o su Scroll. Su Scroll, L1 e L2 utilizzano la stessa API, quindi spetta a te la scelta.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.16;
+
+// This Greeter contract will be interacted with through the ScrollMessenger across the bridge
+contract Greeter {
+  string public greeting = "Hello World!";
+
+  // This function will be called by executeFunctionCrosschain on the Operator Smart Contract
+  function setGreeting(string memory greeting_) public {
+    greeting = greeting_;
+  }
+}
+```
+## Esecuzione di `setGreeting` in modo Cross-Chain
+
+### Contratto Smart Operator
+
+Passiamo ora alla catena opposta e deployiamo il contratto `GreeterOperator`. Quindi, se hai deployato il contratto `Greeter` su L1, deploya il `GreeterOperator` su L2 o viceversa.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.16;
+
+// The Scroll Messenger interface is the same on both L1 and L2, it allows sending cross-chain transactions
+// Let's import it directly from the Scroll Contracts library
+import "@scroll-tech/contracts@0.1.0/libraries/IScrollMessenger.sol";
+
+// The GreeterOperator is capable of executing the Greeter function through the bridge
+contract GreeterOperator {
+  // This function will execute setGreeting on the Greeter contract
+  function executeFunctionCrosschain(
+    address scrollMessengerAddress,
+    address targetAddress,
+    uint256 value,
+    string memory greeting,
+    uint32 gasLimit
+  ) public payable {
+    IScrollMessenger scrollMessenger = IScrollMessenger(scrollMessengerAddress);
+    // sendMessage is able to execute any function by encoding the abi using the encodeWithSignature function
+    scrollMessenger.sendMessage{ value: msg.value }(
+      targetAddress,
+      value,
+      abi.encodeWithSignature("setGreeting(string)", greeting),
+      gasLimit,
+      msg.sender
+    );
+  }
+}
+```
+## Chiamata a una Funzione Cross-chain
+
+Passiamo il messaggio eseguendo `executeFunctionCrosschain` e passando i seguenti parametri:
+
+- `scrollMessengerAddress`: Dipenderà da dove hai deployato il contratto `GreeterOperator`.
+  - Se l'hai deployato su Sepolia, usa `0x50c7d3e7f7c656493D1D76aaa1a836CedfCBB16A`. Se l'hai deployato su Scroll Sepolia usa `0xBa50f5340FB9F3Bd074bD638c9BE13eCB36E603d`.
+- `targetAddress`: L'indirizzo del contratto `Greeter` sull'altra chain.
+- `value`: In questo caso è `0` perché `setGreeting` non richiede pagamenti.
+- `greeting`: Questo è il parametro che verrà inviato attraverso il messaggio. Prova a passare `"Questo messaggio è stato inviato cross-chain!"`.
+- `gasLimit`:
+  - Se stai inviando il messaggio da L1 a L2, un gas limit intorno a `1000000` dovrebbe essere più che sufficiente. Tuttavia, se imposti un valore troppo alto e `msg.value` non copre `gasLimit` * `baseFee`, la transazione fallirà. Se `msg.value` è superiore al costo del gas, la parte non utilizzata sarà rimborsata.
+  - Se stai inviando il messaggio da L2 a L1, passa `0`, poiché la transazione verrà completata eseguendo una transazione aggiuntiva su L1.
+
+### Inoltra il Messaggio quando si invia da L2 a L1
+
+Quando una transazione viene passata da L2 a L1, è necessario inviare una transazione aggiuntiva di "esecuzione del ritiro" su L1. Per farlo, devi chiamare `relayMessageWithProof` sul contratto Scroll Messenger di L1 da un wallet EOA.
+
+Puoi farlo direttamente su [Etherscan Sepolia](https://sepolia.etherscan.io/address/0x50c7d3e7f7c656493d1d76aaa1a836cedfcbb16a#writeProxyContract#F3).
+Per farlo, dovrai passare una prova di inclusione Merkle per la transazione bridged e altri parametri. Questi devono essere ottenuti tramite l'API del Scroll Bridge.
+
+{/* TODO: completare l'analisi dei problemi dell'API */}
+
+Stiamo finalizzando i dettagli specifici dell'API, ma per ora, recupera o esegui curl sull'endpoint seguente:
+
+```bash
+curl "https://sepolia-api-bridge.scroll.io/api/claimable?page_size=10&page=1&address=GREETER_OPERATOR_ADDRESS_ON_L2"
+```
+Sostituisci `GREETER_OPERATOR_ADDRESS_ON_L2` con l'indirizzo del tuo contratto GreeterOperator lanciato su L2. Leggi di più sulle transazioni Execute Withdraw nell'articolo sul [Scroll Messenger](/developers/l1-and-l2-bridging/the-scroll-messenger).
+
+<Aside type="danger" title="API Sperimentale">
+  Questa API è stata creata per la nostra UI del Bridge. Non è ancora definitiva e potrebbe cambiare in futuro. Aggiorneremo questa guida quando l'API sarà definitiva.
+</Aside>
+
+<Aside type="caution" title="Chiunque può eseguire il tuo Messaggio da L2 a L1">
+  `relayMessageWithProof` è completamente permissionless, quindi chiunque può chiamarlo per tuo conto se è disposto a pagare le fee gas su L1. Questa funzionalità consente un supporto infrastrutturale aggiuntivo, inclusi strumenti per automatizzare questo processo per applicazioni e utenti.
+</Aside>
+
+Dopo aver eseguito e confermato la transazione su entrambe le catene L1 e L2, il nuovo stato di `greeting` sul contratto `Greeter` dovrebbe essere `"Questo messaggio è stato inviato cross-chain!"`. Inviare un messaggio da una catena all'altra richiede circa 20 minuti dopo che le transazioni sono confermate sulla catena di origine.
+
+Congratulazioni, hai eseguito con successo una transazione da una catena all'altra utilizzando il nostro bridge nativo!

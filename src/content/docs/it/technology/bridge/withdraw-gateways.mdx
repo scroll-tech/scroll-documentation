@@ -1,0 +1,169 @@
+---
+section: technology
+date: Last Modified
+title: "Withdraw Gateways"
+lang: "it"
+permalink: "/it/technology/bridge/withdraw-gateways"
+whatsnext: { "Sequenziatore": "/it/technology/sequencer/execution-node/" }
+---
+
+import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import Aside from "../../../../../components/Aside.astro"
+import WithdrawWorkflow from "../_images/withdraw.png"
+
+Questo documento descrive come gli utenti e gli sviluppatori possono utilizzare i gateway per prelevare token da L2 a L1. Forniamo diversi gateway per token standard e un router di gateway su L2, elencati nella tabella qui di seguito.
+
+| Contratto Gateway        | Descrizione                                                         |
+| ------------------------ | ------------------------------------------------------------------- |
+| `L2GatewayRouter`        | Il router dei gateway supporta il prelievo di ETH e token ERC20.    |
+| `L2ETHGateway`           | Il gateway per il prelievo di ETH.                                  |
+| `L2StandardERC20Gateway` | Il gateway per il prelievo di token ERC20 standard.                  |
+| `L2CustomERC20Gateway`   | Il gateway per il prelievo di token ERC20 personalizzati.            |
+| `L2WETHGateway`          | Il gateway per il prelievo di Wrapped ETH.                          |
+| `L2ERC721Gateway`        | Il gateway per il prelievo di token ERC-721.                        |
+| `L2ERC1155Gateway`       | Il gateway per il prelievo di token ERC-1155.                       |
+
+## Panoramica
+
+<ClickToZoom src={WithdrawWorkflow} alt="Withdraw Workflow" />
+
+La figura rappresenta il workflow di prelievo da L2 a L1. Gli utenti chiamano i gateway per inizializzare il prelievo del token. Il prelievo è codificato in un messaggio inviato a `L2ScrollMessenger`, che viene quindi aggiunto a `L2MessageQueue`. `L2MessageQueue` mantiene un Withdraw Trie e aggiorna la radice ogni volta che un nuovo messaggio viene aggiunto. La radice del Withdraw Trie è finalizzata sul contratto di rollup L1 insieme alla radice dello stato L2. Dopo che la nuova radice del Withdraw Trie è finalizzata su L1, gli utenti o terze parti possono costruire una valida Proof di Inclusione di Merkle per la radice del Withdraw Trie e inviare una transazione di _withdraw execution_ per finalizzare il prelievo su L1. Puoi trovare ulteriori dettagli sul workflow di relay del messaggio da L2 a L1 nella [Messaggistica tra Domini](/it/technology/bridge/cross-domain-messaging#sending-messages-from-l2-to-l1).
+
+Le sezioni successive descrivono i dettagli del prelievo di diversi token.
+
+## Prelievo di ETH
+
+Il prelievo del token ETH funziona nel seguente modo.
+
+1. `L2GatewayRouter` fornisce tre funzioni per prelevare ETH da L2 a L1. La funzione `withdrawETHAndCall` può prelevare ETH ed eseguire una chiamata di contratto contemporaneamente.
+
+
+    ```solidity
+    function withdrawETH(uint256 _amount, uint256 _gasLimit) external payable;
+
+    function withdrawETH(address _to, uint256 _amount, uint256 _gasLimit) public payable;
+
+    function withdrawETHAndCall(
+        address _to,
+        uint256 _amount,
+        bytes calldata _data,
+        uint256 _gasLimit
+    ) external payable;
+    ```
+
+2. Le funzioni `withdrawETHAndCall` chiamano `L2ETHGateway`. `L2ETHGateway` codifica il messaggio di prelievo e lo invia al contratto `L2ScrollMessenger` insieme all'ETH prelevato.
+3. L'ETH prelevato viene nuovamente bloccato nel contratto `L2ScrollMessenger`. `L2ScrollMessenger` aggiunge il messaggio alla coda dei messaggi nel contratto `L2MessageQueue`.
+4. La transazione di esecuzione del prelievo su L1 chiama la funzione `L1ScrollMessenger.relayMessageWithProof` per finalizzare il prelievo. Nel caso del prelievo di ETH, la funzione `relayMessageWithProof` chiama `L1ETHGateway.finalizeWithdrawETH` per inviare nuovamente l'ETH all'account destinatario su L1.
+5. Se l'utente chiama `withdrawETHAndCall` su L2, `finalizeWithdrawETH` nel contratto `L1ETHGateway` inoltrerà i dati aggiuntivi al contratto L1 di destinazione.
+
+## Prelievo di Token ERC20
+
+Il prelievo dei token ERC20 funziona nel seguente modo.
+
+1. Per prelevare token ERC20 da L2 a L1, gli utenti possono utilizzare `L2GatewayRouter.withdrawERC20` e `L2GatewayRouter.withdrawERC20AndCall` mostrati di seguito.
+
+
+    ```solidity
+    function withdrawERC20(address _token, uint256 _amount, uint256 _gasLimit) external payable;
+
+    function withdrawERC20(address _token, address _to, uint256 _amount, uint256 _gasLimit) external payable;
+
+    function withdrawERC20AndCall(
+        address _token,
+        address _to,
+        uint256 _amount,
+        bytes memory _data,
+        uint256 _gasLimit
+    ) public payable;
+    ```
+
+2. Sulla base della mappatura dai token ERC20 al gateway corrispondente, il `L2GatewayRouter` chiama il gateway appropriato, `L2StandardERC20Gateway`, `L2CustomERC20Gateway`, o `L2WETHGateway`. I passaggi restanti saranno descritti separatamente.
+
+### Token ERC20 Standard e Personalizzati
+
+Il prelievo di token ERC20 standard e personalizzati funziona nel seguente modo:
+
+3. Il contratto `L2StandardERC20Gateway` o `L2CustomERC20Gateway` brucia il token ERC20 prelevato, codifica il prelievo in un messaggio e lo invia a `L2ScrollMessenger`.
+4. La transazione di esecuzione del prelievo su L1 chiama la funzione `L1ScrollMessenger.relayMessageWithProof` per finalizzare i prelievi su L1. Nel caso del prelievo di token ERC20 standard o personalizzati, la transazione chiama rispettivamente la funzione `finalizeWithdrawERC20` nel contratto `L1StandardERC20Gateway` o `L1CustomERC20Gateway`.
+   - Nel contratto `L1StandardERC20Gateway`, se questa è la prima transazione di prelievo di un token ERC20, la funzione `finalizeWithdrawERC20` aggiornerà la mappatura dall'indirizzo del token L1 al suo indirizzo del token L2 nella `tokenMapping`.
+5. Il gateway del token ERC20 su L1 rilascia i token ERC20 bloccati trasferendoli da sé all'indirizzo destinatario su L1.
+6. Se l'utente chiama `withdrawERC20AndCall` su L2, i gateway chiameranno il contratto L1 di destinazione con dati aggiuntivi.
+
+### Token WETH (Wrapped ETH)
+
+Forniamo un gateway personalizzato `L2WETHGateway` per il token Wrapped ETH su L2 e registriamo l'indirizzo del gateway nel `L2GatewayRouter`. Il prelievo del token WETH funziona nel seguente modo:
+
+3. `L2WETHGateway` trasferisce il token WETH prelevato a sé stesso e lo scompone dal token WETH a ETH nativo. L'ETH viene quindi inviato di nuovo al contratto `L2ScrollMessenger`.
+4. `L2WETHGateway` codifica il messaggio di prelievo del token e lo inoltra a `L2ScrollMessenger`.
+5. La transazione di esecuzione del prelievo su L1 chiama la funzione `L1ScrollMessenger.relayMessageWithProof` per finalizzare il prelievo su L1. Nel caso del prelievo del token WETH, la transazione chiama `L1WETHGateway.finalizeWithdrawERC20` e invia l'importo prelevato in ETH a `L1WETHGateway`.
+6. `L1WETHGateway` converte l'ETH prelevato di nuovo nel token WETH su L1 e lo trasferisce all'indirizzo destinatario su L1.
+7. Se l'utente chiama `withdrawERC20AndCall` su L2, `L1WETHGateway` chiamerà l'indirizzo L1 di destinazione con dati aggiuntivi.
+
+## Prelievo di Token ERC-721/ERC-1155
+
+Il prelievo di token ERC-721 o ERC-1155 funziona in modo molto simile ai token ERC20. È possibile utilizzare il gateway `L2ERC721Gateway` o `L2ERC1155Gateway` per prelevare token ERC-721 /ERC-1155 da L2.
+
+```solidity
+function withdrawERC721(
+    address _token,
+    uint256 _tokenId,
+    uint256 _gasLimit
+) external payable;
+
+function withdrawERC721(
+    address _token,
+    address _to,
+    uint256 _tokenId,
+    uint256 _gasLimit
+) external payable;
+
+function withdrawERC1155(
+    address _token,
+    uint256 _tokenId,
+    uint256 _amount,
+    uint256 _gasLimit
+) external payable;
+
+function withdrawERC1155(
+    address _token,
+    address _to,
+    uint256 _tokenId,
+    uint256 _amount,
+    uint256 _gasLimit
+) external payable;
+```
+
+Per facilitare un gran numero di prelievi di token ERC-721 o ERC-1155, forniamo anche funzioni di prelievo batch nei contratti `L2ERC721Gateway` e `L2ERC1155Gateway` tramite le seguenti funzioni:
+
+
+```solidity
+function batchWithdrawERC721(
+    address _token,
+    uint256[] calldata _tokenIds,
+    uint256 _gasLimit
+) external payable;
+
+function batchWithdrawERC721(
+    address _token,
+    address _to,
+    uint256[] calldata _tokenIds,
+    uint256 _gasLimit
+) external payable;
+
+function batchWithdrawERC1155(
+    address _token,
+    uint256[] calldata _tokenIds,
+    uint256[] calldata _amounts,
+    uint256 _gasLimit
+) external payable;
+
+function batchWithdrawERC1155(
+    address _token,
+    address _to,
+    uint256[] calldata _tokenIds,
+    uint256[] calldata _amounts,
+    uint256 _gasLimit
+) external payable;
+```
+
+I contratti corrispondenti su L1 per i token ERC-721 o ERC-1155 sono `L1ERC721Gateway` e `L1ERC1155Gateway`, utilizzati per finalizzare i prelievi su L1.

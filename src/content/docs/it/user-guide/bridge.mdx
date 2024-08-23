@@ -1,0 +1,118 @@
+---
+section: gettingStarted
+date: Last Modified
+title: "Bridge"
+lang: "it"
+permalink: "user-guide/bridge/"
+estratto: "Per iniziare a collegare asset da Sepolia, vai all'applicazione bridge del portale."
+---
+
+{/* // import ClickToZoom from "../../../../components/ClickToZoom.astro" */}
+{/* // import bridge1 from "./\_images/bridge1.png" */}
+{/* // import bridge2 from "./\_images/bridge2.png" */}
+{/* // import bridge3 from "./\_images/bridge3.png" */}
+{/* // import bridge4 from "./\_images/bridge4.png" */}
+{/* // import bridge5 from "./\_images/bridge5.png" */}
+{/* // import bridge6 from "./\_images/bridge6.png" */}
+{/* // import bridge7 from "./\_images/bridge7.png" */}
+{/* // import bridge8 from "./\_images/bridge8.png" */}
+
+{/* TODO: Aggiorna tutte le istruzioni dopo essere riuscito a completare tutto il flusso. */}
+
+
+Visita la nostra app bridge su [testnet di Sepolia](https://sepolia.scroll.io/bridge) o [Mainnet](https://scroll.io/bridge) per iniziare! Il Bridge supporta sia le operazioni di **Deposito** che di **Prelievo**, consentendo agli utenti di spostare in modo fiduciario asset da L1 a L2.
+
+## Deposito da Ethereum a Scroll
+
+### Istruzioni
+
+1. Dopo essere arrivati all'applicazione del bridge, premi il pulsante "Connetti Wallet". Potresti dover cambiare il tuo wallet alla rete giusta.
+1. Nell'app, seleziona la scheda **Deposito su Scroll**.
+1. Seleziona il token che desideri trasferire dalla rete L1. Se è la prima volta che fai il bridge, prova con "ETH".
+1. Se è la prima volta che trasferisci un token ERC20 specifico, devi **Approvare** il contratto Sepolia o Ethereum Bridge per accedere al tuo token ERC20.
+1. Seleziona la modalità di deposito. L'opzione Veloce avvia immediatamente un trasferimento del bridge, mentre l'opzione Economica raggruppa più richieste insieme e avvia un singolo trasferimento del bridge per il batch, condividendo il costo tra tutte le richieste incluse.
+1. Successivamente, sposta il pulsante **Deposita fondi** per effettuare il deposito. Il tuo wallet chiederà di confermare la transazione di trasferimento.
+1. Una volta inviata e confermata la transazione di trasferimento, il token verrà detratto dal tuo wallet.
+1. Puoi sempre controllare lo stato di una transazione premendo l'icona "Cronologia transazioni" accanto all'indirizzo del tuo wallet nell'angolo in alto a destra.
+
+{/* ### Quando arriverà il token nel tuo portafoglio Scroll Sepolia?
+
+Potrebbero volerci tra **8 e 14 minuti** (in attesa che il blocco diventi [_Safe_](https://www.alchemy.com/overviews/ethereum-commitment-levels#what-are-ethereum-commitment-levels) su Sepolia) prima che il token appaia nel tuo portafoglio Scroll Sepolia. */}
+
+{/* Puoi controllare il progresso delle transazioni di deposito come segue: */}
+
+{/* ##### 1. Clicca sull'icona "Cronologia" accanto al tuo indirizzo del wallet nell'angolo in alto a destra. */}
+
+{/* <ClickToZoom src={bridge1} /> */}
+
+{/* Il pannello popup elenca le transazioni più recenti effettuate nell'app del bridge. Ci sono due stati: stato di Sepolia e stato di Scroll Sepolia. Per le transazioni di deposito (L1 -> L2), una volta che la tua transazione diventa _Safe_ su Sepolia (**8-14 minuti**), vedrai lo stato **`successo`** mostrato. I tuoi fondi saranno trasmessi a Scoll Sepolia dopo questo. */}
+
+{/* La finestra delle Transazioni recenti del Bridge dovrebbe darti un'idea del tempo previsto prima che la tua transazione sia _Safe_ su Sepolia. */}
+
+{/* ##### 2. Clicca sull'hash della transazione più recente di Sepolia. */}
+
+{/* <ClickToZoom src={bridge2} /> */}
+
+{/* Si aprirà la pagina dei Dettagli della Transazione in una nuova scheda. Puoi vedere che questa transazione è confermata su Sepolia. Per controllare lo stato di conferma del blocco, clicca sul numero di blocco e leggi il campo "Stato". */}
+
+{/* <ClickToZoom src={bridge3} /> */}
+
+{/* ##### 3. Torna all'app del Bridge e aspetta! */}
+
+{/* Una volta che lo stato della tua transazione mostra **`successo`** su Scroll Sepolia, dovresti vedere i fondi nel tuo wallet Scroll L2 e un hash della transazione: */}
+
+{/* <ClickToZoom src={bridge4} /> */}
+
+## Prelievo da Scroll a Ethereum
+
+### Istruzioni
+
+#### Invio della tua Transazione Iniziale di Prelievo
+
+1. Innanzitutto, seleziona la scheda **Prelievo su Ethereum** nell'app. Potresti dover cambiare il tuo wallet alla rete giusta.
+1. Seleziona il token che desideri trasferire. Se è la prima volta che fai il bridge, prova con "ETH".
+1. Se è la prima volta che trasferisci un token ERC20 specifico, devi **Approvare** il contratto del Bridge di Scroll per accedere al tuo token ERC20.
+1. Successivamente, sposta il pulsante **Prelieva fondi** per effettuare il prelievo. Il tuo wallet chiederà di confermare la transazione di trasferimento.
+1. Una volta inviata e confermata la transazione di trasferimento, il token verrà detratto dal tuo wallet.
+
+#### Invio di una Transazione di Esecuzione del Prelievo
+
+{/* TODO: completare le istruzioni aggiuntive, meglio stimare il "tempo di attesa" */}
+
+_I passaggi rimanenti avvengono su Scroll, ma prima devi aspettare che la tua transazione sia completamente provata ("finalizzata") sul lato L1. Questo processo può richiedere fino a quattro ore._
+
+1. Quando la tua transazione di prelievo viene completata finalizzandosi su Sepolia o Ethereum, vedrai il pulsante "Richiedi" nell'area Transazioni Recenti diventare solido.
+1. Clicca il pulsante "Richiedi" per inviare la transazione di Esecuzione del Prelievo.
+1. Una volta inviati, i fondi prelevati dovrebbero apparire immediatamente nel tuo wallet.
+
+### Quando arriverà il token nel tuo wallet?
+
+Il token trasferito arriverà nel tuo wallet immediatamente dopo che il blocco contenente la tua transazione di Esecuzione del Prelievo sarà confermato.
+
+{/* TODO: controllare che il link all'architettura sia attivo */}
+
+:::tip[Stato Rollup]
+Lo stato del rollup `Finalizzato` indica che l'esecuzione corretta delle transazioni in questo blocco è stata provata verificando una prova di validità on-chain sulla catena L1. Per ulteriori informazioni sullo stato del rollup, vedere [Panoramica dell'Architettura di Scroll](/technology).
+:::
+
+{/* Puoi controllare il progresso delle transazioni di prelievo come segue: */}
+
+{/* 1. Clicca sul tuo indirizzo del wallet nell'angolo in alto a destra dell'app Bridge. */}
+
+{/* <ClickToZoom src={bridge5} /> */}
+
+{/* Il pannello popup elenca le transazioni più recenti effettuate nell'app del Bridge (vedi immagine sotto). Ci sono due stati: stato L1 e stato L2. In questo caso, poiché stiamo facendo il bridge da L2 -> L1, otterremo rapidamente uno stato **`successo`** dopo aver inviato la transazione al Bridge L2. L1, d'altra parte, impiega **10 minuti fino a qualche ora** per raggiungere lo stato **`successo`**. */}
+
+{/* 1. Clicca sull'hash della transazione L2 più recente: */}
+
+{/* <ClickToZoom src={bridge6} /> */}
+
+{/* Si aprirà la pagina dei Dettagli della Transazione in una nuova scheda. Puoi vedere che questa transazione è confermata su L2. */}
+
+{/* <ClickToZoom src={bridge7} /> */}
+
+{/* La transazione è confermata su L2, ma deve ancora essere finalizzata su Goerli. */}
+
+{/* 1. Torna all'[App del Bridge](https://scroll.io/bridge). Ci vogliono circa 10 minuti prima che il token appaia nel tuo wallet Goerli. Una volta che lo stato della tua transazione mostra successo su L2, dovresti vedere i fondi nel tuo wallet Goerli e un hash della transazione: */}
+
+{/* <ClickToZoom src={bridge8} /> */}
