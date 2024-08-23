@@ -153,6 +153,17 @@ import { ethers } from "ethers"
 const provider = new ethers.providers.JsonRpcProvider("https://sepolia-rpc.scroll.io/")
 ```
 
+### web.js
+
+在`web3`脚本中设置 Scroll Sepolia Testnet provider ：
+
+```jsx
+import { Web3 } from "web3";
+
+// set a provider in the scroll sepolia testnet using node rpc url
+const web3 = new Web3("https://sepolia-rpc.scroll.io/");
+```
+
 ### scaffold-eth
 
 要使用 Scaffold-eth 进行部署，你需要将 Hardhat 和 React 设置指向 Scroll Alpha 测试网。 Scroll Sepolia 测试网。
