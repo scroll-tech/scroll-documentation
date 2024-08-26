@@ -55,11 +55,12 @@ During deployment, a simulation is first done to determine what address a contra
 
 {/* <!-- TODO: modify URL to develop branch --> */}
 
-{/* Then, after the `scroll-stack` chart is installed during `make install`, you will need to fund your SDK accounts and run `make deploy-contracts` to deploy all contracts on L1 and L2 using actual transactions. */}
+Then, before the `contracts` chart is installed, you will need to fund your SDK `DEPLOYER` account to deploy all contracts on L1 and L2 using actual transactions.
 
-Then, during `make install`, the `contracts` pod will connect to the cluster's RPCs and deploy the necessary contracts. 
+The `contracts` pod will connect to the cluster's RPCs and deploy the necessary contracts. 
 
-To view the complete logs from the deployment process, see the `broadcast` folder in `/charts/scroll-stack/`.
+{/* TODO: is this still true? */}
+{/* To view the complete logs from the deployment process, see the `broadcast` folder in `/charts/scroll-stack/`. */}
 
 {/* TODO: check again once we do this. */}
 <Aside type="tip">
@@ -115,7 +116,7 @@ cast send --rpc-url https://rpc2.sepolia.org  --private-key "$PRIVATE_KEY" "$L1_
 
 In the table below, we document every contract deployed for Scroll, including a link to the deployment for Scroll's mainnet. Not all of these are used by default for Scroll SDK.
 
-{/* <!-- TODO: Modify table here for only post-Curie Scroll SDK contracts. --> */}
+{/* <!-- TODO: Modify table here for only post-Darwin Scroll SDK contracts. --> */}
 
 | Contract Name                                                                                                              | Description                                            |
 | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |

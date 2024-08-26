@@ -27,11 +27,15 @@ The repo consists of these major components:
 
 ## Deployment Process
 
-<Aside type="danger" title="On-going issues with arm64">
-As of July 22, 2024, if using `arm64` architecture, you will likely have issues with some services, including `rollup-explorer-backend`. You can follow our [ARM64 on Mac Guide](/en/sdk/guides/run-on-arm64-mac), but some services will not be supported.
-</Aside>
+We provide two deployment options for Scroll SDK: a local devnet and a production deployment. Because of the different requirements for each, we handle them separately.
 
-### PreReqs
+In Devnet, all services are deployed by a single "chart" and we deploy additional services like a database in the cluster. We assume users are working inside their clone of the `scroll-sdk` repo.
+
+In Production, each service is an independent chart, and we assume services like a database will be provided by the chain operator. Because of the additional modularity and flexibility, there is also additional configuration needed and some knowledge of Kubernetes may be required. outside the cluster. We also assume users will create a new repo for storing their production workflow.
+
+### Devnet
+
+#### PreReqs
 
 To run a local devnet with all services running on a single machine (using minikube), you’ll want the following items installed from a base Ubuntu installation:
 
@@ -42,30 +46,145 @@ Before getting started, be sure to install the following:
 - [minikube](https://minikube.sigs.k8s.io/docs/start/) (for local dev cluster)
 - [Helm](https://helm.sh/docs/intro/install/)
 
+Docker and minikube will need to be running before starting the deployment process.
 
-### Deployment
+<Aside type="tip">
+To grab charts from the private repo, you'll need to setup a legacy GitHub [personal access token](https://github.com/settings/tokens) with read access to the repo.
+
+Then, set it as a env var and run: `echo $GHCR_PAT | docker login ghcr.io -u [github username] --password-stdin`
+</Aside>
+
+
+#### Deployment
+
+For more in-depth information on deploying a Scroll SDK devnet, see the [Devnet Deployment](/en/sdk/guides/devnet-deployment) guides.
 
 <Steps>
-1. Modify `./charts/scroll-stack/config.toml` with your settings and accounts.
+1. Clone the Scroll SDK repo and navigate to the `./devnet` directory.
+
+    ```bash
+    git clone git@github.com:scroll-tech/scroll-sdk.git && cd scroll-sdk/devnet
+    ```
+    
+1. Fetch all charts and create configuration files.
+
+    ```bash
+    make bootstrap
+    ```
+
+1. *(Optional)* Modify `./scroll-sdk/config.toml` with your settings and accounts.
 
     For more information on modifying config.toml, see [Customization](/en/sdk/technical-stack/customization).
 
-2. Modify `./charts/scroll-stack/values.yaml` to disable any unneeded services.
+1. *(Optional)* Modify `./scroll-sdk/values.yaml` to disable any unneeded services.
 
     For more information on which services to set `enable:true`, see [Services](/en/sdk/technical-stack/services).
 
-3. Bootstrap all Helm dependencies and config files by running:
+1. *(Optional)* If modifications were made, run `make config` to update the configuration files.
 
-   ```bash
-   make bootstrap
-   ```
 
-4. Launch the Scroll SDK services by running:
+1. Launch the Scroll SDK services by running:
    ```bash
    make install
    ```
 
-5. Wait for services to start and contracts to deploy, and you've got a new Scroll SDK chain!
+1. Wait for services to start and contracts to deploy, and you've got a new Scroll SDK chain!
 
 </Steps>
 
+
+### Production
+
+#### PreReqs
+
+Before getting started, be sure to install the following:
+
+- [Docker Engine](https://docs.docker.com/engine/install/) (or Docker Desktop)
+- [kubectl](https://kubernetes.io/docs/tasks/tools/)
+- [Helm](https://helm.sh/docs/intro/install/)
+ 
+For a production environment, you'll want to have a working Kubernetes cluster and `kubectl` configured to point to it. We assume users will create a new repo for storing their production workflow. Docker will be used locally in the configuration preparation workflow.
+
+In addition, you'll want to prepare the following items:
+- A PostgreSQL-compatible database with an admin user
+    - Up to 3 for chain services, optionally 1 more for Blockscout
+- A Kubernetes Monitor Service (i.e. Prometheus)
+- A Kubernetes Ingress Controller (i.e. Nginx)
+- A Secret Store for storing sensitive information (i.e. AWS Secrets, Hashicorp Vault) and a way to access it from Kubernetes using [External Secrets](https://external-secrets.io/latest/)
+
+More information on choosing and setting up these services for various cloud providers will be provided in the [Guides](/en/sdk/guides) section.
+
+<Aside type="tip">
+To grab charts from the private repo, you'll need to setup a legacy GitHub [personal access token](https://github.com/settings/tokens) with read access to the repo.
+
+Then, set it as a env var and run: `echo $GHCR_PAT | docker login ghcr.io -u [github username] --password-stdin`
+</Aside>
+
+#### Deployment
+
+We'll provide a high-level overview here, but for helper scripts and more detailed information, see the soon-to-be-completed [Production Deployment](/en/sdk/guides/production-deployment) guide.
+
+
+<Steps>
+1. Create a new directory to host your git repo and Scroll SDK deployment files.
+
+1. Copy the `config.toml` template and fill in your settings.
+
+1. Generate you configuration files
+   ```bash
+    docker run --rm -it -v .:/contracts/volume scrolltech/scroll-stack-contracts:gen-configs-v0.0.16
+   ```
+
+1. Generate your Secrets files (note: this will be automated in a Make command)
+   ```bash
+   ./create-secret-files.sh .
+   ```
+
+1. Move all generated files into a new `./secrets` directory, then push them to your External Secrets provider.
+
+1. This will be a Make command, but for now: Pull SDK charts and untar them:
+   ```bash
+    helm pull oci://ghcr.io/scroll-tech/scroll-sdk/helm/balance-checker
+    helm pull oci://ghcr.io/scroll-tech/scroll-sdk/helm/blockscout
+    helm pull oci://ghcr.io/scroll-tech/scroll-sdk/helm/blockscout-sc-verifier
+    helm pull oci://ghcr.io/scroll-tech/scroll-sdk/helm/bridge-history-api
+    helm pull oci://ghcr.io/scroll-tech/scroll-sdk/helm/bridge-history-fetcher
+    helm pull oci://ghcr.io/scroll-tech/scroll-sdk/helm/chain-monitor
+    helm pull oci://ghcr.io/scroll-tech/scroll-sdk/helm/contracts
+    helm pull oci://ghcr.io/scroll-tech/scroll-sdk/helm/coordinator-api
+    helm pull oci://ghcr.io/scroll-tech/scroll-sdk/helm/coordinator-cron
+    helm pull oci://ghcr.io/scroll-tech/scroll-sdk/helm/frontends
+    helm pull oci://ghcr.io/scroll-tech/scroll-sdk/helm/l2-bootnode
+    helm pull oci://ghcr.io/scroll-tech/scroll-sdk/helm/l2-rpc
+    helm pull oci://ghcr.io/scroll-tech/scroll-sdk/helm/l2-sequencer
+    helm pull oci://ghcr.io/scroll-tech/scroll-sdk/helm/rollup-explorer-backend
+    helm pull oci://ghcr.io/scroll-tech/scroll-sdk/helm/rollup-node
+    helm pull oci://ghcr.io/scroll-tech/scroll-sdk/helm/scroll-common
+    helm pull oci://ghcr.io/scroll-tech/scroll-sdk/helm/scroll-sdk
+    find . -name "*.tgz" -type f -exec tar -xzf {} \;
+   ```
+
+1. Push each config file into the configs folder of each chart (note: this will be automated soon)
+1. Manually modify the `production.yaml` file in each chart to match your `config.toml` file (note: this will be automated soon)
+1. Install each chart:
+    ```bash
+    helm upgrade -i scroll-common scroll-common
+    helm upgrade -i l2-sequencer l2-sequencer --values l2-sequencer/values/production.yaml
+    helm upgrade -i coordinator-api coordinator-api --values coordinator-api/values/production.yaml
+    helm upgrade -i balance-checker balance-checker
+    helm upgrade -i blockscout blockscout --values blockscout/values/production.yaml
+    helm upgrade -i bridge-history-api bridge-history-api --values bridge-history-api/values/production.yaml
+    helm upgrade -i bridge-history-fetcher bridge-history-fetcher --values bridge-history-fetcher/values/production.yaml
+    helm upgrade -i chain-monitor chain-monitor --values chain-monitor/values/production.yaml
+    helm upgrade -i coordinator-cron coordinator-cron --values coordinator-cron/values/production.yaml
+    helm upgrade -i frontends frontends --values frontends/values/production.yaml
+    helm upgrade -i gas-oracle gas-oracle --values gas-oracle/values/production.yaml
+    helm upgrade -i l2-bootnode l2-bootnode --values l2-bootnode/values/production.yaml
+    helm upgrade -i l2-rpc l2-rpc --values l2-rpc/values/production.yaml
+    helm upgrade -i rollup-explorer-backend rollup-explorer-backend --values rollup-explorer-backend/values/production.yaml
+    helm upgrade -i rollup-node rollup-node --values rollup-node/values/production.yaml
+    helm upgrade -i contracts contracts --values contracts/values/production.yaml
+    ```
+1. Wait for services to start and contracts to deploy, and you've got a new Scroll SDK chain!
+
+</Steps>
