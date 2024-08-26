@@ -379,9 +379,13 @@ export const getSidebar = () => {
         section: t("sidebar.sdk.guides"),
         contents: [
           {
-            title: t("sidebar.sdk.runOnArm64Mac"),
-            url: formatUrl("sdk/guides/run-on-arm64-mac"),
+            title: t("sidebar.sdk.devnetDeployment"),
+            url: formatUrl("sdk/guides/devnet-deployment"),
           },
+          // {
+          //   title: t("sidebar.sdk.runOnArm64Mac"),
+          //   url: formatUrl("sdk/guides/run-on-arm64-mac"),
+          // },
         ],
       },
     ],

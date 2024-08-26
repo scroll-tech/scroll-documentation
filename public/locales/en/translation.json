@@ -168,7 +168,8 @@
       "smartContracts": "Smart Contracts",
       "proofGeneration": "Proof Generation",
       "guides": "Guides",
-      "runOnArm64Mac": "Run on ARM64 Mac"
+      "runOnArm64Mac": "Run on ARM64 Mac",
+      "devnetDeployment": "Devnet Deployment"
     }
   },
   "footer": {
