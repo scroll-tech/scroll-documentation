@@ -11,24 +11,19 @@ import Aside from "../../../../../components/Aside.astro"
 import ToggleElement from "../../../../../components/ToggleElement.astro"
 import Steps from '../../../../../components/Steps/Steps.astro';
 
-TODO: MODIFY ALL OF THIS TO NOT BE ARCH SPECIFIC!!
-
-<Aside type="danger">
-This information may not reflect the refactor from 08/26/2024. We intend to update this information soon.
-</Aside>
 
 ## Overview
 
-This guide should get you started with running a local Scroll SDK devnet on your mac laptop with an `arm64` processor.
+This guide should get you started with running a local Scroll SDK devnet. Additionally, it has specific asides for running is on macos.
 
-This guide assumes you’ve taken a look at the [Early Access document](https://www.notion.so/Scroll-SDK-Early-Access-Feedback-Request-74272ce6a0ae4c1d8f5c1d836df1f410?pvs=21) and have access to the [scroll-sdk github repo](https://github.com/scroll-tech/scroll-sdk) using your local machine.
+This guide assumes you have access to the [scroll-sdk github repo](https://github.com/scroll-tech/scroll-sdk) using your local machine.
 
 We’ve written this guide because local deployments for Kubernetes clusters can be finicky.
 
-By the end of the guide, you should have a Scroll SDK running with a block explorer, RPC, webUI, monitoring and metrics, and a local L1 — all accessible to wallets, browsers, and applications running on your local machine.
+By the end of the guide, you should have a Scroll SDK running with a block explorer, RPC, webUI, monitoring and metrics, and a local L1. These are all accessible to wallets, browsers, and applications running on your local machine.
 
-<Aside type="tip" title="Experimental Software!">
-We’d appreciate any feedback about this document, the codebase, or additional features.
+<Aside type="caution">
+This guide assumes the user is using macos. Windows is not supported, and Linux flavors might require modifications.
 </Aside>
 
 <Aside type="caution">
@@ -39,6 +34,8 @@ This guide does not include running the coordinator or a prover. The coordinator
   <div slot="title">Updates to the Guide</div>
   <span>
 
+  - August 26, 2024
+    - Changes for repository refactor, including new CLI tool commands.
   - July 31, 2024
     - Adding additional `make` commands and `minikube` config
   - June 26, 2024
@@ -55,11 +52,10 @@ This guide does not include running the coordinator or a prover. The coordinator
 
 ## Prerequisites
 <Steps>
-1. Clone the repo onto your local machine.
-2. Install dependencies (using `brew` is strongly recommended):
+1. Install dependencies (using `brew` is strongly recommended):
     - [Brew](https://brew.sh/) (optional)
       - `/bin/bash -c "$(curl -fsSL [https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh](https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh))"`
-    - [Docker Desktop](https://docs.docker.com/desktop/install/mac-install/)
+    - Docker ([Docker Desktop](https://docs.docker.com/desktop/install/mac-install/))
       - `brew install --cask docker`
     - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl-macos/)
       - `brew install kubectl`
@@ -67,18 +63,23 @@ This guide does not include running the coordinator or a prover. The coordinator
       - `brew install minikube`
     - [Helm](https://helm.sh/docs/intro/install/#from-homebrew-macos)
       - `brew install helm`
-    - [docker-mac-net-connect](https://github.com/chipmk/docker-mac-net-connect)
+    - [docker-mac-net-connect](https://github.com/chipmk/docker-mac-net-connect) (macOS ARM64 only)
       - `brew install chipmk/tap/docker-mac-net-connect`
-3. *Optional:* Install dependencies for example helper scripts
-    - [yq](https://mikefarah.gitbook.io/yq)
-      - `brew install yq`
-    - [Foundry](https://getfoundry.sh/)
-      - `curl -L https://foundry.paradigm.xyz | bash`
-4. You should now be able to open a terminal and run the following:
+2. *Optional:* Install dependencies for support CLI tool:
+    - [node >=18](https://nodejs.org/en/download/package-manager)
+      - `brew install nvm`
+      - `nvm install node`
+    - scroll-sdk-cli *(Experimental, APIs may change)*
+      - `npm install -g scroll-sdk-cli`
+3. You should now be able to open a terminal and run the following:
     - `docker -v`
     - `kubectl version`
     - `minikube status`
     - `helm version`
+    - `node -v`
+    - `scrollsdk`
+    - Or, in one step: `scrollsdk test dependencies`
+
 </Steps>
 
 <Aside type="tip" note="Setting Default Resources for `minikube`">
@@ -97,6 +98,8 @@ To start minikube, run:
 
 ```bash
 minikube start --driver=docker
+minikube addons enable ingress
+minikube addons enable ingress-dns
 ```
 
 #### Getting minikube to work with custom DNS names on MacOS
@@ -111,23 +114,27 @@ sudo brew services start chipmk/tap/docker-mac-net-connect
 ```
 
 <Aside type="danger" title="This is a hack!">
-These are all a work-around for ingress-dns not working on arm MacOS and hopefully will change in later fixes to minikube. This work gets relied on in [Pointing DNS Requests to the Cluster](https://www.notion.so/Pointing-DNS-Requests-to-the-Cluster-b6dd4f519697432cb9835e2d5eead731?pvs=21)
+These are all a work-around for ingress-dns not working on arm64 MacOS and hopefully will change in later fixes to minikube. This work gets relied on in [Pointing DNS Requests to the Cluster](#pointing-dns-requests-to-the-cluster).
 </Aside>
 
 ## Installing Scroll SDK
 
+<Aside type="caution">
+To grab charts from the private repo, you'll need to setup a legacy GitHub [personal access token](https://github.com/settings/tokens) with read access to the repo.
+
+Then, set it as a env var and run: `echo $GHCR_PAT | docker login ghcr.io -u [github username] --password-stdin`
+</Aside>
+
+
 <Steps>
-1. **Clone the `scroll-sdk` repo**
+1. **Clone the `scroll-sdk` repo and find `devnet` directory**
 
     *You’ll need If you need repo access, reach out to `@dghelm` on Telegram.*
 
     ```bash
     git clone git@github.com:scroll-tech/scroll-sdk.git
+    cd scroll-sdk/devnet
     ```
-
-1. **Configure `values.yaml` and `config.toml`**
-
-    This is the time to adjust what services run on your stack and their configuration. I’d suggest not altering these on your first installation, but see `charts/scroll-stack/values.yaml` ([view on Github](https://github.com/scroll-tech/scroll-sdk/blob/develop/charts/scroll-stack/values.yaml)) and `config.toml` ([view on Github](https://github.com/scroll-tech/scroll-sdk/blob/develop/charts/scroll-stack/config.toml)).
 
 1. **Bootstrap**
 
@@ -138,8 +145,15 @@ These are all a work-around for ingress-dns not working on arm MacOS and hopeful
     ```
 
     <Aside note="caution" title="Command changes frequently!">
-    The behavior of this command can change frequently since it refers to a specific docker image.
+    The behavior of this command can change frequently since it refers to a specific docker image. Be sure to keep your repo up to date.
     </Aside>
+
+1. Optional: **Configure `values.yaml` and `config.toml`**
+
+    This is the time to adjust what services run on your stack and their configuration. I’d suggest not altering these on your first installation, but see `charts/scroll-stack/values.yaml` ([view on Github](https://github.com/scroll-tech/scroll-sdk/blob/develop/charts/scroll-stack/values.yaml)) and `config.toml` ([view on Github](https://github.com/scroll-tech/scroll-sdk/blob/develop/charts/scroll-stack/config.toml)).
+
+    If you do make changes, you’ll need to run `make config` to regenerate the additional configuration files.
+
 
 1. **Launch the chain!**
 
@@ -150,9 +164,13 @@ These are all a work-around for ingress-dns not working on arm MacOS and hopeful
     Your chain is now starting! Run `kubectl get pods` to check in on their progress. In the next section we’ll expose the chain to your local machine so you can interact with the stack.
 
     <Aside>
-    Right now (July 22, 2024), the whole start process for the various containers can take up to 10 minutes. We’ll be looking to reduce this.
+    The whole start process for the various containers can take up to  minutes.
     </Aside>
 </Steps>
+
+<Aside>
+In Devnet, we'll work inside the `scroll-sdk` repo folder. This is not the recommended method for production deployments.
+</Aside>
 
 ## After Launching the Stack
 
@@ -161,16 +179,17 @@ These are all a work-around for ingress-dns not working on arm MacOS and hopeful
 You will need to provide funds to the following accounts:
 
   - `DEPLOYER_ADDR` *(only needs funded on L1)*
+    - In the default configuration, this account is pre-funded by Anvil. If changed, you'll need to relaunch the contracts pod after funding to deploy the contracts.
   - `L1_COMMIT_SENDER_ADDR`
   - `L1_FINALIZE_SENDER_ADDR`
   - `L1_GAS_ORACLE_SENDER_ADDR`
   - `L2_GAS_ORACLE_SENDER_ADDR` *(funded after L2 chain deployment)*
 
-If you installed the necessary prerequisites, you can run the example script from the repo's base directory.
+If you installed the necessary prerequisites, you can run the cli helper command. (Note: this command only works for L1 accounts)
 
 ```bash
-chmod +x examples/*.sh
-./example/anvil-fund-accounts.sh
+cd scroll-sdk
+scrollsdk helper fund-accounts --dev
 ```
 
 ### Other Useful Commands
@@ -181,21 +200,19 @@ chmod +x examples/*.sh
 
 `make uninstall` will stop all services.
 
-`minikube dashboard` launches a WebUI for exploring the kubernetes cluster and the various pods, volumes and ingresses without learning all the CLI commands.
-
-Other example scripts can be used to generate traffic on the L1 or L2 to produce blocks more quickly. Try `./examples/l2-generate-txs.sh`.
+`minikube dashboard` launches a WebUI for exploring the kubernetes cluster and the various pods, volumes and ingresses without learning all the CLI commands. `k9s` is also a CLI great tool for exploring running pods and quickly looking at their logs.
 
 If you need to update a specific service's config file:
   1. Make any necessary changes to the config or helm charts
-  2. Run `make upgrade`
+  2. Run `make install`
   3. Delete the running pod by running `kubectl delete pod [pod-name]`
 
-### Pointing DNS Requests to the Cluster
+### Pointing DNS Requests to the Cluster (MacOS on ARM64)
 
 Running `kubectl get ingress` should show all the domains setup within the cluster, like the following:
 
 ```
-➜  scroll-stack git:(develop) ✗ kubectl get ingress
+➜  scroll-sdk git:(develop) ✗ kubectl get ingress
 NAME                      CLASS   HOSTS                               ADDRESS        PORTS   AGE
 blockscout                nginx   blockscout.scrollsdk                192.168.49.2   80      5h3m
 bridge-history-api        nginx   bridge-history-api.scrollsdk        192.168.49.2   80      5h3m
@@ -205,7 +222,6 @@ l1-devnet                 nginx   l1-devnet.scrollsdk                 192.168.49
 l1-explorer               nginx   l1-devnet-explorer.scrollsdk        192.168.49.2   80      5h3m
 l2-rpc                    nginx   l2-rpc.scrollsdk                    192.168.49.2   80      5h3m
 rollup-explorer-backend   nginx   rollup-explorer-backend.scrollsdk   192.168.49.2   80      5h3m
-rpc-gateway               nginx   l2-rpc-gateway.scrollsdk            192.168.49.2   80      5h3m
 ```
 
 Now, we’ll follow the instructions from [the minikube docs](https://minikube.sigs.k8s.io/docs/handbook/addons/ingress-dns/#Mac) for setting up our local machine to use our cluster to resolve all `.scrollsdk` domain requests.
@@ -248,11 +264,35 @@ Try running:
 3.  If those work, visit [`http://frontends.scrollsdk`](http://frontends.scrollsdk) in your browser.
     1. If those do not work, try resetting your machine and running through the instructions in [Getting minikube to work with custom DNS names on MacOS](https://www.notion.so/Getting-minikube-to-work-with-custom-DNS-names-on-MacOS-e40ae30777ec4dd083e71d37ead1a185?pvs=21) and above again. It may help to run `minikube stop` and `minikube start` again.
 
-## Interacting with the Chain
+## Testing & Interacting with the Chain
+
+### scroll-sdk-CLI
+
+The scroll-sdk-cli tool has many helper commands. Run it in the same directory as your `config.toml` file in the `./devnet/scroll-sdk` folder.
+
+- `scrollsdk test ingress` will test if your ingress is configured correctly and host urls are accessible from your machine.
+- `scrollsdk test contracts` will check that essential contracts are deployed, initialized and have the correct owner.
+- `scrollsdk helper fund-accounts --dev -a [account-address]` will fund any account.
+- `scrollsdk helper activity -o -t` will generate activity on both layer one and layer two to help produce blocks and batches.
+
+#### End-To-End Test
+
+The `scrollsdk test e2e` command will walk you through generating the following tests on your chain:
+
+- Generate a new wallet
+- Fund it from the Deployer address on L1
+- Deposit funds to the L2
+- Deploying an ERC20 and depositing them to the L2
+- Deploying an ERC20 on the L2
+- Bridging ETH and ERC20 from L2 back to L1
+- Executing the withdrawal claim on L1
+
+If any step fails, you can restart where you left off by adding the `--resume` flag.
 
 <Aside>
-We’re working to get more interesting testing tools added to the stack, so let us know if you want to be told when we update this section.
+We recommend running `scrollsdk helper activity` in another terminal to generate traffic on the chain while running the end-to-end test. This will keep blocks being produced, which is needed for bridging transactions, gas oracle updates and batch submission and finalization.
 </Aside>
+
 
 ### Web UIs
 
@@ -262,7 +302,7 @@ You should now be able to explore the stack on your local machine and using your
   - [L2 Explorer](http://blockscout.scrollsdk/)
   - [L1 Explorer](http://l1-devnet-explorer.scrollsdk/) (this is scanning Anvil and can be a bit buggy)
 - [Bridge](http://frontends.scrollsdk/bridge)
-  - Bridging UI has a gas bug as of June 13, 2024
+  - Until some activity on the network has started, gas errors may occur.
 - [Rollup Explorer](http://frontends.scrollsdk/rollupscan?page=1&per_page=10)
   - Shows committed batches and finalized batches
 - [Granfana Dashboards](http://grafana.scrollsdk/)
