@@ -382,6 +382,10 @@ export const getSidebar = () => {
             title: t("sidebar.sdk.devnetDeployment"),
             url: formatUrl("sdk/guides/devnet-deployment"),
           },
+          {
+            title: t("sidebar.sdk.productionDeployment"),
+            url: formatUrl("sdk/guides/production-deployment"),
+          },
           // {
           //   title: t("sidebar.sdk.runOnArm64Mac"),
           //   url: formatUrl("sdk/guides/run-on-arm64-mac"),
