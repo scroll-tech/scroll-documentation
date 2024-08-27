@@ -1,0 +1,39 @@
+---
+section: technology
+date: Last Modified
+title: "Blocks"
+lang: "en"
+permalink: "technology/chain/blocks"
+whatsnext: { "Rollup Process": "/en/technology/chain/rollup/" }
+---
+
+A block is a collection of transactions and links to the previous block it extends.
+
+## Block Header
+
+The block header in Scroll mirrors the structure of Ethereum's. However, certain fields in the block header have been modified to accommodate the Layer 2 context, as detailed in the following table:
+
+| Field               | Description                                                        |
+| ------------------- | ------------------------------------------------------------------ |
+| `parentHash`        | The hash of the parent block.                                      |
+| `uncleHash`         | Always `keccak256(rlp([]))`.                                       |
+| `coinbase`          | Fees are collected to the pre-deployed fee vault contract address `0x5300000000000000000000000000000000000005`. In most cases, the RPC return field `"miner"` is the zero-address `0x0000000000000000000000000000000000000000`. |
+| `stateRoot`         | The root hash of the state trie. It is the Poseidon                |
+| `transactionsRoot ` | The root hash of the transaction trie.                             |
+| `receiptsRoot `     | The root hash of the transaction receipts trie.                    |
+| `logsBloom`         | The data structure containing event logs.                          |
+| `difficulty`        | Always 1 or 2.                                                     |
+| `number`            | The block number.                                                  |
+| `gasLimit`          | The maximum gas allowed in the block.                              |
+| `gasUsed`           | The gas used in the block.                                         |
+| `timestamp`         | The block time.                                                    |
+| `extraData`         | Signature by the block's signer, followed by arbitrary additional data. |
+| `mixHash`           | Always 0.                                                          |
+| `nonce`             | Always 0.                                                          |
+| `baseFee`           | Currently empty in Scroll because we haven't enabled the EIP-1559. |
+
+## Block Time
+
+Block time refers to the interval between two consecutive blocks. In Scroll, the block time is set at 3s. A reduced block time elevates the user experience and augments the Scroll chain's scalability.
+
+The 3-second block time is maintained on a best-effort basis, it is not guaranteed or enforced by the protocol.

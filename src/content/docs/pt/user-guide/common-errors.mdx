@@ -1,0 +1,41 @@
+---
+section: gettingStarted
+date: Last Modified
+title: "Common Errors"
+lang: "en"
+permalink: "user-guide/common-errors/"
+excerpt: "Seeing an error when trying to interact with Scroll Sepolia Testnet? Here are some common configuration errors and how to quickly fix them."
+---
+
+## Incorrect nonce error when sending a transaction in MetaMask
+
+You will encounter this error when the local nonce stored in your MetaMask wallet is different from the nonce in the Scroll testnet node. It could be because there is a recent pending transaction.
+
+To fix this issue, you need to reset your account in MetaMask for the Scroll Sepolia Testnet. The steps to reset the account are:
+
+1. Open the **MetaMask** extension in the browser
+2. Select **Scroll Sepolia Testnet** in the top area
+3. Click the round **account icon** in the top-right corner
+4. Select **Settings**
+5. Go to **Advanced**
+6. Click **Reset account**
+
+You will not lose any assets during the MetaMask account reset.
+
+:::caution[Caution]
+Removing and re-adding a network is NOT enough to fix this - you must reset your account.
+:::
+
+## Nothing happens when confirming a bridging/swapping transaction
+
+If no error or console logs appear, this is likely due to a nonce issue, please reset your MetaMask account as outlined above at [#incorrect-nonce-error-when-sending-a-transaction-in-metamask](#incorrect-nonce-error-when-sending-a-transaction-in-metamask).
+
+## Block Explorer shows "Internal server error"
+
+Use an incognito window, or open your browser developer console and remove the `_explorer_key` cookie (or all cookies). [See this guide for how to remove cookies](https://www.contentstack.com/docs/developers/how-to-guides/clear-caches-and-cookies-in-different-browsers/).
+
+## Sending max amount of Ether in MetaMask results in a "Failed" error
+
+When sending Ether using MetaMask, if you try sending the "Max" amount, it's going to result in a "Failed" error. This is because MetaMask doesn't account for the additional "L1 Fee" that rollups have on top of regular gas fees and falls short for a small amount needed to pay for the gas of the transaction.
+
+To solve this, manually lower the amount of ether to be a little smaller than suggested and the transaction will go through.

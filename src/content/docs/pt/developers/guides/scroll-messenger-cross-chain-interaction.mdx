@@ -1,0 +1,122 @@
+---
+section: developers
+date: Last Modified
+title: "Scroll Messenger Cross-chain Interaction"
+lang: "en"
+permalink: "developers/guides/scroll-messenger-cross-chain-interaction"
+whatsnext: { "Bridge ERC20 through the Custom Gateway": "/en/developers/guides/bridge-erc20-through-the-custom-gateway" }
+excerpt: "In this example, we will launch a dummy smart contract on either Sepolia or Scroll Sepolia testnet and interact with it from the opposite chain."
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+In this example, we will launch a dummy smart contract on either Sepolia or Scroll and interact
+with it from the opposite chain. We will be using the `ScrollMessenger` that is deployed on both
+Sepolia and Scroll.
+
+## Deploying the Contracts
+
+### Target Smart Contract
+
+Let’s start by deploying the target smart contract. We will use the Greeter contract for this
+example, but you can use any other contract. Deploy it to either Sepolia or Scroll. On Scroll, L1
+and L2 use the same API, so it’s up to you.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.16;
+
+// This Greeter contract will be interacted with through the ScrollMessenger across the bridge
+contract Greeter {
+  string public greeting = "Hello World!";
+
+  // This function will be called by executeFunctionCrosschain on the Operator Smart Contract
+  function setGreeting(string memory greeting_) public {
+    greeting = greeting_;
+  }
+}
+```
+
+We will now execute `setGreeting` in a cross-chain way.
+
+### Operator Smart Contract
+
+Switch to the other chain and deploy the `GreeterOperator`. So, if you deployed the `Greeter` contract on L1, deploy the `GreeterOperator` on L2 or vice versa.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.16;
+
+// The Scroll Messenger interface is the same on both L1 and L2, it allows sending cross-chain transactions
+// Let's import it directly from the Scroll Contracts library
+import "@scroll-tech/contracts@0.1.0/libraries/IScrollMessenger.sol";
+
+// The GreeterOperator is capable of executing the Greeter function through the bridge
+contract GreeterOperator {
+  // This function will execute setGreeting on the Greeter contract
+  function executeFunctionCrosschain(
+    address scrollMessengerAddress,
+    address targetAddress,
+    uint256 value,
+    string memory greeting,
+    uint32 gasLimit
+  ) public payable {
+    IScrollMessenger scrollMessenger = IScrollMessenger(scrollMessengerAddress);
+    // sendMessage is able to execute any function by encoding the abi using the encodeWithSignature function
+    scrollMessenger.sendMessage{ value: msg.value }(
+      targetAddress,
+      value,
+      abi.encodeWithSignature("setGreeting(string)", greeting),
+      gasLimit,
+      msg.sender
+    );
+  }
+}
+```
+
+## Calling a Cross-chain Function
+
+We pass the message by executing `executeFunctionCrosschain` and passing the following parameters:
+
+- `scrollMessengerAddress`: This will depend on where you deployed the `GreeterOperator` contract.
+  - If you deployed it on Sepolia use `0x50c7d3e7f7c656493D1D76aaa1a836CedfCBB16A`. If you deployed on Scroll Sepolia use `0xBa50f5340FB9F3Bd074bD638c9BE13eCB36E603d`.
+- `targetAddress`: The address of the `Greeter` contract on the opposite chain.
+- `value`: In this case, it is `0` because the `setGreeting`is not payable.
+- `greeting`: This is the parameter that will be sent through the message. Try passing `“This message was cross-chain!”`
+- `gasLimit`:
+  - If you are sending the message from L1 to L2, around `1000000` gas limit should be more than enough. That said, if you set this too high, and `msg.value` doesn't cover `gasLimit` * `baseFee`, the transaction will revert. If `msg.value` is greater than the gas fee, the unused portion will be refunded.
+  - If you are sending the message from L2 to L1, pass `0`, as the transaction will be completed by executing an additional transaction on L1.
+
+### Relay the Message when sending from L2 to L1
+
+When a transaction is passed from L2 to L1, an additional "execute withdrawal transaction" must be sent on L1. To do this, you must call `relayMessageWithProof` on the L1 Scroll Messenger
+contract from an EOA wallet.
+
+You can do this directly on [Etherscan Sepolia](https://sepolia.etherscan.io/address/0x50c7d3e7f7c656493d1d76aaa1a836cedfcbb16a#writeProxyContract#F3).
+To do so, you will need to pass a Merkle inclusion proof for the bridged transaction and other parameters. You'll query these using the Scroll Bridge API.
+
+{/* TODO: finish looking into API issues */}
+
+We're finalizing the API specifics, but for now, fetch or curl the following endpoint:
+
+```bash
+curl "https://sepolia-api-bridge.scroll.io/api/claimable?page_size=10&page=1&address=GREETER_OPERATOR_ADDRESS_ON_L2"
+```
+
+Replace `GREETER_OPERATOR_ADDRESS_ON_L2` with your GreeterOperator contract address as launched on L2. Read more about Execute Withdraw transactions
+in the [Scroll Messenger](/developers/l1-and-l2-bridging/the-scroll-messenger) article.
+
+<Aside type="danger" title="Experimental API">
+  This API was made for our Bridge UI. It is not yet finalized and may change in the future. We will update this guide
+  when the API is finalized.
+</Aside>
+
+<Aside type="caution" title="Anyone can execute your L2 → L1 Message">
+  `relayMessageWithProof` is fully permissionless, so anyone can call it on your behalf if they're willing to pay the L1
+  gas fees. This feature allows for additional support infrastructure, including tooling to automate this process for
+  applications and users.
+</Aside>
+
+After executing and confirming the transaction on both L1 and L2, the new state of `greeting` on the `Greeter` contract should be `“This message was cross-chain!”`. Sending a message from one chain to the other should take around 20 minutes after the transactions are confirmed on the origin chain.
+
+Congratulations, you now executed a transaction from one chain to the other using our native bridge!
