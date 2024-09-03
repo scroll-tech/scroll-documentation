@@ -8,7 +8,7 @@ const toolList = [
   { icon: "/svgs/Remix.svg", name: "Remix", link: "https://remix-project.org/", quickstartAnchor: "remix-web-ide" },
   {
     icon: EtherSvg,
-    color: "text-[#2A4B78] dark:text-white",
+    color: "text-[#2A4B78] dark:text-white-800",
     name: "EthersJS",
     link: "https://ethers.org/",
     quickstartAnchor: "ethersjs",
@@ -19,10 +19,7 @@ const toolList = [
 ---
 
 <div>
-  <SectionHeader
-    title="开发者快速入门"
-    content="开始使用您喜爱的工具在 Scroll 上进行智能合约的构建和测试"
-  />
+  <SectionHeader title="开发者快速入门" content="开始使用您喜爱的工具在 Scroll 上进行智能合约的构建和测试" />
   <div class="tools">
     {
       toolList.map(({ icon, name, quickstartAnchor, color }) => (

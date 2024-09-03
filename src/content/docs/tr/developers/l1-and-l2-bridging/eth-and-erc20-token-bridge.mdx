@@ -1,0 +1,195 @@
+---
+section: developers
+date: Last Modified
+title: "ETH ve ERC20 Token Köprüsü"
+lang: "tr"
+permalink: "developers/l1-and-l2-bridging/eth-and-erc20-token-bridge"
+whatsnext: { "ERC721 NFT Köprüsü": "/tr/developers/l1-and-l2-bridging/erc721-nft-bridge/" }
+excerpt: "ETH ve ERC20 tokenlerinin sırasıyla depositETH ve depositERC20 fonksiyonlarını kullanılarak L1'den L2'ye köprülenmesine olanak tanıyan Ağ Geçidi Yönlendiricisi."
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+## L1'den ETH ve ERC20 Token Yatırma
+
+Ağ Geçidi Yönlendiricisi, sırasıyla "depositETH" ve "depositERC20" fonksiyonlarını kullanarak ETH ve ERC20 tokenlerinin L1'den L2'ye köprülenmesine olanak tanır. L1'de konuşlandırılmış izinsiz bir köprüdür. ERC20 tokenlerinin L2'de farklı bir adrese sahip olacağına dikkat edin, yeni adresi sorgulamak için 'getL2ERC20Address' işlevini kullanabilirsiniz.
+
+<Aside type="tip" title="">
+  **`depositETH`** ve **`depositERC20`** ETH cinsinden değer gönderilebilen(payable) fonksiyonlardır. Bu fonksiyonlara gönderilen ETH miktarı, L2 ücretlerinin ödenmesi için kullanılacaktır. Tutarın yeterli olmaması durumunda işlem gönderilmeyecektir. Fazla ETH'in tamamı gönderene iade edilecektir. '0.00001 ETH', token yatırma işlemi başlatmak için fazlasıyla yeterli olacaktır.
+</Aside>
+
+ERC20 tokenlarını köprülerken doğru Ağ Geçidini seçme konusunda endişelenmenize gerek yok. Bunun nedeni, 'L1GatewayRouter'ın mesajı göndermek için doğru temel giriş noktasını seçeceğidir:
+
+- **`L1StandardERC20Gateway`:** Bu Ağ Geçidi, herhangi bir ERC20 yatırma işlemine izin verir ve L2'de özel mantığa ihtiyaç duymayan bir ERC20 tokenı için L1GatewayRouter tarafından varsayılan olarak seçilecektir. İlk token köprülemesinde L2 üzerinde ScrollStandardERC20'yi uygulayan yeni bir token oluşturulacaktır. Bir tokenı köprülemek için 'L1GatewayRouter'da 'depositERC20' fonksiyonunu çağırın.
+- **`L1CustomERC20Gateway`:** Bu Ağ Geçidi, özel mantığa sahip tokenlar için 'L1GatewayRouter' tarafından seçilecektir. Bir L1/L2 token çiftinin Scroll Özel ERC20 Köprüsü'nde çalışması için L2 token sözleşmesinin 'IScrollStandardERC20'yi uygulaması gerekir. Ek olarak, tokenın "L2CustomERC20Gateway"e "mint" veya "burn" yetkisi vermesi gerekir. Özel bir token'ın nasıl köprüleneceğine ilişkin adım adım bir örnek için [Özel Ağ Geçidi üzerinden ERC20'ye Köprü Oluşturma](/developers/guides/bridge-erc20-through-the-custom-gateway) kılavuzunu ziyaret edin.
+
+Tüm Ağ Geçidi sözleşmeleri mesajı oluşturacak ve L2'ye isteğe bağlı mesajlar gönderebilen 'L1ScrollMessenger'a gönderecektir. 'L1ScrollMessenger' mesajı 'L1MessageQueue'ya iletir. Herhangi bir kullanıcı, L2'de isteğe bağlı verileri yürütmek için doğrudan Messenger'a mesaj gönderebilir. Bu, köprü aracılığıyla L1 üzerinde yapılan bir işlem ile L2 üzerinde herhangi bir fonksiyonu çalıştırabilecekleri anlamına gelir. Bir uygulama doğrudan mevcut token sözleşmelerine mesaj iletebilse de, Ağ Geçidi ayrıntıları soyutlayarak transfer ve çağrı yapmayı basitleştirir.
+
+<Aside type="tip" title="">
+  Gelecekteki yükseltmelerde, kullanıcılar 'L1ScrollMessenger'ı atlayıp doğrudan 'L1MessageQueue'ya mesaj gönderebilecekler. 'L1MessageQueue' aracılığıyla bir mesaj gönderilirse, işlemin göndereni, 'L1ScrollMessenger'ın adresi değil, işlemi gönderen kullanıcının adresi olacaktır.
+</Aside>
+
+L1'de yeni bir blok oluşturulduğunda, Watcher "L1MessageQueue"daki mesajı algılayacak ve bunu, işlemi l2geth düğümü aracılığıyla L2'ye gönderecek olan Aktarıcı hizmetine iletecektir. Son olarak, l2geth düğümü, işlemi L2'de yürütülmek üzere 'L2ScrollMessenger' sözleşmesine iletecektir.
+
+## L2'den ETH ve ERC20 tokenleri çekin
+
+L2 Ağ Geçidi, L1 Ağ Geçidine çok benzer yapıdadır. 'drawETH' ve 'withdrawERC20' fonksiyonlarını kullanarak ETH ve ERC20 tokenlerini L1'e geri çekebiliriz. Sözleşme adresi L2'de dağıtılmıştır. L1'deki token adresini almak için 'getL1ERC20Address'i kullanıyoruz.
+
+<Aside type="tip" title="">
+  **`withdrawETH`** ve **`withdrawERC20`** ETH cinsinden değer gönderilebilen(payable) fonksiyonlardır ve bu fonksiyonlara gönderilen ETH miktarı, L1 ücretlerinin ödenmesi için kullanılacaktır. Tutarın yeterli olmaması durumunda işlem gönderilmeyecektir. Fazlalık ETH'in tamamı gönderene iade edilecektir. Ücretler L1 etkinliğine bağlıdır ancak '0.005 ETH', token çekim işlemi için fazlasıyla yeterli olacaktır.
+</Aside>
+
+<Aside type="caution" title="">
+  **L2'den gönderim yaparken işlemin L1'de geri döndürülmeyeceğinden(revert) emin olun**. İşleminiz L1'de geri dönerse köprülenmiş NFT'yi kurtarmanın bir yolu yoktur. İşlem gönderildiğinde tüm varlıklar L2'de yakılır ve yeniden basılması imkansızdır.
+</Aside>
+
+## L2'de özel mantığa sahip bir ERC20 tokenı oluşturma
+
+Bir tokenın L2'de özel mantığa ihtiyacı varsa, sırasıyla "L1CustomERC20Gateway" ve "L2CustomERC20Gateway" üzerinden köprülenmesi gerekecektir. L2'deki özel tokenın, bir para yatırma işlemi gerçekleştiğinde yeni tokenler basması ve tokenler çekildiğinde yakılması için Ağ Geçidine izin vermesi gerekecektir.
+
+Aşağıdaki arayüz, L2'de "L2CustomERC20Gateway" ile uyumlu token dağıtmak için gereken "IScrollStandardERC20"dir.
+
+```solidity
+interface IScrollStandardERC20 {
+  /// @notice Return the address of Gateway the token belongs to.
+  function gateway() external view returns (address);
+
+  /// @notice Return the address of counterpart token.
+  function counterpart() external view returns (address);
+
+  /// @dev ERC677 Standard, see https://github.com/ethereum/EIPs/issues/677
+  /// Defi can use this method to transfer L1/L2 token to L2/L1,
+  /// and deposit to L2/L1 contract in one transaction
+  function transferAndCall(address receiver, uint256 amount, bytes calldata data) external returns (bool success);
+
+  /// @notice Mint some token to recipient's account.
+  /// @dev Gateway Utilities, only gateway contract can call
+  /// @param _to The address of recipient.
+  /// @param _amount The amount of token to mint.
+  function mint(address _to, uint256 _amount) external;
+
+  /// @notice Mint some token from account.
+  /// @dev Gateway Utilities, only gateway contract can call
+  /// @param _from The address of account to burn token.
+  /// @param _amount The amount of token to mint.
+  function burn(address _from, uint256 _amount) external;
+}
+```
+
+### Scroll Köprüsü'ne Özel L2 ERC20 tokenı ekleme
+
+Tokenlarınızı, herhangi bir geliştirici tarafından dağıtılmış olan Ağ Geçidi sözleşmeleri aracılığıyla güvenli ve izin gerektirmeyen bir şekilde köprüleyebilirsiniz. Ancak Scroll aynı zamanda bir ERC20 Yönlendiricisi ve topluluk tarafından oluşturulan tüm tokenlerin kabul edildiği bir Ağ Geçidini de yönetir. Scroll tarafından yönetilen Ağ Geçidinin bir parçası olmak, Ağ Geçidi sözleşmelerini dağıtmanıza gerek kalmayacağı ve tokenınızın Scroll kullanıcı arayüzünde görüneceği anlamına gelir. Scroll Ağ Geçidi'nin bir parçası olmak için, tokenı hem L1 hem de L2 köprü sözleşmelerine eklemelisiniz ve bunun için Scroll ekibiyle iletişime geçmelisiniz. Tokenınızı Scroll resmi kullanıcı arayüzüne eklemek için [token listeleri](https://github.com/scroll-tech/token-list) deposundaki talimatları izleyin.
+
+## L1 Ağ Geçidi API'si
+
+Scroll sözleşmesi API dokümantasyonunun tamamı için lütfen [npm kitaplığını](https://www.npmjs.com/package/@scroll-tech/contracts?activeTab=code) ziyaret edin.
+
+### depositETH
+
+```solidity
+function depositETH(address _to, uint256 _amount, uint256 _gasLimit) public payable;
+```
+
+L1'den L2'ye ETH gönderir.
+
+| Parametre | Açıklama                                                                                                                    |
+| --------- | --------------------------------------------------------------------------------------------------------------------------- |
+| to        | Alıcı hesabının L2'deki adresi.                                                                                             |
+| amount    | Wei cinsinden aktarılacak miktar.                                                                                           |
+| gasLimit  | L2'deki yatırmayı tamamlamak için gereken gaz limiti. İşlemin gerçekleştirilmesi için 170000 yeterli olacaktır ancak kullanılmayan fonlar iade edilir. |
+
+### depositERC20
+
+```solidity
+function depositERC20(address _token, address _to, uint256 _amount, uint256 _gasLimit) payable;
+```
+
+L1'den L2'ye ERC20 token gönderir.
+
+| Parametre | Açıklama                                                                                                                    |
+| --------- | --------------------------------------------------------------------------------------------------------------------------- |
+| token     | L1'deki token adresi.                                                                                                       |
+| to        | Alıcı hesabının L2'deki adresi.                                                                                             |
+| amount    | Wei cinsinden aktarılacak token miktarı.                                                                                    |
+| gasLimit  | L2'deki yatırmayı tamamlamak için gereken gaz limiti. Ağ Geçidine bağlı olarak işlemi gerçekleştirmek için 20000 yeterli olacaktır, ancak kullanılmayan fonlar iade edilir. |
+
+### getL2ERC20Address
+
+```solidity
+function getL2ERC20Address(address _l1Token) external view returns (address);
+```
+
+L1 token adresi verildiğinde karşılık gelen L2 token adresini döndürür.
+
+| Parametre | Açıklama                 |
+| --------- | ------------------------ |
+| \_l1Token | L1 token adresi.         |
+
+### updateTokenMapping
+
+```solidity
+function updateTokenMapping(address _l1Token, address _l2Token) external;
+```
+
+Bir ERC20 tokenını L1'den L2'ye bağlayan eşlemeyi günceller.
+
+| Parametre | Açıklama                                        |
+| --------- | ----------------------------------------------- |
+| \_l1Token | ERC20 tokenının L1'deki adresi.                 |
+| \_l2Token | ERC20 tokenının L2'deki karşılık gelen adresi.  |
+
+## L2 Gateway API
+
+### withdrawETH
+
+```solidity
+function withdrawETH(address to, uint256 amount, uint256 gasLimit) external payable;
+```
+
+L2'den L1'e ETH gönderir.
+
+| Parametre | Açıklama                                                                                                |
+| --------- | ------------------------------------------------------------------------------------------------------- |
+| to        | Alıcı hesabının L1'deki adresi.                                                                         |
+| amount    | Wei cinsinden aktarılacak miktar.                                                                       |
+| gasLimit  | L1'deki yatırmayı tamamlamak için gereken gaz limiti. İsteğe bağlıdır, ayarlamak istemiyorsanız 0 gönderin. |
+
+### withdrawERC20
+
+```solidity
+function withdrawERC20(address token, address to, uint256 amount, uint256 gasLimit) external payable;
+```
+
+L2'den L1'e ERC20 tokenları gönderir.
+
+| Parametre | Açıklama                                                                                                |
+| --------- | ------------------------------------------------------------------------------------------------------- |
+| token     | L2'deki token adresi.                                                                                   |
+| to        | Alıcı hesabının L1'deki adresi.                                                                         |
+| amount    | Wei cinsinden aktarılacak token miktarı.                                                                |
+| gasLimit  | L1'deki yatırmayı tamamlamak için gereken gaz limiti. İsteğe bağlıdır, ayarlamak istemiyorsanız 0 gönderin. |
+
+### getL1ERC20Address
+
+```solidity
+function getL1ERC20Address(address l2Token) external view returns (address);
+```
+
+Bir L2 token adresi verildiğinde karşılık gelen L1 token adresini döndürür.
+
+| Parameter | Description                  |
+| --------- | ---------------------------- |
+| l2Token   | L2 tokenının adresi.         |
+
+### updateTokenMapping
+
+```solidity
+function updateTokenMapping(address _l1Token, address _l2Token) external;
+```
+
+ERC20 sözleşmesini L2'den L1'e bağlayan eşlemeyi güncelleyin.
+
+| Parameter | Description                                     |
+| --------- | ----------------------------------------------- |
+| \_l2Token | ERC20 tokeninin L2'deki adresi.                 |
+| \_l1Token | ERC20 tokeninin L1'deki karşılık gelen adresi.  |

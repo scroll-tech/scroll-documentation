@@ -4,8 +4,10 @@ date: Last Modified
 title: "EVM Differences from Ethereum"
 lang: "en"
 permalink: "technology/chain/differences"
-whatsnext: { "Bridge": "/technology/bridge/cross-domain-messaging/" }
+whatsnext: { "Bridge": "/en/technology/bridge/cross-domain-messaging/" }
 ---
+
+import Aside from "../../../../../components/Aside.astro"
 
 ## Opcodes
 
@@ -14,33 +16,26 @@ whatsnext: { "Bridge": "/technology/bridge/cross-domain-messaging/" }
 | `BLOCKHASH`                 | Returns `keccak(chain_id \|\| block_number)` for the last 256 blocks.                                            |
 | `COINBASE`                  | Returns the fee vault address (predeployed contract `0x5300000000000000000000000000000000000005`).               |
 | `DIFFICULTY` / `PREVRANDAO` | Always return 0.                                                                                                 |
-| `BASEFEE`                   | Disabled because currently we disabled EIP-1559. If the opcode is encountered, the transaction will be reverted. |
 | `SELFDESTRUCT`              | Disabled. If the opcode is encountered, the transaction will be reverted.                                        |
 
 ## Precompiled Contracts
 
 | Address | Name         | Scroll behavior                                                                                 |
 | ------- | ------------ | ----------------------------------------------------------------------------------------------- |
-| `0x02`  | `SHA2-256`   | Currently not supported.                                                                        |
 | `0x03`  | `RIPEMD-160` | Currently not supported.                                                                        |
 | `0x05`  | `modexp`     | Restrict the input values `B, E, M` to unsigned integers less than $2^{256}$.                   |
 | `0x08`  | `ecPairing`  | The inputs are still multiple of 6 32-byte values, but limit the number of tuples to at most 4. |
 | `0x09`  | `blake2f`    | Currently not supported.                                                                        |
+| `0x0a`  | `point evaluation`    | Currently not supported.                                                                        |
 
 The remaining precompiled contracts have the same behavior as Ethereum. However, their maximum usage within a block is constrained by a limit tied to the zkEVM circuit capacity.
 
 ## EIPs
 
-Our sequencer was developed based on the London fork initially. We disabled some EIPs in the London fork and introduced a few EIPs from the Shanghai fork to improve the compatibility.
+Our sequencer was developed based on the London fork initially. Since then we have adopted most features from London, Shanghai, and Cancun.
 
-Disabled EIPs until the London fork:
+Our EIP-1559 fee market behaves differently: the sequencer sets the L2 base fee (based on the L1 base fee), and we don't burn ETH.
 
-- [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559): Fee market change and EIP-1559 transaction type
-- [EIP-2930](https://eips.ethereum.org/EIPS/eip-2930): Optional access lists
-- [EIP-3198](https://eips.ethereum.org/EIPS/eip-3198): `BASEFEE` opcode
-
-EIPs imported from the Shanghai fork:
-
-- [EIP-3651](https://eips.ethereum.org/EIPS/eip-3651): Warm `COINBASE`
-- [EIP-3855](https://eips.ethereum.org/EIPS/eip-3855): `PUSH0` instruction
-- [EIP-3860](https://eips.ethereum.org/EIPS/eip-3860): Limit and meter initcode
+<Aside type="caution" title="">
+Opcodes related to EIP-4844, like `BLOBHASH` and `BLOBBASEFEE`, are not yet available on Scroll. Additionally, [EIP-4788](https://eips.ethereum.org/EIPS/eip-4788) for accessing the Beacon Chain block root is not supported.
+</Aside>

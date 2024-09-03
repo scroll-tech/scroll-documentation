@@ -4,7 +4,7 @@ date: Last Modified
 title: "ERC1155 Token Bridge"
 lang: "en"
 permalink: "developers/l1-and-l2-bridging/erc1155-token-bridge"
-whatsnext: { "The Scroll Messenger": "/developers/l1-and-l2-bridging/the-scroll-messenger/" }
+whatsnext: { "The Scroll Messenger": "/en/developers/l1-and-l2-bridging/the-scroll-messenger/" }
 excerpt: "ERC1155 bridging from L1 to L2 is done via the L1ERC1155Gateway."
 ---
 
@@ -52,7 +52,7 @@ interface IScrollERC1155 {
   /// @notice Batch mint some token to recipient's account.
   /// @dev Gateway Utilities, only gateway contract can call
   /// @param _to The address of recipient.
-  /// @param _tokenIds The token id to mint.
+  /// @param _tokenIds The list of token ids to mint.
   /// @param _amounts The list of corresponding amount of token to mint.
   /// @param _data The data passed to recipient
   function batchMint(
@@ -158,5 +158,5 @@ Update the mapping that connects an ERC1155 token contract from L2 to L1.
 
 | Parameter | Description                                       |
 | --------- | ------------------------------------------------- |
-| \_l1Token | The address of th ERC1155 token in L1.            |
+| \_l1Token | The address of the ERC1155 token in L1.            |
 | \_l2Token | The address of corresponding ERC1155 token in L2. |

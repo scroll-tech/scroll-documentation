@@ -4,7 +4,7 @@ date: Last Modified
 title: "ETH and ERC20 Token Bridge"
 lang: "en"
 permalink: "developers/l1-and-l2-bridging/eth-and-erc20-token-bridge"
-whatsnext: { "ERC721 NFT Bridge": "/developers/l1-and-l2-bridging/erc721-nft-bridge/" }
+whatsnext: { "ERC721 NFT Bridge": "/en/developers/l1-and-l2-bridging/erc721-nft-bridge/" }
 excerpt: "The Gateway Router allows ETH and ERC20 token bridging from L1 to L2 using the depositETH and depositERC20 functions respectively."
 ---
 
@@ -33,7 +33,7 @@ All Gateway contracts will form the message and send it to the `L1ScrollMessenge
   address of the `L1ScrollMessenger`. 
 </Aside>
 
-When a new block gets created on L1, the Watcher will detect the message on the `L1MessageQueue` and will pass it to the Relayer service, which will submit the transaction to the L2 via the l2geth node. Finally, the l2geth node will pass the transaction to the `L2ScrollMessagner` contract for execution on L2.
+When a new block gets created on L1, the Watcher will detect the message on the `L1MessageQueue` and will pass it to the Relayer service, which will submit the transaction to the L2 via the l2geth node. Finally, the l2geth node will pass the transaction to the `L2ScrollMessenger` contract for execution on L2.
 
 ## Withdraw ETH and ERC20 tokens from L2
 
@@ -76,7 +76,7 @@ interface IScrollStandardERC20 {
   /// @param _amount The amount of token to mint.
   function mint(address _to, uint256 _amount) external;
 
-  /// @notice Mint some token from account.
+  /// @notice Burn some token from account.
   /// @dev Gateway Utilities, only gateway contract can call
   /// @param _from The address of account to burn token.
   /// @param _amount The amount of token to mint.
@@ -119,7 +119,7 @@ Sends ERC20 tokens from L1 to L2.
 | token     | The token address on L1.                                                                                                    |
 | to        | The address of recipient's account on L2.                                                                                   |
 | amount    | The amount of token to transfer, in wei.                                                                                    |
-| gasLimit  | Gas limit required to complete the deposit on L2. 20000 should be enough to process the transaction, depending on the Gateway, but unused funds are refunded. |
+| gasLimit  | Gas limit required to complete the deposit on L2. 200000 should be enough to process the transaction, depending on the Gateway, but unused funds are refunded. |
 
 ### getL2ERC20Address
 

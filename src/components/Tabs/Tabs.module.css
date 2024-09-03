@@ -1,6 +1,21 @@
 .container {
   @apply mt-4;
 }
+.tablist {
+  @apply border-0 border-b border-solid border-black mb-4;
+}
+
+.tablist button {
+  @apply bg-transparent text-black border-none text-xl font-semibold leading-8 outline-none mb-[-1px] mr-12 capitalize;
+}
+
+button.primary,
+button.contentTabPrimary {
+  @apply !text-link border-link border-0 border-b-4 border-solid;
+}
+
+button.secondary {
+}
 
 .tab {
   @apply py-1 px-2 mr-2;

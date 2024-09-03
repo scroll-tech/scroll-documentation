@@ -1,0 +1,111 @@
+---
+import SectionHeader from "~/components/SectionHeader/index.astro"
+import EtherSvg from "~/assets/svgs/home/EthersJS.svg?raw"
+
+const toolList = [
+  { icon: "/svgs/Hardhat.svg", name: "Hardhat", link: "https://hardhat.org/", quickstartAnchor: "hardhat" },
+  { icon: "/svgs/Foundry.svg", name: "Foundry", link: "https://getfoundry.sh/", quickstartAnchor: "foundry" },
+  { icon: "/svgs/Remix.svg", name: "Remix", link: "https://remix-project.org/", quickstartAnchor: "remix-web-ide" },
+  {
+    icon: EtherSvg,
+    color: "text-[#2A4B78] dark:text-white-800",
+    name: "EthersJS",
+    link: "https://ethers.org/",
+    quickstartAnchor: "ethersjs",
+  },
+  { icon: "/svgs/Brownie.svg", name: "Brownie", link: "https://github.com/eth-brownie", quickstartAnchor: "brownie" },
+  { icon: "/svgs/Truffle.svg", name: "Truffle", link: "https://trufflesuite.com/", quickstartAnchor: "truffle" },
+]
+---
+
+<div>
+  <SectionHeader
+    title="Geliştiriciler İçin Hızlı Başlangıç"
+    content="Akıllı sözleşmeler oluştururken ve test ederken kullanmayı en sevdiğiniz tüm araçlar ile Scroll'da geliştirmeye başlayın."
+  />
+  <div class="tools">
+    {
+      toolList.map(({ icon, name, quickstartAnchor, color }) => (
+        <a href={`/tr/developers/developer-quickstart#${quickstartAnchor}`} class={`tools-item ${color}`}>
+          <figure class={color ? "p-[18px]" : ""}>
+            {color ? <Fragment set:html={icon} /> : <img src={icon} alt={name} />}
+          </figure>
+          <span>{name}</span>
+        </a>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .tools {
+    margin-top: 96px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .tools-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+  }
+  .tools-item figure {
+    font-size: 0;
+    width: 140px;
+    height: 140px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    @apply bg-normal dark:bg-dark-normal;
+  }
+  .tools-item figure:hover {
+    @apply dark:bg-dark-highlight;
+  }
+
+  .tools-item figure svg {
+    width: 80% !important;
+  }
+  .tools-item span {
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  @media screen and (max-width: 72em) {
+    .tools-item figure {
+      font-size: 0;
+      width: 12vw;
+      height: 12vw;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+    }
+
+    .tools-item figure img {
+      width: 8vw;
+    }
+
+    .tools-item span {
+      font-size: 18px;
+    }
+  }
+
+  @media screen and (max-width: 50em) {
+    .tools {
+      flex-wrap: wrap;
+      gap: 50px;
+      justify-content: center;
+    }
+    .tools-item figure {
+      width: 116px;
+      height: 116px;
+    }
+    .tools-item figure img {
+      width: 78px;
+    }
+    .tools-item span {
+      font-size: 16px;
+    }
+  }
+</style>

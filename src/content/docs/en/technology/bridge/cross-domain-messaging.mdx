@@ -4,7 +4,7 @@ date: Last Modified
 title: "Cross-Domain Messaging"
 lang: "en"
 permalink: "technology/bridge/cross-domain-messaging"
-whatsnext: { "Deposit Gateways": "/technology/bridge/deposit-gateways/" }
+whatsnext: { "Deposit Gateways": "/en/technology/bridge/deposit-gateways/" }
 ---
 
 import ClickToZoom from "../../../../../components/ClickToZoom.astro"
@@ -60,7 +60,7 @@ Both functions construct an L1-initiated transaction with a new transaction type
 - `appendCrossDomainMessage` can be only called by `L1ScrollMessenger` and it uses the [aliased address](#address-alias) of `msg.sender`, which will be the address of `L1ScrollMessenger`, as the transaction sender.
 - `appendEnforcedTransaction` can be only called by `EnforcedTxGateway` and it uses `sender` from the function parameter as the transaction sender. This allows users to enforce a withdrawal or transfer of ETH from their L2 accounts directly through the L1 bridge.
 
-After the transaction is successfully executed on L1, the watcher in the Scroll sequencer that monitors the `L1MessageQueue` contract collects the new `QueueTransaction` events from L1 blocks. The sequencer then constructs a new `L1MessageTx` transaction per event and appends them to its local L1 transaction queue. When constructing a new L2 block, the sequencer includes the transactions from both its L1 transaction queue and its L2 mempool. Note that the L1 message transactions must be included sequentially based on the L1 message queue order in the `L1MessageQueue` contract. `L1MessageTx` transactions always come first in the L2 blocks followed by L2 transactions. Currently, we limit the number of `L1MessageTx` transactions in a L2 block to `NumL1MessagesPerBlock` (currently set to 10).
+After the transaction is successfully executed on L1, the watcher in the Scroll sequencer that monitors the `L1MessageQueue` contract collects the new `QueueTransaction` events from L1 blocks. The sequencer then constructs a new `L1MessageTx` transaction per event and appends them to its local L1 transaction queue. When constructing a new L2 block, the sequencer includes the transactions from both its L1 transaction queue and its L2 mempool. Note that the L1 message transactions must be included sequentially based on the L1 message queue order in the `L1MessageQueue` contract. `L1MessageTx` transactions always come first in the L2 blocks followed by L2 transactions. Currently, we limit the number of `L1MessageTx` transactions in an L2 block to `NumL1MessagesPerBlock` (currently set to 10).
 
 Next, we will expand more on the specific process of sending arbitrary messages via `L1ScrollMessenger` and sending enforced transactions via `EnforcedTxGateway`.
 
@@ -162,7 +162,7 @@ Similar to arbitrary message relaying, `sendTransaction` deducts the message rel
 
 ### Retrying Failed Messages
 
-If a `L1MessageTx` transaction fails on L2 due to insufficient gas, users can replay the message with a higher gas limit. `L1ScrollMessenger` provides the method `replayMessage` that allows users to send the same information as the previous failed message with a higher gas limit. This message will become a new `L1MessageTx` transaction on L2. Note that we won't refund the gas fee for the previous failed transaction as it is already processed on L2.
+If an `L1MessageTx` transaction fails on L2 due to insufficient gas, users can replay the message with a higher gas limit. `L1ScrollMessenger` provides the method `replayMessage` that allows users to send the same information as the previous failed message with a higher gas limit. This message will become a new `L1MessageTx` transaction on L2. Note that we won't refund the gas fee for the previous failed transaction as it is already processed on L2.
 
 <ToggleElement anchor="replayMessage function signature">
 <div slot="title"><code>replayMessage</code> function signature</div>

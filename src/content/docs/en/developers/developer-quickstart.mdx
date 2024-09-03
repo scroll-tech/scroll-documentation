@@ -5,7 +5,7 @@ title: "Developer Quickstart"
 lang: "en"
 permalink: "developers/developer-quickstart"
 excerpt: "Scroll Developer Quickstart helps you acquire testnet Ether, configure your network, and access all of your favorite tooling"
-whatsnext: { "Verify Your Smart Contracts": "/developers/verifying-smart-contracts" }
+whatsnext: { "Verify Your Smart Contracts": "/en/developers/verifying-smart-contracts" }
 ---
 
 import Aside from "../../../../components/Aside.astro"
@@ -83,6 +83,10 @@ Use the table below to configure your Ethereum tools to the Scroll Sepolia Testn
   Contracts](/developers/verifying-smart-contracts).
 </Aside>
 
+<Aside type="danger" title="">
+Features from the Dencun upgrade are not yet available on Scroll. Please use `shanghai` as your EVM target and avoid using a Solidity version higher than `0.8.23`.
+</Aside>
+
 ### Hardhat
 
 Modify your Hardhat config file `hardhat.config.ts` to point at the Scroll Sepolia Testnet public RPC.
@@ -109,7 +113,7 @@ const config: HardhatUserConfig = {
 To deploy using the Scroll Sepolia Testnet Public RPC, run:
 
 ```bash
-forge create ... --rpc-url=https://sepolia-rpc.scroll.io/ --legacy
+forge create ... --rpc-url=https://sepolia-rpc.scroll.io/ 
 ```
 
 ### Remix Web IDE

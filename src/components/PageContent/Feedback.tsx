@@ -113,7 +113,7 @@ export const Feedback = () => {
           }}
         >
           {isSent ? (
-            <div className="text-dark dark:text-white" style={{ fontSize: "1rem", lineHeight: "normal" }}>
+            <div className="text-dark dark:text-white-800" style={{ fontSize: "1rem", lineHeight: "normal" }}>
               {t("rightSidebar.feedbackForm.thankYouMessage")}
             </div>
           ) : (
@@ -124,7 +124,7 @@ export const Feedback = () => {
             >
               <label
                 htmlFor="name"
-                className="text-dark dark:text-white"
+                className="text-dark dark:text-white-800"
                 style={{ fontSize: "1rem", lineHeight: "normal", marginBottom: "16px" }}
               >
                 {t("rightSidebar.feedbackForm.instructions")}
@@ -133,7 +133,7 @@ export const Feedback = () => {
                 <textarea
                   name="msg"
                   rows="4"
-                  className="text-black dark:text-white border-black dark:border-white bg-pure-white dark:bg-black"
+                  className="text-black dark:text-white-800 border-black dark:border-white-800 bg-pure-white dark:bg-black"
                   style={{
                     padding: "15px",
                     caretColor: "#C4C4C4",

@@ -1,0 +1,39 @@
+---
+section: technology
+date: Last Modified
+title: "Bloklar"
+lang: "tr"
+permalink: "technology/chain/blocks"
+whatsnext: { "Rollup Süreci": "/tr/technology/chain/rollup/" }
+---
+
+Blok, kendinden önceki bloğu devam ettirmeye yönelik işlemlerden ve bağlantılardan oluşan bir koleksiyondur.
+
+## Blok Başlığı
+
+Scroll'daki blok başlığı Ethereum'un yapısını yansıtır. Ancak blok başlığındaki belirli alanlar, aşağıdaki tabloda ayrıntılı olarak belirtildiği gibi, Katman 2 bağlamına uyacak şekilde değiştirilmiştir:
+
+| Alan                | Açıklama                                                           |
+| ------------------- | ------------------------------------------------------------------ |
+| `parentHash`        | Kendinden önceki bloğun hash'i.                                      |
+| `uncleHash`         | Her zaman `keccak256(rlp([]))`.                                       |
+| `coinbase`          | İşlem ücretleri önceden dağıtılan ücret kasası sözleşme adresi `0x5300000000000000000000000000000000000005`'e tahsil edilir. Çoğu durumda, RPC "madenci" alanı dönüşü sıfır adresidir `0x0000000000000000000000000000000000000000`. |
+| `stateRoot`         | Durum trie'sinin kök hash'i. Aynı zamanda Poseidon'dur.              |
+| `transactionsRoot ` | İşlem trie'sinin kök hash'i.                             |
+| `receiptsRoot `     | İşlem makbuzu trie'sinin kök hash'i.                    |
+| `logsBloom`         | Olay kayıtlarını içeren veri yapısı.                          |
+| `difficulty`        | Her zaman 1 veya 2'dir.                                                     |
+| `number`            | Blok numarası.                                                  |
+| `gasLimit`          | Blokta izin verilen maksimum gas.                              |
+| `gasUsed`           | Blokta kullanılan gas.                                         |
+| `timestamp`         | Blok zaman damgası.                                                    |
+| `extraData`         | Bloğu imzalayan kişinin imzası ve ardından isteğe bağlı ek veriler. |
+| `mixHash`           | Her zaman 0.                                                          |
+| `nonce`             | Her zaman 0.                                                          |
+| `baseFee`           | Scroll'da EIP-1559'u etkinleştirmediğimiz için şu anda boş. |
+
+## Blok süresi
+
+Blok süresi ardışık iki blok arasındaki süreyi ifade eder. Scroll'da blok süresi 3 saniyeye ayarlanmıştır. Kısaltılmış blok süresi kullanıcı deneyimini iyileştirir ve Scroll zincirinin ölçeklenebilirliğini artırır.
+
+3 saniyelik blok süresi en iyi çaba esasına göre korunur, protokol tarafından garanti edilmez veya zorunlu kılınmaz.

@@ -1,0 +1,155 @@
+---
+section: technology
+date: Last Modified
+title: "Rollup Süreci"
+lang: "tr"
+permalink: "technology/chain/rollup"
+whatsnext: { "Ethereum EVM'inden Farklar": "/tr/technology/chain/differences/" }
+---
+
+import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import RollupProcess from "../_images/rollup.png"
+
+Bu belgede Scroll'daki rollup işlemi açıklanmaktadır.
+
+## İş Akışı
+
+<ClickToZoom src={RollupProcess} alt="Rollup Process" />
+
+Şekilde rollup iş akışı gösterilmektedir. L2 sıralayıcısı üç modül içerir:
+
+- **Senkronizasyon hizmeti** L1 köprü sözleşmesinden düzenlenen etkinliğe abone olur. L1 gelen kutusuna yeni eklenen mesajları tespit ettiğinde, Senkronizasyon Hizmeti buna göre yeni bir "L1MessageTx" işlemi oluşturacak ve bunu yerel L1 işlem kuyruğuna ekleyecektir.
+- **Mempool** doğrudan L2 sıralayıcısına gönderilen işlemleri toplar.
+- **Yürütücü** hem L1 işlem kuyruğundan hem de L2 mempool'dan işlemleri çeker ve yeni bir L2 bloğu oluşturmak için bunları yürütür.
+
+Rollup düğümü üç modül içerir:
+
+- **Aktarıcı**, veri kullanılabilirliği ve kesinliği için taahhüt işlemlerini ve sonlandırma işlemlerini rollup sözleşmesine gönderir.
+- **Parça Önerici** ve **Yığın Önerici**, [İşlem Toplu İşleme](/tr/technology/chain/transactions#transaction-batching) bölümünde açıklanan kısıtlamalara uygun olarak yeni parçalar ve yeni yığınlar önerir.
+
+Rollup süreci üç aşamaya ayrılabilir: işlemin yürütülmesi, yığın oluşturma ve veri taahhüdü, kanıt oluşturma ve sonuçlandırma.
+
+### Aşama 1. İşlemin Yürütülmesi
+
+1. Kullanıcılar işlemleri L1 köprü sözleşmesine veya L2 sıralayıcılara gönderir.
+2. L2 sıralayıcıdaki Senkronizasyon Hizmeti, köprü sözleşmesinden en son eklenen L1 işlemlerini getirir.
+3. L2 sıralayıcı, L2 blokları oluşturmak için hem L1 mesaj kuyruğundan hem de L2 bellek havuzundan gelen işlemleri işler.
+
+### Aşama 2. Yığın Oluşturma ve Veri Taahhüdü
+
+4. Rollup düğümü en son L2 bloklarını izler ve işlem verilerini getirir.
+5. Kriter ([İşlem Toplu İşleme](/tr/technology/chain/transactions#transaction-batching) bölümünde açıklanan) karşılanırsa, rollup düğümü yeni bir yığın veya parça önerir ve bunu veritabanına yazar. Aksi halde rollup düğümü daha fazla blok veya parça beklemeye devam eder.
+6. Yeni bir yığın oluşturulduktan sonra, rollup aktarıcısı bu yığındaki işlem verilerini toplar ve verilerin kullanılabilirliği için rollup sözleşmesine bir Taahhüt İşlemi gönderir.
+
+### Aşama 3. Kanıt Oluşturma ve Sonlandırma
+
+7. Koordinatör veri tabanından yeni bir parça veya yığını yokladığında:
+    - Yeni bir parça üzerine koordinatör, L2 sıralayıcıdan bu yığındaki tüm blokların yürütme izlerini sorgulayacak ve ardından rastgele seçilen bir zkEVM kanıtlayıcıya bir parça kanıtlama görevi gönderecektir.
+    - Yeni bir yığın üzerine, koordinatör bu yığındaki tüm parçaların parça kanıtlarını veri tabanından toplayacak ve rastgele seçilen bir toplayıcı kanıtlayıcıya bir yığın kanıtlama görevi gönderecektir.
+8. Koordinatör kanıtlayıcıdan parça veya yığın kanıtı aldığında, kanıtı veri tabanına yazacaktır.
+9. Rollup aktarıcısı veri tabanından yeni bir yığın seçtiğinde, kanıtı doğrulamak için rollup sözleşmesine bir Sonlandırma İşlemi gönderecektir.
+
+## Taahhüt İşlemi
+
+Taahhüt İşlemi, veri kullanılabilirliği için blok bilgilerini ve işlem verilerini L1'e gönderir. İşlem, yığın başlığını, parça verilerini ve atlanan L1 mesajının bir bit eşlemini içerir. Üst yığın başlığı, bu yığının bağlandığı önceki yığını belirtir. Üst yığın daha önce işlenmelidir; aksi takdirde işlem geri alınacaktır. Aşağıdaki `commitBatch` işlev imzasına bakın.
+
+```solidity
+function commitBatch(
+    uint8 version,
+    bytes calldata parentBatchHeader,
+    bytes[] memory chunks,
+    bytes calldata skippedL1MessageBitmap
+) external override OnlySequencer
+```
+
+`commitBatch` işlevi üst yığının daha önce taahhüt edildiğini doğruladıktan sonra yığının, yığın başlığını oluşturur ve yığının başlığının hash'ini `ScrollChain` sözleşmesine kaydeder.
+
+```solidity
+mapping(uint256 => bytes32) public committedBatches;
+```
+
+Yığın ve parça verilerinin kodlanması [Codec](#codec) bölümünde açıklanmaktadır. Yığın başlığındaki alanların çoğu, parça verilerinden türetilecek şekilde basittir. Dikkat edilmesi gereken önemli alanlardan biri, geçerlilik kanıtını doğrulamak için kamuya açık girdinin bir parçası haline gelecek olan `dataHash`tır. Bir yığının "n" parça içerdiğini varsayarsak, `dataHash` aşağıdaki şekilde hesaplanır.
+
+```
+batch.dataHash := keccak(chunk[0].dataHash || ... || chunk[n-1].dataHash)
+```
+
+Bir parçanın 'k' blok içerdiğini varsayarsak, onun `dataHash`ı aşağıdaki şekilde hesaplanır:
+
+```
+chunk.dataHash := keccak(blockContext[0] || ... || blockContext[k-1] ||
+                         block[0].l1TxHashes || block[0].l2TxHashes || ... ||
+                         block[k-1].l1TxHashes || block[k-1].l2TxHashes)
+```
+
+Burada `block.l1TxHashes` bu bloktaki L1 işlemlerinin birleştirilmiş işlem hash'leridir ve `block.l2TxHashes` ise bu bloktaki L2 işlemlerinin birleştirilmiş işlem hash'leridir. L1 işlemlerinin işlem hash'lerinin rollup düğümü tarafından yüklenmediğini, bunun yerine bu blokta yer alan L1 mesajlarının indeks aralığı göz önüne alındığında doğrudan `L1MessageQueue` sözleşmesinden yüklendiğini unutmayın. L2 işlem hash'leri, [`Chunk`](#Chunk-Codec) içindeki `l2Transactions` alanındaki RLP kodlu bytelardan hesaplanır.
+
+Ek olarak, `commitBatch` fonksiyonu atlanan L1 mesajlarının bir bit eşlemini içerir. Ne yazık ki bunun nedeni kanıt taşması sorunudur. Bir L1 mesajına karşılık gelen L1 işlemi devre kapasitesi sınırını aşarsa, bu işlem için geçerli bir kanıt oluşturamayacağız ve dolayısıyla L1'de sonlandıramayız. Scroll, kanıtlama sistemimizde yapılan yükseltmeler yoluyla kanıt taşması sorununu ortadan kaldırmak için aktif olarak çalışıyor.
+
+## Sonlandırma İşlemi
+
+Sonlandırma İşlemi, daha önce taahhüt edilen yığını geçerlilik kanıtıyla sonlandırır. İşlem ayrıca toplu işlemden sonra durum kökünü ve çekilme kökünü de gönderir. İşte `finalizeBatchWithProof`un işlev imzası:
+
+```solidity
+function finalizeBatchWithProof(
+    bytes calldata batchHeader,
+    bytes32 prevStateRoot,
+    bytes32 postStateRoot,
+    bytes32 withdrawRoot,
+    bytes calldata aggrProof
+) external override OnlyProver
+```
+
+finalizeBatchWithProof` işlevi ilk olarak yığının sözleşmede taahhüt edilip edilmediğini doğrular. Daha sonra genel giriş hash'ini aşağıdaki gibi hesaplar
+
+```
+publicInputHash := keccak(chainId || prevStateRoot || postStateRoot || withdrawRoot || batch.dataHash)
+```
+
+Genel giriş hash'i ve geçerlilik kanıtı, plonk sağlamlık doğrulayıcıya gönderilir. Doğrulama başarılı olduktan sonra yeni durum kökü ve çekim kökü `ScrollChain` sözleşmesinde saklanır.
+
+```solidity
+mapping(uint256 => bytes32) public override finalizedStateRoots;
+mapping(uint256 => bytes32) public override withdrawRoots;
+```
+
+Bu aşamada en son sonuçlanan yığının durum kökü güvenilir bir şekilde kullanılabilir ve o yığındaki para çekme işlemleri, para çekme köküne Merkle kanıtı kullanılarak L1 üzerinden gerçekleştirilebilir.
+
+## Codec
+
+Bu bölümde rollup sözleşmesindeki üç veri yapısının codec'i açıklanmaktadır: `BatchHeader`, `Chunk`, ve `BlockContext`.
+
+### `BatchHeader` Codec
+
+| Alan                    | Bytes   | Veri tipi        | Offset | Açıklama                                                     |
+| ------------------------ | ------- | ----------- | ------ | --------------------------------------------------------------- |
+| `version`                | 1       | `uint8`     | 0      | Yığın başlık sürümü                                       |
+| `batchIndex`             | 8       | `uint64`    | 1      | Yığının indeksi                                         |
+| `l1MessagePopped`        | 8       | `uint64`    | 9      | Yığında açılan L1 mesajlarının sayısı                    |
+| `totalL1MessagePopped`   | 8       | `uint64`    | 17     | Yığından sonra açılan toplam L1 mesajlarının sayısı          |
+| `dataHash`               | 32      | `bytes32`   | 25     | Yığının veri hashi                                      |
+| `parentBatchHash`        | 32      | `bytes32`   | 57     | Üst yığının hashi                                           |
+| `skippedL1MessageBitmap` | dynamic | `uint256[]` | 89     | Yığında hangi L1 mesajlarının atlandığını gösteren bir bit eşlem |
+
+### `Chunk` Codec
+
+| Alan           | Bytes   | Veri tipi          | Offset    | Açıklama                                                                                                                                        |
+| ---------------- | ------- | -------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `numBlocks`      | 1       | `uint8`        | 0         | Parçadaki blok sayısı                                                                                                                 |
+| `block[0]`       | 60      | `BlockContext` | 1         | İlk bloğun blok bilgileri                                                                                                          |
+| ...              | ...     | ...            | ...       | ...                                                                                                                                               |
+| `block[i]`       | 60      | `BlockContext` | `60*i+1`  | `i+1`inci bloğun blok bilgisi                                                                                                          |
+| ...              | ...     | ...            | ...       | ...                                                                                                                                               |
+| `block[n-1]`     | 60      | `BlockContext` | `60*n-59` | Son bloğun blok bilgisi                                                                                                          |
+| `l2Transactions` | dynamic | `bytes`        | `60*n+1`  | İmzalarla L2 işlemlerinin birleştirilmiş RLP kodlaması. RLP kodlamasının bayt uzunluğu (`uint32`) her işlemden önce eklenir. |
+
+### `BlockContext` Codec
+
+| Alan              | Bytes | Veri tipi     | Offset | Açıklama                                                                          |
+| ----------------- | ----- | --------- | ------ | ----------------------------------------------------------------------------------- |
+| `blockNumber`     | 8     | `uint64`  | 0      | Blok numarası                                                                    |
+| `timestamp`       | 8     | `uint64`  | 8      | Blok zamanı                                                                      |
+| `baseFee`         | 32    | `uint256` | 16     | Bu bloğun taban ücreti. Şu anda her zaman 0'dır çünkü EIP-1559'u devre dışı bırakıyoruz. |
+| `gasLimit`        | 8     | `uint64`  | 48     | Bu bloğun gaz limiti                                                     |
+| `numTransactions` | 2     | `uint16`  | 56     | Hem L1 hem de L2 tx'leri dahil olmak üzere bu bloktaki işlem sayısı              |
+| `numL1Messages`   | 2     | `uint16`  | 58     | Bu bloktaki L1 mesajlarının sayısı                                          |

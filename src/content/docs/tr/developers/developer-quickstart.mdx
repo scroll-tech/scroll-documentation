@@ -1,0 +1,260 @@
+---
+section: developers
+date: Last Modified
+title: "Geliştirici Hızlı Başlangıcı"
+lang: "tr"
+permalink: "developers/developer-quickstart"
+excerpt: "Scroll Geliştirici Hızlı Başlangıcı, test ağı Ether'i edinmenize, ağınızı yapılandırmanıza ve tüm favori araçlarınıza erişmenize yardımcı olur"
+whatsnext: { "Akıllı Sözleşemenizi Doğrulayın": "/tr/developers/verifying-smart-contracts" }
+---
+
+import Aside from "../../../../components/Aside.astro"
+import ClickToZoom from "../../../../components/ClickToZoom.astro"
+import networkSelection from "./_images/mmNetworkSelection.png"
+import injectedProviderMM from "./_images/injectedProviderMM.png"
+import ToggleElement from "../../../../components/ToggleElement.astro"
+
+Scroll ile akıllı sözleşmeler oluştururken ve test ederken en sevdiğiniz araçlar oldukları gibi çalışırlar.
+
+Scroll, EVM ile bytecode olarak denk olduğu için en sevdiğiniz geliştirici araçlarınızı bir Scroll RPC sağlayıcısına yönlendirmeniz yeterli olacaktır.
+
+Herhangi bir sorunla karşılaşırsanız lütfen [Discord'umuzdan](https://discord.gg/scroll) bize ulaşın.
+
+## Ether Edinme
+
+Scroll yerel para birimi olarak ETH'yi kullanıyor ve bu ETH'ler, ağda akıllı sözleşme dağıtımı ve etkileşimleri için işlem ücretlerini ödemek için gerekli olacak.
+
+Scroll üzerinde inşa etmeye başlamak için Scroll Sepolia test ağımızı kullanarak başlamanızı öneririz. Öncelikle bir miktar test ağı ETH edinmeniz gerekecek. Sepolia'da test token'ları almayla ilgili ipuçları için [Musluk](/tr/user-guide/faucet) sayfasına bakın. Bundan sonra, [Köprü makalesinde](/tr/user-guide/bridge) açıklandığı gibi [Sepolia Köprümüzü](https://sepolia.scroll.io/bridge) kullanarak test ağı ETH'lerinizi Scroll Sepolia Test ağına (Katman 2) aktarabilirsiniz.
+
+Adım adım açıklama için Kullanım Kılavuzunun [Kurulum](/tr/user-guide/setup) sayfasıyla başlayın.
+
+Scroll ana ağında akıllı sözleşme dağıtmak için hazır olduğunuzda, [yerel köprümüzü](https://scroll.io/bridge/) veya 3. taraf köprülerden birini kullanarak ETH üzerinden köprü kurabilirsiniz.
+
+## Ağ Yapılandırması
+
+### Scroll Ana Ağı
+
+Ethereum araçlarınızı Scroll ana ağına yapılandırmak için aşağıdaki tabloyu kullanın.
+
+| Ağ Adı             | Scroll                                             | Ethereum Ana Ağı                                     |
+| ------------------ | -------------------------------------------------- | ---------------------------------------------------- |
+| RPC URL'si         | [https://rpc.scroll.io/](https://rpc.scroll.io/)   | [https://eth.llamarpc.com](https://eth.llamarpc.com) |
+| Zincir Kimliği     | 534352                                             | 1                                                    |
+| Para Birimi Sembolü| ETH                                                | ETH                                                  |
+| Blok Gezgini URL'si| [https://scrollscan.com/](https://scrollscan.com/) | [https://etherscan.io](https://etherscan.io)         |
+
+<ToggleElement anchor="mainnet-additional-infra">
+  <div slot="title">Ek Scroll Ana Ağ RPC'leri ve Altyapıları</div>
+  - [Scroll Yerel Köprüsü](https://scroll.io/bridge)
+  - [ChainList.org'daki Scroll RPC Sağlayıcıları](https://chainlist.org/chain/534352)
+  - [ChainList.org'daki Ethereum RPC Sağlayıcıları](https://chainlist.org/chain/1)
+  {/* - Ek Blok Gezginleri:
+    - [Dora](https://www.ondora.xyz/network/scroll/interactions)
+    - [L2Scan](https://scroll.l2scan.co/) */}
+
+</ToggleElement>
+
+### Scroll Sepolia Test Ağı
+
+Ethereum araçlarınızı Scroll Sepolia Test ağına yapılandırmak için aşağıdaki tabloyu kullanın.
+
+| Ağ Adı             | Scroll Sepolia                                                    | Ethereum Sepolia                                             |
+| ------------------ | ----------------------------------------------------------------- | ------------------------------------------------------------ |
+| RPC URL'si         | [https://sepolia-rpc.scroll.io/](https://sepolia-rpc.scroll.io/)  | [https://rpc2.sepolia.org](https://rpc2.sepolia.org)         |
+| Zincir Kimliği     | 534351                                                            | 11155111                                                     |
+| Para Birimi Sembolü| ETH                                                               | ETH                                                          |
+| Blok Gezgini URL'si| [https://sepolia.scrollscan.com](https://sepolia.scrollscan.com/) | [https://sepolia.etherscan.io](https://sepolia.etherscan.io) |
+
+<ToggleElement anchor="sepolia-additional-infra">
+  <div slot="title">Ek Scroll Sepolia RPC'leri ve Altyapıları</div>
+  - [Scroll Sepolia Yerel Köprüsü](https://sepolia.scroll.io/bridge)
+  - [ChainList.org'daki Scroll Sepolia RPC Sağlayıcıları](https://chainlist.org/chain/534351)
+  - [ChainList.org'daki Ethereum Sepolia RPC Sağlayıcıları](https://chainlist.org/chain/11155111)
+  - Ek Blok Gezginleri:
+    - [Dora](https://www.ondora.xyz/network/scroll-sepolia/interactions)
+    - [L2Scan](https://scroll.l2scan.co/)
+
+</ToggleElement>
+
+## Araçlarınızı Yapılandırın
+
+<Aside type="tip" title="">
+  Akıllı sözleşme dağıtımınızı doğrulamaya yönelik araçları ayarlamak için bkz.[Akıllı Sözleşmeleri Doğrulama](/tr/developers/verifying-smart-contracts).
+</Aside>
+
+### Hardhat
+
+Hardhat yapılandırma dosyanızı `hardhat.config.ts'yi Scroll Sepolia Test ağı public RPC'sini işaret edecek şekilde değiştirin.
+
+```jsx
+...
+
+const config: HardhatUserConfig = {
+  ...
+  networks: {
+    scrollSepolia: {
+      url: "https://sepolia-rpc.scroll.io/" || "",
+      accounts:
+        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    },
+  },
+};
+
+...
+```
+
+### Foundry
+
+Scroll Sepolia Test ağı Public RPC'sini kullanarak dağıtım yapmak için şunu çalıştırın:
+
+```bash
+forge create ... --rpc-url=https://sepolia-rpc.scroll.io/ --legacy
+```
+
+### Remix Web IDE
+
+Sözleşmelerinizi derledikten sonra Remix kullanarak dağıtım yapmanın en kolay yolu, [Metamask'ı kurmak](/tr/user-guide/setup) ve ardından **Scroll Sepolia Test ağını** seçmektir.
+
+<ClickToZoom src={networkSelection} />
+
+Şimdi, "Dağıt ve İşlemleri Çalıştır" sekmesinde, "Ortam" açılır menüsünü kullanarak "Enjekte Edilen Sağlayıcı - MetaMask"ı seçin.
+
+<ClickToZoom src={injectedProviderMM} />
+
+Cüzdanınızı bağlayın ve Scroll Sepolia Test ağını seçin. Hesabınız Remix'te otomatik olarak seçilmelidir ve "Dağıt"a tıklayabilirsiniz.
+
+### Truffle
+
+Zaten bir Truffle ortamı kurulumunuz olduğunu varsayarak Truffle [yapılandırma dosyasına](https://trufflesuite.com/docs/truffle/reference/configuration/), `truffle.js`ye gidin. HDWalletProvider'ı yüklediğinizden emin olun: `npm install @truffle/hdwallet-provider@1.4.0`
+
+```js
+const HDWalletProvider = require("@truffle/hdwallet-provider")
+...
+module.exports = {
+  networks: {
+    scrollSepolia: {
+      provider: () =>
+        new HDWalletProvider(process.env.PRIVATE_KEY, "https://sepolia-rpc.scroll.io/"),
+      network_id: '*',
+    },
+  }
+}
+```
+
+### Brownie
+
+Scroll Sepolia Test ağını eklemek için aşağıdaki komutu çalıştırın:
+
+```bash
+brownie networks add Ethereum scrollSepolia host=https://sepolia-rpc.scroll.io/ chainid=534351
+```
+
+Bunu varsayılan ağınız olarak ayarlamak için proje yapılandırma dosyanıza aşağıdakileri ekleyin:
+
+```yaml
+networks:
+  default: scrollSepolia
+```
+
+Scroll Sepolia Test ağını eklemenin başka bir yolu da bir 'yaml' dosyası oluşturmak ve onu eklemek için bir komut çalıştırmaktır.
+
+'network-config.yaml' adlı bir yaml dosyası örneği vermek gerekirse:
+
+```yaml
+live:
+- name: Ethereum
+ networks:
+ - chainid: 534351
+   explorer: https://sepolia.scrollscan.com/
+   host: https://sepolia-rpc.scroll.io
+   id: scrollSepolia
+   name: Scroll Sepolia Testnet
+```
+
+Scroll Sepolia Test ağını ağ listesine eklemek için aşağıdaki komutu çalıştırın:
+
+```bash
+brownie networks import ./network-config.yaml
+```
+
+Scroll'da dağıtmak için aşağıdaki komutu çalıştırın. Bu örnekte "token.py" akıllı sözleşmeyi dağıtan bir komut dosyasıdır. Bunu kendi komut dosyanızın adıyla değiştirin:
+
+```bash
+brownie run token.py --network scrollSepolia
+```
+
+### ethers.js
+
+Bir 'ethers' komut dosyasında Scroll Sepolia Test ağı sağlayıcısının kurulması:
+
+```jsx
+import { ethers } from "ethers"
+
+const provider = new ethers.providers.JsonRpcProvider("https://sepolia-rpc.scroll.io/")
+```
+
+### scaffold-eth
+
+Scaffold-eth'i kullanarak dağıtım yapmak için hem Hardhat hem de React ayarlarınızı Scroll Sepolia Test ağına yönlendirmeniz gerekir.
+
+#### Hardhat'i Yapılandırma
+
+'packages/hardhat/hardhat.config.js' dosyasına ağın eklenerek varsayılan ağ olarak seçilmesi gerekmektedir.
+
+```jsx
+...
+//
+// Burada dağıtmak istediğiniz ağı seçin:
+//
+const defaultNetwork = "scrollSepolia";
+...
+module.exports = {
+...
+	networks: {
+...
+          scrollSepolia: {
+            url: "https://sepolia-rpc.scroll.io/",
+            accounts: {
+              mnemonic: mnemonic(),
+            },
+          },
+	}
+...
+}
+```
+
+Dağıtım cüzdanına da fon sağladığınızdan emin olun! Cüzdanı oluşturmak için "yarn generate"i, fonlarını kontrol etmek için "yarn account"u çalıştırın. Fonlama sağlandıktan sonra Scroll Sepolia test ağına dağıtmak için `yarn deploy --network ScrollSepolia` komutunu çalıştırın.
+
+<Aside type="danger" title="warning">
+  Bazı proje çatallarında Etherscan tarafından sağlanan sözleşme doğrulamasını devre dışı bırakmak isteyebilirsiniz. Bu, "packages/hardhat/deploy/00_deploy_your_contract.js" dosyasında yorum olarak eklenebilir/devre dışı bırakılabilir.
+</Aside>
+
+#### Kullanıcı Arayüzü Yapılandırması
+
+Kullanıcı arayüzünüzü yapılandırmak için Scroll Sepolia Test ağını bir ağ seçeneği olarak eklemeniz ve ardından bunu varsayılan olarak seçmeniz gerekir.
+
+Ağı eklemek için 'packages/react-app/src/constants.js' dosyasını değiştirin.
+
+```jsx
+...
+export const NETWORKS = {
+...
+  scrollSepolia: {
+    name: "scrollSepolia",
+    color: "#e9d0b8",
+    chainId: 534351,
+    rpcUrl: "https://sepolia-rpc.scroll.io/",
+    blockExplorer: "https://sepolia.scrollscan.com",
+  },
+...
+}
+```
+
+Daha sonra, 'packages/react-app/src/App.jsx' bölümünde değişiklik yapın
+
+```jsx
+...
+/// 📡 Sözleşmeleriniz hangi zincire dağıtıldı?
+const initialNetwork = NETWORKS.scrollSepolia;
+...
+```

@@ -65,7 +65,7 @@ export function Tabs({ sharedStore, ...slots }: Props) {
 
   return (
     <div class={styles.container}>
-      <div role="tablist" onKeyDown={moveFocus}>
+      <div role="tablist" class={clsx(styles.tablist, 'dark:border-white-800')} onKeyDown={moveFocus}>
         {tabs.map(([key, content]) => (
           <button
             ref={(el) => (tabButtonRefs.current[key] = el)}
@@ -79,7 +79,11 @@ export function Tabs({ sharedStore, ...slots }: Props) {
             data-astro-tab
             id={key}
             key={key}
-            class={clsx(curr === getBaseKeyFromTab(key) ? button.primary : button.secondary, styles.tab)}
+            class={clsx(
+              curr === getBaseKeyFromTab(key) ? styles.primary : styles.secondary,
+              styles.tab,
+              "dark:text-white-800"
+            )}
           >
             {content}
           </button>

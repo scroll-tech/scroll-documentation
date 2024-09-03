@@ -4,6 +4,7 @@ import LinkArrowSvg from "~/assets/svgs/home/home-link-arrow.svg?raw"
 import DiscordSvg from "~/assets/svgs/home/Discord.svg?raw"
 import ForumSvg from "~/assets/svgs/home/Forum.svg?raw"
 import ContributeSvg from "~/assets/svgs/home/Contribute.svg?raw"
+import NoteSvg from "~/assets/svgs/home/Note.svg?raw"
 
 const mediaList = [
   {
@@ -11,6 +12,12 @@ const mediaList = [
     name: "加入我们的 Discord",
     content: "与其他 Scroll 开发者和用户建立联系",
     link: "https://discord.gg/scroll",
+  },
+  {
+    icon: NoteSvg,
+    name: "获取支持",
+    content: "如果您需要更多的支持，请直接联系我们。",
+    link: "https://tally.so/r/waxLBW",
   },
   {
     icon: ForumSvg,
@@ -28,10 +35,7 @@ const mediaList = [
 ---
 
 <div class="connect-us">
-  <SectionHeader
-    title="联系我们"
-    content="随时了解来自 Scroll 社区的最新新闻和发展信息。"
-  />
+  <SectionHeader title="联系我们" content="随时了解来自 Scroll 社区的最新新闻和发展信息。" />
   <div class="medias">
     {
       mediaList.map(({ icon, name, content, link }) => (
@@ -60,7 +64,7 @@ const mediaList = [
 
   .medias {
     display: flex;
-    gap: 3rem;
+    gap: 1.6rem;
     margin-top: 90px;
   }
   .media-item {
@@ -91,7 +95,7 @@ const mediaList = [
     height: 23px;
     background-size: contain;
     align-self: flex-end;
-    @apply text-black dark:text-white;
+    @apply text-black dark:text-white-800;
   }
 
   .media-item-icon {
@@ -110,7 +114,7 @@ const mediaList = [
   .media-item-content {
     font-size: 20px;
     line-height: normal;
-    height: 56px;
+    height: 84px;
   }
 
   @media screen and (max-width: 50em) {

@@ -8,6 +8,10 @@ permalink: "technology/security/audits-and-bug-bounty"
 
 import Aside from "../../../../../components/Aside.astro"
 
+<Aside>
+For any discoveries of critical vulnerabilities outside of the scope of the bug bounty program, please also send reports to security@scroll.io.
+</Aside>
+
 Scroll treats security as a top priority.
 
 Aside from rigorous testing, an internal security team, and comprehensive code reviews, we have also engaged with multiple security audit firms to conduct audits on our codebase. We have also launched a bug bounty program to encourage the community to participate in the security of our protocol.
@@ -31,6 +35,7 @@ Scroll has worked with several industry-leading security audit firms to review o
   - [Wave 1](https://github.com/trailofbits/publications/blob/master/reviews/2023-04-scroll-zkEVM-wave1-securityreview.pdf)
   - [Wave 2](https://github.com/trailofbits/publications/blob/master/reviews/2023-08-scroll-zkEVM-wave2-securityreview.pdf)
   - [Wave 3](https://github.com/trailofbits/publications/blob/master/reviews/2023-09-scroll-zkEVM-wave3-securityreview.pdf)
+  - [EIP-4844 Blob Support](https://github.com/trailofbits/publications/blob/master/reviews/2024-04-scroll-4844-blob-securityreview.pdf)
 - Zellic and Kalos
   - [Wave 1](https://github.com/Zellic/publications/blob/master/Scroll%20zkEVM%20-%20Part%201%20-%20Audit%20Report.pdf)
   - [Wave 2](https://github.com/Zellic/publications/blob/master/Scroll%20zkEVM%20-%20Part%202%20-%20Audit%20Report.pdf)
@@ -52,9 +57,16 @@ Scroll has worked with several industry-leading security audit firms to review o
   - [USDC Gateway](https://blog.openzeppelin.com/scroll-usdc-gateway-audit)
   - [Contract diff](https://blog.openzeppelin.com/scroll-diff-audit-report)
   - [Bridge Gas Optimizations](https://blog.openzeppelin.com/scroll-bridge-gas-optimizations-audit)
+  - [EIP-4844 Support](https://blog.openzeppelin.com/scroll-eip-4844-support-audit)
+  - [Batch Token Bridge](https://blog.openzeppelin.com/scroll-batch-token-bridge-audit)
 - Zellic
   - [Report 1](https://github.com/Zellic/publications/blob/master/Scroll%20-%2005.26.23%20Zellic%20Audit%20Report.pdf)
   - [Report 2](https://github.com/Zellic/publications/blob/master/Scroll%20-%2009.27.23%20Zellic%20Audit%20Report.pdf)
+  - [Lido Gateway](https://github.com/Zellic/publications/blob/master/Scroll%20Lido%20Gateway%20-%20Zellic%20Audit%20Report.pdf)
+
+### Auxiliary contracts
+- ZkTrie Verifier
+  - [OpenZeppelin](https://blog.openzeppelin.com/scroll-zktrieverifier-audit#notes-additional-information)
 
 ## Bug Bounty Program
 
@@ -70,4 +82,4 @@ Rewards depend on the severity of reported vulnerabilities:
 
 The scope of the bug bounty program covers the blockchain infrastructure and the smart contracts for bridging and rollup. For a detailed breakdown of bug categories, please refer to the bug bounty page.
 
-Besides the listed scopes in the bug bounty program, we also encourage reporting any vulnerabilities identified to Immunefi, which we will still consider for rewards. For any discoveries of critical vulnerabilities outside of the scope of the bug bounty program, please also send reports to security@scroll.io.
+Besides the listed scopes in the bug bounty program, we also encourage reporting any vulnerabilities identified to Immunefi, which we will still consider for rewards. 

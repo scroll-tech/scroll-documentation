@@ -77,7 +77,7 @@ Scroll执行节点的次要功能是：
 
 Scroll 执行节点继承了以太坊的大部分行为。但是，我们需要对 `l2geth` 进行一些重大更改，来实现更高效的证明。本节提供了非完整版的修改列表及其基本原理。
 
-- **状态和存储树**：以太坊使用 MPT (Merkle-Partricia Trie) 作为其状态和合约存储的数据结构。该树的结构以及其使用的 Keccak 哈希使得 ZK 电路变得非常昂贵。 而 `l2geth` 使用 [zkTrie](/technology/sequencer/zktrie)：一种使用 Poseidon 哈希默克尔二叉树，来存储状态和合约数据。
+- **状态和存储树**：以太坊使用 MPT (Merkle-Patricia Trie) 作为其状态和合约存储的数据结构。该树的结构以及其使用的 Keccak 哈希使得 ZK 电路变得非常昂贵。 而 `l2geth` 使用 [zkTrie](/technology/sequencer/zktrie)：一种使用 Poseidon 哈希默克尔二叉树，来存储状态和合约数据。
 - **状态账户（StateAccount）**：对于状态账户的修改已经在 [账户和状态](/technology/chain/accounts) 中说明。
 - **EVM**：对 EVM 的修改已经在 [和以太坊 EVM的区别](/technology/chain/differences) 中说明。
 - **交易手续费**

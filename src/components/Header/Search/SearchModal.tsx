@@ -47,7 +47,7 @@ function EmptyQueryBoundary({ children, size, fallback }) {
                   <a
                     style={{ padding: "var(--space-1x) var(--space-2x)" }}
                     href={article.url}
-                    className={clsx(styles.hit, "paragraph-200", "recommended-match-hit", "dark:text-white")}
+                    className={clsx(styles.hit, "paragraph-200", "recommended-match-hit", "dark:text-white-800")}
                   >
                     {article.title}
                   </a>
@@ -67,7 +67,7 @@ function EmptyQueryBoundary({ children, size, fallback }) {
                       <a
                         style={{ padding: "var(--space-1x) var(--space-2x)" }}
                         href={article.url}
-                        className={clsx(styles.hit, "paragraph-200", "recently-viewed-match-hit", "dark:text-white")}
+                        className={clsx(styles.hit, "paragraph-200", "recently-viewed-match-hit", "dark:text-white-800")}
                       >
                         {article.title}
                       </a>
@@ -121,7 +121,7 @@ function CustomHits({ title, hitClassName, ...props }: UseHitsProps & { title: s
               <a
                 // style={{ padding: "var(--space-1x) var(--space-2x)" }}
                 href={hit.url}
-                className={clsx(styles.hit, hitClassName, "paragraph-200 dark:text-white")}
+                className={clsx(styles.hit, hitClassName, "paragraph-200 dark:text-white-800")}
                 dangerouslySetInnerHTML={{
                   __html: hit._highlightResult.title.value,
                 }}

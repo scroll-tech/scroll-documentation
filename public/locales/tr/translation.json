@@ -1,0 +1,197 @@
+{
+  "rightSidebar": {
+    "onThisPage": "Bu Sayfada",
+    "more": "Daha Fazla",
+    "editThisPage": "Bu sayfayı düzenleyin",
+    "joinOurCommunity": "Topluluğumuza katılın",
+    "feedback": "Geri bildirim"
+  },
+  "ui": {
+    "whatsNext": "Sırada ne var?",
+    "readMore": "Daha fazla"
+  },
+  "landing": {
+    "test": "test",
+    "search": {
+      "title": "Scroll Dokümantasyonu'na Hoş Geldiniz",
+      "placeholder": "Scroll dokümantasyonunda arayın..."
+    },
+    "newUserCTA": {
+      "title": "Scroll ve ZK Rollup'larda yeni misiniz?",
+      "description": "Başlangıç Kılavuzu'ndan temel bilgileri öğrenin."
+    },
+    "resourcesCTA": {
+      "title": "Yararlı kaynaklar"
+    },
+    "nodesCTA": {
+      "title": "Kendi Scroll Düğümünüzü çalıştırmanız mı gerekiyor?",
+      "description": "Scroll Düğümlerini başlatma ve sürdürme hakkında bilgi edinmek için Düğüm Operatörü Kılavuzu'na bakın.",
+      "buttonText": "Düğüm Operatörü Kılavuzu"
+    },
+    "TutorialsCTA": {
+      "title": "Eğitimleri izleyin",
+      "description": "Teknolojimiz hakkında daha fazla bilgi edinin. YouTube kanalımıza sürekli olarak yeni videolar yüklüyoruz.",
+      "buttonText": "Eğitimleri izleyin"
+    },
+    "LinksCTA": {
+      "card1": {
+        "title": "Entegrasyon desteğine mi ihtiyacınız var?",
+        "description": "Bir uzmanla görüşün"
+      },
+      "card2": {
+        "title": "Discord",
+        "description": "Topluluğumuza katılın"
+      },
+      "card3": {
+        "title": "TODO: Tartışma",
+        "description": "Gerçekten, topluluğumuza katılın"
+      }
+    },
+    "NewsletterCTA": {
+      "title": "Scroll Geliştirici haberlerini yakından takip edin",
+      "text": "Güncellemeler, online ve yüz yüze etkinlikler, ekosistemdeki fırsatlar ve daha fazlası",
+      "placeholder": "e-posta adresi",
+      "thankYouForSubscribing": "Takip ettiğiniz için teşekkür ederiz!",
+      "correctEmail": "Lütfen geçerli bir e-posta adresi kullanın.",
+      "pleaseInsertEmail": "Lütfen e-posta adresinizi girin."
+    }
+  },
+  "sidebar": {
+    "gettingStarted": {
+      "gettingStarted": "Başlarken",
+      "overview": "Genel Bakış",
+      "scrollSepoliaTestnet": "Scroll Sepolia Test Ağı",
+      "userGuide": "Kullanıcı Rehberi",
+      "setup": "Kurulum",
+      "faucet": "Musluk",
+      "bridge": "Köprü",
+      "transferTokens": "Tokenları Aktar",
+      "commonErrors": "Yaygın Hatalar",
+      "rollupExplorer": "Rollup Gezgini",
+      "scrollSepoliaBlockExplorer": "Scroll Sepolia Gezgini",
+      "scrollMainnet": "Scroll Ana Ağı",
+      "scrollscan": "Scrollscan Block Gezgini",
+      "sepoliaBlockExplorer": "Sepolia Gezgini",
+      "community": "Topluluk",
+      "discord": "Discord",
+      "communityForum": "Topluluk Forumu"
+    },
+    "developers": {
+      "developers": "Geliştiriciler",
+      "buildingOnScroll": "Scroll Üzerinde Geliştirmek",
+      "developerQuickstart": "Geliştirici Hızlı Başlangıcı",
+      "verifyingSmartContracts": "Akıllı Sözleşmeleri Doğrulama",
+      "scrollContracts": "Scroll Sözleşmeleri",
+      "ethereumAndScrollDifferences": "Ethereum ve Scroll Farkları",
+      "l1AndL2Bridging": "L1 ve L2 Köprüleme",
+      "ethAndErc20TokenBridge": "ETH ve ERC20 Token Köprüsü",
+      "erc721NftBridge": "ERC721 NFT Köprüsü",
+      "erc1155TokenBridge": "ERC1155 Token Köprüsü",
+      "theScrollMessenger": "Scroll Messenger",
+      "transactionFeesOnScroll": "Scroll'da İşlem Ücretleri",
+      "l2Fee": "L2 Ücretleri",
+      "l1Fee": "L1 Ücretleri",
+      "gasOracle": "Gaz Oracle'ı'",
+      "future": "Gelecek",
+      "guides": "Rehberler",
+      "contractDeploymentTutorial": "Sözleşme Dağıtımı Eğitimi",
+      "crossChainInteraction": "Scroll Messenger ile Zincirler Arası Etkileşim",
+      "bridgingERC20TokenThroughCustomGateway": "Özel Ağ Geçidi üzerinden ERC20 köprüleyin",
+      "bridgingERC721NftThroughCustomGateway": "Özel Ağ Geçidi üzerinden ERC721 NFT köprüleyin",
+      "bridgingERC1155ThroughCustomGateway": "Özel Ağ Geçidi üzerinden ERC1155 NFT köprüleyin",
+      "estimatingGasAndTxFees": "Gaz ve İşlem Ücretlerinin Tahmin Edilmesi",
+      "resources": "Kaynaklar",
+      "mainnetResources": "Ana Ağ Kaynakları",
+      "sepoliaResources": "Sepolia Kaynakları",
+      "scrollBlockExplorer": "Scrollscan Gezgini",
+      "rollupExplorer": "Rollup Gezgini",
+      "scrollSepoliaBlockExplorer": "Scroll Sepolia Gezgini",
+      "sepoliaRollupExplorer": "Rollup Gezgini",
+      "sepoliaBlockExplorer": "Scrollscan Gezgini"
+    },
+    "technology": {
+      "introduction": "Giriş",
+      "principles": "Prensipler",
+      "scrollArchitecture": "Scroll Mimarisi",
+      "scrollUpgrades": "Scroll Yükseltmeleri",
+      "overview": "Genel Bakış",
+
+      "scrollChain": "Scroll Zinciri",
+      "accountsAndState": "Hesaplar ve Durum",
+      "blocks": "Bloklar",
+      "transactions": "İşlemler",
+      "rollupProcess": "Rollup Süreci",
+      "evmDifferencesFromEthereum": "Ethereum EVM'inden Farklar",
+
+      "bridge": "Köprü",
+      "crossDomainMessaging": "Alanlar Arası Mesajlaşma",
+      "depositGateways": "Yatırım Ağ Geçitleri",
+      "withdrawGateways": "Çekim Ağ Geçitleri",
+
+      "sequencer": "Sıralayıcı",
+      "executionNode": "Yürütme Düğümü",
+      "rollupNode": "Rollup Düğümü",
+      "zkTrie": "zkTrie",
+
+      "zkevm": "zkEVM",
+      "introToZkevm": "zkEVM'e Giriş",
+      "zkevmOverview": "zkEVM Genel Bakış",
+      "bridgeOverview": "Köprüye Genel Bakış",
+      "prover": "Kanıtlayıcı",
+      "proofGeneration": "Kanıt Oluşturma",
+      "cpuProverRepo": "CPU Kanıtlayıcı Deposu",
+
+      "security": "Güvenlik",
+      "auditsAndBugBounty": "Denetimler ve Hata Ödül Programı",
+      "l2BeatAssessment": "L2Beat Değerlendirmesi"
+    },
+    "learn": {
+      "ethereumAndProtocols": "Ethereum & Protokoller",
+      "theScalabilityProblem": "Ölçeklenebilirlik Sorunu",
+      "introToRollups": "Rollup'lara Giriş",
+      "zeroKnowledge": "Zero Knowledge",
+      "introToZeroKnowledge": "Zero Knowledge'a Giriş",
+      "polynomialCommitmentSchemes": "Polinom Taahhüt Şemaları",
+      "kzgCommitmentScheme": "KZG Taahhüt Şeması",
+      "additionalResources": "Ek Kaynaklar"
+    }
+  },
+  "footer": {
+    "aboutScroll": {
+      "title": "Scroll Hakkında",
+      "bugBounty": "Hata Ödül Programı",
+      "joinUs": "Bize Katılın",
+      "healthStatus": "Sağlık Durumu",
+      "privacyPolicy": "Gizlilik Politikası",
+      "termsAndConditions": "Şartlar ve Koşullar"
+    },
+    "resources": {
+      "title": "Kaynaklar",
+      "scrollDocsURL": "https://docs.scroll.io/",
+      "blog": "Blog",
+      "documentation": "Dokümantasyon",
+      "brandKit": "Marka Kiti",
+      "audits": "Denetimler"
+    },
+    "followUs": {
+      "title": "Bizi Takip Edin"
+    }
+  },
+  "pageNotFound": {
+    "title": "Sayfa bulunamadı",
+    "text": "Üzgünüz, aradığınız sayfa bulunamadı."
+  },
+  "rpcTable": {
+    "rpcServerAddress": "RPC Sunucu Adresi",
+    "height": "Yükseklik",
+    "latency": "Gecikme",
+    "score": "Puan",
+    "privacy": "Gizlilik",
+    "addNetwork": "Ağ Ekle",
+    "connect": "Bağlan",
+    "sorting": "Sıralama"
+  },
+  "notTranslated": {
+    "notTranslated": "Bu sayfanın çevirisi henüz yapılmadı."
+  }
+}

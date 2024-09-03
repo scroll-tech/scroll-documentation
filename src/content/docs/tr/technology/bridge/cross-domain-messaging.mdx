@@ -1,0 +1,247 @@
+---
+section: technology
+date: Last Modified
+title: "Alanlar Arası Mesajlaşma"
+lang: "tr"
+permalink: "technology/bridge/cross-domain-messaging"
+whatsnext: { "Yatırma Ağ Geçitleri": "/tr/technology/bridge/deposit-gateways/" }
+---
+
+import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import Aside from "../../../../../components/Aside.astro"
+import ToggleElement from "../../../../../components/ToggleElement.astro"
+
+import L1ToL2 from "../_images/L1-to-L2.png"
+import L2ToL1 from "../_images/L2-to-L1.png"
+import WithdrawTrie from "../_images/withdraw-trie.png"
+
+Scroll, token transferlerine olanak tanıyan ve dapp'lerin L1 ile L2 arasında iletişim kurmasına izin veren rastgele bir mesaj geçiş köprüsüne sahiptir. Bu, L1'deki dapp'lerin L2'deki sözleşme fonksiyonlarını tetikleyebileceği veya bunun tersi anlamına gelir. Yazının devamında mesajların L1 ile L2 arasında nasıl iletildiğini açıklayacağız.
+
+## L1'den L2'ye Mesaj Gönderme
+
+<ClickToZoom src={L1ToL2} alt="L1 to L2 workflow" caption="Figure 1. L1 to L2 message relay workflow" />
+
+L1'den L2'ye mesaj göndermenin iki temel yaklaşımı vardır: `L1ScrollMessenger` aracılığıyla rastgele mesajlar göndermek ve `EnforcedTxGateway` aracılığıyla zorunlu işlemleri göndermek. Her iki yaklaşım da kullanıcıların L1'de bir L2 işlemi başlatmasına ve L2'de isteğe bağlı kontrat çağırmasına olanak tanır. Rastgele mesajlar için, L2 işlemlerinin göndereni `L1ScrollMessenger` adresidir. Zorunlu işlemlerde, L2 göndereni harici sahipli bir hesaptır (EOA). Ek olarak, kullanıcıların ETH ve ERC-20, ERC-677, ERC-721 ve ERC-1155 dahil diğer standart tokenleri yatırmalarını kolaylaştırmak için çeşitli standart token ağ geçitleri sağlıyoruz. Temelde, bu ağ geçitleri, token depozitolarını bir mesaja kodlar ve bunu 'L1ScrollMessenger' sözleşmesi aracılığıyla L2'deki muadillerine gönderir. L1 token ağ geçitleri hakkında daha fazla ayrıntıyı [Para Yatırma Ağ Geçitleri](/tr/teknoloji/bridge/deposit-gateways) bölümünde bulabilirsiniz.
+
+<Aside type="danger" title="">
+Zorunlu İşlemler henüz Scroll'da etkinleştirilmedi. Gelecekteki yükseltmelerde, kullanıcılar bu işlevselliği `L1ScrollMessenger`ı atlamak ve mesajları doğrudan `L1MessageQueue`ya göndermek için kullanabilecekler.
+</Aside>
+
+Şekil 1'de gösterildiği gibi, hem rastgele mesajlar hem de zorunlu işlemler `L1MessageQueue` kontratında saklanan mesaj sırasına eklenir. `L1MessageQueue` sözleşmesi, isteğe bağlı mesajların ve zorunlu işlemlerin eklenmesi için sırasıyla `appendCrossDomainMessage` ve `appendEnforcedTransaction` olmak üzere iki fonksiyon sağlar.
+
+```solidity
+/// @notice Append an arbitrary L1-to-L2 message into this contract.
+/// @param target The target address on L2.
+/// @param gasLimit The maximum gas can be used for this transaction on L2.
+/// @param data The calldata of the L1-initiated transaction.
+function appendCrossDomainMessage(
+    address target,
+    uint256 gasLimit,
+    bytes calldata data
+) external;
+
+/// @notice Append an enforced transaction to this contract.
+/// @param sender The sender address of this transaction.
+/// @param target The target address of this transaction.
+/// @param value The value to be transferred on L2.
+/// @param gasLimit The maximum gas should be used for this transaction on L2.
+/// @param data The calldata of the L1-initiated transaction.
+function appendEnforcedTransaction(
+    address sender,
+    address target,
+    uint256 value,
+    uint256 gasLimit,
+    bytes calldata data
+) external;
+```
+
+Her iki fonksiyon da Scroll zincirinde tanıtılan yeni bir işlem türü `L1MessageTx` ile L1 tarafından başlatılan bir işlem oluşturur ve işlem hash değerini hesaplar (daha fazla ayrıntı için [L1 Mesaj İşlemi](/tr/technology/chain/transactions#l1-message-transaction) bölümüne bakın ). `L1MessageQueue` daha sonra işlem hash'ini mesaj kuyruğuna ekler ve `QueueTransaction(sender, target, value, queueIndex, gasLimit, calldata)` olayını yayar. L1 mesaj işlemlerini oluştururken `appendCrossDomainMessage` ve `appendEnforcedTransaction` arasındaki fark şudur:
+
+- `appendCrossDomainMessage` yalnızca `L1ScrollMessenger` tarafından çağrılabilir ve işlemi gönderen olarak `L1ScrollMessenger`ın adresi olacak olan `msg.sender`ın [takma adresini](#address-alias) kullanır.
+- `appendEnforcedTransaction` yalnızca `EnforcedTxGateway` tarafından çağrılabilir ve işlem göndereni olarak fonksiyon parametresindeki `sender`ı kullanır. Bu, kullanıcıların doğrudan L1 köprüsü aracılığıyla L2 hesaplarından ETH çekilmesini veya aktarılmasını zorunlu kılmasına olanak tanır.
+
+İşlem L1'de başarıyla yürütüldükten sonra, `L1MessageQueue` sözleşmesini izleyen Scroll sıralayıcıdaki izleyici, L1 bloklarından yeni `QueueTransaction` olaylarını toplar. Sıralayıcı daha sonra olay başına yeni bir `L1MessageTx` işlemi oluşturur ve bunları yerel L1 işlem kuyruğuna ekler. Yeni bir L2 bloğu oluştururken sıralayıcı, hem L1 işlem kuyruğundan hem de L2 mempool'dan işlemleri içerir. L1 mesaj işlemlerinin, `L1MessageQueue` sözleşmesindeki L1 mesaj kuyruğu sırasına göre sırayla dahil edilmesi gerektiğini unutmayın. L2 bloklarında her zaman önce `L1MessageTx` işlemleri gelir, ardından L2 işlemleri gelir. Şu anda, bir L2 bloğundaki `L1MessageTx` işlemlerinin sayısını `NumL1MessagesPerBlock` (şu anda 10'a ayarlı) ile sınırlandırıyoruz.
+
+Daha sonra, `L1ScrollMessenger` yoluyla rastgele mesajların gönderilmesi ve `EnforcedTxGateway` aracılığıyla zorunlu işlemlerin gönderilmesine ilişkin spesifik süreci daha da detaylandıracağız.
+
+### Keyfi Mesajlar Göndermek
+
+`L1ScrollMessenger` sözleşmesi, rastgele mesajlar göndermek için iki `sendMessage` fonksiyonu sağlar. Tek fark, ikincisinin, kullanıcıların ücret iadesi alabilmek için gönderici adresi dışında bir iade adresi belirtmesine olanak sağlamasıdır.
+
+<ToggleElement anchor="sendMessage function signatures">
+<div slot="title"><code>sendMessage</code> function signatures</div>
+```solidity
+/// @param target The target address on L2.
+/// @param value The value to deposit to L2 from `msg.value`.
+/// @param message The message passed to target contract.
+/// @param gasLimit The maximum gas can be used for this transaction on L2.
+function sendMessage(
+    address target,
+    uint256 value,
+    bytes memory message,
+    uint256 gasLimit
+) external payable;
+
+/// @param target The target address on L2.
+/// @param value The value to deposit to L2 from `msg.value`.
+/// @param message The message passed to target contract.
+/// @param gasLimit The maximum gas can be used for this transaction on L2.
+/// @param refundAddress The address to refund excessive fee on L1.
+function sendMessage(
+    address target,
+    uint256 value,
+    bytes calldata message,
+    uint256 gasLimit,
+    address refundAddress
+) external payable;
+````
+</ToggleElement>
+
+
+Her iki fonksiyon da kullanıcıların L2'de karşılık gelen `L1MessageTx` işlemi için bir gas limiti sağlamasını ve L1'de gas limiti miktarına göre hesaplanan [mesaj aktarma ücretini](#message-relay-fee) ön ödemesini gerektirir. Ücret, L1'deki bir `feeVault` kontratına tahsil edilir. Kullanıcının L1'deki mesajı için doğru gas limitini ayarlamaması nedeniyle L2'de işlemin başarısız olması durumunda, kullanıcı aynı mesajı daha yüksek bir gas limitiyle tekrar oynatabilir. Daha fazla ayrıntıyı [Başarısız mesajları yeniden deneme](#retrying-failed-messages) bölümünde bulabilirsiniz, ancak bu ücretlerin kullanılmayan kısmı kullanıcıya iade edildiğinden, gas limitini fazla tahmin etmenin herhangi bir cezası yoktur.
+
+`sendMessage` fonksiyonları, argümanları alanlar arası bir mesaja kodlar (aşağıdaki ilgili kodu içeren bölüme bakın), burada nonce mesajı, L1 mesaj kuyruğunun bir sonraki kuyruk indeksidir. Kodlanan veriler daha sonra L2'de yürütülen `L1MessageTx` işleminde çağrı verileri olarak kullanılır. Bu tür etki alanları arası mesajların her zaman L2'deki `L2ScrollMessenger` sözleşmesinin `relayMessage` işlevini çağırdığını unutmayın.
+
+```solidity
+abi.encodeWithSignature(
+    "relayMessage(address,address,uint256,uint256,bytes)",
+    _sender,
+    _target,
+    _value,
+    _messageNonce,
+    _message
+)
+````
+
+Yatırılan `value` tutarının ETH'i `L1ScrollMessenger` kontratında kilitlenir. Mesajdaki ETH miktarının mesaj aktarma ücretini ve yatırılan tutarı karşılayamaması durumunda işlem geri çevrilecektir. `L1ScrollMessenger` sözleşmesi, fazla tutarı belirtilen `refundAddress`e veya işlemi gönderene aksi takdirde iade edecektir. Son olarak, `L1ScrollMessenger`, alanlar arası mesajı `appendCrossDomainMessage` yöntemi aracılığıyla `L1MessageQueue`ya ekler.
+
+### Zorunlu İşlemler Gönderme
+
+<Aside type="danger" title="">
+Zorunlu İşlemler henüz Scroll'da etkinleştirilmedi. Gelecekteki güncellemelerde, kullanıcılar bu işlevselliği `L1ScrollMessenger`ı atlamak ve mesajları doğrudan `L1MessageQueue`ya göndermek için kullanabilecekler.
+</Aside>
+
+`EnforcedTxGateway` kontratı, zorunlu bir işlemi göndermek için iki `sendTransaction` fonksiyonu sağlar. Birinci fonksiyonda oluşturulan `L1MessageTx` işleminin göndericisi işlemin göndericisidir. Öte yandan, ikinci fonksiyon, `L1MessageTx` işleminin göndericisi olarak iletilen `sender` adresini kullanır. Bu, üçüncü bir tarafın kullanıcı adına zorunlu bir işlem göndermesine ve geçiş ücretini ödemesine olanak tanır. İkinci fonksiyonun, oluşturulan `L1MessageTx` işleminin `sender` adresiyle eşleşen geçerli bir imzasının sağlanmasını gerektirdiğini unutmayın. Her iki `sendTransaction` işlevi de gönderenin bir EOA hesabı olmasını zorunlu kılar.
+
+<ToggleElement anchor="sendTransaction function signatures">
+<div slot="title"><code>sendTransaction</code> function signatures</div>
+
+```solidity
+/// @param target The target address on L2.
+/// @param value The value to withdraw from the `tx.origin` address on L2.
+/// @param gasLimit The maximum gas can be used for this transaction on L2.
+/// @param data The calldata passed to target contract.
+function sendTransaction(
+    address target,
+    uint256 value,
+    uint256 gasLimit,
+    bytes calldata data
+) external payable;
+
+/// @param sender The sender address who will initiate this transaction on L2.
+/// @param target The target address on L2.
+/// @param value The value to withdraw from the `sender` address on L2.
+/// @param gasLimit The maximum gas can be used for this transaction on L2.
+/// @param data The calldata passed to target contract.
+/// @param signature The signature for the corresponding `L1MessageTx` transaction.
+/// @param refundAddress The address to refund excessive fee on L1.
+function sendTransaction(
+    address sender,
+    address target,
+    uint256 value,
+    uint256 gasLimit,
+    bytes calldata data,
+    bytes memory signature,
+    address refundAddress
+) external payable;
+```
+
+</ToggleElement>
+
+Rastgele mesaj aktarımına benzer şekilde, `sendTransaction` mesaj aktarma ücretini keser ve bunu L1 `feeVault` hesabına aktarır. Ancak önemli bir fark, işleve iletilen `value`nun, L1'deki değil, L2'deki gönderen hesabından aktarılacak ETH miktarını göstermesidir. Bu nedenle, `msg.value`nun yalnızca [mesaj aktarma ücretini](#message-relay-fee) kapsaması gerekir. Mesajdaki ETH miktarı ücreti karşılayamıyorsa işlem başarısız olacaktır. Fazla ücret, ilk fonksiyonda işlemi gönderene, ikinci fonksiyonda ise `refundAddress`e iade edilir. Son olarak, `EnforcedTxGateway`, işlemi mesaj kuyruğuna eklemek için `L1MessageQueue.appendEnforcedTransaction`ı çağırır.
+
+### Başarısız Mesajları Yeniden Denemek
+
+Yetersiz gas nedeniyle L2'de bir `L1MessageTx` işlemi başarısız olursa, kullanıcılar mesajı daha yüksek bir gas limitiyle tekrarlayabilir. `L1ScrollMessenger`, kullanıcıların önceki başarısız mesajla aynı bilgiyi daha yüksek gas limitiyle göndermesine olanak tanıyan `replayMessage` yöntemini sağlar. Bu mesaj L2'de yeni bir `L1MessageTx` işlemi haline gelecektir. L2'de zaten işlendiğinden, önceki başarısız işlem için gas ücretini iade etmeyeceğimizi unutmayın.
+
+<ToggleElement anchor="replayMessage function signature">
+<div slot="title"><code>replayMessage</code> function signature</div>
+
+```solidity
+/// @param from The address of the sender of the message.
+/// @param to The address of the recipient of the message.
+/// @param value The msg.value passed to the message call.
+/// @param queueIndex The queue index for the message to replay.
+/// @param message The content of the message.
+/// @param newGasLimit New gas limit to be used for this message.
+/// @param refundAddress The address of account who will receive the refunded fee.
+function replayMessage(
+    address from,
+    address to,
+    uint256 value,
+    uint256 queueIndex,
+    bytes memory message,
+    uint32 newGasLimit,
+    address refundAddress
+) external payable;
+```
+
+</ToggleElement>
+
+`L2ScrollMessenger` sözleşmesi, L2'ye başarılı bir şekilde iletilen tüm L1 mesajlarını kaydettiği için, orijinal mesajın başarılı olması halinde, tekrarlanan mesajın işlemi L2'de geri alınacaktır.
+
+### Mesaj Aktarma Ücreti
+
+L1'de konuşlandırılan `L2GasPriceOracle` sözleşmesi, gas limiti dikkate alınarak bir mesajın aktarma ücretini hesaplar. Bu sözleşme, şu anda Scroll tarafından çalıştırılan özel bir aktarıcı tarafından güncellenen `l2BaseFee`yi kendi depolama alanında saklar. L1'den L2'ye mesaj geçiş ücreti `gasLimit * l2BaseFee`dir.
+
+<Aside type="tip" title="Güncelleme Bilgilendirmesi">
+Şubat 2024 Köprü Güncellemesi sırasında, `L2GasPriceOracle` kullanımdan kaldırılacak ve işlevselliği `L1MessageQueueWithGasPriceOracle` sözleşmesine taşınacaktır.
+
+Güncelleme işleminin iki haftalık bir sürenin ardından 21 Şubat 2024'te tamamlanması bekleniyor. Scroll Sepolia zaten bu güncellemeden geçmiştir. [Buradan](https://scroll.io/blog/protocol-upgrade-bridging-cost-reduction) daha fazlasını okuyabilirsiniz.
+</Aside>
+
+### Adres Takma Adı
+
+`CREATE` opcode'unun davranışı nedeniyle, birisinin L1 ve L2'de aynı adreste ancak farklı bytecode'uyla bir sözleşme dağıtması mümkündür. Kötü niyetli kullanıcıların bundan faydalanmasını önlemek için, mesajı gönderen L1'de bir sözleşme olduğunda köprü bir adres takma adı uygular. L1 mesaj işleminin takma adı olan gönderen adresi `l1_contract_address + offset`tir; burada `offset`, `0x1111000000000000000000000000000000001111`dir.
+
+## L2'den L1'e Mesaj Gönderme
+
+<ClickToZoom src={L2ToL1} alt="L2 to L1 workflow" caption="Figure 2. L2 to L1 message relay workflow" />
+
+L2'de kullanıcılar, tokenlerini çekmek ve L1 sözleşmelerini çağırmak için `L2ScrollMessenger` aracılığıyla isteğe bağlı mesajlar gönderebilir. L1'e benzer şekilde, token çekimlerini başlatmayı kolaylaştırmak için birkaç standart token ağ geçidi oluşturduk. L2 token ağ geçitleri hakkında daha fazla ayrıntı için lütfen [Geri Çekme Ağ Geçitleri](/tr/technology/bridge/withdraw-gateways).
+
+`L2ScrollMessenger` sözleşmesi aynı zamanda bir `sendMessage` fonksiyonu da sağlar. `L1ScrollMessenger.sendMessage`dan farkı, L1 üzerindeki para çekme işleminin kullanıcılar tarafından gönderilmesi ve işlem ücretinin doğrudan L1 üzerinden ödenmesi nedeniyle fonksiyonda `gasLimit` parametresinin dikkate alınmamasıdır. Bu nedenle, `sendMessage` işlevi `msg.value`nun `value` parametresine eşit olmasını gerektirir. Fonksiyon, bağımsız değişkenleri, [`L1ScrollMessenger`](#sending-arbitrary-messages) ile aynı şemayı izleyerek alanlar arası bir mesaja kodlar.
+
+<ToggleElement anchor="sendMessage function signatures">
+<div slot="title"><code>sendMessage</code> function signatures</div>
+
+```solidity
+/// @param target The target address on L1.
+/// @param value The value to withdraw to L1 from `msg.value`.
+/// @param message The message passed to target contract.
+/// @param _gasLimit Ignored in the L2ScrollMessenger because the withdrawal execution on L1 is done by the user.
+function sendMessage(
+    address target,
+    uint256 value,
+    bytes memory message,
+    uint256 _gasLimit
+) external payable;
+```
+
+</ToggleElement>
+
+Daha sonra, alanlar arası mesaj hash'i, `appendMessage` işlevi çağrılarak `L2MessageQueue`ya eklenir. `L2MessageQueue` kontratı, yalnızca eklenen bir Merkle ağacı olan [Withdraw Trie](#withdraw-trie)'yi korur. Kuyruğa her yeni mesaj eklendiğinde, sözleşme onu Withdraw Trie'sine ekler ve trie'nin kök hash'ini günceller.
+
+Kullanıcıların L2'den L1'e mesajlarını içeren işlem kümesi L1 rollup sözleşmesinde sonlandırıldıktan sonra, kullanıcıların L1'de para çekme işlemini gerçekleştiren `L1ScrollMessenger` sözleşmesindeki `relayMessageWithProof` yöntemini çağırmak için ilgili _Execute Withdrawal_ işlemlerini göndermeleri gerekir. Merkle kanıtları sayesinde L1'de para çekme işlemlerinin sonuçlandırılması güvensizdir (trustless) ve kullanıcı tarafından veya kullanıcı adına üçüncü bir kişi tarafından yapılabilir.
+
+Bir para çekme MIP'si oluşturmayı kolaylaştırmak için Scroll, Bridge History API adı verilen bir hizmet sağlar. Köprü Geçmişi API'si, `L2ScrollMessenger`dan yayılan `SentMessage` olaylarını izler ve dahili olarak bir Geri Çekme Trie'sini korur. Her para çekme mesajı için sürekli olarak Merkle kanıtları üretir. Kullanıcılar ve üçüncü taraf hizmetleri, _Execute Withdrawal_ işlemlerine dahil etmek için Bridge History API'sinden Merkle kanıtlarını sorgulayabilir.
+
+Gerçekleştirilen para çekme işlemlerinin kullanıcılar tarafından veya bir üçüncü taraf hizmeti tarafından gönderilebileceğini unutmayın.
+
+### Withdraw Trie
+
+<ClickToZoom src={WithdrawTrie} alt="Withdraw Trie structure" caption="Figure 3. Withdraw Trie structure" />
+
+Withdraw Trie yoğun bir ikili Merkle ağacıdır. Bir yaprak düğümün hash değeri, mesaj hashinde miras alınırken, yaprak olmayan bir düğümün hashi, iki çocuğunun birleştirilmiş hashlerinin Keccak hash özetidir. Geri Çekme Trie'sinin derinliği, trie'ye eklenen mesaj sayısına bağlı olarak dinamik olarak artar.
+
+Şekil 3(a), tam 3 katmanlı Withdraw Trie denemesinin bir örneğini göstermektedir. Yaprak sayısı ikili ağacın tamamını doyuramadığında, yaprak düğümlerini Şekil 3(b) ve 3(c)'de gösterildiği gibi hash değeri 0 ile doldururuz. Tamamlanmamış bir Withdraw Trie'sine yeni bir mesaj eklerken, doldurma düğümü daha sonra gerçek mesaj hash'ini içeren yeni bir yaprak düğümle değiştirilecektir.

@@ -46,9 +46,9 @@ export default function Search() {
         className={clsx(
           styles.searchInput,
           "dark:bg-dark-normal",
-          "dark:text-white",
-          "hover:dark:text-white",
-          "focus:dark:text-white"
+          "dark:text-white-800",
+          "hover:dark:text-white-800",
+          "focus:dark:text-white-800"
         )}
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
