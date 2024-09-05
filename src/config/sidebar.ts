@@ -386,6 +386,10 @@ export const getSidebar = () => {
             title: t("sidebar.sdk.productionDeployment"),
             url: formatUrl("sdk/guides/production-deployment"),
           },
+          {
+            title: t("sidebar.sdk.digitalOcean"),
+            url: formatUrl("sdk/guides/digital-ocean-alt-gas-token"),
+          },
           // {
           //   title: t("sidebar.sdk.runOnArm64Mac"),
           //   url: formatUrl("sdk/guides/run-on-arm64-mac"),

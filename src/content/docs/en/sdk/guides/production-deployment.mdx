@@ -16,6 +16,8 @@ import Steps from '../../../../../components/Steps/Steps.astro';
 
 This guide will support DevOps teams in running Scroll SDK in a production environment. This requires many considerations beyond a local [Devnet deployment](/en/sdk/guides/devnet-deployment).
 
+While we build this out, we'd recommend looking at the specifics in our [Digital Ocean guide](/en/sdk/guides/digital-ocean-alt-gas-token), which walks through a full Kubernetes deployment using an easy-to-understand interface.
+
 <Aside type="danger">
 Scroll SDK is experimental software. "Production" here means a cloud-based Kubernetes stack. We do not yet recommend running Scroll SDK for a "mainnet" network.
 </Aside>
@@ -30,49 +32,11 @@ We're using Prometheus and some custom tooling. More info later.
 
 ### Ingress
 
-We're using Nginx. More info later.
-
+We're using Nginx and Cert Manager. More info later.
 
 ### Secrets
 
-We use External Secret Manager to store secrets. This is a Kubernetes-native solution that allows you to store secrets in a separate repository. This is a more secure way to store secrets than in the Scroll SDK repository.
-
-As of 08/26/2024, these are the secrets managed by External Secret Manager:
-- blockscout : 
-	- scroll/blockscout-secret-env: 
-		- DATABASE_URL
-
-- bridge-history-fetcher : 
-	- scroll/bridge-history-fetcher-secret-env:
-		- DATABASE_URL
-	- scroll/bridge-history-fetcher-migrate-db:
-		- migrate-db.json
-
-- chain-monitor:
-	- scroll/chain-monitor-secret-env
-		- DATABASE_URL
-
-- coordinator-cron:
-	- scroll/coordinator-secret-env
-		- DATABASE_URL
-
-- gas-oracle:
-	- scroll/gas-oracle-secret-env
-		- DATABASE_URL
-	- scroll/gas-oracle-migrate-db
-		- migrate-db.json
-
-- l2-sequencer:
-	- scroll/l2-sequencer-secret-env
-		- L2GETH_KEYSTORE
-		- L2GETH_PASSWORD
-		- L2GETH_NODEKEY
-
-- rollup-node:
-	- scroll/rollup-node-secret-env
-		- DATABASE_URL
-	- scroll/rollup-node-migrate-db
-		- migrate-db.json
+We use External Secret Manager to store secrets. This is a Kubernetes-native solution that allows you to store secrets in a separate repository. This is a more secure way to store secrets than in the Scroll SDK repository, but you will still need to bring your own secret management tool. This could be Hashicorp Vault, AWS Secret Manager, or similar.
 
 ### Machine Resources
 
