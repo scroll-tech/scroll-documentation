@@ -63,3 +63,19 @@ For Scroll's Sepolia environment, we use the following resources:
 | rollup-node|	1 |	0.1	|200|
 | rpc-gateway|	1	| 0.1	|100|
 | Total	| 22|	15.9	|120000|
+
+### Accounting for L1 Fees on Alternative Gas Token Chains
+
+On Scroll, transactions on L2 have two components -- the gas costs for execution and an L1 data fee. When gas on your network is paid in a token that has no standard relationship to the currency being used to pay for data fees on the L1, you will need to introduce tooling that can set the gas caluclation "scalar" values.
+
+At the moment, we have not built any automated tooling for this, and instead of viewing the ERC20 value as 1:1 with Sepolia Ether, we suggest setting the scalars to 0 to eliminate these overheads.
+
+To do so, you can run the following commands using your L2 RPC URL and Owner account private key:
+
+```bash
+cast send --rpc-url  http://l2-rpc.scrollsdk 0x5300000000000000000000000000000000000002  "setCommitScalar(uint256)" 0 --private-key [private-key]
+```
+
+```bash
+cast send --rpc-url  http://l2-rpc.scrollsdk 0x5300000000000000000000000000000000000002  "setBlobScalar(uint256)" 0 --private-key [private-key]
+```
