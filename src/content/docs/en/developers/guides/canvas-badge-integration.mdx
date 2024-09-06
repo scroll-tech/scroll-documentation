@@ -1,56 +1,56 @@
 ---
 section: developers
 date: Last Modified
-title: "Scroll Canvas & Badge Integration Guide"
+title: "Canvas & Badge Integration Guide"
 lang: "en"
 permalink: "developers/guides/canvas-badge-integration"
 excerpt: "This guide contains instructions on how to issue your own badge on Scroll Canvas."
 ---
 
 import Aside from "../../../../../components/Aside.astro"
-import BadgeDetails from "./_images/badgeDetails.jpg"
-import BadgeLevels from "./_images/badgeLevels.png"
-
-We will walk through how to issue your own badge on Scroll Canvas in this guide. 
-
-<Aside type="tip">
+import BadgeDetails from "../_images/badgeDetails.jpg"
+import BadgeLevels from "../_images/badgeLevels.png"
+import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import ToggleElement from "../../../../../components/ToggleElement.astro"
 
 We are thrilled to have you join us in building unique badges on Scroll Canvas, a product designed for ecosystem projects to interact with users in a more personal way on-chain. 
 
+<Aside>
 **Scroll Canvas** allows users to showcase on-chain credentials, status, and achievements called **Badges** issued and collected across the Scroll ecosystem. Users can mint a non-transferable and unique personal persona to collect and display their **Badges**.
-
 </Aside>
 
 ## Background
 
 ### Canvas
 
-- Each Canvas is a `Profile` smart contract, minted by the users through the `ProfileRegistry` contract on Scroll. Canvas is not transferrable and unique to each wallet.
-- Canvas is an open onchain profile database of users’ identities and achievements ([check out dashboard built by community on Dune)](https://dune.com/queries/3930803/6609287).
+Each Canvas is a `Profile` smart contract, minted by the users through the `ProfileRegistry` contract on Scroll. Canvas is not transferrable and unique to each wallet.
+
+Canvas is an open onchain profile database of user identities and achievements ([check out dashboard built by community on Dune](https://dune.com/queries/3930803/6609287)).
 
 ### Badge
 
-- **Badges** are attestations of identities, achievements and traits verified through the Ethereum Attestation Service ([EAS service](https://docs.attest.sh/docs/welcome)), issued **permissionlessly by different ecosystem projects**. Badges are wallet-bound and non-transferable. **Badges facilitate interactions between ecosystem projects and users.**
-- Developers can issue badges in three methods:
+**Badges** are attestations of identities, achievements and traits verified through the [Ethereum Attestation Service](https://docs.attest.sh/docs/welcome), issued **permissionlessly by different ecosystem projects**. Badges are wallet-bound and non-transferable. **Badges facilitate interactions between ecosystem projects and users.**
 
-| Issuance Method       | **Description**                                       | **Example** |
-| ---                   | ---                                                   | --- |
+Developers can issue badges in three methods:
+
+| Issuance Method       | **Description**                                       | **Example**                                                                       |
+| ---                   | ---                                                   | ---                                                                                  |
 | `Permissionless`      | Badge checks eligibility based on smart contract.     | Badges attest to the completion of an on-chain transaction or holding of an NFT. |
 | `Backend-authorized`  | Badge checks eligibility based on the issuer’s API.   | Badges attest to the completion of off-chain actions or a certain allow list. |
 | `Gifted`              | Badges checks eligibility based on the issuer’s API and **automatically** sends the badges to users’ canvas. There is no minting required for users to display the badge.  | Badges attest to the ownership or paid membership on other platforms / chains. |
 
-- Developers can design badges in two ways:
+Developers can design badges in two ways:
 
 | Badge Structure           | Description                                                           |
 | ---                       | ---                                                                   |
 | **`Singleton badges`**    | static attestations based on a certain user action/attribute.         |
 | **`Leveled badges`**      | dynamic attestations based on the progression of the users’ onchain   |
 
-## Before you Start: Join Developer **Support Channel**
+## Before you Start
 
 Badge issuance and deployment of the contract is fully permissionless. Please follow the steps below to issue a Badge for your project.
 
-<Aside type="note" >
+<Aside type="note" title="Join Developer Support Channel">
 For Canvas and badge questions, please join [Scroll dev support channel](https://discord.com/channels/853955156100907018/1028102371894624337)
 </Aside>
 
@@ -72,20 +72,14 @@ Example of a Leveled Badge
 
 | Badge Details     | Additional Info |
 | ---               | --- |
-| Name              | Name your badge to be **descriptive and creative** |
-| Description       | Brief description of the **purpose** of this badge and **who is eligible** |
-| Structure         | **One single attribute /**
-**Multiple Badges with levels** trigged by different actions and traits |
-| Category          | **Achievement**: tasks you have done. e.g. Scroll Origin NFTs, tasks completion badge /
-**Identities**: who you are. e.g. Ethereum year, GItcoin passport, NFT community badge |
-| Issuance method   | **Fully permissionless**: meaning your badge can be automatically issued by checking smart contract conditions /
-**Gifted:** Badges can also be issues with no user interaction /
-**Backend-authorized**: requires APIs to enable eligibility criteria ([API requirements](https://www.notion.so/Badge-APIs-95890d7ca14944e2a6d34835ceb6b914?pvs=21)) |
+| Name              | Name your badge to be *descriptive and creative* |
+| Description       | Brief description of the *purpose* of this badge and *who is eligible* |
+| Structure         | *One single attribute*<br/>  *Multiple Badges with levels* trigged by different actions and traits |
+| Category          | *Achievement*: tasks you have done. e.g. Scroll Origin NFTs, tasks completion badge <br/> *Identities*: who you are. e.g. Ethereum year, GItcoin passport, NFT community badge |
+| Issuance method   | *Fully permissionless*: meaning your badge can be automatically issued by checking smart contract conditions <br/> *Gifted:* Badges can also be issues with no user interaction <br/> **Backend-authorized**: requires APIs to enable eligibility criteria ([API requirements](https://www.notion.so/Badge-APIs-95890d7ca14944e2a6d34835ceb6b914?pvs=21)) |
 | Support link      | **Support channel link** to your Discord/Telegram group |
 
-<Aside>
 On the badge details page, there's a button to **visit your official website**. We recommend creating a dedicated promotional page for the badge linked to that button. This will provide users with comprehensive information about the badge (background, purpose, how to obtain, available images, etc.).
-</Aside>
 
 <Aside type="caution">
 Since **badges are permissionless**, Scroll Foundation may not troubleshoot individual third-party badges or answer eligibility questions. Provide ample resources for your community to mint badges smoothly. We ask that you share **Support URL** in Badge Listing process with enough resources (blog, how-to threads, TG/Discord support channel link).
@@ -155,6 +149,7 @@ Since **badges are permissionless**, Scroll Foundation may not troubleshoot indi
             // http code is not 200
             ```
     </ToggleElement>
+
     More details: [Badge APIs] {/* TODO: where to put this extra page */}
     
 4. **Access Readiness**: Ensure badge contract address implements `defaultTokenURI`, allowing retrieval of default display data (`name, image, description`) via `bytes32(0)` with informative name and description. 
@@ -162,10 +157,10 @@ Since **badges are permissionless**, Scroll Foundation may not troubleshoot indi
 
 ## Step 3: Sanity Check `Test`
 
-1. Please visit [https://scroll.io/canvas/badge-contract/{{badgeContractAddress}](https://scroll.io/canvas/badge-contract/%7B%7BbadgeContractAddress%7D)} to ensure that the badge is functioning correctly.
+1. Please visit `https://scroll.io/canvas/badge-contract/{{badgeContractAddress}}` to ensure that the badge is functioning correctly.
     - For `badgeTokenURI` link returned, ensure correct cross-origin configuration
     <ToggleElement anchor="reference-cors">
-    <div slot="title">Reference: Check and Claim API</div>
+    <div slot="title">Reference: CORS</div>
 
             ### CORS
             
@@ -187,9 +182,7 @@ Since **badges are permissionless**, Scroll Foundation may not troubleshoot indi
 5. To maintain the availability of the check API and claim API, Scroll recommends maintaining a TPS of approximately 300. Adjust this rate accordingly if your API handles multiple badges simultaneously. 
 6. If your badge image is stored on IPFS, due to the distributed nature of IPFS, the request time for users in different regions to access content on IPFS can be unpredictable. If they want a better user experience, they can self-host the content. 
 
-<Aside>
-🔥 At this stage, your Badge is live on Scroll Canvas. **Badge launch is permissionless. You can deploy as many badges as needed. Scroll does not need to approve your badge deployment.**
-</Aside>
+At this stage, your Badge is live on Scroll Canvas. Badge launch is permissionless. You can deploy as many badges as needed. Scroll does not need to approve your badge deployment.
 
 <Aside type="caution">
 Regularly monitor server logs to stay informed of any potential issues, especially during the first 48 hours when the badge is live.
