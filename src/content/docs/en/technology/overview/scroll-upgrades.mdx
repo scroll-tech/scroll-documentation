@@ -19,6 +19,38 @@ The following contracts are used to initiate upgrades and execute upgrades after
 
 You can join our [Telegram channel for technical updates](https://t.me/scroll_tech_updates), which includes future upgrade announcements and on-chain operation events.
 
+## DarwinV2 Upgrade
+
+### Overview
+
+During internal testing, we identified that blocks may not always be compressible under certain condition, which leads to unprovable chunks and batches.
+To fix this issue, a minor upgrade has been conducted so that uncompressed blobs will be enabled when this special case is detected.
+
+Notes:
+1. 
+2. This patch does not change any headers and therefore is backward-compatible.
+
+### Timeline
+
+As this is a security related patch, we bypassed the 7-day timelock mechanism.
+
+- **Scroll Sepolia**: August 28th, 2024
+- **Scroll Mainnet**: September 2nd, 2024
+
+### Compatibility
+
+#### Sequencer and Follower Nodes (l2geth)
+
+The new node version is `v5.7.0`. See the [release notes](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.7.0) for more information.
+This upgrade does not change Scroll's state transition function, so it is backward compatible. However, the format of the batch data committed to Ethereum changes. As a result, nodes that enabled rollup verification (`--rollup.verify`) must upgrade to be able to follow the chain.
+
+#### Dapps and Indexers
+
+A change has been implemented to Scroll Mainnet to enhance sequencer throughput, which adjusted the maximum reorg depth to 17 blocks. Previously, the system performed thorough capacity checks within the signer thread to determine whether transactions exceed the circuit limit. While this ensures that all transactions within a block are compliant, it also requires additional CPU resources.
+We introduced a new circuit capacity checking scheme on Mainnet. The sequencer thread now will continue to perform capacity checks, but in a more approximate manner. In parallel, 16 worker threads will accurately verify the capacity of previous blocks. As a result, a reorg could occur with a maximum depth of 17 blocks, although the likelihood of this is low.
+
+For indexers, the `BatchHeader` version has been upgraded to 4. This is backward compatible (the only exception is for projects decoding the blob payload, which has changed slightly).
+
 ## Darwin Upgrade
 
 ### Overview
