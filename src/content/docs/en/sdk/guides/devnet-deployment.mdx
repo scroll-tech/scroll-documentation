@@ -198,7 +198,7 @@ scrollsdk helper fund-accounts --dev
 
 `kubectl get ingress` will show all the exposed services and URIs.
 
-`make uninstall` will stop all services.
+`make delete` will stop all services. You wil also need to run `kubectl delete pvc data-l2-rpc-0` to delete the remaining pvc.
 
 `minikube dashboard` launches a WebUI for exploring the kubernetes cluster and the various pods, volumes and ingresses without learning all the CLI commands. `k9s` is also a CLI great tool for exploring running pods and quickly looking at their logs.
 
