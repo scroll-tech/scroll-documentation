@@ -99,6 +99,10 @@ Similarly to Ethereum, the Scroll sequencer aims to prioritize executable transa
 
 However, just like in Ethereum, this ordering is not guaranteed by the protocol, and some blocks might diverge from it. In particular, during periods of low mempool congestion, the sequencer will process transactions on a first-come-first-served basis, so some transactions might precede others with higher tip in the same block.
 
+## Reorgs and Finality 
+
+Starting from our [DarwinV2 upgrade](/technology/overview/scroll-upgrades#darwinv2-upgrade), the maximum reorg depth has been set to 17 blocks. Transaction ordering should be unchanged after this threshold, however the only absolute guarantee is for transactions to be finalized (proof submitted to L1).
+
 ## Future EIPs
 
 We keep a close eye on all emerging EIPs adopted by Ethereum and adopt them when suitable. If you’re interested in more specifics, reach out in [our community forum](https://community.scroll.io) or on the [Scroll Discord](https://discord.gg/scroll).
