@@ -37,7 +37,7 @@ Because AltGas token introduces another element of complexity, we will use it he
 <Aside type="caution">
 Scroll SDK is still in development, so certain pieces of guides are prone to be breaking. We hope to slow down changes soon.
 
-*Guide last updated September 4, 2024.*
+*Guide last updated September 6, 2024.*
 </Aside>
 
 ## Getting your machine ready
@@ -153,7 +153,9 @@ helm install external-secrets external-secrets/external-secrets -n external-secr
 
 Let's now create a directory to host our local files and setup our git repo.
 
-`mkdir do-alt-gas-demo && cd do-alt-gas-demo && git init` 
+```bash
+mkdir do-alt-gas-demo && cd do-alt-gas-demo && git init
+```
 
 ## Configuration
 
@@ -163,9 +165,13 @@ We'll want two files from the `scroll-sdk` repo. You can either copy paste the c
 
 Here, I'll copy them from a local repo copy.
 
-`cp ../scroll-sdk/examples/config.toml.example ./config.toml`
+```bash
+cp ../scroll-sdk/examples/config.toml.example ./config.toml
+```
 
-`cp ../scroll-sdk/examples/Makefile.example ./Makefile`
+```bash
+cp ../scroll-sdk/examples/Makefile.example ./Makefile
+```
 
 `Config.toml` will be used to setup our base configuration of our chain, from which each service's independent config files will be generated. `Makefile` will allow us to directly run `helm` commands in an automated way.
 
@@ -277,9 +283,13 @@ ALTERNATIVE_GAS_TOKEN_ENABLED = true
 L1_GAS_TOKEN = "0xFF34B3d4Aee8ddCd6F9AFFFB6Fe49bD371b8a357"
 ```
 
+You can follow the prompt by running `scrollsdk setup gas-token`
+
 ### Generate Configuration Files
 
 Now, we'll do the last steps for generating each service's configuration files based on our values in `config.toml`.
+
+Run `scrollsdk setup configs`.
 
 You'll see a few prompts to update a few remaining values, like the L1 height at contract deployment and the "deployment salt" which should be unique per new deployment with a deployer address.
 
@@ -387,13 +397,31 @@ We need to send some Sepolia ETH to the Deployer — 2 ETH should do it. Run the
 
 `-i` is used for funding the deployer. Later we'll run this with different params to fund other SDK accounts.
 
-`scrollsdk helper fund-accounts -f 0.2`
+<Aside type="tip">
+Again, if you're using DAI, here's a [faucet](https://staging.aave.com/faucet/).
+</Aside>
 
-The L2 funding might fail at this point if you choose "Directly fund L2 Wallet" — that's okay, since we haven't really setup the External URLs yet.
+Now, let's fund the other L1 accounts.
+
+`scrollsdk helper fund-accounts -f 0.2 -l 1`
+
+Here, we pass `-l 1` to only fund the L1 accounts. Any L2 funding will fail at this point since we haven't launched the chain yet!
 
 ### Installing the Helm Charts
 
+<Aside type="danger" title="Temporary Hack">
+Before launching your charts, copy your `chain-monitor` database DSN string from `./secrets/chain-monitor-secret.env` to the empty `db_config.dsn` field at the bottom of `./chain-monitor/configs/chain-monitor-config.json`.
+
+This is a chart bug in `chain-monitor v0.0.5` and should be fixed quickly.
+</Aside>
+
 Run `make install` to install (or later, to upgrade) all the SDK charts needed. It may help to run the commands one-by-one the first time, and check the deployment status. `k9s` is a useful tool for this. The sample Make file also doesn't include Blockscout, but feel free to add it as well.
+
+### Fund L2 accounts
+
+Let's fund our L1 Gas Oracle Sender (an account on L2 😅) with some funds.
+
+`scrollsdk helper fund-accounts -f 0.2 -l 2` will fund it with 0.2 of our gas token. Select "Directly fund L2 Wallet" for now, since our Deployer starts with 1 token starts with 1 token on L2. But now we have a working chain, so we can start bridging funds!
 
 ## Testing
 
@@ -409,10 +437,48 @@ Run `scrollsdk test contracts` to check all contract deployments, initialization
 
 ### e2e Test
 
-Run `scrollsdk test e2e` to try end-to-end testing. The without any flags, the test with create and fund a new wallet, but depending on Sepolia gas costs, you may need to manually fund the generated account with additional ETH. If the tests stop at any time, just run `scrollsdk test e2e -r` to resume from the saved file.
+Run `scrollsdk test e2e` to try end-to-end testing. Without any flags, the test with create and fund a new wallet, but depending on Sepolia gas costs, you may need to manually fund the generated account with additional ETH. If the tests stop at any time, just run `scrollsdk test e2e -r` to resume from the saved file.
 
-We recommend opening up another terminal and running `scrollsdk helper activity` to generate traffic and produce more blocks — otherwise, finalization will be stopped.
+We recommend opening up another terminal and running `scrollsdk helper activity -i 1` to generate traffic and produce more blocks — otherwise, finalization will be stopped.
 
 ### Frontends
 
 Go visit the frontends, connect your wallet and try to bridge some funds!
+
+## Next Steps
+
+### Disable L1 Data Fee
+On Scroll, transactions on L2 have two components -- the gas costs for execution and an L1 data fee. When gas on your network is paid in a token that has no standard relationship to the currency being used to pay for data fees on the L1, you will need to introduce tooling that can set the gas caluclation "scalar" values.
+
+At the moment, we have not built any automated tooling for this, and instead of viewing the ERC20 value as 1:1 with Sepolia Ether, we suggest setting the scalars to 0 to eliminate these overheads.
+
+To do so, you can run the following commands using your L2 RPC URL and Owner account private key:
+
+```bash
+cast send --rpc-url  http://l2-rpc.scrollsdk 0x5300000000000000000000000000000000000002  "setCommitScalar(uint256)" 0 --private-key [private-key]
+cast send --rpc-url  http://l2-rpc.scrollsdk 0x5300000000000000000000000000000000000002  "setBlobScalar(uint256)" 0 --private-key [private-key]
+```
+
+Or, if your Owner is just a test account, you can use it's private key to call this method:
+
+```bash
+scrollsdk helper set-scalars -k [private-key]
+```
+
+### Deploy Blockscout
+
+<Aside type="danger" title="Temporary Bug">
+Right now, this doesn't work on DigitalOcean. We haven't debugged it yet, but we're working with the Blockscout team for a much better Block Explorer + Scroll SDK experience.
+</Aside>
+
+As long as you setup the databases in the `scrollsdk setup db-init` step, you can run `helm upgrade -i blockscout blockscout --values blockscout/values/production.yaml`
+
+{/* ### Test Optimized Machine configurations
+
+If you want to modify your pools, you may want to have certain machines with extra CPU (say, for the sequencer) or RAM (for the coordinator-api), without paying for all machines in the cluster to have these characteristics.
+
+DigitalOcean makes this pretty easy.
+
+### Add Redundancy!
+
+Soon, we'll add more information about quickly adding Replicas. */}
