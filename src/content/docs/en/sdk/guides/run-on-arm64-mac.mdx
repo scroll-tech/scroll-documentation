@@ -125,7 +125,7 @@ These are all a work-around for ingress-dns not working on arm MacOS and hopeful
 
 1. **Configure `values.yaml` and `config.toml`**
 
-    This is the time to adjust what services run on your stack and their configuration. I’d suggest not altering these on your first installation, but see `charts/scroll-stack/values.yaml` ([view on Github](https://github.com/scroll-tech/scroll-sdk/blob/develop/charts/scroll-stack/values.yaml)) and `config.toml` ([view on Github](https://github.com/scroll-tech/scroll-sdk/blob/develop/charts/scroll-stack/config.toml)).
+    This is the time to adjust what services run on your stack and their configuration. I’d suggest not altering these on your first installation, but see `charts/scroll-sdk/values.yaml` ([view on Github](https://github.com/scroll-tech/scroll-sdk/blob/develop/charts/scroll-sdk/values.yaml)) and `config.toml` ([view on Github](https://github.com/scroll-tech/scroll-sdk/blob/develop/charts/scroll-sdk/config.toml)).
 
 1. **Bootstrap**
 
@@ -193,7 +193,7 @@ If you need to update a specific service's config file:
 Running `kubectl get ingress` should show all the domains setup within the cluster, like the following:
 
 ```
-➜  scroll-stack git:(develop) ✗ kubectl get ingress
+➜  scroll-sdk git:(develop) ✗ kubectl get ingress
 NAME                      CLASS   HOSTS                               ADDRESS        PORTS   AGE
 blockscout                nginx   blockscout.scrollsdk                192.168.49.2   80      5h3m
 bridge-history-api        nginx   bridge-history-api.scrollsdk        192.168.49.2   80      5h3m
@@ -266,7 +266,7 @@ You should now be able to explore the stack on your local machine and using your
 - [Granfana Dashboards](http://grafana.scrollsdk/)
   - Login
     - User: `admin`
-    - Pass: `scroll-stack`
+    - Pass: `scroll-sdk`
   - See “Scroll” dashboards on [this page](http://grafana.scrollsdk/dashboards).
 
 ### Connecting to the RPC using a Wallet
