@@ -35,9 +35,9 @@ This guide is intended for chain owners and those that aren't DevOps professiona
 Because AltGas token introduces another element of complexity, we will use it here as well.
 
 <Aside type="caution">
-Scroll SDK is still in development, so certain pieces of guides are prone to be breaking. We hope to slow down changes soon.
+Scroll SDK is still in development, so certain pieces of guides may see breaking changes. We hope to slow down changes soon.
 
-*Guide last updated September 6, 2024.*
+*Guide last updated September 9, 2024.*
 </Aside>
 
 ## Getting your machine ready
@@ -473,12 +473,49 @@ Right now, this doesn't work on DigitalOcean. We haven't debugged it yet, but we
 
 As long as you setup the databases in the `scrollsdk setup db-init` step, you can run `helm upgrade -i blockscout blockscout --values blockscout/values/production.yaml`
 
-{/* ### Test Optimized Machine configurations
+### Optimize Machine Configuration with Node Affinity
 
-If you want to modify your pools, you may want to have certain machines with extra CPU (say, for the sequencer) or RAM (for the coordinator-api), without paying for all machines in the cluster to have these characteristics.
+As you work with your network, you might want to be more selective about the pools you provide to services.
 
-DigitalOcean makes this pretty easy.
+One example is that the `l2-sequencer` may want additional CPU-resources and the `coordinator-api` has RAM requirements far greater than other services.
+
+If you'd like to give this a try, create a new "Node Pool" in DigitalOcean -- perhaps selecting "CPU Intensive - 8vCPU 16 GB RAM" and naming it "pool-sequencer".
+
+Now, in your `l2-sequencer/values/production-1.yaml` file, add the following section:
+
+```yaml
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: doks.digitalocean.com/node-pool
+              operator: In
+              values:
+                - pool-sequencer
+resources:
+  requests:
+    memory: "450Mi"
+    cpu: "80m"
+  limits:
+    memory: "14Gi"
+    cpu: "7.5"
+```
+
+Here, we're adding asking it to only select nodes that are in the "pool-sequencer" and increasing the resources of the pod to allow up to 7.5 CPU cores.
+
+To apply this, run:
+
+```bash
+helm upgrade -i l2-sequencer l2-sequencer --values l2-sequencer/values/production-1.yaml
+```
+
+For more info, see the Kubernetes page on [Assigning Pods to Nodes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/).
+
+{/* 
 
 ### Add Redundancy!
 
-Soon, we'll add more information about quickly adding Replicas. */}
+Soon, we'll add more information about quickly adding Replicas.
+
+*/}
