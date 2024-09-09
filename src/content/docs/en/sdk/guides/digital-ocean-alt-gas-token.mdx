@@ -512,10 +512,24 @@ helm upgrade -i l2-sequencer l2-sequencer --values l2-sequencer/values/productio
 
 For more info, see the Kubernetes page on [Assigning Pods to Nodes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/).
 
-{/* 
-
-### Add Redundancy!
+### Add Redundancy with Replicas
 
 Soon, we'll add more information about quickly adding Replicas.
 
-*/}
+For some components (like `l2-rpc` and all `-api` services), this is as easy as adding or modifying the following value in your production.yaml file:
+
+```yaml
+controller:
+  replicas: 2
+```
+
+Some services do not support this without additional configurations (for example, `l2-sequencer` and `l2-bootnode`). We are working on additional info on how to properly run multiple services for loadbalancing between or for having redunant backups available.
+
+{/* ### Add Graphana charts for Monitoring
+
+To quickly get started with Grafana, run the following command:
+
+
+Now, visit the localhost URL in [your browser](http://localhost:3000/). The default password for the `admin` user is `prom-operator`.
+
+Adding an ingress URL, changing the default password or adding LDAP login are all suggested if you use this stack in production. */}
