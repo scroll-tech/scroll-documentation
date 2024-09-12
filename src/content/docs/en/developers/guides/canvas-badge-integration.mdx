@@ -11,13 +11,10 @@ import Aside from "../../../../../components/Aside.astro"
 import BadgeDetails from "../_images/badgeDetails.jpg"
 import BadgeLevels from "../_images/badgeLevels.png"
 import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import Columns from "../../../../../components/Columns.astro"
 import ToggleElement from "../../../../../components/ToggleElement.astro"
 
 We are thrilled to have you join us in building unique badges on Scroll Canvas, a product designed for ecosystem projects to interact with users in a more personal way on-chain. 
-
-<Aside>
-**Scroll Canvas** allows users to showcase on-chain credentials, status, and achievements called **Badges** issued and collected across the Scroll ecosystem. Users can mint a non-transferable and unique personal persona to collect and display their **Badges**.
-</Aside>
 
 ## Background
 
@@ -78,8 +75,9 @@ For Canvas and badge questions, please join [Scroll dev support channel](https:/
 | Issuance method   | *Fully permissionless*: meaning your badge can be automatically issued by checking smart contract conditions <br/> *Gifted:* Badges can also be issues with no user interaction <br/> **Backend-authorized**: requires APIs to enable eligibility criteria ([API requirements](https://www.notion.so/Badge-APIs-95890d7ca14944e2a6d34835ceb6b914?pvs=21)) |
 | Support link      | **Support channel link** to your Discord/Telegram group |
 
+<Aside>
 On the badge details page, there's a button to **visit your official website**. We recommend creating a dedicated promotional page for the badge linked to that button. This will provide users with comprehensive information about the badge (background, purpose, how to obtain, available images, etc.).
-
+</Aside>
 <Aside type="caution">
 Since **badges are permissionless**, Scroll Foundation may not troubleshoot individual third-party badges or answer eligibility questions. Provide ample resources for your community to mint badges smoothly. We ask that you share **Support URL** in Badge Listing process with enough resources (blog, how-to threads, TG/Discord support channel link).
 </Aside>
@@ -181,8 +179,9 @@ Since **badges are permissionless**, Scroll Foundation may not troubleshoot indi
 5. To maintain the availability of the check API and claim API, Scroll recommends maintaining a TPS of approximately 300. Adjust this rate accordingly if your API handles multiple badges simultaneously. 
 6. If your badge image is stored on IPFS, due to the distributed nature of IPFS, the request time for users in different regions to access content on IPFS can be unpredictable. If they want a better user experience, they can self-host the content. 
 
-At this stage, your Badge is live on Scroll Canvas. Badge launch is permissionless. You can deploy as many badges as needed. Scroll does not need to approve your badge deployment.
-
+<Aside>
+At this stage, your Badge is live on Scroll Canvas. Badge launch is permissionless. You can deploy as many badges as needed. **Scroll does not need to approve your badge deployment.**
+</Aside>
 <Aside type="caution">
 Regularly monitor server logs to stay informed of any potential issues, especially during the first 48 hours when the badge is live.
 </Aside>
@@ -201,29 +200,26 @@ Regularly monitor server logs to stay informed of any potential issues, especial
 2. Share on social media about your badge launch and the eligibility criteria. Use `#BadgeonScroll` and tag `@Scroll_ZKP` to boost more visibility.
 3. Monitor your community / support channel for user feedback. If there is any Canvas backend related issues, please reach out to Scroll Discord channel.
 
----
+<ToggleElement anchor="reference-cors">
+    <div slot="title">Extra Boost: Getting Featured on [Discover Badges Page](https://scroll.io/canvas-and-badges)</div>
 
-## Extra Boost: Getting Featured on [Discover Badges Page](https://scroll.io/canvas-and-badges)
+    <Aside>
+        You can display **all of the badges** in your own product permissionlessly. Discover Badges page serves as an additional channel for your badges to get promoted.
+    </Aside>
+    <Aside type="caution">
+        Please be careful when submitting your application. We’re eager to introduce useful and creative badges for the Scroll ecosystem. The Scroll team is thoroughly reviewing each badge listing, which means the process might take a bit longer. Thank you for your patience.
+    </Aside>
 
-<Aside>
-You can display **all of the badges** in your own product permissionlessly. Discover Badges page serves as an additional channel for your badges to get promoted.
+    1. Ensure that your project is listed on the [Scroll Ecosystem Page](https://scroll.io/ecosystem). If you cannot find it yet, please [fill out this form](https://tally.so/r/waxLBW) to discuss onboarding your Badges with Scroll Partnerships team.
+    2. **Application Portal**: [https://scroll.io/canvas/listing](https://scroll.io/canvas/listing) 
+        - General Badge Review Criteria :
+            - Project is indexed on Scroll’s ecosystem page.  If you cannot find it yet, please [fill out this form](https://tally.so/r/waxLBW).
+            - Complete and clear badge description including Badge name, Issuer name, Issuer URL (website/official link), Support URL (support channel link).
+            - Clear and reasonable eligibility criteria. Scroll holds discretion on not featuring badges with criteria that can be exploitive to users.
+            - Badge design is high-resolution, representative of the issuer’s branding.
+            - **Two badges** will be on display from the same project on Canvas & Badges page. If there are new and innovative new use cases for badges from the same project, Scroll team will consider making exceptions to allow up to two more badges.
+            - Once your project is visible on the ecosystem page, after they submit the listing request form, Scroll team will review submission and approve on a weekly basis.
+        - Badge Swaps and Withdrawal
+            - After reaching the 2 badge quota, if a project team wants to add new badges, they can raise the request in Discord with link to the new badge information.
 
-Please be careful when submitting your application. We’re eager to introduce useful and creative badges for the Scroll ecosystem. The Scroll team is thoroughly reviewing each badge listing, which means the process might take a bit longer. Thank you for your patience.
-</Aside>
-
-1. Ensure that your project is listed on the [Scroll Ecosystem Page](https://scroll.io/ecosystem). If you cannot find it yet, please [fill out this form](https://tally.so/r/waxLBW) to discuss onboarding your Badges with Scroll Partnerships team.
-2. **Application Portal**: [https://scroll.io/canvas/listing](https://scroll.io/canvas/listing) 
-    - General Badge Review Criteria :
-        - Project is indexed on Scroll’s ecosystem page.  If you cannot find it yet, please [fill out this form](https://tally.so/r/waxLBW).
-        - Complete and clear badge description including Badge name, Issuer name, Issuer URL (website/official link), Support URL (support channel link).
-        - Clear and reasonable eligibility criteria. Scroll holds discretion on not featuring badges with criteria that can be exploitive to users.
-        - Badge design is high-resolution, representative of the issuer’s branding.
-        - **Two badges** will be on display from the same project on Canvas & Badges page. If there are new and innovative new use cases for badges from the same project, Scroll team will consider making exceptions to allow up to two more badges.
-        - Once your project is visible on the ecosystem page, after they submit the listing request form, Scroll team will review submission and approve on a weekly basis.
-    - Badge Swaps and Withdrawal
-        - After reaching the 2 badge quota, if a project team wants to add new badges, they can raise the request in Discord with link to the new badge information.
-
----
-
-## FAQ 
-{/* TODO */}
+</ToggleElement>
