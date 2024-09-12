@@ -1,0 +1,85 @@
+---
+section: technology
+date: Last Modified
+title: "برنامه ممیزی و جوایز باگ ها"
+lang: "fa"
+dir: "rtl"
+permalink: "technology/security/audits-and-bug-bounty"
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+<Aside>
+برای کشف هر گونه آسیب‌پذیری حیاتی خارج از دامنه برنامه جایزه باگ، لطفاً گزارش‌ها را به آدرس security@scroll.io ارسال کنید.
+</Aside>
+
+امنیت در اولویت اول Scroll قرار دارد.
+
+علاوه بر تست‌های دقیق، تیم امنیت داخلی و مرورهای جامع کد، ما با چندین شرکت معتبر ممیزی امنیتی برای بررسی کدهای خود همکاری کرده‌ایم. همچنین برنامه جایزه باگ را راه‌اندازی کرده‌ایم تا جامعه را به مشارکت در امنیت پروتکل خود تشویق کنیم.
+
+<Aside type="danger" title="">
+  ممیزی‌ها تضمینی برای عدم وجود آسیب‌پذیری‌های امنیتی ارائه نمی‌دهند. استفاده از بلاکچین‌ها با ریسک همراه است و Scroll هم از این قاعده مستثنی نیست. ما به کاربران توصیه می‌کنیم که از پروتکل با احتیاط و به عهده خود استفاده کنند.
+</Aside>
+
+## ممیزی‌های مستقل
+
+Scroll با چندین شرکت پیشرو در صنعت امنیت برای بررسی کدهای خود همکاری کرده است، و کدهای حیاتی تحت بررسی تیم‌های مختلف قرار گرفته است، از جمله [Trail of Bits](https://www.trailofbits.com/)، [OpenZeppelin](https://www.openzeppelin.com/)، [Zellic](https://www.zellic.io/)، و [KALOS](https://www.kalos.xyz/).
+
+- Trail of Bits، Zellic و KALOS کدهای zkEVM ما را بررسی کرده‌اند.
+- OpenZeppelin و Zellic ممیزی‌های مستقلی بر روی قراردادهای پل و رولاپ ما انجام داده‌اند.
+- Trail of Bits تحلیل‌هایی بر روی پیاده‌سازی نود ما انجام داده است.
+
+### مدارک zkEVM
+
+- Trail of Bits
+  - [Wave 1](https://github.com/trailofbits/publications/blob/master/reviews/2023-04-scroll-zkEVM-wave1-securityreview.pdf)
+  - [Wave 2](https://github.com/trailofbits/publications/blob/master/reviews/2023-08-scroll-zkEVM-wave2-securityreview.pdf)
+  - [Wave 3](https://github.com/trailofbits/publications/blob/master/reviews/2023-09-scroll-zkEVM-wave3-securityreview.pdf)
+  - [پشتیبانی از Blob EIP-4844](https://github.com/trailofbits/publications/blob/master/reviews/2024-04-scroll-4844-blob-securityreview.pdf)
+- Zellic و Kalos
+  - [Wave 1](https://github.com/Zellic/publications/blob/master/Scroll%20zkEVM%20-%20Part%201%20-%20Audit%20Report.pdf)
+  - [Wave 2](https://github.com/Zellic/publications/blob/master/Scroll%20zkEVM%20-%20Part%202%20-%20Audit%20Report.pdf)
+
+### پیاده‌سازی نود
+
+- Trail of Bits
+  - [zkTrie](https://github.com/trailofbits/publications/blob/master/reviews/2023-07-scroll-zktrie-securityreview.pdf)
+  - [L2geth](https://github.com/trailofbits/publications/blob/master/reviews/2023-08-scrollL2geth-initial-securityreview.pdf)
+  - [تفاوت L2geth](https://github.com/trailofbits/publications/blob/master/reviews/2023-08-scrollL2geth-securityreview.pdf)
+
+### قراردادهای پل و رولاپ
+
+- OpenZeppelin
+  - [فاز 1](https://blog.openzeppelin.com/scroll-layer-1-audit-1)
+  - [فاز 2](https://blog.openzeppelin.com/scroll-phase-2-audit)
+  - [GasSwap، Verifier‌های متعدد، Wrapped Ether و Diff](https://blog.openzeppelin.com/scroll-gasswap-multiple-verifier-wrapped-ether-and-diff-audit)
+  - [ScrollOwner و Rate Limiter](https://blog.openzeppelin.com/scrollowner-and-rate-limiter-audit)
+  - [USDC Gateway](https://blog.openzeppelin.com/scroll-usdc-gateway-audit)
+  - [تفاوت قراردادها](https://blog.openzeppelin.com/scroll-diff-audit-report)
+  - [بهینه‌سازی گس پل](https://blog.openzeppelin.com/scroll-bridge-gas-optimizations-audit)
+  - [پشتیبانی از EIP-4844](https://blog.openzeppelin.com/scroll-eip-4844-support-audit)
+  - [پل توکن دسته‌ای](https://blog.openzeppelin.com/scroll-batch-token-bridge-audit)
+- Zellic
+  - [گزارش 1](https://github.com/Zellic/publications/blob/master/Scroll%20-%2005.26.23%20Zellic%20Audit%20Report.pdf)
+  - [گزارش 2](https://github.com/Zellic/publications/blob/master/Scroll%20-%2009.27.23%20Zellic%20Audit%20Report.pdf)
+  - [Lido Gateway](https://github.com/Zellic/publications/blob/master/Scroll%20Lido%20Gateway%20-%20Zellic%20Audit%20Report.pdf)
+
+### قراردادهای کمکی
+- ZkTrie Verifier
+  - [OpenZeppelin](https://blog.openzeppelin.com/scroll-zktrieverifier-audit#notes-additional-information)
+
+## برنامه جایزه باگ
+
+Scroll برنامه [جایزه باگ فعال در Immunefi](https://immunefi.com/bounty/scroll/) را دارد، که یک پلتفرم پیشرو در زمینه جایزه‌های باگ است. این برنامه به صورت عمومی در دسترس است و ما از هر کسی که بخواهد شرکت کند، استقبال می‌کنیم.
+
+پاداش‌ها بسته به شدت آسیب‌پذیری‌های گزارش شده متفاوت است:
+
+- **حیاتی**: تا \$1,000,000
+- **بالا**: \$10,000 - \$50,000
+- **متوسط**: \$5,000
+
+### دامنه
+
+دامنه برنامه جایزه باگ شامل زیرساخت بلاکچین و قراردادهای هوشمند برای پل و رولاپ است. برای تفکیک دقیق دسته‌های باگ، لطفاً به صفحه جایزه باگ مراجعه کنید.
+
+علاوه بر دامنه‌های ذکر شده در برنامه جایزه باگ، ما همچنین به گزارش آسیب‌پذیری‌های شناسایی شده به Immunefi تشویق می‌کنیم که همچنان برای پاداش‌ها مورد بررسی قرار خواهند گرفت.

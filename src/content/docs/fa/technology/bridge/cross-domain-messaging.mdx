@@ -1,0 +1,252 @@
+---
+section: technology
+date: Last Modified
+title: "پیام‌رسانی بین دامنه‌ای"
+lang: "fa"
+dir: "rtl"
+permalink: "technology/bridge/cross-domain-messaging"
+whatsnext: { "درگاه های واریز": "/fa/technology/bridge/deposit-gateways/" }
+---
+
+import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import Aside from "../../../../../components/Aside.astro"
+import ToggleElement from "../../../../../components/ToggleElement.astro"
+
+import L1ToL2 from "../_images/L1-to-L2.png"
+import L2ToL1 from "../_images/L2-to-L1.png"
+import WithdrawTrie from "../_images/withdraw-trie.png"
+
+Scroll یک پل پیام‌رسانی دلخواه دارد که امکان انتقال توکن‌ها و ارتباط میان اپلیکیشن‌های غیرمتمرکز (dapp) را بین لایه ۱ و لایه ۲ فراهم می‌کند. به این معنی که اپلیکیشن‌های غیرمتمرکز روی لایه ۱ می‌توانند توابع قرارداد را روی لایه ۲ فراخوانی کنند و برعکس. در ادامه، توضیح خواهیم داد که پیام‌ها چگونه بین لایه ۱ و لایه ۲ منتقل می‌شوند.
+
+## ارسال پیام‌ها از لایه ۱ به لایه ۲
+
+<ClickToZoom src={L1ToL2} alt="L1 to L2 workflow" caption="شکل 1. جریان کار ارسال پیام از لایه ۱ به لایه ۲" />
+
+دو رویکرد اصلی برای ارسال پیام از لایه ۱ به لایه ۲ وجود دارد: ارسال پیام‌های دلخواه از طریق `L1ScrollMessenger` و ارسال تراکنش‌های اجباری از طریق `EnforcedTxGateway`. هر دو رویکرد به کاربران این امکان را می‌دهند که یک تراکنش لایه ۲ را روی لایه ۱ آغاز کنند و به قراردادهای دلخواه روی لایه ۲ فراخوانی کنند. برای پیام‌های دلخواه، فرستنده تراکنش‌های لایه ۲ آدرس `L1ScrollMessenger` است. برای تراکنش‌های اجباری، فرستنده لایه ۲ یک حساب با مالکیت خارجی (EOA) است. علاوه بر این، چندین دروازه توکن استاندارد برای تسهیل واریز ETH و دیگر توکن‌های استاندارد از جمله ERC-20، ERC-677، ERC-721، و ERC-1155 ارائه می‌دهیم. به طور کلی، این دروازه‌ها واریز توکن‌ها را به پیام تبدیل کرده و از طریق قرارداد `L1ScrollMessenger` به معادل‌های خود در لایه ۲ ارسال می‌کنند. جزئیات بیشتر در مورد دروازه‌های توکن لایه ۱ را می‌توانید در [دروازه‌های واریز](/technology/bridge/deposit-gateways) پیدا کنید.
+
+<Aside type="danger" title="">
+تراکنش‌های اجباری در حال حاضر در Scroll فعال نیستند. در بروزرسانی‌های آینده، کاربران قادر خواهند بود از این عملکرد برای دور زدن `L1ScrollMessenger` و ارسال پیام‌ها به طور مستقیم به `L1MessageQueue` استفاده کنند.
+</Aside>
+
+همان‌طور که در شکل 1 نشان داده شده است، هر دو پیام دلخواه و تراکنش‌های اجباری به صف پیام‌ها که در قرارداد `L1MessageQueue` ذخیره شده است، افزوده می‌شوند. قرارداد `L1MessageQueue` دو تابع `appendCrossDomainMessage` و `appendEnforcedTransaction` را برای افزودن پیام‌های دلخواه و تراکنش‌های اجباری به ترتیب فراهم می‌کند.
+
+```solidity
+/// @notice Append an arbitrary L1-to-L2 message into this contract.
+/// @param target The target address on L2.
+/// @param gasLimit The maximum gas can be used for this transaction on L2.
+/// @param data The calldata of the L1-initiated transaction.
+function appendCrossDomainMessage(
+    address target,
+    uint256 gasLimit,
+    bytes calldata data
+) external;
+
+/// @notice Append an enforced transaction to this contract.
+/// @param sender The sender address of this transaction.
+/// @param target The target address of this transaction.
+/// @param value The value to be transferred on L2.
+/// @param gasLimit The maximum gas should be used for this transaction on L2.
+/// @param data The calldata of the L1-initiated transaction.
+function appendEnforcedTransaction(
+    address sender,
+    address target,
+    uint256 value,
+    uint256 gasLimit,
+    bytes calldata data
+) external;
+```
+
+هر دو تابع تراکنش لایه ۱ آغاز شده با نوع جدید `L1MessageTx` را در زنجیره Scroll ایجاد کرده و هش تراکنش را محاسبه می‌کنند (جزئیات بیشتر را در [تراکنش پیام لایه ۱](/technology/chain/transactions#l1-message-transaction) پیدا کنید). سپس `L1MessageQueue` هش تراکنش را به صف پیام‌ها افزوده و رویداد `QueueTransaction(sender, target, value, queueIndex, gasLimit, calldata)` را منتشر می‌کند. تفاوت بین `appendCrossDomainMessage` و `appendEnforcedTransaction` هنگام ایجاد تراکنش‌های پیام لایه ۱ به شرح زیر است:
+
+- `appendCrossDomainMessage` فقط می‌تواند توسط `L1ScrollMessenger` فراخوانی شود و از [آدرس مستعار](#address-alias) `msg.sender` استفاده می‌کند، که آدرس `L1ScrollMessenger` خواهد بود، به عنوان فرستنده تراکنش.
+- `appendEnforcedTransaction` فقط می‌تواند توسط `EnforcedTxGateway` فراخوانی شود و از `sender` در پارامتر تابع به عنوان فرستنده تراکنش استفاده می‌کند. این امکان را برای کاربران فراهم می‌کند تا برداشت یا انتقال ETH از حساب‌های لایه ۲ خود را به طور مستقیم از طریق پل لایه ۱ تحمیل کنند.
+
+پس از اجرای موفقیت‌آمیز تراکنش روی لایه ۱، ناظر در sequencer Scroll که قرارداد `L1MessageQueue` را نظارت می‌کند، رویدادهای جدید `QueueTransaction` را از بلوک‌های لایه ۱ جمع‌آوری می‌کند. سپس sequencer یک تراکنش جدید `L1MessageTx` برای هر رویداد ایجاد کرده و آن‌ها را به صف تراکنش‌های محلی لایه ۱ خود اضافه می‌کند. هنگام ساخت بلوک جدید لایه ۲، sequencer تراکنش‌ها از هر دو صف تراکنش‌های لایه ۱ و mempool لایه ۲ را شامل می‌شود. توجه داشته باشید که تراکنش‌های پیام لایه ۱ باید به صورت متوالی بر اساس ترتیب صف پیام لایه ۱ در قرارداد `L1MessageQueue` گنجانده شوند. تراکنش‌های `L1MessageTx` همیشه در ابتدا در بلوک‌های لایه ۲ آمده و سپس تراکنش‌های لایه ۲ قرار می‌گیرند. در حال حاضر، تعداد تراکنش‌های `L1MessageTx` در یک بلوک لایه ۲ به `NumL1MessagesPerBlock` محدود شده است (که در حال حاضر به 10 تنظیم شده است).
+
+در ادامه، بیشتر در مورد فرآیند خاص ارسال پیام‌های دلخواه از طریق `L1ScrollMessenger` و ارسال تراکنش‌های اجباری از طریق `EnforcedTxGateway` توضیح خواهیم داد.
+
+### ارسال پیام‌های دلخواه
+
+قرارداد `L1ScrollMessenger` دو تابع `sendMessage` را برای ارسال پیام‌های دلخواه ارائه می‌دهد. تنها تفاوت این است که تابع دوم به کاربران این امکان را می‌دهد تا آدرس بازپرداختی غیر از آدرس فرستنده را برای دریافت بازپرداخت هزینه تعیین کنند.
+
+<ToggleElement anchor="sendMessage function signatures">
+<div slot="title"><code>sendMessage</code> function signatures</div>
+```solidity
+/// @param target The target address on L2.
+/// @param value The value to deposit to L2 from `msg.value`.
+/// @param message The message passed to target contract.
+/// @param gasLimit The maximum gas can be used for this transaction on L2.
+function sendMessage(
+    address target,
+    uint256 value,
+    bytes memory message,
+    uint256 gasLimit
+) external payable;
+
+/// @param target The target address on L2.
+/// @param value The value to deposit to L2 from `msg.value`.
+/// @param message The message passed to target contract.
+/// @param gasLimit The maximum gas can be used for this transaction on L2.
+/// @param refundAddress The address to refund excessive fee on L1.
+function sendMessage(
+    address target,
+    uint256 value,
+    bytes calldata message,
+    uint256 gasLimit,
+    address refundAddress
+) external payable;
+````
+</ToggleElement>
+
+هر دو تابع از کاربران می‌خواهند که یک حد گس برای تراکنش `L1MessageTx` مربوطه در لایه ۲ ارائه دهند و هزینه [انتقال پیام](#message-relay-fee) را در لایه ۱ پیش‌پرداخت کنند که بر اساس مقدار حد گس محاسبه می‌شود. هزینه به قرارداد `feeVault` در لایه ۱ جمع‌آوری می‌شود. اگر تراکنش در لایه ۲ به دلیل تعیین نادرست حد گس توسط کاربر شکست بخورد، کاربر می‌تواند پیام مشابه را با حد گس بالاتری تکرار کند. جزئیات بیشتر را در بخش [تکرار پیام‌های ناموفق](#retrying-failed-messages) پیدا خواهید کرد، اما از آنجایی که بخش‌های استفاده نشده از این هزینه‌ها به کاربر بازپرداخت می
+
+‌شود، هیچ جریمه‌ای برای برآورد بیش از حد حد گس وجود ندارد.
+
+توابع `sendMessage` آرگومان‌ها را به یک پیام بین دامنه‌ای (cross-domain) کدگذاری می‌کنند (به کد زیر توجه کنید)، جایی که نانس پیام، ایندکس صف پیام لایه ۱ است. داده‌های کدگذاری شده به عنوان calldata در تراکنش `L1MessageTx` که در لایه ۲ اجرا می‌شود، استفاده می‌شود. توجه داشته باشید که چنین پیام‌های بین دامنه‌ای همیشه تابع `relayMessage` در قرارداد `L2ScrollMessenger` را در لایه ۲ فراخوانی می‌کنند.
+
+```solidity
+abi.encodeWithSignature(
+    "relayMessage(address,address,uint256,uint256,bytes)",
+    _sender,
+    _target,
+    _value,
+    _messageNonce,
+    _message
+)
+````
+
+ETH واریز شده با مبلغ `value` در قرارداد `L1ScrollMessenger` قفل می‌شود. اگر مبلغ ETH در پیام نتواند هزینه پیام‌رسانی و مبلغ واریزی را پوشش دهد، تراکنش با شکست مواجه خواهد شد. قرارداد `L1ScrollMessenger` مبلغ اضافی را به آدرس بازپرداختی تعیین شده یا به فرستنده تراکنش بازپرداخت خواهد کرد. در نهایت، `L1ScrollMessenger` پیام بین دامنه‌ای را از طریق روش `appendCrossDomainMessage` به `L1MessageQueue` اضافه می‌کند.
+
+### ارسال تراکنش‌های اجباری
+
+<Aside type="danger" title="">
+تراکنش‌های اجباری در حال حاضر در Scroll فعال نیستند. در بروزرسانی‌های آینده، کاربران قادر خواهند بود از این عملکرد برای دور زدن `L1ScrollMessenger` و ارسال پیام‌ها به طور مستقیم به `L1MessageQueue` استفاده کنند.
+</Aside>
+
+قرارداد `EnforcedTxGateway` دو تابع `sendTransaction` را برای ارسال یک تراکنش اجباری ارائه می‌دهد. در تابع اول، فرستنده تراکنش `L1MessageTx` تولید شده، فرستنده تراکنش است. از سوی دیگر، تابع دوم از آدرس `sender` که به تابع منتقل شده به عنوان فرستنده `L1MessageTx` استفاده می‌کند. این امکان را برای شخص ثالث فراهم می‌کند که تراکنش اجباری را به نمایندگی از کاربر ارسال کرده و هزینه پیام‌رسانی را پرداخت کند. توجه داشته باشید که تابع دوم نیاز به ارائه امضای معتبر تراکنش `L1MessageTx` تولید شده دارد که با آدرس `sender` مطابقت دارد. هر دو تابع `sendTransaction` فرستنده را به یک حساب EOA محدود می‌کنند.
+
+<ToggleElement anchor="sendTransaction function signatures">
+<div slot="title"><code>sendTransaction</code> function signatures</div>
+
+```solidity
+/// @param target The target address on L2.
+/// @param value The value to withdraw from the `tx.origin` address on L2.
+/// @param gasLimit The maximum gas can be used for this transaction on L2.
+/// @param data The calldata passed to target contract.
+function sendTransaction(
+    address target,
+    uint256 value,
+    uint256 gasLimit,
+    bytes calldata data
+) external payable;
+
+/// @param sender The sender address who will initiate this transaction on L2.
+/// @param target The target address on L2.
+/// @param value The value to withdraw from the `sender` address on L2.
+/// @param gasLimit The maximum gas can be used for this transaction on L2.
+/// @param data The calldata passed to target contract.
+/// @param signature The signature for the corresponding `L1MessageTx` transaction.
+/// @param refundAddress The address to refund excessive fee on L1.
+function sendTransaction(
+    address sender,
+    address target,
+    uint256 value,
+    uint256 gasLimit,
+    bytes calldata data,
+    bytes memory signature,
+    address refundAddress
+) external payable;
+```
+
+</ToggleElement>
+
+مشابه با پیام‌رسانی دلخواه، `sendTransaction` هزینه پیام‌رسانی را کسر کرده و به حساب `feeVault` در لایه ۱ منتقل می‌کند. اما تفاوت کلیدی این است که مقدار `value` که به تابع منتقل می‌شود نشان‌دهنده مبلغ ETHی است که باید از حساب فرستنده در لایه ۲ برداشت شود، نه از لایه ۱. به همین دلیل، `msg.value` تنها باید هزینه [پیام‌رسانی](#message-relay-fee) را پوشش دهد. اگر مقدار ETH در پیام نتواند هزینه را پوشش دهد، تراکنش شکست خواهد خورد. هزینه اضافی به فرستنده تراکنش در تابع اول و به آدرس بازپرداختی در تابع دوم بازپرداخت می‌شود. در نهایت، `EnforcedTxGateway` به وسیله تابع `appendEnforcedTransaction` پیام را به صف پیام‌ها اضافه می‌کند.
+
+### تکرار پیام‌های ناموفق
+
+اگر یک تراکنش `L1MessageTx` در لایه ۲ به دلیل گس ناکافی شکست بخورد، کاربران می‌توانند پیام را با حد گس بالاتری تکرار کنند. `L1ScrollMessenger` متد `replayMessage` را ارائه می‌دهد که به کاربران این امکان را می‌دهد تا همان اطلاعات پیام قبلی را با حد گس بالاتر ارسال کنند. این پیام به یک تراکنش جدید `L1MessageTx` در لایه ۲ تبدیل خواهد شد. توجه داشته باشید که تراکنش پیام تکراری در لایه ۲ اگر پیام اصلی موفقیت‌آمیز بوده باشد، بازگردانده می‌شود.
+
+<ToggleElement anchor="replayMessage function signature">
+<div slot="title"><code>replayMessage</code> function signature</div>
+
+```solidity
+/// @param from The address of the sender of the message.
+/// @param to The address of the recipient of the message.
+/// @param value The msg.value passed to the message call.
+/// @param queueIndex The queue index for the message to replay.
+/// @param message The content of the message.
+/// @param newGasLimit New gas limit to be used for this message.
+/// @param refundAddress The address of account who will receive the refunded fee.
+function replayMessage(
+    address from,
+    address to,
+    uint256 value,
+    uint256 queueIndex,
+    bytes memory message,
+    uint32 newGasLimit,
+    address refundAddress
+) external payable;
+```
+
+</ToggleElement>
+
+از آنجا که قرارداد `L2ScrollMessenger` تمام پیام‌های لایه ۱ را که به لایه ۲ منتقل شده‌اند ثبت می‌کند، تراکنش پیام تکراری در لایه ۲ اگر پیام اصلی موفقیت‌آمیز بوده باشد، بازگردانده می‌شود.
+
+### هزینه پیام‌رسانی
+
+قرارداد `L2GasPriceOracle` مستقر در لایه ۱ هزینه پیام یک پیام را بر اساس حد گس محاسبه می‌کند. این قرارداد مقدار `l2BaseFee` را در ذخیره‌سازی خود نگه می‌دارد که به‌طور جاری توسط یک ناظر اختصاصی که توسط Scroll اداره می‌شود، به‌روزرسانی می‌شود. هزینه پیام‌های لایه ۱ به لایه ۲ به صورت `gasLimit * l2BaseFee` محاسبه می‌شود.
+
+<Aside type="tip" title="Notice of Upgrade">
+در بروزرسانی پل فوریه 2024، `L2GasPriceOracle` منسوخ خواهد شد و عملکرد آن به قرارداد `L1MessageQueueWithGasPriceOracle` منتقل خواهد شد.
+
+پیش‌بینی می‌شود که این بروزرسانی در تاریخ 21 فوریه 2024 نهایی شود، پس از یک دوره دو هفته‌ای قفل. Scroll Sepolia قبلاً این بروزرسانی را گذرانده است. جزئیات بیشتر [اینجا](https://scroll.io/blog/protocol-upgrade-bridging-cost-reduction) بخوانید.
+
+</Aside>
+
+### آدرس مستعار
+
+به دلیل رفتار کد عملیاتی `CREATE`، ممکن است کسی قراردادی را در همان آدرس در لایه ۱ و لایه ۲ اما با بایت‌کد متفاوت مستقر کند. برای جلوگیری از سوء استفاده از این موضوع توسط کاربران بدخواه، پل هنگام ارسال پیام‌ها از یک آدرس مستعار استفاده می‌کند. آدرس مستعار فرستنده تراکنش پیام لایه ۱ به صورت `l1_contract_address + offset` است که در آن `offset` برابر با `0x1111000000000000000000000000000000001111` است.
+
+## ارسال پیام‌ها از لایه ۲ به لایه ۱
+
+<ClickToZoom src={L2ToL1} alt="L2 to L1 workflow" caption="شکل 2. جریان کار ارسال پیام از لایه ۲ به لایه ۱" />
+
+در لایه ۲، کاربران می‌توانند پیام‌های دلخواه را از طریق `L2ScrollMessenger` ارسال کنند تا توکن‌ها را برداشت کنند و به قراردادهای لایه ۱ فراخوانی کنند. مشابه با لایه ۱، ما چندین دروازه توکن استاندارد ساخته‌ایم تا تسهیل برداشت توکن‌ها را ساده‌تر کنیم. برای جزئیات بیشتر در مورد دروازه‌های توکن لایه ۲، لطفاً به [دروازه‌های برداشت](/technology/bridge/withdraw-gateways) مراجعه کنید.
+
+قرارداد `L2ScrollMessenger` همچنین یک تابع `sendMessage` را ارائه می‌دهد. تفاوت با `L1ScrollMessenger.sendMessage` این است که پارامتر `gasLimit` در تابع نادیده گرفته می‌شود زیرا تراکنش اجرای برداشت روی لایه ۱ توسط کاربران ارسال
+
+ می‌شود و هزینه تراکنش به طور مستقیم در لایه ۱ پرداخت می‌شود. بنابراین، تابع `sendMessage` نیاز دارد که `msg.value` برابر با پارامتر `value` باشد. تابع پارامترها را به پیام بین دامنه‌ای کدگذاری می‌کند و از همان الگوی [`L1ScrollMessenger`](#sending-arbitrary-messages) استفاده می‌کند.
+
+<ToggleElement anchor="sendMessage function signatures">
+<div slot="title"><code>sendMessage</code> function signatures</div>
+
+```solidity
+/// @param target The target address on L1.
+/// @param value The value to withdraw to L1 from `msg.value`.
+/// @param message The message passed to target contract.
+/// @param _gasLimit Ignored in the L2ScrollMessenger because the withdrawal execution on L1 is done by the user.
+function sendMessage(
+    address target,
+    uint256 value,
+    bytes memory message,
+    uint256 _gasLimit
+) external payable;
+```
+
+</ToggleElement>
+
+سپس هش پیام بین دامنه‌ای به `L2MessageQueue` از طریق تابع `appendMessage` اضافه می‌شود. قرارداد `L2MessageQueue` [Trie برداشت](#withdraw-trie) را نگه می‌دارد، که یک Trie مرکل ضمیمه‌پذیر است. هر بار که پیام جدیدی به صف اضافه می‌شود، قرارداد آن را در Trie برداشت درج کرده و ریشه Trie را به‌روزرسانی می‌کند.
+
+پس از نهایی شدن دسته تراکنش‌ها که شامل پیام‌های لایه ۲ به لایه ۱ است در قرارداد رولاپ لایه ۱، کاربران باید تراکنش‌های _اجرای برداشت_ مربوطه را برای فراخوانی تابع `relayMessageWithProof` در قرارداد `L1ScrollMessenger` ارسال کنند که برداشت را در لایه ۱ انجام می‌دهد. به لطف پروف‌های مرکل، نهایی‌سازی تراکنش‌های برداشت در لایه ۱ به صورت اعتماد ناپذیر است و می‌تواند توسط خود کاربران یا توسط یک طرف سوم به نمایندگی از کاربران ارسال شود.
+
+برای راحت‌تر ساختن یک MIP برداشت، Scroll یک سرویس به نام API تاریخچه پل را حفظ می‌کند. API تاریخچه پل `SentMessage` رویدادهای منتشر شده از `L2ScrollMessenger` را نظارت کرده و Trie برداشت را به‌طور داخلی نگه می‌دارد. این سرویس به طور مداوم پروف‌های مرکل برای هر پیام برداشت تولید می‌کند. کاربران و خدمات ثالث می‌توانند پروف‌های مرکل را از API تاریخچه پل درخواست کنند تا در تراکنش‌های _اجرای برداشت_ درج شوند.
+
+توجه داشته باشید که تراکنش‌های اجرای برداشت می‌توانند توسط خود کاربران یا توسط یک خدمت ثالث ارسال شوند.
+
+### Trie برداشت
+
+<ClickToZoom src={WithdrawTrie} alt="ساختار Trie برداشت" caption="شکل 3. ساختار Trie برداشت" />
+
+Trie برداشت یک Trie مرکل دودویی متراکم است. هش یک گره برگ از هش پیام به ارث برده می‌شود، در حالی که هش یک گره غیر برگ، هش کیکاکی از الحاق هش‌های دو فرزند آن است. عمق Trie برداشت به طور پویا با توجه به تعداد پیام‌های افزوده شده به Trie رشد می‌کند.
+
+شکل 3(a) یک نمونه از یک Trie برداشت ۳ لایه کامل را نشان می‌دهد. وقتی تعداد برگ‌ها نمی‌تواند Trie دودویی کامل را اشباع کند، ما گره‌های برگ را با هش ۰ پر می‌کنیم، همانطور که در شکل 3(b) و 3(c) نشان داده شده است. هنگام افزودن یک پیام جدید به یک Trie برداشت غیرکامل، گره پرکننده سپس با یک گره برگ جدید با هش واقعی پیام جایگزین می‌شود.

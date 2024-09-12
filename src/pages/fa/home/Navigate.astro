@@ -1,0 +1,65 @@
+---
+import NavCard from "~/components/NavCard.astro"
+import StartSvg from "~/assets/svgs/home/home-start.svg?raw"
+import DevelopSvg from "~/assets/svgs/home/home-develop.svg?raw"
+import TechnologySvg from "~/assets/svgs/home/home-technology.svg?raw"
+import LearnSvg from "~/assets/svgs/home/home-learn.svg?raw"
+import SectionHeader from "~/components/SectionHeader/index.astro"
+
+const navList = [
+  {
+    icon: StartSvg,
+    name: "شروع کنید",
+    content: "به اسکرول بریج کنید و به کاوش اکوسیستم ما بپردازید.",
+    link: "/fa/getting-started/overview",
+  },
+  {
+    icon: DevelopSvg,
+    name: "توسعه دهندگان",
+    content: "به مطالعه مستندات توسعه دهندگان اسکرول بپردازید.",
+    link: "/fa/developers",
+  },
+  {
+    icon: TechnologySvg,
+    name: "تکنولوژی",
+    content: "بررسی اجمالی معماری zkEVM در اسکرول.",
+    link: "/fa/technology",
+  },
+  {
+    icon: LearnSvg,
+    name: "یادگیری",
+    content: "مقدمه ای به دنیای ZK و مقیاس پذیری.",
+    link: "/fa/learn",
+  },
+]
+---
+
+<div class="navigate">
+  <SectionHeader title="دسترسی به مستندات" content="همین امروز توسعه برروی اسکرول را شروع کنید" />
+  <div class="navs">
+    {navList.map(({ icon, name, content, link }) => <NavCard icon={icon} name={name} content={content} link={link} />)}
+  </div>
+</div>
+
+<style>
+  .navigate {
+    margin-top: 146px;
+    font-family: Vazirmatn !important;
+  }
+
+  .navs {
+    display: flex;
+    justify-content: space-between;
+    font-family: Vazirmatn !important;
+  }
+
+  @media screen and (max-width: 50em) {
+    .navigate {
+      margin-top: 106px;
+    }
+    .navs {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+</style>

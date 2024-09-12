@@ -1,0 +1,169 @@
+---
+section: technology
+date: Last Modified
+title: "درگاه‌های برداشت"
+lang: "fa"
+dir: "rtl"
+permalink: "technology/bridge/withdraw-gateways"
+whatsnext: { "Sequencer": "/fa/technology/sequencer/execution-node/" }
+---
+
+import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import Aside from "../../../../../components/Aside.astro"
+import WithdrawWorkflow from "../_images/withdraw.png"
+
+این سند نحوه استفاده کاربران و توسعه‌دهندگان از دروازه‌ها برای برداشت توکن‌ها از L2 به L1 را توضیح می‌دهد. ما چندین دروازه برای توکن‌های استاندارد و یک روتر دروازه در L2 ارائه می‌دهیم که در جدول زیر فهرست شده‌اند.
+
+| قرارداد دروازه           | توضیحات                                                        |
+| ------------------------- | --------------------------------------------------------------- |
+| `L2GatewayRouter`         | روتر دروازه برداشت ETH و توکن‌های ERC20 را پشتیبانی می‌کند.   |
+| `L2ETHGateway`            | دروازه برای برداشت ETH.                                       |
+| `L2StandardERC20Gateway`  | دروازه برای برداشت توکن‌های استاندارد ERC20.                  |
+| `L2CustomERC20Gateway`    | دروازه برای برداشت توکن‌های سفارشی ERC20.                    |
+| `L2WETHGateway`           | دروازه برای برداشت ETH Wrapped.                               |
+| `L2ERC721Gateway`         | دروازه برای برداشت توکن‌های ERC-721.                           |
+| `L2ERC1155Gateway`        | دروازه برای برداشت توکن‌های ERC-1155.                         |
+
+## مرور کلی
+
+<ClickToZoom src={WithdrawWorkflow} alt="روند برداشت" />
+
+این شکل روند برداشت از L2 به L1 را به تصویر می‌کشد. کاربران با فراخوانی دروازه‌ها، برداشت توکن را آغاز می‌کنند. برداشت سپس به یک پیام رمزگذاری شده تبدیل شده و به قرارداد `L2ScrollMessenger` ارسال می‌شود و به صف `L2MessageQueue` اضافه می‌شود. `L2MessageQueue` یک درخت برداشت (Withdraw Trie) را حفظ می‌کند و هر بار که پیام جدیدی اضافه می‌شود، ریشه درخت برداشت را به‌روزرسانی می‌کند. ریشه درخت برداشت پس از نهایی شدن در قرارداد رول‌آپ L1 با ریشه وضعیت L2 نهایی می‌شود. پس از نهایی شدن ریشه جدید درخت برداشت در L1، کاربران یا اشخاص ثالث می‌توانند یک مدرک گنجاندن مرکل معتبر به ریشه درخت برداشت بسازند و تراکنش _اجرای برداشت_ را برای نهایی‌سازی برداشت در L1 ارسال کنند. جزئیات بیشتری در مورد روند ارسال پیام از L2 به L1 در [پیام‌رسانی بین‌دامنه‌ای](/technology/bridge/cross-domain-messaging#sending-messages-from-l2-to-l1) پیدا خواهید کرد.
+
+بخش‌های بعدی جزئیات نحوه برداشت توکن‌های مختلف را شرح می‌دهند.
+
+## برداشت ETH
+
+روند برداشت توکن ETH به شرح زیر است.
+
+1. `L2GatewayRouter` سه تابع برای برداشت ETH از L2 به L1 ارائه می‌دهد. تابع `withdrawETHAndCall` می‌تواند ETH را برداشت کرده و به طور همزمان یک تماس به قرارداد را اجرا کند.
+
+    ```solidity
+    function withdrawETH(uint256 _amount, uint256 _gasLimit) external payable;
+
+    function withdrawETH(address _to, uint256 _amount, uint256 _gasLimit) public payable;
+
+    function withdrawETHAndCall(
+        address _to,
+        uint256 _amount,
+        bytes calldata _data,
+        uint256 _gasLimit
+    ) external payable;
+    ```
+
+2. توابع `withdrawETHAndCall` به `L2ETHGateway` فراخوانی می‌شوند. `L2ETHGateway` پیام برداشت را رمزگذاری کرده و به قرارداد `L2ScrollMessenger` همراه با ETH برداشت‌شده ارسال می‌کند.
+3. ETH برداشت‌شده دوباره در قرارداد `L2ScrollMessenger` قفل می‌شود. `L2ScrollMessenger` پیام را به صف پیام در قرارداد `L2MessageQueue` اضافه می‌کند.
+4. تراکنش اجرای برداشت در L1 تابع `L1ScrollMessenger.relayMessageWithProof` را برای نهایی‌سازی برداشت فراخوانی می‌کند. در مورد برداشت ETH، تابع `relayMessageWithProof` تابع `L1ETHGateway.finalizeWithdrawETH` را فراخوانی می‌کند تا ETH را به حساب گیرنده در L1 ارسال کند.
+5. اگر کاربر تابع `withdrawETHAndCall` را در L2 فراخوانی کند، تابع `finalizeWithdrawETH` در قرارداد `L1ETHGateway` داده‌های اضافی را به قرارداد هدف L1 منتقل خواهد کرد.
+
+## برداشت توکن‌های ERC20
+
+روند برداشت توکن‌های ERC20 به شرح زیر است.
+
+1. برای برداشت توکن‌های ERC20 از L2 به L1، کاربران می‌توانند از توابع `L2GatewayRouter.withdrawERC20` و `L2GatewayRouter.withdrawERC20AndCall` استفاده کنند.
+
+    ```solidity
+    function withdrawERC20(address _token, uint256 _amount, uint256 _gasLimit) external payable;
+
+    function withdrawERC20(address _token, address _to, uint256 _amount, uint256 _gasLimit) external payable;
+
+    function withdrawERC20AndCall(
+        address _token,
+        address _to,
+        uint256 _amount,
+        bytes memory _data,
+        uint256 _gasLimit
+    ) public payable;
+    ```
+
+2. بر اساس نگاشت توکن‌های ERC20 به دروازه، `L2GatewayRouter` به دروازه مربوطه مانند `L2StandardERC20Gateway`، `L2CustomERC20Gateway` یا `L2WETHGateway` فراخوانی می‌کند. مراحل بعدی به طور جداگانه توضیح داده خواهد شد.
+
+### توکن‌های استاندارد و سفارشی ERC20
+
+روند برداشت توکن‌های ERC20 استاندارد و سفارشی مشابه به شرح زیر است.
+
+3. قرارداد `L2StandardERC20Gateway` یا `L2CustomERC20Gateway` توکن‌های ERC20 برداشت‌شده را سوزانده و پیام برداشت را رمزگذاری کرده و به `L2ScrollMessenger` ارسال می‌کند.
+4. تراکنش اجرای برداشت در L1 تابع `L1ScrollMessenger.relayMessageWithProof` را برای نهایی‌سازی برداشت‌ها در L1 فراخوانی می‌کند. در مورد برداشت توکن‌های ERC20 استاندارد یا سفارشی، تراکنش تابع `finalizeWithdrawERC20` را در قرارداد `L1StandardERC20Gateway` یا `L1CustomERC20Gateway` به ترتیب فراخوانی می‌کند.
+   - در قرارداد `L1StandardERC20Gateway`، اگر این اولین تراکنش برداشت برای یک توکن ERC20 باشد، تابع `finalizeWithdrawERC20` نگاشت از آدرس توکن L1 به آدرس توکن L2 را در `tokenMapping` به‌روزرسانی خواهد کرد.
+5. دروازه توکن ERC20 در L1 توکن‌های ERC20 قفل‌شده را با انتقال آنها از خود به آدرس گیرنده در L1 آزاد می‌کند.
+6. اگر کاربر تابع `withdrawERC20AndCall` را در L2 فراخوانی کند، دروازه‌ها قرارداد هدف L1 را با داده‌های اضافی فراخوانی خواهند کرد.
+
+### توکن WETH
+
+ما یک دروازه سفارشی `L2WETHGateway` برای توکن Wrapped ETH در L2 ارائه می‌دهیم و آدرس دروازه را در `L2GatewayRouter` ثبت می‌کنیم. روند برداشت توکن WETH به شرح زیر است.
+
+3. `L2WETHGateway` توکن‌های WETH برداشت‌شده را به خود منتقل کرده و توکن WETH را به توکن ETH بومی تبدیل می‌کند. سپس توکن ETH به قرارداد `L2ScrollMessenger` ارسال می‌شود.
+4. `L2WETHGateway` پیام برداشت توکن را رمزگذاری کرده و به `L2ScrollMessenger` ارسال می‌کند.
+5. تراکنش اجرای برداشت در L1 تابع `L1ScrollMessenger.relayMessageWithProof` را برای نهایی‌سازی برداشت در L1 فراخوانی می‌کند. در مورد برداشت توکن WETH، تراکنش تابع `L1WETHGateway.finalizeWithdrawERC20` را فراخوانی کرده و مقدار برداشت‌شده به صورت ETH را به `L1WETHGateway` ارسال می‌کند.
+6. `L1WETHGateway` توکن ETH برداشت‌شده را دوباره به توکن WETH در L1 تبدیل کرده و به آدرس گیرنده در L1 منتقل می‌کند.
+7. اگر کاربر تابع `withdrawERC20AndCall` را در L2 فراخوانی کند، `L1WETHGateway` قرارداد هدف L1 را با داده‌های اضافی فراخوانی خواهد کرد.
+
+## برداشت توکن‌های ERC-721/ERC-1155
+
+روند برداشت توکن‌های ERC-721 یا ERC-1155 بسیار مشابه با توکن‌های ERC20 است. برای برداشت توکن‌های ERC-721 /ERC-1155 از L2، می‌توان از دروازه‌های `L2ERC721Gateway` یا `L2ERC1155Gateway` استفاده کرد.
+
+```solidity
+function withdrawERC721(
+    address _token,
+    uint256 _tokenId,
+    uint256 _gasLimit
+) external payable;
+
+function withdrawERC721(
+    address _token,
+    address _to,
+   
+
+ uint256 _tokenId,
+    uint256 _gasLimit
+) external payable;
+
+function withdrawERC1155(
+    address _token,
+    uint256 _tokenId,
+    uint256 _amount,
+    uint256 _gasLimit
+) external payable;
+
+function withdrawERC1155(
+    address _token,
+    address _to,
+    uint256 _tokenId,
+    uint256 _amount,
+    uint256 _gasLimit
+) external payable;
+```
+
+برای تسهیل برداشت حجم زیادی از توکن‌های ERC-721 یا ERC-1155، ما همچنین توابع برداشت دسته‌ای را در قراردادهای `L2ERC721Gateway` و `L2ERC1155Gateway` از طریق توابع زیر ارائه می‌دهیم:
+
+```solidity
+function batchWithdrawERC721(
+    address _token,
+    uint256[] calldata _tokenIds,
+    uint256 _gasLimit
+) external payable;
+
+function batchWithdrawERC721(
+    address _token,
+    address _to,
+    uint256[] calldata _tokenIds,
+    uint256 _gasLimit
+) external payable;
+
+function batchWithdrawERC1155(
+    address _token,
+    uint256[] calldata _tokenIds,
+    uint256[] calldata _amounts,
+    uint256 _gasLimit
+) external payable;
+
+function batchWithdrawERC1155(
+    address _token,
+    address _to,
+    uint256[] calldata _tokenIds,
+    uint256[] calldata _amounts,
+    uint256 _gasLimit
+) external payable;
+```
+
+قرارداد‌های معادل L1 برای توکن‌های ERC-721 یا ERC-1155، `L1ERC721Gateway` و `L1ERC1155Gateway` هستند که برای نهایی‌سازی برداشت‌ها در L1 استفاده می‌شوند.

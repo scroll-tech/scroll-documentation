@@ -1,0 +1,265 @@
+---
+section: developers
+date: Last Modified
+title: "شروع سریع برای توسعه‌دهندگان"
+lang: "fa"
+dir: "rtl"
+permalink: "developers/developer-quickstart"
+excerpt: "شروع سریع برای توسعه‌دهندگان Scroll به شما کمک می‌کند اتر تست‌نت را به دست آورید، شبکه خود را پیکربندی کنید و به تمامی ابزارهای مورد علاقه‌تان دسترسی پیدا کنید."
+whatsnext: { "تأیید قراردادهای هوشمند شما": "/fa/developers/verifying-smart-contracts" }
+---
+
+import Aside from "../../../../components/Aside.astro"
+import ClickToZoom from "../../../../components/ClickToZoom.astro"
+import networkSelection from "./_images/mmNetworkSelection.png"
+import injectedProviderMM from "./_images/injectedProviderMM.png"
+import ToggleElement from "../../../../components/ToggleElement.astro"
+
+با Scroll، ابزارهای مورد علاقه‌تان برای ساخت و آزمایش قراردادهای هوشمند به سادگی کار می‌کنند.
+
+از آنجایی که Scroll با EVM سازگار است، شما فقط باید ابزارهای ساخت و ساز خود را به یک ارائه‌دهنده RPC Scroll هدایت کنید.
+
+اگر با هر مشکلی مواجه شدید، لطفاً در [Discord ما](https://discord.gg/scroll) تماس بگیرید.
+
+## به دست آوردن اتر
+
+Scroll از ETH به عنوان ارز بومی خود استفاده می‌کند که برای پرداخت هزینه‌های تراکنش برای استقرار و تعامل با شبکه لازم است.
+
+برای شروع ساخت و ساز روی Scroll، پیشنهاد می‌کنیم با استفاده از تست‌نت Scroll Sepolia شروع کنید. ابتدا باید مقداری اتر تست‌نت به دست آورید. به صفحه [Faucet](/user-guide/faucet) برای نکات در مورد دریافت توکن‌های تست‌نت در Sepolia مراجعه کنید. پس از این، می‌توانید اتر تست‌نت خود را به تست‌نت Scroll Sepolia (لایه 2) با استفاده از [پل Sepolia](https://sepolia.scroll.io/bridge) ما منتقل کنید، همانطور که در [مقاله پل](/user-guide/bridge) توضیح داده شده است.
+
+برای یک راهنمای گام به گام، با صفحه [تنظیمات](user-guide/setup/) راهنمای کاربر شروع کنید.
+
+هنگامی که آماده استقرار روی شبکه اصلی Scroll هستید، می‌توانید اتر را با استفاده از [پل بومی ما](https://scroll.io/bridge/) یا یکی از پل‌های شخص ثالث منتقل کنید.
+
+## پیکربندی شبکه
+
+### شبکه اصلی Scroll
+
+از جدول زیر برای پیکربندی ابزارهای اتریوم خود به شبکه اصلی Scroll استفاده کنید.
+
+| نام شبکه          | Scroll                                             | شبکه اصلی اتریوم                                      |
+| ----------------- | -------------------------------------------------- | ---------------------------------------------------- |
+| URL RPC           | [https://rpc.scroll.io/](https://rpc.scroll.io/)   | [https://eth.llamarpc.com](https://eth.llamarpc.com) |
+| Chain ID          | 534352                                             | 1                                                    |
+| نماد ارز          | ETH                                                | ETH                                                  |
+| URL کاوشگر بلاک   | [https://scrollscan.com/](https://scrollscan.com/) | [https://etherscan.io](https://etherscan.io)         |
+
+<ToggleElement anchor="mainnet-additional-infra">
+  <div slot="title">RPCها و زیرساخت‌های اضافی شبکه اصلی Scroll</div>
+  - [پل بومی Scroll](https://scroll.io/bridge)
+  - [ارائه‌دهندگان RPC Scroll در ChainList.org](https://chainlist.org/chain/534352)
+  - [ارائه‌دهندگان RPC اتریوم در ChainList.org](https://chainlist.org/chain/1)
+  {/* - کاوشگرهای بلاک اضافی:
+    - [Dora](https://www.ondora.xyz/network/scroll/interactions)
+    - [L2Scan](https://scroll.l2scan.co/) */}
+</ToggleElement>
+
+### تست‌نت Scroll Sepolia
+
+از جدول زیر برای پیکربندی ابزارهای اتریوم خود به تست‌نت Scroll Sepolia استفاده کنید.
+
+| نام شبکه          | Scroll Sepolia                                                    | اتریوم Sepolia                                               |
+| ----------------- | ----------------------------------------------------------------- | ------------------------------------------------------------ |
+| URL RPC           | [https://sepolia-rpc.scroll.io/](https://sepolia-rpc.scroll.io/)  | [https://rpc2.sepolia.org](https://rpc2.sepolia.org)         |
+| Chain ID          | 534351                                                            | 11155111                                                     |
+| نماد ارز          | ETH                                                               | ETH                                                          |
+| URL کاوشگر بلاک   | [https://sepolia.scrollscan.com](https://sepolia.scrollscan.com/) | [https://sepolia.etherscan.io](https://sepolia.etherscan.io) |
+
+<ToggleElement anchor="sepolia-additional-infra">
+  <div slot="title">RPCها و زیرساخت‌های اضافی Scroll Sepolia</div>
+  - [پل بومی Scroll Sepolia](https://sepolia.scroll.io/bridge)
+  - [ارائه‌دهندگان RPC Scroll Sepolia در ChainList.org](https://chainlist.org/chain/534351)
+  - [ارائه‌دهندگان RPC اتریوم Sepolia در ChainList.org](https://chainlist.org/chain/11155111)
+  - کاوشگرهای بلاک اضافی:
+    - [Dora](https://www.ondora.xyz/network/scroll-sepolia/interactions)
+    - [L2Scan](https://scroll.l2scan.co/)
+</ToggleElement>
+
+## پیکربندی ابزارهای خود
+
+<Aside type="tip" title="">
+  برای تنظیم ابزارها به منظور تأیید استقرار قرارداد هوشمند، به صفحه [تأیید قراردادهای هوشمند](/developers/verifying-smart-contracts) مراجعه کنید.
+</Aside>
+
+<Aside type="danger" title="">
+ویژگی‌های به‌روزرسانی Dencun هنوز در Scroll در دسترس نیستند. لطفاً از `shanghai` به عنوان هدف EVM خود استفاده کنید و از نسخه Solidity بالاتر از `0.8.23` استفاده نکنید.
+</Aside>
+
+### Hardhat
+
+فایل پیکربندی Hardhat خود `hardhat.config.ts` را تغییر دهید تا به RPC عمومی تست‌نت Scroll Sepolia اشاره کند.
+
+```jsx
+...
+
+const config: HardhatUserConfig = {
+  ...
+  networks: {
+    scrollSepolia: {
+      url: "https://sepolia-rpc.scroll.io/" || "",
+      accounts:
+        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    },
+  },
+};
+
+...
+```
+
+### Foundry
+
+برای استقرار با استفاده از RPC عمومی تست‌نت Scroll Sepolia، اجرا کنید:
+
+```bash
+forge create ... --rpc-url=https://sepolia-rpc.scroll.io/ 
+```
+
+### Remix Web IDE
+
+پس از کامپایل قراردادهای خود، ساده‌ترین راه برای استقرار با استفاده از Remix، [تنظیم Metamask](/user-guide/setup#metamask) است، سپس شبکه **Scroll Sepolia Testnet** را انتخاب کنید.
+
+<ClickToZoom src={networkSelection} />
+
+اکنون، در تب “Deploy and Run Transactions”، از منوی کشویی “Environment” استفاده کرده و “Injected Provider - MetaMask” را انتخاب کنید.
+
+<ClickToZoom src={injectedProviderMM} />
+
+کیف پول خود را وصل کرده و شبکه Scroll Sepolia Testnet را انتخاب کنید. حساب شما باید به طور خودکار در Remix انتخاب شود و شما می‌توانید روی “Deploy” کلیک کنید.
+
+### Truffle
+
+با فرض اینکه شما قبلاً یک محیط Truffle راه‌اندازی کرده‌اید، به فایل [پیکربندی Truffle](https://trufflesuite.com/docs/truffle/reference/configuration/)، `truffle.js` بروید. مطمئن شوید که HDWalletProvider نصب شده است: `npm install @truffle/hdwallet-provider@1.4.0`
+
+```js
+const HDWalletProvider = require("@truffle/hdwallet-provider")
+...
+module.exports = {
+  networks: {
+    scrollSepolia: {
+      provider: () =>
+        new HDWalletProvider(process.env.PRIVATE_KEY, "https://sepolia-rpc.scroll.io/"),
+      network_id: '*',
+    },
+  }
+}
+```
+
+### Brownie
+
+برای افزودن تست‌نت Scroll Sepolia، دستور زیر را اجرا کنید:
+
+```bash
+brownie networks add Ethereum scrollSepolia host=https://sepolia-rpc.scroll.io/ chainid=534351
+```
+
+برای تنظیم این شبکه به عنوان شبکه پیش‌فرض، موارد زیر را به فایل پیکربندی پروژه خود اضافه کنید:
+
+```yaml
+networks:
+  default: scrollSepolia
+```
+
+راه دیگر برای افزودن تست‌نت Scroll Sepolia ایجاد یک فایل `yaml` و اجرای دستوری برای افزودن آن است.
+
+این یک نمونه از فایل yaml به نام `network-config.yaml` است.
+
+```yaml
+live:
+- name: Ethereum
+ networks:
+ - chainid: 534351
+   explorer: https://sepolia.scrollscan.com/
+   host: https://sepolia-rpc.scroll.io
+   id: scrollSepolia
+   name: Scroll Sepolia Testnet
+```
+
+برای افزودن تست‌نت Scroll Sepolia به لیست شبکه‌ها، دستور زیر را اجرا کنید:
+
+```bash
+brownie networks import ./network-config.yaml
+```
+
+برای استقرار روی Scroll، دستور زیر را اجرا کنید. در این مثال، `token.py` اسکریپتی برای استقرار قرارداد هوشمند است. این را با نام اسکریپت خود جایگزین کنید:
+
+```
+
+bash
+brownie run token.py --network scrollSepolia
+```
+
+### ethers.js
+
+تنظیم یک ارائه‌دهنده تست‌نت Scroll Sepolia در یک اسکریپت `ethers`:
+
+```jsx
+import { ethers } from "ethers"
+
+const provider = new ethers.providers.JsonRpcProvider("https://sepolia-rpc.scroll.io/")
+```
+
+### scaffold-eth
+
+برای استقرار با استفاده از Scaffold-eth، باید تنظیمات Hardhat و React خود را به تست‌نت Scroll Sepolia هدایت کنید.
+
+#### پیکربندی Hardhat
+
+در فایل `packages/hardhat/hardhat.config.js`، شبکه را اضافه کنید و آن را به عنوان شبکه پیش‌فرض انتخاب کنید.
+
+```jsx
+...
+//
+// شبکه‌ای که می‌خواهید به آن استقرار دهید را اینجا انتخاب کنید:
+//
+const defaultNetwork = "scrollSepolia";
+...
+module.exports = {
+...
+	networks: {
+...
+          scrollSepolia: {
+            url: "https://sepolia-rpc.scroll.io/",
+            accounts: {
+              mnemonic: mnemonic(),
+            },
+          },
+	}
+...
+}
+```
+
+مطمئن شوید که کیف پول استقرار را نیز تأمین مالی کنید! برای ایجاد کیف پول `yarn generate` و برای بررسی وجوه آن `yarn account` را اجرا کنید. پس از تأمین مالی، برای استقرار روی تست‌نت Scroll Sepolia `yarn deploy --network scrollSepolia` را اجرا کنید.
+
+<Aside type="danger" title="هشدار">
+  در برخی از فورک‌های پروژه، شما می‌خواهید تأیید قرارداد را که به Etherscan وابسته است غیرفعال کنید. این می‌تواند در `packages/hardhat/deploy/00_deploy_your_contract.js` کامنت شود.
+</Aside>
+
+#### پیکربندی فرانت‌اند
+
+برای پیکربندی فرانت‌اند خود، باید تست‌نت Scroll Sepolia را به عنوان یک گزینه شبکه اضافه کنید، سپس آن را به عنوان پیش‌فرض انتخاب کنید.
+
+برای اضافه کردن شبکه، `packages/react-app/src/constants.js` را تغییر دهید.
+
+```jsx
+...
+export const NETWORKS = {
+...
+  scrollSepolia: {
+    name: "scrollSepolia",
+    color: "#e9d0b8",
+    chainId: 534351,
+    rpcUrl: "https://sepolia-rpc.scroll.io/",
+    blockExplorer: "https://sepolia.scrollscan.com",
+  },
+...
+}
+```
+
+بعدی، در `packages/react-app/src/App.jsx` تغییر دهید
+
+```jsx
+...
+/// 📡 چه زنجیره‌ای قراردادهای شما روی آن مستقر شده‌اند؟
+const initialNetwork = NETWORKS.scrollSepolia;
+...
+```

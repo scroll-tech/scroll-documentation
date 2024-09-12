@@ -1,0 +1,83 @@
+---
+section: developers  
+date: Last Modified  
+title: "آموزش Deploy قرارداد"  
+lang: "fa"
+dir: "rtl"
+permalink: "developers/guides/contract-deployment-tutorial"  
+excerpt: "شبکه آزمایشی Scroll Sepolia به جامعه این امکان را می‌دهد تا قراردادهای هوشمند را در Scroll مستقر کند. در این آموزش، به شما خواهیم آموخت که چگونه یک قرارداد را در Scroll Sepolia مستقر کنید."  
+whatsnext: { "تعامل میان زنجیره‌ای Scroll Messenger": "/fa/developers/guides/scroll-messenger-cross-chain-interaction/" }  
+---
+
+import Aside from "../../../../../components/Aside.astro"  
+
+شبکه آزمایشی Scroll Sepolia به هر کسی این امکان را می‌دهد که یک قرارداد هوشمند را در Scroll مستقر کند. در این آموزش، شما خواهید آموخت که چگونه یک قرارداد را در Scroll Sepolia با استفاده از ابزارهای رایج برای توسعه در اتریوم مستقر کنید. این [پروژه دمو](https://github.com/scroll-tech/scroll-guides/tree/main/contract-deploy-demo) نحوه Deploy قرارداد را با استفاده از [Hardhat](https://hardhat.org/) و [Foundry](https://github.com/foundry-rs/foundry) نشان می‌دهد.
+
+<Aside type="tip" title="ETH آزمایشی دارید؟">
+  قبل از شروع به Deploy قرارداد، باید توکن‌های آزمایشی را از یک faucet Sepolia درخواست کنید و از [بریج](https://scroll.io/bridge) برای انتقال مقداری ETH آزمایشی از _Sepolia_ به _Scroll Sepolia_ استفاده کنید. به طور جایگزین، می‌توانید ETH Scroll Sepolia را مستقیماً به دست آورید. برای کمک به این موارد، به راهنماهای [Faucet](/user-guide/faucet/) و [Bridge](/user-guide/bridge/) ما مراجعه کنید.
+</Aside>
+
+## Deploy قراردادها با Hardhat
+
+1. اگر هنوز نصب نکرده‌اید، [nodejs](https://nodejs.org/en/download/) و [yarn](https://classic.yarnpkg.com/lang/en/docs/install) را نصب کنید.
+2. مخزن را کلون کرده و وابستگی‌ها را نصب کنید:
+
+   ```shell
+   git clone https://github.com/scroll-tech/scroll-guides.git
+   cd scroll-guides/contract-deploy-demo
+   yarn install
+   ```
+
+3. یک فایل `.env` ایجاد کنید که مطابق با نمونه `.env.example` در دایرکتوری ریشه باشد. `PRIVATE_KEY` را به کلید خصوصی حساب خود در `.env` تغییر دهید.
+
+4. دستور `yarn compile` را برای کامپایل قرارداد اجرا کنید.
+
+5. دستور `yarn deploy:scrollTestnet` را برای Deploy قرارداد در شبکه آزمایشی Scroll Sepolia اجرا کنید.
+
+6. برای تست‌های hardhat، دستور `yarn test` را اجرا کنید.
+
+## Deploy قراردادها با Foundry
+
+1. مخزن را کلون کنید:
+
+   ```shell
+   git clone https://github.com/scroll-tech/scroll-guides.git
+   cd scroll-guides/contract-deploy-demo
+   ```
+
+2. Foundry را نصب کنید:
+
+   ```shell
+   curl -L https://foundry.paradigm.xyz | bash
+   foundryup
+   ```
+
+3. با اجرای دستور `forge build` پروژه را بسازید.
+
+4. قرارداد خود را با Foundry مستقر کنید:
+
+   ```bash
+   forge create --rpc-url https://sepolia-rpc.scroll.io/ \
+     --value <lock_amount> \
+     --constructor-args <unlock_time> \
+     --private-key <your_private_key> \
+     contracts/Lock.sol:Lock
+   ```
+
+   - `<lock_amount>` مقداری از ETH آزمایشی است که در قرارداد قفل می‌شود. سعی کنید این مقدار را به مقداری کوچک مانند `0.0000001ether` تنظیم کنید.
+   - `<unlock_time>` زمان یونیکس است که پس از آن، وجوه قفل شده در قرارداد برای برداشت در دسترس خواهند بود. سعی کنید این مقدار را به زمان یونیکس در آینده، مانند `1696118400` (که به 1 اکتبر 2023 میلادی معادل است) تنظیم کنید.
+
+   به عنوان مثال:
+
+   ```bash
+   forge create --rpc-url https://sepolia-rpc.scroll.io/ \
+     --value 0.00000000002ether \
+     --constructor-args 1696118400 \
+     --private-key 0xabc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc1 \
+     contracts/Lock.sol:Lock
+   ```
+
+## سوالات و بازخوردها
+
+از مشارکت و توسعه در شبکه آزمایشی Scroll Sepolia سپاسگزاریم! اگر با مشکلی مواجه شدید، به [Discord](https://discord.gg/scroll) ما بپیوندید و در کانال `#testnet-devs` از ما بپرسید.
+

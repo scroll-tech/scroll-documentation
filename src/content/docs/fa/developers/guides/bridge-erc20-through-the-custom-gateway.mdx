@@ -1,0 +1,221 @@
+---
+section: developers
+date: Last Modified
+title: "بریج ERC20 از طریق درگاه سفارشی"
+lang: "fa"
+dir: "rtl"
+permalink: "developers/guides/bridge-erc20-through-the-custom-gateway"
+whatsnext: { "اجرای یک نود Scroll": "/fa/developers/guides/running-a-scroll-node" }
+excerpt: "This guide will walk through how to use Scroll's bridge for ERC20s that need custom functionality using the Custom Gateway."
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+این راهنما توضیح می‌دهد که چگونه از پل Scroll برای ERC20هایی که به عملکرد سفارشی نیاز دارند، با استفاده از Custom Gateway استفاده کنید.
+
+<Aside type="tip" title="آیا به منطق سفارشی نیاز دارید؟">
+  به یاد داشته باشید که در بسیاری از موارد، شما نیازی به استفاده از Custom Gateway برای افزودن ویژگی‌های اضافی به توکن خود یا منطق پل زدن آن ندارید. برای اطلاعات بیشتر، مقاله [پل ETH و ERC20 Token](/developers/l1-and-l2-bridging/eth-and-erc20-token-bridge#deposit-eth-and-erc20-tokens-from-l1) را مشاهده کنید.
+</Aside>
+
+## گام ۱: راه‌اندازی یک توکن در Sepolia
+
+ابتدا، ما به یک توکن برای پل زدن نیاز داریم. برای سازگاری با L2 نیازی به پیاده‌سازی خاصی از ERC20 نیست. اگر قبلاً توکنی دارید، می‌توانید این مرحله را رد کنید. اگر می‌خواهید توکن جدیدی را منتشر کنید، از قرارداد زیر برای توکن ساده ERC20 استفاده کنید که ۱ میلیون توکن به منتشرکننده می‌دهد.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.16;
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+
+contract L1Token is ERC20 {
+  constructor() ERC20("My Token L1", "MTL1") {
+    _mint(msg.sender, 1_000_000 ether);
+  }
+}
+```
+
+## گام ۲: راه‌اندازی توکن معادل در شبکه آزمایشی Sepolia Scroll
+
+در مرحله بعد، باید یک توکن معادل این توکن را در Scroll راه‌اندازی کنید که نمایانگر توکن اصلی در Sepolia باشد. این توکن می‌تواند منطق سفارشی را به تناسب توکن L1 پیاده‌سازی کند یا حتی ویژگی‌های اضافی فراتر از آنچه در توکن L1 وجود دارد، اضافه کند.
+
+برای این که این کار انجام شود:
+
+- توکن باید رابط `IScrollStandardERC20` را پیاده‌سازی کند تا با پل سازگار باشد.
+- قرارداد باید آدرس گیت‌وی و آدرس‌های توکن‌های معادل (توکن L1 که تازه راه‌اندازی کردیم) را در توابع `gateway()` و `counterpart()` ارائه دهد. همچنین باید اجازه دهد که گیت‌وی L2 به توابع `mint()` و `burn()` توکن دسترسی پیدا کند که در هنگام واریز و برداشت توکن‌ها فراخوانی می‌شود.
+
+در زیر یک مثال کامل از توکن سازگار با پل آورده شده است. در سازنده، آدرس رسمی Scroll Custom Gateway (`0x058dec71E53079F9ED053F3a0bBca877F6f3eAcf`) و آدرس توکن منتشر شده در Sepolia را به عنوان پارامترها خواهید داد.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.16;
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@scroll-tech/contracts@0.1.0/libraries/token/IScrollERC20Extension.sol";
+
+contract L2Token is ERC20, IScrollERC20Extension {
+  address _gateway;
+  address _counterpart;
+
+  constructor(address gateway_, address counterpart_) ERC20("My Token L2", "MTL2") {
+    _gateway = gateway_;
+    _counterpart = counterpart_;
+  }
+
+  function gateway() public view returns (address) {
+    return _gateway;
+  }
+
+  function counterpart() external view returns (address) {
+    return _counterpart;
+  }
+
+  function transferAndCall(address receiver, uint256 amount, bytes calldata data) external returns (bool success) {
+    transfer(receiver, amount);
+    data;
+    return true;
+  }
+
+  function mint(address _to, uint256 _amount) external onlyGateway {
+    _mint(_to, _amount);
+  }
+
+  function burn(address _from, uint256 _amount) external onlyGateway {
+    _burn(_from, _amount);
+  }
+
+  modifier onlyGateway() {
+    require(gateway() == _msgSender(), "Ownable: caller is not the gateway");
+    _;
+  }
+}
+```
+
+## گام ۳: افزودن توکن به پل Scroll
+
+برای افزودن توکن به قرارداد `L2CustomERC20Gateway` در Scroll و قرارداد `L1CustomERC20Gateway` در L1 باید با تیم Scroll تماس بگیرید. علاوه بر این، دستورالعمل‌های موجود در مخزن [لیست توکن‌ها](https://github.com/scroll-tech/token-list) را برای افزودن توکن خود به رابط کاربری رسمی پل Scroll دنبال کنید.
+
+## گام ۴: واریز توکن‌ها
+
+پس از تأیید توکن شما توسط تیم Scroll، باید بتوانید توکن‌ها را از L1 واریز کنید. برای این کار، ابتدا باید آدرس قرارداد `L1CustomGateway` را در Sepolia (`0x31C994F2017E71b82fd4D8118F140c81215bbb37`) تأیید کنید. سپس با فراخوانی تابع `depositERC20` از قرارداد `L1CustomGateway`، توکن‌ها را واریز کنید. این کار می‌تواند با استفاده از [رابط کاربری پل ما](https://scroll.io/bridge)، [Etherscan Sepolia](https://sepolia.etherscan.io/address/0x31C994F2017E71b82fd4D8118F140c81215bbb37#writeProxyContract) یا یک قرارداد هوشمند انجام شود.
+
+## گام ۵: برداشت توکن‌ها
+
+برای ارسال توکن‌ها از L2 به L1، مراحل مشابهی را دنبال خواهید کرد. ابتدا آدرس `L2CustomGateway` (`0x058dec71E53079F9ED053F3a0bBca877F6f3eAcf`) را تأیید کنید و سپس توکن‌ها را با فراخوانی تابع `withdrawERC20` از قرارداد `L2CustomGateway` برداشت کنید.
+
+## روش جایگزین: راه‌اندازی و تنظیم یک قرارداد گیت‌وی سفارشی L1
+
+افزودن توکن خود به پل رسمی Scroll (همانطور که در بالا توضیح داده شد) روش پیشنهادی برای پل زدن توکن‌ها به و از Scroll است. این روش باعث می‌شود تا توکن‌ها راحت‌تر کشف شوند و برای دارندگان آن‌ها امن‌تر باشد. با این حال، این کار نیاز به تأیید از تیم Scroll دارد. اگر می‌خواهید توکن سفارشی را بدون فرآیند تأیید رسمی منتشر کنید، می‌توانید یک گیت‌وی سفارشی راه‌اندازی کنید. برای این کار، باید یک قرارداد `L1CustomERC20Gateway` را در L1 و یک `L2CustomERC20Gateway` را در L2 مستقر کنید.
+
+### راه‌اندازی یک گیت‌وی سفارشی L1
+
+ابتدا، قرارداد زیر را در Sepolia راه‌اندازی کنید.
+
+```solidity
+// SPDX-License-Identifier: MIT
+
+pragma solidity =0.8.16;
+
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+import { IL2ERC20Gateway } from "@scroll-tech/contracts@0.1.0/L2/gateways/IL2ERC20Gateway.sol";
+import { IL1ScrollMessenger } from "@scroll-tech/contracts@0.1.0/L1/IL1ScrollMessenger.sol";
+import { IL1ERC20Gateway } from "@scroll-tech/contracts@0.1.0/L1/gateways/IL1ERC20Gateway.sol";
+
+import { ScrollGatewayBase } from "@scroll-tech/contracts@0.1.0/libraries/gateway/ScrollGatewayBase.sol";
+import { L1ERC20Gateway } from "@scroll-tech/contracts@0.1.0/L1/gateways/L1ERC20Gateway.sol";
+
+contract L1CustomERC20Gateway is L1ERC20Gateway, Ownable {
+  event UpdateTokenMapping(address indexed l1Token, address indexed oldL2Token, address indexed newL2Token);
+
+  mapping(address => address) public tokenMapping;
+
+  constructor() {}
+
+  function initialize(address _counterpart, address _router, address _messenger) external {
+    require(_router != address(0), "zero router address");
+
+    ScrollGatewayBase._initialize(_counterpart, _router, _messenger);
+  }
+
+  function getL2ERC20Address(address _l1Token) public view override returns (address) {
+    return tokenMapping[_l1Token];
+  }
+
+  function updateTokenMapping(address _l1Token, address _l2Token) external onlyOwner {
+    require(_l2Token != address(0), "token address cannot be 0");
+
+    address _oldL2Token = tokenMapping[_l1Token];
+    tokenMapping[_l1Token] = _l2Token;
+
+    emit UpdateTokenMapping(_l1Token, _oldL2Token, _l2Token);
+  }
+
+  function _beforeFinalizeWithdrawERC20(
+    address _l1Token,
+    address _l2Token,
+   
+
+ address _to,
+    uint256 _amount
+  ) internal override {
+    _transferERC20(_l1Token, _to, _amount);
+  }
+}
+```
+
+### راه‌اندازی یک گیت‌وی سفارشی L2
+
+سپس، قرارداد زیر را در Sepolia Scroll راه‌اندازی کنید.
+
+```solidity
+// SPDX-License-Identifier: MIT
+
+pragma solidity =0.8.16;
+
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+import { IL1ERC20Gateway } from "@scroll-tech/contracts@0.1.0/L1/gateways/IL1ERC20Gateway.sol";
+import { IL2ScrollMessenger } from "@scroll-tech/contracts@0.1.0/L2/IL2ScrollMessenger.sol";
+import { IL2ERC20Gateway } from "@scroll-tech/contracts@0.1.0/L2/gateways/IL2ERC20Gateway.sol";
+
+import { ScrollGatewayBase } from "@scroll-tech/contracts@0.1.0/libraries/gateway/ScrollGatewayBase.sol";
+import { L2ERC20Gateway } from "@scroll-tech/contracts@0.1.0/L2/gateways/L2ERC20Gateway.sol";
+
+contract L2CustomERC20Gateway is L2ERC20Gateway, Ownable {
+  event UpdateTokenMapping(address indexed l2Token, address indexed oldL1Token, address indexed newL1Token);
+
+  mapping(address => address) public tokenMapping;
+
+  constructor() {}
+
+  function initialize(address _counterpart, address _router, address _messenger) external {
+    require(_router != address(0), "zero router address");
+
+    ScrollGatewayBase._initialize(_counterpart, _router, _messenger);
+  }
+
+  function getL1ERC20Address(address _l2Token) public view override returns (address) {
+    return tokenMapping[_l2Token];
+  }
+
+  function updateTokenMapping(address _l2Token, address _l1Token) external onlyOwner {
+    require(_l1Token != address(0), "token address cannot be 0");
+
+    address _oldL1Token = tokenMapping[_l2Token];
+    tokenMapping[_l2Token] = _l1Token;
+
+    emit UpdateTokenMapping(_l2Token, _oldL1Token, _l1Token);
+  }
+
+  function _beforeFinalizeDepositERC20(
+    address _l2Token,
+    address _l1Token,
+    address _from,
+    uint256 _amount
+  ) internal override {
+    _transferERC20(_l2Token, _from, _amount);
+  }
+}
+```
+
+در انتها، توجه داشته باشید که راه‌اندازی یک گیت‌وی سفارشی نیاز به نگهداری و توجه بیشتر نسبت به امنیت و به‌روزرسانی دارد. همچنین، شما باید توجه داشته باشید که توکن‌ها و معاملات به درستی مدیریت شوند و مطمئن شوید که قراردادها با استانداردهای امنیتی معتبر و به روز باشند.

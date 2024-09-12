@@ -1,0 +1,58 @@
+---
+section: developers
+date: Last Modified
+title: "تراکنش‌های اجباری"
+lang: "fa"
+dir: "rtl"
+permalink: "developers/l1-and-l2-bridging/enforced-transactions"
+excerpt: "قرارداد تراکنش‌های اجباری امکان ارسال تراکنش‌ها بین L1 و L2 را با استفاده از تابع `sendTransaction` فراهم می‌کند."
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+در به‌روزرسانی‌های آینده Scroll، قرارداد تراکنش‌های اجباری امکان ارسال تراکنش‌ها بین L1 و L2 را با استفاده از تابع **`sendTransaction`** فراهم خواهد کرد. این قرارداد شباهت‌هایی به قرارداد Scroll Messenger دارد زیرا اجازه می‌دهد داده‌های دلخواه از یک لایه به لایه دیگر ارسال شود. با این حال، تفاوت آن در این است که ارسال تراکنش‌های امضا شده را امکان‌پذیر می‌کند و به شما اجازه می‌دهد که فرستنده (CALLER یا msg.sender) را در تراکنش دریافتی در Scroll تنظیم کنید.
+
+## API تراکنش‌های اجباری
+
+لطفاً برای مستندات کامل API قرارداد Scroll به [کتابخانه npm](https://www.npmjs.com/package/@scroll-tech/contracts?activeTab=code) مراجعه کنید.
+
+### sendTransaction
+
+```solidity
+function sendTransaction(address _target, uint256 _value, uint256 _gasLimit, bytes calldata _data) public payable;
+```
+
+اضافه کردن یک تراکنش اجباری به L2 از یک حساب EOA فرستنده.
+
+| پارامتر   | توضیحات                                                       |
+| --------- | ------------------------------------------------------------- |
+| \_target  | آدرس قرارداد هدف برای تماس در L2.                             |
+| \_value   | مقداری که ارسال می‌شود.                                      |
+| \_gasLimit| حداکثر گس مورد نیاز برای این تراکنش در L2.                  |
+| \_data    | داده‌های کالدتا که به قرارداد هدف ارسال می‌شود.                |
+
+### sendTransaction
+
+```solidity
+function sendTransaction(
+  address _sender,
+  address _target,
+  uint256 _value,
+  uint256 _gasLimit,
+  bytes calldata _data,
+  bytes memory _signature,
+  address _refundAddress
+) public payable;
+```
+
+اضافه کردن یک تراکنش اجباری به L2 با ارسال امضای فرستنده.
+
+| پارامتر        | توضیحات                                                        |
+| --------------- | -------------------------------------------------------------- |
+| \_sender        | آدرس فرستنده که این تراکنش را در L2 آغاز می‌کند.                |
+| \_target        | آدرس قرارداد هدف برای تماس در L2.                              |
+| \_value         | مقدار ارسال‌شده                                               |
+| \_gasLimit      | حداکثر گس مورد نیاز برای این تراکنش در L2.                   |
+| \_data          | داده‌های کالدتا که به قرارداد هدف ارسال می‌شود.                 |
+| \_signature     | امضای تراکنش.                                                 |
+| \_refundAddress | آدرس برای بازپرداخت هزینه‌های اضافی.                           |

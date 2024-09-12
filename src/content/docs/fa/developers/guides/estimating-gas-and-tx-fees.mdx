@@ -1,0 +1,229 @@
+---
+section: developers
+date: Last Modified
+title: "تخمین هزینه‌های گس و تراکنش"
+lang: "fa"
+dir: "rtl"
+permalink: "developers/guides/estimating-gas-and-transaction-fees"
+excerpt: "از آنجا که Scroll یک رولاپ L2 است، بخشی از چرخه حیات تراکنش شامل ثبت داده‌هایی به L1 برای امنیت است. برای پرداخت این هزینه، تمامی تراکنش‌ها هزینه اضافی به نام _هزینه L1_ دارند."
+---
+
+import Aside from "../../../../../components/Aside.astro"
+import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import txFeesProjectStructure from "../../../../../assets/images/developers/txFeesProjectStructure.png"
+
+{/* TODO: Update for Sepolia, test and publish to sidebar. */}
+
+:::warning[این مقاله به‌روز نیست.]
+این صفحه به‌روزرسانی نشده و با آخرین نسخه Scroll Sepolia آزمایش نشده است. لطفاً با احتیاط استفاده کنید.
+:::
+
+از آنجا که Scroll یک رولاپ L2 است، بخشی از چرخه حیات تراکنش شامل ثبت داده‌هایی به L1 برای امنیت است. برای پرداخت این هزینه، تمامی تراکنش‌ها هزینه اضافی به نام _هزینه L1_ دارند.
+
+در این راهنما، ما به بررسی نحوه تخمین هزینه L1 در Scroll و محاسبه تخمین‌های نهایی هزینه تراکنش از طریق یک مثال کد عملی که می‌توانید [اینجا](https://github.com/scroll-tech/scroll-guides/tree/main/gas-estimation-demo) پیدا کنید، خواهیم پرداخت.
+
+## فرمول
+
+به طور خلاصه، هزینه تراکنش در Scroll، در هر لحظه خاص، به صورت زیر محاسبه می‌شود:
+
+```
+totalFee = (l2GasPrice * l2GasUsed) + l1Fee
+```
+
+تفاوت مهمی که باید به آن توجه کنیم این است که `l1Fee` از `l2Fee` جدا است.
+
+برای توضیحات جامع‌تر و جزئیات در مورد فرمول، مستندات [نحوه کار هزینه‌های تراکنش در Scroll](../developers/transaction-fees-on-scroll-l2/) را بررسی کنید.
+
+## تعامل با مقادیر
+
+برای به‌دست‌آوردن این مقادیر و محاسبه هزینه نهایی، با RPC عمومی Scroll و قرارداد هوشمند از پیش‌استقرار یافته `L1GasOracle.sol`، که در [`0x5300000000000000000000000000000000000002`](https://scrollscan.com/address/0x5300000000000000000000000000000000000002) مستقر است، تعامل خواهیم کرد.
+
+برای کد نمونه ما، یک پروژه Hardhat ایجاد کرده و مقادیر را با استفاده از کتابخانه [Ethers.js](https://docs.ethers.org/v6/) به‌دست می‌آوریم.
+
+`l2GasUsed` - ما این مقدار را با استفاده از روش [estimateGas](https://docs.ethers.org/v6/api/providers/#Provider-estimateGas) به‌دست می‌آوریم که با داده‌های TX ما را از طریق RPC می‌پرسد تا تخمینی از گس مورد استفاده را دریافت کنیم.
+
+`l2GasPrice` - برای این کار، از روش [getFeeData](https://docs.ethers.org/v6/api/providers/#Provider-getFeeData) استفاده خواهیم کرد که شرایط بازار فعلی L2 را به‌دست می‌آورد.
+
+قرارداد Gas Oracle چندین فیلد کلیدی را که برای محاسبه هزینه تراکنش به آنها نیاز داریم، نمایش می‌دهد: `overhead()`، `scalar()`، `l1BaseFee()` و `getL1GasUsed(bytes memory data)`.
+
+اما همچنین تابع `getL1Fee(bytes memory data)` را نیز ارائه می‌دهد که تمام این پیچیدگی‌ها را انتزاع می‌کند و به ما این امکان را می‌دهد که هزینه را تنها با یک فراخوانی تابع دریافت کنیم.
+
+## مثال عملی
+
+### ساختار پروژه
+
+اول از همه، بیایید به سرعت به بررسی پوشه‌های کلیدی در ساختار پروژه خود بپردازیم.
+
+این یک پروژه استاندارد Hardhat است، اما بیشتر کار ما در پوشه‌های *contracts* و _scripts_ قرار دارد.
+
+<ClickToZoom src={txFeesProjectStructure} />
+
+<Aside type="tip" title="">
+  این آموزش قسمت‌های کلیدی کد را مرور خواهد کرد و از کد نمونه به عنوان یک روش آسان برای دریافت نمای کلی از
+  آنچه که در پروژه انجام شده استفاده خواهد کرد. برخی کدها، مانند مدیریت خطا، برای سادگی حذف خواهند شد.
+</Aside>
+
+### قرارداد هوشمند
+
+ابتدا، ما به یک قرارداد هوشمند نیاز داریم تا با آن تعامل کنیم و تخمین گس را نشان دهیم. برای این کار، یک `ExampleContract.sol` ایجاد خواهیم کرد.
+
+```solidity
+pragma solidity ^0.8.17;
+
+contract ExampleContract {
+  uint public exampleVariable;
+
+  function setExampleVariable(uint _exampleVariable) external {
+    exampleVariable = _exampleVariable;
+  }
+}
+```
+
+<Aside type="tip" title="">
+  امضای متد `setExampleVariable` را به یاد داشته باشید زیرا بعداً از آن به عنوان مثال استفاده خواهیم کرد.
+</Aside>
+
+پس از استقرار، مقدار `EXAMPLE_CONTRACT_ADDRESS` را در فایل `.env` خود پر می‌کنیم. برای پروژه نمونه، این قرارداد قبلاً در `TODO: 0xc37ee92c73753B46eB865Ee156d89741ad0a8777` مستقر شده است و پیش‌پر شده است، بنابراین نیازی به انجام کار دیگری نیست.
+
+### تخمین هزینه‌ها
+
+قسمت مرکزی مثال در فایل `/scripts/gasEstimation.ts` قرار دارد.
+
+ما فقط چهار کار انجام خواهیم داد:
+
+1. ایجاد یک تراکنش ساختگی با استفاده از ExampleContract
+2. تخمین هزینه L2 آن تراکنش
+3. تخمین هزینه L1 آن تراکنش
+4. ارسال یک تراکنش واقعی به Scroll و مقایسه مقادیر
+
+#### ایجاد تراکنش ساختگی
+
+هدف این مرحله ایجاد یک **تراکنش امضاشده (RLP) سریال‌شده** برای استفاده به عنوان پارامتر برای فراخوانی روش تخمین گس اوراکل است.
+
+1. بیایید تراکنش خود را با مقادیر مورد نیاز برای تخمین هزینه آن پر کنیم با فراخوانی `buildPopulatedExampleContractTransaction`. این مقادیر `data`، `to`، `gasPrice`، `type` و `gasLimit` را پر خواهد کرد:
+
+```typescript
+export async function buildPopulatedExampleContractTransaction(
+  exampleContractAddress: string,
+  newValueToSet: number
+): Promise<ContractTransaction> {
+  const exampleContract = await ethers.getContractAt("ExampleContract", exampleContractAddress)
+
+  return exampleContract.setExampleVariable.populateTransaction(newValueToSet)
+}
+```
+
+2. حالا، بیایید آن را به فیلدهای اصلی کاهش دهیم با استفاده از `buildUnsignedTransaction`. ما آن را امضا نخواهیم کرد.
+
+```typescript
+export async function buildUnsignedTransaction(signer: HardhatEthersSigner, populatedTransaction: ContractTransaction): Promise<UnsignedTransaction> {
+  const nonce = await signer.getNonce();
+
+  return {
+    data: populatedTransaction.data,
+    to: populatedTransaction.to,
+    gasPrice: populatedTransaction.gasPrice,
+    type: populatedTransaction.type,
+    gasLimit: populatedTransaction.gasLimit,
+    nonce,
+  };
+```
+
+<Aside type="tip" title="">
+  مطمئن شوید که nonce معتبر است!
+</Aside>
+
+3. با خروجی تابع قبلی، آن را با استفاده از `getSerializedTransaction` سریال می‌کنیم:
+
+```typescript
+export function getSerializedTransaction(tx: UnsignedTransaction) {
+  return serialize(tx)
+}
+```
+
+#### تخمین هزینه L2
+
+این مرحله به طور استاندارد و مشابه با Ethereum است. ما از تابع `estimateL2Fee` استفاده خواهیم کرد که تراکنش پر شده را به عنوان ورودی می‌پذیرد و تخمینی از گس کل مورد استفاده را با ضرب قیمت گس فعلی و گس مورد نیاز برای استفاده، برمی‌گرداند.
+
+```typescript
+export async function estimateL2Fee(tx: ContractTransaction): Promise<bigint> {
+  const gasToUse = await ethers.provider.estimateGas(tx)
+  const feeData = await ethers.provider.getFeeData()
+  const gasPrice = feeData.gasPrice
+
+  return gasToUse * gasPrice
+}
+```
+
+#### تخمین هزینه L1 آن تراکنش
+
+این مرحله بسیار ساده است. با استفاده از خروجی تابع `getSerializedTransaction`، ما از اوراکل استعلام می‌زنیم و هزینه تخمینی را در بازگشت دریافت می‌کنیم.
+
+```typescript
+export async function estimateL1Fee(
+  gasOraclePrecompileAddress: string,
+  unsignedSerializedTransaction: string
+): Promise<bigint> {
+  const l1GasOracle = await ethers.getContractAt("IL1GasPriceOracle", gasOraclePrecompileAddress)
+
+  return l1GasOracle.getL1Fee(unsignedSerializedTransaction)
+}
+```
+
+#### ارسال تراکنش و مقایسه مقادیر تخمینی و واقعی
+
+**ارسال تراکنش**
+
+ما یک فراخوان به قرارداد خود ایجاد خواهیم کرد با استفاده از همان مقادیر استفاده شده برای تراکنش ساختگی.
+
+```typescript
+const tx
+
+ = await exampleContract.setExampleVariable(newValueToSetOnExampleContract)
+const txReceipt = await tx.wait(5)
+```
+
+**محاسبه هزینه L2**
+
+با استفاده از رسید تراکنش می‌توانیم مقدار گس استفاده شده توسط تراکنش را ببینیم:
+
+```typescript
+const l2Fee = txReceipt.gasUsed * txReceipt.gasPrice
+```
+
+**دریافت مقدار استفاده شده برای پرداخت هزینه L1**
+
+برای این کار، ما باید _موجودی حساب قبل از_ اجرای تراکنش، _موجودی حساب بعد از_ اجرا را مقایسه کرده و سپس هزینه L2 را کسر کنیم.
+
+```typescript
+const totalFee = signerBalanceBefore - signerBalanceAfter
+const l1Fee = totalFee - l2Fee
+```
+
+**مقایسه مقادیر**
+
+بازارهای هزینه به طور مداوم در حال تغییر و پیش‌بینی‌ناپذیر هستند. از آنجا که مقادیر تخمینی ممکن است با اجرای واقعی متفاوت باشند، بیایید بررسی کنیم که چقدر تفاوت دارند.
+
+ما می‌توانیم تمام کدی که قبلاً نوشته‌ایم را با تایپ دستور `yarn gas:estimate` در [پروژه](https://github.com/scroll-tech/scroll-guides/tree/main/gas-estimation-demo) اجرا کنیم که اسکریپت [`gasEstimation.ts`](https://github.com/scroll-tech/scroll-guides/blob/main/gas-estimation-demo/scripts/gasEstimation.ts) را اجرا کرده و خروجی زیر را به ما می‌دهد:
+
+```bash
+Estimated L1 fee (wei): 208705598167252
+Estimated L2 fee (wei): 26416000000
+Estimated total fee (wei):  208732014167252
+
+Actual L1 fee (wei): 210830909757550
+Actual L2 fee (wei): 26416000000
+Actual total fee (wei):  210857325757550
+
+(actual fee - estimated fee)
+Difference L1 fee (wei): 2125311590298 (1.0183299389002531%)
+Difference L2 fee (wei): 0 (0%)
+Difference total fee (wei): 2125311590298 (1.0182010645453987%)
+```
+
+ما می‌توانیم ببینیم که مقادیر تخمینی (در wei) حدوداً 1% تفاوت دارند، اما به خاطر داشته باشید که در زمان افزایش قیمت گس، این تفاوت ممکن است افزایش یابد. مطمئن شوید که این مورد را در فرانت‌اند خود برای کاربران در نظر بگیرید!
+
+<Aside type="tip" title="">
+  برای جزئیات بیشتر در مورد آنچه که هنگام تغییر گس در L1 اتفاق می‌افتد و در مورد محدودیت‌های تعیین شده در آنجا، به [چرخه‌ زندگی تراکنش در هزینه‌های گس](../developers/transaction-fees-on-scroll-l2/l1-fee.md#what-happens-if-gas-fluctuates-on-l1) نگاهی بیندازید.
+</Aside>
+

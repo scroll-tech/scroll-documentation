@@ -1,0 +1,98 @@
+---
+section: developers
+date: Last Modified
+title: "قراردادهای اسکرول"
+lang: "fa"
+dir: "rtl"
+permalink: "developers/scroll-contracts"
+whatsnext: { "تفاوت‌های اتریوم و اسکرول": "/fa/developers/ethereum-and-scroll-differences" }
+excerpt: "اطلاعات شبکه و آدرس قراردادهایی که برای شروع با تست نت Scroll Sepolia نیاز دارید."
+---
+
+import Aside from "../../../../components/Aside.astro"
+import ToggleElement from "../../../../components/ToggleElement.astro"
+
+در این مقاله، آدرس‌های مفید قراردادهای اسکرول و پروتکل‌های پرکاربرد را پیدا خواهید کرد. اطلاعات مربوط به [Scroll Sepolia](#scroll-sepolia-testnet) در بخش زیر موجود است.
+
+## اطلاعات شبکه
+
+برای پیکربندی ابزارهای اتریوم خود به مین نت اسکرول، از جدول زیر استفاده کنید.
+
+| نام شبکه            | اسکرول                                                | مین نت اتریوم                                           |
+| ------------------- | ----------------------------------------------------- | ---------------------------------------------------------- |
+| URL RPC             | [https://rpc.scroll.io/](https://rpc.scroll.io/)      | [https://eth.llamarpc.com](https://eth.llamarpc.com)       |
+| شناسه زنجیره        | 534352                                                | 1                                                          |
+| نماد ارز            | ETH                                                   | ETH                                                        |
+| URL کاوشگر بلاک     | [https://scrollscan.com/](https://scrollscan.com/)    | [https://etherscan.io](https://etherscan.io)               |
+
+<ToggleElement anchor="mainnet-additional-infra">
+  <div slot="title">RPCها و زیرساخت‌های اضافی مین نت اسکرول</div>
+  - [پل بومی اسکرول](https://scroll.io/bridge)
+  - [اسکنر رول‌آپ اسکرول](https://scroll.io/rollupscan)
+  - [ارائه‌دهندگان RPC اسکرول در ChainList.org](https://chainlist.org/chain/534352)
+  - [ارائه‌دهندگان RPC اتریوم در ChainList.org](https://chainlist.org/chain/1)
+</ToggleElement>
+
+## قراردادهای اسکرول
+
+### رول‌آپ
+
+- رول‌آپ L1 (زنجیره اسکرول): [`0xa13BAF47339d63B743e7Da8741db5456DAc1E556`](https://etherscan.io/address/0xa13BAF47339d63B743e7Da8741db5456DAc1E556)
+
+### پل ETH و ERC20
+
+- مسیریاب گیت‌وی L1: [`0xF8B1378579659D8F7EE5f3C929c2f3E332E41Fd6`](https://etherscan.io/address/0xF8B1378579659D8F7EE5f3C929c2f3E332E41Fd6)
+- مسیریاب گیت‌وی L2: [`0x4C0926FF5252A435FD19e10ED15e5a249Ba19d79`](https://scrollscan.com/address/0x4C0926FF5252A435FD19e10ED15e5a249Ba19d79)
+
+### قراردادهای پل پیشرفته
+
+- پیام‌رسان اسکرول
+  - پیام‌رسان L1: [`0x6774Bcbd5ceCeF1336b5300fb5186a12DDD8b367`](https://etherscan.io/address/0x6774Bcbd5ceCeF1336b5300fb5186a12DDD8b367)
+  - پیام‌رسان L2: [`0x781e90f1c8Fc4611c9b7497C3B47F99Ef6969CbC`](https://scrollscan.com/address/0x781e90f1c8Fc4611c9b7497C3B47F99Ef6969CbC)
+- پل ETH
+  - گیت‌وی ETH L1: [`0x7F2b8C31F88B6006c382775eea88297Ec1e3E905`](https://etherscan.io/address/0x7F2b8C31F88B6006c382775eea88297Ec1e3E905)
+  - گیت‌وی ETH L2: [`0x6EA73e05AdC79974B931123675ea8F78FfdacDF0`](https://scrollscan.com/address/0x6EA73e05AdC79974B931123675ea8F78FfdacDF0)
+  - گیت‌وی WETH L1: [`0x7AC440cAe8EB6328de4fA621163a792c1EA9D4fE`](https://etherscan.io/address/0x7AC440cAe8EB6328de4fA621163a792c1EA9D4fE)
+  - گیت‌وی WETH L2: [`0x7003E7B7186f0E6601203b99F7B8DECBfA391cf9`](https://scrollscan.com/address/0x7003E7B7186f0E6601203b99F7B8DECBfA391cf9)
+- پل ERC20
+  - گیت‌وی استاندارد ERC20 L1: [`0xD8A791fE2bE73eb6E6cF1eb0cb3F36adC9B3F8f9`](https://etherscan.io/address/0xD8A791fE2bE73eb6E6cF1eb0cb3F36adC9B3F8f9)
+  - گیت‌وی استاندارد ERC20 L2: [`0xE2b4795039517653c5Ae8C2A9BFdd783b48f447A`](https://scrollscan.com/address/0xE2b4795039517653c5Ae8C2A9BFdd783b48f447A)
+  - گیت‌وی سفارشی ERC20 L1: [`0xb2b10a289A229415a124EFDeF310C10cb004B6ff`](https://etherscan.io/address/0xb2b10a289A229415a124EFDeF310C10cb004B6ff)
+  - گیت‌وی سفارشی ERC20 L2: [`0x64CCBE37c9A82D85A1F2E74649b7A42923067988`](https://scrollscan.com/address/0x64CCBE37c9A82D85A1F2E74649b7A42923067988)
+- پل ERC721
+  - گیت‌وی ERC721 L1: [`0x6260aF48e8948617b8FA17F4e5CEa2d21D21554B`](https://etherscan.io/address/0x6260aF48e8948617b8FA17F4e5CEa2d21D21554B)
+  - گیت‌وی ERC721 L2: [`0x7bC08E1c04fb41d75F1410363F0c5746Eae80582`](https://scrollscan.com/address/0x7bC08E1c04fb41d75F1410363F0c5746Eae80582)
+- پل ERC1155
+  - گیت‌وی ERC1155 L1: [`0xb94f7F6ABcb811c5Ac709dE14E37590fcCd975B6`](https://etherscan.io/address/0xb94f7F6ABcb811c5Ac709dE14E37590fcCd975B6)
+  - گیت‌وی ERC1155 L2: [`0x62597Cc19703aF10B58feF87B0d5D29eFE263bcc`](https://scrollscan.com/address/0x62597Cc19703aF10B58feF87B0d5D29eFE263bcc)
+- گس اوراکل (در مین نت مستقر شده است)
+  - گس اوراکل L2 (*به زودی غیرفعال می‌شود*): [`0x987e300fDfb06093859358522a79098848C33852`](https://etherscan.io/address/0x987e300fDfb06093859358522a79098848C33852)
+  - *پس از [بروزرسانی پل فوریه '24](https://scroll.io/blog/protocol-upgrade-bridging-cost-reduction)*
+    - صف پیام با اوراکل قیمت گس L2: [`0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B`](https://etherscan.io/address/0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B)
+
+### پیش‌نصب‌های L2
+
+- صف پیام: [`0x5300000000000000000000000000000000000000`](https://scrollscan.com/address/0x5300000000000000000000000000000000000000)
+- اوراکل قیمت گس: [`0x530000000000000
+
+0000000000000000000000001`](https://scrollscan.com/address/0x5300000000000000000000000000000000000001)
+- پرداخت‌کننده برای دیتا: [`0x5300000000000000000000000000000000000002`](https://scrollscan.com/address/0x5300000000000000000000000000000000000002)
+
+## تست نت Scroll Sepolia
+
+این بخش شامل تست نت Scroll Sepolia می‌باشد. برای دریافت اطلاعات بیشتر در مورد شبکه، به لینک‌های زیر مراجعه کنید.
+
+| نام شبکه            | Scroll Sepolia                                         | تست نت Sepolia                                           |
+| ------------------- | ----------------------------------------------------- | ---------------------------------------------------------- |
+| URL RPC             | [https://sepolia-rpc.scroll.io/](https://sepolia-rpc.scroll.io/) | [https://rpc.sepolia.org](https://rpc.sepolia.org)          |
+| شناسه زنجیره        | 534351                                                | 11155111                                                   |
+| نماد ارز            | ETH                                                   | ETH                                                        |
+| URL کاوشگر بلاک     | [https://sepolia-blockscout.scroll.io/](https://sepolia-blockscout.scroll.io/) | [https://sepolia.etherscan.io](https://sepolia.etherscan.io) |
+
+<ToggleElement anchor="testnet-additional-infra">
+  <div slot="title">RPCها و زیرساخت‌های اضافی تست نت Scroll Sepolia</div>
+  - [فاست اسکرول Sepolia](https://sepoliafaucet.scroll.io)
+  - [پل بومی Sepolia](https://scroll.io/bridge)
+  - [ارائه‌دهندگان RPC اسکرول در ChainList.org](https://chainlist.org/chain/534351)
+  - [ارائه‌دهندگان RPC اتریوم در ChainList.org](https://chainlist.org/chain/11155111)
+</ToggleElement>

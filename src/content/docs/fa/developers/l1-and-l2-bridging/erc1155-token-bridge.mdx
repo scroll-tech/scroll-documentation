@@ -1,0 +1,159 @@
+---
+section: developers
+date: Last Modified
+title: "بریج توکن ERC1155"
+lang: "fa"
+dir: "rtl"
+permalink: "developers/l1-and-l2-bridging/erc1155-token-bridge"
+whatsnext: { "پیام‌رسان Scroll": "/fa/developers/l1-and-l2-bridging/the-scroll-messenger/" }
+excerpt: "بریج ERC1155 از L1 به L2 از طریق L1ERC1155Gateway انجام می‌شود."
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+## واریز توکن‌های ERC1155 از L1
+
+بریج ERC1155 از L1 به L2 از طریق `L1ERC1155Gateway` انجام می‌شود. مشابه بریج ERC721، از یک روتر استفاده نمی‌کنیم بلکه مستقیماً از تابع `depositERC1155` در Gateway استفاده می‌کنیم.
+
+<Aside type="tip" title="">
+  **`depositERC1155`** یک تابع قابل پرداخت است و مقدار ETH ارسال شده به این تابع برای پرداخت هزینه‌های L2 استفاده می‌شود. اگر مقدار کافی نباشد، تراکنش ارسال نخواهد شد. تمامی ETH اضافی به فرستنده بازگردانده خواهد شد. `0.00001 ETH` بیشتر از کافی برای پردازش یک واریز توکن است.
+</Aside>
+
+### ایجاد توکن ERC1155 در L2
+
+مشابه بریج ERC721، برای بریج توکن‌های ERC1155، باید یک قرارداد مطابق با استاندارد `IScrollERC1155` راه‌اندازی و در `L1ERC1155Gateway` و `L2ERC1155Gateway` در هر دو شبکه L1 و L2 Mapping شود. این قرارداد باید اجازه دهد تا Gateway در L2 هنگام واریز توکن‌ها را ضرب و هنگام برداشت توکن‌ها را بسوزاند.
+
+در زیر رابط `IScrollERC1155` مورد نیاز برای استقرار توکن‌های ERC1155 سازگار با `L2ERC1155Gateway` در L2 آمده است:
+
+```solidity
+interface IScrollERC1155 {
+  /// @notice آدرس Gateway که توکن به آن تعلق دارد را برمی‌گرداند.
+  function gateway() external view returns (address);
+
+  /// @notice آدرس توکن معادل را برمی‌گرداند.
+  function counterpart() external view returns (address);
+
+  /// @notice مقداری توکن را به حساب دریافت‌کننده ضرب می‌کند.
+  /// @dev ابزارهای Gateway، فقط قرارداد Gateway می‌تواند این تابع را فراخوانی کند.
+  /// @param _to آدرس دریافت‌کننده.
+  /// @param _tokenId شناسه توکن برای ضرب.
+  /// @param _amount مقدار توکن برای ضرب.
+  /// @param _data داده‌ای که به دریافت‌کننده ارسال می‌شود.
+  function mint(address _to, uint256 _tokenId, uint256 _amount, bytes memory _data) external;
+
+  /// @notice مقداری توکن را از حساب می‌سوزاند.
+  /// @dev ابزارهای Gateway، فقط قرارداد Gateway می‌تواند این تابع را فراخوانی کند.
+  /// @param _from آدرس حساب برای سوزاندن توکن.
+  /// @param _tokenId شناسه توکن برای سوزاندن.
+  /// @param _amount مقدار توکن برای سوزاندن.
+  function burn(address _from, uint256 _tokenId, uint256 _amount) external;
+
+  /// @notice گروهی از توکن‌ها را به حساب دریافت‌کننده ضرب می‌کند.
+  /// @dev ابزارهای Gateway، فقط قرارداد Gateway می‌تواند این تابع را فراخوانی کند.
+  /// @param _to آدرس دریافت‌کننده.
+  /// @param _tokenIds لیست شناسه‌های توکن برای ضرب.
+  /// @param _amounts لیست مقادیر مربوطه توکن برای ضرب.
+  /// @param _data داده‌ای که به دریافت‌کننده ارسال می‌شود.
+  function batchMint(
+    address _to,
+    uint256[] calldata _tokenIds,
+    uint256[] calldata _amounts,
+    bytes calldata _data
+  ) external;
+
+  /// @notice گروهی از توکن‌ها را از حساب می‌سوزاند.
+  /// @dev ابزارهای Gateway، فقط قرارداد Gateway می‌تواند این تابع را فراخوانی کند.
+  /// @param _from آدرس حساب برای سوزاندن توکن.
+  /// @param _tokenIds لیست شناسه‌های توکن برای سوزاندن.
+  /// @param _amounts لیست مقادیر مربوطه توکن برای سوزاندن.
+  function batchBurn(address _from, uint256[] calldata _tokenIds, uint256[] calldata _amounts) external;
+}
+```
+
+### افزودن توکن ERC1155 به پل Scroll
+
+تمامی دارایی‌ها می‌توانند به طور ایمن و بدون نیاز به مجوز از طریق قراردادهای Gateway که توسط هر توسعه‌دهنده‌ای مستقر شده است بریج شوند. با این حال، Scroll همچنین یک قرارداد Gateway برای ERC1155 را مدیریت می‌کند که در آن تمامی توکن‌های ایجاد شده توسط جامعه خوش‌آمد گفته می‌شود. عضویت در Gateway مدیریت‌شده توسط Scroll به این معنی است که نیازی به استقرار قراردادهای Gateway نخواهید داشت و توکن شما در رابط کاربری Scroll نمایش داده خواهد شد. برای عضویت در Gateway Scroll، باید با تیم Scroll تماس بگیرید تا توکن را در هر دو قرارداد Gateway در L1 و L2 اضافه کنند. برای این کار، به دستورالعمل‌های موجود در مخزن [لیست توکن‌ها](https://github.com/scroll-tech/token-list) برای افزودن توکن خود به رابط کاربری رسمی Scroll مراجعه کنید.
+
+## برداشت توکن‌های ERC1155 از L2
+
+قرارداد `L2ERC1155Gateway` برای ارسال توکن‌ها از L2 به L1 استفاده می‌شود. قبل از بریج، قرارداد `L2ERC1155Gateway` باید توسط قرارداد توکن تأیید شده باشد. پس از انجام این کار، می‌توان از تابع `withdrawERC1155` برای انجام بریج دارایی استفاده کرد.
+
+<Aside type="tip" title="">
+  **`withdrawERC1155`** یک تابع قابل پرداخت است و مقدار ETH ارسال شده به این تابع برای پرداخت هزینه‌های L1 استفاده می‌شود. اگر مقدار کافی نباشد، تراکنش ارسال نخواهد شد. تمامی ETH اضافی به فرستنده بازگردانده خواهد شد. هزینه‌ها به فعالیت L1 بستگی دارند اما `0.005 ETH` باید برای پردازش برداشت توکن کافی باشد.
+</Aside>
+
+<Aside type="caution" title="">
+  **اطمینان حاصل کنید که تراکنش در L1 به دلیل ارسال از L2 برگشت نمی‌خورد.** در صورت برگشت تراکنش در L1، امکان بازیابی توکن‌های بریج شده وجود ندارد. تمامی دارایی‌ها در L2 هنگام ارسال تراکنش سوزانده می‌شوند و امکان ضرب آن‌ها دوباره وجود ندارد.
+</Aside>
+
+## API قرارداد L1ERC1155Gateway
+
+لطفاً برای مستندات کامل API قرارداد Scroll به [کتابخانه npm](https://www.npmjs.com/package/@scroll-tech/contracts?activeTab=code) مراجعه کنید.
+
+### depositERC1155
+
+```solidity
+function depositERC1155(
+  address _token,
+  address _to,
+  uint256 _tokenId,
+  uint256 _amount,
+  uint256 _gasLimit
+) external payable;
+```
+
+واریز یک توکن ERC1155 از L1 به حساب دریافت‌کننده در L2.
+
+| پارامتر | توضیحات                                       |
+| ------- | --------------------------------------------- |
+| token   | آدرس قرارداد توکن ERC1155 در L1.              |
+| to      | آدرس حساب دریافت‌کننده در L2.                |
+| tokenId | شناسه توکن برای واریز.                        |
+| amount  | مقدار توکن برای واریز.                        |
+| gasLimit| محدودیت گس مورد نیاز برای تکمیل واریز در L2. بخش غیرقابل استفاده از هزینه‌ها بازگردانده می‌شود. |
+
+### updateTokenMapping
+
+```solidity
+function updateTokenMapping(address _l1Token, address _l2Token) external;
+```
+
+به‌روزرسانی Mapping که یک قرارداد توکن ERC1155 را از L1 به L2 متصل می‌کند.
+
+| پارامتر | توضیحات                                    |
+| ------- | ------------------------------------------ |
+| \_l1Token | آدرس توکن ERC1155 در L1.                    |
+| \_l2Token | آدرس توکن معادل ERC1155 در L2.              |
+
+## API قرارداد L2ERC1155Gateway
+
+### withdrawERC1155
+
+```solidity
+function withdrawERC1155(address token, address to, uint256 tokenId, uint256 amount, uint256 gasLimit) external payable;
+```
+
+ارسال توکن‌های ERC1155 از L2 به حساب دریافت‌کننده در L1.
+
+| پارامتر | توضیحات                                                              |
+| ------- | -------------------------------------------------------------------- |
+| token   | آدرس قرارداد توکن ERC1155 در L2.                                     |
+| to      | آدرس حساب دریافت‌کننده در L1.                                       |
+| tokenId | شناسه توکن برای برداشت.                                              |
+| amount  | مقدار توکن برای برداشت.                                              |
+| gasLimit| غیرقابل استفاده است، اما برای سازگاری آینده در نظر گرفته شده است.  |
+
+### updateTokenMapping
+
+```solidity
+function updateTokenMapping(address _l1Token, address _l2Token) external
+
+;
+```
+
+به‌روزرسانی Mapping که یک قرارداد توکن ERC1155 را از L2 به L1 متصل می‌کند.
+
+| پارامتر | توضیحات                                    |
+| ------- | ------------------------------------------ |
+| \_l1Token | آدرس توکن ERC1155 در L1.                    |
+| \_l2Token | آدرس توکن معادل ERC1155 در L2.              |

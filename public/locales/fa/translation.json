@@ -1,0 +1,199 @@
+{
+  "rightSidebar": {
+    "onThisPage": "در این صفحه",
+    "more": "بیشتر",
+    "editThisPage": "ویرایش این صفحه",
+    "joinOurCommunity": "به جامعه ما بپیوندید",
+    "feedback": "بازخورد"
+  },
+  "ui": {
+    "whatsNext": "چه چیزی در ادامه است",
+    "readMore": "بیشتر بخوانید"
+  },
+  "landing": {
+    "test": "آزمایش",
+    "search": {
+      "title": "به مستندات Scroll خوش آمدید",
+      "placeholder": "در مستندات Scroll جستجو کنید..."
+    },
+    "newUserCTA": {
+      "title": "آیا در Scroll و ZK Rollups تازه‌وارد هستید؟",
+      "description": "مبانی را در راهنمای شروع به کار بیاموزید."
+    },
+    "resourcesCTA": {
+      "title": "منابع مفید"
+    },
+    "nodesCTA": {
+      "title": "نیاز به اجرای نود Scroll خود دارید؟",
+      "description": "برای یادگیری درباره راه‌اندازی و نگهداری نودهای Scroll، راهنمای نود اوپراتور را ببینید.",
+      "buttonText": "راهنمای نود اوپراتور"
+    },
+    "TutorialsCTA": {
+      "title": "تماشای آموزش‌ها",
+      "description": "بیشتر درباره فناوری که ما در حال ساخت آن هستیم بیاموزید. ما به طور مداوم ویدیوهای جدید را در کانال YouTube خود آپلود می‌کنیم.",
+      "buttonText": "تماشای آموزش‌ها"
+    },
+    "LinksCTA": {
+      "card1": {
+        "title": "نیاز به پشتیبانی یکپارچه‌سازی دارید؟",
+        "description": "با یک متخصص صحبت کنید وقتی که TODO: یک url"
+      },
+      "card2": {
+        "title": "دیسکورد",
+        "description": "به جامعه بپیوندید"
+      },
+      "card3": {
+        "title": "TODO: Discourse",
+        "description": "واقعاً به جامعه بپیوندید"
+      }
+    },
+    "NewsletterCTA": {
+      "title": "به‌روز باشید با آخرین اخبار توسعه‌دهندگان Scroll",
+      "text": "به‌روزرسانی‌های نقشه راه، رویدادهای مجازی و زنده، فرصت‌های اکوسیستم و بیشتر",
+      "placeholder": "آدرس ایمیل شما اینجا",
+      "thankYouForSubscribing": "از اشتراک شما متشکریم!",
+      "correctEmail": "لطفاً از یک آدرس ایمیل صحیح استفاده کنید.",
+      "pleaseInsertEmail": "لطفاً ایمیل خود را وارد کنید."
+    }
+  },
+  "sidebar": {
+    "gettingStarted": {
+      "gettingStarted": "شروع به کار",
+      "overview": "بررسی اجمالی",
+      "scrollSepoliaTestnet": "Scroll Sepolia Testnet",
+      "userGuide": "راهنمای کاربر",
+      "setup": "Setup",
+      "faucet": "Faucet",
+      "bridge": "Bridge",
+      "transferTokens": "انتقال توکن‌ها",
+      "commonErrors": "خطاهای رایج",
+      "rollupExplorer": "Rollup Explorer",
+      "scrollSepoliaBlockExplorer": "Scroll Sepolia Explorer",
+      "scrollMainnet": "Scroll Mainnet",
+      "scrollscan": "Scrollscan Block Explorer",
+      "sepoliaBlockExplorer": "Sepolia Explorer",
+      "community": "جامعه",
+      "discord": "دیسکورد",
+      "communityForum": "انجمن"
+    },
+    "developers": {
+      "developers": "توسعه‌دهندگان",
+      "buildingOnScroll": "ساختن بر روی Scroll",
+      "developerQuickstart": "شروع سریع برای توسعه‌دهندگان",
+      "verifyingSmartContracts": "تایید قراردادهای هوشمند",
+      "scrollContracts": "قراردادهای Scroll",
+      "ethereumAndScrollDifferences": "تفاوت‌های Ethereum و Scroll",
+      "l1AndL2Bridging": "بریج L1 و L2",
+      "ethAndErc20TokenBridge": "بریج ETH و ERC20 Token",
+      "erc721NftBridge": "بریج ERC721 NFT",
+      "erc1155TokenBridge": "بریج ERC1155 Token",
+      "theScrollMessenger": "پیام‌رسان Scroll",
+      "transactionFeesOnScroll": "کارمزدهای تراکنش در Scroll",
+      "toolingDeployedOnScroll": "ابزارهای Deploy در Scroll",
+      "l2Fee": "کارمزد L2",
+      "l1Fee": "کارمزد L1",
+      "gasOracle": "اوراکل گس فی",
+      "future": "آینده",
+      "guides": "راهنماها",
+      "contractDeploymentTutorial": "آموزش Deploy قرارداد",
+      "crossChainInteraction": "تعامل بین زنجیره‌ای پیام‌رسان Scroll",
+      "runningNode": "اجرای یک نود Scroll",
+      "bridgingERC20TokenThroughCustomGateway": "بریج ERC20 از طریق درگاه سفارشی",
+      "bridgingERC721NftThroughCustomGateway": "بریج ERC721 NFT از طریق درگاه سفارشی",
+      "bridgingERC1155ThroughCustomGateway": "بریج ERC1155 از طریق درگاه سفارشی",
+      "estimatingGasAndTxFees": "تخمین گس فی و کارمزدهای تراکنش",
+      "resources": "منابع",
+      "mainnetResources": "منابع Mainnet",
+      "sepoliaResources": "منابع Sepolia",
+      "scrollBlockExplorer": "Scrollscan Explorer",
+      "rollupExplorer": "Rollup Explorer",
+      "scrollSepoliaBlockExplorer": "Scroll Sepolia Explorer",
+      "sepoliaRollupExplorer": "Rollup Explorer",
+      "sepoliaBlockExplorer": "Scrollscan Explorer"
+    },
+    "technology": {
+      "introduction": "مقدمه",
+      "principles": "اصول",
+      "scrollArchitecture": "معماری Scroll",
+      "scrollUpgrades": "ارتقاءهای Scroll",
+      "overview": "بررسی اجمالی",
+
+      "scrollChain": "زنجیره Scroll",
+      "accountsAndState": "حساب‌ها و حالت",
+      "blocks": "بلوک‌ها",
+      "transactions": "تراکنش‌ها",
+      "rollupProcess": "فرآیند Rollup",
+      "evmDifferencesFromEthereum": "تفاوت‌های EVM با Ethereum",
+
+      "bridge": "Bridge",
+      "crossDomainMessaging": "پیام‌رسانی بین دامنه‌ای",
+      "depositGateways": "درگاه‌های واریز",
+      "withdrawGateways": "درگاه‌های برداشت",
+
+      "sequencer": "Sequencer",
+      "executionNode": "نود اجرایی",
+      "rollupNode": "نود Rollup",
+      "zkTrie": "zkTrie",
+
+      "zkevm": "zkEVM",
+      "introToZkevm": "مقدمه‌ای بر zkEVM",
+      "zkevmOverview": "بررسی اجمالی zkEVM",
+      "bridgeOverview": "بررسی اجمالی Bridge",
+      "prover": "Prover",
+      "proofGeneration": "تولید اثبات",
+      "cpuProverRepo": "مخزن CPU Prover",
+
+      "security": "امنیت",
+      "auditsAndBugBounty": "ممیزی‌ها و جوایز باگ‌ها",
+      "l2BeatAssessment": "ارزیابی L2Beat"
+    },
+    "learn": {
+      "ethereumAndProtocols": "Ethereum و پروتکل‌ها",
+      "theScalabilityProblem": "مشکل مقیاس‌پذیری",
+      "introToRollups": "مقدمه‌ای بر Rollups",
+      "zeroKnowledge": "دانش صفر",
+      "introToZeroKnowledge": "مقدمه‌ای بر دانش صفر",
+      "polynomialCommitmentSchemes": "طرح‌های تعهد چندجمله‌ای",
+      "kzgCommitmentScheme": "طرح تعهد KZG",
+      "additionalResources": "منابع اضافی"
+    }
+  },
+  "footer": {
+    "aboutScroll": {
+      "title": "درباره Scroll",
+      "bugBounty": "جایزه باگ‌ها",
+      "joinUs": "به ما بپیوندید",
+      "healthStatus": "وضعیت سلامتی",
+      "privacyPolicy": "سیاست حفظ حریم خصوصی",
+      "termsAndConditions": "شرایط و ضوابط"
+    },
+    "resources": {
+      "title": "منابع",
+      "scrollDocsURL": "https://docs.scroll.io/",
+      "blog": "بلاگ",
+      "documentation": "مستندات",
+      "brandKit": "کیف برند",
+      "audits": "ممیزی‌ها"
+    },
+    "followUs": {
+      "title": "ما را دنبال کنید"
+    }
+  },
+  "pageNotFound": {
+    "title": "صفحه پیدا نشد",
+    "text": "متأسفیم، اما نتوانستیم صفحه‌ای که به دنبال آن بودید را پیدا کنیم."
+  },
+  "rpcTable": {
+    "rpcServerAddress": "آدرس سرور RPC",
+    "height": "ارتفاع",
+    "latency": "زمان تأخیر",
+    "score": "امتیاز",
+    "privacy": "حریم خصوصی",
+    "addNetwork": "اضافه کردن شبکه",
+    "connect": "اتصال",
+    "sorting": "مرتب‌سازی"
+  },
+  "notTranslated": {
+    "notTranslated": "این صفحه هنوز ترجمه نشده است."
+  }
+}

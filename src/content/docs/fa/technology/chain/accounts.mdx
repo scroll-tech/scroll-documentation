@@ -1,0 +1,30 @@
+---
+section: technology
+date: Last Modified
+title: "حساب‌ها و حالت"
+lang: "fa"
+dir: "rtl"
+permalink: "technology/chain/accounts-and-state"
+whatsnext: { "تراکنش ها": "/fa/technology/chain/transactions/" }
+---
+
+## حساب‌ها
+
+همانند اتریوم، Scroll دو نوع حساب دارد: حساب‌های خارجی (EOA) و حساب‌های قراردادی که قرارداد هوشمند و ذخیره‌سازی اضافی را نگه می‌دارند.
+
+Scroll اطلاعات اضافی مربوط به بایت‌کد قرارداد را در حساب ذخیره می‌کند تا مدارک zkEVM بتوانند انتقال وضعیت را به صورت کارآمدتر اثبات کنند.
+
+حساب در Scroll شامل فیلدهای زیر است:
+
+- `nonce`: شمارنده‌ای که تعداد معاملات ارسال شده توسط فرستنده را نشان می‌دهد.
+- `balance`: موجودی توکن `ETH` در حساب (واحد به wei).
+- `storageRoot`: ریشه هش trie ذخیره‌سازی. از آنجا که Scroll از [zkTrie](/technology/sequencer/zktrie) برای trie ذخیره‌سازی استفاده می‌کند، `storageRoot` هش Poseidon را در یک عدد ۲۵۶ بیتی ذخیره می‌کند.
+- `codeHash`: هش Keccak از بایت‌کد قرارداد.
+- `PoseidonCodeHash` (**فیلد جدید**): هش Poseidon از بایت‌کد قرارداد در یک عدد ۲۵۶ بیتی.
+- `CodeSize` (**فیلد جدید**): اندازه بایت‌کد قرارداد بر حسب بایت.
+
+## وضعیت
+
+وضعیت یک بلاکچین مجموعه‌ای از داده‌های حساب است. _وضعیت trie_ داده‌های حساب و آدرس‌های مربوطه را به یک ساختار داده [Merkle tree](https://en.wikipedia.org/wiki/Merkle_tree) کدگذاری می‌کند. ریشه درخت، یا وضعیت بلاکچین، یک هش رمزنگاری از تمامی داده‌های حساب موجود در درخت است.
+
+اتریوم از یک ساختار داده به نام [Patricia Merkle Trie](https://ethereum.org/en/developers/docs/data-structures-and-encoding/patricia-merkle-trie/) برای هر دو trie وضعیت و trie ذخیره‌سازی که ورودی‌های کلید-مقدار ذخیره شده در یک قرارداد هوشمند را ذخیره می‌کند، استفاده می‌کند. در Scroll، ما Patricia Merkle Trie را با یک ساختار داده‌ای که بیشتر برای zk مناسب است، به نام zkTrie، برای هر دو trie وضعیت و trie ذخیره‌سازی جایگزین می‌کنیم. در یک سطح بالا، ساختار داده zkTrie یک درخت مرکل باینری پراکنده با [هش Poseidon](https://eprint.iacr.org/2019/458.pdf)، یک تابع هش مناسب برای zk است. مستندات [zkTrie](/technology/sequencer/zktrie) جزئیات بیشتری درباره این ساختار داده توصیف می‌کند.
