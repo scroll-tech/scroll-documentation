@@ -361,3 +361,31 @@ curl --location 'http://l1-devnet.scrollsdk/' \
 	"id":0
 }'
 ```
+
+## Troubleshooting
+
+### `ingress-dns` issues
+
+Getting `ingress-dns` can be tricky across different machines, operating systems and network configurations. 
+
+Directly editing `etc/hosts` has worked for some users, adding all ingress hosts pointing to the minikube IP address.
+
+For VPN users, we've seen the following work:
+
+<Steps>
+1. Execute command `sudo minikube tunnel`
+
+1. Open file `/etc/hosts` and add:
+    ```
+    127.0.0.1 l1-devnet.scrollsdk
+    127.0.0.1 bridge-history.scrollsdk
+    127.0.0.1 frontends.scrollsdk
+    127.0.0.1 grafana.scrollsdk
+    127.0.0.1 l1-devnet-explorer.scrollsdk
+    127.0.0.1 l2-rpc.scrollsdk
+    127.0.0.1 blockscout.scrollsdk
+    127.0.0.1 bridge-history-api.scrollsdk
+    ```
+
+1. Turn off VPN when visiting in browser
+</Steps>
