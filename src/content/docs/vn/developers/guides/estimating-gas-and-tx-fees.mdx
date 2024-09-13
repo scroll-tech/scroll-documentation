@@ -1,0 +1,225 @@
+---
+section: developers
+date: Last Modified
+title: "Ước lượng Gas và Phí Giao dịch"
+lang: "vn"
+permalink: "developers/guides/estimating-gas-and-transaction-fees"
+excerpt: "Vì Scroll là một L2 rollup, một phần của vòng đời giao dịch là ghi lại một số dữ liệu trên L1 để đảm bảo an toàn. Để thanh toán cho điều này, tất cả các giao dịch đều phải chịu một khoản phí bổ sung gọi là phí L1."
+---
+
+import Aside from "../../../../../components/Aside.astro"
+import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import txFeesProjectStructure from "../../../../../assets/images/developers/txFeesProjectStructure.png"
+
+:::warning[Trang này đã hết hạn.]
+Trang này chưa được cập nhật và kiểm tra với bản phát hành Scroll Sepolia mới nhất. Vui lòng sử dụng cẩn thận.
+:::
+
+
+Vì Scroll là một L2 rollup, một phần của vòng đời giao dịch là việc cam kết một số dữ liệu lên L1 để đảm bảo an toàn. Để thanh toán cho điều này, tất cả các giao dịch đều gây ra một khoản phí bổ sung được gọi là _phí L1_.
+
+Trong hướng dẫn này, chúng ta sẽ đi qua cách ước lượng phí L1 trên Scroll và tính toán ước lượng phí giao dịch cuối cùng thông qua một ví dụ mã thực hành bạn có thể tìm thấy [tại đây](https://github.com/scroll-tech/scroll-guides/tree/main/gas-estimation-demo).
+
+## Công thức
+
+Đơn giản, phí giao dịch trên Scroll, tại bất kỳ thời điểm nào, có thể được tính toán như sau:
+
+\[
+\text{totalFee} = (\text{l2GasPrice} \times \text{l2GasUsed}) + \text{l1Fee}
+\]
+
+Một điểm quan trọng chúng ta cần phải làm rõ là `l1Fee` được tách riêng từ `l2Fee`.
+
+Để có một giải thích chi tiết hơn và thông tin về công thức, hãy xem tài liệu về [cách Phí Giao Dịch hoạt động trên Scroll](../developers/transaction-fees-on-scroll-l2/).
+
+## Giao tiếp với các giá trị
+
+Để lấy các giá trị này và tính toán phí cuối cùng, chúng ta sẽ tương tác với RPC công cộng của Scroll và Hợp đồng Thông minh được triển khai trước đó `L1GasOracle.sol`, triển khai tại [`0x5300000000000000000000000000000000000002`](https://scrollscan.com/address/0x5300000000000000000000000000000000000002).
+
+Đối với cơ sở mã nguồn ví dụ của chúng tôi, chúng tôi tạo một dự án Hardhat và lấy các giá trị bằng cách sử dụng thư viện [Ethers.js](https://docs.ethers.org/v6/).
+
+`l2GasUsed` - Chúng tôi lấy giá trị này bằng cách sử dụng phương thức [estimateGas](https://docs.ethers.org/v6/api/providers/#Provider-estimateGas), which truy vấn RPC của chúng tôi với dữ liệu TX để có được ước lượng về gas sẽ được sử dụng.
+
+`l2GasPrice` - Đối với điều này, chúng tôi sẽ sử dụng phương thức [getFeeData](https://docs.ethers.org/v6/api/providers/#Provider-getFeeData), mà sẽ nhận được điều kiện thị trường hiện tại trên L2
+
+Hợp đồng thông minh Gas Oracle tiết lộ nhiều trường quan trọng mà chúng ta cần phải tìm ra chi phí của giao dịch. `overhead()` , `scalar()` , `l1BaseFee()` và `getL1GasUsed(bytes memory data)`
+
+Nhưng nó cũng tiết lộ hàm `getL1Fee(bytes memory data)`, làm trừu tượng hóa tất cả các phức tạp này và cho phép chúng ta nhận được phí chỉ trong một cuộc gọi hàm.
+
+## Ví dụ thực hành
+
+### Cấu trúc dự án
+
+Trước hết, hãy nhanh chóng xem qua các thư mục quan trọng trong cấu trúc dự án của chúng ta.
+
+Đó là một dự án Hardhat tiêu chuẩn, nhưng hầu hết công việc của chúng ta đều ở trong các thư mục *contracts* và _scripts_.
+
+<ClickToZoom src={txFeesProjectStructure} />
+
+<Aside type="tip" title="">
+  Hướng dẫn này sẽ xem xét các phần quan trọng của mã, sử dụng mã mẫu như một cách dễ dàng để có cái nhìn tổng quan về
+  những gì đã làm trong dự án. Một số mã, như xử lý lỗi, sẽ bị loại bỏ để đơn giản hóa.
+</Aside>
+
+### Hợp đồng thông minh
+
+Đầu tiên, chúng ta cần một Hợp đồng Thông minh để tương tác với để trình bày ước lượng gas. Đối với điều đó, chúng ta sẽ tạo một `ExampleContract.sol`.
+
+```solidity
+pragma solidity ^0.8.17;
+
+contract ExampleContract {
+  uint public exampleVariable;
+
+  function setExampleVariable(uint _exampleVariable) external {
+    exampleVariable = _exampleVariable;
+  }
+}
+```
+
+<Aside type="tip" title="">
+  Nhớ ký hiệu của phương thức `setExampleVariable` vì chúng ta sẽ sử dụng nó sau này như một ví dụ
+</Aside>
+
+Khi triển khai, chúng ta điền giá trị EXAMPLE_CONTRACT_ADDRESS vào tệp .env của chúng ta. Đối với dự án ví dụ, nó đã được triển khai tại TODO: 0xc37ee92c73753B46eB865Ee156d89741ad0a8777 và đã được điền trước, vì vậy không cần thực hiện bất kỳ điều gì ở đây.
+
+### Ước lượng phí
+
+Phần trung tâm của ví dụ này nằm trong tệp `/scripts/gasEstimation.ts`.
+
+Chúng ta chỉ làm bốn việc:
+
+1. Tạo một giao dịch giả mạo bằng cách sử dụng ExampleContract
+2. Ước lượng phí L2 của giao dịch đó
+3. Ước lượng phí L1 của giao dịch đó
+4. Phát ra một giao dịch thực sự đến Scroll và so sánh các giá trị
+
+#### Tạo giao dịch giả mạo
+
+Mục tiêu của bước này là tạo một **(RLP) Serialized Unsigned Transaction** để được sử dụng sau này làm tham số cho việc gọi phương thức ước lượng gas của trình chỉ đạo.
+
+1. Hãy điền vào giao dịch của chúng tôi với các giá trị cần thiết để ước lượng chi phí bằng cách gọi `buildPopulatedExampleContractTransaction`. Điều này sẽ điền vào các trường `data`, `to`, `gasPrice`, `type` và `gasLimit`:
+
+```typescript
+export async function buildPopulatedExampleContractTransaction(
+  exampleContractAddress: string,
+  newValueToSet: number
+): Promise<ContractTransaction> {
+  const exampleContract = await ethers.getContractAt("ExampleContract", exampleContractAddress)
+
+  return exampleContract.setExampleVariable.populateTransaction(newValueToSet)
+}
+```
+
+2. Bây giờ, hãy giảm xuống các trường cơ bản bằng cách sử dụng `buildUnsignedTransaction`. Chúng ta sẽ không ký nó.
+
+```typescript
+export async function buildUnsignedTransaction(signer: HardhatEthersSigner, populatedTransaction: ContractTransaction): Promise<UnsignedTransaction> {
+  const nonce = await signer.getNonce();
+
+  return {
+    data: populatedTransaction.data,
+    to: populatedTransaction.to,
+    gasPrice: populatedTransaction.gasPrice,
+    type: populatedTransaction.type,
+    gasLimit: populatedTransaction.gasLimit,
+    nonce,
+  };
+```
+
+<Aside type="tip" title="">
+  Đảm bảo rằng nonce là một giá trị hợp lệ!
+</Aside>
+
+3. Với đầu ra của hàm trước, chúng ta tiến hành serialize nó bằng cách sử dụng `getSerializedTransaction`.
+
+```typescript
+export function getSerializedTransaction(tx: UnsignedTransaction) {
+  return serialize(tx)
+}
+```
+
+#### Ước lượng phí L2
+
+Bước này khá tiêu biểu và tương tự như trên Ethereum. Chúng ta sẽ sử dụng hàm estimateL2Fee nhận giao dịch đã điền đầy đủ thông tin và trả về ước lượng tổng lượng gas sẽ sử dụng bằng cách nhân giá gas hiện tại với lượng gas cần sử dụng.
+
+```typescript
+export async function estimateL2Fee(tx: ContractTransaction): Promise<bigint> {
+  const gasToUse = await ethers.provider.estimateGas(tx)
+  const feeData = await ethers.provider.getFeeData()
+  const gasPrice = feeData.gasPrice
+
+  return gasToUse * gasPrice
+}
+```
+
+#### Ước lượng phí L1 của giao dịch đó
+
+Bước này rất đơn giản. Sử dụng kết quả của hàm `getSerializedTransaction`, chúng ta truy vấn bảng dữ liệu và nhận lại phí ước lượng.
+
+```typescript
+export async function estimateL1Fee(
+  gasOraclePrecompileAddress: string,
+  unsignedSerializedTransaction: string
+): Promise<bigint> {
+  const l1GasOracle = await ethers.getContractAt("IL1GasPriceOracle", gasOraclePrecompileAddress)
+
+  return l1GasOracle.getL1Fee(unsignedSerializedTransaction)
+}
+```
+
+#### Phát ra giao dịch và so sánh các giá trị ước lượng và thực tế
+
+**Phát ra giao dịch**
+
+Chúng tôi sẽ tạo một cuộc gọi đến hợp đồng của chúng tôi bằng cách sử dụng các giá trị giống như giao dịch giả mạo.
+
+```typescript
+const tx = await exampleContract.setExampleVariable(newValueToSetOnExampleContract)
+const txReceipt = await tx.wait(5)
+```
+
+**Tính toán phí L2**
+
+Sử dụng biên lai giao dịch chúng ta có thể thấy lượng gas mà giao dịch sử dụng
+
+```typescript
+const l2Fee = txReceipt.gasUsed * txReceipt.gasPrice
+```
+
+**Nhận số tiền được sử dụng để thanh toán phí L1**
+
+Để thực hiện việc này, chúng tôi sẽ so sánh _balance of the account before (số dư tài khoản trước)_ việc thực hiện giao dịch, _account balance after (số dư tài khoản sau_ việc thực hiện và sau đó trừ đi phí L2.
+
+```typescript
+const totalFee = signerBalanceBefore - signerBalanceAfter
+const l1Fee = totalFee - l2Fee
+```
+
+**So sánh các giá trị**
+
+Thị trường phí luôn biến động và khó lường. Vì các giá trị ước tính có thể khác với giá trị thực thi thực tế, hãy kiểm tra xem chúng khác nhau bao nhiêu.
+
+Chúng tôi có thể chạy tất cả mã mà chúng tôi đã viết trước đó bằng cách nhập lệnh `yarn gas:estimate` trong [dự án](https://github.com/scroll-tech/scroll-guides/tree/main/gas-estimation-demo ) sẽ chạy tập lệnh [`gasEstimation.ts`](https://github.com/scroll-tech/scroll-guides/blob/main/gas-estimation-demo/scripts/gasEstimation.ts) và cung cấp cho chúng tôi đầu ra dưới đây:
+
+```bash
+Estimated L1 fee (wei): 208705598167252
+Estimated L2 fee (wei): 26416000000
+Estimated total fee (wei):  208732014167252
+
+Actual L1 fee (wei): 210830909757550
+Actual L2 fee (wei): 26416000000
+Actual total fee (wei):  210857325757550
+
+(actual fee - estimated fee)
+Difference L1 fee (wei): 2125311590298 (1.0183299389002531%)
+Difference L2 fee (wei): 0 (0%)
+Difference total fee (wei): 2125311590298 (1.0182010645453987%)
+```
+
+Ở trên, chúng ta có thể thấy rằng các giá trị ước tính (bằng wei) chênh lệch khoảng 1%, nhưng hãy nhớ rằng trong thời gian giá xăng tăng đột biến, chênh lệch này có thể tăng lên. Hãy nhớ tính đến điều này trong giao diện người dùng của bạn!
+
+<Aside type="tip" title="">
+  Để biết thêm chi tiết về những gì xảy ra khi khí dao động trên L1 và về các giới hạn được đặt ở đó, hãy xem [vòng đời của một giao dịch trên Gas
+  Fees](../developers/transaction-fees-on-scroll-l2/l1-fee.md#what-happens-if-gas-fluctuates-on-l1).
+</Aside>

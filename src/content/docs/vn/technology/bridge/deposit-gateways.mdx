@@ -1,0 +1,183 @@
+---
+section: technology
+date: Last Modified
+title: "Deposit Gateways"
+lang: "vn"
+permalink: "technology/bridge/deposit-gateways"
+whatsnext: { "Withdraw Gateways": "/technology/bridge/withdraw-gateways/" }
+---
+
+import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import DepositWorkflow from "../_images/deposit.png"
+
+Tài liệu này mô tả cách người dùng và nhà phát triển có thể sử dụng cổng để gửi mã thông báo từ L1 đến L2. Chúng tôi cung cấp một số cổng cho mã thông báo tiêu chuẩn và bộ định tuyến cổng trên L1, được liệt kê trong bảng bên dưới.
+
+| Gateway Contract         | Description                                                      |
+| ------------------------ | ---------------------------------------------------------------- |
+| `L1GatewayRouter`        | The gateway router supports the deposit of ETH and ERC20 tokens. |
+| `L1ETHGateway`           | The gateway to deposit ETH.                                      |
+| `L1StandardERC20Gateway` | The gateway for standard ERC20 token deposits.                   |
+| `L1CustomERC20Gateway`   | The gateway for custom ERC20 token deposits.                     |
+| `L1WETHGateway`          | The gateway for Wrapped ETH deposits.                            |
+| `L1ERC721Gateway`        | The gateway for ERC-721 token deposits.                          |
+| `L1ERC1155Gateway`       | The gateway for ERC-1155 token deposits.                         |
+
+## Overview
+
+<ClickToZoom src={DepositWorkflow} alt="Deposit Workflow" />
+
+Hình vẽ mô tả quy trình gửi tiền từ L1 đến L2. Người dùng gọi các cổng để khởi tạo khoản tiền gửi mã thông báo. Sau đó, khoản tiền gửi được mã hóa thành một tin nhắn gửi đến hợp đồng `L1ScrollMessenger` và giao dịch do L1 khởi tạo tương ứng sẽ được thêm vào `L1MessageQueue`. Để hoàn tất các khoản tiền gửi trên L2, trình sắp xếp L2 thu thập các sự kiện giao dịch L1 mới và bao gồm các giao dịch tương ứng trong các khối L2 mà nó tạo ra. Các phần tiếp theo mô tả chi tiết về cách gửi các mã thông báo khác nhau. Bạn có thể tìm thêm thông tin chi tiết về quy trình chuyển tiếp tin nhắn L1-to-L2 trong [Nhắn tin tên miền chéo](/technology/bridge/cross-domain-messaging#sending-messages-from-l1-to-l2).
+
+## Depositing ETH
+
+Scroll coi ETH là mã thông báo gốc của nó. Chúng tôi phân bổ trước một lượng ETH vừa đủ cho hợp đồng `L2ScrollMessenger` trong khối gốc để nó có thể chuyển mã thông báo ETH gốc sang tài khoản L2 mà không cần đúc. Việc gửi ETH hoạt động như sau.
+
+1. `L1GatewayRouter` cung cấp ba chức năng để gửi ETH từ L1 đến L2. Chức năng `depositETHAndCall` có thể chuyển ETH và thực hiện cuộc gọi hợp đồng cùng một lúc.
+
+    ```solidity
+    function depositETH(uint256 _amount, uint256 _gasLimit) external payable;
+
+    function depositETH(address _to, uint256 _amount, uint256 _gasLimit) public payable;
+
+    function depositETHAndCall(
+        address _to,
+        uint256 _amount,
+        bytes calldata _data,
+        uint256 _gasLimit
+    ) external payable;
+    ```
+
+2. Cả ba hàm `depositETH` đều gọi vào `L1ETHGateway`. `L1ETHGateway` mã hóa khoản tiền gửi thành tin nhắn được gửi đến hợp đồng `L1ScrollMessenger`.
+
+3. ETH của số tiền gửi bị khóa trong hợp đồng `L1ScrollMessenger`. `L1ScrollMessenger` nối thêm tin nhắn vào hàng đợi tin nhắn trong hợp đồng `L1MessageQueue`.
+
+4. Sau khi giao dịch gửi tiền được hoàn tất trên L1, trình sắp xếp thứ tự sẽ bao gồm giao dịch L2 tương ứng trong khối L2 để hoàn tất việc gửi tiền và chuyển ETH đến địa chỉ người nhận trên L2.
+
+5. Giao dịch L2 gọi hàm `L2ScrollMessenger.relayMessage` để thực thi tin nhắn được chuyển tiếp.
+    Trong trường hợp gửi ETH, hàm `relayMessage` gọi `L2ETHGateway.finalizeDepositETH` để chuyển ETH sang tài khoản người nhận trên L2.
+
+6. Nếu người dùng gọi `depositETHAndCall` trên L1, `finalizeDepositETH` trong hợp đồng `L2ETHGateway` sẽ chuyển tiếp dữ liệu bổ sung đến hợp đồng L2 mục tiêu.
+
+## Gửi token ERC20
+
+Một số hợp đồng cổng ERC20 được cung cấp để kết nối các loại mã thông báo ERC20 khác nhau, chẳng hạn như mã thông báo ERC20 tiêu chuẩn, mã thông báo ERC20 tùy chỉnh và mã thông báo ETH được bọc. `L1GatewayRouter` ghi lại ánh xạ chuẩn của mã thông báo ERC20 tới cổng ERC20 tương ứng trên L1. `L1GatewayRouter` sử dụng `StandardERC20Gateway` làm cổng ERC20 mặc định cho mã thông báo ERC20 mới trừ khi cổng tùy chỉnh đã được thiết lập.
+
+Việc gửi mã thông báo ERC20 hoạt động như sau.
+
+1. Để gửi mã thông báo ERC20 từ L1 đến L2, người dùng có thể sử dụng `L1GatewayRouter.depositERC20` và `L1GatewayRouter.depositERC20AndCall` được hiển thị bên dưới.
+
+    ```solidity
+    function depositERC20(address _token, uint256 _amount, uint256 _gasLimit) external payable;
+
+    function depositERC20(address _token, address _to, uint256 _amount, uint256 _gasLimit) external payable;
+
+    function depositERC20AndCall(
+        address _token,
+        address _to,
+        uint256 _amount,
+        bytes memory _data,
+        uint256 _gasLimit
+    ) public payable;
+    ```
+
+2. Dựa trên ánh xạ từ mã thông báo ERC20 đến cổng, `L1GatewayRouter` gọi đến cổng tương ứng: `L1StandardERC20Gateway`, `L1CustomERC20Gateway` hoặc `L1WETHHGateway`. Các bước còn lại sẽ được mô tả riêng.
+
+### Tiêu chuẩn ERC20 Tokens
+
+Mã thông báo ERC20 tiêu chuẩn là mã thông báo không yêu cầu bất kỳ logic tùy chỉnh nào. Đối với các mã thông báo như vậy, hợp đồng mã thông báo L2 ERC20 của họ được tạo bởi `L2StandardERC20Gateway`. Các bước còn lại để gửi mã thông báo ERC20 tiêu chuẩn là:
+
+3. Hợp đồng `L1StandardERC20Gateway` khóa mã thông báo ERC20 bằng cách chuyển chúng từ người gửi sang chính nó.
+4. Nếu mã thông báo ERC20 này chưa được rút thông qua `L1StandardERC20Gateway` trước đó, `L1StandardERC20Gateway` sẽ tính toán địa chỉ mã thông báo L2 ERC20 xác định và thêm siêu dữ liệu mã thông báo (ký hiệu, tên và số thập phân) vào thông báo để triển khai hợp đồng tiềm năng trên L2. Nếu địa chỉ mã thông báo L2 đã được lưu trữ trong `tokenMapping`, `L1StandardERC20Gateway` sẽ tải trực tiếp địa chỉ mã thông báo L2 từ ánh xạ.
+5. `L1StandardERC20Gateway` mã hóa tin nhắn gửi mã thông báo và gọi `L1ScrollMessenger` để gửi tin nhắn.
+6. Giao dịch L2 tương ứng gọi hàm `L2ScrollMessenger.relayMessage` để hoàn tất việc gửi tiền trên L2. Trong trường hợp gửi tiền mã thông báo ERC20 tiêu chuẩn, giao dịch sẽ gọi `L2StandardERC20Gateway.finalizeDepositERC20`.
+7. Nếu hợp đồng mã thông báo ERC20 này chưa được triển khai trên L2, `L2StandardERC20Gateway` sẽ trích xuất siêu dữ liệu mã thông báo từ tin nhắn và gọi `ScrollStandardERC20Factory` để triển khai mã thông báo ERC20 tiêu chuẩn trên L2.
+8. `L2StandardERC20Gateway` gọi hàm đúc tiền trên hợp đồng mã thông báo L2 ERC20 tương ứng.
+9. Nếu người dùng gọi `depositERC20AndCall` trên L1, `L2StandardERC20Gateway` sẽ gọi hợp đồng L2 đích với dữ liệu bổ sung.
+
+### Token ERC20 tùy chỉnh
+
+So với mã thông báo ERC20 tiêu chuẩn, hợp đồng L2 của mã thông báo ERC20 tùy chỉnh được chủ sở hữu mã thông báo triển khai. Các bước còn lại để gửi mã thông báo ERC20 tùy chỉnh là:
+
+3. Hợp đồng `L1CustomERC20Gateway` khóa mã thông báo ERC20 trên L1 bằng cách chuyển chúng từ người gửi sang chính nó.
+4. `L1CustomERC20Gateway` yêu cầu địa chỉ mã thông báo L2 ERC20 có trong `tokenMapping`. Nó truy xuất địa chỉ mã thông báo ERC20 tương ứng, mã hóa thông báo gửi mã thông báo và chuyển tiếp nó tới `L1ScrollMessenger`.
+5. Giao dịch L2 tương ứng gọi hàm `L2ScrollMessenger.relayMessage` để hoàn tất khoản tiền gửi trên L2. Trong trường hợp gửi mã thông báo ERC20 tùy chỉnh, giao dịch sẽ gọi `L2CustomERC20Gateway.finalizeDepositERC20`.
+6. `L2CustomERC20Gateway` gọi hàm đúc tiền trên hợp đồng mã thông báo L2 ERC20 tương ứng. Hợp đồng mã thông báo L2 ERC20 bắt buộc phải cấp quyền đúc tiền cho hợp đồng `L2CustomERC20Gateway`.
+7. Nếu người dùng gọi `depositERC20AndCall` trên L1, `L2CustomERC20Gateway` sẽ gọi hợp đồng L2 đích với dữ liệu bổ sung.
+
+### WETH Token
+
+Chúng tôi cung cấp một cổng tùy chỉnh `L1WETHGateway` cho mã thông báo ETH được bọc trên L1 và ghi lại địa chỉ cổng vào `L1GatewayRouter`. Việc gửi mã thông báo WETH hoạt động như sau.
+
+3. `L1WTHGateway` khóa mã thông báo WETH bằng cách chuyển chúng từ người gửi sang chính nó và mở mã thông báo WETH thành mã thông báo ETH gốc. Sau đó, mã thông báo ETH và `msg.value` (để trả phí chuyển tiếp) sẽ được gửi cùng nhau đến hợp đồng `L1ScrollMessenger`.
+4. `L1WETHHGateway` mã hóa thông báo gửi mã thông báo và chuyển tiếp nó đến `L1ScrollMessenger`.
+5. Giao dịch L2 tương ứng gọi hàm `L2ScrollMessenger.relayMessage` để hoàn tất khoản tiền gửi trên L2. Trong trường hợp gửi tiền bằng mã thông báo WETH, giao dịch sẽ gọi `L2WETHGateway.finalizeDepositERC20`.
+6. `L2WETHGateway` gói lại ETH đã gửi vào mã thông báo L2 WETH và chuyển nó đến địa chỉ người nhận trên L2.
+7. Nếu người dùng gọi `depositERC20AndCall` trên L1, `L2WETGateway` sẽ gọi hợp đồng L2 đích với dữ liệu bổ sung.
+
+## Gửi token ERC-721/ERC-1155
+
+Việc gửi mã thông báo ERC-721 hoặc ERC-1155 hoạt động rất giống với mã thông báo ERC20. Người ta có thể sử dụng các cổng `L1ERC721Gateway` hoặc `L1ERC1155Gateway` để gửi mã thông báo ERC-721 /ERC-1155 từ L1.
+
+```solidity
+function depositERC721(
+    address _token,
+    uint256 _tokenId,
+    uint256 _gasLimit
+) external payable;
+
+function depositERC721(
+    address _token,
+    address _to,
+    uint256 _tokenId,
+    uint256 _gasLimit
+) external payable;
+
+function depositERC1155(
+    address _token,
+    uint256 _tokenId,
+    uint256 _amount,
+    uint256 _gasLimit
+) external payable;
+
+function depositERC1155(
+    address _token,
+    address _to,
+    uint256 _tokenId,
+    uint256 _amount,
+    uint256 _gasLimit
+) external payable;
+```
+
+Để tạo điều kiện thuận lợi cho việc gửi số lượng lớn mã thông báo ERC-721 hoặc ERC-1155, chúng tôi cũng cung cấp chức năng gửi tiền theo lô trong hợp đồng `L1ERC721Gateway` và `L1ERC1155Gateway` thông qua các chức năng sau:
+
+```solidity
+function batchDepositERC721(
+    address _token,
+    uint256[] calldata _tokenIds,
+    uint256 _gasLimit
+) external payable;
+
+function batchDepositERC721(
+    address _token,
+    address _to,
+    uint256[] calldata _tokenIds,
+    uint256 _gasLimit
+) external payable;
+
+function batchDepositERC1155(
+    address _token,
+    uint256[] calldata _tokenIds,
+    uint256[] calldata _amounts,
+    uint256 _gasLimit
+) external payable;
+
+function batchDepositERC1155(
+    address _token,
+    address _to,
+    uint256[] calldata _tokenIds,
+    uint256[] calldata _amounts,
+    uint256 _gasLimit
+) external payable;
+```
+
+Hợp đồng đối tác L2 cho mã thông báo ERC-721 hoặc ERC-1155 là `L2ERC721Gateway` và `L2ERC1155Gateway`. Chúng được sử dụng để hoàn tất việc gửi tiền trên L2.

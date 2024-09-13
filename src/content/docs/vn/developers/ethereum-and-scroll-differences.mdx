@@ -1,0 +1,97 @@
+---
+section: developers
+date: Last Modified
+title: "Sự khác biệt giữa Ethereum và Scroll"
+lang: "vn"
+permalink: "developers/ethereum-and-scroll-differences"
+whatsnext: { "L1 & L2 Bridging": "/developers/l1-and-l2-bridging/" }
+excerpt: "Có một số chi tiết kỹ thuật khác nhau giữa EVM của mạng chính Ethereum và thiết kế được sửa đổi của Scroll cho zkEVM. Dưới đây bạn có thể thấy những khác biệt đó khi chúng tồn tại."
+---
+
+import Aside from "../../../../components/Aside.astro"
+
+Một số chi tiết kỹ thuật khác nhau giữa EVM của mạng chính Ethereum và thiết kế được sửa đổi của Scroll cho zkEVM. Dưới đây bạn có thể thấy những khác biệt đó khi chúng tồn tại trên Scroll và Scroll Sepolia.
+
+Đối với những người đóng góp nguồn mở và nhà xây dựng cơ sở hạ tầng, vui lòng liên hệ với nhóm của chúng tôi để được hỗ trợ thêm.
+
+<Aside type="tip" title="Don't Worry!">
+  Đối với nhà phát triển Solidity trung bình, những chi tiết này sẽ không ảnh hưởng đến trải nghiệm phát triển của bạn.
+</Aside>
+
+## EVM Opcodes
+
+| Opcode                      | Solidity equivalent | Scroll Behavior                                                                                            |
+| --------------------------- | ------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `BLOCKHASH`                 | `block.blockhash`   | Returns `keccak(chain_id \|\| block_number)` for the last 256 blocks.                                      |
+| `COINBASE`                  | `block.coinbase`    | Returns the pre-deployed fee vault contract address. See [Scroll Contracts](/developers/scroll-contracts). |
+| `DIFFICULTY` / `PREVRANDAO` | `block.difficulty`  | Returns 0.                                                                                                 |
+| `BASEFEE`                   | `block.basefee`     | Disabled.[^eip1559] If the opcode is encountered, the transaction will be reverted.                        |
+| `SELFDESTRUCT`              | `selfdestruct`      | Disabled. If the opcode is encountered, the transaction will be reverted.[^willadpot]                      |
+
+[^eip1559]:Hiện tại chúng tôi đã tắt EIP-1559 trên Scroll.
+[^willadpot]: Sẽ thay đổi để áp dụng giải pháp của Ethereum trong tương lai.
+
+## EVM Precompiles
+
+Các trình biên dịch trước `SHA2-256` (địa chỉ `0x2`), `RIPEMD-160` (địa chỉ `0x3`) và `blake2f` (địa chỉ `0x9`) hiện không được hỗ trợ. Các cuộc gọi đến các hợp đồng được biên dịch trước này sẽ hoàn nguyên. Chúng tôi dự định kích hoạt ba phần biên dịch trước này trong một đợt hard fork trong tương lai.
+
+Hỗ trợ biên dịch trước `modexp` nhưng chỉ hỗ trợ đầu vào có kích thước nhỏ hơn hoặc bằng 32 byte (tức là `u256`).
+
+Hỗ trợ biên dịch trước `ecPairing` nhưng số điểm (bộ, cặp) bị giới hạn ở 4, thay vì 6.
+
+Các trình biên dịch trước EVM khác đều được hỗ trợ: `ecRecover`, `identity`, `ecAdd`, `ecMul`.
+
+## State Account
+
+### **Additional Fields**
+
+Chúng tôi đã thêm hai trường trong đối tượng `StateAccount` hiện tại: `PoseidonCodehash` và `CodeSize`.
+
+```go
+type StateAccount struct {
+	Nonce    uint64
+	Balance  *big.Int
+	Root     common.Hash // merkle root of the storage trie
+	KeccakCodeHash []byte // still the Keccak codehash
+	// added fields
+	PoseidonCodeHash []byte // the Poseidon codehash
+	CodeSize uint64
+}
+```
+
+### **CodeHash**
+
+Liên quan đến vấn đề này, chúng tôi duy trì hai loại codehash cho mỗi bytecode hợp đồng: hàm băm Keccak và hàm băm Poseidon.
+
+`KeccakCodeHash` được giữ lại để duy trì khả năng tương thích cho `EXTCODEHASH`. `PoseidonCodeHash` được sử dụng để xác minh tính chính xác của mã byte được tải trong zkEVM, trong đó việc băm Poseidon hiệu quả hơn nhiều.
+
+### CodeSize
+
+Khi xác minh `EXTCODESIZE`, việc tải toàn bộ dữ liệu hợp đồng vào zkEVM sẽ tốn kém. Thay vào đó, chúng tôi lưu trữ quy mô hợp đồng trong bộ lưu trữ trong quá trình tạo hợp đồng. Bằng cách này, chúng tôi không cần tải mã - bằng chứng lưu trữ là đủ để xác minh mã hoạt động này.
+
+## Block Time
+
+Scroll nhằm mục đích đạt được thời gian chặn không đổi là 3 giây. Thời gian này ngắn hơn và nhất quán hơn 12 giây được sử dụng trong Ethereum trong điều kiện lý tưởng.
+
+Điều này đã được chọn vì hai lý do:
+
+- Thời gian chặn nhanh hơn, liên tục sẽ mang lại phản hồi nhanh hơn và trải nghiệm người dùng tốt hơn.
+- Khi chúng tôi tối ưu hóa các mạch zkEVM trong mạng thử nghiệm của mình, ngay cả khi chúng tôi duy trì giới hạn gas nhỏ hơn trên mỗi khối hoặc lô, chúng tôi vẫn có thể đạt thông lượng cao hơn Ethereum.
+
+## Future EIPs
+
+Chúng tôi theo dõi chặt chẽ tất cả các EIP mới nổi được Ethereum áp dụng và áp dụng chúng khi phù hợp. Nếu bạn muốn biết thông tin cụ thể hơn, hãy liên hệ tại [Diễn đàn cộng đồng của chúng tôi](https://community.scroll.io) hoặc trên [Scroll Discord](https://discord.gg/scroll).
+
+
+## Transaction Fees
+
+Phí được tính cho các giao dịch Scroll bao gồm hai phần:
+
+- **Phí gas L2:** tương tự như L1, số tiền phí thực hiện L2 bằng `L2_gas_price * L2_gas_used`, bao gồm các chi phí sau:
+- Chi phí thực hiện và lưu trữ trình tự L2 - Chi phí xác minh và quyết toán bằng chứng hợp lệ trên L1 
+- Chi phí chứng minh
+
+- **Phí dữ liệu L1:** phí bổ sung ngoài phí gas L2. Phí dữ liệu L1 chỉ được tính cho các giao dịch do L2 thực hiện, không tính cho các giao dịch do L1 thực hiện. Phí này bao gồm chi phí gửi dữ liệu tới L1 để đảm bảo tính khả dụng của dữ liệu. Vì chúng tôi tổng hợp dữ liệu tx lên L1 nên phí tổng hợp L1 được tính dựa trên kích thước của dữ liệu tx.
+
+Để biết thêm thông tin, hãy xem [Phí giao dịch trên Scroll](/developers/transaction-fees-on-scroll).
+---

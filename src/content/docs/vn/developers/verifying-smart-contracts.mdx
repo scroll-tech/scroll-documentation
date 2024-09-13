@@ -1,0 +1,131 @@
+---
+section: developers
+date: Last Modified
+title: "Verifying Smart Contracts"
+lang: "vn"
+permalink: "developers/verifying-smart-contracts"
+whatsnext: { "Scroll Contracts": "/developers/scroll-contracts" }
+excerpt: "Dễ dàng xác minh hợp đồng thông minh của bạn với công cụ dành cho nhà phát triển được Scroll hỗ trợ"
+---
+
+import Aside from "../../../../components/Aside.astro"
+
+import ClickToZoom from "../../../../components/ClickToZoom.astro"
+
+import verify1 from "./_images/verify1.png"
+
+import CodeSample from "../../../../components/CodeSample/CodeSample.astro"
+
+Sau khi triển khai hợp đồng thông minh, điều quan trọng là phải xác minh mã của bạn trên trình khám phá khối. Việc này có thể được thực hiện theo cách tự động bằng cách sử dụng công cụ dành cho nhà phát triển của bạn hoặc Giao diện người dùng web.
+
+## Sử dụng Công cụ dành cho nhà phát triển
+
+Hầu hết các công cụ hợp đồng thông minh đều có plugin để xác minh hợp đồng của bạn một cách dễ dàng trên Etherscan. Blockscout hỗ trợ các API xác minh hợp đồng của Etherscan, do đó, việc sử dụng các công cụ này bằng cách sử dụng API của một trong những trình khám phá khối này thật đơn giản.
+
+| Network    | Scroll | Scroll Sepolia                                  |
+| ---------- | -------------------------------- | ---------------------------------------- |
+| Scrollscan | https://api.scrollscan.com/api   | https://api-sepolia.scrollscan.com/api   |
+| Blockscout | https://blockscout.scroll.io/api | https://sepolia-blockscout.scroll.io/api |
+
+<Aside type="tip" title="Using the Scrollscan API">
+Khi sử dụng Scrollscan, bạn sẽ cần [đăng ký tài khoản](https://scrollscan.com/register) và tạo khóa API. Khóa tương tự có thể được sử dụng cho cả Scroll Sepolia và mainnet. Sau khi tạo khóa API, vui lòng đợi vài phút trước khi nó có hiệu lực.
+</Aside>
+
+### Hardhat
+
+Sửa đổi `hardhat.config.ts` để trỏ đến RPC của Scroll và API block explorer. Đối với Blockscout, bắt buộc phải có giá trị `apiKey` giả, nhưng mọi thứ đều hoạt động với giá trị của nó. Đối với Scrollscan, hãy sử dụng khóa API của riêng bạn.
+
+Ví dụ: nếu bạn đang sử dụng Scroll Sepolia trên Blockscout, cấu hình của bạn sẽ như thế này:
+```javascript
+...
+
+const config: HardhatUserConfig = {
+  ...
+  networks: {
+    scrollSepolia: {
+      url: 'https://sepolia-rpc.scroll.io' || '',
+      accounts:
+        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    },
+  },
+  etherscan: {
+    apiKey: {
+      scrollSepolia: 'abc',
+    },
+    customChains: [
+      {
+        network: 'scrollSepolia',
+        chainId: 534351,
+        urls: {
+          apiURL: 'https://sepolia-blockscout.scroll.io/api',
+          browserURL: 'https://sepolia-blockscout.scroll.io/',
+        },
+      },
+    ],
+  },
+}
+
+...
+```
+
+Bây giờ bạn có thể xác minh hợp đồng thông minh bằng cách chạy lệnh sau.
+
+```solidity
+npx hardhat verify --network scrollSepolia <contract address> <space separated constructor parameters>
+```
+
+Ví dụ: đây là cách một hợp đồng thông minh nhận hai tham số uint trong hàm tạo:
+
+```solidity
+npx hardhat verify --network scrollSepolia 0xD9880690bd717189cC3Fbe7B9020F27fae7Ac76F 123 456
+```
+
+<Aside type="danger" title="Warning">
+Bạn có thể nhận được lỗi cho biết `etherscan.apiKey.trim không phải là một hàm` . Nếu vậy thì bạn cần cập nhật `@nomiclabs/hardhat-etherscan` để có thể hỗ trợ các chuỗi tùy chỉnh. Hãy thử chạy bản cập nhật `npm update @nomiclabs/hardhat-etherscan`
+</Aside>
+
+### Foundry
+
+Khi sử dụng Foundry, lệnh `verify-contract` giúp tự động hóa quá trình xác minh hợp đồng. Nếu hợp đồng của bạn có các đối số hàm tạo, bạn có thể chỉ định các đối số này ở dạng được mã hóa ABI bằng tùy chọn `--constructor-args`. Ví dụ: nếu hàm tạo của bạn nhận hai biến `uint256`:
+
+```bash
+ --constructor-args $(cast abi-encode "constructor(uint256,uint256)" 0 7)
+```
+
+Hãy tham khảo [Tài liệu của Foundry](https://book.getfoundry.sh/reference/forge/forge-verify-contract) để biết thêm các tùy chọn mà bạn có thể chỉ định.
+
+#### Scrollscan
+
+```bash
+forge verify-contract <contract address> <contract name> \
+  --verifier-url https://api-sepolia.scrollscan.com/api \
+  --etherscan-api-key <your Scrollscan API key> \
+  --constructor-args <your constructor arguments>
+```
+<Aside type="caution" title="Caution">
+Không chỉ định ID chuỗi.
+</Aside>
+
+#### Blockscout
+
+Chỉ định nhà cung cấp xác minh là `blockscout`.
+
+##### Scroll 
+```bash
+forge verify-contract <contract address> <contract name> \
+  --verifier-url https://blockscout.scroll.io/api\? \
+  --verifier blockscout \
+  --constructor-args <your constructor arguments>  
+```
+
+##### Scroll Sepolia
+```bash
+forge verify-contract <contract address> <contract name> \
+  --verifier-url https://sepolia-blockscout.scroll.io/api\? \
+  --verifier blockscout \
+  --constructor-args <your constructor arguments>
+```
+
+<Aside type="danger" title="Warning">
+ Lưu ý rằng chúng tôi thêm `\?` vào cuối URL của người xác minh, nếu không việc xác minh sẽ không thành công. (Thử nghiệm lần cuối trên forge v0.2.0).
+</Aside>

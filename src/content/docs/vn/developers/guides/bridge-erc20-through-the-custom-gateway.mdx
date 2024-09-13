@@ -1,0 +1,348 @@
+---
+section: developers
+date: Last Modified
+title: "Kết nối ERC20 thông qua Cổng Tùy chỉnh"
+lang: "vn"
+permalink: "developers/guides/bridge-erc20-through-the-custom-gateway"
+excerpt: "Hướng dẫn này sẽ hướng dẫn cách sử dụng cầu của Scroll cho các token ERC20 cần chức năng tùy chỉnh bằng cách sử dụng Cổng Tùy chỉnh."
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+Hướng dẫn này sẽ hướng dẫn cách sử dụng cầu của Scroll cho các token ERC20 cần chức năng tùy chỉnh bằng cách sử dụng Cổng Tùy chỉnh.
+
+<Aside type="tip" title="Bạn có cần logic tùy chỉnh không?">
+  Hãy nhớ, đối với nhiều ngữ cảnh, bạn sẽ không cần sử dụng Cổng Tùy chỉnh để thêm tính năng bổ sung cho token của mình hoặc cho
+  logic cầu của nó. Xem bài viết về [Cầu Token ETH và ERC20](/developers/l1-and-l2-bridging/eth-and-erc20-token-bridge#deposit-eth-and-erc20-tokens-from-l1) để biết thêm thông tin.
+</Aside>
+
+## Bước 1: Khởi chạy một token trên Sepolia
+
+Đầu tiên, chúng ta cần một token để cầu. Không cần thiết phải có một triển khai ERC20 cụ thể để một token tương thích với L2. Nếu bạn đã có một token, hãy bỏ qua bước này. Nếu bạn muốn triển khai một token mới, hãy sử dụng hợp đồng ERC20 đơn giản sau đây của một token ERC20 đơn giản mà tạo ra 1 triệu token cho người triển khai khi được khởi chạy.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.16;
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+
+contract L1Token is ERC20 {
+  constructor() ERC20("My Token L1", "MTL1") {
+    _mint(msg.sender, 1_000_000 ether);
+  }
+}
+```
+
+## Bước 2: Khởi chạy mã thông báo tương ứng trên mạng thử nghiệm Scroll Sepolia
+
+Tiếp theo, bạn sẽ khởi chạy một mã thông báo tương ứng với mã thông báo này trên Scroll, đó sẽ đại diện cho mã thông báo gốc trên Sepolia. Mã thông báo này có thể triển khai logic tùy chỉnh để phù hợp với mã thông báo L1 hoặc thậm chí thêm các tính năng bổ sung vượt quá các tính năng của mã thông báo L1.
+
+Để thực hiện điều này:
+
+- Mã thông báo phải triển khai giao diện `IScrollStandardERC20` để tương thích với cầu.
+- Hợp đồng phải cung cấp địa chỉ cổng và địa chỉ mã thông báo tương ứng (mã thông báo L1 chúng ta vừa khởi chạy) dưới các hàm `gateway()` và `counterpart()`. Nó cũng phải cho phép cổng L2 gọi các hàm `mint()` và `burn()` của mã thông báo, được gọi khi một mã thông báo được gửi và rút khỏi.
+
+Dưới đây là một ví dụ hoàn chỉnh về một mã thông báo tương thích với cầu. Trong hàm khởi tạo, bạn sẽ chuyển địa chỉ Cổng Tùy chỉnh chính thức của Scroll (`0x058dec71E53079F9ED053F3a0bBca877F6f3eAcf`) và địa chỉ của mã thông báo được khởi chạy trên Sepolia.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.16;
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@scroll-tech/contracts@0.1.0/libraries/token/IScrollERC20Extension.sol";
+
+contract L2Token is ERC20, IScrollERC20Extension {
+  // Chúng ta lưu trữ cổng và địa chỉ mã thông báo L1 để cung cấp các hàm `gateway()` và `counterpart()` cần thiết từ giao diện ERC20 tiêu chuẩn của Scroll
+  address _gateway;
+  address _counterpart;
+
+  // Trong hàm khởi tạo, chúng ta chuyển địa chỉ Cổng L2 Tùy chỉnh và địa chỉ mã thông báo L1 như là các tham số
+  constructor(address gateway_, address counterpart_) ERC20("My Token L2", "MTL2") {
+    _gateway = gateway_;
+    _counterpart = counterpart_;
+  }
+
+  function gateway() public view returns (address) {
+    return _gateway;
+  }
+
+  function counterpart() external view returns (address) {
+    return _counterpart;
+  }
+
+  // Chúng ta cho phép việc tạo mã thông báo chỉ cho Cổng để nó có thể tạo mới mã thông báo khi được cầu từ L1
+  function transferAndCall(address receiver, uint256 amount, bytes calldata data) external returns (bool success) {
+    transfer(receiver, amount);
+    data;
+    return true;
+  }
+
+  // Chúng ta chỉ cho phép việc tạo mã thông báo cho Cổng để nó có thể tạo mới mã thông báo khi được cầu từ L1
+  function mint(address _to, uint256 _amount) external onlyGateway {
+    _mint(_to, _amount);
+  }
+
+  // Tương tự như việc tạo mã thông báo, Cổng cũng có thể đốt mã thông báo khi được cầu từ L2 đến L1
+  function burn(address _from, uint256 _amount) external onlyGateway {
+    _burn(_from, _amount);
+  }
+
+  modifier onlyGateway() {
+    require(gateway() == _msgSender(), "Ownable: caller is not the gateway");
+    _;
+  }
+}
+```
+
+## Bước 3: Thêm mã thông báo vào Cầu Scroll
+
+Bạn cần liên hệ với nhóm Scroll để thêm mã thông báo vào hợp đồng `L2CustomERC20Gateway` trên Scroll và hợp đồng `L1CustomERC20Gateway` trên L1. Ngoài ra, làm theo hướng dẫn trên [danh sách mã thông báo](https://github.com/scroll-tech/token-list) để thêm mã thông báo của bạn vào giao diện chính thức của cầu Scroll.
+
+## Bước 4: Gửi tiền
+
+Sau khi mã thông báo của bạn được nhóm Scroll phê duyệt, bạn sẽ có thể gửi tiền từ L1. Để làm điều này, bạn phải trước tiên phê duyệt địa chỉ hợp đồng `L1CustomGateway` trên Sepolia (`0x31C994F2017E71b82fd4D8118F140c81215bbb37`). Sau đó, gửi tiền bằng cách gọi hàm `depositERC20` từ hợp đồng `L1CustomGateway`. Điều này có thể được thực hiện bằng [giao diện cầu của chúng tôi](https://scroll.io/bridge), [Etherscan Sepolia](https://sepolia.etherscan.io/address/0x31C994F2017E71b82fd4D8118F140c81215bbb37#writeProxyContract), hoặc một hợp đồng thông minh.
+
+## Bước 5: Rút tiền
+
+Bạn sẽ tuân theo các bước tương tự để gửi lại tiền từ L2 đến L1. Đầu tiên, phê duyệt địa chỉ `L2CustomGateway` (`0x058dec71E53079F9ED053F3a0bBca877F6f3eAcf`) và sau đó rút tiền bằng cách gọi hàm `withdrawERC20` từ hợp đồng `L2CustomGateway`.
+
+## Phương pháp Thay thế: Khởi chạy và thiết lập một hợp đồng cổng L1 tùy chỉnh
+
+Thêm mã thông báo của bạn vào cầu chính thức của Scroll (như đã mô tả ở trên) là phương pháp được khuyến nghị để kết nối các mã thông báo tới và từ Scroll. Phương pháp này sẽ làm cho chúng dễ dàng được tìm thấy và an toàn hơn cho người giữ. Tuy nhiên, điều này sẽ đòi hỏi sự phê duyệt từ nhóm Scroll. Nếu bạn muốn khởi chạy một mã thông báo tùy chỉnh mà không cần thông qua quy trình phê duyệt chính thức, bạn có thể khởi chạy một cổng tùy chỉnh một cách tự do. Để làm điều này, bạn sẽ cần triển khai một hợp đồng `L1CustomERC20Gateway` trên L1 và một `L2CustomERC20Gateway` trên L2.
+
+### Khởi chạy một Cổng L1 Tùy chỉnh
+
+Hãy bắt đầu bằng cách triển khai hợp đồng sau trên Sepolia.
+
+```solidity
+// SPDX-License-Identifier: MIT
+
+// Mặc dù có thể sử dụng các phiên bản Solidity khác, chúng tôi khuyến nghị sử dụng phiên bản 0.8.16 vì đó là nơi các hợp đồng của chúng tôi đã được kiểm định
+pragma solidity =0.8.16;
+
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+import { IL2ERC20Gateway } from "@scroll-tech/contracts@0.1.0/L2/gateways/IL2ERC20Gateway.sol";
+import { IL1ScrollMessenger } from "@scroll-tech/contracts@0.1.0/L1/IL1ScrollMessenger.sol";
+import { IL1ERC20Gateway } from "@scroll-tech/contracts@0.1.0/L1/gateways/IL1ERC20Gateway.sol";
+
+import { ScrollGatewayBase } from "@scroll-tech/contracts@0.1.0/libraries/gateway/ScrollGatewayBase.sol";
+import { L1ERC20Gateway } from "@scroll-tech/contracts@0.1.0/L1/gateways/L1ERC20Gateway.sol";
+
+// Hợp đồng này sẽ được sử dụng để gửi và nhận mã thông báo từ L2
+contract L1CustomERC20Gateway is L1ERC20Gateway, Ownable {
+  // Mã thông báo phải được ánh xạ để "liên kết" chúng với một mã thông báo đại diện cho mã thông báo gốc trên mạng gốc. Sự kiện này sẽ được phát ra khi ánh xạ mã thông báo cho mã thông báo ERC20 được cập nhật.
+  event UpdateTokenMapping(address indexed l1Token, address indexed oldL2Token, address indexed newL2Token);
+
+  mapping(address => address) public tokenMapping;
+
+  constructor() {}
+
+  // Hàm này phải được gọi một lần sau khi cả hợp đồng L1 và L2 được triển khai
+  function initialize(address _counterpart, address _router, address _messenger) external {
+    require(_router != address(0), "zero router address");
+
+    ScrollGatewayBase._initialize(_counterpart, _router, _messenger);
+  }
+
+  /// Hàm này trả về địa chỉ của mã thông báo trên L2
+  function getL2ERC20Address(address _l1Token) public view override returns (address) {
+    return tokenMapping[_l1Token];
+  }
+
+  // Cập nhật ánh xạ mã thông báo để "liên kết" một mã thông báo với một mã thông báo khác trên mạng khác
+  function updateTokenMapping(address _l1Token, address _l2Token) external onlyOwner {
+    require(_l2Token != address(0), "token address cannot be 0");
+
+    address _oldL2Token = tokenMapping[_l1Token];
+    tokenMapping[_l1Token] = _l2Token;
+
+    emit UpdateTokenMapping(_l1Token, _oldL2Token, _l2Token);
+  }
+
+  // Gọi lại được gọi trước khi một mã thông báo được rút khỏi trên L1
+  function _beforeFinalizeWithdrawERC20(
+    address _l1Token,
+    address _l2Token,
+    address,
+    address,
+    uint256,
+    bytes calldata
+  ) internal virtual override {
+    require(msg.value == 0, "nonzero msg.value");
+    require(_l2Token != address(0), "token address cannot be 0");
+    require(_l2Token == tokenMapping[_l1Token], "l2 token mismatch");
+  }
+
+  // Mã thông báo đã được "hủy" hoặc bị loại bỏ. Gọi lại này được gọi trước khi điều đó xảy ra.
+  function _beforeDropMessage(address, address, uint256) internal virtual override {
+    require(msg.value == 0, "nonzero msg.value");
+  }
+
+  // Hàm nội bộ chứa logic gửi tiền
+  function _deposit(
+    address _token,
+    address _to,
+    uint256 _amount,
+    bytes memory _data,
+    uint256 _gasLimit
+  ) internal virtual override nonReentrant {
+    address _l2Token = tokenMapping[_token];
+    require(_l2Token != address(0), "no corresponding l2 token");
+
+    // 1. Chuyển mã thông báo vào hợp đồng này.
+    address _from;
+    (_from, _amount, _data) = _transferERC20In(_token, _amount, _data);
+
+    // 2. Tạo ra tin nhắn được chuyển đến L2CustomERC20Gateway.
+    bytes memory _message = abi.encodeCall(
+      IL2ERC20Gateway.finalizeDepositERC20,
+      (_token, _l2Token, _from, _to, _amount, _data)
+    );
+
+    // 3. Gửi tin nhắn đến L1ScrollMessenger.
+    IL1ScrollMessenger(messenger).sendMessage{ value: msg.value }(counterpart, 0, _message, _gasLimit, _from);
+
+    emit DepositERC20(_token, _l2Token, _from, _to, _amount, _data);
+  }
+}
+```
+
+### Khởi chạy một Cổng L2 Tùy chỉnh
+
+Bây giờ hãy triển khai hợp đồng đối ứng trên Scroll.
+
+```solidity
+// SPDX-License-Identifier: MIT
+
+pragma solidity =0.8.16;
+
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+import "@scroll-tech/contracts@0.1.0/L2/gateways/L2ERC20Gateway.sol";
+import { IL2ScrollMessenger } from "@scroll-tech/contracts@0.1.0/L2/IL2ScrollMessenger.sol";
+import { IL1ERC20Gateway } from "@scroll-tech/contracts@0.1.0/L1/gateways/IL1ERC20Gateway.sol";
+import { ScrollGatewayBase } from "@scroll-tech/contracts@0.1.0/libraries/gateway/ScrollGatewayBase.sol";
+import "@scroll-tech/contracts@0.1.0/libraries/token/IScrollERC20Extension.sol";
+
+import { IL2ERC20Gateway } from "@scroll-tech/contracts@0.1.0/L2/gateways/IL2ERC20Gateway.sol";
+
+// Hợp đồng này sẽ được sử dụng để gửi và nhận mã thông báo từ L1
+contract L2CustomERC20Gateway is L2ERC20Gateway, ScrollGatewayBase, Ownable {
+  event UpdateTokenMapping(address indexed l2Token, address indexed oldL1Token, address indexed newL1Token);
+
+  // solhint-disable-next-line var-name-mixedcase
+  mapping(address => address) public tokenMapping;
+
+  constructor() {}
+
+  // Tương tự như với phiên bản L1 của Cổng, điều này phải được gọi một lần sau khi cả hai cổng L1 và L2 được triển khai
+  function initialize(address _counterpart, address _router, address _messenger) external {
+    require(_router != address(0), "zero router address");
+
+    ScrollGatewayBase._initialize(_counterpart, _router, _messenger);
+  }
+
+  /// Trả về địa chỉ của mã thông báo đại diện cho mã thông báo trên L2
+  function getL1ERC20Address(address _l2Token) external view override returns (address) {
+    return tokenMapping[_l2Token];
+  }
+
+  // Hàm này trả về địa chỉ của mã thông báo trên L2
+  function getL2ERC20Address(address) public pure override returns (address) {
+    revert("unimplemented");
+  }
+
+  // Hàm này hoàn tất việc gửi tiền mã thông báo trên L2 khi giao dịch gửi tiền không hoàn tất do không đủ gas được gửi từ L1
+  function finalizeDepositERC20(
+    address _l1Token,
+    address _l2Token,
+    address _from,
+    address _to,
+    uint256 _amount,
+    bytes calldata _data
+  ) external payable override onlyCallByCounterpart nonReentrant {
+    require(msg.value == 0, "nonzero msg.value");
+    require(_l1Token != address(0), "token address cannot be 0");
+    require(_l1Token == tokenMapping[_l2Token], "l1 token mismatch");
+
+    IScrollERC20Extension(_l2Token).mint(_to, _amount);
+
+    _doCallback(_to, _data);
+
+    emit FinalizeDepositERC20(_l1Token, _l2Token, _from, _to, _amount, _data);
+  }
+
+  // Giống như trong phiên bản L1 của hợp đồng này, hàm này "liên kết" một mã thông báo với một mã thông báo trên mạng khác
+  function updateTokenMapping(address _l2Token, address _l1Token) external onlyOwner {
+    require(_l1Token != address(0), "token address cannot be 0");
+
+    address _oldL1Token = tokenMapping[_l2Token];
+    tokenMapping[_l2Token] = _l1Token;
+
+    emit UpdateTokenMapping(_l2Token, _oldL1Token, _l1Token);
+  }
+
+  // Hàm nội bộ chứa logic rút tiền
+  function _withdraw(
+    address _token,
+    address _to,
+    uint256 _amount,
+    bytes memory _data,
+    uint256 _gasLimit
+  ) internal virtual override nonReentrant {
+    address _l1Token = tokenMapping[_token];
+    require(_l1Token != address(0), "no corresponding l1 token");
+
+    require(_amount > 0, "withdraw zero amount");
+
+    // 1. Rút mã thông báo.
+    IScrollERC20Extension(_token).burn(_from, _amount);
+
+    // 2. Tạo ra tin nhắn được chuyển đến L1StandardERC20Gateway.
+    bytes memory _message = abi.encodeCall(
+      IL1ERC20Gateway.finalizeWithdrawERC20,
+      (_l1Token, _token, _from, _to, _amount, _data)
+    );
+
+    // 3. Gửi tin nhắn đến L2ScrollMessenger
+    IL2ScrollMessenger(messenger).sendMessage{ value: msg.value }(counterpart, 0, _message, _gasLimit);
+
+    emit WithdrawERC20(_l1Token, _token, _from, _to, _amount, _data);
+  }
+}
+```
+
+### Thiết lập hợp đồng Cổng trên Sepolia
+
+Sau khi triển khai các hợp đồng, gọi các hàm sau để khởi tạo các hợp đồng và liên kết chúng với các mã thông báo tương ứng và cổng ở phía bên kia của cầu.
+
+Đầu tiên, gọi hàm `initialize` trên hợp đồng `MyL1Gateway` với các tham số sau:
+
+- `_counterpart`: Địa chỉ của `MyL2Gateway` chúng ta vừa triển khai trên Scroll.
+- `_router`: Đặt là `0x13FBE0D0e5552b8c9c4AE9e2435F38f37355998a`, hợp đồng `L1GatewayRouter` trên Sepolia.
+- `_messenger`: Đặt là `0x50c7d3e7f7c656493D1D76aaa1a836CedfCBB16A`, hợp đồng `L1ScrollMessenger` trên Sepolia.
+
+Một cổng tùy chỉnh có thể chứa nhiều cầu mã thông báo. Trong trường hợp này, chúng ta chỉ cho phép cầu giữa L1Token và L2Token bằng cách gọi hàm `updateTokenMapping` trên hợp đồng `MyL1Gateway` với các tham số sau:
+
+- `_l1Token`: Địa chỉ của hợp đồng `L1Token` chúng ta đã triển khai trước đó trên Sepolia.
+- `_l2Token`: Địa chỉ của hợp đồng `L2Token` chúng ta đã triển khai trước đó trên Scroll.
+
+### Thiết lập hợp đồng Cổng trên Scroll
+
+Bây giờ chúng ta chuyển sang mạng Scroll và khởi tạo `MyL2Gateway`, tuân theo các bước tương tự.
+
+Đầu tiên, gọi hàm `initialize` từ `MyL2Gateway`:
+
+- `_counterpart`: Địa chỉ của `MyL1Gateway` chúng ta vừa triển khai trên Sepolia.
+- `_router`: Đặt là `0x9aD3c5617eCAa556d6E166787A97081907171230`, hợp đồng `L2GatewayRouter` trên Scroll.
+- `_messenger`: Đặt là `0xBa50f5340FB9F3Bd074bD638c9BE13eCB36E603d`, hợp đồng `L2ScrollMessenger` trên Scroll.
+
+Tiếp theo, gọi `updateTokenMapping` trên hợp đồng `MyL2Gateway`:
+
+- `_l2Token`: Địa chỉ của hợp đồng `L2Token` chúng ta đã triển khai trước đó trên Scroll.
+- `_l1Token`: Địa chỉ của hợp đồng `L1Token` chúng ta đã triển khai trước đó trên Sepolia.
+
+### Cầu mã thông báo
+
+Bây giờ chúng ta có thể gọi `depositERC20` từ `MyL1Gateway` và `withdrawERC20` từ `MyL2Gateway` giống như với cầu chính thức của Scroll.
