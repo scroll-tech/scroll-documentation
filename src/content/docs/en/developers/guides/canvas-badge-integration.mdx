@@ -22,7 +22,7 @@ We are thrilled to have you join us in building unique badges on Scroll Canvas, 
 
 Each Canvas is a `Profile` smart contract, minted by the users through the `ProfileRegistry` contract on Scroll. Canvas is not transferrable and unique to each wallet.
 
-Canvas is an open onchain profile database of user identities and achievements ([check out dashboard built by community on Dune](https://dune.com/queries/3930803/6609287)).
+Canvas is an open onchain profile database of user identities and achievements ([check out dashboard built by community on Dune](https://dune.com/soodoo/scroll-marks)).
 
 ### Badge
 
@@ -51,7 +51,7 @@ Badge issuance and deployment of the contract is fully permissionless. Please fo
 For Canvas and badge questions, please join [Scroll dev support channel](https://discord.com/channels/853955156100907018/1028102371894624337)
 </Aside>
 
-## Step 1: Badge Design Guidelines `Design`
+## Step 1 `Design`: Badge Design Guidelines 
 
 <Columns>
     <Fragment slot="1"><ClickToZoom src={BadgeDetails} alt="BadgeDetails" caption="Example of badge detail page"/></Fragment>
@@ -82,7 +82,7 @@ On the badge details page, there's a button to **visit your official website**. 
 Since **badges are permissionless**, Scroll Foundation may not troubleshoot individual third-party badges or answer eligibility questions. Provide ample resources for your community to mint badges smoothly. We ask that you share **Support URL** in Badge Listing process with enough resources (blog, how-to threads, TG/Discord support channel link).
 </Aside>
 
-## Step 2: Deploying Badges & Go Live `Engineering`
+## Step 2 `Engineering`: Deploying Badges & Go Live 
 
 <Aside type="tip" title="Deployment Resources">
 - [Canvas Dev Doc (contract included)](https://github.com/scroll-tech/canvas-contracts)
@@ -152,7 +152,7 @@ Since **badges are permissionless**, Scroll Foundation may not troubleshoot indi
 4. **Access Readiness**: Ensure badge contract address implements `defaultTokenURI`, allowing retrieval of default display data (`name, image, description`) via `bytes32(0)` with informative name and description. 
 5. **Set up support**: Prepare a channel for your badge holders can find you for support, get the url to join that channel ready.
 
-## Step 3: Sanity Check `Test`
+## Step 3 `Test`: Sanity Check 
 
 1. Please visit `https://scroll.io/canvas/badge-contract/{{badgeContractAddress}}` to ensure that the badge is functioning correctly.
     - For `badgeTokenURI` link returned, ensure correct cross-origin configuration
@@ -186,7 +186,7 @@ At this stage, your Badge is live on Scroll Canvas. Badge launch is permissionle
 Regularly monitor server logs to stay informed of any potential issues, especially during the first 48 hours when the badge is live.
 </Aside>
 
-## Step 4: Reveal Your Badge `Announce`
+## Step 4 `Announce`: Reveal Your Badge 
 
 1. To get the word out faster, you are encouraged to embed badge mint and discovery in your product!  Scroll provides an example code for anthropomorphic "assistants" to pop up when the user meets the badge minting requirements.
     
@@ -201,10 +201,10 @@ Regularly monitor server logs to stay informed of any potential issues, especial
 3. Monitor your community / support channel for user feedback. If there is any Canvas backend related issues, please reach out to Scroll Discord channel.
 
 <ToggleElement anchor="reference-cors">
-    <div slot="title">Extra Boost: Getting Featured on [Discover Badges Page](https://scroll.io/canvas-and-badges)</div>
+    <div slot="title">Get listed on [Canvas & Badges] (https://scroll.io/canvas-and-badges)</div>
 
     <Aside>
-        You can display **all of the badges** in your own product permissionlessly. Discover Badges page serves as an additional channel for your badges to get promoted.
+        You can display **all of the badges** in your own product permissionlessly. Discover Badges page serves as an additional discovery channel for your badges.
     </Aside>
     <Aside type="caution">
         Please be careful when submitting your application. We’re eager to introduce useful and creative badges for the Scroll ecosystem. The Scroll team is thoroughly reviewing each badge listing, which means the process might take a bit longer. Thank you for your patience.
