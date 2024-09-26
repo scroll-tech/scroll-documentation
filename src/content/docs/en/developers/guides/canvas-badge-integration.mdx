@@ -26,7 +26,7 @@ Canvas is an open onchain profile database of user identities and achievements (
 
 ### Badge
 
-**Badges** are attestations of identities, achievements and traits verified through the [Ethereum Attestation Service](https://docs.attest.sh/docs/welcome), issued **permissionlessly by different ecosystem projects**. Badges are wallet-bound and non-transferable. **Badges facilitate interactions between ecosystem projects and users.**
+**Badges** are attestations of identities, achievements and traits verified through the [Ethereum Attestation Service](https://scroll.easscan.org/learn/scroll), issued **permissionlessly by different ecosystem projects**. Badges are wallet-bound and non-transferable. **Badges facilitate interactions between ecosystem projects and users**. 
 
 Developers can issue badges in three methods:
 
@@ -48,7 +48,7 @@ Developers can design badges in two ways:
 Badge issuance and deployment of the contract is fully permissionless. Please follow the steps below to issue a Badge for your project.
 
 <Aside type="note" title="Join Developer Support Channel">
-For Canvas and badge questions, please join [Scroll dev support channel](https://discord.com/channels/853955156100907018/1028102371894624337)
+For Canvas and badge questions, please join [Scroll dev support channel](https://discord.com/invite/scroll)
 </Aside>
 
 ## Step 1 `Design`: Badge Design Guidelines 
@@ -72,7 +72,7 @@ For Canvas and badge questions, please join [Scroll dev support channel](https:/
 | Description       | Brief description of the *purpose* of this badge and *who is eligible* |
 | Structure         | *One single attribute*<br/>  *Multiple Badges with levels* trigged by different actions and traits |
 | Category          | *Achievement*: tasks you have done. e.g. Scroll Origin NFTs, tasks completion badge <br/> *Identities*: who you are. e.g. Ethereum year, GItcoin passport, NFT community badge |
-| Issuance method   | *Fully permissionless*: meaning your badge can be automatically issued by checking smart contract conditions <br/> *Gifted:* Badges can also be issues with no user interaction <br/> **Backend-authorized**: requires APIs to enable eligibility criteria ([API requirements](https://www.notion.so/Badge-APIs-95890d7ca14944e2a6d34835ceb6b914?pvs=21)) |
+| Issuance method   | *Fully permissionless*: meaning your badge can be automatically issued by checking smart contract conditions <br/> *Gifted*: Badges can also be issues with no user interaction, requires APIs <br/> *Backend-authorized*: requires APIs to enable eligibility criteria |
 | Support link      | **Support channel link** to your Discord/Telegram group |
 
 <Aside>
@@ -146,8 +146,6 @@ Since **badges are permissionless**, Scroll Foundation may not troubleshoot indi
             // http code is not 200
             ```
     </ToggleElement>
-
-    More details: [Badge APIs] {/* TODO: where to put this extra page */}
     
 4. **Access Readiness**: Ensure badge contract address implements `defaultTokenURI`, allowing retrieval of default display data (`name, image, description`) via `bytes32(0)` with informative name and description. 
 5. **Set up support**: Prepare a channel for your badge holders can find you for support, get the url to join that channel ready.
@@ -193,15 +191,17 @@ Regularly monitor server logs to stay informed of any potential issues, especial
     <aside>
     📖
     
-    [**Scroll Canvas - A**nthropomorphic "assistants" **Integration Guide for Developers**](https://www.notion.so/Scroll-Canvas-Anthropomorphic-assistants-Integration-Guide-for-Developers-2712f7a91af042c0a2d145af804bab51?pvs=21)
+    [**Scroll Canvas - A**nthropomorphic "assistants" **Integration Guide for Developers**](https://github.com/scroll-tech/frontends/blob/mainnet/docs/canvas.md)
     
     </aside>
     
 2. Share on social media about your badge launch and the eligibility criteria. Use `#BadgeonScroll` and tag `@Scroll_ZKP` to boost more visibility.
 3. Monitor your community / support channel for user feedback. If there is any Canvas backend related issues, please reach out to Scroll Discord channel.
 
+---
+
 <ToggleElement anchor="reference-cors">
-    <div slot="title">Get listed on [Canvas & Badges] (https://scroll.io/canvas-and-badges)</div>
+    <div slot="title">Get listed on [Canvas & Badges](https://scroll.io/canvas-and-badges)</div>
 
     <Aside>
         You can display **all of the badges** in your own product permissionlessly. Discover Badges page serves as an additional discovery channel for your badges.
