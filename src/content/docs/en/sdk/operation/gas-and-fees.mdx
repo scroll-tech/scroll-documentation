@@ -1,0 +1,72 @@
+---
+section: sdk
+title: "Gas & Fee Management in Scroll SDK"
+lang: "en"
+permalink: "sdk/operation/gas-and-fees"
+excerpt: "Learn more about gas and fee management in Scroll SDK"
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+Scroll SDK provides a comprehensive gas and fee management system to ensure the efficient operation of the network. This section provides an overview of the gas and fee management tools and best practices for using them.
+
+## Configuring Transaction Fees on an SDK Chain
+
+Transaction fees for users on Scroll are split between an L2 Fee and an L1 Fee. For more information on how transaction fees, see [Transaction Fees on Scroll](/en/developers/transaction-fees-on-scroll).
+
+### Configuring L2 Fees
+
+Most L2 fees are set as a minimum "floor", beyond which normal mechanisms for EIP1559 adjustment apply. Network fees are placed in the L2FeeVault contract, and can be claimed by the Owner role.
+
+This is set with `--miner.gasprice` on the sequencer. You can modify this value and `--gpo.ignoreprice` in the chart by overriding the `L2GETH_MIN_GAS_PRICE` environment variable [here](https://github.com/scroll-tech/scroll-sdk/blob/main/charts/l2-sequencer/values.yaml#L106).
+
+Additionally, you could modify the `--gpo.percentile` and `--gpo.blocks` arguements, but will need to manually modify the `l2-sequencer` chart. 
+
+For additional information, see the [geth documentation](https://geth.ethereum.org/docs/fundamentals/command-line-options).
+
+### Configuring L1 Fees
+
+The L1GasOracle pre-deployed contract holds the values used to calculate the L1 fee for transactions.
+
+The following fields are set by the Gas Oracle service, specifically by transactions submitted by the `L2GasOracleSender`:
+- `l1BaseFee`: the base fee for the L1 transaction
+- `l1BlobBaseFee`: the base fee for the L1 blob data
+
+The following fields are set by the Owner using setter functions in the `L1GasOracle` contract:
+- `commitScalar`
+- `blobScalar`
+- `overhead`
+- `scalar`
+
+To see these on Scroll's mainnet deployment, view the [L1GasOracle contract](https://scrollscan.com/address/0x5300000000000000000000000000000000000002#writeContract).
+
+<Aside type="tip">
+Note: While this can help in knowing _how_ to set these values, it doesn't help determine what values to set. We're working on tooling to help operators determine what values to set for their chains.
+</Aside>
+
+
+## Alternative Gas Token
+
+Beyond the default gas token, Scroll SDK also supports alternative gas tokens. This customization allows users to use their preferred gas token for transactions.
+
+### Calculating and Setting Gas Oracle Fields
+
+On Scroll, transaction fees are calculated by not just charging a gas fee, but also an L1 fee. Because the conversion needed between the L1's native token and the SDK's gas token, additional configuration and logic is needed.
+
+Instead of introducing another variable to the L1GasPriceOracle contract, operators should incorporate the ETH/ERC20 conversion rate into the calculation of the "scalar".
+
+For more information on how gas fees on Scroll are calculated, see the [Calculating the L1 Data Fee with Gas Oracle](/en/developers/transaction-fees-on-scroll/#calculating-the-l1-data-fee-with-gas-oracle).
+
+<Aside type="caution">
+We're currently working on tooling to help operators calculate and automate updates to the scalar, using trading prices from both centralized exchange and Uniswap Pools.
+</Aside>
+
+<Aside type="danger">
+Currently, we recommend setting the scalar value to 0. See [Disable L1 Data Fee](/en/sdk/guides/digital-ocean-alt-gas-token/#disable-l1-data-fee) in the example deployment guide for more information.
+</Aside>
+
+## Claiming Fees from the Vault
+
+<Aside type="tip">
+Todo: Morty is working on testing and documenting this process on the SDK.
+</Aside>
