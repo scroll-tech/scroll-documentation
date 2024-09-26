@@ -146,3 +146,12 @@ Relay a L2 => L1 message with message proof.
 | nonce     | The nonce of the message to avoid replay attack.             |
 | message   | The content of the message.                                  |
 | proof     | The proof used to verify the correctness of the transaction. |
+
+### xDomainMessageSender
+`xDomainMessageSender` contains the address of the `msg.sender` that called `sendMessage` on the other chain.  
+```solidity
+address public override xDomainMessageSender;
+```  
+Note: `xDomainMessageSender` resets after the `relayMessageWithProof` function ends.  
+Make sure that only the `scrollMessenger` contract can call functions that use `xDomainMessageSender`.    
+See the [scroll contracts](/developers/scroll-contracts/#advanced-bridge-contracts) page to see the scrollMessenger contract addresses.  
