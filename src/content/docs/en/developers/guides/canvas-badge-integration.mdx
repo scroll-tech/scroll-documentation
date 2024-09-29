@@ -152,7 +152,14 @@ Since **badges are permissionless**, Scroll Foundation may not troubleshoot indi
 
 ## Step 3 `Test`: Sanity Check 
 
-1. Please visit `https://scroll.io/canvas/badge-contract/{{badgeContractAddress}}` to ensure that the badge is functioning correctly.
+1. Once your badge has been deployed on Scroll, you can auto-check some of these requirements by running `yarn check-badge`.([link to check badge script](https://github.com/scroll-tech/canvas-contracts/blob/master/script/CheckBadge.s.sol))
+    - If your badge minting transaction reverts, we recommend debugging using `cast`:
+
+    ```bash
+    cast run --rpc-url https://rpc.scroll.io [txhash]
+    ```
+
+    This call will simulate the transaction in a local environment and show you the call stack and revert reason.
     - For `badgeTokenURI` link returned, ensure correct cross-origin configuration
     <ToggleElement anchor="reference-cors">
     <div slot="title">Reference: CORS</div>
@@ -171,11 +178,12 @@ Since **badges are permissionless**, Scroll Foundation may not troubleshoot indi
             
             - **`scroll.io` domain**: requests originating from **`scroll.io`** are permitted.
     </ToggleElement>
-2. Review the information on the badge detail page: Confirm that all basic badge information and redirect links are correct and match the information you provided.
-3. Verify that the check API is operational. Test it with 2-4 wallet addresses eligible/ineligible to mint this badge and confirm that the claim API is functioning properly.
-4. If you have created a badge that can be upgraded, please use wallets that meet different level requirements to attempt minting it. Ideally, find at least one wallet per level requirement to ensure the badge mints correctly.
-5. To maintain the availability of the check API and claim API, Scroll recommends maintaining a TPS of approximately 300. Adjust this rate accordingly if your API handles multiple badges simultaneously. 
-6. If your badge image is stored on IPFS, due to the distributed nature of IPFS, the request time for users in different regions to access content on IPFS can be unpredictable. If they want a better user experience, they can self-host the content. 
+2. **Review the information on the badge detail page**: 
+    - Confirm that all basic badge information and redirect links are correct and match the information you provided.
+    - Verify that the check API is operational. Test it with 2-4 wallet addresses eligible/ineligible to mint this badge and confirm that the claim API is functioning properly.
+    - If you have created a badge that can be upgraded, please use wallets that meet different level requirements to attempt minting it. Ideally, find at least one wallet per level requirement to ensure the badge mints correctly.
+3. To maintain the availability of the check API and claim API, Scroll recommends maintaining a TPS of approximately 300. Adjust this rate accordingly if your API handles multiple badges simultaneously. 
+4. If your badge image is stored on IPFS, due to the distributed nature of IPFS, the request time for users in different regions to access content on IPFS can be unpredictable. If they want a better user experience, they can self-host the content. 
 
 <Aside>
 At this stage, your Badge is live on Scroll Canvas. Badge launch is permissionless. You can deploy as many badges as needed. **Scroll does not need to approve your badge deployment.**
@@ -205,7 +213,7 @@ Regularly monitor server logs to stay informed of any potential issues, especial
     <div slot="title">Get listed on [Canvas & Badges](https://scroll.io/canvas-and-badges)</div>
 
     <Aside>
-        You can display **all of the badges** in your own product permissionlessly. Discover Badges page serves as an additional discovery channel for your badges.
+        You can display **all of the badges** in your own product permissionlessly. Canvas and Badges display page serves as an additional discovery channel for your badges.
     </Aside>
     <Aside type="caution">
         Please be careful when submitting your application. We’re eager to introduce useful and creative badges for the Scroll ecosystem. The Scroll team is thoroughly reviewing each badge listing, which means the process might take a bit longer. Thank you for your patience.
