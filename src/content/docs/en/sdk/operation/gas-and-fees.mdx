@@ -67,6 +67,10 @@ Currently, we recommend setting the scalar value to 0. See [Disable L1 Data Fee]
 
 ## Claiming Fees from the Vault
 
+As L2 Fees accumulate in the L2FeeVault, any user can call the `withdrawl` method to "claim" these fees. This will bridge the funds to the `L1_FEE_VAULT_ADDR` address (configured in `config.toml`) on the L1 chain.
+
+After the funds are bridged, the bridged funds will still need to be claimed on L1 with a proof that can be easily obtained using the `bridge-history-api`. To see this process on Scroll, see [Finalizing Transactions on L1](/en/developers/l1-and-l2-bridging/the-scroll-messenger/#finalizing-transactions-on-l1)
+
 <Aside type="tip">
-Todo: Morty is working on testing and documenting this process on the SDK.
+We'll likely add these steps to the CLI or Admin System Dashboard in the future.
 </Aside>

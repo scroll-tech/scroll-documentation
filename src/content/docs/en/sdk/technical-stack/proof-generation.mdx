@@ -7,7 +7,9 @@ permalink: "sdk/technical-stack/proof-generation"
 excerpt: "Documents how zk proof generation is done on Scroll SDK."
 ---
 
-<!-- Info about running the Ansible script for proof generation (and eventually using external prover partners) will go here. -->
+import Aside from "../../../../../components/Aside.astro"
+
+{/* Info about running the Ansible script for proof generation (and eventually using external prover partners) will go here. */}
 
 Currently, Scroll SDK requires that you run your own provers. We're actively working with proof generation platforms to make proof generation as easy as providing an API key.
 
@@ -20,6 +22,10 @@ To change this mock finalization delay, adjust `config.toml` to change `TEST_ENV
 To disable mock finalization entirely, adjust `config.toml` to change `TEST_ENV_MOCK_FINALIZE_ENABLED` to `false`.
 
 ## Deploy a Prover
+
+<Aside type="caution">
+These instructions are an outline of the process, but our testing of the SDK has focused on working with external proving service providers, so may be out of date with out current SDK implementation.
+</Aside>
 
 Our automation code for deploying a prover differs from the rest of the stack. Because Kubernetes is designed to automatically manage resources, it doesn't fit as well as [Ansible](https://www.ansible.com/) for larger clusters of machines needing specific machine requirements.
 

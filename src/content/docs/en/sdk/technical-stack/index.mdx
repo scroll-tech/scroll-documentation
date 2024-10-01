@@ -124,6 +124,9 @@ Then, set it as a env var and run: `echo $GHCR_PAT | docker login ghcr.io -u [gi
 
 We'll provide a high-level overview here, but for helper scripts and more detailed information, see the soon-to-be-completed [Production Deployment](/en/sdk/guides/production-deployment) guide.
 
+<Aside type='caution'>
+As of Sept. 29, we have a new best practice for deploying charts that doesn't require downloading each individually. This should be updated soon.
+</Aside>
 
 <Steps>
 1. Create a new directory to host your git repo and Scroll SDK deployment files.
@@ -132,7 +135,7 @@ We'll provide a high-level overview here, but for helper scripts and more detail
 
 1. Generate you configuration files
    ```bash
-    docker run --rm -it -v .:/contracts/volume scrolltech/scroll-stack-contracts:gen-configs-v0.0.16
+    docker run --rm -it -v .:/contracts/volume scrolltech/scroll-stack-contracts:gen-configs-v0.0.25
    ```
 
 1. Generate your Secrets files (note: this will be automated in a Make command)

@@ -33,6 +33,7 @@ The following services need to be exposed to clients outside of the cluster and 
 
 | Name                | Host                          | Port |
 |---------------------|-------------------------------|------|
+| admin-system-dashboard | [admin-system-dashboard.scrollsdk](http://admin-system-dashboard.scrollsdk)  | 80   |
 | blockscout          | [blockscout.scrollsdk](http://blockscout.scrollsdk)          | 80   |
 | bridge-history-api  | [bridge-history-api.scrollsdk](http://bridge-history-api.scrollsdk)  | 80   |
 | frontends           | [frontends.scrollsdk](http://frontends.scrollsdk)           | 80   |
@@ -55,32 +56,34 @@ Below, we describe three configurations for services:
 > ❔️: To be assessed.
 
 | Service                 | Default | Minimal | Production |
-| ----------------------- | :---------------------: | :--------------------: | :------------------------------------------------: |
-| balance-checker         |                         |                        |  ⚠️                                                 |
-| blockscout              | ✅                       |                        |                                                    |
-| blockscout-sc-verifier  | ❔ |                        |                                                    |
-| bridge-history-api [^1]     | ✅                       | ✅                | ✅                                                  |
-| bridge-history-fetcher [^1] | ✅                       | ✅             | ✅                                                  |
-| chain-monitor           |                         | ✅                       | ✅                                                  |
-| contracts               | ✅                       | ✅                  | ✅                                                  |
-| coordinator-api [^2]                           |                         | | ✅                                                  |
-| coordinator-cron [^2]       |                         |                        | ✅                                                  |
-| frontends               | ✅                       |                        | ⚠️                                                  |
-| gas-oracle              | ✅                       | ✅                      | ✅                                                  |
-| grafana                 | ✅                       |                        |  ⚠️                                                  |
-| kube-prometheus-stack   | ✅                       |                        |                                                    |
-| l1-devnet               | ✅                       |                        |                                                    |
-| l1-explorer             | ✅                       |                        |                                                    |
-| l2-bootnode             | ❔  |                        | ✅                                                  |
-| l2-rpc                  | ✅                       |                        | ✅                                                  |
-| l2-sequencer            | ✅                       | ✅                      | ✅                                                  |
-| loki-stack              | ✅                       |                        | ⚠️ |
-| postgresql              | ✅                       | ⚠️                      | ⚠️   |
-| rollup-explorer-backend | ✅             |                        |                                                    |
-| rollup-node             | ✅                       | ✅                      | ✅                                                  |
-| rpc-gateway             | ✅                       |                        | ✅                                                  |
+| ----------------------- | :-----: | :-----: | :--------: |
+| admin-system-backend    | ✅      |         |            |  
+| admin-system-cron       | ✅      |         |            | 
+| admin-system-dashboard  | ✅      |         |            |
+| balance-checker         |         |         |  ⚠️         |
+| blockscout              | ✅      |         |            |
+| blockscout-sc-verifier  | ❔      |         |            |
+| bridge-history-api [^1]     | ✅  | ✅      | ✅        |
+| bridge-history-fetcher [^1] | ✅  | ✅      | ✅        |
+| chain-monitor           |         | ✅      | ✅        |
+| contracts               | ✅      | ✅      | ✅        |
+| coordinator-api [^2]    |         |         | ✅        |
+| coordinator-cron [^2]   |         |         | ✅        |
+| frontends               | ✅      |         | ⚠️         |
+| gas-oracle              | ✅      | ✅      | ✅        |
+| grafana                 | ✅      |         |  ⚠️        |
+| kube-prometheus-stack   | ✅      |         |           |
+| l1-devnet               | ✅      |         |           |
+| l1-explorer             | ✅      |         |           |
+| l2-bootnode             | ❔      |         | ✅        |
+| l2-rpc                  | ✅      |         | ✅        |
+| l2-sequencer            | ✅      | ✅      | ✅        |
+| loki-stack              | ✅      |         | ⚠️ |
+| postgresql              | ✅      | ⚠️      | ⚠️   |
+| rollup-explorer-backend | ✅      |         |           |
+| rollup-node             | ✅      | ✅      | ✅        |
+| rpc-gateway             | ✅      |         | ✅        |
 
-{/* | event-watcher           | ✅                       | ❔  | ❔                                                  | */}
 
 [^1]: Services necessary for claiming funds bridged from L2 to L1 and used by bridge frontend. Could be replaced by [Bridge History SDK](https://github.com/scroll-tech/scroll-bridge-sdk) for other usage.
 [^2]: Only necessary for chains after testnet, when proof generation is needed.
@@ -91,6 +94,16 @@ Below, we describe three configurations for services:
 #### Anvil (`l1-devnet`)
 
 Foundry [Anvil](https://book.getfoundry.sh/reference/anvil/) serves as the default local base chain for devnet deployments. It provides a simulated Ethereum environment for testing and development purposes.
+
+#### Admin System Dashboard (`admin-system-dashboard`)
+
+The Admin System Dashboard is a simple Web UI for monitoring the Scroll SDK chain. It provides a high-level overview of the network's health and status, including the number of transactions, blocks, prover info, and other key metrics.
+
+{/* TODO: Describe Admin system better. */}
+
+{/* ### Admin System Backend (`admin-system-backend`) */}
+
+{/* ### Admin System Cron (`admin-system-cron`) */}
 
 #### Blockscout (`blockscout`)
 
