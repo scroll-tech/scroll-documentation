@@ -61,7 +61,7 @@ function commitBatchWithBlobProof(
     bytes[] memory chunks,
     bytes calldata skippedL1MessageBitmap,
     bytes calldata blobDataProof
-) external;
+) external override OnlySequencer;
 ```
 
 After the `commitBatchWithBlobProof` function verifies the parent batch is committed before, it constructs the batch header of the batch and stores the hash of the batch header in the `ScrollChain` contract.
@@ -90,23 +90,26 @@ In addition, the `commitBatchWithBlobProof` function contains a bitmap of skippe
 
 ## Finalize Transaction
 
-The Finalize Transaction finalizes the previously-committed batch with a validity proof. The transaction also submits the state root and the withdraw root after the batch. Here is the function signature of `finalizeBatchWithProof`:
+The Finalize Transaction finalizes the previously-committed batch with a validity proof. The transaction also submits the state root and the withdraw root after the batch. Here is the function signature of `finalizeBatchWithProof4844`:
 
 ```solidity
-function finalizeBatchWithProof(
+function finalizeBatchWithProof4844(
     bytes calldata batchHeader,
-    bytes32 prevStateRoot,
+    bytes32,
     bytes32 postStateRoot,
     bytes32 withdrawRoot,
+    bytes calldata blobDataProof,
     bytes calldata aggrProof
 ) external override OnlyProver
 ```
 
-The `finalizeBatchWithProof` function first verifies if the batch has been committed in the contract. It then calculates the public input hash as follows
+The `finalizeBatchWithProof4844` function first verifies if the batch has been committed in the contract. It then calculates the public input hash as follows
 
 ```
-publicInputHash := keccak(chainId || prevStateRoot || postStateRoot || withdrawRoot || batch.dataHash)
+publicInputHash := keccak(chainId || prevStateRoot || postStateRoot || withdrawRoot || batch.dataHash || blobDataProof[0:64] || blobVersionedHash)
 ```
+
+, where the `prevStateRoot` is read from the `finalizedStateRoots` map variable on the contract and `blobVersionedHash` is as described in the [Codec](#batchheader-codec) section.
 
 The public input hash and the validity proof are sent to the plonk solidity verifier. Once the verification passes, the new state root and withdraw root are stored in the `ScrollChain` contract.
 
