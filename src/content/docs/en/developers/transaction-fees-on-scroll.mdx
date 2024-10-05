@@ -30,7 +30,7 @@ At a high level, the **L2 fee** is the cost of executing your transaction on the
 In short, `totalTxFee = l2Fee + l1Fee`, all denominated in ETH, the native gas token for the Scroll network.
 
 <Aside type="note" title="Where are transaction fees sent?">
-All tx fees are collected into the `L2ScrollFeeVault` contract balance. This contract also tracks the amount we’ve historically withdrawn to L1 using `totalProcessed()(uint256)`.
+All tx fees are collected into the `L2ScrollFeeVault` contract balance. This contract also tracks the amount we’ve historically withdrawn to L1 using `totalProcessed() returns (uint256)`.
 
 The block producer receives no direct reward, and the `COINBASE` opcode returns the fee vault address.
 
