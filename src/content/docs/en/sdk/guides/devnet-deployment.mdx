@@ -185,7 +185,7 @@ You will need to provide funds to the following accounts:
   - `L1_GAS_ORACLE_SENDER_ADDR`
   - `L2_GAS_ORACLE_SENDER_ADDR` *(funded after L2 chain deployment)*
 
-If you installed the necessary prerequisites, you can run the cli helper command. (Note: this command only works for L1 accounts)
+If you installed the necessary prerequisites, you can run the cli helper command after [Pointing DNS Requests to the Cluster](#pointing-dns-requests-to-the-cluster-macos-on-arm64). (Note: this command only works for L1 accounts)
 
 ```bash
 cd scroll-sdk
@@ -214,6 +214,7 @@ Running `kubectl get ingress` should show all the domains setup within the clust
 ```
 ➜  scroll-sdk git:(develop) ✗ kubectl get ingress
 NAME                      CLASS   HOSTS                               ADDRESS        PORTS   AGE
+admin-system-dashboard    nginx   admin-system-dashboard.scrollsdk    192.168.49.2   80      5h3m
 blockscout                nginx   blockscout.scrollsdk                192.168.49.2   80      5h3m
 bridge-history-api        nginx   bridge-history-api.scrollsdk        192.168.49.2   80      5h3m
 frontends                 nginx   frontends.scrollsdk                 192.168.49.2   80      5h3m
@@ -221,6 +222,7 @@ grafana                   nginx   grafana.scrollsdk                   192.168.49
 l1-devnet                 nginx   l1-devnet.scrollsdk                 192.168.49.2   80      5h3m
 l1-explorer               nginx   l1-devnet-explorer.scrollsdk        192.168.49.2   80      5h3m
 l2-rpc                    nginx   l2-rpc.scrollsdk                    192.168.49.2   80      5h3m
+l2-rpc-websocket          nginx   l2-rpc-ws.scrollsdk                 192.168.49.2   80      5h3m
 rollup-explorer-backend   nginx   rollup-explorer-backend.scrollsdk   192.168.49.2   80      5h3m
 ```
 
@@ -368,7 +370,9 @@ curl --location 'http://l1-devnet.scrollsdk/' \
 
 Getting `ingress-dns` can be tricky across different machines, operating systems and network configurations. 
 
-Directly editing `etc/hosts` has worked for some users, adding all ingress hosts pointing to the minikube IP address.
+**Directly editing `etc/hosts` has worked for some users, adding all ingress hosts pointing to the minikube IP address.**
+
+Follow the template below, being sure to create one value for every ingress in your configuration. Also, be sure to try the IP of your minikube deployment.
 
 For VPN users, we've seen the following work:
 

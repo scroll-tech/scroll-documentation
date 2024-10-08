@@ -37,7 +37,7 @@ Because AltGas token introduces another element of complexity, we will use it he
 <Aside type="caution">
 Scroll SDK is still in development, so certain pieces of guides may see breaking changes. We hope to slow down changes soon.
 
-*Guide last updated September 9, 2024.*
+*Guide last updated October 8, 2024 and refers to example files from [this commit](https://github.com/scroll-tech/scroll-sdk/tree/4a4092736486664df96277565e8d14e3ce023e60).*
 </Aside>
 
 ## Getting your machine ready
@@ -173,7 +173,11 @@ cp ../scroll-sdk/examples/config.toml.example ./config.toml
 cp ../scroll-sdk/examples/Makefile.example ./Makefile
 ```
 
-`Config.toml` will be used to setup our base configuration of our chain, from which each service's independent config files will be generated. `Makefile` will allow us to directly run `helm` commands in an automated way.
+```bash
+cp -r ../scroll-sdk/examples/values values
+```
+
+`Config.toml` will be used to setup our base configuration of our chain, from which each service's independent config files will be generated. `Makefile` will allow us to directly run `helm` commands in an automated way. The `values` directory contains the starter values for each service's `production.yaml` file, where we'll customize the behavior of each chart.
 
 ### Preparing our Config.toml file
 
@@ -267,9 +271,11 @@ You can do this manually or run `scrollsdk setup db-init --update-port 25061`
 
 ### Generate Keystore Files
 
-Next, we need to generate new private keys for the sequencer signer and the SDK accounts used for on-chain activity.
+Next, we need to generate new private keys for the sequencer signer and the SDK accounts used for on-chain activity. The prompt will also ask if you want to setup backup sequencers. These will be standby fullnodes ready to take over the sequencer role if needed for recovery or key rotation. This step will also allow you to setup pre-defined bootnodes.
 
-Follow the prompt by running `scrollsdk setup gen-keystore`. Use the Owner wallet address of the multi-sig generated in the first step, or for testing, allow the script to generate one for you. But, be sure to save the private key, as it should not be stored in config.toml!
+This step will also update `L2_GETH_STATIC_PEERS` to point to all sequencer as well.
+
+Follow the prompt by running `scrollsdk setup gen-keystore`. Use the Owner wallet address of the multi-sig generated in the first step, or for testing, allow the script to generate a wallet for you. But, be sure to save the private key, as it should not be stored in config.toml!
 
 ### Define Gas Token Details
 
@@ -293,13 +299,11 @@ Run `scrollsdk setup configs`.
 
 You'll see a few prompts to update a few remaining values, like the L1 height at contract deployment and the "deployment salt" which should be unique per new deployment with a deployer address.
 
-You'll want to update `L2_GETH_STATIC_PEERS` to point to the sequencer as well.
-
-Now, we'll simulate contract deployment to get contract addresses and build the config files and secrets files for all SDK services.
+Now, we'll simulate contract deployment to get contract addresses and build the config files and secrets files for all SDK services. Secrets will be written to `./secrets` and config files to `./values`. If you want the config files written to a different directory, pass the `--configs-dir` flag.
 
 ### Pull Charts and Move Config Files
 
-Now, we need to pull the Helm charts we will deploy, extract them, and move the config files where they need to go.
+Now, we need to prepare the Helm charts. We will check access to charts, review the Makefile and check the values files for any missing values.
 
 To do this, run `scrollsdk setup prep-charts`
 
@@ -315,7 +319,7 @@ You will be prompted with each update, and even flagged for empty values. Be sur
 
 ### Push Secrets
 
-Lastly, we need to take the configuration values that are sensitive and publish them to however we're deploying "secrets."
+Lastly, we need to take the configuration values that are sensitive and publish them to wherever we're deploying "secrets."
 
 Since DigitalOcean doesn't natively host a Secret Management tool like AWS or Azure, we'll use Hashicorp Vault to store our sensitive data like database connection strings and private keys.
 
@@ -409,12 +413,6 @@ Here, we pass `-l 1` to only fund the L1 accounts. Any L2 funding will fail at t
 
 ### Installing the Helm Charts
 
-<Aside type="danger" title="Temporary Hack">
-Before launching your charts, copy your `chain-monitor` database DSN string from `./secrets/chain-monitor-secret.env` to the empty `db_config.dsn` field at the bottom of `./chain-monitor/configs/chain-monitor-config.json`.
-
-This is a chart bug in `chain-monitor v0.0.5` and should be fixed quickly.
-</Aside>
-
 Run `make install` to install (or later, to upgrade) all the SDK charts needed. It may help to run the commands one-by-one the first time, and check the deployment status. `k9s` is a useful tool for this. The sample Make file also doesn't include Blockscout, but feel free to add it as well.
 
 ### Fund L2 accounts
@@ -468,10 +466,12 @@ scrollsdk helper set-scalars -k [private-key]
 ### Deploy Blockscout
 
 <Aside type="danger" title="Temporary Bug">
-Right now, this doesn't work on DigitalOcean. We haven't debugged it yet, but we're working with the Blockscout team for a much better Block Explorer + Scroll SDK experience.
+Right now, this doesn't work on DigitalOcean. We haven't debugged it yet, but we're working with the Blockscout team for a much better Block Explorer + Scroll SDK experience, expected in October 2024.
 </Aside>
 
-As long as you setup the databases in the `scrollsdk setup db-init` step, you can run `helm upgrade -i blockscout blockscout --values blockscout/values/production.yaml`
+As long as you setup the databases in the `scrollsdk setup db-init` step, you can download the chart, extract it, and run `helm upgrade -i blockscout blockscout --values blockscout/values/production.yaml`
+
+{/* Todo: return with instructions that add this directly as a Makefile command. */}
 
 ### Optimize Machine Configuration with Node Affinity
 
@@ -481,7 +481,7 @@ One example is that the `l2-sequencer` may want additional CPU-resources and the
 
 If you'd like to give this a try, create a new "Node Pool" in DigitalOcean -- perhaps selecting "CPU Intensive - 8vCPU 16 GB RAM" and naming it "pool-sequencer".
 
-Now, in your `l2-sequencer/values/production-1.yaml` file, add the following section:
+Now, in your `values/l2-sequencer-production-0.yaml` file, add the following section:
 
 ```yaml
 affinity:
@@ -507,8 +507,12 @@ Here, we're adding asking it to only select nodes that are in the "pool-sequence
 To apply this, run:
 
 ```bash
-helm upgrade -i l2-sequencer l2-sequencer --values l2-sequencer/values/production-1.yaml
+helm upgrade -i l2-sequencer-0 oci://ghcr.io/scroll-tech/scroll-sdk/helm/l2-sequencer \
+  --version=0.0.11 \
+  --values values/l2-sequencer-production-0.yaml
 ```
+
+Replace with the version value from your Makefile. Add `-n [namespace]` if you're not using the default namespace.
 
 For more info, see the Kubernetes page on [Assigning Pods to Nodes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/).
 
@@ -525,7 +529,7 @@ controller:
 
 Some services do not support this without additional configurations (for example, `l2-sequencer` and `l2-bootnode`). We are working on additional info on how to properly run multiple services for loadbalancing between or for having redunant backups available.
 
-{/* ### Add Graphana charts for Monitoring
+{/* ### TODO: Add Graphana charts for Monitoring
 
 To quickly get started with Grafana, run the following command:
 
