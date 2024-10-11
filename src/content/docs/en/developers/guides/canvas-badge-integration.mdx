@@ -20,13 +20,13 @@ We are thrilled to have you join us in building unique badges on Scroll Canvas, 
 
 ### Canvas
 
-Each Canvas is a `Profile` smart contract, minted by the users through the `ProfileRegistry` contract on Scroll. Canvas is not transferrable and unique to each wallet. ([link to Canvas contract](https://github.com/scroll-tech/canvas-contracts))
+Each Canvas is a `Profile` smart contract, minted by the users through the `ProfileRegistry` contract on Scroll. Canvas is not transferrable and unique to each wallet. (You can check out Canvas contracts [here](https://github.com/scroll-tech/canvas-contracts))
 
 Canvas is an open onchain profile database of user identities and achievements ([check out dashboard built by community on Dune](https://dune.com/soodoo/scroll-marks)).
 
 ### Badge
 
-**Badges** are attestations of identities, achievements and traits verified through the [Ethereum Attestation Service](https://scroll.easscan.org/learn/scroll), issued **permissionlessly by different ecosystem projects**. Badges are wallet-bound and non-transferable. **Badges facilitate interactions between ecosystem projects and users**. 
+**Badges** are attestations of identities, achievements and traits issued through the [Ethereum Attestation Service](https://scroll.easscan.org/learn/scroll) **permissionlessly by different ecosystem projects**. Badges are wallet-bound and non-transferable. **Badges facilitate interactions between ecosystem projects and users**. 
 
 Developers can issue badges in three methods:
 
@@ -34,7 +34,7 @@ Developers can issue badges in three methods:
 | ---                   | ---                                                   | ---                                                                                  |
 | `Permissionless`      | Badge checks eligibility based on smart contract.     | Badges attest to the completion of an on-chain transaction or holding of an NFT. |
 | `Backend-authorized`  | Badge checks eligibility based on the issuer’s API.   | Badges attest to the completion of off-chain actions or a certain allow list. |
-| `Gifted`              | Badges checks eligibility based on the issuer’s API and **automatically** sends the badges to users’ canvas. There is no minting required for users to display the badge.  | Badges attest to the ownership or paid membership on other platforms / chains. |
+| `Gifted`              | Badge checks eligibility based on the issuer’s API and **automatically** sends the badges to users’ canvas. There is no minting required for users to display the badge.  | Badges attest to the ownership or paid membership on other platforms / chains. |
 
 Developers can design badges in two ways:
 
@@ -47,8 +47,8 @@ Developers can design badges in two ways:
 
 Badge issuance and deployment of the contract is fully permissionless. Please follow the steps below to issue a Badge for your project.
 
-<Aside type="note" title="Join Developer Support Channel">
-For Canvas and badge questions, please join [Scroll dev support channel](https://discord.com/invite/scroll)
+<Aside type="note" title="Join the Developer Support Channel">
+For Canvas and badge questions, please join the [Scroll dev support channel](https://discord.com/invite/scroll)
 </Aside>
 
 ## Step 1 `Design`: Badge Design Guidelines 
@@ -71,9 +71,9 @@ For Canvas and badge questions, please join [Scroll dev support channel](https:/
 | Name              | Name your badge to be *descriptive and creative* |
 | Description       | Brief description of the *purpose* of this badge and *who is eligible* |
 | Structure         | *One single attribute*<br/>  *Multiple Badges with levels* trigged by different actions and traits |
-| Category          | *Achievement*: tasks you have done. e.g. Scroll Origin NFTs, tasks completion badge <br/> *Identities*: who you are. e.g. Ethereum year, GItcoin passport, NFT community badge |
+| Category          | *Achievement*: tasks you have done. e.g. Scroll Origin NFTs, tasks completion badge <br/> *Identities*: who you are. e.g. Ethereum year, Gitcoin passport, NFT community badge |
 | Issuance method   | *Fully permissionless*: meaning your badge can be automatically issued by checking smart contract conditions <br/> *Gifted*: Badges can also be issues with no user interaction, requires APIs <br/> *Backend-authorized*: requires APIs to enable eligibility criteria |
-| Support link      | **Support channel link** to your Discord/Telegram group |
+| Support link      | *Support channel link* to your Discord/Telegram group |
 
 <Aside>
 On the badge details page, there's a button to **visit your official website**. We recommend creating a dedicated promotional page for the badge linked to that button. This will provide users with comprehensive information about the badge (background, purpose, how to obtain, available images, etc.).
@@ -147,12 +147,13 @@ Since **badges are permissionless**, Scroll Foundation may not troubleshoot indi
             ```
     </ToggleElement>
     
-4. **Access Readiness**: Ensure badge contract address implements `defaultTokenURI`, allowing retrieval of default display data (`name, image, description`) via `bytes32(0)` with informative name and description. 
+4. **Access Readiness**: Ensure your badge contract implements `ScrollBadgeDefaultURI`, allowing retrieval of default display data (`name, image, description, issuerName `) via `bytes32(0)` with informative name and description. 
 5. **Set up support**: Prepare a channel for your badge holders can find you for support, get the url to join that channel ready.
 
 ## Step 3 `Test`: Sanity Check 
 
-1. Once your badge has been deployed on Scroll, you can auto-check some of these requirements by running `yarn check-badge`.([link to check badge script](https://github.com/scroll-tech/canvas-contracts/blob/master/script/CheckBadge.s.sol))
+1. Once your badge has been deployed on Scroll, you can auto-check some (but not all) of these requirements by running `yarn check-badge` ([link to check badge script](https://github.com/scroll-tech/canvas-contracts/blob/master/script/CheckBadge.s.sol)).
+
     - If your badge minting transaction reverts, we recommend debugging using `cast`:
 
     ```bash
@@ -196,12 +197,7 @@ Regularly monitor server logs to stay informed of any potential issues, especial
 
 1. To get the word out faster, you are encouraged to embed badge mint and discovery in your product!  Scroll provides an example code for anthropomorphic "assistants" to pop up when the user meets the badge minting requirements.
     
-    <aside>
-    📖
-    
     [**Scroll Canvas - A**nthropomorphic "assistants" **Integration Guide for Developers**](https://github.com/scroll-tech/frontends/blob/mainnet/docs/canvas.md)
-    
-    </aside>
     
 2. Share on social media about your badge launch and the eligibility criteria. Use `#BadgeonScroll` and tag `@Scroll_ZKP` to boost more visibility.
 3. Monitor your community / support channel for user feedback. If there is any Canvas backend related issues, please reach out to Scroll Discord channel.
