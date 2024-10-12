@@ -3,7 +3,7 @@
 [![Twitter Follow](https://img.shields.io/twitter/follow/Scroll_ZKP?style=social)](https://twitter.com/Scroll_ZKP)
 [![Discord](https://img.shields.io/discord/984015101017346058?color=%235865F2&label=Discord&logo=discord&logoColor=%23fff)](https://discord.gg/scroll)
 
-This is the open source project for the Scroll documentation.
+This is the open source project for the [Scroll](https://docs.scroll.io/en/getting-started/overview/) documentation.
 
 ## Developing
 
