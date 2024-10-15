@@ -1,0 +1,16 @@
+---
+// Display info in two columns
+---
+
+<div class="container">
+  <div><slot name="1" /></div>
+  <div><slot name="2" /></div>
+</div>
+
+<style>
+  .container {
+    display: flex;
+    flex-direction: row;
+    margin: 10px;
+  }
+</style>

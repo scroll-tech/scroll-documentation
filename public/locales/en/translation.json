@@ -109,7 +109,8 @@
       "rollupExplorer": "Rollup Explorer",
       "scrollSepoliaBlockExplorer": "Scroll Sepolia Explorer",
       "sepoliaRollupExplorer": "Rollup Explorer",
-      "sepoliaBlockExplorer": "Scrollscan Explorer"
+      "sepoliaBlockExplorer": "Scrollscan Explorer",
+      "canvasBadge": "Canvas & Badge Integration"
     },
     "technology": {
       "introduction": "Introduction",

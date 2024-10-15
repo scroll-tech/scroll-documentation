@@ -157,6 +157,10 @@ export const getSidebar = () => {
             title: t("sidebar.developers.runningNode"),
             url: formatUrl("developers/guides/running-a-scroll-node"),
           },
+          {
+            title: t("sidebar.developers.canvasBadge"),
+            url: formatUrl("developers/guides/canvas-badge-integration"),
+          },
           // {
           //   title: t("sidebar.developers.bridgingERC721NftThroughCustomGateway"),
           //   url: formatUrl("developers/guides/"),

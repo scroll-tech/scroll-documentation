@@ -1,0 +1,230 @@
+---
+section: developers
+date: Last Modified
+title: "Canvas & Badge Integration Guide"
+lang: "en"
+permalink: "developers/guides/canvas-badge-integration"
+excerpt: "This guide contains instructions on how to issue your own badge on Scroll Canvas."
+---
+
+import Aside from "../../../../../components/Aside.astro"
+import BadgeDetails from "../_images/badgeDetails.jpg"
+import BadgeLevels from "../_images/badgeLevels.png"
+import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import Columns from "../../../../../components/Columns.astro"
+import ToggleElement from "../../../../../components/ToggleElement.astro"
+
+We are thrilled to have you join us in building unique badges on Scroll Canvas, a product designed for ecosystem projects to interact with users in a more personal way on-chain. 
+
+## Background
+
+### Canvas
+
+Each Canvas is a `Profile` smart contract, minted by the users through the `ProfileRegistry` contract on Scroll. Canvas is not transferrable and unique to each wallet. (You can check out Canvas contracts [here](https://github.com/scroll-tech/canvas-contracts))
+
+Canvas is an open onchain profile database of user identities and achievements ([check out dashboard built by community on Dune](https://dune.com/soodoo/scroll-marks)).
+
+### Badge
+
+**Badges** are attestations of identities, achievements and traits issued through the [Ethereum Attestation Service](https://scroll.easscan.org/learn/scroll) **permissionlessly by different ecosystem projects**. Badges are wallet-bound and non-transferable. **Badges facilitate interactions between ecosystem projects and users**. 
+
+Developers can issue badges in three methods:
+
+| Issuance Method       | **Description**                                       | **Example**                                                                       |
+| ---                   | ---                                                   | ---                                                                                  |
+| `Permissionless`      | Badge checks eligibility based on smart contract.     | Badges attest to the completion of an on-chain transaction or holding of an NFT. |
+| `Backend-authorized`  | Badge checks eligibility based on the issuer’s API.   | Badges attest to the completion of off-chain actions or a certain allow list. |
+| `Gifted`              | Badge checks eligibility based on the issuer’s API and **automatically** sends the badges to users’ canvas. There is no minting required for users to display the badge.  | Badges attest to the ownership or paid membership on other platforms / chains. |
+
+Developers can design badges in two ways:
+
+| Badge Structure           | Description                                                           |
+| ---                       | ---                                                                   |
+| **`Singleton badges`**    | static attestations based on a certain user action/attribute.         |
+| **`Leveled badges`**      | dynamic attestations based on the progression of the users’ onchain activities   |
+
+## Before you Start
+
+Badge issuance and deployment of the contract is fully permissionless. Please follow the steps below to issue a Badge for your project.
+
+<Aside type="note" title="Join the Developer Support Channel">
+For Canvas and badge questions, please join the [Scroll dev support channel](https://discord.com/invite/scroll)
+</Aside>
+
+## Step 1 `Design`: Badge Design Guidelines 
+
+<Columns>
+    <Fragment slot="1"><ClickToZoom src={BadgeDetails} alt="BadgeDetails" caption="Example of badge detail page"/></Fragment>
+    <Fragment slot="2"><ClickToZoom src={BadgeLevels} alt="BadgeLevels" caption="Example of a Leveled Badge" /></Fragment>
+</Columns>
+
+### Visual Format Request:
+
+- Minimum resolution: 480px x 480px
+- Optimal resolution: 600px x 600px
+- File size: Under 300KB
+
+### Decide on Badge Details
+
+| Badge Details     | Additional Info |
+| ---               | --- |
+| Name              | Name your badge to be *descriptive and creative* |
+| Description       | Brief description of the *purpose* of this badge and *who is eligible* |
+| Structure         | *One single attribute*<br/>  *Multiple Badges with levels* trigged by different actions and traits |
+| Category          | *Achievement*: tasks you have done. e.g. Scroll Origin NFTs, tasks completion badge <br/> *Identities*: who you are. e.g. Ethereum year, Gitcoin passport, NFT community badge |
+| Issuance method   | *Fully permissionless*: meaning your badge can be automatically issued by checking smart contract conditions <br/> *Gifted*: Badges can also be issues with no user interaction, requires APIs <br/> *Backend-authorized*: requires APIs to enable eligibility criteria |
+| Support link      | *Support channel link* to your Discord/Telegram group |
+
+<Aside>
+On the badge details page, there's a button to **visit your official website**. We recommend creating a dedicated promotional page for the badge linked to that button. This will provide users with comprehensive information about the badge (background, purpose, how to obtain, available images, etc.).
+</Aside>
+<Aside type="caution">
+Since **badges are permissionless**, Scroll Foundation may not troubleshoot individual third-party badges or answer eligibility questions. Provide ample resources for your community to mint badges smoothly. We ask that you share **Support URL** in Badge Listing process with enough resources (blog, how-to threads, TG/Discord support channel link).
+</Aside>
+
+## Step 2 `Engineering`: Deploying Badges & Go Live 
+
+<Aside type="tip" title="Deployment Resources">
+- [Canvas Dev Doc (contract included)](https://github.com/scroll-tech/canvas-contracts)
+- [Example Badge Contract](https://github.com/scroll-tech/canvas-contracts/tree/master/src/badge/examples)
+</Aside>
+
+1. **Understand Canvas and Badges**: Read through this guide and [](https://github.com/scroll-tech/canvas-contracts)understand how Canvas and Badges work together.
+2. **Develop and Deploy Badge Contract (**[link to deployment contracts](https://github.com/scroll-tech/canvas-contracts/blob/master/docs/deployments.md)): Ensure it is verified on Scrollscan. For backend-authorized badges, you also need to deploy an `AttesterProxy`
+3. **For backend-authorized badges, set up Check and Claim APIs. For gifted badges, set up Check API**: Check eligibility and claim eligibility using provided schemas, confirm correct cross-origin configuration.
+   <ToggleElement anchor="reference-api">
+    <div slot="title">Reference: Check and Claim API</div>
+
+        ### Check Eligibility For Minting Badge
+        
+        1. **method**: GET
+        2. **url**: `{{pathname}}/check?badge={{badgeContractAddress}}&recipient={{walletAddress}}`
+        3. **contentType**: `data/json`
+        4. **responseSchema**
+            
+            ```jsx
+            // eligible
+            {
+            	code: 1,
+            	message: "success",
+            	eligibility: true
+            }
+            
+            // not eligible
+            {
+            	code: 0,
+            	message: "why the recipient is not eligible",
+            	eligibility: false
+            }
+            
+            // error
+            // http code is not 200
+            ```
+        
+        ### Claim Badge
+        
+        1. **method**: GET
+        2. **url**: `{{pathname}}/claim?badge={{badgeContractAddress}}&recipient={{walletAddress}}`
+        3. **contentType**: `data/json`
+        4. **responseSchema**
+            
+            ```jsx
+            // success
+            {
+            	code: 1,
+            	message: "success",
+            	tx: ...
+            }
+            
+            // failure
+            {
+            	code: 0,
+            	message: "some msg",
+            }
+            
+            // error
+            // http code is not 200
+            ```
+    </ToggleElement>
+    
+4. **Access Readiness**: Ensure your badge contract implements `ScrollBadgeDefaultURI`, allowing retrieval of default display data (`name, image, description, issuerName `) via `bytes32(0)` with informative name and description. 
+5. **Set up support**: Prepare a channel for your badge holders can find you for support, get the url to join that channel ready.
+
+## Step 3 `Test`: Sanity Check 
+
+1. Once your badge has been deployed on Scroll, you can auto-check some (but not all) of these requirements by running `yarn check-badge` ([link to check badge script](https://github.com/scroll-tech/canvas-contracts/blob/master/script/CheckBadge.s.sol)).
+
+    - If your badge minting transaction reverts, we recommend debugging using `cast`:
+
+    ```bash
+    cast run --rpc-url https://rpc.scroll.io [txhash]
+    ```
+
+    This call will simulate the transaction in a local environment and show you the call stack and revert reason.
+    - For `badgeTokenURI` link returned, ensure correct cross-origin configuration
+    <ToggleElement anchor="reference-cors">
+    <div slot="title">Reference: CORS</div>
+
+            ### CORS
+            
+            > Please ensure the provided API supports the cross-origin requirements.
+            > 
+            
+            ### Sepolia
+            
+            - **localhost**: This allows for development and testing directly from your local machine environment.
+            - **Domains containing the substring 'scroll'**: Any domain that includes the substring 'scroll' in its name is allowed to make requests.
+            
+            ### Mainnet
+            
+            - **`scroll.io` domain**: requests originating from **`scroll.io`** are permitted.
+    </ToggleElement>
+2. **Review the information on the badge detail page**: 
+    - Confirm that all basic badge information and redirect links are correct and match the information you provided.
+    - Verify that the check API is operational. Test it with 2-4 wallet addresses eligible/ineligible to mint this badge and confirm that the claim API is functioning properly.
+    - If you have created a badge that can be upgraded, please use wallets that meet different level requirements to attempt minting it. Ideally, find at least one wallet per level requirement to ensure the badge mints correctly.
+3. To maintain the availability of the check API and claim API, Scroll recommends maintaining a TPS of approximately 300. Adjust this rate accordingly if your API handles multiple badges simultaneously. 
+4. If your badge image is stored on IPFS, due to the distributed nature of IPFS, the request time for users in different regions to access content on IPFS can be unpredictable. If they want a better user experience, they can self-host the content. 
+
+<Aside>
+At this stage, your Badge is live on Scroll Canvas. Badge launch is permissionless. You can deploy as many badges as needed. **Scroll does not need to approve your badge deployment.**
+</Aside>
+<Aside type="caution">
+Regularly monitor server logs to stay informed of any potential issues, especially during the first 48 hours when the badge is live.
+</Aside>
+
+## Step 4 `Announce`: Reveal Your Badge 
+
+1. To get the word out faster, you are encouraged to embed badge mint and discovery in your product!  Scroll provides an example code for anthropomorphic "assistants" to pop up when the user meets the badge minting requirements.
+    
+    [**Scroll Canvas - A**nthropomorphic "assistants" **Integration Guide for Developers**](https://github.com/scroll-tech/frontends/blob/mainnet/docs/canvas.md)
+    
+2. Share on social media about your badge launch and the eligibility criteria. Use `#BadgeonScroll` and tag `@Scroll_ZKP` to boost more visibility.
+3. Monitor your community / support channel for user feedback. If there is any Canvas backend related issues, please reach out to Scroll Discord channel.
+
+---
+
+<ToggleElement anchor="reference-cors">
+
+    <div slot="title">Get listed on [Canvas & Badges](https://scroll.io/canvas-and-badges)</div>
+
+    <Aside>
+        You can display **all of the badges** in your own product permissionlessly. Canvas and Badges display page serves as an additional discovery channel for your badges.
+    </Aside>
+    <Aside type="caution">
+        Please be careful when submitting your application. We’re eager to introduce useful and creative badges for the Scroll ecosystem. The Scroll team is thoroughly reviewing each badge listing, which means the process might take a bit longer. Thank you for your patience.
+    </Aside>
+
+    1. Ensure that your project is listed on the [Scroll Ecosystem Page](https://scroll.io/ecosystem). If you cannot find it yet, please [fill out this form](https://tally.so/r/waxLBW) to discuss onboarding your Badges with Scroll Partnerships team.
+    2. **Application Portal**: [https://scroll.io/canvas/listing](https://scroll.io/canvas/listing) 
+        - General Badge Review Criteria :
+            - Project is indexed on Scroll’s ecosystem page.  If you cannot find it yet, please [fill out this form](https://tally.so/r/waxLBW).
+            - Complete and clear badge description including Badge name, Issuer name, Issuer URL (website/official link), Support URL (support channel link).
+            - Clear and reasonable eligibility criteria. Scroll holds discretion on not featuring badges with criteria that can be exploitive to users.
+            - Badge design is high-resolution, representative of the issuer’s branding.
+            - **Two badges** will be on display from the same project on Canvas & Badges page. If there are new and innovative new use cases for badges from the same project, Scroll team will consider making exceptions to allow up to two more badges.
+            - Once your project is visible on the ecosystem page, after they submit the listing request form, Scroll team will review submission and approve on a weekly basis.
+        - Badge Swaps and Withdrawal
+            - After reaching the 2 badge quota, if a project team wants to add new badges, they can raise the request in Discord with link to the new badge information.
+
+</ToggleElement>
