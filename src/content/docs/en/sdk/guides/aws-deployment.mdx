@@ -11,6 +11,7 @@ import Aside from "../../../../../components/Aside.astro";
 import ClickToZoom from "../../../../../components/ClickToZoom.astro";
 import Steps from '../../../../../components/Steps/Steps.astro';
 import ToggleElement from "../../../../../components/ToggleElement.astro";
+import AWSEBSDriver from "./_images/aws-ebs-driver.png";
 
 This guide demonstrates how to deploy a Scroll SDK on Amazon Web Services (AWS) using Elastic Kubernetes Service (EKS) and other managed services.
 
@@ -88,6 +89,68 @@ eksctl create cluster \
 ```
 
 This will create a cluster with 3 t3.2xlarge nodes, which should be sufficient for our needs. Adjust the region and node type as needed.
+
+### Configuring Persistent Storage
+
+After creating your EKS cluster, you need to set up persistent storage using Amazon Elastic Block Store (EBS). This involves installing the EBS CSI driver, configuring IAM permissions, and setting a default storage class.
+
+#### Installing the EBS CSI Driver
+
+The EBS Container Storage Interface (CSI) driver allows your Kubernetes cluster to manage the lifecycle of Amazon EBS volumes for persistent storage.
+
+1. Navigate to the EKS console for your cluster.
+2. Go to the "Add-ons" section and install the "Amazon EBS CSI Driver" add-on.
+
+<ClickToZoom src={AWSEBSDriver} alt="EBS CSI Driver" />
+
+#### Configuring IAM Permissions  
+
+To allow your EKS nodes to interact with EBS volumes, attach the appropriate IAM policy:
+
+```bash
+# Create an EBS policy file named ebs-policy.json:
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ec2:CreateVolume",
+                "ec2:DeleteVolume",
+                "ec2:AttachVolume",
+                "ec2:DetachVolume",
+                "ec2:DescribeVolumes",
+                "ec2:DescribeVolumesModifications",
+                "ec2:ModifyVolume"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+
+# Create the IAM policy:
+aws iam create-policy --policy-name EKSNodeEBSPolicy --policy-document file://ebs-policy.json
+
+# Identify your node group's IAM role:
+aws eks describe-nodegroup --cluster-name scroll-sdk-cluster --nodegroup-name standard-workers --query "nodegroup.nodeRole" --output text --region us-west-2
+
+# Attach the policy to the node group's role:
+aws iam attach-role-policy --role-name <YOUR_NODEGROUP_ROLE_NAME> --policy-arn arn:aws:iam::<YOUR_ACCOUNT_ID>:policy/EKSNodeEBSPolicy
+```
+
+#### Setting the Default Storage Class
+
+To ensure that your Kubernetes pods can automatically provision EBS volumes:
+
+```bash
+# Verify available storage classes:
+kubectl get sc
+
+# Set the gp2 storage class as the default:
+kubectl patch storageclass gp2 -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+```
+
+These steps will configure your EKS cluster to use EBS volumes for persistent storage, which is crucial for many components of the Scroll SDK deployment.
 
 ### Installing Kubernetes Add-Ons
 
