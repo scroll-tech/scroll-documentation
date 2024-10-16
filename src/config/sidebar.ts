@@ -345,8 +345,8 @@ export const getSidebar = () => {
             url: "sdk/",
           },
           {
-            title: t("sidebar.sdk.earlyAccessProgram"),
-            url: "sdk/early-access-program",
+            title: t("sidebar.sdk.faq"),
+            url: "sdk/sdk-faq",
           },
         ],
       },
@@ -373,6 +373,10 @@ export const getSidebar = () => {
             title: t("sidebar.sdk.proofGeneration"),
             url: formatUrl("sdk/technical-stack/proof-generation"),
           },
+          {
+            title: t("sidebar.sdk.integrations"),
+            url: formatUrl("sdk/technical-stack/integrations"),
+          },
         ],
       },
       {
@@ -390,10 +394,14 @@ export const getSidebar = () => {
             title: t("sidebar.sdk.digitalOcean"),
             url: formatUrl("sdk/guides/digital-ocean-alt-gas-token"),
           },
-          // {
-          //   title: t("sidebar.sdk.runOnArm64Mac"),
-          //   url: formatUrl("sdk/guides/run-on-arm64-mac"),
-          // },
+          {
+            title: t("sidebar.sdk.aws"),
+            url: formatUrl("sdk/guides/aws-deployment"),
+          },
+          {
+            title: t("sidebar.sdk.customizingSdkComponents"),
+            url: formatUrl("sdk/guides/customizing-sdk-components"),
+          },
         ],
       },
     ],

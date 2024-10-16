@@ -1,0 +1,34 @@
+---
+section: sdk
+date: Last Modified
+title: "Scroll SDK FAQ"
+lang: "en"
+permalink: "sdk/early-access-program"
+excerpt: "Help us sculpt the Scroll SDK by trying it out and giving us early feedback!"
+# whatsnext: { "Scroll Rollup Process": "/en/technology/chain/rollup" }
+---
+
+## Troubleshooting / FAQ
+
+### How long is finality on Scroll chain?
+
+Finality depends on the parameterization of how often your chain wants to finalize to Ethereum. Roughly, a batch is created every minute (containing ~20 blocks or 200 txs), and takes about 50 minutes to finalize on L1.
+
+Our next upgrade with increase the variability on block speed, but also increase how many batches will fit in a proof. We may decide to lengthen finality in order to reduce on-chain costs and lower transaction fees. _(At 556k gas to finalize, each finalize tx costs ~$9.80 as of June 3, 2024)._
+
+If you want to explore more, check out [https://scroll.io/rollupscan](https://scroll.io/rollupscan)
+
+### How does finality work without running a prover?
+
+The Scroll SDK defaults to the behavior seen on Scroll Sepolia.
+
+If proofs are not generated and accepted by the Coordinator, the Rollup Relayer with call a function on the L1 Bridge to finalize the state root without a proof. (This method is not part of the mainnet contracts.)
+
+The default timeout for this finalization is 3600 seconds, to approximate mainnet finalization latency. To alter this behavior in Scroll SDK, set the following variables in `config.toml`:
+
+```toml
+TEST_ENV_MOCK_FINALIZE_ENABLED = true
+TEST_ENV_MOCK_FINALIZE_TIMEOUT_SEC = 3600
+```
+
+{/* TODO: Add a few more questions here */}
