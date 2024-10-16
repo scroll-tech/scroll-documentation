@@ -11,6 +11,8 @@ import Aside from "../../../../../components/Aside.astro";
 import ClickToZoom from "../../../../../components/ClickToZoom.astro";
 import Steps from '../../../../../components/Steps/Steps.astro';
 import ToggleElement from "../../../../../components/ToggleElement.astro";
+import AWSCloudflareDNSWildcards from "./_images/aws-cloudflare-dns-wildcards.png";
+import AWSCloudflareDNS from "./_images/aws-cloudflare-dns.png";
 import AWSEBSDriver from "./_images/aws-ebs-driver.png";
 
 This guide demonstrates how to deploy a Scroll SDK on Amazon Web Services (AWS) using Elastic Kubernetes Service (EKS) and other managed services.
@@ -298,6 +300,9 @@ We'll use Cloudflare for DNS management, setting up a subdomain and a wildcard r
 
 4. Save your changes.
 
+<ClickToZoom src={AWSCloudflareDNS} alt="AWS Cloudflare DNS" />
+<ClickToZoom src={AWSCloudflareDNSWildcards} alt="AWS Cloudflare DNS Wildcards" />
+
 <Aside type="note">
 We're using "DNS only" mode (grey cloud icon) for both records. This bypasses Cloudflare's proxy, which is necessary because:
 1. We haven't set up SSL certificates yet.
@@ -305,7 +310,6 @@ We're using "DNS only" mode (grey cloud icon) for both records. This bypasses Cl
 3. Wildcard and nested subdomain setups require additional configuration with Cloudflare's proxy.
 </Aside>
 
-[TODO: Add image placeholder for Cloudflare DNS configuration]
 
 Remember to update your Scroll SDK configuration to use these new subdomains. For example, you might use:
 
@@ -417,7 +421,7 @@ Updated [general] L1_RPC_ENDPOINT_WEBSOCKET = "ws://l1-devnet:8546"
 ? Do you want the frontends to be hosted at the root domain? (No will use a "frontends" subdomain) no
 
 New domain configurations:
-EXTERNAL_RPC_URI_L2 = "https://l2-rpc.scrollsdk.your.xyz"
+EXTERNAL_RPC_URI_L2 = "https://l2-rpc.scrollsdk.yourdomain.xyz"
 BRIDGE_API_URI = "https://bridge-history-api.scrollsdk.yourdomain/api"
 ROLLUPSCAN_API_URI = "https://rollup-explorer-backend.scrollsdk.yourdomain/api"
 EXTERNAL_EXPLORER_URI_L2 = "https://blockscout.scrollsdk.yourdomain"
