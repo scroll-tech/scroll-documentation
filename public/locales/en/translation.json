@@ -117,24 +117,20 @@
       "scrollArchitecture": "Scroll Architecture",
       "scrollUpgrades": "Scroll Upgrades",
       "overview": "Overview",
-
       "scrollChain": "Scroll Chain",
       "accountsAndState": "Accounts and State",
       "blocks": "Blocks",
       "transactions": "Transactions",
       "rollupProcess": "Rollup Process",
       "evmDifferencesFromEthereum": "EVM Differences from Ethereum",
-
       "bridge": "Bridge",
       "crossDomainMessaging": "Cross-Domain Messaging",
       "depositGateways": "Deposit Gateways",
       "withdrawGateways": "Withdraw Gateways",
-
       "sequencer": "Sequencer",
       "executionNode": "Execution Node",
       "rollupNode": "Rollup Node",
       "zkTrie": "zkTrie",
-
       "zkevm": "zkEVM",
       "introToZkevm": "Intro to zkEVM",
       "zkevmOverview": "zkEVM Overview",
@@ -142,7 +138,6 @@
       "prover": "Prover",
       "proofGeneration": "Proof Generation",
       "cpuProverRepo": "CPU Prover Repo",
-
       "security": "Security",
       "auditsAndBugBounty": "Audits & Bug Bounty",
       "l2BeatAssessment": "L2Beat Assessment"
@@ -171,7 +166,8 @@
       "runOnArm64Mac": "Run on ARM64 Mac",
       "devnetDeployment": "Devnet Deployment",
       "productionDeployment": "Production Deployment",
-      "digitalOcean": "Digital Ocean & ERC20 Gas Token Testnet"
+      "digitalOcean": "Digital Ocean & ERC20 Gas Token Testnet",
+      "awsDeployment": "AWS Deployment"
     }
   },
   "footer": {
