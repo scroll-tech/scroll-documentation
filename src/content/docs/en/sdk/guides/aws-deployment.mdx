@@ -31,14 +31,17 @@ Scroll SDK is in active development, and parts of this guide may change. We aim 
 
 Ensure you have the following tools installed on your local machine:
 
-- AWS CLI
-- eksctl
-- kubectl
-- helm
-- docker
-- node ≥ 18
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+- [eksctl](https://eksctl.io/installation/)
+- [kubectl](https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html)
+- [Helm](https://helm.sh/docs/intro/install/)
+- [Docker](https://docs.docker.com/get-docker/)
+- [Node.js](https://nodejs.org/en/download/) ≥ 18
+- [jq](https://jqlang.github.io/jq/download/)
 - [scroll-sdk-cli](https://www.npmjs.com/package/scroll-sdk-cli)
-- k9s (optional, but recommended for cluster management)
+- [k9s](https://k9scli.io/topics/install/) (optional, but recommended for cluster management)
+
+Make sure to follow the installation instructions for each tool on their respective websites. For `kubectl`, you can refer to the detailed installation steps provided in the [Amazon EKS documentation](https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html).
 
 To install the scroll-sdk-cli, run:
 
@@ -140,6 +143,8 @@ aws eks describe-nodegroup --cluster-name scroll-sdk-cluster --nodegroup-name st
 aws iam attach-role-policy --role-name <YOUR_NODEGROUP_ROLE_NAME> --policy-arn arn:aws:iam::<YOUR_ACCOUNT_ID>:policy/EKSNodeEBSPolicy
 ```
 
+Be sure to replace `<YOUR_NODEGROUP_ROLE_NAME>` and `<YOUR_ACCOUNT_ID>` with your specific details.
+
 #### Setting the Default Storage Class
 
 To ensure that your Kubernetes pods can automatically provision EBS volumes:
@@ -172,7 +177,7 @@ These steps will configure your EKS cluster to use gp3 EBS volumes for persisten
 
 ### Installing Kubernetes Add-Ons
 
-We know we’ll want a Ingress Controller for handling in-bound requests, a monitoring stack and a certificate manager to support HTTPS connections.
+We know we'll want an Ingress Controller for handling inbound requests, a monitoring stack, and a certificate manager to support HTTPS connections.
 After your cluster is created, install the following add-ons:
 
 1. NGINX Ingress Controller
@@ -196,7 +201,7 @@ kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/
 
 ### Creating a Managed Database
 
-`scroll-sdk` uses 3 distinct databases, with 2 additional databases used for L1 and L2 Blockscout instances if needed. We'll setup a single database cluster that we'll host each database and user inside (more on the setup later).
+`scroll-sdk` uses 3 distinct databases, with 2 additional databases used for L1 and L2 Blockscout instances if needed. We'll set up a single database cluster that we'll host each database and user inside. This will be described in depth later in the guide.
 
 We'll use Amazon RDS for our managed PostgreSQL database. Let's set it up using the AWS CLI:
 
@@ -259,7 +264,7 @@ This command sequence does the following:
 - Uses a `db.t3.2xlarge` instance (suitable for testing, adjust as needed)
 - Sets the master username to `scrolladmin` (change this as desired)
 - Allocates 20GB of storage
-- Makes the database not publicly accessible for better security
+- Makes the database publicly accessible for initial setup (we'll restrict access later)
 - Creates the database in the `us-west-2` region (adjust as needed)
 
 Make sure to replace `<your-secure-password>` with a strong password.
@@ -319,7 +324,7 @@ We'll use Cloudflare for DNS management, setting up a subdomain and a wildcard r
    b. Wildcard record:
    - Type: CNAME
    - Name: *.scrollsdk
-   - Target: scrollsdk.yourdomain.com
+   - Target: scrollsdk.yourdomain.xyz
    - Proxy status: Set to "DNS only" (grey cloud icon)
 
 4. Save your changes.
@@ -337,8 +342,8 @@ We're using "DNS only" mode (grey cloud icon) for both records. This bypasses Cl
 
 Remember to update your Scroll SDK configuration to use these new subdomains. For example, you might use:
 
-- frontends.scrollsdk.yourdomain.com for your frontend
-- l2-rpc.scrollsdk.yourdomain.com for your API
+- frontends.scrollsdk.yourdomain.xyz for your frontend
+- l2-rpc.scrollsdk.yourdomain.xyz for your API
 
 Make sure to update these in your `config.toml` file and any other relevant configuration files.
 
@@ -358,14 +363,13 @@ You should see your cluster nodes listed.
 
 ### Adding External Secrets Operator
 
-Scroll SDK uses [External Secrets](https://external-secrets.io/latest/introduction/getting-started/) to manage sensitive information. Once you have `kubctl` working with your cluster, please run the following:
+Scroll SDK uses [External Secrets](https://external-secrets.io/latest/introduction/getting-started/) to manage sensitive information. Once you have `kubectl` working with your cluster, run the following:
 
 ```bash
 helm repo add external-secrets https://charts.external-secrets.io
 helm repo update
 helm install external-secrets external-secrets/external-secrets -n external-secrets --create-namespace
 ```
-
 
 ## Setup your local repo
 
@@ -379,7 +383,7 @@ mkdir aws-scroll-sdk && cd aws-scroll-sdk && git init
 
 ### Grabbing Files from `scroll-sdk`
 
-We'll want two files from the `scroll-sdk` repo. You can either copy paste the contents from GitHub, or copy the files from another location you've cloned.
+We'll want two files from the `scroll-sdk` repo. You can either copy-paste the contents from GitHub or copy the files from another location you've cloned.
 
 Here, I'll copy them from a local repo copy.
 
@@ -395,8 +399,7 @@ cp ../scroll-sdk/examples/Makefile.example ./Makefile
 cp -r ../scroll-sdk/examples/values values
 ```
 
-`Config.toml` will be used to setup our base configuration of our chain, from which each service's independent config files will be generated. `Makefile` will allow us to directly run `helm` commands in an automated way. The `values` directory contains the starter values for each service's `production.yaml` file, where we'll customize the behavior of each chart.
-
+`Config.toml` will be used to set up the base configuration of our chain, from which each service's independent config files will be generated. `Makefile` will allow us to directly run `helm` commands in an automated way. The `values` directory contains the starter values for each service's `production.yaml` file, where we'll customize the behavior of each chart.
 
 ### Preparing our Config.toml file
 
@@ -404,7 +407,7 @@ Although these values can be set manually, we have a number of "setup" methods i
 
 ### Setting Domains
 
-We want to setup our ingress hosts and the URLs used by our frontend sites. These will often be the same, but are defined separately to allow flexibility in architecture and usage of HTTP while in development.
+We want to set up our ingress hosts and the URLs used by our frontend sites. These will often be the same, but are defined separately to allow flexibility in architecture and usage of HTTP while in development.
 
 If you're using a public testnet like Scroll Sepolia, please have a private L1 RPC URL ready for HTTPS and WSS. Public RPC endpoints are too unreliable for supporting the SDK backend services.
 
@@ -470,15 +473,16 @@ CHAIN_ID_L1 = "31337"
 L1_RPC_ENDPOINT = "http://l1-devnet:8545"
 L1_RPC_ENDPOINT_WEBSOCKET = "ws://l1-devnet:8546"
 ? Do you want to update the config.toml file with these new confi
+{/* TODO: The prompt seems to be cut off. Ensure the instruction is complete. */}
 ```
-<Aside type="danger">
-The CLI tool is still experimental, so please remember you can manually modify any `config.toml` values at this stage.
+
+<Aside type="tip">
+The CLI tool doesn't account for all possible configurations, so please remember you can manually modify any `config.toml` values at this stage.
 </Aside>
 
 ### Initializing our Databases and Database Users
 
 We need to temporarily allow public access to our RDS instance to run the initial setup. After setup, we'll revert these changes to maintain security.
-
 
 1. Update the security group to allow inbound traffic from any IP:
 
@@ -501,7 +505,6 @@ aws rds describe-db-instances \
 --region us-west-2
 ```
 
-
 3. Run the database initialization:
 
 ```bash
@@ -517,7 +520,6 @@ Lastly, when asked “Do you want to update the config.toml file with the new DS
 4. Reverting RDS to Private Access:
 
 After initializing your databases, it's important to revert the RDS instance to private access for improved security. Follow these steps:
-
 
 ```bash
 # 1. Remove the public accessibility:
@@ -543,12 +545,11 @@ These steps ensure that your RDS instance is only accessible from within your VP
 
 ### Generate Keystore Files
 
-Next, we need to generate new private keys for the sequencer signer and the SDK accounts used for on-chain activity. The prompt will also ask if you want to setup backup sequencers. These will be standby fullnodes ready to take over the sequencer role if needed for recovery or key rotation. This step will also allow you to setup pre-defined bootnodes.
+Next, we need to generate new private keys for the sequencer signer and the SDK accounts used for on-chain activity. The prompt will also ask if you want to set up backup sequencers. These will be standby full nodes ready to take over the sequencer role if needed for recovery or key rotation. This step will also allow you to set up pre-defined bootnodes.
 
-This step will also update `L2_GETH_STATIC_PEERS` to point to all sequencer as well.
+This step will also update `L2_GETH_STATIC_PEERS` to point to all sequencers as well.
 
 Follow the prompt by running `scrollsdk setup gen-keystore`. Use the Owner wallet address of the multi-sig generated in the first step, or for testing, allow the script to generate a wallet for you. But, be sure to save the private key, as it should not be stored in config.toml!
-
 
 ### Generate Configuration Files
 
@@ -562,19 +563,21 @@ Now, we'll simulate contract deployment to get contract addresses and build the 
 
 ### Pull Charts and Move Config Files
 
-Now, we need to prepare the Helm charts. We will check access to charts, review the Makefile and check the values files for any missing values.
+Now, we need to prepare the Helm charts. We will check access to charts, review the Makefile, and check the values files for any missing values.
 
 To do this, run `scrollsdk setup prep-charts`
 
 <Aside type="danger">
-If you haven't setup docker permissions for accessing the private repo, you can create a legacy token with access to the `scroll-sdk` repo and run this command:
+If you haven't set up Docker permissions for accessing the private repo, you can create a legacy token with access to the `scroll-sdk` repo and run this command:
 
 `scrollsdk setup prep-charts --github-username=[username] --github-token=[token]`
+
+{/* TODO: Remove this aside after repo is public */}
 </Aside>
 
 After pulling the charts, the CLI tool will try to auto-fill each chart's `production.yaml` file.
 
-You will be prompted with each update, and even flagged for empty values. Be sure to sanity check these values to make sure you didn't setup something incorrectly earlier. If you did, re-run any earlier steps, being sure to rerun the `setup configs` command before running `setup prep-charts` .
+You will be prompted with each update and even flagged for empty values. Be sure to sanity check these values to make sure you didn't set up something incorrectly earlier. If you did, re-run any earlier steps, being sure to rerun the `setup configs` command before running `setup prep-charts`.
 
 ### Push Secrets
 
@@ -626,7 +629,7 @@ eksctl create iamserviceaccount \
     --region us-west-2
 ```
 
-Replace `YOUR_AWS_ACCOUNT_ID` with your actual AWS account ID.
+Remember to replace `YOUR_AWS_ACCOUNT_ID` with your actual AWS account ID.
 
 4. Create a SecretStore:
 
@@ -709,7 +712,10 @@ Here, we pass `-l 1` to only fund the L1 accounts. Any L2 funding will fail at t
 
 ### Installing the Helm Charts
 
-Run `make install` to install (or later, to upgrade) all the SDK charts needed. It may help to run the commands one-by-one the first time, and check the deployment status. `k9s` is a useful tool for this. The sample Make file also doesn't include Blockscout, but feel free to add it as well.
+Run `make install` to install (or later, to upgrade) all the SDK charts needed. It may help to run the commands one-by-one the first time and check the deployment status.
+
+`k9s` is a useful tool for this. The sample Makefile also doesn't include Blockscout, but feel free to add it as well.
+{/* TODO: Fix this once blockscout is official and added to Makefile */}
 
 ### Fund L2 accounts
 
@@ -731,7 +737,7 @@ Run `scrollsdk test ingress` to check all ingresses and that they match the expe
 
 ### Contracts
 
-Run `scrollsdk test contracts` to check all contract deployments, initialization and owner updates.
+Run `scrollsdk test contracts` to check all contract deployments, initialization, and owner updates.
 
 ### e2e Test
 
@@ -741,7 +747,7 @@ We recommend opening up another terminal and running `scrollsdk helper activity 
 
 ### Frontends
 
-Go visit the frontends, connect your wallet and try to bridge some funds!
+Go visit the frontends, connect your wallet, and try to bridge some funds!
 
 ## Next Steps
 
@@ -749,7 +755,7 @@ Go visit the frontends, connect your wallet and try to bridge some funds!
 
 As you work with your network, you might want to be more selective about the node groups you provide to services.
 
-One example is that the `l2-sequencer` may want additional CPU-resources and the `coordinator-api` has RAM requirements far greater than other services.
+One example is that the `l2-sequencer` may want additional CPU resources and the `coordinator-api` has RAM requirements far greater than other services.
 
 If you'd like to give this a try, create a new node group in your EKS cluster -- perhaps selecting instances with higher CPU and RAM.
 
@@ -774,7 +780,7 @@ resources:
     cpu: "7.5"
 ```
 
-Here, we're adding asking it to only select nodes that are in the "high-performance-nodegroup" and increasing the resources of the pod to allow up to 7.5 CPU cores.
+Here, we're asking it to only select nodes that are in the "high-performance-nodegroup" and increasing the resources of the pod to allow up to 7.5 CPU cores.
 
 To apply this, run:
 
@@ -799,4 +805,6 @@ controller:
   replicas: 2
 ```
 
-Some services do not support this without additional configurations (for example, `l2-sequencer` and `l2-bootnode`). We are working on additional info on how to properly run multiple services for loadbalancing between or for having redundant backups available.
+Some services do not support this without additional configurations (for example, `l2-sequencer` and `l2-bootnode`). We are working on additional info on how to properly run multiple services for load balancing between or for having redundant backups available.
+
+{/* TODO: Fix this comment once we add this documentation */}
