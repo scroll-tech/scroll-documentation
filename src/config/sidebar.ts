@@ -395,7 +395,7 @@ export const getSidebar = () => {
             url: formatUrl("sdk/guides/digital-ocean-alt-gas-token"),
           },
           {
-            title: t("sidebar.sdk.aws"),
+            title: t("sidebar.sdk.awsDeployment"),
             url: formatUrl("sdk/guides/aws-deployment"),
           },
           {

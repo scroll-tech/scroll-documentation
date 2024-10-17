@@ -168,8 +168,8 @@
       "devnetDeployment": "Devnet Deployment",
       "productionDeployment": "Production Deployment",
       "digitalOcean": "Digital Ocean & ERC20 Gas Token Testnet",
-      "aws": "AWS Deployment",
-      "customizingSdkComponents": "Customizing SDK Components"
+      "customizingSdkComponents": "Customizing SDK Components",
+      "awsDeployment": "AWS Deployment"
     }
   },
   "footer": {
