@@ -529,7 +529,55 @@ You will be prompted with each update, and even flagged for empty values. Be sur
 
 Lastly, we need to take the configuration values that are sensitive and publish them to wherever we're deploying "secrets."
 
-We'll use AWS Secrets Manager to store our secrets. First, create a SecretStore:
+We'll use AWS Secrets Manager to store our secrets. First, let's set up the necessary permissions and create a ServiceAccount:
+
+1. Create an IAM policy for accessing Secrets Manager:
+
+```bash
+cat <<EOF > secretsmanager-policy.json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "secretsmanager:GetSecretValue",
+                "secretsmanager:DescribeSecret",
+                "secretsmanager:PutSecretValue",
+                "secretsmanager:CreateSecret",
+                "secretsmanager:DeleteSecret",
+                "secretsmanager:TagResource"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+EOF
+
+aws iam create-policy --policy-name ExternalSecretsPolicy --policy-document file://secretsmanager-policy.json
+```
+
+2. Associate an IAM OIDC provider with your cluster:
+
+```bash
+eksctl utils associate-iam-oidc-provider --region=us-west-2 --cluster=scroll-sdk-cluster --approve
+```
+
+3. Create a ServiceAccount and associate it with the IAM role:
+
+```bash
+eksctl create iamserviceaccount \
+    --name external-secrets \
+    --namespace default \
+    --cluster scroll-sdk-cluster \
+    --attach-policy-arn arn:aws:iam::YOUR_AWS_ACCOUNT_ID:policy/ExternalSecretsPolicy \
+    --approve \
+    --region us-west-2
+```
+
+Replace `YOUR_AWS_ACCOUNT_ID` with your actual AWS account ID.
+
+4. Create a SecretStore:
 
 ```yaml
 apiVersion: external-secrets.io/v1beta1
@@ -544,10 +592,10 @@ spec:
       auth:
         jwt:
           serviceAccountRef:
-            name: external-secrets-sa
+            name: external-secrets
 ```
 
-Apply this **configuration**:
+Apply this configuration:
 
 ```bash
 kubectl apply -f secretstore.yaml
