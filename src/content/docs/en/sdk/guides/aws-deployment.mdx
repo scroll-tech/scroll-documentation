@@ -208,10 +208,17 @@ VPC_ID=$(aws eks describe-cluster --name scroll-sdk-cluster --region us-west-2 -
 SECURITY_GROUP_ID=$(aws ec2 create-security-group --group-name scroll-sdk-db-sg --description "Security group for Scroll SDK RDS" --vpc-id $VPC_ID --output text --region us-west-2)
 
 # Get the EKS cluster security group ID
-EKS_SG_ID=$(aws ec2 describe-security-groups --filters "Name=vpc-id,Values=$VPC_ID" "Name=group-name,Values=eksctl-scroll-sdk-cluster-cluster-ControlPlaneSecurityGroup*" --query "SecurityGroups[0].GroupId" --output text --region us-west-2)
+CLUSTER_SG_ID=$(aws ec2 describe-security-groups \
+--filters "Name=vpc-id,Values=$VPC_ID" "Name=group-name,Values=eks-cluster-sg-scroll-sdk-cluster-*" \
+--query "SecurityGroups[0].GroupId" --output text --region us-west-2)
 
 # Allow inbound traffic on port 5432 (PostgreSQL) from the EKS cluster security group
-aws ec2 authorize-security-group-ingress --group-id $SECURITY_GROUP_ID --protocol tcp --port 5432 --source-group $EKS_SG_ID --region us-west-2
+aws ec2 authorize-security-group-ingress \
+--group-id $SECURITY_GROUP_ID \
+--protocol tcp \
+--port 5432 \
+--source-group $CLUSTER_SG_ID \
+--region us-west-2
 
 # Get the public subnet IDs in the VPC
 SUBNET_IDS=$(aws ec2 describe-subnets --filters "Name=vpc-id,Values=$VPC_ID" "Name=map-public-ip-on-launch,Values=true" --query "Subnets[].SubnetId" --output json --region us-west-2)
@@ -244,7 +251,8 @@ aws rds wait db-instance-available --db-instance-identifier scroll-sdk-db --regi
 This command sequence does the following:
 - Gets the VPC ID of our EKS cluster
 - Creates a new security group for our RDS instance in the same VPC
-- Allows inbound PostgreSQL traffic from the EKS cluster's security group
+- Gets the security group ID for the EKS cluster
+- Allows inbound PostgreSQL traffic from the EKS cluster security group
 - Gets the subnet IDs in the VPC
 - Creates a DB subnet group using the VPC subnets
 - Creates a PostgreSQL database named `scrolldb`
