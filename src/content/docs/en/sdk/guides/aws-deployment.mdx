@@ -148,11 +148,27 @@ To ensure that your Kubernetes pods can automatically provision EBS volumes:
 # Verify available storage classes:
 kubectl get sc
 
-# Set the gp2 storage class as the default:
-kubectl patch storageclass gp2 -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+# Create a new gp3 storage class:
+cat <<EOF | kubectl apply -f -
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: gp3
+provisioner: ebs.csi.aws.com
+parameters:
+  type: gp3
+  encrypted: "true"
+volumeBindingMode: WaitForFirstConsumer
+EOF
+
+# Set the gp3 storage class as the default:
+kubectl patch storageclass gp3 -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+
+# Remove the default annotation from gp2 (if it exists):
+kubectl patch storageclass gp2 -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
 ```
 
-These steps will configure your EKS cluster to use EBS volumes for persistent storage, which is crucial for many components of the Scroll SDK deployment.
+These steps will configure your EKS cluster to use gp3 EBS volumes for persistent storage, which is crucial for many components of the Scroll SDK deployment
 
 ### Installing Kubernetes Add-Ons
 
@@ -489,6 +505,33 @@ Next, follow the prompts to create the new database users and passwords.
 When prompted “Do you want to connect to a different database cluster for this database?”, type “no”.
 
 Lastly, when asked “Do you want to update the config.toml file with the new DSNs?” select “yes” to update your config.
+
+4. Reverting RDS to Private Access:
+
+After initializing your databases, it's important to revert the RDS instance to private access for improved security. Follow these steps:
+
+
+```bash
+# 1. Remove the public accessibility:
+aws rds modify-db-instance \
+    --db-instance-identifier scroll-sdk-db \
+    --no-publicly-accessible \
+    --apply-immediately \
+    --region us-west-2
+
+# 2. Remove the temporary security group rule that allowed public access:
+aws ec2 revoke-security-group-ingress \
+    --group-id $SECURITY_GROUP_ID \
+    --protocol tcp \
+    --port 5432 \
+    --cidr 0.0.0.0/0 \
+    --region us-west-2
+
+# 3. Wait for the changes to take effect:
+aws rds wait db-instance-available --db-instance-identifier scroll-sdk-db --region us-west-2
+```
+
+These steps ensure that your RDS instance is only accessible from within your VPC, enhancing the security of your deployment.
 
 ### Generate Keystore Files
 
