@@ -22,6 +22,10 @@ This is set with `--miner.gasprice` on the sequencer. You can modify this value 
 
 Additionally, you could modify the `--gpo.percentile` and `--gpo.blocks` arguements, but will need to manually modify the `l2-sequencer` chart. 
 
+Lastly, RPC nodes (or any node that accepts transactions) should set `--gpo.congestionthreshold`, which we default to 500. This configuration allows nodes to provide more accurate fee estimate. The value is the number of pending transactions to consider the network congested and suggest a minimum tip cap if there are fewer pending transactions in the txpool.[^congestion-threshold]
+
+[^congestion-threshold]: See these [`l2geth` code comments](https://github.com/scroll-tech/go-ethereum/blob/develop/eth/gasprice/gasprice.go#L197) for more info.
+
 For additional information, see the [geth documentation](https://geth.ethereum.org/docs/fundamentals/command-line-options).
 
 ### Configuring L1 Fees
@@ -39,10 +43,6 @@ The following fields are set by the Owner using setter functions in the `L1GasOr
 - `scalar`
 
 To see these on Scroll's mainnet deployment, view the [L1GasOracle contract](https://scrollscan.com/address/0x5300000000000000000000000000000000000002#writeContract).
-
-<Aside type="tip">
-Note: While this can help in knowing _how_ to set these values, it doesn't help determine what values to set. We're working on tooling to help operators determine what values to set for their chains.
-</Aside>
 
 
 ## Alternative Gas Token
@@ -74,3 +74,89 @@ After the funds are bridged, the bridged funds will still need to be claimed on 
 <Aside type="tip">
 We'll likely add these steps to the CLI or Admin System Dashboard in the future.
 </Aside>
+
+# Setting scalars & additional gas oracle configuration
+
+## Set scalars
+
+On contract `L1GasPriceOracle` , there are two variables `commitScalar` and `blobScalar` . which are used to calculate L1 fee for a L1 transaction.
+
+### Calculate scalars
+
+```jsx
+// fixed values
+compression_ratio = 2.887
+blob_util_ratio = 87.1%
+
+// formula to calculate scalars
+// tx_per_block: average transaction number per L2 block
+// tx_per_batch: average transaction number per batch
+// fluctuation_multiplier: multiplier used to pervent loss from transaction number and L1 gas price fluctuation
+commitScalar = (1382.58 / tx_per_block + 71621.32 / tx_per_batch)  * fluctuation_multiplier * 1e9
+blobScalar = fluctuation_multiplier / compression_ratio / blob_util_ratio * 1e9 
+```
+
+### Set scalars to contract L1GasPriceOracle
+
+cast command to set scalars.
+
+```jsx
+cast send --rpc-url <l2_rpc_url> 0x5300000000000000000000000000000000000002 "setCommitScalar(uint256)" <commitScalar> --private-key <owner_private_key>
+cast send --rpc-url <l2_rpc_url> 0x5300000000000000000000000000000000000002 "setBlobScalar(uint256)" <blobScalar> --private-key <owner_private_key>
+```
+
+## Configuring Gas Oracle
+
+For more complicated configurations, you'll want to make manual adjustments to the gas oracle config, specifically the `alternative_gas_token_config` sections.
+
+```json
+// L1 gas oracle config
+"gas_oracle_config": {
+  "min_gas_price": 0,
+  "gas_price_diff": 50000,
+  "l1_base_fee_weight": 0.132,
+  "l1_blob_base_fee_weight":  0.145,
+  "check_committed_batches_window_minutes": 5,
+  "l1_base_fee_default": 15000000000,
+  "l1_blob_base_fee_default": 1,
+  "alternative_gas_token_config": {
+    "enabled": false,
+    "mode": "BinanceAp",
+    "fixed_exchange_rate": 0.001,
+    "token_symbol_pair": "UNIETH"
+  }
+}
+
+// L2 gas oracle config
+"gas_oracle_config": {
+  "min_gas_price": 0,
+  "gas_price_diff": 50000,
+  "alternative_gas_token_config": {
+    "enabled": false,
+    "mode": "BinanceAp",
+    "fixed_exchange_rate": 0.001,
+    "token_symbol_pair": "UNIETH"
+  }
+},
+```
+
+### L1 gas oracle config
+
+- `min_gas_price`: the minimal gas price set to contract L1GasPriceOracle. (for both baseFee and blobBaseFee)
+- `gas_price_diff`: the minimum percentage of gas price difference to update gas oracle. (for both baseFee and blobBaseFee)
+- `l1_base_fee_weight`: the weight for L1 base fee. **(deprecated after curie upgrade)**
+- `l1_blob_base_fee_weight` : the weight for L1 blob base fee. **(deprecated after curie upgrade)**
+- `check_committed_batches_window_minutes` : the time frame to check if we committed batches to decide to update gas oracle or not in minutes. If we are not committing batches due to high fees then we shouldn't update fees to prevent users from paying high l1_data_fee, so we should set fees to some default value. **(set it  to the same or slightly larger value as batch_timeout_sec, note: don’t forget convert second to minute).**
+- `l1_base_fee_default` : the default base cost value set when a batch is not committed for longer than check_committed_batches_window_minutes.
+- `l1_blob_base_fee_default` :  the default blob base cost value set when a batch is not committed for longer than check_committed_batches_window_minutes.
+- `alternative_gas_token_config` :
+    - `enabled` : if include L2/L1 gas token exchange rate into gas price. (should only set to true when alternative gas token enabled)
+    - `mode` : the mode to retrieve L2/L1 gas token exchange rate. (now we only support mode `Fixed` and `BinanceApi`)
+    - `fixed_exchange_rate` : effect only when mode is `Fixed`, it represents the number of native token on L1 required to exchange for 1 native token on L2.
+    - `token_symbol_pair` : effect only when mode is `BinanceApi`,  The pair should be L2 gas token symbol + L1 gas token symbol. For instance if we use Uni token as gas token on L2, the pair should be “UNIETH”. (check token pair support by Binance [here](https://api.binance.com/api/v3/ticker/price))
+
+### L2 gas oracle config
+
+- `min_gas_price`: the minimal gas price set to contract L1GasPriceOracle.
+- `gas_price_diff`: the minimum percentage of gas price difference to update gas oracle.
+- `alternative_gas_token_config` : refer to `alternative_gas_token_config` on L1 gas oracle config above.

@@ -169,7 +169,12 @@
       "productionDeployment": "Production Deployment",
       "digitalOcean": "Digital Ocean & ERC20 Gas Token Testnet",
       "customizingSdkComponents": "Customizing SDK Components",
-      "awsDeployment": "AWS Deployment"
+      "awsDeployment": "AWS Deployment",
+      "operation": "Operating a Chain",
+      "gasAndFees": "Gas & Fee Management",
+      "monitoring": "Monitoring",
+      "security": "Security",
+      "upgrades": "Upgrading"
     }
   },
   "footer": {

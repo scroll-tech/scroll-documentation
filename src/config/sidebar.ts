@@ -404,6 +404,27 @@ export const getSidebar = () => {
           },
         ],
       },
+      {
+        section: t("sidebar.sdk.operation"),
+        contents: [
+          {
+            title: t("sidebar.sdk.gasAndFees"),
+            url: formatUrl("sdk/operation/gas-and-fees"),
+          },
+          {
+            title: t("sidebar.sdk.monitoring"),
+            url: formatUrl("sdk/operation/monitoring"),
+          },
+          {
+            title: t("sidebar.sdk.security"),
+            url: formatUrl("sdk/operation/security"),
+          },
+          {
+            title: t("sidebar.sdk.upgrades"),
+            url: formatUrl("sdk/operation/upgrades"),
+          },
+        ],
+      },
     ],
   }
 }

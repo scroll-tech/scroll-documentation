@@ -6,10 +6,38 @@ permalink: "sdk/operation/security"
 excerpt: "Learn more about security in Scroll SDK"
 ---
 
+import Aside from "../../../../../components/Aside.astro"
+
 Security is a crucial aspect of any blockchain project, and Scroll is no exception. This section provides an overview of the security measures implemented in Scroll SDK and best practices for using it.
 
-- Owner Role & Safe Management
-- Privileged Roles
+<Aside type="caution">
+This article will cover many aspects about the security of the protocol, but attack vectors go well beyond your Scroll SDK configuration. The well-being of your users is your responsibility, and we urge you to consider all aspects of security when running a chain. Hiring a security professional is advised.
+</Aside>
+
+## Protocol Security & Risks
+
+For a comprehensive overview of the security of the protocol, L2Beat's [overview of Scroll](https://l2beat.com/scaling/projects/scroll#risk-summary) is a great place to understand the risks, centalization points and permissioned operators on Scroll chain. Because Scroll is a single entity (who also built the tech), the risk factors may increase as you coordinate with external parties (ie RaaS providers).
+
+## Owner Role & Safe Management
+
+Because the Owner Role has the ability to upgrade smart contracts, it can compromise the bridge and user funds. This account should be a multi-sig wallet, and we encourage you to review the best practices for [creating a Security Council](https://medium.com/l2beat/stages-update-security-council-requirements-4c79cea8ef52).
+
+If a RaaS provider is used, create a plan for multi-sig upgrades where the provider cannot arbitrarily upgrade the contracts.
+
+
+## Privileged Smart Contract Roles
+
+The following accounts are given roles that have special permissions and should be managed with extra care:
+
+- Deployer: Used to deploy contracts
+- Owner: Can upgrade contracts, set important parameters, whitelist accounts to grant them roles
+- L1 Gas Oracle:
+- L2 Gas Oracle:
+- Rollup Relayer Submitter:
+- Rollup Relayer Verifier:
+
+https://l2beat.com/scaling/projects/scroll#permissions
+
 - Handling Private Keys
 - Threat Models
 - Something about vault
