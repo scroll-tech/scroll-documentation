@@ -1,0 +1,192 @@
+---
+section: developers
+date: Last Modified
+title: "Transaction Fees on Scroll"
+lang: "vn"
+permalink: "developers/transaction-fees-on-scroll"
+whatsnext: { "Contract Deployment Tutorial": "/developers/guides/contract-deployment-tutorial/" }
+excerpt: "Hiểu cách hoạt động của phí giao dịch L1 và L2 trên Scroll"
+---
+
+import Aside from "../../../../components/Aside.astro"
+
+## Tổng quan
+
+Phí cuộn thấp hơn đáng kể so với lớp hỗ trợ của nó. Đối với người dùng và nhà phát triển, phí giao dịch trên Scroll dường như hoạt động tương tự như trên mạng chính Ethereum và các công cụ, ví và mã hiện có có thể sẽ hoạt động như cũ. Tuy nhiên, phí giao dịch hiển thị trong ví không phải là toàn bộ bức tranh trừ khi phần mềm nhận thức cụ thể về cách tính phí của Scroll.
+
+Do thiết kế tổng hợp L2, chi phí giao dịch phụ thuộc vào chi phí của L1. Để tận dụng tính bảo mật của Ethereum, Scroll phải tính đến chi phí của dữ liệu giao dịch và bằng chứng phải được lưu trữ và xác minh trên L1.
+
+So với mạng chính Ethereum, Scroll giới thiệu một số khía cạnh mới trong tính toán phí giao dịch để thực hiện việc này. Chi phí cuối cùng của một giao dịch được xây dựng từ nhiều phần:
+
+- **Phí L2**
+  - Tính tương tự như trên L1, bằng `gas_price * gas_used`
+- **Phí L1**
+  - Khoản phí bổ sung này bao gồm việc gửi dữ liệu đến L1 để đảm bảo tính khả dụng của dữ liệu. Các giao dịch được thực hiện trên L1 không phải trả khoản phí này. 
+  - Nó được tính dựa trên kích thước của calldata của giao dịch 
+  - ETH được tự động khấu trừ khỏi số dư của người dùng trên Scroll để trả phí
+
+
+Ở mức cao, **phí L2** là chi phí thực hiện giao dịch của bạn trên trình sắp xếp L2 và **phí L1** là chi phí thực hiện giao dịch đó trên L1.
+
+Nói tóm lại, `totalTxFee = l2Fee + l1Fee`, tất cả đều có mệnh giá bằng ETH, mã thông báo gas gốc cho mạng Scroll.
+
+<Aside type="note" title="Where are transaction fees sent?">
+Tất cả phí tx được thu vào số dư hợp đồng `L2ScrollFeeVault`. Hợp đồng này cũng theo dõi số tiền trước đây chúng tôi đã rút về L1 bằng cách sử dụng `totalProcessed()(uint256)`.
+
+Nhà sản xuất khối không nhận được phần thưởng trực tiếp và opcode `COINBASE` trả về địa chỉ kho tiền phí.
+
+</Aside>
+
+## Phí trên L2
+
+Các giao dịch trên Scroll, giống như trên Ethereum, phải trả chi phí thực hiện các tính toán và lưu trữ dữ liệu mà chúng tạo ra.
+
+### Tính phí thực hiện
+
+Phí thực hiện L2 rất đơn giản:
+```javascript
+l2TransactionExecutionFee = l2TransactionGasUsed * l2TransactionGasPrice
+```
+
+Tổng phí phụ thuộc vào nội dung giao dịch thực hiện (`l2TransactionGasUsed`) cũng như các điều kiện thị trường hiện tại (`l2TransactionGasPrice`). Người dùng đặt giá gas và "gas đã sử dụng" được đánh giá bằng cách gọi điểm cuối `estimateGas` trên nút Scroll.
+
+Nói cách khác, phí thực thi được tính toán chính xác giống như pre-[EIP1559](https://eips.ethereum.org/EIPS/eip-1559) Ethereum.
+
+## Phí trên L1
+
+Dữ liệu cuộc gọi của mọi giao dịch phải được cam kết với Ethereum, điều này sẽ phát sinh phí giao dịch bổ sung, được gọi là "Phí L1". Nếu không làm điều này, Scroll không thể được xây dựng lại chỉ từ dữ liệu L1.
+
+Các giao dịch không được thực hiện từng bước một -- chúng được thu thập theo lô khối (và khối giao dịch). Chi phí của một giao dịch riêng lẻ được tính toán dựa trên các byte số 0 và khác 0 trong tải trọng của nó.
+
+### Ước tính phí dữ liệu L1
+
+Scroll có `L1GasPriceOracle` được triển khai trước, có thể truy cập trên cả Scroll và Scroll Sepolia tại ([`0x5300000000000000000000000000000000000002`](https://sepolia-blockscout.scroll.io/address/0x53000000000000000000000000 0000000000000002)). Nó cung cấp phương pháp `getL1Fee` để ước tính phí dữ liệu L1 cho dữ liệu thô của một giao dịch nhất định.
+
+```solidity
+function getL1Fee(bytes memory _data) external view override returns (uint256);
+```
+
+<Aside type="note" title="What happens if gas prices spike on L1?">
+
+Khi trình sắp xếp thứ tự đã xử lý giao dịch, phí L1 của người dùng sẽ bị khóa và mọi biến động sẽ không ảnh hưởng đến số tiền người dùng thanh toán.
+
+<br />
+Do thời gian tạo khối của Scroll ngắn nên bất kỳ lượng khí L1 nào cũng thay đổi giữa quá trình gửi giao dịch và việc đưa giao dịch đó vào khối nên ở mức tối thiểu. Trình sắp xếp thứ tự sẽ hấp thụ mọi thay đổi đối với chi phí gas L1 giữa việc đưa giao dịch vào khối và khi trình sắp xếp chuỗi chuyển dữ liệu sang L1.
+
+</Aside>
+
+### Tính phí dữ liệu L1 với Gas Oracle
+
+Như đã đề cập, `L1GasPriceOracle` được sử dụng để ước tính phí gas L1 dựa trên dữ liệu giao dịch thô. Đây là **push oracle**, được cập nhật bởi một trình chuyển tiếp do Scroll điều hành.
+
+Phí dữ liệu được tính dựa trên nhiều yếu tố:
+
+- Các byte là `số 0` và `khác 0` của giao dịch được mã hóa RLP bằng Chữ ký
+- `l1BaseFee` - Phí cơ bản hiện tại trên L1 
+- `chi phí chung` - Chi phí gas bổ sung của giao dịch cam kết dữ liệu 
+- `scalingFactor` - Hệ số chia tỷ lệ được sử dụng để tính mức tăng đột biến của giá 
+- `PRECISION` - Một hằng số được sử dụng để tính mức phí cuối cùng.
+
+Các bước sau đây được thực hiện để tính phí dữ liệu L1:
+
+1. Đọc ba trường `l1BaseFee`, `overhead`, `scalar` từ hợp đồng `L1GasPriceOracle`. Các vị trí cho các trường này trong hợp đồng là:
+
+   | Field     | Slot |
+   | --------- | ---- |
+   | l1BaseFee | 1    |
+   | overhead  | 2    |
+   | scalar    | 3    |
+
+2. Đếm số byte 0 và byte khác 0 từ giao dịch.
+3. Tính phí dữ liệu L1, cho trước `TX_DATA_ZERO_GAS = 4` và `TX_DATA_NON_ZERO_GAS = 16`[^eip-2028] và `PRECISION = 1e9`:
+
+   ```javascript
+   l1Gas = zeros * TX_DATA_ZERO_GAS + (nonzeros + 4) * TX_DATA_NON_ZERO_GAS
+   l1GasFee = ((l1Gas + overhead) * l1BaseFee * scalar) / PRECISION
+   ```
+
+Chúng tôi dự trữ thêm 4 byte trong các byte khác 0 để lưu trữ số byte trong giao dịch được mã hóa RLP.
+
+[^eip-2028]: See [EIP-2028](https://eips.ethereum.org/EIPS/eip-2028) for more info.
+
+### L1GasPriceOracle API
+
+#### overhead
+
+```solidity
+function overhead() external view returns (uint256);
+```
+
+Trả về chi phí phí ​​L1 hiện tại
+
+#### scalar
+
+```solidity
+function scalar() external view returns (uint256);
+```
+
+Trả về phí scalar l1 hiện tại
+
+#### l1BaseFee
+
+```solidity
+function l1BaseFee() external view returns (uint256);
+```
+
+Trả về phí cơ sở l1 đã biết mới nhất
+
+#### getL1Fee
+
+```solidity
+function getL1Fee(bytes memory data) external view returns (uint256);
+```
+
+Tính toán phần phí L1 dựa trên quy mô của giao dịch đầu vào được mã hóa RLP, phí cơ sở L1 hiện tại và các thông số động khác nhau.
+
+**Trả lại:** Phí L1 phải trả cho giao dịch
+
+| Parameter | Description                                                 |
+| --------- | ----------------------------------------------------------- |
+| data      | Signed fully RLP-encoded transaction to get the L1 fee for. |
+
+#### getL1GasUsed
+
+```solidity
+function getL1GasUsed(bytes memory data) external view returns (uint256);
+```
+
+Tính toán lượng gas L1 được sử dụng cho một giao dịch. Thêm chi phí thể hiện chi phí gas cho mỗi giao dịch khi đăng giao dịch và gốc trạng thái vào L1. Thêm 74 byte đệm để giải thích cho thực tế là đầu vào không có chữ ký.
+
+**Trả về:** Lượng gas L1 được sử dụng để thực hiện giao dịch.
+
+| Parameter | Description                                                 |
+| --------- | ----------------------------------------------------------- |
+| data      | Đã ký giao dịch được mã hóa RLP đầy đủ để nhận phí L1.      |
+
+## L1 Originated Transactions
+
+Khi nhắn tin từ L1 đến L2, người dùng thanh toán toàn bộ phí giao dịch trên L1. Người dùng trả phí gas L1, nhưng vì điều này, không cần phải trả Phí dữ liệu L1. Tuy nhiên, họ sẽ cần phải tính đến Phí thực hiện L2 trong giao dịch L1 của mình và sẽ cần biết số lượng gas L2 phải trả.
+
+Các hợp đồng trên L1 có thể sử dụng Giá gas L2 mà Oracle triển khai cho L1 để nhận phí gas cho một giao dịch nhất định. Oracle cũng tiết lộ l2BaseFee hiện tại và phí tin nhắn giữa các miền ước tính cho một giới hạn gas nhất định.
+
+Trên mạng chính, `L2GasPriceOracle` được triển khai tại [`0x987e300fDfb06093859358522a79098848C33852`](https://etherscan.io/address/0x987e300fDfb06093859358522a79098848C33852).
+
+Trên Sepolia, nên sử dụng `L1MessageQueueWithGasPriceOracle` đã nâng cấp, triển khai tới [`0xF0B2293F5D834eAe920c6974D50957A1732de763`](https://sepolia.etherscan.io/address/0xF0B2293F5D834eAe920c6974D50957A 1732de763).
+
+Nếu hệ thống của bạn hỗ trợ các cơ chế ngoài chuỗi, bạn cũng có thể gọi `eth_estimateGas` và `eth_gasprice` trên bất kỳ nút Scroll RPC nào để ước tính lượng gas cần thiết cho một giao dịch nhất định.
+
+<Aside type="danger" title="Upgrade Notice">
+Sau đợt nâng cấp cầu tháng 2 năm 2024, `L1GasPriceOracle` sẽ không còn được dùng nữa và thay vào đó là `L1MessageQueueWithGasPriceOracle`, sẽ có tại [`0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B`](https://etherscan.io/address/0x0d7E906BD9cAFa154 b048cFa766Cc1E54E39AF9B).
+
+Quá trình nâng cấp dự kiến ​​sẽ hoàn tất vào ngày 21 tháng 2 năm 2024, sau khoảng thời gian hai tuần. Scroll Sepolia đã trải qua quá trình nâng cấp này. Đọc thêm [tại đây](https://scroll.io/blog/protocol-upgrade-bridging-cost-reduction).
+
+</Aside>
+{/* TODO: Add full documentation of key methods */}
+
+## Lộ trình tương lai
+
+Hiện tại, việc tính toán cần thiết để tạo bằng chứng và khí để xác minh bằng chứng trên L1 được Scroll và các đối tác chứng minh khác nhau trợ cấp. Nó được bao phủ một phần bằng cách đặt mức sàn cho Giá Gas L2.
+
+Khi mạng chứng minh trở nên phi tập trung, các biện pháp khuyến khích tạo ra bằng chứng sẽ cần được tích hợp vào giao thức để hệ thống có thể bền vững và có thể mở rộng.
+
+Chúng tôi hy vọng chi phí khí đốt cuối cùng sẽ bao gồm rõ ràng chi phí cho việc tạo ra thử nghiệm này. Với việc tối ưu hóa giao thức hơn nữa, chi phí này đối với người dùng sẽ ở mức tối thiểu vì mỗi bằng chứng bao gồm nhiều giao dịch.

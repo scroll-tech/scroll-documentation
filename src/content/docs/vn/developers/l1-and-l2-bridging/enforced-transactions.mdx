@@ -1,0 +1,57 @@
+---
+section: developers
+date: Last Modified
+title: "Enforced transactions"
+lang: "vn"
+permalink: "developers/l1-and-l2-bridging/enforced-transactions"
+excerpt: "Hợp đồng Giao dịch cưỡng bức cho phép gửi giao dịch giữa L1 ​​và L2 chức năng sendTransaction."
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+Trong các bản nâng cấp trong tương lai của Scroll, hợp đồng Giao dịch cưỡng bức sẽ cho phép gửi giao dịch giữa L1 ​​và L2 bằng chức năng **`sendTransaction`**. Hợp đồng này có những điểm tương đồng với hợp đồng Scroll Messenger vì nó cho phép gửi dữ liệu tùy ý từ lớp này sang lớp khác. Tuy nhiên, nó tự phân biệt bằng cách cho phép chuyển tiếp các giao dịch đã ký và khả năng đặt người gửi (CALLER hoặc msg.sender) trên giao dịch nhận trên Scroll.
+
+## Enforced Transactions API
+
+Vui lòng truy cập [thư viện npm](https://www.npmjs.com/package/@scroll-tech/contracts?activeTab=code) để xem tài liệu API hợp đồng Scroll đầy đủ.
+
+### sendTransaction
+
+```solidity
+function sendTransaction(address _target, uint256 _value, uint256 _gasLimit, bytes calldata _data) public payable;
+```
+
+Thêm giao dịch được thực thi vào L2 từ người gửi tài khoản EOA.
+
+| Parameter  | Description                                                |
+| ---------- | ---------------------------------------------------------- |
+| \_target   | Địa chỉ của hợp đồng mục tiêu cần gọi trong L2.            |
+| \_value    | Giá trị đã được thông qua.                                 |
+| \_gasLimit | Gas tối đa nên được sử dụng cho giao dịch này trong L2     |
+| \_data     | Dữ liệu cuộc gọi được chuyển đến hợp đồng mục tiêu.        | 
+
+### sendTransaction
+
+```solidity
+function sendTransaction(
+  address _sender,
+  address _target,
+  uint256 _value,
+  uint256 _gasLimit,
+  bytes calldata _data,
+  bytes memory _signature,
+  address _refundAddress
+) public payable;
+```
+
+Thêm giao dịch được thực thi vào L2 bằng cách chuyển tiếp chữ ký từ người gửi.
+
+| Parameter       | Description                                                     |
+| --------------- | --------------------------------------------------------------- |
+| \_sender        | Địa chỉ của người gửi sẽ thực hiện giao dịch này trong L2.      |
+| \_target        | Địa chỉ của hợp đồng mục tiêu cần gọi trong L2.                 |
+| \_value         | Giá trị đã được thông qua.                                      |
+| \_gasLimit      | Gas tối đa nên được sử dụng cho giao dịch này trong L2.         |
+| \_data          |Dữ liệu cuộc gọi được chuyển đến hợp đồng mục tiêu.              |
+| \_signature     | Chữ ký cho giao dịch.                                           |
+| \_refundAddress | Địa chỉ hoàn trả phí vượt quá.                                  |

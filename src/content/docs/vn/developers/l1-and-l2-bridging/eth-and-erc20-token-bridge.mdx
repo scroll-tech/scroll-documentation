@@ -1,0 +1,195 @@
+---
+section: developers
+date: Last Modified
+title: "ETH and ERC20 Token Bridge"
+lang: "vn"
+permalink: "developers/l1-and-l2-bridging/eth-and-erc20-token-bridge"
+whatsnext: { "ERC721 NFT Bridge": "/developers/l1-and-l2-bridging/erc721-nft-bridge/" }
+excerpt: "Bộ định tuyến cổng cho phép kết nối mã thông báo ETH và ERC20 từ L1 đến L2 bằng cách sử dụng các chức năng DepositETH và DepositERC20 tương ứng."
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+## Gửi mã thông báo ETH và ERC20 từ L1
+
+Bộ định tuyến cổng cho phép kết nối mã thông báo ETH và ERC20 từ L1 đến L2 bằng cách sử dụng các chức năng `depositETH` và `depositERC20` tương ứng. Đó là một cây cầu không được phép được triển khai trên L1. Lưu ý rằng mã thông báo ERC20 sẽ có một địa chỉ khác trên L2, bạn có thể sử dụng hàm `getL2ERC20Address` để truy vấn địa chỉ mới.
+
+<Aside type="tip" title="">
+  **`depositETH`** và **`depositERC20`** là các chức năng phải trả, số ETH gửi đến các chức năng này sẽ được sử dụng để trả phí L2. Nếu số tiền không đủ, giao dịch sẽ không được gửi. Tất cả ETH dư thừa sẽ được gửi lại người gửi. `0,00001 ETH` là quá đủ để xử lý khoản tiền gửi mã thông báo.
+</Aside>
+
+Khi kết nối mã thông báo ERC20, bạn không phải lo lắng về việc chọn Gateway phù hợp. Điều này là do `L1GatewayRouter` sẽ chọn điểm vào cơ bản chính xác để gửi tin nhắn:
+
+- **`L1StandardERC20Gateway`:** Cổng này cho phép mọi khoản tiền gửi ERC20 và sẽ được L1GatewayRouter chọn làm mặc định cho mã thông báo ERC20 không cần logic tùy chỉnh trên L2. Trong lần kết nối mã thông báo đầu tiên, một mã thông báo mới sẽ được tạo trên L2 triển khai ScrollStandardERC20. Để kết nối mã thông báo, hãy gọi hàm `depositERC20` trên `L1GatewayRouter`.
+- **`L1CustomERC20Gateway`:** Cổng này sẽ được `L1GatewayRouter` chọn cho các mã thông báo có logic tùy chỉnh. Để cặp mã thông báo L1/L2 hoạt động trên Cầu ERC20 tùy chỉnh cuộn, hợp đồng mã thông báo L2 phải triển khai `IScrollStandardERC20`. Ngoài ra, mã thông báo phải cấp khả năng `mint` hoặc` burn` cho `L2CustomERC20Gateway`. Hãy truy cập hướng dẫn [Kết nối ERC20 thông qua Cổng tùy chỉnh](/developers/guides/bridge-erc20-through-the-custom-gateway) để biết ví dụ từng bước về cách kết nối mã thông báo tùy chỉnh.
+
+Tất cả các hợp đồng Cổng sẽ tạo thành tin nhắn và gửi nó đến `L1ScrollMessenger`, có thể gửi tin nhắn tùy ý đến L2. `L1ScrollMessenger` chuyển tin nhắn đến `L1MessageQueue`. Bất kỳ người dùng nào cũng có thể gửi tin nhắn trực tiếp tới Messenger để thực thi dữ liệu tùy ý trên L2. Điều này có nghĩa là họ có thể thực thi bất kỳ chức năng nào trên L2 từ giao dịch được thực hiện trên L1 thông qua cầu nối. Mặc dù ứng dụng có thể trực tiếp chuyển tin nhắn đến các hợp đồng mã thông báo hiện có, nhưng Cổng sẽ tóm tắt các chi tiết cụ thể và đơn giản hóa việc thực hiện chuyển khoản và gọi điện.
+
+<Aside type="tip" title="">
+  Trong các bản nâng cấp trong tương lai, người dùng sẽ có thể bỏ qua `L1ScrollMessenger` và gửi tin nhắn trực tiếp đến `L1MessageQueue`. Nếu một tin nhắn được gửi thông qua `L1MessageQueue`, người gửi giao dịch sẽ là địa chỉ của người dùng gửi giao dịch chứ không phải địa chỉ địa chỉ của `L1ScrollMessenger`.
+</Aside>
+
+Khi một khối mới được tạo trên L1, Watcher sẽ phát hiện thông báo trên `L1MessageQueue` và sẽ chuyển nó đến dịch vụ Relayer, dịch vụ này sẽ gửi giao dịch đến L2 thông qua nút l2geth. Cuối cùng, nút l2geth sẽ chuyển giao dịch sang hợp đồng `L2ScrollMessagner` để thực thi trên L2.
+
+## Rút token ETH và ERC20 từ L2
+
+Cổng L2 rất giống với Cổng L1. Chúng tôi có thể rút mã thông báo ETH và ERC20 trở lại L1 bằng cách sử dụng chức năng `rútETH` và `rútERC20`. Địa chỉ hợp đồng được triển khai trên L2. Chúng tôi sử dụng `getL1ERC20Address` để truy xuất địa chỉ mã thông báo trên L1.
+
+<Aside type="tip" title="">
+ **`rútETH`** và **`rútERC20`** là các hàm phải trả và số ETH được gửi đến các hàm này sẽ là được sử dụng để thanh toán phí L1. Nếu số tiền không đủ, giao dịch sẽ không được gửi. Tất cả ETH dư thừa sẽ được gửi lại cho người gửi. Phí sẽ phụ thuộc vào hoạt động L1 nhưng `0,005 ETH` sẽ đủ để xử lý việc rút mã thông báo.
+</Aside>
+
+<Aside type="caution" title="">
+ **Đảm bảo các giao dịch sẽ không hoàn nguyên trên L1** khi gửi từ L2. Không có cách nào để khôi phục ETH được bắc cầu, mã thông báo hoặc NFT nếu giao dịch của bạn hoàn nguyên về L1. Tất cả nội dung sẽ bị đốt cháy trên Scroll khi giao dịch được gửi và không thể đúc chúng lại được.
+</Aside>
+
+## Tạo mã thông báo ERC20 với logic tùy chỉnh trên L2
+
+Nếu mã thông báo cần logic tùy chỉnh trên L2, thì mã thông báo đó sẽ cần được bắc cầu thông qua `L1CustomERC20Gateway` và `L2CustomERC20Gateway` tương ứng. Mã thông báo tùy chỉnh trên L2 sẽ cần cấp quyền cho Cổng để đúc mã thông báo mới khi tiền gửi xảy ra và ghi khi rút mã thông báo.
+
+Giao diện sau đây là `IScrollStandardERC20` cần thiết để triển khai mã thông báo tương thích với `L2CustomERC20Gateway` trên L2.
+
+```solidity
+interface IScrollStandardERC20 {
+  /// @notice Return the address of Gateway the token belongs to.
+  function gateway() external view returns (address);
+
+  /// @notice Return the address of counterpart token.
+  function counterpart() external view returns (address);
+
+  /// @dev ERC677 Standard, see https://github.com/ethereum/EIPs/issues/677
+  /// Defi can use this method to transfer L1/L2 token to L2/L1,
+  /// and deposit to L2/L1 contract in one transaction
+  function transferAndCall(address receiver, uint256 amount, bytes calldata data) external returns (bool success);
+
+  /// @notice Mint some token to recipient's account.
+  /// @dev Gateway Utilities, only gateway contract can call
+  /// @param _to The address of recipient.
+  /// @param _amount The amount of token to mint.
+  function mint(address _to, uint256 _amount) external;
+
+  /// @notice Mint some token from account.
+  /// @dev Gateway Utilities, only gateway contract can call
+  /// @param _from The address of account to burn token.
+  /// @param _amount The amount of token to mint.
+  function burn(address _from, uint256 _amount) external;
+}
+```
+
+### Thêm mã thông báo L2 ERC20 tùy chỉnh vào Scroll Bridge
+
+Mã thông báo có thể được kết nối một cách an toàn và không cần xin phép thông qua các hợp đồng Cổng được triển khai bởi bất kỳ nhà phát triển nào. Tuy nhiên, Scroll cũng quản lý Bộ định tuyến ERC20 và Cổng nơi tất cả các mã thông báo do cộng đồng tạo đều được chào đón. Trở thành một phần của Cổng được quản lý cuộn có nghĩa là bạn sẽ không cần triển khai các hợp đồng Cổng và mã thông báo của bạn sẽ xuất hiện trong giao diện Cuộn. Để trở thành một phần của Cổng cuộn, bạn phải liên hệ với nhóm Cuộn để thêm mã thông báo vào cả hợp đồng cầu nối L1 và L2. Để làm như vậy, hãy làm theo hướng dẫn trên kho lưu trữ [danh sách mã thông báo](https://github.com/scroll-tech/token-list) để thêm mã thông báo mới của bạn vào giao diện Cuộn chính thức.
+
+## L1 Gateway API
+
+Vui lòng truy cập [thư viện npm](https://www.npmjs.com/package/@scroll-tech/contracts?activeTab=code) để xem tài liệu API hợp đồng Scroll đầy đủ.
+
+### depositETH
+
+```solidity
+function depositETH(address _to, uint256 _amount, uint256 _gasLimit) public payable;
+```
+
+Sends ETH from L1 to L2.
+
+| Parameter | Description                                                                                                                 |
+| --------- | --------------------------------------------------------------------------------------------------------------------------- |
+| to        | Địa chỉ tài khoản người nhận trên L2.                                                                                       |
+| amount    | Số lượng token cần chuyển, tính bằng wei.                                                                                   |
+| gasLimit  | Giới hạn gas cần thiết để hoàn thành việc gửi tiền vào L2. 170000 là đủ để xử lý giao dịch, nhưng số tiền chưa sử dụng sẽ được hoàn lại.|
+
+### depositERC20
+
+```solidity
+function depositERC20(address _token, address _to, uint256 _amount, uint256 _gasLimit) payable;
+```
+
+Gửi mã thông báo ERC20 từ L1 đến L2.
+
+| Parameter | Description                                                                                                                 |
+| --------- | --------------------------------------------------------------------------------------------------------------------------- |
+| token     | Địa chỉ mã thông báo trên L1.                                                                                               |
+| to        | Địa chỉ tài khoản người nhận trên L2.                                                                                       |
+| amount    | Số lượng token cần chuyển, tính bằng wei.                                                                                   |
+| gasLimit  | Giới hạn gas cần thiết để hoàn thành việc gửi tiền vào L2. 20000 sẽ đủ để xử lý giao dịch, tùy thuộc vào Cổng, nhưng số tiền chưa sử dụng sẽ được hoàn lại.|
+
+### getL2ERC20Address
+
+```solidity
+function getL2ERC20Address(address _l1Token) external view returns (address);
+```
+
+Trả về địa chỉ mã thông báo L2 tương ứng cho địa chỉ mã thông báo L1.
+
+| Parameter | Description              |
+| --------- | ------------------------ |
+| \_l1Token | Địa chỉ của mã thông báo l1.|
+
+### updateTokenMapping
+
+```solidity
+function updateTokenMapping(address _l1Token, address _l2Token) external;
+```
+
+Cập nhật ánh xạ kết nối mã thông báo ERC20 từ L1 đến L2.  
+
+| Parameter | Description                                     |
+| --------- | ----------------------------------------------- |
+| \_l1Token | Địa chỉ của mã thông báo ERC20 trong L1.        |
+| \_l2Token | Địa chỉ của mã thông báo ERC20 tương ứng trong L2.|
+
+## L2 Gateway API
+
+### withdrawETH
+
+```solidity
+function withdrawETH(address to, uint256 amount, uint256 gasLimit) external payable;
+```
+
+Gửi ETH từ L2 đến L1.
+
+| Parameter | Description                                                                                             |
+| --------- | ------------------------------------------------------------------------------------------------------- |
+| to        | Địa chỉ tài khoản người nhận trên L1.                                                                   |
+| amount    | Số lượng token cần chuyển, tính bằng wei.                                                               |
+| gasLimit  | Giới hạn gas cần thiết để hoàn thành khoản tiền gửi trên L1. Đây là tùy chọn, gửi 0 nếu bạn không muốn đặt.|
+
+### withdrawERC20
+
+```solidity
+function withdrawERC20(address token, address to, uint256 amount, uint256 gasLimit) external payable;
+```
+
+Gửi mã thông báo ERC20 từ L2 đến L1.
+
+| Parameter | Description                                                                                             |
+| --------- | ------------------------------------------------------------------------------------------------------- |
+| token     | Địa chỉ mã thông báo trên L2.                                                                           |
+| to        | Địa chỉ tài khoản người nhận trên L1.                                                                   |
+| amount    | Số lượng token cần chuyển, tính bằng wei.                                                               |
+| gasLimit  | Giới hạn gas cần thiết để hoàn thành khoản tiền gửi trên L1. Đây là tùy chọn, gửi 0 nếu bạn không muốn đặt.|
+
+### getL1ERC20Address
+
+```solidity
+function getL1ERC20Address(address l2Token) external view returns (address);
+```
+
+Trả về địa chỉ mã thông báo L1 tương ứng với địa chỉ mã thông báo L2.
+
+| Parameter | Description                  |
+| --------- | ---------------------------- |
+| l2Token   | Địa chỉ của mã thông báo L2. |
+
+### updateTokenMapping
+
+```solidity
+function updateTokenMapping(address _l1Token, address _l2Token) external;
+```
+
+Cập nhật ánh xạ kết nối hợp đồng ERC20 từ L2 đến L1.
+
+| Parameter | Description                                     |
+| --------- | ----------------------------------------------- |
+| \_l2Token | Địa chỉ của mã thông báo ERC20 trong L2.        |
+| \_l1Token | Địa chỉ của mã thông báo ERC20 tương ứng trong L1.|

@@ -1,0 +1,237 @@
+---
+section: technology
+date: Last Modified
+title: "Giao Tiếp Giữa Các Miền"
+lang: "vn"
+permalink: "technology/bridge/cross-domain-messaging"
+whatsnext: { "Cổng Nạp": "/technology/bridge/deposit-gateways/" }
+---
+
+Scroll có một cầu chuyển thông điệp tùy ý cho phép chuyển token và cho phép các ứng dụng phi tầng lớp giao tiếp giữa lớp 1 và lớp 2. Điều này có nghĩa là các ứng dụng trên lớp 1 có thể kích hoạt các hàm hợp đồng trên lớp 2, và ngược lại. Tiếp theo, chúng tôi sẽ giải thích cách các thông điệp được truyền giữa lớp 1 và lớp 2.
+
+## Gửi Thông Điệp từ L1 đến L2
+
+<ClickToZoom src={L1ToL2} alt="L1 to L2 workflow" caption="Hình 1. Luồng công việc truyền thông điệp từ L1 đến L2" />
+
+Có hai phương pháp chính để gửi một thông điệp từ L1 đến L2: gửi các thông điệp tùy ý qua `L1ScrollMessenger` và gửi các giao dịch bắt buộc thông qua `EnforcedTxGateway`. Cả hai phương pháp đều cho phép người dùng khởi tạo một giao dịch L2 trên L1 và gọi các hợp đồng tùy ý trên L2. Đối với các thông điệp tùy ý, người gửi của các giao dịch L2 là địa chỉ `L1ScrollMessenger` đã được đặt tên. Đối với các giao dịch bắt buộc, người gửi L2 là một tài khoản sở hữu bên ngoài (EOA). Ngoài ra, chúng tôi cung cấp một số cổng token tiêu chuẩn để giúp người dùng nạp ETH và các token tiêu chuẩn khác bao gồm ERC-20, ERC-677, ERC-721 và ERC-1155. Đơn giản, các cổng này mã hóa các khoản nạp token thành một thông điệp và gửi nó đến các đối tác của chúng trên L2 thông qua hợp đồng `L1ScrollMessenger`. Bạn có thể tìm hiểu thêm chi tiết về các cổng token L1 trong [Cổng Nạp](/technology/bridge/deposit-gateways).
+
+<Aside type="danger" title="">
+Giao dịch bắt buộc hiện chưa được kích hoạt trên Scroll. Trong các nâng cấp tương lai, người dùng sẽ có thể sử dụng chức năng này để bỏ qua `L1ScrollMessenger` và gửi thông điệp trực tiếp đến `L1MessageQueue`.
+</Aside>
+
+Như được mô tả trong Hình 1, cả hai thông điệp tùy ý và giao dịch bắt buộc được thêm vào hàng đợi thông điệp được lưu trữ trong hợp đồng `L1MessageQueue`. Hợp đồng `L1MessageQueue` cung cấp hai chức năng `appendCrossDomainMessage` và `appendEnforcedTransaction` để thêm thông điệp tùy ý và giao dịch bắt buộc vào lượt lượt.
+
+```solidity
+/// @notice Thêm một thông điệp L1-to-L2 tùy ý vào hợp đồng này.
+/// @param target Địa chỉ mục tiêu trên L2.
+/// @param gasLimit Số gas tối đa có thể được sử dụng cho giao dịch này trên L2.
+/// @param data Dữ liệu gọi của giao dịch được khởi tạo từ L1.
+function appendCrossDomainMessage(
+    address target,
+    uint256 gasLimit,
+    bytes calldata data
+) external;
+
+/// @notice Thêm một giao dịch bắt buộc vào hợp đồng này.
+/// @param sender Địa chỉ người gửi của giao dịch này.
+/// @param target Địa chỉ mục tiêu của giao dịch này.
+/// @param value Số tiền được chuyển sang L2.
+/// @param gasLimit Số gas tối đa nên sử dụng cho giao dịch này trên L2.
+/// @param data Dữ liệu gọi của giao dịch được khởi tạo từ L1.
+function appendEnforcedTransaction(
+    address sender,
+    address target,
+    uint256 value,
+    uint256 gasLimit,
+    bytes calldata data
+) external;
+
+```
+
+Cả hai hàm xây dựng một giao dịch được khởi tạo từ L1 với một loại giao dịch mới L1MessageTx được giới thiệu trong chuỗi Scroll và tính toán mã băm của giao dịch (xem thêm chi tiết tại Giao Dịch Thông Điệp L1). L1MessageQueue sau đó thêm mã băm của giao dịch vào hàng đợi thông điệp, và phát ra sự kiện QueueTransaction(sender, target, value, queueIndex, gasLimit, calldata). Sự khác biệt giữa appendCrossDomainMessage và appendEnforcedTransaction khi xây dựng các giao dịch thông điệp L1 là:
+
+appendCrossDomainMessage chỉ có thể được gọi bởi L1ScrollMessenger và nó sử dụng [địa chỉ được đặt tên](#địa chỉ-đặt tên) của msg.sender, mà sẽ là địa chỉ của L1ScrollMessenger, như người gửi giao dịch.
+appendEnforcedTransaction chỉ có thể được gọi bởi EnforcedTxGateway và nó sử dụng sender từ tham số hàm như người gửi giao dịch. Điều này cho phép người dùng bắt buộc một rút tiền hoặc chuyển tiền ETH từ các tài khoản L2 của họ trực tiếp thông qua cầu nối L1.
+Sau khi giao dịch được thực hiện thành công trên L1, bộ giám sát trong bộ xử lý Scroll theo dõi hợp đồng L1MessageQueue thu thập các sự kiện QueueTransaction mới từ các khối L1. Bộ xử lý sau đó xây dựng một giao dịch L1MessageTx mới cho mỗi sự kiện và thêm chúng vào hàng đợi giao dịch L1 cục bộ của mình. Khi xây dựng một khối L2 mới, bộ xử lý bao gồm các giao dịch từ cả hàng đợi giao dịch L1 của mình và bộ nhớ tạm L2 của mình. Lưu ý rằng các giao dịch thông điệp L1 phải được bao gồm theo thứ tự tuần tự dựa trên thứ tự hàng đợi thông điệp L1 trong hợp đồng L1MessageQueue. Các giao dịch L1MessageTx luôn đến trước trong các khối L2 tiếp theo sau bởi các giao dịch L2. Hiện tại, chúng tôi giới hạn số lượng giao dịch L1MessageTx trong một khối L2 là NumL1MessagesPerBlock (hiện được đặt thành 10).
+
+Tiếp theo, chúng tôi sẽ mở rộng thêm về quy trình cụ thể của việc gửi thông điệp tùy ý qua L1ScrollMessenger và gửi các giao dịch bắt buộc thông qua EnforcedTxGateway.
+
+## Gửi Các Thông Điệp Tùy Ý (Sending Arbitrary Messages)
+
+Hợp đồng L1ScrollMessenger cung cấp hai hàm sendMessage để gửi các thông điệp tùy ý. Sự khác biệt duy nhất là hàm thứ hai cho phép người dùng chỉ định một địa chỉ hoàn tiền khác với địa chỉ người gửi để nhận hoàn tiền phí.
+
+<ToggleElement anchor="sendMessage function signatures">
+<div slot="title">Các chữ ký chức năng <code>sendMessage</code></div>
+```solidity
+/// @param target Địa chỉ mục tiêu trên L2.
+/// @param value Giá trị để nạp vào L2 từ `msg.value`.
+/// @param message Thông điệp được truyền cho hợp đồng mục tiêu.
+/// @param gasLimit Số gas tối đa có thể được sử dụng cho giao dịch này trên L2.
+function sendMessage(
+    address target,
+    uint256 value,
+    bytes memory message,
+    uint256 gasLimit
+) external payable;
+/// @param target Địa chỉ mục tiêu trên L2.
+/// @param value Giá trị để nạp vào L2 từ msg.value.
+/// @param message Thông điệp được truyền cho hợp đồng mục tiêu.
+/// @param gasLimit Số gas tối đa có thể được sử dụng cho giao dịch này trên L2.
+/// @param refundAddress Địa chỉ để hoàn tiền phí vượt quá trên L1.
+function sendMessage(
+address target,
+uint256 value,
+bytes calldata message,
+uint256 gasLimit,
+address refundAddress
+) external payable;
+````
+</ToggleElement>
+
+Cả hai hàm đều yêu cầu người dùng cung cấp một giới hạn gas cho giao dịch `L1MessageTx` tương ứng trên L2 và trả trước [phí chuyển thông điệp](#phí-chuyển thông điệp) trên L1, được tính dựa trên số lượng giới hạn gas. Phí được thu về một hợp đồng `feeVault` trên L1. Trong trường hợp giao dịch thất bại trên L2 vì người dùng không đặt giới hạn gas chính xác cho thông điệp của họ trên L1, người dùng có thể chạy lại cùng một thông điệp với một giới hạn gas cao hơn. Bạn có thể tìm hiểu thêm chi tiết trong phần [Chạy lại các thông điệp thất bại](#chạy lại các thông điệp thất bại), nhưng vì bất kỳ phần không sử dụng nào của các khoản phí này đều được hoàn trả cho người dùng, không có hình phạt cho việc ước lượng quá cao về giới hạn gas.
+
+Các hàm `sendMessage` mã hóa các đối số thành một thông điệp giữa các miền (xem đoạn mã bên dưới), trong đó nonce của thông điệp là chỉ số hàng đợi tiếp theo của hàng đợi thông điệp L1. Dữ liệu được mã hóa sau đó được sử dụng như calldata trong giao dịch `L1MessageTx` được thực hiện trên L2. Lưu ý rằng các thông điệp giữa các miền luôn gọi hàm `relayMessage` của hợp đồng `L2ScrollMessenger` trên L2.
+
+```solidity
+abi.encodeWithSignature(
+    "relayMessage(address,address,uint256,uint256,bytes)",
+    _sender,
+    _target,
+    _value,
+    _messageNonce,
+    _message
+)
+````
+
+Số tiền ETH được gửi của số lượng value được khóa trong hợp đồng L1ScrollMessenger. Nếu số tiền ETH trong thông điệp không thể đủ để thanh toán phí chuyển thông điệp và số tiền đã nạp, giao dịch sẽ bị quay lại. Hợp đồng L1ScrollMessenger sẽ hoàn trả số tiền dư cho địa chỉ hoàn tiền đã được chỉ định hoặc người gửi giao dịch nếu không. Cuối cùng, L1ScrollMessenger thêm thông điệp giữa các miền vào L1MessageQueue qua phương thức appendCrossDomainMessage.
+
+Gửi Các Giao Dịch Bắt Buộc
+<Aside type="danger" title="">
+Giao Dịch Bắt Buộc hiện chưa được kích hoạt trên Scroll. Trong các nâng cấp tương lai, người dùng sẽ có thể sử dụng chức năng này để bỏ qua `L1ScrollMessenger` và gửi thông điệp trực tiếp đến `L1MessageQueue`.
+</Aside>
+Hợp đồng EnforcedTxGateway cung cấp hai hàm sendTransaction để gửi một giao dịch bắt buộc. Trong hàm đầu tiên, người gửi của giao dịch L1MessageTx được tạo ra là người gửi giao dịch. Ngược lại, hàm thứ hai sử dụng địa chỉ sender được truyền qua như là người gửi của giao dịch L1MessageTx. Điều này cho phép một bên thứ ba gửi một giao dịch bắt buộc thay mặt cho người dùng và trả phí chuyển thông điệp. Lưu ý rằng hàm thứ hai yêu cầu cung cấp một chữ ký hợp lệ của giao dịch L1MessageTx được tạo ra phù hợp với địa chỉ sender. Cả hai hàm sendTransaction đều yêu cầu người gửi là một tài khoản EOA.
+
+<ToggleElement anchor="sendTransaction function signatures">
+<div slot="title"><code>sendTransaction</code> function signatures</div>
+
+```solidity
+/// @param target Địa chỉ mục tiêu trên L2.
+/// @param value Giá trị để rút từ địa chỉ `tx.origin` trên L2.
+/// @param gasLimit Số gas tối đa có thể được sử dụng cho giao dịch này trên L2.
+/// @param data Dữ liệu gọi được truyền cho hợp đồng mục tiêu.
+function sendTransaction(
+    address target,
+    uint256 value,
+    uint256 gasLimit,
+    bytes calldata data
+) external payable;
+
+/// @param sender Địa chỉ người gửi sẽ khởi tạo giao dịch này trên L2.
+/// @param target Địa chỉ mục tiêu trên L2.
+/// @param value Giá trị để rút từ địa chỉ `sender` trên L2.
+/// @param gasLimit Số gas tối đa có thể được sử dụng cho giao dịch này trên L2.
+/// @param data Dữ liệu gọi được truyền cho hợp đồng mục tiêu.
+/// @param signature Chữ ký cho giao dịch `L1MessageTx` tương ứng.
+/// @param refundAddress Địa chỉ để hoàn tiền phí vượt quá trên L1.
+function sendTransaction(
+    address sender,
+    address target,
+    uint256 value,
+    uint256 gasLimit,
+    bytes calldata data,
+    bytes memory signature,
+    address refundAddress
+) external payable;
+
+```
+
+</ToggleElement>
+
+Tương tự như việc chuyển thông điệp tùy ý, `sendTransaction` trừ phí chuyển thông điệp từ số tiền ETH được nạp đến tài khoản L1 `feeVault`. Nhưng điểm khác biệt chính là `value` được chuyển đến hàm cho biết số lượng ETH được chuyển từ tài khoản người gửi trên L2, không ở L1. Do đó, `msg.value` chỉ cần bao gồm [phí chuyển tiếp tin nhắn](#message-relay-fee). Nếu số lượng ETH trong tin nhắn không thể trả phí thì giao dịch sẽ không thành công. Mọi khoản phí vượt quá sẽ được hoàn trả cho người gửi giao dịch ở chức năng đầu tiên và cho `refundAddress` ở chức năng thứ hai. Cuối cùng, `EnforcedTxGateway` gọi `L1MessageQueue.appendEnforcedTransaction` để thêm giao dịch vào hàng đợi tin nhắn.
+
+### Đang thử lại tin nhắn không thành công (Retrying Failed Messages)
+
+Nếu giao dịch `L1MessageTx` không thành công trên L2 do không đủ gas, người dùng có thể phát lại tin nhắn với giới hạn gas cao hơn. `L1ScrollMessenger` cung cấp phương thức `replayMessage` cho phép người dùng gửi thông tin tương tự như tin nhắn không thành công trước đó với giới hạn gas cao hơn. Tin nhắn này sẽ trở thành giao dịch `L1MessageTx` mới trên L2. Lưu ý rằng chúng tôi sẽ không hoàn lại phí gas cho giao dịch thất bại trước đó vì giao dịch này đã được xử lý trên L2.
+
+<ToggleElement anchor="replayMessage function signature">
+<div slot="title"><code>replayMessage</code> function signature</div>
+
+```solidity
+/// @param from The address of the sender of the message.
+/// @param to The address of the recipient of the message.
+/// @param value The msg.value passed to the message call.
+/// @param queueIndex The queue index for the message to replay.
+/// @param message The content of the message.
+/// @param newGasLimit New gas limit to be used for this message.
+/// @param refundAddress The address of account who will receive the refunded fee.
+function replayMessage(
+    address from,
+    address to,
+    uint256 value,
+    uint256 queueIndex,
+    bytes memory message,
+    uint32 newGasLimit,
+    address refundAddress
+) external payable;
+```
+
+</ToggleElement>
+
+Bởi vì hợp đồng `L2ScrollMessenger` ghi lại tất cả các tin nhắn L1 đã được chuyển tiếp thành công đến L2, giao dịch của tin nhắn được phát lại sẽ được hoàn nguyên trên L2 nếu tin nhắn ban đầu thành công.
+
+### Phí chuyển tiếp tin nhắn (Message Relay Fee)
+
+Hợp đồng `L2GasPriceOracle` được triển khai trên L1 tính toán phí chuyển tiếp của tin nhắn dựa trên giới hạn gas của nó. Hợp đồng này lưu trữ `l2BaseFee` trong bộ lưu trữ của nó, hiện được cập nhật bởi một trình chuyển tiếp chuyên dụng do Scroll điều hành. Phí chuyển tiếp của tin nhắn L1-to-L2 là `gasLimit * l2BaseFee`.
+
+<Aside type="tip" title="Upgrade Notice">
+Trong đợt nâng cấp cầu tháng 2 năm 2024, `L2GasPriceOracle` sẽ không được dùng nữa và chức năng của nó sẽ được chuyển sang hợp đồng `L1MessageQueueWithGasPriceOracle`.
+
+Quá trình nâng cấp dự kiến ​​sẽ hoàn tất vào ngày 21 tháng 2 năm 2024, sau khoảng thời gian hai tuần. Scroll Sepolia đã trải qua quá trình nâng cấp này. Đọc thêm [tại đây](https://scroll.io/blog/protocol-upgrade-bridging-cost-reduction).
+
+</Aside>
+
+### Address Alias
+
+Do hoạt động của opcode `CREATE`, có thể ai đó triển khai hợp đồng tại cùng một địa chỉ trên L1 và L2 nhưng với mã byte khác nhau. Để tránh những người dùng độc hại lợi dụng điều này, bridge sẽ áp dụng bí danh địa chỉ khi người gửi tin nhắn là hợp đồng trên L1. Địa chỉ người gửi bí danh của giao dịch tin nhắn L1 là `l1_contract_address + offset` trong đó `offset` là `0x1111000000000000000000000000000000000001111`.
+
+## Gửi tin nhắn từ L2 đến L1 (Sending Messages from L2 to L1)
+
+<ClickToZoom src={L2ToL1} alt="L2 to L1 workflow" caption="Figure 2. L2 to L1 message relay workflow" />
+
+Trên L2, người dùng có thể gửi tin nhắn tùy ý thông qua `L2ScrollMessenger` để rút token và gọi các hợp đồng L1. Tương tự như L1, chúng tôi đã xây dựng một số cổng token tiêu chuẩn để giúp việc khởi tạo việc rút token trở nên dễ dàng hơn. Để biết thêm chi tiết về cổng mã thông báo L2, vui lòng tham khảo [Cổng rút tiền](/technology/bridge/rút-gateways).
+
+Hợp đồng `L2ScrollMessenger` cũng cung cấp chức năng `sendMessage`. Sự khác biệt so với `L1ScrollMessenger.sendMessage` là tham số `gasLimit` bị bỏ qua trong hàm vì giao dịch thực hiện rút tiền trên L1 được người dùng gửi và phí giao dịch được thanh toán trực tiếp trên L1. Do đó, hàm `sendMessage` yêu cầu `msg.value` phải bằng tham số `value`. Hàm mã hóa các đối số thành một thông báo tên miền chéo theo cùng một lược đồ như trong [`L1ScrollMessenger`](#sending-arbitrary-messages).
+
+<ToggleElement anchor="sendMessage function signatures">
+<div slot="title"><code>sendMessage</code> function signatures</div>
+
+```solidity
+/// @param target The target address on L1.
+/// @param value The value to withdraw to L1 from `msg.value`.
+/// @param message The message passed to target contract.
+/// @param _gasLimit Ignored in the L2ScrollMessenger because the withdrawal execution on L1 is done by the user.
+function sendMessage(
+    address target,
+    uint256 value,
+    bytes memory message,
+    uint256 _gasLimit
+) external payable;
+```
+
+</ToggleElement>
+
+Tiếp theo, hàm băm thông báo giữa các miền được thêm vào `L2MessageQueue` bằng cách gọi hàm `appendMessage` của nó. Hợp đồng `L2MessageQueue` duy trì [Rút Trie](#rút-trie), một cây Merkle chỉ nối thêm. Mỗi khi một tin nhắn mới được thêm vào hàng đợi, hợp đồng sẽ chèn nó vào Withdraw Trie và cập nhật hàm băm gốc của trie.
+
+Sau khi hoàn tất lô giao dịch chứa thông báo L2-to-L1 của người dùng trên hợp đồng tổng hợp L1, người dùng cần gửi giao dịch _Thực thi rút tiền_ tương ứng để gọi phương thức `relayMessageWithProof` trong hợp đồng `L1ScrollMessenger` thực hiện việc rút tiền trên L1. Nhờ bằng chứng Merkle, việc hoàn tất các giao dịch rút tiền trên L1 là không đáng tin cậy và có thể được gửi bởi chính người dùng hoặc bên thứ ba thay mặt cho người dùng.
+
+Để giúp việc xây dựng MIP rút tiền dễ dàng hơn, Scroll duy trì một dịch vụ có tên là Bridge History API. API lịch sử cầu nối giám sát các sự kiện `SentMessage` được phát ra từ `L2ScrollMessenger` và duy trì Withdraw Trie trong nội bộ. Nó liên tục tạo ra bằng chứng Merkle cho mỗi tin nhắn rút tiền. Người dùng và dịch vụ của bên thứ ba có thể truy vấn bằng chứng Merkle từ API Lịch sử cầu nối để đưa vào các giao dịch _Thực thi rút tiền_.
+
+Lưu ý rằng các giao dịch rút tiền thực hiện có thể được gửi bởi chính người dùng hoặc dịch vụ của bên thứ ba.
+
+### Withdraw Trie
+
+<ClickToZoom src={WithdrawTrie} alt="Withdraw Trie structure" caption="Figure 3. Withdraw Trie structure" />
+
+Withdraw Trie là một cây Merkle nhị phân dày đặc. Giá trị băm của nút lá được kế thừa từ giá trị băm của thông báo, trong khi giá trị băm của nút không phải là lá là bản tóm tắt băm Keccak của giá trị băm được nối của hai nút con của nó. Độ sâu của Trie Rút tiền tăng lên linh hoạt tùy thuộc vào số lượng tin nhắn được thêm vào trie.
+
+Hình 3(a) hiển thị ví dụ về thử nghiệm rút tiền 3 lớp hoàn chỉnh. Khi số lượng lá không thể bão hòa một cây nhị phân hoàn chỉnh, chúng tôi đệm các nút lá bằng hàm băm 0, như mô tả trong Hình 3(b) và 3(c). Khi thêm một tin nhắn mới vào Withdraw Trie chưa hoàn chỉnh, nút đệm sau đó sẽ được thay thế bằng một nút lá mới với hàm băm thông báo thực tế.

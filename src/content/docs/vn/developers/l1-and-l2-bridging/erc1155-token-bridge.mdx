@@ -1,0 +1,156 @@
+---
+section: developers
+date: Last Modified
+title: "ERC1155 Token Bridge"
+lang: "vn"
+permalink: "developers/l1-and-l2-bridging/erc1155-token-bridge"
+whatsnext: { "The Scroll Messenger": "/developers/l1-and-l2-bridging/the-scroll-messenger/" }
+excerpt: "Việc kết nối ERC1155 từ L1 đến L2 được thực hiện thông qua L1ERC1155Gateway."
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+## Deposit ERC1155 tokens from L1
+
+Việc kết nối ERC1155 từ L1 đến L2 được thực hiện thông qua L1ERC1155Gateway. Tương tự như cầu nối ERC721, chúng tôi không sử dụng bộ định tuyến mà sử dụng trực tiếp chức năng `depositERC1155` trên Gateway.
+
+<Aside type="tip" title="">
+  **`depositERC1155`** là chức năng phải trả và số ETH gửi đến chức năng này sẽ được dùng để thanh toán cho L2 lệ phí. Nếu số tiền không đủ, giao dịch sẽ không được gửi. Tất cả số ETH dư thừa sẽ được gửi lại cho người gửi.
+ `0,00001 ETH` là quá đủ để xử lý khoản tiền gửi mã thông báo.
+</Aside>
+
+### Tạo mã thông báo ERC1155 trên L2
+
+Tương tự như cầu nối ERC721, để kết nối các mã thông báo ERC1155, một hợp đồng tương thích với tiêu chuẩn `IScrollERC1155` phải được khởi chạy và ánh xạ trên `L1ERC1155Gateway` và `L2ERC1155Gateway` trên cả L1 và L2 tương ứng. Hợp đồng này phải cấp quyền cho Cổng trên L2 để đúc khi mã thông báo được gửi và ghi khi rút mã thông báo. 
+
+Giao diện sau đây là `IScrollERC1155` cần thiết để triển khai mã thông báo ERC1155 tương thích với `L2ERC1155Gateway` trên L2.
+
+```solidity
+interface IScrollERC1155 {
+  /// @notice Return the address of Gateway the token belongs to.
+  function gateway() external view returns (address);
+
+  /// @notice Return the address of counterpart token.
+  function counterpart() external view returns (address);
+
+  /// @notice Mint some token to recipient's account.
+  /// @dev Gateway Utilities, only gateway contract can call
+  /// @param _to The address of recipient.
+  /// @param _tokenId The token id to mint.
+  /// @param _amount The amount of token to mint.
+  /// @param _data The data passed to recipient
+  function mint(address _to, uint256 _tokenId, uint256 _amount, bytes memory _data) external;
+
+  /// @notice Burn some token from account.
+  /// @dev Gateway Utilities, only gateway contract can call
+  /// @param _from The address of account to burn token.
+  /// @param _tokenId The token id to burn.
+  /// @param _amount The amount of token to burn.
+  function burn(address _from, uint256 _tokenId, uint256 _amount) external;
+
+  /// @notice Batch mint some token to recipient's account.
+  /// @dev Gateway Utilities, only gateway contract can call
+  /// @param _to The address of recipient.
+  /// @param _tokenIds The token id to mint.
+  /// @param _amounts The list of corresponding amount of token to mint.
+  /// @param _data The data passed to recipient
+  function batchMint(
+    address _to,
+    uint256[] calldata _tokenIds,
+    uint256[] calldata _amounts,
+    bytes calldata _data
+  ) external;
+
+  /// @notice Batch burn some token from account.
+  /// @dev Gateway Utilities, only gateway contract can call
+  /// @param _from The address of account to burn token.
+  /// @param _tokenIds The list of token ids to burn.
+  /// @param _amounts The list of corresponding amount of token to burn.
+  function batchBurn(address _from, uint256[] calldata _tokenIds, uint256[] calldata _amounts) external;
+}
+```
+
+### Thêm mã thông báo ERC1155 vào Scroll Bridge
+
+Tất cả nội dung có thể được kết nối một cách an toàn và không cần xin phép thông qua các hợp đồng Gateway do bất kỳ nhà phát triển nào triển khai. Tuy nhiên, Scroll cũng quản lý hợp đồng Cổng ERC1155 trong đó tất cả NFT do cộng đồng tạo ra đều được chào đón. Trở thành một phần của Cổng được quản lý cuộn có nghĩa là bạn sẽ không cần triển khai các hợp đồng Cổng và mã thông báo của bạn sẽ xuất hiện trong giao diện Cuộn. Để trở thành một phần của Cổng cuộn, bạn phải liên hệ với nhóm Cuộn để thêm mã thông báo vào cả hợp đồng Cổng L1 và L2. Để làm như vậy, hãy làm theo hướng dẫn trên kho lưu trữ [danh sách mã thông báo](https://github.com/scroll-tech/token-list) để thêm mã thông báo của bạn vào giao diện chính thức của Scroll.
+
+## Rút token ERC1155 từ L2
+
+Hợp đồng `L2ERC1155Gateway` được sử dụng để gửi mã thông báo từ L2 đến L1. Trước khi kết nối, hợp đồng `L2ERC1155Gateway` phải được hợp đồng mã thông báo phê duyệt. Sau khi hoàn tất, `rútERC1155` có thể được gọi để thực hiện kết nối tài sản.
+
+<Aside type="tip" title="">
+  **`withdrawERC1155`** là chức năng phải trả và số ETH gửi đến chức năng này sẽ được dùng để thanh toán cho L1 lệ phí. Nếu số tiền không đủ, giao dịch sẽ không được gửi. Tất cả ETH dư thừa sẽ được gửi lại cho người gửi. Phí phụ thuộc vào hoạt động L1 nhưng `0,005 ETH` sẽ đủ để xử lý việc rút mã thông báo.
+</Aside>
+
+<Aside type="caution" title="">
+ **Đảm bảo giao dịch sẽ không hoàn nguyên trên L1** khi gửi từ L2. Không có cách nào để khôi phục mã thông báo được bắc cầu nếu giao dịch của bạn hoàn nguyên trên L1. Tất cả tài sản đều bị đốt cháy trên L2 khi giao dịch được gửi và không thể đúc được họ một lần nữa.
+</Aside>
+
+## L1ERC1155Gateway API
+
+Vui lòng truy cập [thư viện npm](https://www.npmjs.com/package/@scroll-tech/contracts?activeTab=code) để xem tài liệu API hợp đồng Scroll đầy đủ.
+
+### depositERC1155
+
+```solidity
+function depositERC1155(
+  address _token,
+  address _to,
+  uint256 _tokenId,
+  uint256 _amount,
+  uint256 _gasLimit
+) external payable;
+```
+
+Gửi mã thông báo ERC1155 từ L1 vào tài khoản của người nhận trên L2.
+
+| Parameter | Description                                       |
+| --------- | ------------------------------------------------- |
+| token     | Địa chỉ của hợp đồng token ERC1155 trên L1.       |
+| to        | Địa chỉ tài khoản người nhận trên L2.             |
+| tokenId   | Id NFT để gửi tiền.                               |
+| amount    | Số lượng token cần gửi.                           |
+| gasLimit  | Giới hạn gas cần thiết để hoàn thành việc gửi tiền vào L2. Phần phí chưa sử dụng sẽ được hoàn lại.|
+
+### updateTokenMapping
+
+```solidity
+function updateTokenMapping(address _l1Token, address _l2Token) external;
+```
+
+Cập nhật ánh xạ kết nối hợp đồng mã thông báo ERC1155 từ L1 đến L2.
+
+| Parameter | Description                                       |
+| --------- | ------------------------------------------------- |
+| \_l1Token | Địa chỉ của mã thông báo ERC1155 trong L1.        |
+| \_l2Token | Địa chỉ của mã thông báo ERC1155 tương ứng trong L2.|
+
+## L2ERC1155Gateway API
+
+### withdrawERC1155
+
+```solidity
+function withdrawERC1155(address token, address to, uint256 tokenId, uint256 amount, uint256 gasLimit) external payable;
+```
+
+Gửi mã thông báo ERC1155 từ L2 đến tài khoản của người nhận trên L1.
+
+| Parameter | Description                                                              |
+| --------- | ------------------------------------------------------------------------ |
+| token     | Địa chỉ của hợp đồng token ERC1155 trên L2.                              |
+| to        | Địa chỉ tài khoản người nhận trên L1.                                    |
+| tokenId   | Id NFT để rút.                                                           |
+| amount    | Số lượng token cần rút.                                                  |
+| gasLimit  | Không được sử dụng nhưng được đưa vào để cân nhắc khả năng tương thích về sau.|
+
+### updateTokenMapping
+
+```solidity
+function updateTokenMapping(address _l1Token, address _l2Token) external;
+```
+
+Cập nhật ánh xạ kết nối hợp đồng mã thông báo ERC1155 từ L2 đến L1.
+| Parameter | Description                                       |
+| --------- | ------------------------------------------------- |
+| \_l1Token | Địa chỉ của mã thông báo ERC1155 thứ trong L1.    |
+| \_l2Token | Địa chỉ của mã thông báo ERC1155 tương ứng trong L2.|
