@@ -19,6 +19,138 @@ The following contracts are used to initiate upgrades and execute upgrades after
 
 You can join our [Telegram channel for technical updates](https://t.me/scroll_tech_updates), which includes future upgrade announcements and on-chain operation events.
 
+## DarwinV2 Upgrade
+
+### Overview
+
+During internal testing, we identified that blocks may not always be compressible under certain conditions, which leads to unprovable chunks and batches.
+To fix this issue, a minor upgrade has been conducted so that uncompressed blobs will be enabled when this special case is detected.
+
+### Timeline
+
+As this is a security related patch, we bypassed the 7-day timelock mechanism.
+
+- **Scroll Sepolia**: August 28th, 2024
+- **Scroll Mainnet**: September 2nd, 2024
+
+### Compatibility
+
+#### Sequencer and Follower Nodes (l2geth)
+
+The new node version is `v5.7.0`. See the [release notes](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.7.0) for more information.
+
+This upgrade does not change Scroll's state transition function, so it is backward compatible. However, the format of the batch data committed to Ethereum changes. As a result, nodes that enabled rollup verification (`--rollup.verify`) must upgrade to be able to follow the chain.
+
+#### Dapps and Indexers
+
+A change has been implemented to Scroll Mainnet to enhance sequencer throughput, which adjusted the maximum reorg depth to 17 blocks. Previously, the system performed thorough capacity checks within the signer thread to determine whether transactions exceed the circuit limit. While this ensures that all transactions within a block are compliant, it also requires additional CPU resources.
+We introduced a new circuit capacity checking scheme on Mainnet. The sequencer thread now will continue to perform capacity checks, but in a more approximate manner. In parallel, 16 worker threads will accurately verify the capacity of previous blocks. As a result, a reorg could occur with a maximum depth of 17 blocks, although the likelihood of this is low.
+
+For indexers, the `BatchHeader` version has been upgraded to 4. This is backward compatible (the only exception is for developers decoding the blob payload, which has changed slightly).
+
+## Darwin Upgrade
+
+### Overview
+
+This upgrade will reduce gas fees by 34% by using a single aggregated proof for multiple batches, eliminating the need to finalize each batch individually.
+
+- Darwin uses a new [V3 batch codec](https://github.com/scroll-tech/da-codec/tree/main/encoding/codecv3).
+- In addition to the previous notions of `chunk` and `batch`, we have introduced a new concept called `bundle`.
+    - `Chunk`: A unit of zkEVM proving, consisting of a list of L2 blocks.
+    - `Batch`: A collection of chunks encoded into one EIP-4844 blob, serving as the unit of Data Availability.
+    - `Bundle`: A series of batches that functions as the unit of finalization.
+    
+    The main difference compared to Curie is that Scroll will now finalize multiple batches using a single aggregated bundle proof.
+    
+- The on-chain bundle proof verifier uses a new public input layout.
+
+### Timeline
+
+- **Scroll Sepolia**
+	- Network Upgrade: August 14th, 2024
+- **Scroll Mainnet**
+	- Upgrade Initiation: August 5th, 2024
+	- Timelock Completion & Upgrade: August 21st, 2024
+
+### Technical Details
+
+#### Contract Changes
+
+*Note: Since the previous Curie upgrade, we have migrated the Scroll contracts to a new repo at [scroll-contracts](https://github.com/scroll-tech/scroll-contracts).*
+
+The code changes for this upgrade are implemented in [this PR](https://github.com/scroll-tech/scroll-contracts/pull/4). The key changes are as follows:
+
+- We have introduced a new `BatchHeaderV3Codec`.
+- We have changed how messages are processed in the `L1MessageQueue` contract. Prior to Darwin, we would process messages when a batch is finalized. After Darwin, most of this processing is moved to the commit step.
+- We have introduced a new public input format for bundle proofs. This is implemented in a new contract `IZkEvmVerifierV2`, which is in turn added to `MultipleVersionRollupVerifier`.
+- In the `ScrollChain` contract `version=3` batches will now be committed through a new function called `commitBatchWithBlobProof`. Bundles will be finalized using a new function called `finalizeBundleWithProof`.
+
+See the contract [release notes](https://github.com/scroll-tech/scroll-contracts/releases/tag/v1.0.0) for more information.
+
+#### Node Changes
+
+The new node version is `v5.6.0`. See the [release notes](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.6.0) for more information.
+
+The main changes are:
+
+- Implementation of timestamp-based hard forks.
+- Processing V3 batch codec in rollup-verifier.
+
+#### zkEVM circuit changes
+
+The new version of zkevm circuits is `v0.12.0`. See [here](https://github.com/scroll-tech/zkevm-circuits/releases/tag/v0.12.0) for the release log.
+
+We have introduced a `RecursionCircuit` that will bundle multiple sequential batches by recursively aggregating the SNARKs from the `BatchCircuit` (previously `AggregationCircuit`). The previously 5 layer proving system is now 7 layers as we introduce:
+
+- 6th Layer (layer5): `RecursionCircuit` that recursively aggregates `BatchCircuit` SNARKs.
+- 7th Layer (layer6): `CompressionCircuit` that compresses the `RecursionCircuit` SNARK and produce an EVM-verifiable validity proof.
+
+The public input to the `BatchCircuit` is now context-aware of the “previous” `batch`, which allows us to implement the recursion scheme we adopted (described [here](https://scrollzkp.notion.site/Upgrade-4-Darwin-Documentation-05a3ecb59e9d4f288254701f8c888173) in-depth).
+
+#### Audits
+
+- TrailofBits: coming soon!
+
+### Compatibility
+
+#### Sequencer and Follower Nodes (l2geth)
+
+This upgrade does not alter the state transition function and is therefore backward-compatible. However, we strongly recommend node operators to upgrade to [v5.6.0](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.6.0).
+
+#### Dapps and Indexers
+
+There are some major changes to how we commit and finalize batches after Darwin. 
+
+- Batches will be encoded using the new [V3 batch codec](https://github.com/scroll-tech/da-codec/tree/main/encoding/codecv3). This version adds two new fields:
+    1. `lastBlockTimestamp` (the timestamp of the last block in this batch).
+    2. `blobDataProof` (the KZG challenge point evaluation proof).
+    
+    This version removes `skippedL1MessageBitmap`. There will be no changes to how the blob data is encoded and compressed.
+- Batches will be committed using the `commitBatchWithBlobProof` function (instead of the previous `commitBatch`).
+    
+    New function signature:
+    
+    ```solidity
+    function commitBatchWithBlobProof(uint8 _version, bytes calldata _parentBatchHeader, bytes[] memory _chunks, bytes calldata _skippedL1MessageBitmap, bytes calldata _blobDataProof)
+    ```
+    
+- Batches will be finalized using the `finalizeBundleWithProof` function (instead of the previous `finalizeBatchWithProof4844`).
+    
+    New function signature:
+    
+    ```solidity
+    function finalizeBundleWithProof(bytes calldata _batchHeader, bytes32 _postStateRoot, bytes32 _withdrawRoot, bytes calldata _aggrProof)
+    ```
+    
+- The semantics of the `FinalizeBatch` event will change: It will now mean that all batches between the last finalized batch and the event’s `_batchIndex` have been finalized. The event’s stateRoot and withdrawRoot values belong to the last finalized batch in the bundle. Finalized roots for intermediate batches are no longer available.
+    
+    The semantics of the `CommitBatch` and `RevertBatch` events will not change.
+
+Recommendations:
+
+- Indexers that decode committed batch data should be adjusted to use the new codec and the new function signature.
+- Indexers that track batch finalization status should be adjusted to consider the new event semantics.
+
 ## Curie Upgrade
 
 ### Overview

@@ -5,6 +5,7 @@ title: "Running a Scroll L2geth Node"
 lang: "en"
 permalink: "developers/guides/running-a-scroll-node"
 excerpt: "This guide contains instructions on how to run your own node on the Scroll network."
+whatsnext: { "Canvas & Bridge Integration Guide": "/developers/guides/canvas-badge-integration" }
 ---
 
 import Aside from "../../../../../components/Aside.astro"
@@ -18,7 +19,7 @@ For most developers, using [our official RPC endpoint](/en/developers/developer-
 
 We recommend using the latest release at https://github.com/scroll-tech/go-ethereum/releases. The required version for Scroll Mainnet is `scroll-v5.5.0` or higher, and for Scroll Sepolia it is `scroll-v5.4.2` or higher. If you'd like to keep up with new node releases, go to https://github.com/scroll-tech/go-ethereum, click on **Watch**, **Custom**, and make sure that **Releases** is selected.
 
-For the remainder of this guide, `VERSION` will denote the version tag. For example, `scroll-v5.5.0`.
+For the remainder of this guide, `VERSION` will denote the version tag. For example, `scroll-v5.7.0`.
 
 ### Hardware Requirements
 
@@ -118,7 +119,7 @@ Running the node in Docker might have a significant impact on node performance.
         --http --http.addr "0.0.0.0" --http.port 8545 --http.api "eth,net,web3,debug,scroll" \
         --l1.endpoint "$L2GETH_L1_ENDPOINT" --rollup.verify
     ```
-    For Scroll Sepolia, set the chain ID to 534351.
+    For Scroll Sepolia, set the chain ID to 534351 and use `--scroll-sepolia` instead of `--scroll`.
 
 2. In a separate shell, you can now attach to `l2geth`.
     
