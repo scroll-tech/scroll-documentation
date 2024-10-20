@@ -24,6 +24,7 @@ export type Frontmatter = {
 
   // whats next links at the end of the content
   whatsnext: Record<Text, Link>
+  draft?: boolean
   metadata?: {
     title?: string
     description?: string
