@@ -175,7 +175,8 @@
       "gasAndFees": "Gas & Fee Management",
       "monitoring": "Monitoring",
       "security": "Security",
-      "upgrades": "Upgrading"
+      "upgrades": "Upgrading",
+      "troubleshooting": "Troubleshooting"
     }
   },
   "footer": {

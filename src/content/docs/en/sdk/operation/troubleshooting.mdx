@@ -1,0 +1,162 @@
+---
+section: sdk
+title: "Troubleshooting a Scroll SDK Deployment"
+lang: "en"
+permalink: "sdk/operation/troubleshooting"
+excerpt: "Troubleshooting issues you may encounter when running Scroll SDK"
+---
+
+import Steps from '../../../../../components/Steps/Steps.astro';
+import Aside from '../../../../../components/Aside.astro';
+
+The Scroll SDK is a complex system with many interdependent services. This document covers common issues you may encounter when running the SDK and how to resolve them.
+
+### Rollup node isn't committing batches or finalizing
+
+<Steps>
+
+1. Check if the accounts have funds
+   - Verify public addresses and send them funds on L1
+
+2. Look for logs about "check chain monitor"
+   - If present, check chain monitor logs. You may not have enough blocks *after* the batch to finalize. 
+   - Generate more network activity to produce blocks, or change the `chain-monitor-config.json` value:
+
+     ```json
+     "l2_config": {
+       ...
+       "confirm": "0x80",
+       ...
+     }
+     ```
+
+3. If your logs include something like "replacement transaction underpriced: new tx blob gas fee cap 1000000000000 &le; 574376045900 queued + 100% replacement penalty":
+   - Update these values in `rollup-config.json`:
+
+     ```json
+     "l2_config": {
+       ...
+       "max_gas_price": 5000000000000,
+       "max_blob_gas_price": 5000000000000,
+       ...
+     }
+     ```
+
+4. If you see "Failed to finalize timeout batch without proof":
+   ```
+   ERROR[08-29|18:40:37.366|scroll-tech/rollup/internal/controller/relayer/l2_relayer.go:465] Failed to finalize timeout batch without proof  ││ index=6 hash=0x05bc419ecb59e9566554ddb716ee4b69fbe3b103a84e1c714656190c5af5028c err="failed to get batch status, errCode: 40001, errMsg: " ││ WARN [08-29|18:40:52.273|scroll-tech/rollup/internal/controller/relayer/l2_relayer.go:506] failed to get batch status, please check chain_ ││ monitor api server batch_index=6 err="failed to get batch status, errCode: 40001, errMsg: " 
+   ```
+   - Confirm that chain monitor's Layer 2 "start block" is higher than the block in the batch. See the change for `chain-monitor-config.json` value above.
+
+</Steps>
+
+### Unable to withdraw funds
+
+<Steps>
+
+1. Check if the withdrawal block is finalized
+   - If not, wait for finalization
+
+2. Verify if bridge-history-fetcher is still syncing
+   - Check its 'fetch and save L1 events" height
+   - You may need to wait for it to catch up before the bridge history API can create a withdrawal proof
+
+</Steps>
+
+### Didn't receive funds on Layer 2 after deposit on Layer 1
+
+<Steps>
+
+1. Check if the deposit transaction block is finalized on Layer 1
+   - If not, wait (or send a transaction on Layer 1 to force block generation if using anvil)
+
+2. Verify if there's a transaction on Layer 2
+   - If not, send a transaction on Layer 2 to force block generation
+
+</Steps>
+
+### Rollup node failed to get batch status
+
+Error from rollup node pod:
+
+```
+ERROR[09-18|07:52:21.515|scroll-tech/rollup/internal/controller/relayer/l2_relayer.go:489] Failed to finalize timeout batch without proof index=1 hash=0x43b0e21561d60b052c14eeb53f04c4f797b6c1532fae207fcb03f7da3ea819dd err="failed to get batch status, errCode: 40001, errMsg: "
+```
+
+This occurs because there are not enough L2 blocks generated. Continue sending transactions on L2 to force block generation, which should resolve the issue.
+
+### Gas-oracle/rollup-relayer failed to get fee data
+
+Error: `max fee per gas less than block base fee`
+
+This is a bug from the l2-geth node. A workaround is to manually send a legacy transaction with a high gas price.
+
+### Rollup node failed to commit a batch, and batch status on rollup-explorer is unknown
+
+#### Issue context
+
+```
+ERROR[10-15|09:04:42.873|scroll-tech/rollup/internal/controller/relayer/l2_relayer.go:476]      
+Failed to send commitBatch tx to layer1  index=191 hash=0x80c87236e31dd2b33cb03909905e7ccdf070ea879b8e7f5c91542fd1a1ad7d6f RollupContractAddress=0xE518eD8A0568c99Be066ecEDcf29e0C1315E4b77 err="failed to get fee data, err: execution reverted
+```
+
+#### Analysis
+
+**Issue 1:** The failed commit transaction (txhash: 0x1ca3fb4ed1688d7aa43d65f3d8ef0a98ff6afb03dc9cff69924f77fd1f06e432) reverted with error code 0x12137ab0, which stands for `"ErrorBatchIsAlreadyCommitted()"`. The rollup node is attempting to commit an already committed batch. This likely occurred because the rollup node stopped while sending a commit transaction to L1. L1 received the transaction, but the rollup node didn't save it in the pending_transaction table of the database.
+
+**Issue 2:** After fixing Issue 1, another issue arose where the rollup node failed to commit a later batch, reverting with the error `ErrorIncorrectBatchHash()`. This was caused by updating the batch rollup_status in the database without shutting down the rollup node, leading to the rollup fetching incorrect batch information.
+
+#### Solutions
+
+**Issue 1:**
+
+<Steps>
+
+1. Debug the failed commit transaction using the `debug_traceTransaction` RPC method:
+
+   ```bash
+   curl l1_rpc_url -X POST -H "Content-Type: application/json" --data '{"method":"debug_traceTransaction","params":["0x1ca3fb4ed1688d7aa43d65f3d8ef0a98ff6afb03dc9cff69924f77fd1f06e432", {"tracer": "callTracer"}], "id":1,"jsonrpc":"2.0"}'
+   ```
+
+   If the output is `0x12137ab0` (`ErrorBatchIsAlreadyCommitted()`), it confirms Issue 1.
+
+2. Shut down the rollup-node and gas-oracle.
+
+3. In the PostgreSQL database, select the `batch` table and update the `rollup_status` of the corresponding failing commit batch to `3` (representing rollup committed).
+
+4. Restart the rollup-node and gas-oracle.
+
+</Steps>
+
+**Issue 2:**
+
+<Aside type="caution">
+  Warning: Proceed with extreme caution, especially in a production environment. It's advisable to seek assistance from the Scroll team.
+</Aside>
+
+Issue 2 typically shouldn't occur unless the rollup-node wasn't shut down when solving Issue 1. If it happens anyway:
+
+<Steps>
+
+1. Debug the failed commit transaction using the `debug_traceTransaction` RPC method:
+
+   ```bash
+   curl l1_rpc_url -X POST -H "Content-Type: application/json" --data '{"method":"debug_traceTransaction","params":["0x1ca3fb4ed1688d7aa43d65f3d8ef0a98ff6afb03dc9cff69924f77fd1f06e432", {"tracer": "callTracer"}], "id":1,"jsonrpc":"2.0"}'
+   ```
+
+   If the output is `0x2a1c1442` (`ErrorIncorrectBatchHash()`), it confirms Issue 2.
+
+2. Revert the incorrect batch (the previous batch of the current failing commit batch):
+   `revert_batch_number = current_failing_batch_number - 1`
+
+3. Shut down the rollup-node and gas-oracle. In the PostgreSQL database, select the `batch` table and delete batches where `batch_index ≥ revert_batch_number`.
+
+4. Revert the batch on the scrollChain contract:
+
+   ```bash
+   cast send --rpc-url <l1_rpc_url> <scroll_chain_contract_address> "revertBatch(bytes, bytes)" <revert_batch_header> <revert_batch_header> --private-key <owner_private_key>
+   ```
+
+5. Restart the rollup-node and gas-oracle.
+
+</Steps>

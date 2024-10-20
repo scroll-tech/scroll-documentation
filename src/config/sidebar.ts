@@ -427,6 +427,10 @@ export const getSidebar = () => {
             title: t("sidebar.sdk.upgrades"),
             url: formatUrl("sdk/operation/upgrades"),
           },
+          {
+            title: t("sidebar.sdk.troubleshooting"),
+            url: formatUrl("sdk/operation/troubleshooting"),
+          },
         ],
       },
     ],
