@@ -24,10 +24,10 @@ If you'd like to add an entry to our [tooling list](http://docs.scroll.xyz/en/de
 ---
 name: "Safe"
 category: ["Identity", "Wallet"]
-excerpt: "Safe allows you to create smart wallet on chain."
+excerpt: "Safe allows you to create a smart wallet on chain."
 logo: { src: "https://app.safe.global/images/safe-logo-green.png", alt: "Safe Logo" }
 website: "https://app.safe.global"
-network: ["Mainnet", "Testnet]
+network: ["Mainnet", "Testnet"]
 noAdditionalInfo: false
 ---
 
