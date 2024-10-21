@@ -4,7 +4,12 @@
     "more": "Más",
     "editThisPage": "Editar esta página",
     "joinOurCommunity": "Únete a nuestro Discord",
-    "feedback": "Feedback"
+    "feedback": "Comentarios",
+    "feedbackForm": {
+      "thankYouMessage": "¡Agradecemos tus comentarios! 🤎",
+      "instructions": "Cuéntanos más sobre tu experiencia.",
+      "submit": "enviar"
+    }
   },
   "ui": {
     "whatsNext": "¿Qué sigue?",
