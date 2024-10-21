@@ -7,7 +7,7 @@ permalink: "user-guide/transfer-tokens/"
 excerpt: "You can use your wallet as usual to transfer tokens within the Scroll Sepolia Testnet."
 ---
 
-You can use your wallet's normal function for transferring tokens within the Scroll Sepolia Testnet -- no additional configurations are needed.
+You can use your wallet's normal function for transferring tokens within the [Scroll Sepolia Testnet](https://www.alchemy.com/faucets/ethereum-sepolia) -- no additional configurations are needed.
 
 ## Sending a token in MetaMask
 
