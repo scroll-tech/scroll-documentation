@@ -191,14 +191,7 @@ helm repo update
 helm install nginx-ingress nginx-stable/ingress-nginx --namespace kube-system
 ```
 
-2. Prometheus Stack:
-```bash
-helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-helm repo update
-helm install kube-prometheus-stack prometheus-community/kube-prometheus-stack --namespace kube-system
-```
-
-3. Cert-Manager:
+2. Cert-Manager:
 ```bash
 kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.16.0/cert-manager.yaml
 ```
