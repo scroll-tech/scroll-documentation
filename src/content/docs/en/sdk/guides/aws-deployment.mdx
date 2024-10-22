@@ -14,6 +14,10 @@ import ToggleElement from "../../../../../components/ToggleElement.astro";
 import AWSCloudflareDNSWildcards from "./_images/aws-cloudflare-dns-wildcards.png";
 import AWSCloudflareDNS from "./_images/aws-cloudflare-dns.png";
 import AWSEBSDriver from "./_images/aws-ebs-driver.png";
+import CreateSlackApp from "./_images/CreateSlackApp.png"
+import AddNewWebhookToWorkspace from "./_images/AddNewWebhookToWorkspace.png"
+import CopyWebhookURL from "./_images/CopyWebhookURL.png"
+import GrafanaDashboard from "./_images/grafana.png"
 
 This guide demonstrates how to deploy a Scroll SDK on Amazon Web Services (AWS) using Elastic Kubernetes Service (EKS) and other managed services.
 
@@ -808,3 +812,62 @@ controller:
 Some services do not support this without additional configurations (for example, `l2-sequencer` and `l2-bootnode`). We are working on additional info on how to properly run multiple services for load balancing between or for having redundant backups available.
 
 {/* TODO: Fix this comment once we add this documentation */}
+
+
+### Monitoring  
+You can monitor the cluster's running status through Grafana. 
+Additionally, you can send alerts via email and Slack using Alertmanager. 
+If you have configured a domain for Grafana in the previous steps, you can access it by opening http://grafana.yourdomain.xyz, where you will see two sets of dashboards.
+<ClickToZoom src={GrafanaDashboard} alt="Copy Webhook URL" />
+
+#### send alert to slack
+1. **Create a Slack App**
+
+   Open [https://api.slack.com/apps](https://api.slack.com/apps) and click **`Create New App`** if you don't have one already. Select **`From scratch`**, enter a name, and select the workspace.
+
+2. **Activate Incoming Webhooks**
+
+   Click the **`Incoming Webhooks`** label on the right side of the page, then turn on **`Activate Incoming Webhooks`**.  
+   <ClickToZoom src={CreateSlackApp} alt="Create Slack App" />
+
+   Click the **`Add New Webhook to Workspace`** button.  
+   <ClickToZoom src={AddNewWebhookToWorkspace} alt="Add New Webhook to Workspace" />
+
+   Select the channel you want to send alerts to, then copy the Webhook URL.  
+   <ClickToZoom src={CopyWebhookURL} alt="Copy Webhook URL" />
+
+
+3. **Edit the Config File**
+
+    Edit `./values/alert-manager.yaml` to replace it with your webhook URL and your Slack channel name.
+    ```
+    kube-prometheus-stack:
+      alertmanager:
+        config:
+          global:
+            resolve_timeout: 5m
+            slack_api_url: 'https://hooks.slack.com/services/xxxxxxxxxxx/xxxxxxxxxxx/xxxxxxxxxxxxxxxxxxxxxxxx' # your webhook url
+          receivers:
+          - name: 'slack-alerts'
+            slack_configs:
+            - channel: '#scroll-webhook' #your channel name
+              send_resolved: true
+              text: '{{ .CommonAnnotations.description }}'
+              title: '{{ .CommonAnnotations.summary }}'
+          route:
+            group_by: ['alertname']
+            receiver: 'slack-alerts'
+            routes:
+            - matchers: []
+              receiver: 'slack-alerts'
+    ```
+    This configuration file will send all alerts to your Slack channel. If you need more complex rules, refer to the [Prometheus Alerting Configuration Documentation](https://prometheus.io/docs/alerting/latest/configuration/).
+
+4. **Update to alertmanager**
+
+    Use the following command to update Alertmanager:
+    ```
+    helm upgrade -i scroll-monitor oci://ghcr.io/scroll-tech/scroll-sdk/helm/scroll-monitor -n $(NAMESPACE) \
+        --version=0.0.4 \
+        --values ./values/alert-manager.yaml
+    ```
