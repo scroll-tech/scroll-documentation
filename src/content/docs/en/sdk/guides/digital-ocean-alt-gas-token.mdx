@@ -529,6 +529,186 @@ controller:
 
 Some services do not support this without additional configurations (for example, `l2-sequencer` and `l2-bootnode`). We are working on additional info on how to properly run multiple services for loadbalancing between or for having redunant backups available.
 
+### Enable Proof Generation using External Providers
+
+The Scroll team has been collaborating closely with teams specializing in proof generation to enable plug-and-play proof generation for SDK networks.
+
+In this example, we'll use a sample chart from the `scroll-proving-sdk` repo to generate proofs with [Sindri](https://sindri.app/docs/introduction/). In the future, teams will publish their own charts for chains to easily enable one or external providers.
+
+Because this feature is not directly built into the Scroll SDK, there will be quite a bit of copy-pasting.
+
+#### Creating Values Files for each type of Provider
+
+In Scroll, we have 3 types of provers: chunk (type-1), batch (type-2), and bundle (type-3). We'll deploy 3 sets of the chart, each with a different type of prover.
+
+Create the following files in your `values` directory:
+
+`prover-chunk-production.yaml`:
+```yaml 
+global:
+  nameOverride: &app_name prover-chunk
+  fullnameOverride: *app_name
+
+persistence:
+  config:
+    enabled: true
+    type: configMap
+    mountPath: /sdk_prover/
+    name: prover-chunk-config
+
+scrollConfig: |
+  {
+    "prover_name_prefix": "sindri_chunk_",
+    "keys_dir": "keys",
+    "coordinator": {
+      "base_url": "http://coordinator-api:80",
+      "retry_count": 3,
+      "retry_wait_time_sec": 5,
+      "connection_timeout_sec": 60
+    },
+    "l2geth": {
+      "endpoint": "http://l2-rpc:8545"
+    },
+    "prover": {
+      "circuit_type": 1,
+      "circuit_version": "v0.13.1",
+      "n_workers": 1,
+      "cloud": {
+        "base_url": "https://sindri.app/api/v1/",
+        "api_key": "<your-api-key>",
+        "retry_count": 3,
+        "retry_wait_time_sec": 5,
+        "connection_timeout_sec": 60
+      }
+    }
+  }
+```
+
+`prover-batch-production.yaml`:
+```yaml
+global:
+  nameOverride: &app_name prover-batch
+  fullnameOverride: *app_name
+
+persistence:
+  config:
+    enabled: true
+    type: configMap
+    mountPath: /sdk_prover/
+    name: prover-batch-config
+
+scrollConfig: |
+  {
+    "prover_name_prefix": "sindri_batch_",
+    "keys_dir": "keys",
+    "coordinator": {
+      "base_url": "http://coordinator-api:80",
+      "retry_count": 3,
+      "retry_wait_time_sec": 5,
+      "connection_timeout_sec": 60
+    },
+    "l2geth": {
+      "endpoint": "http://l2-rpc:8545"
+    },
+    "prover": {
+      "circuit_type": 2,
+      "circuit_version": "v0.13.1",
+      "n_workers": 1,
+      "cloud": {
+        "base_url": "https://sindri.app/api/v1/",
+        "api_key": "<your-api-key>",
+        "retry_count": 3,
+        "retry_wait_time_sec": 5,
+        "connection_timeout_sec": 60
+      }
+    }
+  }
+
+```
+
+`prover-bundle-production.yaml`:
+```yaml
+global:
+  nameOverride: &app_name prover-bundle
+  fullnameOverride: *app_name
+
+persistence:
+  config:
+    enabled: true
+    type: configMap
+    mountPath: /sdk_prover/
+    name: prover-bundle-config
+
+scrollConfig: |
+  {
+    "prover_name_prefix": "sindri_bundle_",
+    "keys_dir": "keys",
+    "coordinator": {
+      "base_url": "http://coordinator-api:80",
+      "retry_count": 3,
+      "retry_wait_time_sec": 5,
+      "connection_timeout_sec": 60
+    },
+    "l2geth": {
+      "endpoint": "http://l2-rpc:8545"
+    },
+    "prover": {
+      "circuit_type": 3,
+      "circuit_version": "v0.13.1",
+      "n_workers": 1,
+      "cloud": {
+        "base_url": "https://sindri.app/api/v1/",
+        "api_key": "<your-api-key>",
+        "retry_count": 3,
+        "retry_wait_time_sec": 5,
+        "connection_timeout_sec": 60
+      }
+    }
+  }
+
+```
+
+Be sure to set `prover.api_key` to the value created in Sindri's user dashboard.
+
+Notice that each file is similar, with only the `prover.circuit_type` and few name values changing.
+
+Lastly, set `prover.n_workers` to the number of provers you'd like to dedicate to proof generation. We recommend starting at 1 for each during testing, but scaling up as needed.
+
+#### Adding Provers to your Makefile
+
+Now, let's add the prover services to the bottom of your `Makefile`.
+
+```
+install-provers:
+	helm upgrade -i prover-chunk oci://ghcr.io/scroll-tech/scroll-sdk/helm/scroll-proving-sdk -n $(NAMESPACE) \
+		--version=0.0.5 \
+		--values values/prover-chunk-production.yaml
+
+	helm upgrade -i prover-batch oci://ghcr.io/scroll-tech/scroll-sdk/helm/scroll-proving-sdk -n $(NAMESPACE) \
+		--version=0.0.5 \
+		--values values/prover-batch-production.yaml
+
+	helm upgrade -i prover-bundle oci://ghcr.io/scroll-tech/scroll-sdk/helm/scroll-proving-sdk -n $(NAMESPACE) \
+		--version=0.0.5 \
+		--values values/prover-bundle-production.yaml 
+
+delete-provers:
+	helm delete -n $(NAMESPACE) prover-chunk
+	helm delete -n $(NAMESPACE) prover-batch
+	helm delete -n $(NAMESPACE) prover-bundle
+```
+
+Now, simply run `make install-provers` to deploy the provers.
+
+<Aside type="tip">
+The default timeout for chunk proofs may be too short, causing the rollup-node to finalize using an empty proof before it receives a completed proof.
+
+You can modify the `config.toml` values of `TEST_ENV_MOCK_FINALIZE_ENABLED` and `TEST_ENV_MOCK_FINALIZE_TIMEOUT_SEC` to disable or lengthen the timeout for mock proof submission.
+</Aside>
+
+{/* TODO: Update to point at actual charts once available. */}
+
+
 {/* ### TODO: Add Graphana charts for Monitoring
 
 To quickly get started with Grafana, run the following command:
