@@ -107,7 +107,10 @@
       "rollupExplorer": "Rollup 浏览器",
       "scrollSepoliaBlockExplorer": "Scroll Sepolia 浏览器",
       "sepoliaRollupExplorer": "Rollup 浏览器",
-      "sepoliaBlockExplorer": "Sepolia 浏览器"
+      "sepoliaBlockExplorer": "Sepolia 浏览器",
+      "canvasBadge": "画布和徽章集成",
+      "runningNode": "运行 Scroll 节点",
+      "toolingDeployedOnScroll": "部署在 Scroll 上的工具"
     },
     "technology": {
       "introduction": "介绍",
@@ -142,7 +145,8 @@
 
       "security": "安全",
       "auditsAndBugBounty": "审计和漏洞赏金",
-      "l2BeatAssessment": "L2Beat 评估"
+      "l2BeatAssessment": "L2Beat 评估",
+      "scrollUpgrades": "Scroll 升级"
     },
     "learn": {
       "ethereumAndProtocols": "以太坊与协议",
