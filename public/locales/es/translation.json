@@ -96,6 +96,7 @@
       "guides": "Guías",
       "contractDeploymentTutorial": "Tutorial de Despliegue de Contratos",
       "crossChainInteraction": "Interacción Cross-chain del Scroll Messenger",
+      "runningNode": "Ejecutar un Nodo de Scroll",
       "bridgingERC20TokenThroughCustomGateway": "Bridging de un ERC20 a través de una Gateway Personalizada",
       "bridgingERC721NftThroughCustomGateway": "Bridging de un ERC721 NFT a través de una Gateway Personalizada",
       "bridgingERC1155ThroughCustomGateway": "Bridging de un ERC1155 a través de una Gateway Personalizada",
