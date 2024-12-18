@@ -224,7 +224,7 @@ WARN [09-18|13:52:25.843] syncing pipeline step failed due to temporary error, r
 ### Limitations
 
 L1 follower nodes can reproduce the correct `state root` of L2 blocks.
-However, currently not the derived `block hash` will not match the ones seen on other nodes or Scrollscan.
+However, currently the derived `block hash` will not match the one seen on L2 follower nodes or Scrollscan.
 This is due to the fact that currently the header fields `difficulty` and `extraData` are not stored on DA but these fields are utilized by [Clique consensus](https://eips.ethereum.org/EIPS/eip-225) which is used by the Scroll protocol.
 This will be fixed in a future upgrade.
 
