@@ -140,58 +140,65 @@ Running the node in Docker might have a significant impact on node performance.
 - Stop the container: `docker stop l2geth-docker`
 
 ---
-## Run L2geth in L1 follower mode
+
+## Run L2geth in L1 Follower Mode
 
 <Aside type="tip">
-L1 follower mode runs a node that only follows the finalized L1 and DA to read and derive the L2 chain. In this mode the node does not participate directly in the L2.
+L1 follower mode runs a node that only follows the finalized L1 and DA to read and derive the L2 chain.
+In this mode the node does not participate directly in the L2 network.
 This mode is useful for reconstructing the L2 state by only following the L1.
 </Aside>
 
-Run `l2geth` with the `--da.sync` flag. Provide blob APIs and beacon node with
+Run `l2geth` with the `--da.sync` flag.
+Provide blob APIs and beacon node by configuring one or more of the following flags:
 - `--da.blob.beaconnode "<L1 beacon node>"` (recommended, if beacon node supports historical blobs)
 - `--da.blob.blobscan "https://api.blobscan.com/blobs/"` `--da.blob.blocknative "https://api.ethernow.xyz/v1/blob/"` for Mainnet
 - `--da.blob.blobscan "https://api.sepolia.blobscan.com/blobs/"` for Sepolia.
 
-Strictly speaking only one of the blob providers is necessary, but during testing blobscan and blocknative were not fully reliable. That's why using a beacon node with historical blob data is recommended (can be in addition to blobscan and blobnative).
+Strictly speaking a single blob provider is sufficient.
+However, configuring multiple providers can help avoid reliability issues.
+Using a beacon node with historical blob data is the recommended option (can be in addition to the Blobscan and Blocknative APIs).
+
 
 ### Mainnet
 ```bash
 ./build/bin/geth --scroll \
---datadir "tmp/mainnet-l2geth-datadir" \
---gcmode archive \
---http --http.addr "0.0.0.0" --http.port 8545 --http.api "eth,net,web3,debug,scroll" \
---da.sync=true \
---da.blob.blobscan "https://api.blobscan.com/blobs/" --da.blob.blocknative "https://api.ethernow.xyz/v1/blob/" \
---da.blob.beaconnode "<L1 beacon node>" \
---l1.endpoint "<L1 RPC node>" \
---verbosity 3
+  --datadir "tmp/mainnet-l2geth-datadir" \
+  --gcmode archive \
+  --http --http.addr "0.0.0.0" --http.port 8545 --http.api "eth,net,web3,debug,scroll" \
+  --da.sync=true \
+  --da.blob.blobscan "https://api.blobscan.com/blobs/" --da.blob.blocknative "https://api.ethernow.xyz/v1/blob/" \
+  --da.blob.beaconnode "<L1 beacon node>" \
+  --l1.endpoint "<L1 RPC node>" \
+  --verbosity 3
 ```
 
 
 ### Sepolia
 ```bash
 ./build/bin/geth --scroll-sepolia \
---datadir "tmp/sepolia-l2geth-datadir" \
---gcmode archive \
---http --http.addr "0.0.0.0" --http.port 8545 --http.api "eth,net,web3,debug,scroll" \
---da.sync=true \
---da.blob.blobscan "https://api.sepolia.blobscan.com/blobs/" \
---da.blob.beaconnode "<L1 beacon node>" \
---l1.endpoint "<L1 RPC node>" \
---verbosity 3
+  --datadir "tmp/sepolia-l2geth-datadir" \
+  --gcmode archive \
+  --http --http.addr "0.0.0.0" --http.port 8545 --http.api "eth,net,web3,debug,scroll" \
+  --da.sync=true \
+  --da.blob.blobscan "https://api.sepolia.blobscan.com/blobs/" \
+  --da.blob.beaconnode "<L1 beacon node>" \
+  --l1.endpoint "<L1 RPC node>" \
+  --verbosity 3
 ```
 
-A full sync will take about 2 weeks for Mainnet and 2-3 days for Sepolia depending on the speed of the RPC node, beacon node and the local machine. Progess is reported as follows for every 1000 blocks applied:
+A full sync will take about 2 weeks for Scroll mainnet and 2-3 days for Scroll Sepolia depending on the speed of the RPC node, beacon node and the local machine.
+Progress is reported as follows for every 1000 blocks applied:
 
 ```bash
-INFO [08-01|16:44:42.173] L1 sync progress                         blockhain height=87000 block hash=608eec..880ebd root=218215..9a58a2
+INFO [08-01|16:44:42.173] L1 sync progress                         blockchain height=87000 block hash=608eec..880ebd root=218215..9a58a2
 ```
 
 
 ### Troubleshooting
-- the node (APIs, geth console, etc) will not be responsive until all the L1 messages have been synced
-- but it is already starting the derivation pipeline which can be seen through `L1 sync progress [...]`.
-- for Sepolia it might take a little longer (10-20mins) for the first `L1 sync progress [...]` to appear as the L1 blocks are more sparse at the beginning
+- The node (APIs, geth console, etc) will not be responsive until all the L1 messages have been synced.
+- However, the derivation pipeline is already started during the initial sync phase, which can be seen through `L1 sync progress [...]` logs.
+- For Scroll Sepolia it might take a little longer (10-20mins) for the first `L1 sync progress [...]` logs to appear as the L1 blocks are more sparse at the beginning.
 
 You should see something like this shortly after starting:
 ```bash
@@ -201,22 +208,27 @@ INFO [09-18|13:41:45.249] Syncing L1 messages                      processed=20,
 INFO [09-18|13:41:55.300] Syncing L1 messages                      processed=20,637,029 confirmed=20,777,179 collected=145 progress(%)=99.325
 INFO [09-18|13:42:05.400] Syncing L1 messages                      processed=20,638,329 confirmed=20,777,179 collected=220 progress(%)=99.332
 INFO [09-18|13:42:15.610] Syncing L1 messages                      processed=20,640,129 confirmed=20,777,179 collected=303 progress(%)=99.340
-INFO [09-18|13:42:24.324] L1 sync progress                         "blockhain height"=1000 "block hash"=a28c48..769cee root=174edb..9d9fbd
+INFO [09-18|13:42:24.324] L1 sync progress                         "blockchain height"=1000 "block hash"=a28c48..769cee root=174edb..9d9fbd
 INFO [09-18|13:42:25.555] Syncing L1 messages                      processed=20,641,529 confirmed=20,777,179 collected=402 progress(%)=99.347
 ```
 
-#### Temporary errors
+#### Temporary Errors
 
-Especially at the beginning some errors like below might appear in the console. This is expected, as the pipeline relies on the L1 messages but in case they're not synced fast enough such an error might pop up. It will continue once the L1 messages are available.
+Especially at the beginning some errors like below might appear in the console.
+This is expected, as the pipeline relies on the L1 messages but in case they are not synced fast enough such an error might pop up.
+The chain derivation will continue once the L1 messages are available.
 ```
 WARN [09-18|13:52:25.843] syncing pipeline step failed due to temporary error, retrying err="temporary: failed to process logs to DA, error: failed to get commit batch da: 7, err: failed to get L1 messages for v0 batch 7: EOF: <nil>"
 ```
 
-## Limitations
+### Limitations
 
-The `state root` of a block can be reproduced when using this mode of syncing but currently not the `block hash`. This is due to the fact that currently the header fields `difficulty` and `extraData` are not stored on DA but these fields are utilized by [Clique consensus](https://eips.ethereum.org/EIPS/eip-225) which is used by the Scroll protocol. This will be fixed in a [future upgrade](https://github.com/scroll-tech/go-ethereum/pull/903 https://github.com/scroll-tech/go-ethereum/pull/913) where the main implementation on l2geth is already done.
+L1 follower nodes can reproduce the correct `state root` of L2 blocks.
+However, currently not the derived `block hash` will not match the ones seen on other nodes or Scrollscan.
+This is due to the fact that currently the header fields `difficulty` and `extraData` are not stored on DA but these fields are utilized by [Clique consensus](https://eips.ethereum.org/EIPS/eip-225) which is used by the Scroll protocol.
+This will be fixed in a future upgrade.
 
-To verify the locally created `state root` against mainnet (`https://sepolia-rpc.scroll.io/` for Sepolia), we can do the following:
+To verify the locally created `state root` against mainnet, we can do the following:
 
 ```bash
 # query local block info
@@ -226,7 +238,8 @@ curl localhost:8545 -X POST -H "Content-Type: application/json" -d '{"jsonrpc":"
 curl https://rpc.scroll.io -X POST -H "Content-Type: application/json" -d '{"jsonrpc":"2.0","method":"eth_getHeaderByNumber","params":["0x2AF8"],"id":0}' | jq
 ```
 
-By comparing the headers we can most importantly see that **`state root` , `receiptsRoot` and everything that has to do with the state matches**. However, the following fields will be different:
+By comparing the headers we can most importantly see that **`state root` , `receiptsRoot` and everything that has to do with the state match**.
+However, the following fields will be different:
 
 - `difficulty` and therefore `totalDifficulty`
 - `extraData`
