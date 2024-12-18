@@ -1,0 +1,99 @@
+---
+section: sdk
+date: Last Modified
+title: "Proof Generation"
+lang: "en"
+permalink: "sdk/technical-stack/proof-generation"
+excerpt: "Documents how zk proof generation is done on Scroll SDK."
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+{/* TODO: Review full page before launch */}
+Generating ZK Proofs is a key component for any ZK Rollup, and it can often be the most painful part of operating a zk rollup.
+
+## Proof Generation Flow
+
+
+## Mock Finalization
+
+Scroll SDK supports being run in two modes -- one using mock finalization, the other requiring valid zk proofs to finalize. Mock finalization is useful for devnets and testnets, where the zk proof generation is an unnecessary cost beyond brief testing periods.
+
+In its default configuration, testnets are without a ZK provers and simulate finalization. The L1 contract allows finalizing a batch without a valid proof, and the `rollup-relay` is configured to call the finalize method after 1 hour without a proof in the default configuration.
+
+To change this mock finalization delay, adjust `config.toml` to change `rollup.TEST_ENV_MOCK_FINALIZE_TIMEOUT` from `3600` to the number of seconds you want to delay.
+
+To disable mock finalization entirely, adjust `config.toml` to change `TEST_ENV_MOCK_FINALIZE_ENABLED` to `false`.
+
+<Aside type="danger">
+
+Because different "testnet" contracts are deployed depending on if `TEST_ENV_MOCK_FINALIZE_ENABLED` is true, it should be set to true from the genesis block for any production environments intended to secure user funds.  
+
+</Aside>
+
+## Outsourcing Proof Generation to External Service Providers
+
+Teams shouldn't need to become ZK infrastructure experts (or professional GPU sourcers) to run a chain. We've partnered with proof generation specialists to make outsoucing proof generation as easy as deploying one more chart.
+
+Using a proof generation service offers the following benefits:
+- Generate proofs on-demand through API-based services
+- Choose between enterprise solutions or proof marketplaces
+- Scale proof generation elastically based on your actual usage instead of reserving a specific capacity
+- Maintain flexibility to switch between providers, distribute load between them, or run your own GPUs
+
+The following providers already support generating Scroll SDK proofs:
+- Sindri
+	- [Chart Repo](https://github.com/Sindri-Labs/sindri-scroll-sdk)
+	- [Docs](https://sindri.app/docs/introduction/)
+- Snarkify
+	- [Chart Repo](https://github.com/snarkify/snarkify-scroll-proving-sdk/tree/main)
+	- [Docs](https://docs.snarkify.io/)
+
+{/* TODO: Confirm links to charts and docs */}
+
+<Aside type="caution">
+These Helm Charts are not maintained by Scroll, but we have collaborated with the teams to integrate the [`scroll-proving-sdk`](https://github.com/scroll-tech/scroll-proving-sdk).
+</Aside>
+
+See the [Enable Proof Generation using External Providers](/en/sdk/guides/digital-ocean-alt-gas-token#enable-proof-generation-using-external-providers) section of the Digital Ocean guide for an example of how to enable chunk, batch and bundle proofs using external providers.
+
+## Self-host a Prover
+
+<Aside type="danger">
+As of Oct. 31, 2024, these instructions are out-of-date. We are working on updating them.
+</Aside>
+
+<Aside type="caution">
+These instructions are an outline of the process, but our testing of the SDK has focused on working with external proving service providers, so may be out of date with out current SDK implementation.
+</Aside>
+
+Our automation code for deploying a prover differs from the rest of the stack. Because Kubernetes is designed to automatically manage resources, it doesn't fit as well as [Ansible](https://www.ansible.com/) for larger clusters of machines needing specific machine requirements.
+
+The Ansible playbook for running a prover is available in the GitHub repo [here](https://github.com/scroll-tech/scroll-sdk/tree/develop/ansible/playbooks).
+
+### Prequisities
+
+- One ubuntu server with at least 256GB memory, 32 cores, and a GPU with at least 20GB memory.
+- One user with `sudo` access, no password, and all permissions -- or you can change the [shared-vars.yaml](https://github.com/scroll-tech/scroll-sdk/blob/develop/ansible/playbooks/vars/shared-vars.yaml) to add the `ansible_become_password` variable in your file.
+
+### Configuration
+
+- Change the values of `rpc` for `mainnet` or `sepolia` in [shared-vars.yaml](https://github.com/scroll-tech/scroll-sdk/blob/develop/ansible/playbooks/vars/shared-vars.yaml) to your own.
+- Set the values of `release_version` and `docker_tag` -- this is determined by the `coordinator` service.
+- Set the values in [inventory](https://github.com/scroll-tech/scroll-sdk/blob/develop/ansible/playbooks/inventory/provers) for your `sepolia|mainnet' and 'chunk|batch' provers.
+- Optionally, set the values of `pj_path` in [shared-vars.yaml](https://github.com/scroll-tech/scroll-sdk/blob/develop/ansible/playbooks/vars/shared-vars.yaml) -- the default is `/prover/go-prover-docker`, but can be changed to the value you want to customize.
+
+### How to deploy your prover
+
+Be sure to set the correct value for the `export` statements below when setting environmental variables. _Do not include brackets._
+
+```bash
+export env=[mainnet|sepolia]
+export type=[chunk|batch]
+export user=[your_ssh_user]
+
+ansible-playbook  --ssh-extra-args='-o StrictHostKeyChecking=no' --private-key $your_key  prover-bootstrap.yaml  -u $user -e env=$env -e type=$type -i inventory/provers
+
+# Reboot your prover manually, and finally launch this playbook
+ansible-playbook  --ssh-extra-args='-o StrictHostKeyChecking=no' --private-key $your_key  prover-deploy.yaml  -u $user -e env=$env -e type=$type -i inventory/provers
+```

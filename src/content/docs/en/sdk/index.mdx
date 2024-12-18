@@ -1,0 +1,65 @@
+---
+section: sdk
+title: "Scroll SDK"
+lang: "en"
+permalink: "sdk/"
+excerpt: "Learn more about how to depoly your own rollup using Scroll's zkEVM"
+---
+
+import NavCard from "../../../../components/NavCard.astro"
+import StartSvg from "~/assets/svgs/home/home-start.svg?raw"
+import TechnologySvg from "../../../../assets/svgs/home/home-technology.svg?raw"
+import LearnSvg from "../../../../assets/svgs/home/home-learn.svg?raw"
+import DevelopSvg from "../../../../assets/svgs/home/home-develop.svg?raw"
+import Aside from "../../../../components/Aside.astro"
+
+## Introduction
+
+Scroll SDK allows anyone to quickly deploy an instance of the Scroll zkEVM and its rollup architecture for deploying an L2 on Ethereum.
+
+For an introduction on why, and how it fits into our broader multichain vision, read [Scroll SDK & Gadgets: Building the Foundation for Ethereum's Multichain Future](https://scroll.io/blog/scroll-sdk-and-gadgets-building-the-foundation-for-ethereums-multichain-future).
+
+We're working with a number of clients, technology parters, and service providers to build the most robust ZK stack for Ethereum.
+
+If you want to dive deeper and try launching your own L2, keep reading and check out the additional resources.
+
+## Current Feature Set
+
+- Fully functional local devnet or Sepolia testnet deployment of Scroll's current zkEVM and protocol
+- Configurable deployment using Docker, Kubernetes, and Helm
+- Choose between Ether or any ERC20 token as the native gas token
+- Plug-and-play proof generation using various service providers, allowing for failover and elastic capacity
+- Adaptable finality time, allowing custom trade-offs between finality time and on-chain costs
+- Tools for interacting and exploring your chain, including a CLI tool, Blockscout, Grafana dashboards, our Rollup Explorer, and a demo Bridge UI
+
+## Planned Feature Set
+
+- Rollup or Validium Mode (Modular DA using 4844, callData, or Alt-DA Layers)
+- Base layer flexibility (Ethereum mainnet, Scroll, or any EVM-compatible environment)
+- Customization of the sequencer node to add additional features to the EVM
+- Out-of-the-box, contract auto-deployments for various commonly used protocols
+
+<Aside type="danger">
+Scroll SDK shares the same risks, centralized components, and rollup maturity as Scroll chain. We're building fast, but it’s worth being familiar with the [L2Beat assessment of Scroll](https://l2beat.com/scaling/projects/scroll#).
+</Aside>
+
+<div class="navs" class="flex flex-col flex-wrap items-center md:flex-row md:gap-8 md:items-start">
+  <NavCard
+    icon={StartSvg}
+    name="Scroll SDK FAQ"
+    content="Get answers to the most asked questions about Scroll SDK"
+    link="/en/sdk/sdk-faq"
+  />
+  <NavCard
+    icon={DevelopSvg}
+    name="Technical Stack"
+    content="Learn more about the specifics of running Scroll SDK"
+    link="/en/sdk/technical-stack"
+  />
+  <NavCard
+    icon={LearnSvg}
+    name="Run a Local Devnet"
+    content="Get started by running a devnet on your local machine."
+    link="/en/sdk/guides/devnet-deployment"
+  />
+</div>

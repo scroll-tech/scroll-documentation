@@ -340,5 +340,103 @@ export const getSidebar = () => {
         ],
       },
     ],
+    sdk: [
+      {
+        section: t("sidebar.sdk.overview"),
+        contents: [
+          {
+            title: t("sidebar.sdk.scrollSdk"),
+            url: "sdk/",
+          },
+          {
+            title: t("sidebar.sdk.faq"),
+            url: "sdk/sdk-faq",
+          },
+        ],
+      },
+      {
+        section: t("sidebar.sdk.technicalStack"),
+        contents: [
+          {
+            title: t("sidebar.sdk.stackOverview"),
+            url: formatUrl("sdk/technical-stack/"),
+          },
+          {
+            title: t("sidebar.sdk.configuration"),
+            url: formatUrl("sdk/technical-stack/configuration"),
+          },
+          {
+            title: t("sidebar.sdk.services"),
+            url: formatUrl("sdk/technical-stack/services"),
+          },
+          {
+            title: t("sidebar.sdk.smartContracts"),
+            url: formatUrl("sdk/technical-stack/contracts"),
+          },
+          {
+            title: t("sidebar.sdk.proofGeneration"),
+            url: formatUrl("sdk/technical-stack/proof-generation"),
+          },
+          // {
+          //   title: t("sidebar.sdk.integrations"),
+          //   url: formatUrl("sdk/technical-stack/integrations"),
+          // },
+        ],
+      },
+      {
+        section: t("sidebar.sdk.guides"),
+        contents: [
+          {
+            title: t("sidebar.sdk.devnetDeployment"),
+            url: formatUrl("sdk/guides/devnet-deployment"),
+          },
+          // {
+          //   title: t("sidebar.sdk.productionDeployment"),
+          //   url: formatUrl("sdk/guides/production-deployment"),
+          // },
+          {
+            title: t("sidebar.sdk.digitalOcean"),
+            url: formatUrl("sdk/guides/digital-ocean-alt-gas-token"),
+          },
+          {
+            title: t("sidebar.sdk.awsDeployment"),
+            url: formatUrl("sdk/guides/aws-deployment"),
+          },
+          {
+            title: t("sidebar.sdk.customizingSdkComponents"),
+            url: formatUrl("sdk/guides/customizing-sdk-components"),
+          },
+        ],
+      },
+      {
+        section: t("sidebar.sdk.operation"),
+        contents: [
+          {
+            title: t("sidebar.sdk.contractsVerification"),
+            url: formatUrl("sdk/operation/contracts-verification"),
+          },
+          {
+            title: t("sidebar.sdk.gasAndFees"),
+            url: formatUrl("sdk/operation/gas-and-fees"),
+          },
+          {
+            title: t("sidebar.sdk.monitoring"),
+            url: formatUrl("sdk/operation/monitoring"),
+          },
+          {
+            title: t("sidebar.sdk.upgrades"),
+            url: formatUrl("sdk/operation/upgrades"),
+          },
+          {
+            title: t("sidebar.sdk.troubleshooting"),
+            url: formatUrl("sdk/operation/troubleshooting"),
+          },
+          {
+            title: t("sidebar.sdk.security"),
+            url: formatUrl("sdk/operation/security-and-recovery"),
+          },
+        ],
+      },
+    ],
   }
 }

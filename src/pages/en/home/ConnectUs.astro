@@ -2,7 +2,6 @@
 import SectionHeader from "~/components/SectionHeader/index.astro"
 import LinkArrowSvg from "~/assets/svgs/home/home-link-arrow.svg?raw"
 import DiscordSvg from "~/assets/svgs/home/Discord.svg?raw"
-import ForumSvg from "~/assets/svgs/home/Forum.svg?raw"
 import ContributeSvg from "~/assets/svgs/home/Contribute.svg?raw"
 import NoteSvg from "~/assets/svgs/home/Note.svg?raw"
 
@@ -18,12 +17,6 @@ const mediaList = [
     name: "Get in touch",
     content: "Reach out directly if you need more support for your project.",
     link: "https://tally.so/r/waxLBW",
-  },
-  {
-    icon: ForumSvg,
-    name: "Community Forum",
-    content: "Discuss and propose changes to Scroll’s core protocols.",
-    link: "http://community.scroll.io/",
   },
   {
     icon: ContributeSvg,
@@ -71,7 +64,7 @@ const mediaList = [
     margin-top: 90px;
   }
   .media-item {
-    width: 325px;
+    flex: 1;
     height: 325px;
     padding: 30px;
     border-radius: 25px;
