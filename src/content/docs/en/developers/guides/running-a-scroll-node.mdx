@@ -19,7 +19,7 @@ For most developers, using [our official RPC endpoint](/en/developers/developer-
 
 We recommend using the latest release at https://github.com/scroll-tech/go-ethereum/releases. The required version for Scroll Mainnet is `scroll-v5.5.0` or higher, and for Scroll Sepolia it is `scroll-v5.4.2` or higher. If you'd like to keep up with new node releases, go to https://github.com/scroll-tech/go-ethereum, click on **Watch**, **Custom**, and make sure that **Releases** is selected.
 
-For the remainder of this guide, `VERSION` will denote the version tag. For example, `scroll-v5.7.0`.
+For the remainder of this guide, `VERSION` will denote the version tag. For example, `scroll-v5.8.0`.
 
 ### Hardware Requirements
 
@@ -144,9 +144,9 @@ Running the node in Docker might have a significant impact on node performance.
 ## Run L2geth in L1 Follower Mode
 
 <Aside type="tip">
-L1 follower mode runs a node that only follows the finalized L1 and DA to read and derive the L2 chain.
-In this mode the node does not participate directly in the L2 network.
-This mode is useful for reconstructing the L2 state by only following the L1.
+An l2geth node running in L1 follower mode does not participate in the L2 peer-to-peer network.
+Instead, it follows finalized blocks on L1, and derives the L2 chain and state by decoding and executing data from L1 DA (blobs).
+This mode guarantees that nodes can always reconstruct the L2 state, even if the data is never published on the L2 peer-to-peer network.
 </Aside>
 
 Run `l2geth` with the `--da.sync` flag.
