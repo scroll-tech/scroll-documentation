@@ -19,7 +19,7 @@ For most developers, using [our official RPC endpoint](/en/developers/developer-
 
 We recommend using the latest release at https://github.com/scroll-tech/go-ethereum/releases. The required version for Scroll Mainnet is `scroll-v5.5.0` or higher, and for Scroll Sepolia it is `scroll-v5.4.2` or higher. If you'd like to keep up with new node releases, go to https://github.com/scroll-tech/go-ethereum, click on **Watch**, **Custom**, and make sure that **Releases** is selected.
 
-For the remainder of this guide, `VERSION` will denote the version tag. For example, `scroll-v5.7.0`.
+For the remainder of this guide, `VERSION` will denote the version tag. For example, `scroll-v5.8.0`.
 
 ### Hardware Requirements
 
@@ -138,6 +138,171 @@ Running the node in Docker might have a significant impact on node performance.
 
 - Check logs: `docker logs --tail 10 -f l2geth-docker`
 - Stop the container: `docker stop l2geth-docker`
+
+---
+
+## Run L2geth in L1 Follower Mode
+
+<Aside type="tip">
+An l2geth node running in L1 follower mode does not participate in the L2 peer-to-peer network.
+Instead, it follows finalized blocks on L1, and derives the L2 chain and state by decoding and executing data from L1 DA (blobs).
+This mode guarantees that nodes can always reconstruct the L2 state, even if the data is never published on the L2 peer-to-peer network.
+</Aside>
+
+Run `l2geth` with the `--da.sync` flag.
+Provide blob APIs and beacon node by configuring one or more of the following flags:
+- `--da.blob.beaconnode "<L1 beacon node>"` (recommended, if beacon node supports historical blobs)
+- `--da.blob.blobscan "https://api.blobscan.com/blobs/"` `--da.blob.blocknative "https://api.ethernow.xyz/v1/blob/"` for Mainnet
+- `--da.blob.blobscan "https://api.sepolia.blobscan.com/blobs/"` for Sepolia.
+
+Strictly speaking a single blob provider is sufficient.
+However, configuring multiple providers can help avoid reliability issues.
+Using a beacon node with historical blob data is the recommended option (can be in addition to the Blobscan and Blocknative APIs).
+
+
+### Mainnet
+```bash
+./build/bin/geth --scroll \
+  --datadir "tmp/mainnet-l2geth-datadir" \
+  --gcmode archive \
+  --http --http.addr "0.0.0.0" --http.port 8545 --http.api "eth,net,web3,debug,scroll" \
+  --da.sync=true \
+  --da.blob.blobscan "https://api.blobscan.com/blobs/" --da.blob.blocknative "https://api.ethernow.xyz/v1/blob/" \
+  --da.blob.beaconnode "<L1 beacon node>" \
+  --l1.endpoint "<L1 RPC node>" \
+  --verbosity 3
+```
+
+
+### Sepolia
+```bash
+./build/bin/geth --scroll-sepolia \
+  --datadir "tmp/sepolia-l2geth-datadir" \
+  --gcmode archive \
+  --http --http.addr "0.0.0.0" --http.port 8545 --http.api "eth,net,web3,debug,scroll" \
+  --da.sync=true \
+  --da.blob.blobscan "https://api.sepolia.blobscan.com/blobs/" \
+  --da.blob.beaconnode "<L1 beacon node>" \
+  --l1.endpoint "<L1 RPC node>" \
+  --verbosity 3
+```
+
+A full sync will take about 2 weeks for Scroll mainnet and 2-3 days for Scroll Sepolia depending on the speed of the RPC node, beacon node and the local machine.
+Progress is reported as follows for every 1000 blocks applied:
+
+```bash
+INFO [08-01|16:44:42.173] L1 sync progress                         blockchain height=87000 block hash=608eec..880ebd root=218215..9a58a2
+```
+
+
+### Troubleshooting
+- The node (APIs, geth console, etc) will not be responsive until all the L1 messages have been synced.
+- However, the derivation pipeline is already started during the initial sync phase, which can be seen through `L1 sync progress [...]` logs.
+- For Scroll Sepolia it might take a little longer (10-20mins) for the first `L1 sync progress [...]` logs to appear as the L1 blocks are more sparse at the beginning.
+
+You should see something like this shortly after starting:
+```bash
+INFO [09-18|13:41:34.039] Starting L1 message sync service         latestProcessedBlock=20,633,529
+WARN [09-18|13:41:34.551] Running initial sync of L1 messages before starting l2geth, this might take a while...
+INFO [09-18|13:41:45.249] Syncing L1 messages                      processed=20,634,929 confirmed=20,777,179 collected=71 progress(%)=99.315
+INFO [09-18|13:41:55.300] Syncing L1 messages                      processed=20,637,029 confirmed=20,777,179 collected=145 progress(%)=99.325
+INFO [09-18|13:42:05.400] Syncing L1 messages                      processed=20,638,329 confirmed=20,777,179 collected=220 progress(%)=99.332
+INFO [09-18|13:42:15.610] Syncing L1 messages                      processed=20,640,129 confirmed=20,777,179 collected=303 progress(%)=99.340
+INFO [09-18|13:42:24.324] L1 sync progress                         "blockchain height"=1000 "block hash"=a28c48..769cee root=174edb..9d9fbd
+INFO [09-18|13:42:25.555] Syncing L1 messages                      processed=20,641,529 confirmed=20,777,179 collected=402 progress(%)=99.347
+```
+
+#### Temporary Errors
+
+Especially at the beginning some errors like below might appear in the console.
+This is expected, as the pipeline relies on the L1 messages but in case they are not synced fast enough such an error might pop up.
+The chain derivation will continue once the L1 messages are available.
+```
+WARN [09-18|13:52:25.843] syncing pipeline step failed due to temporary error, retrying err="temporary: failed to process logs to DA, error: failed to get commit batch da: 7, err: failed to get L1 messages for v0 batch 7: EOF: <nil>"
+```
+
+### Limitations
+
+L1 follower nodes can reproduce the correct `state root` of L2 blocks.
+However, currently the derived `block hash` will not match the one seen on L2 follower nodes or Scrollscan.
+This is due to the fact that currently the header fields `difficulty` and `extraData` are not stored on DA but these fields are utilized by [Clique consensus](https://eips.ethereum.org/EIPS/eip-225) which is used by the Scroll protocol.
+This will be fixed in a future upgrade.
+
+To verify the locally created `state root` against mainnet, we can do the following:
+
+```bash
+# query local block info
+curl localhost:8545 -X POST -H "Content-Type: application/json" -d '{"jsonrpc":"2.0","method":"eth_getHeaderByNumber","params":["0x2AF8"],"id":0}' | jq
+
+# query mainnet block info
+curl https://rpc.scroll.io -X POST -H "Content-Type: application/json" -d '{"jsonrpc":"2.0","method":"eth_getHeaderByNumber","params":["0x2AF8"],"id":0}' | jq
+```
+
+By comparing the headers we can most importantly see that **`state root` , `receiptsRoot` and everything that has to do with the state match**.
+However, the following fields will be different:
+
+- `difficulty` and therefore `totalDifficulty`
+- `extraData`
+- `size` due to differences in header size
+- `hash` and therefore `parentHash`
+
+Example local output for block 11000:
+
+```bash
+{
+  "jsonrpc": "2.0",
+  "id": 0,
+  "result": {
+    "difficulty": "0xa",
+    "extraData": "0x0102030405060708",
+    "gasLimit": "0x989680",
+    "gasUsed": "0xa410",
+    "hash": "0xf3cdafbe35d5e7c18d8274bddad9dd12c94b83a81cefeb82ebb73fa799ff9fcc",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "miner": "0x0000000000000000000000000000000000000000",
+    "mixHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+    "nonce": "0x0000000000000000",
+    "number": "0x2af8",
+    "parentHash": "0xde244f7e8bc54c8809e6c2ce65c439b58e90baf11f6cf9aaf8df33a827bd01ab",
+    "receiptsRoot": "0xd95b673818fa493deec414e01e610d97ee287c9421c8eff4102b1647c1a184e4",
+    "sha3Uncles": "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
+    "size": "0x252",
+    "stateRoot": "0x0f387e78e4a7457a318c7bce7cde0b05c3609347190144a7e105ef05194ae218",
+    "timestamp": "0x6526db8e",
+    "totalDifficulty": "0x1adb1",
+    "transactionsRoot": "0x6a81c9342456693d57963883983bba024916f4d277392c9c1dc497e3518a78e3"
+  }
+}
+```
+
+Example remote output:
+
+```bash
+{
+  "id": 0,
+  "jsonrpc": "2.0",
+  "result": {
+    "difficulty": "0x2",
+    "extraData": "0xd883050000846765746888676f312e31392e31856c696e7578000000000000009920319c246ec8ae4d4f73f07d79f68b2890e9c2033966efe5a81aedddae12875c3170f0552f48b7e5d8e92ac828a6008b2ba7c5b9c4a0af1692337bbdc792be01",
+    "gasLimit": "0x989680",
+    "gasUsed": "0xa410",
+    "hash": "0xb7848d5b300247d7c33aeba0f1b33375e1cb3113b950dffc140945e9d3d88d58",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "miner": "0x0000000000000000000000000000000000000000",
+    "mixHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+    "nonce": "0x0000000000000000",
+    "number": "0x2af8",
+    "parentHash": "0xa93e6143ab213a044eb834cdd391a6ef2c818de25b04a3839ee44a75bd28a2c7",
+    "receiptsRoot": "0xd95b673818fa493deec414e01e610d97ee287c9421c8eff4102b1647c1a184e4",
+    "sha3Uncles": "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
+    "size": "0x2ab",
+    "stateRoot": "0x0f387e78e4a7457a318c7bce7cde0b05c3609347190144a7e105ef05194ae218",
+    "timestamp": "0x6526db8e",
+    "totalDifficulty": "0x55f1",
+    "transactionsRoot": "0x6a81c9342456693d57963883983bba024916f4d277392c9c1dc497e3518a78e3"
+  }
+}
+```
 
 ---
 ## Configuration Reference
