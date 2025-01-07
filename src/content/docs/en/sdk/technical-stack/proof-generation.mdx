@@ -33,7 +33,7 @@ Because different "testnet" contracts are deployed depending on if `TEST_ENV_MOC
 
 ## Outsourcing Proof Generation to External Service Providers
 
-Teams shouldn't need to become ZK infrastructure experts (or professional GPU sourcers) to run a chain. We've partnered with proof generation specialists to make outsoucing proof generation as easy as deploying one more chart.
+Teams shouldn't need to become ZK infrastructure experts (or professional GPU sourcers) to run a chain. We've partnered with proof generation specialists to make outsourcing proof generation as easy as deploying one more chart.
 
 Using a proof generation service offers the following benefits:
 - Generate proofs on-demand through API-based services
@@ -71,7 +71,7 @@ Our automation code for deploying a prover differs from the rest of the stack. B
 
 The Ansible playbook for running a prover is available in the GitHub repo [here](https://github.com/scroll-tech/scroll-sdk/tree/develop/ansible/playbooks).
 
-### Prequisities
+### Prerequisites
 
 - One ubuntu server with at least 256GB memory, 32 cores, and a GPU with at least 20GB memory.
 - One user with `sudo` access, no password, and all permissions -- or you can change the [shared-vars.yaml](https://github.com/scroll-tech/scroll-sdk/blob/develop/ansible/playbooks/vars/shared-vars.yaml) to add the `ansible_become_password` variable in your file.

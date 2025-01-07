@@ -49,7 +49,7 @@ The `config.toml` file is used to generate various service-specific configuratio
 
 Each service has a number configuration values -- some quite nuanced.
 
-In most instances, if it is not directly set or calculated from values in the `config.toml`, a sensible default is used. Occassionally, a feature most operators do not need during their initial deployment is here as well (for example LDAP configuration for the `admin-system-backend`). If you manually change these values, keep in mind that the `config.toml` processing script may overwrite your customizations -- please use git commits track changes.
+In most instances, if it is not directly set or calculated from values in the `config.toml`, a sensible default is used. Occasionally, a feature most operators do not need during their initial deployment is here as well (for example LDAP configuration for the `admin-system-backend`). If you manually change these values, keep in mind that the `config.toml` processing script may overwrite your customizations -- please use git commits track changes.
 
 ### Ingress
 
@@ -206,7 +206,7 @@ The [Rollup Explorer Backend](https://github.com/scroll-tech/rollup-explorer-bac
 
 #### Rollup Node (`rollup-node`)
 
-The Rollup Node (also called the [Rollup Relayer](https://github.com/scroll-tech/scroll/tree/develop/rollup)) is a core component of the Scroll SDK architecture. It plays a crucial role in managing the rollup process, by proposing chunks and batches, commiting those to the basechain and relaying proofs for finalization.
+The Rollup Node (also called the [Rollup Relayer](https://github.com/scroll-tech/scroll/tree/develop/rollup)) is a core component of the Scroll SDK architecture. It plays a crucial role in managing the rollup process, by proposing chunks and batches, committing those to the basechain and relaying proofs for finalization.
 
 #### L1 Explorer (`l1-explorer`)
 
