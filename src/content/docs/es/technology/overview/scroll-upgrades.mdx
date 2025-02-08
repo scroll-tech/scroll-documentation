@@ -1,0 +1,90 @@
+---
+section: technology
+date: Last Modified
+title: "Actualizaciones de Scroll"
+lang: "es"
+permalink: "technology/overview/scroll-upgrades"
+---
+
+A medida que el equipo continúa avanzando en el roadmap de Scroll, actualizaremos la red de Scroll para incluir nuevas características y mejoras.
+
+Los siguientes contratos se utilizan para iniciar y ejecutar actualizaciones después del período de bloqueo de dos semanas:
+
+| Contrato         | Red                                                      | Dirección | 
+| ------------------------ | ------- | - | 
+| L1 Scroll Multisig | Ethereum| [`0xEfc9D1096fb65c832207E5e7F13C2D1102244dbe`](https://etherscan.io/address/0xEfc9D1096fb65c832207E5e7F13C2D1102244dbe)| 
+| L1 Timelock |  Ethereum| [`0x1A658B88fD0a3c82fa1a0609fCDbD32e7dd4aB9C`](https://etherscan.io/address/0x1A658B88fD0a3c82fa1a0609fCDbD32e7dd4aB9C)| 
+| L2 Scroll Multisig | Scroll| [`0xEfc9D1096fb65c832207E5e7F13C2D1102244dbe`](https://scrollscan.com/address/0xEfc9D1096fb65c832207E5e7F13C2D1102244dbe)|
+| L2 Timelock | Scroll | [`0xf6069DB81239E5194bb53f83aF564d282357bc99`](https://scrollscan.com/address/0xf6069DB81239E5194bb53f83aF564d282357bc99)|
+
+## Febrero 2024 Actualización del bridge
+
+### Visión general
+
+Para reducir los costos de bridging, implementamos varias optimizaciones del gas en nuestro conjunto de contratos de bridge y rollup. Las técnicas de optimización utilizadas incluyen las siguientes:
+
+- Ahora usaremos constantes para almacenar algunas direcciones de contratos complementarios, en lugar de usar variables de almacenamiento. Esto es posible ya que estos valores no deberían (casi) nunca cambiarse. Con este cambio podemos ahorrar en algunas operaciones de carga de almacenamiento.
+- Actualizamos la estimación del gas intrínseco en `L1MessageQueue` para usar un límite superior simple en lugar de un cálculo exacto. Los dos resultados serán similares para la mayoría de las transacciones de bridge, pero la nueva implementación es significativamente más barata.
+- Hemos fusionado dos contratos `L1MessageQueue` y `L2GasPriceOracle` para ahorrar en los costos de llamadas de un contrato a otro.
+
+
+### Línea de tiempo
+
+- **Scroll Sepolia:**
+	- Actualización de la red: 19 de enero de 2024
+- **Scroll Mainnet:**
+	- Inicio de la actualización: 7 de febrero de 2024
+  - Finalización del bloqueo de tiempo y actualización: 21 de febrero de 2024
+
+### Detalles técnicos
+
+#### Cambios de código
+
+- [Optimización de costos de bridge](https://github.com/scroll-tech/scroll/pull/1011)
+- [Correcciones de auditoría](https://github.com/scroll-tech/scroll/pulls?q=OZ+is%3Apr+created%3A2024-01-27..2024-02-10)
+- [Versión desplegada anteriormente](https://github.com/scroll-tech/scroll/tree/ff380141a8cbcc214dc65f17ffa44faf4be646b6) (commit `ff380141a8cbcc214dc65f17ffa44faf4be646b6`)
+- [Versión desplegada](https://github.com/scroll-tech/scroll/tree/6030927680a92d0285c2c13e6bb27ed27d1f32d1) (commit `6030927680a92d0285c2c13e6bb27ed27d1f32d1`)
+
+#### Auditorías
+
+- [OpenZeppelin](https://blog.openzeppelin.com/scroll-bridge-gas-optimizations-audit)
+
+#### Lista de cambios
+
+**Cambios en los contratos L1:**
+
+- En `ScrollChain`, cambia `messageQueue` y `verifier` a `immutable`.
+- En `L1ScrollMessenger`, cambia `counterpart`, `rollup`, y `messageQueue` a `immutable`.
+- En todos los token gateways, cambia `counterpart`, `router`, y `messenger` a `immutable`.
+- Fusiona `L1MessageQueue` y `L2GasPriceOracle` en un solo contrato `L1MessageQueueWithGasPriceOracle` (desplegado en la misma dirección que el anterior `L1MessageQueue`). En este contrato también cambiamos `messenger` y `scrollChain` a `immutable`, y simplifica `calculateIntrinsicGasFee`.
+
+**Cambios en los contratos L2:**
+
+- En `L2ScrollMessenger`, cambia `counterpart` a `immutable`.
+- En todos los token gateways, cambia `counterpart`, `router`, y `messenger` a `immutable`.
+
+**Contratos afectados:**
+
+- **L1:** `L1MessageQueue`, `L2GasPriceOracle`, `ScrollChain`, `L1WETHGateway`, `L1StandardERC20Gateway`, `L1GatewayRouter`, `L1ScrollMessenger`, `L1CustomERC20Gateway`, `L1ERC721Gateway`, `L1ERC1155Gateway`.
+- **L2:** `L2ScrollMessenger`, `L2WETHGateway`, `L2StandardERC20Gateway`, `L2GatewayRouter`, `L2CustomERC20Gateway`, `L2ERC721Gateway`, `L2ERC1155Gateway`.
+
+#### Compatibilidad
+
+##### Nodos secuenciadores y seguidores (l2geth)
+
+Los operadores que ejecuten un nodo `l2geth` no necesitan actualizar. Los cambios en esta actualización no afectarán `l2geth`.
+
+##### Dapps e indexadores
+
+Dapps e indexadores (e infraestructura similar fuera de la cadena) que consultan contratos o se basan en interfaces de contratos, en la mayoría de los casos, no necesitan ser cambiados. La mayoría de los cambios en el contrato son internos y/o retrocompatibles.
+
+Si tu aplicación depende de [`L2GasPriceOracle`](https://etherscan.io/address/0x987e300fDfb06093859358522a79098848C33852) para monitorear como Scroll hace seguimiento del precio del gas de la L2 en la L1, desde el número de bloque de actualización necesitarás comenzar el monitoreo [`L1MessageQueueWithGasPriceOracle`](https://etherscan.io/address/0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B).
+
+El contrato original del oráculo de precio del gas será deprecado: ya no será actualizado ni utilizado por el bridge de Scroll.
+
+- Ethereum:
+	- `L2GasPriceOracle`: [`0x987e300fDfb06093859358522a79098848C33852`](https://etherscan.io/address/0x987e300fDfb06093859358522a79098848C33852)
+	- `L1MessageQueueWithGasPriceOracle`: [`0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B`](https://etherscan.io/address/0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B)
+- Sepolia:
+	- `L2GasPriceOracle`: [`0x247969F4fad93a33d4826046bc3eAE0D36BdE548`](https://sepolia.etherscan.io/address/0x247969F4fad93a33d4826046bc3eAE0D36BdE548)
+	- `L1MessageQueueWithGasPriceOracle`: [`0xF0B2293F5D834eAe920c6974D50957A1732de763`](https://sepolia.etherscan.io/address/0xF0B2293F5D834eAe920c6974D50957A1732de763)
