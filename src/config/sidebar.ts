@@ -7,11 +7,11 @@ export const getSidebar = () => {
     gettingStarted: [
       {
         section: t("sidebar.gettingStarted.gettingStarted"),
-        contents: [{ title: t("sidebar.gettingStarted.overview"), url: "getting-started/overview" }],
-      },
-      {
-        section: t("sidebar.gettingStarted.scrollSepoliaTestnet"),
         contents: [
+          {
+            title: t("sidebar.gettingStarted.overview"),
+            url: "getting-started/overview",
+          },
           {
             title: t("sidebar.gettingStarted.userGuide"),
             url: formatUrl("user-guide/"),
@@ -38,6 +38,11 @@ export const getSidebar = () => {
               },
             ],
           },
+        ],
+      },
+      {
+        section: t("sidebar.gettingStarted.scrollSepoliaTestnet"),
+        contents: [
           {
             title: t("sidebar.gettingStarted.scrollSepoliaBlockExplorer"),
             url: "https://sepolia.scrollscan.com/",
