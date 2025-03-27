@@ -1,6 +1,6 @@
 ![Contribute to Scroll](./src/assets/banner.png)
 
-[![](https://github.com/scroll-tech/scroll-documentation/actions/workflows/update-algolia-index.yml/badge.svg)](https://github.com/scroll-tech/scroll-documentation/actions/workflows/update-algolia-index.yml)
+[![Github build](https://github.com/scroll-tech/scroll-documentation/actions/workflows/update-algolia-index.yml/badge.svg)](https://github.com/scroll-tech/scroll-documentation/actions/workflows/update-algolia-index.yml)
 [![Twitter Follow](https://img.shields.io/twitter/follow/Scroll_ZKP?style=social)](https://twitter.com/Scroll_ZKP)
 [![Discord](https://img.shields.io/discord/984015101017346058?color=%235865F2&label=Discord&logo=discord&logoColor=%23fff)](https://discord.gg/scroll)
 
