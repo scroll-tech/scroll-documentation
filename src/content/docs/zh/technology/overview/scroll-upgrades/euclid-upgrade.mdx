@@ -1,0 +1,78 @@
+---
+section: technology
+date: Last Modified
+title: "Euclid Upgrade"
+lang: "zh"
+permalink: "technology/overview/scroll-upgrades/euclid-upgrade"
+---
+
+import Aside from "../../../../../../components/Aside.astro"
+
+<Aside type="note" title="Note">
+  合作伙伴相关的详细影响和行动项目请见这份 [合作伙伴说明](https://scrollzkp.notion.site/Euclid-Upgrade-5-Note-for-Partners-1ad7792d22af808cad5ac643a5ecdaf0)。
+</Aside>
+
+### 概览
+
+此次升级包含五个主要变化：
+
+- 迁移至 OpenVM Prover。
+- 迁移至 MPT 状态承诺。
+- 优化 Rollup 处理流程。
+- 支持 EIP-7702 与 RIP-7212。
+- 达成 Stage-1 阶段准备。
+
+这些变化将带来更低的费用、更高的吞吐量、更强的安全性、更好的兼容性，以及 Scroll 用户与开发者能享受到的更多先进功能。
+
+### 时间线
+
+- **Scroll Sepolia**
+  - 阶段一：2025 年 3 月 11 日
+  - 阶段二：2025 年 3 月 13 日
+- **Scroll 主网**
+  - 阶段一：2025 年 4 月 16 日
+  - 阶段二：2025 年 4 月 22 日
+
+### 功能详情
+
+#### OpenVM Prover
+
+Scroll 是 EVM 字节码兼容的 halo2 zkEVM 的早期先驱之一。随着 ZK 技术的快速发展，通用的 RISC-V zkVM 现在也变得可行。在 Euclid 升级中，我们将弃用 halo2 电路，转向构建于 [OpenVM](https://scroll.io/blog/the-first-release-of-the-openvm-framework-is-live) 之上的新 Prover。
+
+新的 OpenVM Prover 带来诸多好处. 代码更易于理解与审计；可在多个模块中复用代码；可大幅降低证明成本与延迟；还支持验证任意复杂交易，从而取消限制 sequencer 吞吐量的电路容量检查器模块。
+
+#### MPT 状态承诺
+
+目前 Scroll 使用的是 zk 友好的状态承诺结构 [zktrie](https://docs.scroll.io/en/technology/sequencer/zktrie/)。通过 OpenVM prover，现在可以实际地证明 Ethereum 的状态结构：[Merkle-Patricia Trie (MPT)](https://ethereum.org/en/developers/docs/data-structures-and-encoding/patricia-merkle-trie)。因此我们将弃用 zktrie，改为采用 MPT。
+
+MPT 能提升 sequencer 性能，并为依赖 L2 状态证明的 dApp 提供更好兼容性。
+
+#### 优化的 Rollup 处理流程
+
+Euclid 将推出一系列优化，显著降低数据可用性（DA）开销，从而为用户带来更低的费用。
+
+关键优化包括：
+
+- 将 blob 验证从合约代码转移到 zk 电路中；
+- 摊销消息队列提交成本；
+- 将 L2 区块头数据从 calldata 转移到 blobs；
+- 在单笔交易中提交多个 blobs。
+
+预计整体可将批次提交成本减少高达 90%。
+
+此外，Scroll L2 节点将弃用当前的 Clique（基于权威证明的共识机制），转为从 L1 的系统配置合约中读取 L2 区块签名者权限。
+
+#### 强大的智能账户
+
+Euclid 将支持 [EIP-7702](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-7702.md) 与 [RIP-7212](https://github.com/ethereum/RIPs/blob/master/RIPS/rip-7212.md)。这与 Ethereum 的 [Pectra 升级](https://blog.ethereum.org/2025/02/14/pectra-testnet-announcement) 保持一致，确保了高度兼容性。这些功能也为用户与开发者带来全新体验：如为现有账户添加智能合约功能、使用 passkey 授权签名、享受新标准所带来的 UX 改进。
+
+#### Stage-1 阶段
+
+Euclid 引入了关键的安全机制，使 Scroll 可达到由 [L2BEAT 定义](https://medium.com/l2beat/introducing-stages-a-framework-to-evaluate-rollups-maturity-d290bb22befe) 的 Stage-1 阶段。
+
+- 强制交易纳入机制可提升抗审查能力。用户可直接通过 L1 发送交易，强制 sequencer 将其包含。
+- 无许可批次提交机制防止活性故障。在极少数情况下，若 sequencer 停止提交或完成批次，任何人都可接管操作。
+
+这些机制强制 sequencer 履行职责，提供重要的安全保障。
+
+此外，Scroll 已将控制权交由 [安全委员会](https://scroll.io/blog/introducing-scroll-security-council)，由 12 名声誉良好的成员组成，采用 9/12 多签机制。Euclid 将是安全委员会执行的第一个升级。

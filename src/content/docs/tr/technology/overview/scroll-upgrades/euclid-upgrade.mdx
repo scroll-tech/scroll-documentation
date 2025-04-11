@@ -1,0 +1,73 @@
+---
+section: technology
+date: Last Modified
+title: "Euclid Upgrade"
+lang: "tr"
+permalink: "technology/overview/scroll-upgrades/euclid-upgrade"
+---
+
+import Aside from "../../../../../../components/Aside.astro"
+
+<Aside type="note" title="Note">
+  İzinsiz batch gönderimi, sistemin çalışmasını sürdürmesini sağlar. Scroll sequencer’ı belirli bir süre boyunca batch göndermez veya son
+</Aside>
+
+### Genel Bakış
+
+Bu yükseltme beş ana değişikliği içeriyor:
+
+- OpenVM Prover’a geçiş.
+- MPT durum taahhüdüne geçiş.
+- Optimize edilmiş rollup süreci.
+- EIP-7702 ve RIP-7212 desteği.
+- Aşama-1 uygunluğu.
+
+Bu değişiklikler sayesinde Scroll üzerindeki kullanıcılar ve geliştiriciler daha düşük ücretler, daha yüksek işlem hacmi, daha iyi güvenlik, daha fazla uyumluluk ve gelişmiş özelliklerden faydalanabilecek.
+
+### Zaman Çizelgesi
+
+- **Scroll Sepolia**
+  - Aşama 1: 11 Mart 2025
+  - Aşama 2: 13 Mart 2025
+- **Scroll Mainnet**
+  - Aşama 1: 16 Nisan 2025
+  - Aşama 2: 22 Nisan 2025
+
+### Özellikler
+
+#### OpenVM Prover
+
+Scroll, halo2 zkEVM teknolojisi ile ZK teknolojisinin öncülerinden biri olmuştur. ZK teknolojisi hızla gelişmeye devam etti ve artık genel amaçlı RISC-V tabanlı zkVM’ler pratik hale gelmiştir. Euclid yükseltmesinde, halo2 devreleri bırakılarak [OpenVM](https://scroll.io/blog/the-first-release-of-the-openvm-framework-is-live) üzerine inşa edilen yeni bir prover’a geçilmektedir.
+
+Yeni OpenVM prover’ı birçok avantaj sunar. Prover kodu daha anlaşılır ve denetlenebilir. Farklı bileşenler arasında kod paylaşımı daha kolaydır. Ayrıca, ispatlama maliyetleri ve gecikme süresi azaltılır. Son olarak, yeni prover rastgele karmaşıklıkta işlemleri ispatlayabilir ve bu sayede sequencer throughput’unu sınırlayan kapasite denetleyici modül kaldırılabilir.
+
+#### MPT Durum Taahhüdü
+
+Scroll şu anda zk-dostu bir veri yapısı olan [zktrie](https://docs.scroll.io/en/technology/sequencer/zktrie/) kullanmaktadır. Yeni OpenVM prover ile birlikte Ethereum’un durum yapısı olan [Merkle-Patricia Trie (MPT)](https://ethereum.org/en/developers/docs/data-structures-and-encoding/patricia-merkle-trie) artık pratik hale gelmiştir. Bu nedenle Scroll, zktrie’yi bırakıp MPT’ye geçiş yapmaktadır.
+
+MPT, sequencer performansını artırır ve L2 durum kanıtlarına bağlı dapp’ler için daha iyi uyumluluk sağlar.
+
+#### Optimize Edilmiş Rollup Süreci
+
+Euclid ile rollup sürecine bir dizi optimizasyon getiriyoruz. Bu optimizasyonlar, Veri Erişilebilirliği (DA) yükünü önemli ölçüde azaltarak kullanıcılar için daha düşük ücretlerle sonuçlanır.
+
+Ana optimizasyonlar:
+
+- Blob doğrulamasını kontrat kodundan zk devrelere taşımak.
+- Mesaj kuyruğu taahhüt maliyetini amorti etmek.
+- L2 blok başlığı verilerini calldata yerine bloblara taşımak.
+- Birden fazla blob’u tek bir işlemde taahhüt etmek.
+
+Bu değişikliklerin birleşimiyle birlikte batch taahhüt maliyetlerinde %90’a varan bir azalma beklenmektedir.
+
+Ek olarak, Scroll L2 düğümleri mevcut Proof-of-Authority (Clique) yapısını bırakacak ve yetkili L2 blok imzalayıcısını artık L1’deki yeni sistem yapılandırma sözleşmesinden okuyacaktır.
+
+#### Güçlü Akıllı Hesaplar
+
+Euclid’de Scroll, [EIP-7702](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-7702.md) ve [RIP-7212](https://github.com/ethereum/RIPs/blob/master/RIPS/rip-7212.md) protokollerini benimsemektedir. Ethereum’un [Pectra yükseltmesi](https://blog.ethereum.org/2025/02/14/pectra-testnet-announcement) ile paralel olarak 7702'nin benimsenmesi, Scroll’un Ethereum ile yüksek uyumluluğunu sürdürmesini sağlar. Bu özellikler, Scroll kullanıcılarının ve geliştiricilerinin akıllı hesap teknolojilerinden faydalanmasına olanak tanır: Mevcut hesaplara akıllı sözleşme işlevselliği eklemek, yetkilendirmeleri imzalamak için passkey kullanmak ve kullanıcı deneyimini geliştiren yeni standartları kullanmak mümkündür.
+
+#### Aşama-1
+
+Euclid ile Scroll, [L2BEAT tarafından tanımlanan standarda](https://medium.com/l2beat/introducing-stages-a-framework-to-evaluate-rollups-maturity-d290bb22befe) göre Aşama-1'e ulaşmayı sağlayacak önemli güvenlik garantileri sunmaktadır.
+
+Zorunlu işlem dahil etme, sansür direncine yönelik bir mekanizmadır. Kullanıcılar, Ethereum üzerinden doğrudan bir işlem gönderebilir ve sequencer’ı bunu dahil etmeye zorlayabilir.

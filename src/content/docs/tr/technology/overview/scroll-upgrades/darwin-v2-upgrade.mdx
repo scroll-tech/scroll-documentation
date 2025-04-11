@@ -1,0 +1,37 @@
+---
+section: technology
+date: Last Modified
+title: "Darwin v2 Upgrade"
+lang: "tr"
+permalink: "technology/overview/scroll-upgrades/darwin-v2-upgrade"
+---
+
+### Genel Bakış
+
+Dahili testler sırasında, belirli koşullar altında blokların her zaman sıkıştırılamayabileceğini tespit ettik; bu da doğrulanamayan parçalar ve gruplar (batch) ile sonuçlanabilir.  
+Bu sorunu çözmek için, bu özel durum algılandığında sıkıştırılmamış blob'ların etkinleştirileceği küçük bir yükseltme gerçekleştirildi.
+
+### Zaman Çizelgesi
+
+Bu bir güvenlik düzeltmesi olduğundan, 7 günlük zaman kilidi mekanizması atlandı.
+
+- **Scroll Sepolia**: 28 Ağustos 2024  
+- **Scroll Mainnet**: 2 Eylül 2024
+
+### Uyumluluk
+
+#### Sequencer ve Follower Düğümleri (l2geth)
+
+Yeni düğüm versiyonu `v5.7.0`'dır. Daha fazla bilgi için [sürüm notlarına](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.7.0) bakabilirsiniz.
+
+Bu yükseltme, Scroll’un durum geçiş fonksiyonunu değiştirmez; bu nedenle geriye dönük uyumludur. Ancak Ethereum'a gönderilen batch veri formatı değişmiştir.  
+Bu nedenle `--rollup.verify` parametresiyle rollup doğrulaması yapan düğümlerin zinciri takip edebilmesi için yükseltilmesi gerekir.
+
+#### Dapp’ler ve İndeksleyiciler
+
+Sequencer’ın işlem hacmini artırmak amacıyla Scroll Mainnet üzerinde bir değişiklik uygulandı; maksimum reorg derinliği 17 blok olacak şekilde ayarlandı.  
+Daha önce, sistem, işlem devre limitini aşmasın diye signer thread içinde kapsamlı kontroller yapıyordu. Bu güvenli olsa da CPU kaynaklarını artırıyordu.  
+Artık yeni bir devre kapasite kontrol sistemi devrede: Sequencer thread yaklaşık kontrol yaparken, 16 işçi thread geçmiş blokları hassas şekilde kontrol ediyor.  
+Sonuç olarak, nadiren de olsa maksimum 17 blokluk bir reorganizasyon yaşanabilir.
+
+İndeksleyiciler için, `BatchHeader` versiyonu 4'e yükseltildi. Bu yükseltme geriye dönük uyumludur (yalnızca blob verisini manuel çözen geliştiriciler için küçük bir değişiklik vardır).

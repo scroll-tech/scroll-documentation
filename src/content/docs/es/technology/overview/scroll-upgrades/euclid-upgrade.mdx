@@ -1,0 +1,79 @@
+---
+section: technology
+date: Last Modified
+title: "Euclid Upgrade"
+lang: "es"
+permalink: "technology/overview/scroll-upgrades/euclid-upgrade"
+---
+
+import Aside from "../../../../../../components/Aside.astro"
+
+<Aside type="note" title="Note">
+  Los impactos detallados y las acciones para los socios se pueden encontrar en esta [Nota para Socios](https://scrollzkp.notion.site/Euclid-Upgrade-5-Note-for-Partners-1ad7792d22af808cad5ac643a5ecdaf0).
+</Aside>
+
+### Resumen
+
+Esta actualización incluye cinco cambios principales:
+
+- Migración al Prover OpenVM.
+- Migración al compromiso de estado MPT.
+- Proceso de rollup optimizado.
+- Soporte para EIP-7702 y RIP-7212.
+- Preparación para la Etapa 1.
+
+Estos cambios resultarán en tarifas más bajas, mayor rendimiento, mejor seguridad, mejor compatibilidad y funciones más avanzadas que los usuarios y desarrolladores en Scroll pueden disfrutar.
+
+### Cronograma
+
+- **Scroll Sepolia**
+  - Fase 1: 11 de marzo de 2025
+  - Fase 2: 13 de marzo de 2025
+- **Scroll Mainnet**
+  - Fase 1: 16 de abril de 2025
+  - Fase 2: 22 de abril de 2025
+
+### El Distintivo 
+
+#### Prover OpenVM
+
+Scroll ha sido pionero en la tecnología ZK a través de nuestro zkEVM compatible con bytecode EVM basado en halo2. La tecnología ZK ha progresado rápidamente desde entonces, y ahora los zkVMs de propósito general basados en RISC-V se están volviendo prácticos. En la actualización Euclid, estamos reemplazando nuestros circuitos halo2 por un nuevo prover construido sobre [OpenVM](https://scroll.io/blog/the-first-release-of-the-openvm-framework-is-live).
+
+El nuevo prover OpenVM ofrece numerosos beneficios. El código del prover es más fácil de razonar y auditar. Podemos reutilizar mejor el código entre diferentes componentes. También podemos reducir los costos y la latencia de prueba. Finalmente, el nuevo prover nos permitirá probar transacciones arbitrariamente complejas, lo que nos permitirá eliminar el módulo de verificación de capacidad de circuito que ha sido un gran cuello de botella en el rendimiento del secuenciador.
+
+#### Compromiso de Estado MPT
+
+Scroll actualmente utiliza una estructura de datos de compromiso de estado amigable con zk llamada [zktrie](https://docs.scroll.io/en/technology/sequencer/zktrie/). Con el nuevo prover OpenVM, ahora es práctico probar la estructura de estado de Ethereum: el [Merkle-Patricia Trie](https://ethereum.org/en/developers/docs/data-structures-and-encoding/patricia-merkle-trie), también conocido como MPT. Scroll ahora está reemplazando zktrie y adoptando MPT.
+
+MPT desbloquea un mejor rendimiento del secuenciador y ofrece mejor compatibilidad para las dapps que dependen de pruebas de estado L2.
+
+#### Proceso de Rollup Optimizado
+
+En Euclid, estamos implementando una serie de optimizaciones en el proceso de rollup. Estas resultan en reducciones significativas en la sobrecarga de Disponibilidad de Datos (DA) y, en última instancia, tarifas más bajas para los usuarios.
+
+Las principales optimizaciones son:
+
+- Mover la verificación de blobs del código del contrato a los circuitos zk.
+- Amortizar el costo de compromiso de la cola de mensajes.
+- Mover los datos del encabezado del bloque L2 de calldata a blobs.
+- Comprometer múltiples blobs en una sola transacción.
+
+Estos cambios combinados se estiman para reducir los costos de compromiso de lotes hasta en un 90%.
+
+Además, los nodos L2 de Scroll reemplazarán Clique (el consenso actual de Prueba de Autoridad) y comenzarán a leer el firmante autorizado del bloque L2 desde el nuevo contrato de configuración del sistema en L1.
+
+#### Cuentas Inteligentes Potentes
+
+En Euclid, Scroll está adoptando [EIP-7702](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-7702.md) y [RIP-7212](https://github.com/ethereum/RIPs/blob/master/RIPS/rip-7212.md). Adoptar 7702 en paralelo con la [actualización Pectra](https://blog.ethereum.org/2025/02/14/pectra-testnet-announcement) de Ethereum asegura que Scroll mantenga un alto grado de compatibilidad con Ethereum. Estas características también permitirán a los usuarios y desarrolladores de Scroll aprovechar las últimas tecnologías en cuentas inteligentes: los usuarios pueden agregar funcionalidades de contrato inteligente a sus cuentas existentes, usar claves de acceso para firmar autorizaciones y beneficiarse de las mejoras emergentes en la experiencia de usuario que habilitan estos nuevos estándares.
+
+#### Etapa 1
+
+En Euclid, estamos implementando garantías de seguridad importantes que permitirán a Scroll alcanzar la Etapa 1 según el [estándar definido por L2BEAT](https://medium.com/l2beat/introducing-stages-a-framework-to-evaluate-rollups-maturity-d290bb22befe).
+
+La inclusión forzada de transacciones es un mecanismo de resistencia a la censura. Permite a los usuarios encolar una transacción directamente desde Ethereum, obligando al secuenciador a incluirla.
+
+La presentación de lotes sin permiso es un mecanismo para prevenir fallas de disponibilidad. En el improbable escenario de que el secuenciador de Scroll deje de publicar o finalizar lotes durante un período prolongado, este mecanismo permite a cualquiera intervenir y comenzar a publicar y finalizar lotes.
+
+Ambos mecanismos obligan al secuenciador de Scroll a hacer su trabajo. Como tal, sirven como elementos disuasorios y ofrecen garantías de seguridad importantes a los usuarios.
+
+También hemos transferido recientemente el control al [Consejo de Seguridad](https://scroll.io/blog/introducing-scroll-security-council), un organismo independiente de 12 miembros reputados, formando una multisig de 9/12. La actualización Euclid será la primera actualización ejecutada por el Consejo de Seguridad.

@@ -142,7 +142,13 @@
 
       "security": "Seguridad",
       "auditsAndBugBounty": "Auditorías y recompenzas por encontrar bugs",
-      "l2BeatAssessment": "Análisis de L2Beat"
+      "l2BeatAssessment": "Análisis de L2Beat",
+
+      "euclidUpgrade": "Actualización de Euclides",
+      "darwinV2Upgrade": "Actualización de Darwin v2",
+      "darwinUpgrade": "Actualización de Darwin",
+      "curieUpgrade": "Actualización de Curie",
+      "bernoulliUpgrade": "Actualización de Bernoulli"
     },
     "learn": {
       "ethereumAndProtocols": "Ethereum y Protocolos",

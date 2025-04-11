@@ -202,7 +202,29 @@ export const getSidebar = () => {
           { title: t("sidebar.technology.scrollArchitecture"), url: formatUrl("technology") },
           {
             title: t("sidebar.technology.scrollUpgrades"),
-            url: "technology/overview/scroll-upgrades",
+            url: formatUrl("technology/overview/scroll-upgrades"),
+            children: [
+              {
+                title: t("sidebar.technology.euclidUpgrade"),
+                url: formatUrl("technology/overview/scroll-upgrades/euclid-upgrade"),
+              },
+              {
+                title: t("sidebar.technology.darwinV2Upgrade"),
+                url: formatUrl("technology/overview/scroll-upgrades/darwin-v2-upgrade"),
+              },
+              {
+                title: t("sidebar.technology.darwinUpgrade"),
+                url: formatUrl("technology/overview/scroll-upgrades/darwin-upgrade"),
+              },
+              {
+                title: t("sidebar.technology.curieUpgrade"),
+                url: formatUrl("technology/overview/scroll-upgrades/curie-upgrade"),
+              },
+              {
+                title: t("sidebar.technology.bernoulliUpgrade"),
+                url: formatUrl("technology/overview/scroll-upgrades/bernoulli-upgrade"),
+              },
+            ],
           },
         ],
       },

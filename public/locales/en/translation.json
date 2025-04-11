@@ -141,7 +141,12 @@
       "cpuProverRepo": "CPU Prover Repo",
       "security": "Security",
       "auditsAndBugBounty": "Audits & Bug Bounty",
-      "l2BeatAssessment": "L2Beat Assessment"
+      "l2BeatAssessment": "L2Beat Assessment",
+      "euclidUpgrade": "Euclid Upgrade",
+      "darwinV2Upgrade": "Darwin v2 Upgrade",
+      "darwinUpgrade": "Darwin Upgrade",
+      "curieUpgrade": "Curie Upgrade",
+      "bernoulliUpgrade": "Bernoulli Upgrade"
     },
     "learn": {
       "ethereumAndProtocols": "Ethereum & Protocols",
