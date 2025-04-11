@@ -6,6 +6,8 @@ lang: "en"
 permalink: "technology/overview/scroll-upgrades"
 ---
 
+import Aside from "../../../../../components/Aside.astro"
+
 As the team continues to progress on Scroll's roadmap, we will be upgrading the Scroll network to include new features and improvements.
 
 The following contracts are used to initiate upgrades and execute upgrades after the two-week timelock period:
@@ -18,6 +20,69 @@ The following contracts are used to initiate upgrades and execute upgrades after
 | L2 Timelock | Scroll | [`0xf6069DB81239E5194bb53f83aF564d282357bc99`](https://scrollscan.com/address/0xf6069DB81239E5194bb53f83aF564d282357bc99)|
 
 You can join our [Telegram channel for technical updates](https://t.me/scroll_tech_updates), which includes future upgrade announcements and on-chain operation events.
+
+## Euclid Upgrade
+
+<Aside type="note" title="Note">
+  Detailed impacts and action items for partner can be found in this [Note for Partners](https://scrollzkp.notion.site/Euclid-Upgrade-5-Note-for-Partners-1ad7792d22af808cad5ac643a5ecdaf0)
+</Aside>
+
+### Overview
+This upgrade contains five main changes:
+- Migration to OpenVM Prover.
+- Migration to MPT state commitment.
+- Optimized rollup process.
+- EIP-7702 and RIP-7212 support.
+- Stage-1 readiness.
+
+These changes will result in lower fees, higher throughput, better security, better compatibility, and more advanced features that users and developers on Scroll can enjoy.
+
+### Timeline
+
+- **Scroll Sepolia**
+    - Phase 1: March 11th, 2025
+    - Phase 2: March 13th, 2025
+- **Scroll Mainnet**
+    - Phase 1: April 16th, 2025
+    - Phase 2: April 22nd, 2025
+
+### Features
+
+#### OpenVM Prover
+Scroll has been among the pioneers of ZK technology through our EVM bytecode compatible halo2 zkEVM. ZK technology has continued to progress rapidly ever since, and now general-purpose RISC-V zkVMs are becoming practical. In the Euclid upgrade we are deprecating our halo2 circuits in favor of a new prover built on top of [OpenVM](https://scroll.io/blog/the-first-release-of-the-openvm-framework-is-live).
+
+The new OpenVM prover offers numerous benefits. Prover code is easier to reason about and to audit. We can better reuse code among different components. We can also reduce proving costs and latency. Finally, the new prover will enable us to prove arbitrarily complex transactions, allowing us to remove the circuit capacity checker module that has been a major bottleneck on sequencer throughput.
+
+#### MPT State Commitment
+Scroll currently uses a zk-friendly state commitment data structure called [zktrie](https://docs.scroll.io/en/technology/sequencer/zktrie/). With the new OpenVM prover, it is now practical to prove Ethereum’s state structure: the [Merkle-Patricia Trie](https://ethereum.org/en/developers/docs/data-structures-and-encoding/patricia-merkle-trie), also known as MPT. Scroll is now deprecating the zktrie and adopting MPT.
+
+MPT unlocks better sequencer performance and offers better compatibility for dapps relying on L2 state proofs.
+
+#### Optimized Rollup Process
+In Euclid, we are rolling out a series of optimizations to the rollup process. These result in major reductions in Data Availability (DA) overhead, and ultimately lower fees for users. 
+
+The main optimizations are:
+- Move blob verification from contract code to zk circuits.
+- Amortize message queue commitment cost.
+- Move L2 block header data from calldata to blobs.
+- Commit multiple blobs in a single transaction.
+- These changes combined are estimated to reduce batch commitment costs by up to 90%.
+
+In addition, Scroll L2 nodes will deprecate Clique (the current Proof-of-Authority consensus) and will start reading the authorized L2 block signer from the new system config contract on L1.
+
+#### Powerful Smart Accounts
+
+In Euclid, Scroll is adopting [EIP-7702](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-7702.md) and [RIP-7212](https://github.com/ethereum/RIPs/blob/master/RIPS/rip-7212.md). Adopting 7702 in parallel with Ethereum’s [Pectra upgrade](https://blog.ethereum.org/2025/02/14/pectra-testnet-announcement) ensures that Scroll maintains a high degree of compatibility with Ethereum. These features will also allow Scroll users and developers to tap into the latest technologies in smart accounts: Users can add smart contract functionalities to their existing accounts, use passkeys for signing authorizations, and benefit from the emerging UX improvements that these new standards enable.
+
+#### Stage-1
+
+In Euclid, we are rolling out important safety guarantees that will allow Scroll to reach Stage-1 based on the [standard defined by L2BEAT](https://medium.com/l2beat/introducing-stages-a-framework-to-evaluate-rollups-maturity-d290bb22befe).
+
+Enforced transaction inclusion is a censorship resistance mechanism. It allows users to enqueue a transaction directly from Ethereum, forcing the sequencer to include it.
+Permissionless batch submission is a mechanism to prevent liveness failure. In the unlikely scenario that the Scroll sequencer stops posting or finalizing batches for an extended period of time, this mechanism allows anyone to step up and start posting and finalizing batches.
+Both mechanisms force the Scroll sequencer to do its job. As such, they serve as deterrents, and they offer important safety guarantees to the users.
+
+We have also recently transferred control to the [Security Council](https://scroll.io/blog/introducing-scroll-security-council), an independent body of 12 reputable members, forming a 9/12 multisig. The Euclid upgrade will be the first upgrade to be executed by the Security Council.   
 
 ## DarwinV2 Upgrade
 
@@ -341,3 +406,4 @@ The original gas price oracle contract will be deprecated: it will no longer be 
 - Sepolia:
 	- `L2GasPriceOracle`: [`0x247969F4fad93a33d4826046bc3eAE0D36BdE548`](https://sepolia.etherscan.io/address/0x247969F4fad93a33d4826046bc3eAE0D36BdE548)
 	- `L1MessageQueueWithGasPriceOracle`: [`0xF0B2293F5D834eAe920c6974D50957A1732de763`](https://sepolia.etherscan.io/address/0xF0B2293F5D834eAe920c6974D50957A1732de763)
+
