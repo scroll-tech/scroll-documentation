@@ -6,12 +6,6 @@ lang: "zh"
 permalink: "technology/overview/scroll-upgrades/euclid-upgrade"
 ---
 
-import Aside from "../../../../../../components/Aside.astro"
-
-<Aside type="note" title="Note">
-  合作伙伴相关的详细影响和行动项目请见这份 [合作伙伴说明](https://scrollzkp.notion.site/Euclid-Upgrade-5-Note-for-Partners-1ad7792d22af808cad5ac643a5ecdaf0)。
-</Aside>
-
 ### 概览
 
 此次升级包含五个主要变化：
@@ -76,3 +70,41 @@ Euclid 引入了关键的安全机制，使 Scroll 可达到由 [L2BEAT 定义](
 这些机制强制 sequencer 履行职责，提供重要的安全保障。
 
 此外，Scroll 已将控制权交由 [安全委员会](https://scroll.io/blog/introducing-scroll-security-council)，由 12 名声誉良好的成员组成，采用 9/12 多签机制。Euclid 将是安全委员会执行的第一个升级。
+
+#### 节点运营商
+
+##### 第一阶段更新
+
+- 节点运营商需迁移至新的 MPT 版本 l2geth。这需要完全重新同步（从网络或快照开始）。稍后我们将发布节点版本和快照。请查看 [节点状态迁移指南](https://www.notion.so/Node-Runner-State-Migration-Guideline-17b7792d22af80e4ab4bdc294f4f7541?pvs=21)。
+- zktrie 节点将继续运行，但将不再验证区块头中的状态根。建议在 Euclid 升级前迁移至 MPT 节点。
+
+##### 第二阶段更新
+
+- 节点运营商需知悉第一阶段引入的“无需许可的批次”。尽管不太可能在实际中触发，一旦触发将需要手动恢复操作。我们将在下个节点版本中提供详细文档。
+
+#### Dapps 与索引器
+
+##### 第一阶段更新
+
+- 状态承诺结构从 zktrie 切换为 MPT。
+- 所有依赖 zktrie 证明的 Dapp 需迁移至 MPT。
+- 批次版本为 v5 和 v6（与 v4 格式相同）。
+
+##### 第二阶段更新
+
+- 批次头和 blob 数据将采用新的编码格式（批次版本 v7）。
+- 批次承诺 calldata 将不再包含区块头。需要此信息的项目应从 L1 获取并解码 blob。
+- 一笔交易可能包含多个批次。索引器需支持处理同一 L1 交易中的多个批次。
+- 在无需许可模式中，使用 `commitAndFinalizeBatch` 一步原子提交并终结批次。
+- 函数签名更新如下：
+    - 升级前：`commitBatchWithBlobProof`、`finalizeBundleWithProof`、`revertBatch`
+    - 升级后：`commitBatches`、`finalizeBundlePostEuclidV2`、`commitAndFinalizeBatch`、`revertBatch`
+- `committedBatches` 数组将变得稀疏。
+- 消息队列合约迁移为 `L1MessageQueueV2`，其消息哈希方式不同。
+- 不安全的 L2 区块不再包含签名或自定义标记（`ExtraData` 字段）。
+
+#### 资源
+
+- [GitHub 合约变更 PR](https://github.com/scroll-tech/scroll-contracts/pull/79)
+- [DA 编解码器仓库](https://github.com/scroll-tech/da-codec)
+- [Discord 提交工单](https://discord.com/channels/853955156100907018/1280768286124146732)

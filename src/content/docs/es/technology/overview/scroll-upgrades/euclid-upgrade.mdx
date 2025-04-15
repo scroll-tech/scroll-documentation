@@ -6,12 +6,6 @@ lang: "es"
 permalink: "technology/overview/scroll-upgrades/euclid-upgrade"
 ---
 
-import Aside from "../../../../../../components/Aside.astro"
-
-<Aside type="note" title="Note">
-  Los impactos detallados y las acciones para los socios se pueden encontrar en esta [Nota para Socios](https://scrollzkp.notion.site/Euclid-Upgrade-5-Note-for-Partners-1ad7792d22af808cad5ac643a5ecdaf0).
-</Aside>
-
 ### Resumen
 
 Esta actualización incluye cinco cambios principales:
@@ -77,3 +71,43 @@ La presentación de lotes sin permiso es un mecanismo para prevenir fallas de di
 Ambos mecanismos obligan al secuenciador de Scroll a hacer su trabajo. Como tal, sirven como elementos disuasorios y ofrecen garantías de seguridad importantes a los usuarios.
 
 También hemos transferido recientemente el control al [Consejo de Seguridad](https://scroll.io/blog/introducing-scroll-security-council), un organismo independiente de 12 miembros reputados, formando una multisig de 9/12. La actualización Euclid será la primera actualización ejecutada por el Consejo de Seguridad.
+
+### Compatibilidad
+
+#### Operadores de Nodo
+
+##### Cambios de la Fase 1
+
+- Los operadores de nodo deben migrar a la nueva versión MPT de l2geth. Esto requiere una resincronización completa (desde la red o desde una instantánea). Proporcionaremos una versión del nodo y instantáneas más adelante. Consulte la [Guía de Migración del Estado del Nodo](https://www.notion.so/Node-Runner-State-Migration-Guideline-17b7792d22af80e4ab4bdc294f4f7541?pvs=21) para obtener instrucciones detalladas.
+- Los nodos zktrie seguirán operando, pero dejarán de verificar las raíces de estado en los encabezados de bloque recibidos. Recomendamos a los operadores de nodo migrar a nodos MPT poco antes de Euclid.
+
+##### Cambios de la Fase 2
+
+- Los operadores de nodo deben estar al tanto de la etapa 1 (lotes sin permisos). Aunque es poco probable que este mecanismo se active en la práctica, si lo hace, requerirá pasos manuales para recuperar los nodos. Proporcionaremos documentación detallada sobre esto en nuestras próximas notas de lanzamiento del nodo.
+
+#### Dapps e Indexadores
+
+##### Cambios de la Fase 1
+
+- La estructura de compromiso de estado cambia de zktrie a MPT.
+- Cualquier dapp que dependa de pruebas zktrie debe migrar a pruebas MPT.
+- Las versiones de lote utilizarán v5 y v6 (formato idéntico a los lotes v4 anteriores).
+
+##### Cambios de la Fase 2
+
+- Los encabezados de lote y la carga útil del blob utilizarán una nueva codificación. Las versiones de lote utilizadas en la fase 2 serán v7.
+- El calldata de compromiso de lote ya no contendrá encabezados de bloque. Los proyectos que necesiten esta información desde L1 deben obtener y decodificar el blob.
+- Una sola transacción de compromiso puede transportar múltiples lotes. Los indexadores deben poder procesar múltiples lotes desde una misma transacción L1.
+- En el modo de lote sin permisos, el remitente compromete y finaliza un solo lote atómicamente con `commitAndFinalizeBatch`.
+- Las firmas de funciones cambiarán. Los proyectos deben agregar soporte para las nuevas funciones:
+    - Antes de Euclid fase 2: `commitBatchWithBlobProof`, `finalizeBundleWithProof`, `revertBatch`
+    - Después: `commitBatches`, `finalizeBundlePostEuclidV2`, `commitAndFinalizeBatch`, `revertBatch`
+- La matriz `committedBatches` será escasa.
+- Migramos a `L1MessageQueueV2`, con diferentes hashes de almacenamiento de mensajes.
+- Los bloques L2 inseguros ya no incluirán firma o etiqueta de vanidad en `ExtraData`.
+
+#### Recursos
+
+- [Cambios de contrato en GitHub](https://github.com/scroll-tech/scroll-contracts/pull/79)
+- [Repositorio de códec DA](https://github.com/scroll-tech/da-codec)
+- [Abrir ticket en Discord](https://discord.com/channels/853955156100907018/1280768286124146732)

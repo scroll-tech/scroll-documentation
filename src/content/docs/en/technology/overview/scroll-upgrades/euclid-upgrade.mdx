@@ -6,12 +6,6 @@ lang: "en"
 permalink: "technology/overview/scroll-upgrades/euclid-upgrade"
 ---
 
-import Aside from "../../../../../../components/Aside.astro"
-
-<Aside type="note" title="Note">
-  Detailed impacts and action items for partner can be found in this [Note for Partners](https://scrollzkp.notion.site/Euclid-Upgrade-5-Note-for-Partners-1ad7792d22af808cad5ac643a5ecdaf0)
-</Aside>
-
 ### Overview
 This upgrade contains five main changes:
 - Migration to OpenVM Prover.
@@ -67,4 +61,45 @@ Enforced transaction inclusion is a censorship resistance mechanism. It allows u
 Permissionless batch submission is a mechanism to prevent liveness failure. In the unlikely scenario that the Scroll sequencer stops posting or finalizing batches for an extended period of time, this mechanism allows anyone to step up and start posting and finalizing batches.
 Both mechanisms force the Scroll sequencer to do its job. As such, they serve as deterrents, and they offer important safety guarantees to the users.
 
-We have also recently transferred control to the [Security Council](https://scroll.io/blog/introducing-scroll-security-council), an independent body of 12 reputable members, forming a 9/12 multisig. The Euclid upgrade will be the first upgrade to be executed by the Security Council.   
+We have also recently transferred control to the [Security Council](https://scroll.io/blog/introducing-scroll-security-council), an independent body of 12 reputable members, forming a 9/12 multisig. The Euclid upgrade will be the first upgrade to be executed by the Security Council.
+
+### Compatibility
+
+#### Node Operators
+
+##### Phase 1 Changes
+* Node operators should migrate to the new MPT version of l2geth. This requires a full resync (from network or from snapshot). We will provide a node release and snapshots later. 
+Please refer to [Node Runner State Migration Guideline](https://www.notion.so/Node-Runner-State-Migration-Guideline-17b7792d22af80e4ab4bdc294f4f7541?pvs=21) for node runner state migration guide.
+* Zktrie nodes will continue to operate, but they will stop verifying state roots on the received block headers. We encourage node operators to migrate to mpt nodes shortly before Euclid.
+
+##### Phase 2 Changes
+* Node operators need to be aware of stage-1 (permissionless batches). While this mechanism will most likely not be triggered in practice, if it is, it will require manual steps to recover the nodes. We will provide detailed documentation about this in our next node release notes.
+
+#### Dapps and Indexers
+
+##### Phase 1 Changes
+* State commitment structure switches from zktrie to MPT
+* Any dapp relying on zktrie proofs must migrate to MPT proofs
+* Batch versions will use v5 and v6 (format identical to previous v4 batches)
+
+##### Phase 2 Changes
+* Batch headers and blob payload will use a new encoding. The batch versions used in phase-2 will be v7.
+* Commit batch calldata will no longer contain block headers. Projects that need this information from L1 must fetch and decode the blob.
+* Previously, one `CommitBatch` event would correspond to one commit transaction that carried a single blob. After Euclid phase-2, a single commit transaction can carry multiple batches. This means that indexers should be able to process multiple batches from the same L1 transaction. We maintain the 1 batch = 1 blob semantics and emit a `CommitBatch` event for each batch.
+* In permissionless batch mode, the batch submitter commits and finalizes a single batch in a single atomic step through the newly added `commitAndFinalizeBatch` function. While this will be rare in practice, indexers should prepare to handle this case.
+* Function signatures will change for commit, finalize, and revert batch. Projects that decode transaction calldata should add support for the new signatures. See the contract changes for the detailed function signatures.
+
+    Pre-Euclid-phase-2: `commitBatchWithBlobProof`, `finalizeBundleWithProof`, `revertBatch`
+
+    Post-Euclid-phase-2: `commitBatches`, `finalizeBundlePostEuclidV2`, `commitAndFinalizeBatch`, `revertBatch` (new).
+
+* The `committedBatches` array in the `ScrollChain` will become sparse: Only the last batch hash from each commit batch transaction will be stored in the contract state.
+* We will migrate to a new message queue contract (`L1MessageQueueV2`) that will store messages by a different (rolling) hash.
+
+In addition, L2 unsafe blocks will no longer include a signature or vanity tag in the `ExtraData` field.
+
+#### Resources
+* [Contract changes on GitHub](https://github.com/scroll-tech/scroll-contracts/pull/79)
+* [DA codec repository](https://github.com/scroll-tech/da-codec)
+
+Projects requiring additional guidance should open a [ticket on Discord](https://discord.com/channels/853955156100907018/1280768286124146732).

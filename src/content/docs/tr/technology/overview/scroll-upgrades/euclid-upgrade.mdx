@@ -6,12 +6,6 @@ lang: "tr"
 permalink: "technology/overview/scroll-upgrades/euclid-upgrade"
 ---
 
-import Aside from "../../../../../../components/Aside.astro"
-
-<Aside type="note" title="Note">
-  İzinsiz batch gönderimi, sistemin çalışmasını sürdürmesini sağlar. Scroll sequencer’ı belirli bir süre boyunca batch göndermez veya son
-</Aside>
-
 ### Genel Bakış
 
 Bu yükseltme beş ana değişikliği içeriyor:
@@ -71,3 +65,41 @@ Euclid’de Scroll, [EIP-7702](https://github.com/ethereum/EIPs/blob/master/EIPS
 Euclid ile Scroll, [L2BEAT tarafından tanımlanan standarda](https://medium.com/l2beat/introducing-stages-a-framework-to-evaluate-rollups-maturity-d290bb22befe) göre Aşama-1'e ulaşmayı sağlayacak önemli güvenlik garantileri sunmaktadır.
 
 Zorunlu işlem dahil etme, sansür direncine yönelik bir mekanizmadır. Kullanıcılar, Ethereum üzerinden doğrudan bir işlem gönderebilir ve sequencer’ı bunu dahil etmeye zorlayabilir.
+
+#### Düğüm Operatörleri
+
+##### 1. Aşama Değişiklikleri
+
+- Düğüm operatörleri l2geth'in MPT sürümüne geçmelidir. Bu, tam yeniden senkronizasyon gerektirir. Yakında bir sürüm ve anlık görüntüler paylaşılacak. [Geçiş Rehberini](https://www.notion.so/Node-Runner-State-Migration-Guideline-17b7792d22af80e4ab4bdc294f4f7541?pvs=21) inceleyin.
+- zktrie düğümleri çalışmaya devam edecek ancak blok başlıklarındaki state root’ları doğrulamayacaktır. Euclid'den önce MPT düğümlerine geçmeniz önerilir.
+
+##### 2. Aşama Değişiklikleri
+
+- İzin gerektirmeyen partiler etkinleşirse, manuel kurtarma gerekecektir. Detaylı belge yakında yayınlanacaktır.
+
+#### Dapps ve İndeksleyiciler
+
+##### 1. Aşama
+
+- State commitment yapısı zktrie'den MPT'ye geçer.
+- zktrie kanıtları kullanan dapp’ler MPT'ye geçmelidir.
+- v5 ve v6 parti sürümleri kullanılacaktır.
+
+##### 2. Aşama
+
+- Parti başlıkları & blob içeriği yeni formatta olacak (v7).
+- Blok başlıkları artık calldata'da olmayacak. L1'den alınmalı ve decode edilmelidir.
+- Tek işlemde birden çok parti desteklenir. 1 parti = 1 blob.
+- `commitAndFinalizeBatch` ile tek adımda batch gönderimi mümkün.
+- Yeni fonksiyon imzaları:
+    - Öncesi: `commitBatchWithBlobProof`, `finalizeBundleWithProof`, `revertBatch`
+    - Sonrası: `commitBatches`, `finalizeBundlePostEuclidV2`, `commitAndFinalizeBatch`, `revertBatch`
+- `committedBatches` array’i seyrek hale gelir.
+- Yeni mesaj kuyruğu `L1MessageQueueV2` kullanılacak.
+- Güvensiz L2 bloklarında `ExtraData` artık imza içermez.
+
+#### Kaynaklar
+
+- [Kontrat değişiklikleri](https://github.com/scroll-tech/scroll-contracts/pull/79)
+- [DA codec deposu](https://github.com/scroll-tech/da-codec)
+- [Discord üzerinden ticket açın](https://discord.com/channels/853955156100907018/1280768286124146732)
