@@ -142,7 +142,13 @@
 
       "security": "安全",
       "auditsAndBugBounty": "审计和漏洞赏金",
-      "l2BeatAssessment": "L2Beat 评估"
+      "l2BeatAssessment": "L2Beat 评估",
+
+      "euclidUpgrade": "Euclid 升级",
+      "darwinV2Upgrade": "Darwin v2 升级",
+      "darwinUpgrade": "Darwin 升级",
+      "curieUpgrade": "Curie 升级",
+      "bernoulliUpgrade": "Bernoulli 升级"
     },
     "learn": {
       "ethereumAndProtocols": "以太坊与协议",

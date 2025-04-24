@@ -1,0 +1,89 @@
+---
+section: technology
+date: Last Modified
+title: "Darwin Upgrade"
+lang: "tr"
+permalink: "technology/overview/scroll-upgrades/darwin-upgrade"
+---
+
+### Genel Bakış
+
+Bu yükseltme, birden fazla batch için tek bir toplu zk-proof kullanarak gaz ücretlerini %34 oranında azaltacaktır; her batch’i ayrı ayrı finalize etmeye gerek kalmayacaktır.
+
+- Darwin, yeni bir [Batch Codec V3](https://github.com/scroll-tech/da-codec/tree/main/encoding/codecv3) kullanır.
+- Daha önceki `chunk` ve `batch` kavramlarına ek olarak, yeni bir `bundle` kavramı tanıtıldı:
+    - `Chunk`: L2 blokları listesi içeren zkEVM kanıt birimi.
+    - `Batch`: Chunk'ların EIP-4844 blob'larında kodlandığı veri kullanılabilirliği birimi.
+    - `Bundle`: Birden fazla batch içeren ve finalize edilen birim.
+
+    Curie ile fark: Scroll artık tek bir toplu zk-proof ile birden fazla batch’i finalize ediyor.
+
+- Zincirdeki yeni bundle verifier, yeni bir public input formatı kullanıyor.
+
+### Zaman Çizelgesi
+
+- **Scroll Sepolia**
+  - Ağ yükseltmesi: 14 Ağustos 2024
+- **Scroll Ana Ağı**
+  - Yükseltme başlangıcı: 5 Ağustos 2024
+  - Timelock süresi bitişi ve yükseltme: 21 Ağustos 2024
+
+### Teknik Ayrıntılar
+
+#### Akıllı Sözleşme Değişiklikleri
+
+*Not: Curie sonrası, Scroll akıllı sözleşmeleri [scroll-contracts](https://github.com/scroll-tech/scroll-contracts) deposuna taşındı.*
+
+Bu yükseltmeye ait kod değişiklikleri [bu PR'de](https://github.com/scroll-tech/scroll-contracts/pull/4) bulunabilir. Ana değişiklikler:
+
+- `BatchHeaderV3Codec` tanıtıldı.
+- `L1MessageQueue` içinde mesaj işleme finalize adımından commit adımına taşındı.
+- Yeni bundle public input formatı için `IZkEvmVerifierV2` ve `MultipleVersionRollupVerifier` eklendi.
+- `ScrollChain` içinde `commitBatchWithBlobProof` ve `finalizeBundleWithProof` adlı yeni fonksiyonlar tanıtıldı.
+
+Tüm detaylar için [sürüm notları](https://github.com/scroll-tech/scroll-contracts/releases/tag/v1.0.0)'na göz atabilirsiniz.
+
+#### Node Değişiklikleri
+
+Yeni node sürümü: `v5.6.0`. Ayrıntılar için [sürüm notlarına](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.6.0) bakınız.
+
+- Timestamp tabanlı hard fork desteği eklendi.
+- V3 batch codec işleme desteği getirildi.
+
+#### zkEVM Devre Değişiklikleri
+
+Yeni devre sürümü: `v0.12.0` ([link](https://github.com/scroll-tech/zkevm-circuits/releases/tag/v0.12.0)).
+
+- `RecursionCircuit` tanıtıldı; birden fazla ardışık batch’in SNARK’larını recursive olarak toplar.
+- Yeni katmanlar eklendi: 6. katman (`RecursionCircuit`), 7. katman (`CompressionCircuit`).
+
+Public input’lar artık bir önceki batch bilgisiyle bağlamsal, bu da recursive kanıt sistemine olanak sağlar (daha fazla bilgi için [Notion dokümantasyonu](https://scrollzkp.notion.site/Upgrade-4-Darwin-Documentation-05a3ecb59e9d4f288254701f8c888173)).
+
+#### Denetimler
+
+- TrailofBits: yakında açıklanacak!
+
+### Uyumluluk
+
+#### Sequencer ve Follower Nodelar
+
+Geçiş durumu değişmediği için geriye dönük uyumludur. Ancak [v5.6.0](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.6.0) sürümüne yükseltme önerilir.
+
+#### Dapp ve İndeksleyiciler
+
+Batch işlemede önemli değişiklikler var:
+
+- Yeni [V3 codec](https://github.com/scroll-tech/da-codec/tree/main/encoding/codecv3) kullanılıyor. Yeni alanlar:
+    - `lastBlockTimestamp`
+    - `blobDataProof`
+- `commitBatchWithBlobProof` fonksiyonu ile batch'ler gönderilecek.
+- `finalizeBundleWithProof` ile birden fazla batch finalize edilecek.
+- `FinalizeBatch` eventi artık çoklu batch finalize anlamına gelecek.
+
+İndeksleyiciler için öneriler:
+
+- V3 codec'e geçiş.
+- Yeni commit/finalize fonksiyonlarını destekleme.
+- Yeni `FinalizeBatch` semantiğine göre stateRoot takip etme.
+
+Detaylı teknik bilgi için [Darwin dokümantasyonu](https://scrollzkp.notion.site/Upgrade-4-Darwin-Documentation-05a3ecb59e9d4f288254701f8c888173).

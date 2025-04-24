@@ -1,0 +1,70 @@
+---
+section: technology
+date: Last Modified
+title: "Curie Upgrade"
+lang: "es"
+permalink: "technology/overview/scroll-upgrades/curie-upgrade"
+---
+
+### Resumen
+
+Esta importante actualización reducirá las tarifas de gas en la cadena de Scroll en 1.5x. Los aspectos destacados incluyen:
+
+- Comprime los datos almacenados en blobs utilizando el algoritmo [zstd](https://github.com/scroll-tech/da-codec/tree/main/libzstd). Esta compresión reduce el tamaño de los datos, permitiendo que cada blob almacene más transacciones, lo que reduce el costo de disponibilidad de datos por transacción.
+- Adopta una versión modificada del modelo de precios EIP-1559 compatible con la interfaz de transacción EIP-1559, brindando beneficios como precios de transacción más precisos y una estructura de tarifas más predecible y estable.
+- Soporte para nuevos códigos de operación EVM `TLOAD`, `TSTORE` y `MCOPY`. Los usuarios pueden usar de manera segura la última versión del compilador Solidity `0.8.26` para construir contratos.
+- Introduce un tiempo de bloque dinámico. Durante periodos de congestión, un bloque se empaquetará cuando el número de transacciones alcance el límite del circuito en lugar de esperar al intervalo de 3 segundos.
+
+### Cronograma
+
+- **Scroll Sepolia**
+  - Actualización de red: 17 de junio de 2024
+- **Scroll Mainnet**
+  - Inicio de la actualización: 20 de junio de 2024
+  - Finalización del Timelock y actualización: 3 de julio de 2024
+
+### Detalles técnicos
+
+#### Cambios en contratos
+
+Los cambios de código para esta actualización están documentados en los siguientes PRs:
+
+- [Aceptar lotes comprimidos](https://github.com/scroll-tech/scroll/pull/1317)
+- [Actualizar `L1GasPriceOracle`](https://github.com/scroll-tech/scroll/pull/1343)
+- [Cambiar `MAX_COMMIT_SCALAR` y `MAX_BLOB_SCALAR` a 1e18](https://github.com/scroll-tech/scroll/pull/1354)
+- [Eliminar verificación de índice de lote al actualizar un verificador](https://github.com/scroll-tech/scroll/pull/1372)
+
+Cambios principales:
+
+- El contrato rollup (`ScrollChain`) ahora aceptará lotes con versiones 1 y 2. [Versión 1](https://github.com/scroll-tech/da-codec/tree/main/encoding/codecv1) se utiliza para blobs sin comprimir (pre-Curie), mientras que [versión 2](https://github.com/scroll-tech/da-codec/tree/main/encoding/codecv2) se usa para blobs comprimidos (post-Curie).
+- El contrato `L1GasPriceOracle` se actualizará para cambiar la fórmula de tarifas de datos considerando DA de blob:
+    - Fórmula original: `(l1GasUsed(txRlp) + overhead) * l1BaseFee * scalar`
+    - Nueva fórmula: `l1BaseFee * commitScalar + len(txRlp) * l1BlobBaseFee * blobScalar`
+
+#### Cambios en nodos
+
+Nueva versión del nodo: `v5.5.0`. Ver [notas de lanzamiento](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.5.0).
+
+#### Cambios en zkEVM circuit
+
+Nueva versión de circuitos zkevm: `v0.11.4`. Ver [aquí](https://github.com/scroll-tech/zkevm-circuits/releases/tag/v0.11.4).
+
+#### Auditorías
+
+- TrailofBits: ¡Próximamente!
+- [Zellic](https://github.com/Zellic/publications/blob/master/Scroll%20zkEVM%20-%20Zellic%20Audit%20Report.pdf)
+
+### Compatibilidad
+
+#### Nodos Secuenciador y Follower (l2geth)
+
+Esta actualización es un hard fork. Los operadores deben actualizar antes del bloque de bifurcación. Ver [nota del nodo](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.4.2).
+
+#### Dapps e indexadores
+
+Para dApps, esta actualización es compatible. Los desarrolladores deben ajustar la configuración de tarifas. Las dApps ya no pueden depender del tiempo fijo de bloque de 3 segundos.
+
+Para indexadores, el [formato de datos](https://docs.scroll.io/en/technology/chain/rollup/#codec) sigue igual, pero el contenido cambia:
+
+- El campo `version` en `BatchHeader` será 2 desde Curie.
+- Los datos en blob estarán comprimidos y pueden descomprimirse con [zstd v1.5.6](https://github.com/facebook/zstd/releases/tag/v1.5.6).

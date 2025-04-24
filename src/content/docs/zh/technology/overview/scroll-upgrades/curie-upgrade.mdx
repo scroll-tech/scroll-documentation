@@ -1,0 +1,70 @@
+---
+section: technology
+date: Last Modified
+title: "Curie Upgrade"
+lang: "zh"
+permalink: "technology/overview/scroll-upgrades/curie-upgrade"
+---
+
+### 概览
+
+此次重大升级将使 Scroll 链上的 gas 费用减少 1.5 倍。亮点包括：
+
+- 使用 [zstd](https://github.com/scroll-tech/da-codec/tree/main/libzstd) 算法压缩 blob 中存储的数据。压缩后数据体积更小，每个 blob 可容纳更多交易，从而降低每笔交易的数据可用性成本。
+- 采用兼容 EIP-1559 交易接口的修改版 EIP-1559 定价模型，带来更精准的交易费用估算和更可预测、稳定的费用结构。
+- 支持新的 EVM 操作码 `TLOAD`、`TSTORE` 和 `MCOPY`。用户可以安全使用最新的 Solidity 编译器版本 `0.8.26` 来构建合约。
+- 引入动态区块时间。在网络拥堵时，当交易数量达到电路限制后，区块将被打包，而不是等待 3 秒的固定时间。
+
+### 时间表
+
+- **Scroll Sepolia**
+  - 网络升级：2024 年 6 月 17 日
+- **Scroll 主网**
+  - 升级启动：2024 年 6 月 20 日
+  - Timelock 解锁并完成升级：2024 年 7 月 3 日
+
+### 技术细节
+
+#### 合约变更
+
+此次升级的代码变更记录如下 PR：
+
+- [接受压缩 batch](https://github.com/scroll-tech/scroll/pull/1317)
+- [更新 `L1GasPriceOracle`](https://github.com/scroll-tech/scroll/pull/1343)
+- [将 `MAX_COMMIT_SCALAR` 和 `MAX_BLOB_SCALAR` 更改为 1e18](https://github.com/scroll-tech/scroll/pull/1354)
+- [更新验证者时移除 batch 索引检查](https://github.com/scroll-tech/scroll/pull/1372)
+
+主要变更：
+
+- Rollup 合约 (`ScrollChain`) 现在支持版本 1 和 2 的 batch。[版本 1](https://github.com/scroll-tech/da-codec/tree/main/encoding/codecv1) 为未压缩 blob（Curie 前），[版本 2](https://github.com/scroll-tech/da-codec/tree/main/encoding/codecv2) 为压缩 blob（Curie 后）。
+- `L1GasPriceOracle` 合约将更新数据费用公式以考虑 blob DA：
+    - 原公式：`(l1GasUsed(txRlp) + overhead) * l1BaseFee * scalar`
+    - 新公式：`l1BaseFee * commitScalar + len(txRlp) * l1BlobBaseFee * blobScalar`
+
+#### 节点变更
+
+新节点版本为 `v5.5.0`，请查看[发布说明](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.5.0)。
+
+#### zkEVM 电路变更
+
+新版本为 `v0.11.4`，[查看发布日志](https://github.com/scroll-tech/zkevm-circuits/releases/tag/v0.11.4)。
+
+#### 审计
+
+- TrailofBits：即将上线！
+- [Zellic](https://github.com/Zellic/publications/blob/master/Scroll%20zkEVM%20-%20Zellic%20Audit%20Report.pdf)
+
+### 兼容性
+
+#### Sequencer 和 Follower 节点（l2geth）
+
+此次升级为硬分叉，需在分叉区块之前完成升级。[节点发布说明](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.4.2)。
+
+#### dApps 和索引器
+
+dApps 可向后兼容，建议开发者根据 EIP-1559 模型调整 gas 设置。注意：不能再依赖固定 3 秒出块时间。
+
+索引器方面，[数据格式](https://docs.scroll.io/en/technology/chain/rollup/#codec) 保持一致，但数据内容将发生变化：
+
+- 自 Curie 起，`BatchHeader` 中的 `version` 字段将改为 2。
+- blob 中的数据将使用 [zstd v1.5.6](https://github.com/facebook/zstd/releases/tag/v1.5.6) 压缩。
