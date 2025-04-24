@@ -143,7 +143,13 @@
 
       "security": "Güvenlik",
       "auditsAndBugBounty": "Denetimler ve Hata Ödül Programı",
-      "l2BeatAssessment": "L2Beat Değerlendirmesi"
+      "l2BeatAssessment": "L2Beat Değerlendirmesi",
+
+      "euclidUpgrade": "Euclid Yükseltmesi",
+      "darwinV2Upgrade": "Darwin v2 Yükseltmesi",
+      "darwinUpgrade": "Darwin Yükseltmesi",
+      "curieUpgrade": "Curie Yükseltmesi",
+      "bernoulliUpgrade": "Bernoulli Yükseltmesi"
     },
     "learn": {
       "ethereumAndProtocols": "Ethereum & Protokoller",

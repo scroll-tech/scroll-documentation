@@ -1,0 +1,37 @@
+---
+section: technology
+date: Last Modified
+title: "Darwin v2 Upgrade"
+lang: "zh"
+permalink: "technology/overview/scroll-upgrades/darwin-v2-upgrade"
+---
+
+### 概览
+
+在内部测试过程中，我们发现，在某些条件下区块可能无法被压缩，这将导致区块碎片（chunk）和批次（batch）无法被证明。  
+为了解决这个问题，我们进行了一个小幅升级：当检测到这种特殊情况时，将启用未压缩的 blob 数据。
+
+### 时间线
+
+由于这是一个与安全相关的补丁，我们跳过了 7 天的 timelock 机制。
+
+- **Scroll Sepolia**：2024 年 8 月 28 日  
+- **Scroll 主网**：2024 年 9 月 2 日
+
+### 兼容性
+
+#### Sequencer 和 Follower 节点（l2geth）
+
+新的节点版本为 `v5.7.0`。详情请查看[发布说明](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.7.0)。
+
+此次升级不会改变 Scroll 的状态转换函数，因此是向后兼容的。  
+但提交到以太坊的批次数据格式发生了变化。因此，启用了 rollup 验证（`--rollup.verify`）的节点必须升级才能继续同步链数据。
+
+#### Dapp 和索引服务（Indexers）
+
+为了提升主网 sequencer 的吞吐量，我们对 Scroll 主网做出了一项更改，将最大重组深度调整为 17 个区块。  
+此前，系统会在 signer 线程中执行全面的容量检查，以确保交易不超过电路限制。虽然这种做法能确保所有交易合规，但也会占用较多 CPU 资源。  
+现在我们引入了新的电路容量检查机制：sequencer 线程将执行近似检查，另有 16 个工作线程并行精确验证之前区块的容量。  
+因此，最多可能发生 17 个区块的链重组，尽管这种情况较为罕见。
+
+对于索引器来说，`BatchHeader` 版本已升级为 4。这个升级是向后兼容的（唯一例外是对于解析 blob 数据的开发者而言，格式略有变动）。

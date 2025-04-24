@@ -1,0 +1,36 @@
+---
+section: technology
+date: Last Modified
+title: "Darwin v2 Upgrade"
+lang: "es"
+permalink: "technology/overview/scroll-upgrades/darwin-v2-upgrade"
+---
+
+### Resumen
+
+Durante las pruebas internas, identificamos que los bloques pueden no ser siempre comprimibles bajo ciertas condiciones, lo que provoca fragmentos y lotes imposibles de probar.  
+Para solucionar este problema, se ha realizado una actualización menor para que se habiliten blobs sin comprimir cuando se detecte este caso especial.
+
+### Cronograma
+
+Dado que se trata de un parche relacionado con la seguridad, se omitió el mecanismo de bloqueo de 7 días.
+
+- **Scroll Sepolia**: 28 de agosto de 2024  
+- **Scroll Mainnet**: 2 de septiembre de 2024
+
+### Compatibilidad
+
+#### Nodos de Secuenciador y Follower (l2geth)
+
+La nueva versión del nodo es `v5.7.0`. Consulta las [notas de la versión](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.7.0) para más información.
+
+Esta actualización no modifica la función de transición de estado de Scroll, por lo que es compatible con versiones anteriores. Sin embargo, cambia el formato de los datos de lote enviados a Ethereum. Por lo tanto, los nodos que tienen habilitada la verificación de rollup (`--rollup.verify`) deben actualizarse para poder seguir la cadena.
+
+#### Dapps e Indexadores
+
+Se ha implementado un cambio en Scroll Mainnet para mejorar el rendimiento del secuenciador, ajustando la profundidad máxima de reorganización a 17 bloques.  
+Anteriormente, el sistema realizaba comprobaciones de capacidad exhaustivas dentro del hilo del firmante para determinar si las transacciones superaban el límite del circuito. Aunque esto garantizaba el cumplimiento, también exigía más recursos de CPU.  
+Ahora, el hilo del secuenciador sigue realizando comprobaciones de capacidad, pero de forma aproximada, mientras que 16 hilos trabajadores verifican con precisión la capacidad de los bloques anteriores.  
+Como resultado, puede ocurrir una reorganización con una profundidad máxima de 17 bloques, aunque la probabilidad es baja.
+
+Para los indexadores, la versión de `BatchHeader` se ha actualizado a 4. Es compatible hacia atrás (excepto para desarrolladores que decodifican el contenido de los blobs, que ha cambiado ligeramente).

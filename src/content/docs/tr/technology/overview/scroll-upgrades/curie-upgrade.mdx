@@ -1,0 +1,70 @@
+---
+section: technology
+date: Last Modified
+title: "Curie Upgrade"
+lang: "tr"
+permalink: "technology/overview/scroll-upgrades/curie-upgrade"
+---
+
+### Genel Bakış
+
+Bu önemli yükseltme, Scroll zincirindeki gaz ücretlerini 1.5 kat azaltacak. Öne çıkanlar:
+
+- [zstd](https://github.com/scroll-tech/da-codec/tree/main/libzstd) algoritmasını kullanarak bloblarda depolanan verileri sıkıştırır. Bu sıkıştırma, her blob'un daha fazla işlem depolamasına olanak tanır ve işlem başına veri kullanılabilirliği maliyetini azaltır.
+- EIP-1559 işlem arayüzüyle uyumlu, değiştirilmiş bir EIP-1559 fiyatlandırma modelini benimser. Bu da daha doğru işlem fiyatlandırması ve daha öngörülebilir/kararlı ücret yapısı sağlar.
+- Yeni EVM opcod'ları olan `TLOAD`, `TSTORE` ve `MCOPY` için destek eklenir. Kullanıcılar sözleşmelerini derlemek için güvenle `0.8.26` sürümündeki Solidity derleyicisini kullanabilir.
+- Dinamik blok süresi tanıtıldı. Trafik yoğunluğu durumlarında, bir blok 3 saniyelik aralığı beklemek yerine işlem sayısı devre sınırına ulaştığında oluşturulacaktır.
+
+### Zaman Çizelgesi
+
+- **Scroll Sepolia**
+  - Ağ Yükseltmesi: 17 Haziran 2024
+- **Scroll Ana Ağ**
+  - Yükseltme Başlangıcı: 20 Haziran 2024
+  - Timelock Tamamlanması ve Yükseltme: 3 Temmuz 2024
+
+### Teknik Detaylar
+
+#### Sözleşme Değişiklikleri
+
+Kod değişiklikleri aşağıdaki PR'larda belgelenmiştir:
+
+- [Sıkıştırılmış batch kabulü](https://github.com/scroll-tech/scroll/pull/1317)
+- [`L1GasPriceOracle` güncellemesi](https://github.com/scroll-tech/scroll/pull/1343)
+- [`MAX_COMMIT_SCALAR` ve `MAX_BLOB_SCALAR` değerlerini 1e18 yap](https://github.com/scroll-tech/scroll/pull/1354)
+- [Doğrulayıcı güncellenirken batch index kontrolünü kaldır](https://github.com/scroll-tech/scroll/pull/1372)
+
+Ana değişiklikler:
+
+- Rollup sözleşmesi (`ScrollChain`) artık hem 1 hem de 2 versiyonlu batch’leri kabul edecek. [Versiyon 1](https://github.com/scroll-tech/da-codec/tree/main/encoding/codecv1) sıkıştırılmamış (Curie öncesi), [versiyon 2](https://github.com/scroll-tech/da-codec/tree/main/encoding/codecv2) ise sıkıştırılmış (Curie sonrası) blob'lar içindir.
+- `L1GasPriceOracle` veri ücreti formülünü blob DA'yı hesaba katacak şekilde güncellenecek:
+    - Eski formül: `(l1GasUsed(txRlp) + overhead) * l1BaseFee * scalar`
+    - Yeni formül: `l1BaseFee * commitScalar + len(txRlp) * l1BlobBaseFee * blobScalar`
+
+#### Node Değişiklikleri
+
+Yeni node versiyonu: `v5.5.0`. Değişiklikler için [yayın notlarına](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.5.0) bakınız.
+
+#### zkEVM devre değişiklikleri
+
+Yeni sürüm: `v0.11.4`. [Yayın günlüğü burada](https://github.com/scroll-tech/zkevm-circuits/releases/tag/v0.11.4).
+
+#### Denetimler
+
+- TrailofBits: yakında!
+- [Zellic](https://github.com/Zellic/publications/blob/master/Scroll%20zkEVM%20-%20Zellic%20Audit%20Report.pdf)
+
+### Uyumluluk
+
+#### Sıralayıcı ve Follower Node’lar (l2geth)
+
+Bu yükseltme bir hard fork’tur. Operatörler, fork bloğundan önce yükseltme yapmalıdır. [Node yayın notuna](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.4.2) bakın.
+
+#### dApp’ler ve İndeksleyiciler
+
+dApp’ler için bu yükseltme geriye dönük uyumludur. Geliştiriciler EIP-1559 modeline göre gaz ayarlarını güncellemelidir. Artık uygulama mantığında sabit 3 saniyelik blok süresine güvenilemez.
+
+İndeksleyiciler için, [veri formatı](https://docs.scroll.io/en/technology/chain/rollup/#codec) aynı kalır ama içerik değişecektir:
+
+- `BatchHeader` içindeki `version` alanı Curie sonrası 2 olacaktır.
+- Blob içinde saklanan veriler sıkıştırılacak ve [zstd v1.5.6](https://github.com/facebook/zstd/releases/tag/v1.5.6) ile açılabilecektir.

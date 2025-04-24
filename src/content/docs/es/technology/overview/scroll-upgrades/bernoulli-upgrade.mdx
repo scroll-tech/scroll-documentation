@@ -1,0 +1,102 @@
+---
+section: technology
+date: Last Modified
+title: "Bernoulli Upgrade"
+lang: "es"
+permalink: "technology/overview/scroll-upgrades/bernoulli-upgrade"
+---
+
+### Resumen
+
+Esta actualización introduce una reducción significativa en los costos de transacción al añadir soporte para blobs de datos EIP-4844 y la precompilación SHA2-256.
+
+### Cronograma
+
+- **Scroll Sepolia**
+  - Actualización de red: 15 de abril de 2024
+- **Scroll Mainnet**
+  - Inicio de la actualización: 15 de abril de 2024
+  - Finalización del timelock y actualización: 29 de abril de 2024
+
+### Detalles Técnicos
+
+#### Cambios en contratos
+
+Los cambios están en [este PR](https://github.com/scroll-tech/scroll/pull/1179), y las correcciones de auditoría [aquí](https://github.com/scroll-tech/scroll/pulls?q=is%3Apr+created%3A2024-04-10..2024-04-11+fix+in%3Atitle+label%3Abug). Cambios principales:
+
+- `ScrollChain` ahora acepta lotes con `calldata` o blobs.
+- `ScrollChain` ahora permite finalizar lotes codificados con blob mediante `finalizeBatchWithProof4844`
+- `MultipleVersionRollupVerifier` ahora gestiona diferentes verificadores por versión.
+
+#### Cambios en el nodo
+
+Nueva versión del nodo: `v5.3.0`  
+Ver registro [aquí](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.3.0)
+
+#### Cambios en circuitos zkEVM
+
+Nueva versión de circuitos: `v0.10.3`  
+Ver registro [aquí](https://github.com/scroll-tech/zkevm-circuits/releases/tag/v0.10.3)
+
+#### Auditorías
+
+- [OpenZeppelin](https://blog.openzeppelin.com/scroll-eip-4844-support-audit)
+- [Trail of Bits](https://github.com/trailofbits/publications/blob/master/reviews/2024-04-scroll-4844-blob-securityreview.pdf)
+
+### Compatibilidad
+
+#### Nodos l2geth
+
+Es un hard fork. Los operadores deben actualizar antes del bloque de fork.  
+Ver [node releases](https://github.com/scroll-tech/go-ethereum/releases).
+
+#### Indexadores y puentes
+
+El formato de datos ha cambiado. Ver [nuevo formato](/en/technology/chain/rollup/#codec):
+
+- `BlockContext` no cambia.
+- `Chunks` ya no incluye datos de transacción L2, ahora están en el blob.
+- `BatchHeader` añade el campo `BlobVersionedHash`.
+
+#### Provers
+
+Los operadores deben actualizar debido a cambios en `zkevm-circuits`.
+
+---
+
+## Actualización del Puente
+
+### Resumen
+
+Se realizaron optimizaciones de gas en contratos de puente y rollup:
+
+- Uso de `immutable` para direcciones que no cambian.
+- Estimación de gas más simple en `L1MessageQueue`.
+- Unión de `L1MessageQueue` y `L2GasPriceOracle`.
+
+### Cronograma
+
+- **Scroll Sepolia:** 19 de enero de 2024  
+- **Scroll Mainnet:** Inicio 7 de febrero, activación 21 de febrero de 2024
+
+### Detalles Técnicos
+
+- [Optimización de puente](https://github.com/scroll-tech/scroll/pull/1011)
+- [Fixes de auditoría](https://github.com/scroll-tech/scroll/pulls?q=OZ+is%3Apr+created%3A2024-01-27..2024-02-10)
+- [Versión anterior](https://github.com/scroll-tech/scroll/tree/ff380141a8cbcc214dc65f17ffa44faf4be646b6)
+- [Versión nueva](https://github.com/scroll-tech/scroll/tree/6030927680a92d0285c2c13e6bb27ed27d1f32d1)
+
+#### Auditoría
+
+- [OpenZeppelin](https://blog.openzeppelin.com/scroll-bridge-gas-optimizations-audit)
+
+### Compatibilidad
+
+##### Nodos l2geth
+
+No se requiere actualización.
+
+##### Dapps / Indexadores
+
+La mayoría de cambios son internos.  
+`L2GasPriceOracle` queda obsoleto. Usar [`L1MessageQueueWithGasPriceOracle`](https://etherscan.io/address/0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B)
