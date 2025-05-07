@@ -46,10 +46,10 @@ You will need access to a fully-synced **Ethereum Mainnet** or **Ethereum Sepoli
 1. Clone the latest version of `l2geth`. 
 
     ```bash
-    $ git clone https://github.com/scroll-tech/go-ethereum l2geth-source
-    $ cd l2geth-source
-    $ git checkout VERSION
-    ```    
+     git clone https://github.com/scroll-tech/go-ethereum l2geth-source
+     cd l2geth-source
+     git checkout VERSION
+    ```   
 2. Ensure that you are using version 1.20 of `go`.
 3. Install the gcc compiler: `sudo apt install build-essential`.
 4. Build `l2geth`: `make nccc_geth`. The binary is now in `build/bin/geth`.
@@ -64,7 +64,7 @@ Please consider opening port `30303`(UDP & TCP) and enabling discovery so that o
 1. Run `l2geth`.
     
     ```bash
-    $ l2geth --scroll \
+     l2geth --scroll \
         --datadir "./l2geth-datadir" \
         --gcmode archive --cache.noprefetch \
         --http --http.addr "0.0.0.0" --http.port 8545 --http.api "eth,net,web3,debug,scroll" \
@@ -83,7 +83,7 @@ Please consider opening port `30303`(UDP & TCP) and enabling discovery so that o
 2. In a separate shell, you can now attach to `l2geth`.
     
     ```bash
-    $ l2geth attach "./l2geth-datadir/geth.ipc"
+     l2geth attach "./l2geth-datadir/geth.ipc"
     
     > admin.peers.length
     5
@@ -112,7 +112,7 @@ Running the node in Docker might have a significant impact on node performance.
 1. Run the `l2geth` container using the name `l2geth-docker`:
     
     ```bash
-    $ docker run --rm --name l2geth-docker -v $(pwd):/volume -p 8545:8545 -e RUST_LOG="info" -e CHAIN_ID="534352" scrolltech/l2geth:latest \
+     docker run --rm --name l2geth-docker -v $(pwd):/volume -p 8545:8545 -e RUST_LOG="info" -e CHAIN_ID="534352" scrolltech/l2geth:latest \
         --scroll \
         --datadir "/volume/l2geth-datadir" \
         --gcmode archive --cache.noprefetch \
@@ -124,7 +124,7 @@ Running the node in Docker might have a significant impact on node performance.
 2. In a separate shell, you can now attach to `l2geth`.
     
     ```bash
-    $ docker exec -it l2geth-docker geth attach "/volume/l2geth-datadir/geth.ipc"
+     docker exec -it l2geth-docker geth attach "/volume/l2geth-datadir/geth.ipc"
     
     > admin.peers.length
     5
