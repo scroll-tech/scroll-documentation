@@ -22,7 +22,7 @@ L2 transaction fees are set as a minimum "floor" for the execution component of 
 
 This is set with `--miner.gasprice` on the sequencer. You can modify this value and `--gpo.ignoreprice` in the chart by overriding the `L2GETH_MIN_GAS_PRICE` environment variable [here](https://github.com/scroll-tech/scroll-sdk/blob/main/charts/l2-sequencer/values.yaml#L106).
 
-Additionally, you could modify the `--gpo.percentile` and `--gpo.blocks` arguements, but will need to manually modify the `l2-sequencer` chart. 
+Additionally, you could modify the `--gpo.percentile` and `--gpo.blocks` arguments, but will need to manually modify the `l2-sequencer` chart. 
 
 Lastly, RPC nodes (or any node that accepts transactions) should set `--gpo.congestionthreshold`, which we default to 500. This configuration allows nodes to provide more accurate fee estimate. The value is the number of pending transactions to consider the network congested and suggest a minimum tip cap if there are fewer pending transactions in the txpool.[^congestion-threshold]
 
@@ -64,7 +64,7 @@ blob_util_ratio = 87.1%
 // formula to calculate scalars
 // tx_per_block: average transaction number per L2 block
 // tx_per_batch: average transaction number per batch
-// fluctuation_multiplier: multiplier used to pervent loss from transaction number and L1 gas price fluctuation
+// fluctuation_multiplier: multiplier used to prevent loss from transaction number and L1 gas price fluctuation
 commitScalar = (1382.58 / tx_per_block + 71621.32 / tx_per_batch)  * fluctuation_multiplier * 1e9
 blobScalar = fluctuation_multiplier / compression_ratio / blob_util_ratio * 1e9 
 ```
@@ -82,7 +82,7 @@ We're currently working on tooling to help operators calculate and automate upda
 
 ### Claiming Fees from the Vault
 
-As L2 Fees accumulate in the L2FeeVault, any user can call the `withdrawl` method to "claim" these fees. This will bridge the funds to the `L1_FEE_VAULT_ADDR` address (configured in `config.toml`) on the L1 chain.
+As L2 Fees accumulate in the L2FeeVault, any user can call the `withdrawal` method to "claim" these fees. This will bridge the funds to the `L1_FEE_VAULT_ADDR` address (configured in `config.toml`) on the L1 chain.
 
 After the funds are bridged, the bridged funds will still need to be claimed on L1 with a proof that can be easily obtained using the `bridge-history-api`. To see this process on Scroll, see [Finalizing Transactions on L1](/en/developers/l1-and-l2-bridging/the-scroll-messenger/#finalizing-transactions-on-l1)
 
@@ -108,7 +108,7 @@ Basic configuration for the Gas Oracle can be made in the `config.toml` file bef
 
 #### config.toml [gas-token] values
 
-- `GAS_ORACLE_INCORPORATE_TOKEN_EXCHANGE_RATE_ENANBLED`
+- `GAS_ORACLE_INCORPORATE_TOKEN_EXCHANGE_RATE_ENABLED`
   - if `true`, includes the L2/L1 exchange rate into gas price. *Should only set to true when alternative gas token enabled.*
   - Default: `false`
 - `EXCHANGE_RATE_UPDATE_MODE`

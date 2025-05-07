@@ -18,7 +18,7 @@ The well-being of your users is your responsibility, and we urge you to consider
 
 ## Protocol Security & Risks
 
-For a comprehensive overview of the security of the protocol, L2Beat's [overview of Scroll](https://l2beat.com/scaling/projects/scroll#risk-summary) is a great place to understand the risks, centalization points and permissioned operators on Scroll chain. Because Scroll is a single entity (who also built the tech), the risk factors may increase as you coordinate with external parties (ie RaaS providers).
+For a comprehensive overview of the security of the protocol, L2Beat's [overview of Scroll](https://l2beat.com/scaling/projects/scroll#risk-summary) is a great place to understand the risks, centralization points and permissioned operators on Scroll chain. Because Scroll is a single entity (who also built the tech), the risk factors may increase as you coordinate with external parties (ie RaaS providers).
 
 <Aside>
 For any discoveries of critical vulnerabilities outside of the scope of the bug bounty program, please also send reports to security@scroll.io.
@@ -78,11 +78,11 @@ By default, Scroll SDK's production deployments are configured to store "hot" pr
 
 We intend to add support for Web3Signer in the future as well, allowing more restricted access to apply to a single service.
 
-For more information on implemententing access control to specific parts of your cluster, see [Kubernetes: Using RBAC Authorization](https://kubernetes.io/docs/reference/access-authn-authz/rbac/).
+For more information on implementing access control to specific parts of your cluster, see [Kubernetes: Using RBAC Authorization](https://kubernetes.io/docs/reference/access-authn-authz/rbac/).
 
 ## Pausing the Bridge
 
-In extreme security instances, you may need to pause the bridge. The easiest way to do this quickly from the infrastructure operator is to bring the rollup node offline. This way, even if blocks contine to be produced, finalization (and thus new withdrawals) will not be processed until the `rollup-node` is back online.
+In extreme security instances, you may need to pause the bridge. The easiest way to do this quickly from the infrastructure operator is to bring the rollup node offline. This way, even if blocks continue to be produced, finalization (and thus new withdrawals) will not be processed until the `rollup-node` is back online.
 
 ## Key Rotation for Rollup Accounts
 
@@ -168,7 +168,7 @@ Ensure you maintain backups of both old and new keys until you've confirmed the 
 
 ## Recovering from a Infrastructure Failure
 
-Recoving from an infrastructure failure will depend on what components are affected.
+Recovering from an infrastructure failure will depend on what components are affected.
 
 #### Database Failure
 
@@ -183,7 +183,7 @@ We recommend having at least one hot standby sequencer to take its place. This s
 **If all of your sequencer machines are lost:**
 
 You will need either:
-  - Sync a new full node from gensis (assuming there are full nodes remaining somewhere in your p2p network).
+  - Sync a new full node from genesis (assuming there are full nodes remaining somewhere in your p2p network).
   - Repurpose a synced RPC node. "Converting" it to be the sequencer by creating a new sequencer chart that takes over the RPC node's Persistent Volume Claim.
 
 **If all full nodes in the network are lost:**

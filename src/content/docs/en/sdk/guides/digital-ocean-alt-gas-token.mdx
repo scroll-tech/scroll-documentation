@@ -455,7 +455,7 @@ Go visit the frontends, connect your wallet and try to bridge some funds!
 ## Next Steps
 
 ### Disable L1 Data Fee
-On Scroll, transactions on L2 have two components -- the gas costs for execution and an L1 data fee. When gas on your network is paid in a token that has no standard relationship to the currency being used to pay for data fees on the L1, you will need to introduce tooling that can set the gas caluclation "scalar" values.
+On Scroll, transactions on L2 have two components -- the gas costs for execution and an L1 data fee. When gas on your network is paid in a token that has no standard relationship to the currency being used to pay for data fees on the L1, you will need to introduce tooling that can set the gas calculation "scalar" values.
 
 At the moment, we have not built any automated tooling for this, and instead of viewing the ERC20 value as 1:1 with Sepolia Ether, we suggest setting the scalars to 0 to eliminate these overheads.
 
@@ -718,7 +718,7 @@ You can modify the `config.toml` values of `TEST_ENV_MOCK_FINALIZE_ENABLED` and 
 {/* TODO: Update to point at actual charts once available. */}
 
 
-{/* ### TODO: Add Graphana charts for Monitoring
+{/* ### TODO: Add Grafana charts for Monitoring
 
 To quickly get started with Grafana, run the following command:
 
