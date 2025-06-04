@@ -12,11 +12,11 @@ import Aside from "../../../../components/Aside.astro"
 
 ## Vista General
 
-Las comisiones de Scroll Sepolia Testnet son notablemente menores a las de su capa de soporte. Para usuarios y desarrolladores, las comisiones por transacción en Scroll parecen funcionar de forma similar a las de la mainnet de Ethereum, y las herramientas, wallets y código existentes probablemente funcionarán como si lo fueran. Sin embargo, la comisión por transacción que se muestra en la billetera no es la imagen completa, a menos que el software conozca específicamente los cálculos de comisiones de Scroll.
+Las comisiones de Scroll son notablemente menores a las de su capa de soporte. Para usuarios y desarrolladores, las comisiones por transacción en Scroll parecen funcionar de forma similar a las de la mainnet de Ethereum, y las herramientas, wallets y código existentes probablemente funcionarán como si lo fueran. Sin embargo, la comisión por transacción que se muestra en la billetera no es la imagen completa, a menos que el software conozca específicamente los cálculos de comisiones de Scroll.
 
 Debido al diseño de los rollups L2, los costos de transacción dependen de los costos de la L1. Para aprovechar la seguridad de Ethereum, Scroll debe tener en cuenta el costo de los datos de las transacciones y las pruebas que deben almacenarse y verificarse en la L1.
 
-Para lograr esto, Scroll Sepolia introduce algunas nuevas dimensiones en el cálculo de la comisión de transacción que no existen en Ethereum. El costo final de una transacción se construye a partir de varias partes:
+Para lograr esto, Scroll introduce algunas nuevas dimensiones en el cálculo de la comisión de transacción que no existen en Ethereum. El costo final de una transacción se construye a partir de varias partes:
 
 - **Comisión de L2**
   - Calculada de la misma manera que en la L1, igual a `gas_price * gas_used`.
@@ -60,7 +60,7 @@ Las transacciones no se guardan de 1 en 1, sino en lotes de bloques (y bloques d
 
 ### Estimación de la Comisión de Datos de L1
 
-Scroll tiene un `L1GasPriceOracle` pre-lanzado, accesible en Scroll Sepolia en ([`0x5300000000000000000000000000000000000000000000000002`](https://sepolia-blockscout.scroll.io/address/0x5300000000000000000000000000000000000002)). Proporciona un método `getL1Fee` para estimar la comisión de datos L1 para la raw data de una transacción dada.
+Scroll tiene un `L1GasPriceOracle` pre-lanzado, accesible en Scroll y Scroll Sepolia en ([`0x5300000000000000000000000000000000000000000000000002`](https://sepolia-blockscout.scroll.io/address/0x5300000000000000000000000000000000000002)). Proporciona un método `getL1Fee` para estimar la comisión de datos L1 para la raw data de una transacción dada.
 
 ```solidity
 function getL1Fee(bytes memory _data) external view override returns (uint256);

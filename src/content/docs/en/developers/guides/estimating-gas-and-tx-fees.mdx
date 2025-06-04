@@ -35,7 +35,7 @@ For a more comprehensive explanation and details on the formula, check the docum
 
 ## Interfacing with values
 
-To fetch these values and calculate the final fee, we’ll interact with Scroll’s public RPC and pre-deployed Smart Contract L1GasOracle.sol, which is deployed at [`TODO: 0x5300000000000000000000000000000000000002`](TODO: https://blockscout.scroll.io/address/0x5300000000000000000000000000000000000002)
+To fetch these values and calculate the final fee, we’ll interact with Scroll’s public RPC and pre-deployed Smart Contract `L1GasOracle.sol`, deployed at [`0x5300000000000000000000000000000000000002`](https://scrollscan.com/address/0x5300000000000000000000000000000000000002).
 
 For our example codebase, we make a Hardhat project and fetch values using the [Ethers.js](https://docs.ethers.org/v6/) library.
 
@@ -53,7 +53,7 @@ But it also exposes the `getL1Fee(bytes memory data)` function, which abstracts 
 
 First of all, let’s quickly go over the key folders inside our project structure.
 
-It’s a standard Hardhat project, but most of our work is inside the c*ontracts* and _scripts_ folders.
+It’s a standard Hardhat project, but most of our work is inside the *contracts* and _scripts_ folders.
 
 <ClickToZoom src={txFeesProjectStructure} />
 

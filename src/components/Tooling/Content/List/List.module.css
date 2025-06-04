@@ -1,0 +1,62 @@
+.toolsContainerList {
+  border-radius: 15px;
+  height: 532px;
+  overflow: auto;
+}
+.toolItem {
+  display: flex;
+  padding: 20px;
+}
+
+.toolItem:hover,
+.toolItem.active {
+  background-color: #f9f9f9;
+  cursor: pointer;
+}
+
+.toolItem:not(:last-child) {
+  border-bottom: 1px solid #ece8e3;
+}
+
+.logo {
+  width: 66px;
+  height: fit-content;
+  flex-shrink: 0;
+  border-radius: 15px;
+  margin-right: 15px;
+  margin-top: 6px;
+}
+
+.toolInfo {
+  width: 100%;
+}
+
+.toolName {
+  color: #101010;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: 0.18px;
+  display: flex;
+  justify-items: center;
+  align-items: center;
+}
+
+.category {
+  display: inline-block;
+  padding: 3px 5px;
+  font-size: 12px;
+  color: #0f8e7e;
+  letter-spacing: 0.12px;
+  border-radius: 5px;
+  background: #dffcf8;
+  margin-right: 5px;
+}
+
+.toolDescription {
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 18px;
+}

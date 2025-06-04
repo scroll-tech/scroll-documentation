@@ -20,7 +20,7 @@ También puedes explorar nuestro [zktrie repo](https://github.com/scroll-tech/zk
 
 ## Estructura del Árbol
 
-zkTrie es un Merkle Patricia Trie binario disperso, representado en la figura anterior.
+zkTrie es un Merkle Patricia Trie binario disperso, representado en la figura a continuación.
 Antes de sumergirnos en el Merkle Patricia Trie binario disperso, hablemos brevemente de los Merkle Trees y los Patricia Tries.
 * **Merkle Tree**: Un Merkle Tree es un árbol donde cada nodo hoja representa un hash de un bloque de datos, y cada nodo no-hoja representa el hash de sus nodos hijos.
 * **Patricia Trie**: Un Patricia Trie es un tipo de árbol radix o trie compreso utilizado para almacenar pares llave-valor de forma eficiente. Codifica los nodos con el mismo prefijo de la llave para compartir el camino común, donde el camino está determinado por el valor de la llave del nodo.
@@ -40,7 +40,7 @@ Dado un par llave-valor, primero calculamos una *llave segura* para el nodo hoja
 
 Codificamos la ruta de un nuevo nodo hoja recorriendo la llave segura desde el Bit Menos Significativo (Least Significant Bit o LSB) hasta el Bit Más Significativo (Most Significant Bit o MSB). En cada paso, si el bit es 0, pasaremos al hijo izquierdo; en caso contrario, pasaremos al hijo derecho.
 
-Limitamos la profundidad máxima de zkTrie a 248, lo que significa que el árbol sólo recorrerá los 248 bits inferiores de la llave. Debido a que el espacio de llave segura es un campo finito utilizado por Poseidon hash que no ocupa todo el rango de $2^{256}$. la representación de bits de la llave puede ser ambigua en el campo finito y por lo tanto resulta en un problema de solidez en el circuito zk. Después de truncar la llave a 248 bits inferiores, el espacio de la llave puede ocupar completamente el rango de $2^{248}$ y no tendrá la ambigüedad en la representación de bits.
+Limitamos la profundidad máxima de zkTrie a 248, lo que significa que el árbol sólo recorrerá los 248 bits inferiores de la llave. Debido a que el espacio de llave segura es un campo finito utilizado por Poseidon hash que no ocupa todo el rango de $2^{256}$, la representación de bits de la llave puede ser ambigua en el campo finito y por lo tanto resulta en un problema de solidez en el circuito zk. Después de truncar la llave a 248 bits inferiores, el espacio de la llave puede ocupar completamente el rango de $2^{248}$ y no tendrá la ambigüedad en la representación de bits.
 
 Aplicamos una optimización para reducir la profundidad del árbol contrayendo un subárbol que sólo tiene un nodo hoja para un nodo hoja único. Por ejemplo, en la Figura 1, el árbol tiene tres nodos en total, con las claves `0100`, `0010` y `1010`. Como sólo hay un nodo que tenga la llave con sufijo `00`, el nodo hoja de la llave `0100` sólo atraviesa el sufijo `00` y no expande completamente su llave, lo que hubiera resultado en una profundidad de 4.
 
@@ -63,7 +63,7 @@ La eliminación de un nodo hoja es similar a la inserción. En la Figura 3 se il
 
 1. El nodo hermano del nodo hoja que se va a eliminar es un nodo rama (Figura 3a).
 En este caso, podemos simplemente reemplazar el nodo `a` por un nodo vacío y actualizar el hash de sus ancestros hasta el nodo raíz.
-2. El nodo hoja a eliminar es un nodo hoja (Figura 3b). De forma similar al caso 1, primero sustituimos el nodo hoja por un nodo vacío y empezamos a contraer su nodo hermano hacia arriba hasta que su nodo hermano no sea un nodo vacío. Por ejemplo, en la figura 3b, sustituimos el nodo hoja `b` por un nodo vacío. Como el hermano del nodo `c` se convierte ahora en un nodo vacío, tenemos que mover el nodo `c` un nivel hacia arriba y reemplazar a su padre. El nuevo hermano del nodo `c`, el nodo `e`, sigue siendo un nodo vacío. Así que de nuevo movemos el nodo `c` hacia arriba. Ahora que el hermano del nodo `c` es el nodo `a`, un nodo hoja, el proceso de borrado ha terminado.
+2. El nodo hermano del nodo a hoja a eliminar (Figura 3b). De forma similar al caso 1, primero sustituimos el nodo hoja por un nodo vacío y empezamos a contraer su nodo hermano hacia arriba hasta que su nodo hermano no sea un nodo vacío. Por ejemplo, en la figura 3b, sustituimos el nodo hoja `b` por un nodo vacío. Como el hermano del nodo `c` se convierte ahora en un nodo vacío, tenemos que mover el nodo `c` un nivel hacia arriba y reemplazar a su padre. El nuevo hermano del nodo `c`, el nodo `e`, sigue siendo un nodo vacío. Así que de nuevo movemos el nodo `c` hacia arriba. Ahora que el hermano del nodo `c` es el nodo `a`, un nodo hoja, el proceso de borrado ha terminado.
 
 Ten en cuenta que el hermano de un nodo hoja en una zkTrie válida no puede ser un nodo vacío. De lo contrario, siempre debemos purgar el subárbol y mover el nodo hoja hacia arriba.
 

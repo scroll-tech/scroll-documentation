@@ -1,0 +1,61 @@
+---
+import { changeLanguage } from "i18next"
+import HomeLayout from "../../../layouts/HomeLayout.astro"
+import Search from "../../../components/HomeSearch"
+import QuickStart from "./QuickStart.astro"
+import Navigate from "./Navigate.astro"
+import ConnectUs from "./ConnectUs.astro"
+
+changeLanguage("zh")
+---
+
+<HomeLayout>
+  <div class="header bg-black">
+    <div class="inner">
+      <p class="header-title text-white dark:!text-white-900">欢迎来到<br /> Scroll 的文档</p>
+      <Search client:visible />
+    </div>
+  </div>
+  <div class="content bg-white dark:bg-black">
+    <div class="inner">
+      <QuickStart />
+      <Navigate />
+      <ConnectUs />
+    </div>
+  </div>
+</HomeLayout>
+
+<style>
+  .header {
+    height: 390px;
+    padding: 70px 60px 110px;
+  }
+  .inner {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .header-title {
+    font-size: 55px;
+    font-weight: 600;
+    line-height: 65px;
+  }
+
+  .content {
+    padding: 52px 60px 160px;
+  }
+
+  @media screen and (max-width: 50em) {
+    .header {
+      height: 350px;
+      padding: 70px 20px 115px;
+    }
+    .header-title {
+      font-size: 40px;
+      line-height: 50px;
+      width: 100%;
+    }
+    .content {
+      padding: 82px 20px 120px;
+    }
+  }
+</style>

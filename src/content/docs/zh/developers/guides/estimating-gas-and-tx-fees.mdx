@@ -1,0 +1,227 @@
+---
+section: developers
+date: Last Modified
+title: "Estimating Gas and Tx Fees"
+lang: "en"
+permalink: "developers/guides/estimating-gas-and-transaction-fees"
+excerpt: "Since Scroll is an L2 rollup, part of the transaction lifecycle is committing some data to L1 for security. To pay for this, all transaction incurs an additional fee called the L1 fee"
+---
+
+import Aside from "../../../../../components/Aside.astro"
+import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import txFeesProjectStructure from "../../../../../assets/images/developers/txFeesProjectStructure.png"
+
+{/* TODO: Update for Sepolia, test and publish to sidebar. */}
+
+:::warning[This article is out of date.]
+This page has not been updated and tested against the latest Scroll Sepolia release. Please use with caution.
+:::
+
+Since Scroll is an L2 rollup, part of the transaction lifecycle is committing some data to L1 for security. To pay for this, all transaction incurs an additional fee called the _L1 fee_.
+
+In this guide, we will go over how to estimate the L1 fee on Scroll and calculate final transaction fee estimations through a hands-on code example you can find [here](https://github.com/scroll-tech/scroll-guides/tree/main/gas-estimation-demo).
+
+## The formula
+
+In short, the transaction fee on Scroll, at any given moment, can be calculated as
+
+```
+totalFee = (l2GasPrice * l2GasUsed) + l1Fee
+```
+
+An important distinction we need to make is that `l1Fee` is separated from the `l2Fee`.
+
+For a more comprehensive explanation and details on the formula, check the documentation on [how Transaction Fees work on Scroll](../developers/transaction-fees-on-scroll-l2/).
+
+## Interfacing with values
+
+To fetch these values and calculate the final fee, we’ll interact with Scroll’s public RPC and pre-deployed Smart Contract L1GasOracle.sol, which is deployed at [`TODO: 0x5300000000000000000000000000000000000002`](TODO: https://blockscout.scroll.io/address/0x5300000000000000000000000000000000000002)
+
+For our example codebase, we make a Hardhat project and fetch values using the [Ethers.js](https://docs.ethers.org/v6/) library.
+
+`l2GasUsed` - We get this using the [estimateGas](https://docs.ethers.org/v6/api/providers/#Provider-estimateGas) method, which queries our RPC with the TX data to get an estimate of the gas to be used.
+
+`l2GasPrice` - For this, we’ll use the [getFeeData](https://docs.ethers.org/v6/api/providers/#Provider-getFeeData) method, which will get the current market conditions on the L2
+
+The Gas Oracle smart contract exposes multiple key fields we need to figure out the cost of the transaction. `overhead()` , `scalar()` , `l1BaseFee()` and `getL1GasUsed(bytes memory data)`
+
+But it also exposes the `getL1Fee(bytes memory data)` function, which abstracts all these complexities and allows us to get the fee in just one function call.
+
+## Hands-on example
+
+### Project structure
+
+First of all, let’s quickly go over the key folders inside our project structure.
+
+It’s a standard Hardhat project, but most of our work is inside the c*ontracts* and _scripts_ folders.
+
+<ClickToZoom src={txFeesProjectStructure} />
+
+<Aside type="tip" title="">
+  This tutorial will review the critical parts of the code, using the example code as an easy way to get an overview of
+  what’s done in the project. Some code, like error handling, will be excluded for simplicity.
+</Aside>
+
+### The smart contract
+
+First, we need a Smart Contract to interact with to showcase the gas estimation. For that, we’ll create a `ExampleContract.sol`.
+
+```solidity
+pragma solidity ^0.8.17;
+
+contract ExampleContract {
+  uint public exampleVariable;
+
+  function setExampleVariable(uint _exampleVariable) external {
+    exampleVariable = _exampleVariable;
+  }
+}
+```
+
+<Aside type="tip" title="">
+  Remember the `setExampleVariable` method signature since we’ll use it later as an example
+</Aside>
+
+Once deployed, we fill the `EXAMPLE_CONTRACT_ADDRESS` value in our `.env` file. For the example project, it’s already deployed at `TODO: 0xc37ee92c73753B46eB865Ee156d89741ad0a8777` and pre-filled, so nothing has to be done here.
+
+### Estimating the fees
+
+The central part of the example lives in the `/scripts/gasEstimation.ts` file.
+
+We’ll do just four things:
+
+1. Create a dummy transaction using the ExampleContract
+2. Estimate the L2 fee of that transaction
+3. Estimate the L1 fee of that transaction
+4. Emit an actual transaction to Scroll and compare the values
+
+#### Creating the dummy transaction
+
+The goal of this step is to create an **(RLP) Serialized Unsigned Transaction** to be used later on as the parameter for calling the oracle gas estimation method.
+
+1. Let’s populate our transaction with the needed values to estimate its cost by calling `buildPopulatedExampleContractTransaction`. This will fill the `data`, `to`, `gasPrice`, `type` and `gasLimit` fields:
+
+```typescript
+export async function buildPopulatedExampleContractTransaction(
+  exampleContractAddress: string,
+  newValueToSet: number
+): Promise<ContractTransaction> {
+  const exampleContract = await ethers.getContractAt("ExampleContract", exampleContractAddress)
+
+  return exampleContract.setExampleVariable.populateTransaction(newValueToSet)
+}
+```
+
+2. Now, let’s trim it down to the basic fields using `buildUnsignedTransaction`. We won’t be signing it.
+
+```typescript
+export async function buildUnsignedTransaction(signer: HardhatEthersSigner, populatedTransaction: ContractTransaction): Promise<UnsignedTransaction> {
+  const nonce = await signer.getNonce();
+
+  return {
+    data: populatedTransaction.data,
+    to: populatedTransaction.to,
+    gasPrice: populatedTransaction.gasPrice,
+    type: populatedTransaction.type,
+    gasLimit: populatedTransaction.gasLimit,
+    nonce,
+  };
+```
+
+<Aside type="tip" title="">
+  Make sure that the nonce is a valid one!
+</Aside>
+
+3. With the output of the previous function, we serialize it using `getSerializedTransaction`
+
+```typescript
+export function getSerializedTransaction(tx: UnsignedTransaction) {
+  return serialize(tx)
+}
+```
+
+#### Estimating the L2 fee
+
+This step is pretty standard and the same as on Ethereum. We’ll use the `estimateL2Fee` function which takes the populated transaction as an input and returns an estimate of the total gas it will use by multiplying the current gas price and gas needed to be used.
+
+```typescript
+export async function estimateL2Fee(tx: ContractTransaction): Promise<bigint> {
+  const gasToUse = await ethers.provider.estimateGas(tx)
+  const feeData = await ethers.provider.getFeeData()
+  const gasPrice = feeData.gasPrice
+
+  return gasToUse * gasPrice
+}
+```
+
+#### Estimating the L1 fee of that transaction
+
+This step is very straightforward. Using the output of the `getSerializedTransaction` function, we query the oracle and get the estimated fee in return.
+
+```typescript
+export async function estimateL1Fee(
+  gasOraclePrecompileAddress: string,
+  unsignedSerializedTransaction: string
+): Promise<bigint> {
+  const l1GasOracle = await ethers.getContractAt("IL1GasPriceOracle", gasOraclePrecompileAddress)
+
+  return l1GasOracle.getL1Fee(unsignedSerializedTransaction)
+}
+```
+
+#### Emitting the transaction and comparing estimated vs actual values
+
+**Emitting the transaction**
+
+We’ll create a call to our contract using the same values used for the dummy transaction.
+
+```typescript
+const tx = await exampleContract.setExampleVariable(newValueToSetOnExampleContract)
+const txReceipt = await tx.wait(5)
+```
+
+**Calculating the L2 fee**
+
+Using the transaction receipt we can see the amount of gas used by the transaction
+
+```typescript
+const l2Fee = txReceipt.gasUsed * txReceipt.gasPrice
+```
+
+**Getting the amount used to pay for the L1 fee**
+
+To do this, we’ll compare the _balance of the account before_ the transaction execution, the _account balance after_ the execution and then subtract the L2 fee.
+
+```typescript
+const totalFee = signerBalanceBefore - signerBalanceAfter
+const l1Fee = totalFee - l2Fee
+```
+
+**Comparing the values**
+
+Fee markets are constantly moving and unpredictable. Since the values estimated may differ from the actual execution, let’s check how much they differ.
+
+We can run all the code that we previously wrote by typing `yarn gas:estimate` command in our [project](https://github.com/scroll-tech/scroll-guides/tree/main/gas-estimation-demo) that will run the [`gasEstimation.ts`](https://github.com/scroll-tech/scroll-guides/blob/main/gas-estimation-demo/scripts/gasEstimation.ts) script and give us the output below:
+
+```bash
+Estimated L1 fee (wei): 208705598167252
+Estimated L2 fee (wei): 26416000000
+Estimated total fee (wei):  208732014167252
+
+Actual L1 fee (wei): 210830909757550
+Actual L2 fee (wei): 26416000000
+Actual total fee (wei):  210857325757550
+
+(actual fee - estimated fee)
+Difference L1 fee (wei): 2125311590298 (1.0183299389002531%)
+Difference L2 fee (wei): 0 (0%)
+Difference total fee (wei): 2125311590298 (1.0182010645453987%)
+```
+
+We can see above that the estimated values (in wei) differ by around 1%, but keep in mind that during spikes in gas prices, this difference may increase. Be sure to account for this in your front end for users!
+
+<Aside type="tip" title="">
+  For more details about what happens when gas fluctuates on L1 and about the limits set there, check out the [lifecycle
+  of a transaction on the Gas
+  Fees](../developers/transaction-fees-on-scroll-l2/l1-fee.md#what-happens-if-gas-fluctuates-on-l1).
+</Aside>

@@ -1,0 +1,171 @@
+---
+section: developers
+date: Last Modified
+title: "Scroll上的交易手续费"
+lang: "zh"
+permalink: "developers/transaction-fees-on-scroll"
+whatsnext: { "合约部署教程": "/zh/developers/guides/contract-deployment-tutorial/" }
+excerpt: "Understand how L1 and L2 transaction fees work on Scroll "
+---
+
+import Aside from "../../../../components/Aside.astro"
+
+## 概览
+
+Scroll Sepolia测试网的费用明显低于其底层。对于用户和开发者来说，Scroll上的交易费用看上去与以太坊主网上的交易费用类似，现有的工具，钱包和代码可能会像以前一样工作。但是，钱包中显示的交易费用并不是全部，除非软件特别了解Scroll的费用计算。
+
+由于 L2 rollups的设计，交易成本取决于 L1 的成本。为了利用以太坊的安全性，Scroll必须考虑必须在L1上存储和验证交易数据和证明的成本。
+
+与以太坊主网相比，Scroll Sepolia为交易费用计算引入了一些新的维度。交易的最终成本由以下几个部分构成：
+
+- **L2 费用**
+  - 与 L1 计算方式相同，等于 `gas_price * gas_used`
+- **L1 fee**
+  - 额外费用包括将数据发送到 L1 以获得数据可用性。在L1上发起的交易无需支付此费用。
+  - 根据交易的calldata的大小计算.
+  - ETH 会自动从 Scroll 上的账户余额中扣除费用
+
+从更高的视角看，**L2 费用**是在 L2 排序器上执行交易的成本，**L1 费用**是将该交易提交到 L1 的成本。
+
+简而言之，`totalTxFee = l2Fee + l1Fee`，全部以 ETH 计价，这是Scroll网络的原生gas代币。
+
+<Aside type="note" title="交易费用发送至哪里?">
+所有交易费用都收取到 `L2ScrollFeeVault` 合约余额中。该合约还使用 `totalProcessed()(uint256)` 追踪我们历史上提取到 L1 的金额。
+
+区块生产者不会获得直接奖励， `COINBASE` 操作码将返回费用库地址。
+
+</Aside>
+
+## L2 费用
+
+与以太坊一样，Scroll上的交易必须支付执行计算和存储产生的数据成本。
+
+### 计算执行费用
+
+L2执行费用很简单：
+
+```javascript
+l2TransactionExecutionFee = l2TransactionGasUsed * l2TransactionGasPrice
+```
+总费用取决于交易gas使用情况（ `l2TransactionGasUsed` ）以及当前的市场状况（ `l2TransactionGasPrice` ）。用户设置 gas 价格，并通过在 Scroll 节点上调用 `estimateGas` 端口来预估“使用的gas”。
+
+换句话说，执行费用的计算方式与[EIP1559](https://eips.ethereum.org/EIPS/eip-1559)之前的以太坊完全相同。
+
+## L1 费用
+
+每笔交易的调用数据（calldata）必须提交到以太坊，这会产生额外的交易费用，称为“L1费用”。如果不这样做，则无法仅从 L1 数据重新恢复 Scroll。
+
+交易不是逐一提交的 - 它们是区块（和交易的区块）的批次收集的。单个交易的成本是根据其负载（payload）中的零和非零字节计算的。
+
+### 预估 L1 数据费用
+
+Scroll 预先部署了 L1GasPriceOracle 合约 ，可在 Scroll Sepolia 上访问([`0x5300000000000000000000000000000000000002`](https://sepolia-blockscout.scroll.io/address/0x5300000000000000000000000000000000000002))。它提供了 `getL1Fee` 的方法，可以估算给定交易原始数据的 L1 数据费用。
+
+```solidity
+function getL1Fee(bytes memory _data) external view override returns (uint256);
+```
+
+<Aside type="note" title="如果 L1 gas 价格飙升会发生什么?">
+
+一旦排序器处理了交易，用户的L1费用就会被锁定，任何波动都不会影响用户支付的费用。
+
+<br />
+由于 Scroll 的区块时间很短，因此在交易提交和将其包含在区块中之间的任何 L1 气体变化都应该是最小的。排序器将吸收从交易包含在区块中到排序器将数据提交到 L1 之间的 L1 gas 成本的任何变化。
+
+</Aside>
+
+### 使用 Gas 预言机计算 L1 数据费用
+
+如前所述，`L1GasPriceOracle` 用于在给定原始交易数据的情况下估计 L1 gas 费用。这是一个**推送预言机**，由 Scroll 运行的中继器更新。
+
+数据费用基于多种因素：
+
+- 带签名的 RLP 编码交易的 `nonzeros` 和 `zeros` 字节
+- `l1BaseFee` - 当前 L1 的base fee
+- `overhead` - 数据承诺交易的额外 gas 开销
+- `scalingFactor` - 用于计算价格飙升的扩展因子
+- `PRECISION` - 用于缩放最终费用的常量
+
+计算L1数据费用的步骤如下：
+
+1. 从 `L1GasPriceOracle` 合约中读取三个字段 `l1BaseFee` ，`overhead` 和 `scalar`，合约中这些字段的slot是：
+
+   | 字段     | Slot |
+   | --------- | ---- |
+   | l1BaseFee | 1    |
+   | overhead  | 2    |
+   | scalar    | 3    |
+
+2. 计算交易中的零字节和非零字节数。
+3. 计算 L1 数据费用，给定 TX_DATA_ZERO_GAS = 4，TX_DATA_NON_ZERO_GAS = 16[^eip-2028] 和 PRECISION = 1e9：
+
+   ```javascript
+   l1Gas = zeros * TX_DATA_ZERO_GAS + (nonzeros + 4) * TX_DATA_NON_ZERO_GAS
+   l1GasFee = ((l1Gas + overhead) * l1BaseFee * scalar) / PRECISION
+   ```
+
+   我们在非零字节中保留额外的 4 个字节，以存储 RLP 编码交易中的字节数。
+
+[^eip-2028]: 参阅 [EIP-2028](https://eips.ethereum.org/EIPS/eip-2028) 获取更多信息
+
+### L1GasPriceOracle API
+
+#### overhead
+
+```solidity
+function overhead() external view returns (uint256);
+```
+
+返回当前的 L1 费用开销
+
+#### scalar
+
+```solidity
+function scalar() external view returns (uint256);
+```
+
+返回当前 l1 费用标量
+
+#### l1BaseFee
+
+```solidity
+function l1BaseFee() external view returns (uint256);
+```
+
+返回最新的已知 l1 base fee
+
+#### getL1Fee
+
+```solidity
+function getL1Fee(bytes memory _data) external view returns (uint256);
+```
+
+根据 RLP 编码输入交易的大小、当前 L1 base fee和各种动态参数计算 L1 部分的费用。
+
+**返回值:** 应为交易支付的L1费用
+
+| 参数 | 描述                                                 |
+| --------- | ----------------------------------------------------------- |
+| data      | 已签名的完全 RLP 编码交易的 L1 费用 |
+
+#### getL1GasUsed
+
+```solidity
+function getL1GasUsed(bytes memory data) external view returns (uint256);
+```
+
+计算用于交易的 L1 gas数量。将开销相加，该开销表示将交易和状态根发布到 L1 的每个交易的 gas 开销。填充添加 74 字节的表明输入没有签名。
+
+**返回值:** 用于发布交易的 L1 gas 数量
+
+| 参数 | 描述                                                |
+| --------- | ----------------------------------------------------------- |
+| data      | 已签名的完全 RLP 编码交易的 L1 费用 |
+
+## 未来路线图
+
+目前，证明生成所需的计算由Scroll和各种证明合作伙伴完成并补贴。
+
+随着证明者网络变得去中心化，需要将证明生成的激励措施纳入协议中，以使系统具有可持续性和可扩展性。
+
+我们预计最终的gas成本将包括证明生成的成本。通过协议的进一步优化，用户的证明成本应该是最小的，因为每个证明都包含许多交易。

@@ -4,8 +4,8 @@ date: Last Modified
 title: "Verifying Smart Contracts"
 lang: "en"
 permalink: "developers/verifying-smart-contracts"
-whatsnext: { "Scroll Contracts": "/developers/scroll-contracts" }
-excerpt: "Easily verify your smart contracts with Scroll-supported developer tooling or the Blockscout Web API"
+whatsnext: { "Scroll Contracts": "/en/developers/scroll-contracts" }
+excerpt: "Easily verify your smart contracts with Scroll-supported developer tooling"
 ---
 
 import Aside from "../../../../components/Aside.astro"
@@ -13,22 +13,24 @@ import ClickToZoom from "../../../../components/ClickToZoom.astro"
 import verify1 from "./_images/verify1.png"
 import CodeSample from "../../../../components/CodeSample/CodeSample.astro"
 
-After deploying your smart contracts, it's important to verify your code on [our block explorer](https://sepolia-blockscout.scroll.io/). This can be done in an automated way using your developer tooling or using Blockscout's Web UI.
-
-<Aside type="danger" title="Warning">
-  Our Blockscout instance currently has inconsistent behavior in verifying contracts with Foundry. We're working on a
-  fix, along with other stability improvements. Don't hesitate to come ask for help [on
-  Discord](https://discord.com/channels/853955156100907018/1028102371894624337) though.
-</Aside>
+After deploying your smart contracts, it's important to verify your code on a block explorer. This can be done in an automated way using your developer tooling or the Web UI.
 
 ## Using Developer Tools
 
-Most smart contract tooling has plugins for verifying your contracts easily on Etherscan. Blockscout supports Etherscan's contract verification APIs, and it's straightforward to use these tools with the Scroll Sepolia Testnet.
+Most smart contract tooling has plugins for verifying your contracts easily on Etherscan. 
+
+- Scroll Mainnet: https://api.scrollscan.com/api   
+- Scroll Sepolia: https://api-sepolia.scrollscan.com/api
+
+<Aside type="tip" title="Using the Scrollscan API">
+  When using Scrollscan, you will need to [register an account](https://scrollscan.com/register) and create an API key. The same key can be used for both Scroll Sepolia and mainnet. After creating your API key, please wait a few minutes before it comes into effect.
+</Aside>
 
 ### Hardhat
 
-First, modify `hardhat.config.ts` to point to Scroll's RPC and `sepolia-blockscout.scroll.io/api`. A dummy `apiKey` value is required, but anything works for its value.
+Modify `hardhat.config.ts` to point to Scroll's RPC and block explorer API. 
 
+For example, the config for Scroll Sepolia will look like this:
 ```javascript
 ...
 
@@ -43,15 +45,15 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: {
-      scrollSepolia: 'abc',
+      scrollSepolia: <YOUR API KEY>,
     },
     customChains: [
       {
         network: 'scrollSepolia',
         chainId: 534351,
         urls: {
-          apiURL: 'https://sepolia-blockscout.scroll.io/api',
-          browserURL: 'https://sepolia-blockscout.scroll.io/',
+          apiURL: 'https://api-sepolia.scrollscan.com/api',
+          browserURL: 'https://sepolia.scrollscan.com/',
         },
       },
     ],
@@ -74,15 +76,26 @@ npx hardhat verify --network scrollSepolia 0xD9880690bd717189cC3Fbe7B9020F27fae7
 ```
 
 <Aside type="danger" title="Warning">
-  You may receive an error stating `etherscan.apiKey.trim is not a function` . If so, you need to update
+  You may receive an error stating `etherscan.apiKey.trim is not a function`. If so, you need to update
   `@nomiclabs/hardhat-etherscan` to be able to support custom chains. Try running `npm update
   @nomiclabs/hardhat-etherscan`
 </Aside>
 
 ### Foundry
 
-When using Foundry, the `verify-contract` helps automate the process of verifying contracts.
+When using Foundry, the `verify-contract` command helps automate the process of verifying contracts. If your contract has constructor arguments, you can specify these in ABI-encoded form with the `--constructor-args` option. For example, if your constructor takes two `uint256` variables:
+```bash
+ --constructor-args $(cast abi-encode "constructor(uint256,uint256)" 0 7)
+```
+
+Refer to the [Foundry documentation](https://book.getfoundry.sh/reference/forge/forge-verify-contract) for further options you can specify.
 
 ```bash
-forge verify-contract <Contract Address> <Space separated params> <Solidity file>:<Contract name> --chain-id 534351 --verifier-url <https://sepolia-blockscout.scroll.io/api> --verifier blockscout
+forge verify-contract <contract address> <contract name> \
+  --verifier-url https://api-sepolia.scrollscan.com/api \
+  --etherscan-api-key <your Scrollscan API key> \
+  --constructor-args <your constructor arguments>
 ```
+<Aside type="caution" title="Caution">
+  Do not specify the chain ID.
+</Aside>

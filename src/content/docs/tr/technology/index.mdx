@@ -1,0 +1,24 @@
+---
+section: technology
+date: Last Modified
+title: "Scroll Mimarisi"
+lang: "tr"
+permalink: "technology"
+whatsnext:
+  { "Scroll Zinciri": "/tr/technology/chain/accounts", "Köprü": "/tr/technology/bridge/cross-domain-messaging", "Sıralayıcı": "/tr/technology/sequencer/execution-node", "zkEVM": "/tr/technology/zkevm/zkevm-overview" }
+---
+
+import ClickToZoom from "../../../../components/ClickToZoom.astro"
+import Architecture from "./_images/arch.png"
+
+<ClickToZoom src={Architecture} alt="Architecture" />
+
+Yukarıdaki şekilde gösterildiği gibi Scroll zinciri üç katmandan oluşur:
+
+- **Yerleşim Katmanı**: Kanonik Scroll zinciri için veri kullanılabilirliği ve sıralama sağlar, geçerlilik kanıtlarını doğrular ve kullanıcıların ve dapp'lerin Ethereum ile Scroll arasında mesaj ve varlık göndermesine olanak tanır. Uzlaşma Katmanı olarak Ethereum'u kullanıyoruz ve köprü ve rollup sözleşmesini Ethereum'a dağıtıyoruz.
+- **Sıralama Katmanı**: Scroll sıralayıcısına gönderilen işlemleri ve L1 köprü sözleşmesine gönderilen işlemleri yürüten ve L2 blokları üreten bir *Yürütme Düğümü*, ve işlemleri gruplandırıp veri kullanılabilirliği için işlem verileri ve blok bilgisini Ethereum'a gönderen ve kesinlik için geçerlilik kanıtlarını Ethereum'a gönderen bir *Rollup Düğümü* içerir.
+- **Kanıtlama Katmanı**: L2 işlemlerinin doğruluğunu doğrulayan zkEVM geçerlilik kanıtlarını oluşturmaktan sorumlu olan kanıtlayıcılardan oluşan bir havuzdan ve kanıtlayıcılara kanıtlayıcı görevleri gönderen ve kanıtları Rollup Düğümüne ileterek Ethereum'da finalize edecek bir koordinatörden oluşur.
+
+Belgelerin bu bölümü, Scroll protokolü spesifikasyonu, köprüleme protokolü, sıralayıcı ve zkEVM devresi hakkında kapsamlı bilgi sağlar.
+
+*Bu bölümün geri kalanında L1 Ethereum'u, L2 ise Scroll'u ifade edecektir.*

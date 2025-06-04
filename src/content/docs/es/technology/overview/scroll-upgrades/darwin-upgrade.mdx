@@ -1,0 +1,110 @@
+---
+section: technology
+date: Last Modified
+title: "Darwin Upgrade"
+lang: "es"
+permalink: "technology/overview/scroll-upgrades/darwin-upgrade"
+---
+
+### Resumen
+
+Esta actualización reducirá las tarifas de gas en un 34% al utilizar una única prueba agregada para múltiples lotes, eliminando la necesidad de finalizar cada lote individualmente.
+
+- Darwin utiliza un nuevo [códec de lote V3](https://github.com/scroll-tech/da-codec/tree/main/encoding/codecv3).
+- Además de los conceptos anteriores de `chunk` y `batch`, hemos introducido un nuevo concepto llamado `bundle`.
+    - `Chunk`: Una unidad de prueba zkEVM, que consiste en una lista de bloques L2.
+    - `Batch`: Una colección de chunks codificados en un blob EIP-4844, que sirve como unidad de Disponibilidad de Datos.
+    - `Bundle`: Una serie de batches que funciona como unidad de finalización.
+
+    La principal diferencia en comparación con Curie es que Scroll ahora finalizará múltiples batches utilizando una única prueba de bundle agregada.
+
+- El verificador de pruebas de bundle en cadena utiliza un nuevo diseño de entrada pública.
+
+### Cronograma
+
+- **Scroll Sepolia**
+  - Actualización de red: 14 de agosto de 2024
+- **Scroll Mainnet**
+  - Inicio de la actualización: 5 de agosto de 2024
+  - Finalización del timelock y actualización: 21 de agosto de 2024
+
+### Detalles técnicos
+
+#### Cambios en los contratos
+
+*Nota: Desde la actualización anterior de Curie, hemos migrado los contratos de Scroll a un nuevo repositorio en [scroll-contracts](https://github.com/scroll-tech/scroll-contracts).*
+
+Los cambios de código para esta actualización se implementan en [este PR](https://github.com/scroll-tech/scroll-contracts/pull/4). Los cambios clave son los siguientes:
+
+- Hemos introducido un nuevo `BatchHeaderV3Codec`.
+- Hemos cambiado cómo se procesan los mensajes en el contrato `L1MessageQueue`. Antes de Darwin, procesábamos los mensajes cuando se finalizaba un batch. Después de Darwin, la mayor parte de este procesamiento se mueve al paso de commit.
+- Hemos introducido un nuevo formato de entrada pública para las pruebas de bundle. Esto se implementa en un nuevo contrato `IZkEvmVerifierV2`, que a su vez se agrega a `MultipleVersionRollupVerifier`.
+- En el contrato `ScrollChain`, los batches con `version=3` ahora se comprometerán a través de una nueva función llamada `commitBatchWithBlobProof`. Los bundles se finalizarán utilizando una nueva función llamada `finalizeBundleWithProof`.
+
+Consulta las [notas de la versión del contrato](https://github.com/scroll-tech/scroll-contracts/releases/tag/v1.0.0) para obtener más información.
+
+#### Cambios en los nodos
+
+La nueva versión del nodo es `v5.6.0`. Consulta las [notas de la versión](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.6.0) para obtener más información.
+
+Los principales cambios son:
+
+- Implementación de hard forks basados en marcas de tiempo.
+- Procesamiento del códec de lote V3 en rollup-verifier.
+
+#### Cambios en los circuitos zkEVM
+
+La nueva versión de los circuitos zkEVM es `v0.12.0`. Consulta [aquí](https://github.com/scroll-tech/zkevm-circuits/releases/tag/v0.12.0) el registro de la versión.
+
+Hemos introducido un `RecursionCircuit` que agrupará múltiples batches secuenciales mediante la agregación recursiva de los SNARKs del `BatchCircuit` (anteriormente `AggregationCircuit`). El sistema de prueba de 5 capas anterior ahora es de 7 capas al introducir:
+
+- 6ª Capa (layer5): `RecursionCircuit` que agrega recursivamente los SNARKs de `BatchCircuit`.
+- 7ª Capa (layer6): `CompressionCircuit` que comprime el SNARK de `RecursionCircuit` y produce una prueba de validez verificable por EVM.
+
+La entrada pública al `BatchCircuit` ahora es consciente del contexto del "batch" anterior, lo que nos permite implementar el esquema de recursión que adoptamos (descrito [aquí](https://scrollzkp.notion.site/Upgrade-4-Darwin-Documentation-05a3ecb59e9d4f288254701f8c888173) en profundidad).
+
+#### Auditorías
+
+- TrailofBits: ¡próximamente!
+
+### Compatibilidad
+
+#### Nodos de secuenciador y seguidores (l2geth)
+
+Esta actualización no altera la función de transición de estado y, por lo tanto, es compatible hacia atrás. Sin embargo, recomendamos encarecidamente a los operadores de nodos que actualicen a [v5.6.0](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.6.0).
+
+#### Dapps e indexadores
+
+Hay algunos cambios importantes en cómo comprometemos y finalizamos los batches después de Darwin.
+
+- Los batches se codificarán utilizando el nuevo [códec de lote V3](https://github.com/scroll-tech/da-codec/tree/main/encoding/codecv3). Esta versión agrega dos nuevos campos:
+    1. `lastBlockTimestamp` (la marca de tiempo del último bloque en este batch).
+    2. `blobDataProof` (la prueba de evaluación del punto de desafío KZG).
+
+    Esta versión elimina `skippedL1MessageBitmap`. No habrá cambios en cómo se codifican y comprimen los datos del blob.
+- Los batches se comprometerán utilizando la función `commitBatchWithBlobProof` (en lugar de la anterior `commitBatch`).
+
+    Nueva firma de función:
+
+    ```solidity
+    function commitBatchWithBlobProof(uint8 _version, bytes calldata _parentBatchHeader, bytes[] memory _chunks, bytes calldata _skippedL1MessageBitmap, bytes calldata _blobDataProof)
+    ```
+
+- Los batches se finalizarán utilizando la función `finalizeBundleWithProof` (en lugar de la anterior `finalizeBatchWithProof4844`).
+
+    Nueva firma de función:
+
+    ```solidity
+    function finalizeBundleWithProof(bytes calldata _batchHeader, bytes32 _postStateRoot, bytes32 _withdrawRoot, bytes calldata _aggrProof)
+    ```
+
+- La semántica del evento `FinalizeBatch` cambiará: ahora significará que todos los batches entre el último batch finalizado y el `_batchIndex` del evento han sido finalizados. Los valores de stateRoot y withdrawRoot del evento pertenecen al último batch finalizado en el bundle. Las raíces finalizadas para los batches intermedios ya no están disponibles.
+
+    La semántica de los eventos `CommitBatch` y `RevertBatch` no cambiará.
+
+Recomendaciones:
+
+- Los indexadores que decodifican datos de batches comprometidos deben ajustarse para usar el nuevo códec y la nueva firma de función.
+- Los indexadores que rastrean el estado finalizado deben actualizar su lógica para manejar el evento `FinalizeBatch` en el contexto de múltiples batches finalizados a la vez.
+
+ 

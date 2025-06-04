@@ -5,42 +5,86 @@ title: "Developer Quickstart"
 lang: "en"
 permalink: "developers/developer-quickstart"
 excerpt: "Scroll Developer Quickstart helps you acquire testnet Ether, configure your network, and access all of your favorite tooling"
-whatsnext: { "Verify Your Smart Contracts": "/developers/verifying-smart-contracts" }
+whatsnext: { "Verify Your Smart Contracts": "/en/developers/verifying-smart-contracts" }
 ---
 
 import Aside from "../../../../components/Aside.astro"
 import ClickToZoom from "../../../../components/ClickToZoom.astro"
 import networkSelection from "./_images/mmNetworkSelection.png"
 import injectedProviderMM from "./_images/injectedProviderMM.png"
+import ToggleElement from "../../../../components/ToggleElement.astro"
 
 With Scroll, your favorite tools for building and testing smart contracts just work.
 
-Since Scroll is bytecode equivalent with the EVM, you’ll just need to point your favorite builder tools at a Scroll Sepolia Testnet RPC Provider.
+Since Scroll is bytecode equivalent with the EVM, you’ll just need to point your favorite builder tools at a Scroll RPC Provider.
 
 If you run into any issues, please reach out in [our Discord](https://discord.gg/scroll).
 
-## Acquiring Testnet Ether
+## Acquiring Ether
 
-To start building on Scroll, you'll first need to acquire some testnet ETH. See the [Faucet](/user-guide/faucet) page for tips on getting test tokens on Sepolia. After this, you can bridge your testnet ETH to the Scroll Sepolia Testnet (Layer 2) using our [Bridge](/user-guide/bridge).
+Scroll uses ETH as its native currency, which will be needed to pay transaction fees for deploying and interacting with the network.
+
+To start building on Scroll, we suggest you begin with using our Scroll Sepolia testnet. You'll first need to acquire some testnet ETH. See the [Faucet](/user-guide/faucet) page for tips on getting test tokens on Sepolia. After this, you can bridge your testnet ETH to the Scroll Sepolia Testnet (Layer 2) using our [Sepolia Bridge](https://sepolia.scroll.io/bridge), as described in the [Bridge article](/user-guide/bridge).
 
 For a walkthrough, start with the User Guide's [Setup](/user-guide/setup) page.
 
+Once you're ready to deploy on Scroll's mainnet, you can bridge over ETH using [our native bridge](https://scroll.io/bridge/) or one of the 3rd-party bridges.
+
 ## Network Configuration
+
+### Scroll Mainnet
+
+Use the table below to configure your Ethereum tools to the Scroll mainnet.
+
+| Network Name       | Scroll                                             | Ethereum Mainnet                                     |
+| ------------------ | -------------------------------------------------- | ---------------------------------------------------- |
+| RPC URL            | [https://rpc.scroll.io/](https://rpc.scroll.io/)   | [https://eth.llamarpc.com](https://eth.llamarpc.com) |
+| Chain ID           | 534352                                             | 1                                                    |
+| Currency Symbol    | ETH                                                | ETH                                                  |
+| Block Explorer URL | [https://scrollscan.com/](https://scrollscan.com/) | [https://etherscan.io](https://etherscan.io)         |
+
+<ToggleElement anchor="mainnet-additional-infra">
+  <div slot="title">Additional Scroll Mainnet RPCs and Infra</div>
+  - [Scroll Native Bridge](https://scroll.io/bridge)
+  - [Scroll RPC Providers on ChainList.org](https://chainlist.org/chain/534352)
+  - [Ethereum RPC Providers on ChainList.org](https://chainlist.org/chain/1)
+  {/* - Additional Block Explorers:
+    - [Dora](https://www.ondora.xyz/network/scroll/interactions)
+    - [L2Scan](https://scroll.l2scan.co/) */}
+
+</ToggleElement>
+
+### Scroll Sepolia Testnet
 
 Use the table below to configure your Ethereum tools to the Scroll Sepolia Testnet.
 
-| Network Name       | Scroll Sepolia Testnet                                                        | Sepolia Testnet                                                              |
-| ------------------ | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| RPC URL            | [https://sepolia-rpc.scroll.io/](https://sepolia-rpc.scroll.io/)              | [https://eth-sepolia-public.unifra.io](https://eth-sepolia-public.unifra.io) |
-| Chain ID           | 534351                                                                        | 11155111                                                                     |
-| Currency Symbol    | ETH                                                                           | ETH                                                                          |
-| Block Explorer URL | [https://sepolia-blockscout.scroll.io](https://sepolia-blockscout.scroll.io/) | [https://sepolia.etherscan.io](https://sepolia.etherscan.io)                 |
+| Network Name       | Scroll Sepolia                                                    | Ethereum Sepolia                                             |
+| ------------------ | ----------------------------------------------------------------- | ------------------------------------------------------------ |
+| RPC URL            | [https://sepolia-rpc.scroll.io/](https://sepolia-rpc.scroll.io/)  | [https://rpc2.sepolia.org](https://rpc2.sepolia.org)         |
+| Chain ID           | 534351                                                            | 11155111                                                     |
+| Currency Symbol    | ETH                                                               | ETH                                                          |
+| Block Explorer URL | [https://sepolia.scrollscan.com](https://sepolia.scrollscan.com/) | [https://sepolia.etherscan.io](https://sepolia.etherscan.io) |
+
+<ToggleElement anchor="sepolia-additional-infra">
+  <div slot="title">Additional Scroll Sepolia RPCs and Infra</div>
+  - [Scroll Sepolia Native Bridge](https://sepolia.scroll.io/bridge)
+  - [Scroll Sepolia RPC Providers on ChainList.org](https://chainlist.org/chain/534351)
+  - [Ethereum Sepolia RPC Providers on ChainList.org](https://chainlist.org/chain/11155111)
+  - Additional Block Explorers:
+    - [Dora](https://www.ondora.xyz/network/scroll-sepolia/interactions)
+    - [L2Scan](https://scroll.l2scan.co/)
+
+</ToggleElement>
 
 ## Configure your tooling
 
 <Aside type="tip" title="">
   For setting up tooling to verify a smart contract deployment, see [Verifying Smart
   Contracts](/developers/verifying-smart-contracts).
+</Aside>
+
+<Aside type="danger" title="">
+Features from the Dencun upgrade are not yet available on Scroll. Please use `shanghai` as your EVM target and avoid using a Solidity version higher than `0.8.23`.
 </Aside>
 
 ### Hardhat
@@ -69,7 +113,7 @@ const config: HardhatUserConfig = {
 To deploy using the Scroll Sepolia Testnet Public RPC, run:
 
 ```bash
-forge create ... --rpc-url=https://sepolia-rpc.scroll.io/ --legacy
+forge create ... --rpc-url=https://sepolia-rpc.scroll.io/ 
 ```
 
 ### Remix Web IDE
@@ -126,7 +170,7 @@ live:
 - name: Ethereum
  networks:
  - chainid: 534351
-   explorer: https://sepolia-blockscout.scroll.io/
+   explorer: https://sepolia.scrollscan.com/
    host: https://sepolia-rpc.scroll.io
    id: scrollSepolia
    name: Scroll Sepolia Testnet
@@ -195,7 +239,7 @@ Be sure to fund the deployment wallet as well! Run `yarn generate` to create the
 
 To configure your frontend, you need to add the Scroll Sepolia Testnet as a network option, then select it as default.
 
-To add the network, modify `packages/react-app/src/constants.js` .
+To add the network, modify `packages/react-app/src/constants.js`.
 
 ```jsx
 ...
@@ -206,7 +250,7 @@ export const NETWORKS = {
     color: "#e9d0b8",
     chainId: 534351,
     rpcUrl: "https://sepolia-rpc.scroll.io/",
-    blockExplorer: "https://sepolia-blockscout.scroll.io",
+    blockExplorer: "https://sepolia.scrollscan.com",
   },
 ...
 }

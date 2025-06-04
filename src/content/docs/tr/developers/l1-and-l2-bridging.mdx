@@ -1,0 +1,37 @@
+---
+section: developers
+date: Last Modified
+title: "L1 ve L2 Köprüleme"
+lang: "tr"
+permalink: "developers/l1-and-l2-bridging"
+whatsnext: { "ETH ve ERC20 Token Köprüsü": "/tr/developers/l1-and-l2-bridge/eth-and-erc20-token-bridge/" }
+excerpt: "Scroll'un Köprüleme mimarisine genel bakış"
+---
+
+import ClickToZoom from "../../../../components/ClickToZoom.astro"
+import Aside from "../../../../components/Aside.astro"
+import L1GatewayWHITE from "../../../../assets/images/developers/L1GatewayWHITE.png"
+import withdrawWHITE from "../../../../assets/images/developers/withdrawWHITE.png"
+
+Scroll köprüsü, L1 ile L2 arasında ETH, ERC20 tokenleri, NFT'ler ve isteğe bağlı mesajların aktarımını sağlar. Çeşitli dijital varlıkların L1 ve L2 arasında taşınması için güvenli bir mekanizma görevi görür.
+
+ETH ve ERC20 tokenlerinin transferini kolaylaştırmak için Scroll köprüsü Ağ Geçidi Yönlendiricisini kullanır. Bu sözleşme, bu varlıkların L1 ve L2 arasında sorunsuz geçişini sağlayarak kullanıcıların Ethereum tabanlı tokenlerini sorunsuz bir şekilde aktarmalarına olanak tanır.
+
+ERC721 ve ERC1155 Ağ Geçidi, iki ağ arasında değiştirilemez varlıkların aktarımına olanak tanıyarak kullanıcıların NFT'lerini L1 ve L2 arasında taşımasına olanak tanır.
+
+Token transferlerine ek olarak Scroll Messenger sözleşmesi, zincirler arası sözleşme etkileşimine olanak tanır. Bu, bir ağdaki sözleşmelerin Scroll Messenger sözleşmesi aracılığıyla diğer ağdaki sözleşmelerle etkileşime girebileceği anlamına gelir. Bu işlevsellik, merkezi olmayan uygulamaların ve akıllı sözleşmelerin her iki ağda da sorunsuz bir şekilde çalışmasına yönelik olasılıkları genişletir.
+
+## L1 Ağ Geçidi mimarisi
+
+
+<ClickToZoom src={L1GatewayWHITE} />
+
+Kullanıcıların Scroll Köprüsü'ne birçok giriş noktası bulunmaktadır. Bu ne yapmak istediğinize ve nasıl yapmak istediğinize bağlı olacaktır. ETH veya ERC20 tokenleri göndermek istiyorsanız 'GatewayRouter'ı kullanmalısınız. NFT göndermek istiyorsanız 'L1ERC721Gateway' veya 'L1ERC1155Gateway' kullanmalısınız. İsteğe bağlı veri göndermek istiyorsanız 'L1ScrollMessenger'ı kullanmalısınız. Tüm ağ geçidi aktarımları, varlıkları zincirler arası göndermek için Scroll Messenger'ı kullanır. Scroll Messenger'ın görevi, işlemleri L2'ye dahil etmek için Mesaj Kuyruğu'na eklemektir.
+
+## L2 Ağ Geçidi mimarisi
+
+<ClickToZoom src={withdrawWHITE} />
+
+İzinsiz çağrılabilen olası giriş noktalarıyla ilgili olarak, L2 Ağ Geçidi Mimarisi L1'e çok benzemektedir. Aradaki fark, L2'den bir mesaj gönderirken, ‘appendMessage’ fonksiyonunu çağırmakla olur. Bu durumda mesaj, L2MessageQueue'da, yalnızca ekleme yapılabilen bir ikili merkle ağacında (diğer bir deyişle çekim ağacı) saklanır. Blok sonlandırıldığında, yeni merkle yolunun bir kanıtını oluşturacak ve bunu 'L1ScrollMessenger' üzerinde yürütülmek üzere L1geth düğümüne iletecektir. Kesinleşmiş tüm çekim kökleri, onlara karşı kanıtları doğrulayabilmemiz için rollup sözleşmesinde saklanacaktır. Sonraki Scroll sürümlerinde, tüm kullanıcılar işlemi L1'de tamamlayabileceğinden Aktarıcı'ya ihtiyaç duyulmayacak.
+
+Gelecek bölümlerde, yeteneklerini kullanmak için gereken akıllı sözleşme API'si de dahil olmak üzere köprünün teknik yönlerini inceleyeceğiz. Geliştiricilerin ve kullanıcıların bu işlevleri anlamalarına ve uygulamalarına yardımcı olmak için Geliştirici Kılavuzları bölümünde kod örnekleri içeren ayrıntılı kılavuzlar sağlanmaktadır.

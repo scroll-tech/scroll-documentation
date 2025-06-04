@@ -1,0 +1,91 @@
+---
+section: technology
+date: Last Modified
+title: "交易"
+lang: "zh"
+permalink: "technology/chain/transactions"
+whatsnext: { "区块": "/zh/technology/chain/blocks/" }
+---
+
+import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import TransactionBatching from "../_images/batching.png"
+
+交易是加密签名的消息，用于发起链状态的转换。它可以是简单的余额转移，或是调用智能合约来执行程序改变状态。
+
+## 交易类型
+
+目前，Scroll 支持三种类型的交易。
+
+- Pre-EIP-155 交易: 以支持 [Singleton Factory](https://eips.ethereum.org/EIPS/eip-2470) 合约。
+- Legacy 交易 (参考 [EIP-155](https://eips.ethereum.org/EIPS/eip-155))
+- `L1MessageTx` 类型交易 (类型: `0x7E`): 这是 Scroll 引入的一种新的 [EIP-2718](https://eips.ethereum.org/EIPS/eip-2718) 交易，如下所述。此交易类型适用于在 L1 上发起的交易。
+
+请注意，Scroll 当前不支持 [EIP-2930](https://eips.ethereum.org/EIPS/eip-2930) 和 [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559) 交易类型。Scroll 未来将会引入这两种交易类型。
+
+### L1 Message 交易
+
+我们为L1发起的交易引入了一种新型的交易 `L1MessageTx` 。这种类型的交易在 L1 跨链桥合约上发起。每次新消息将附加到 L1 上的 `L1MessageQueue` 合约，L2 排序器都会创建一个相应的 `L1MessageTx` 交易包含在 L2 区块中。由于当用户在 L1 上发起交易时，签名已经已经隐式验证，因此 `L1MessageTx` 交易没有签名。
+
+`L1MessageTx` 交易类型为 `0x7E` ，其负载定义如下。
+
+```go
+type L1MessageTx struct {
+	QueueIndex uint64          // The queue index of the message queue in L1 contract
+	Gas        uint64          // Gas limit
+	To         *common.Address // Cannot be nil, we do not allow contract creation from L1
+	Value      *big.Int
+	Data       []byte
+	Sender     common.Address
+}
+```
+
+`L1MessageTx` 交易的 RLP 编码遵循 [EIP-2718](https://eips.ethereum.org/EIPS/eip-2718) 规则 `TransactionType || TransactionPayload`，其中 `TransactionType` 为 `0x7E`，而 `TransactionPayload = RLP(L1MessageTx)`。
+
+`L1MessageTx` 交易的两个显著特征：
+
+- 与 `Sender` 账户的`Nonce`不同，交易中的 `QueueIndex` 是 L1 消息队列的排序序号。 但交易发送者的 `Nonce` 在交易后仍然会增加1。
+- 该类型的交易不支付 [L2 费用](/developers/transaction-fees-on-scroll#l2-fee)和[L1 费用](/developers/transaction-fees-on-scroll#l1-fee)。当用户在 L1 上发起交易时，L2 费用已经支付了。不收取 L1 费用，是因为 `L1MessageTx` 交易的数据已经存在于 L1 跨链桥合约中。
+
+## 交易生命周期
+
+Scroll 中的交易生命周期包含以下三个阶段：
+
+1. **已确认（Confirmed）**: 用户向 L1 跨链桥合约或 L2 排序器提交交易。交易执行并包含在 L2 区块中后变为 `已确认` 。
+2. **已提交（Committed）**: 交易被包含在批次(batch)中，并且包含此批处理数据的 *承诺交易（commit transaction* 将提交到 L1。在 L1 区块中确认承诺事务后，此批处理中的交易变为`已提交`。
+3. **最终确认（Finalized）**: 该批次的证明生成并在L1上得到验证。在 *最终确认交易(finalize transaction)* 在 L1 上最终确认后，交易状态变为 `最终确认` 并成为 Scroll L2 链的一部分。
+
+### 提交交易
+
+用户可以在两个入口点将交易提交到 Scroll。
+
+第一，用户可以直接将提交给 L2 排序器。为此，用户只需要配置他们的钱包，连接 Scroll RPC 端点。排序器将验证交易并存储在本地交易池中。
+
+第二，来自于 L1 的存款和强制交易。Scroll L1 跨链桥合约为用户和智能合约提供了三个入口点，以从 L1 发送交易。通过这三个入口点发送的所有消息都将附加到 `L1MessageQueue` 合约中。
+
+- `ScrollGatewayRouter` 合约和几个标准代币 gateway 允许用户和合约将标准代币存入L2。更多细节参阅 [代币存款 Gateways](/technology/bridge/deposit-gateways)。
+- `L1ScrollMessenger` 合约允许用户和合约向 L2 发送任意消息。更多详细信息，请参阅[发送任意消息](/UPyw7afFQE6q-9CIdIRBag#Sending-Arbitrary-Messages)。
+- `EnforcedTxGateway` 合约允许EOA从同一地址发起强制交易，以提取代币或在L2上调用其他合约。更多详细信息，请参阅[发送强制交易](/UPyw7afFQE6q-9CIdIRBag#Sending-Enforced-Transactions)。
+
+Scroll 排序器会定期开始新的mining任务。它会从 `L1MessageQueue` 合约和 L2 内存池中的交易中提取 L1 消息并密封一个区块。一旦交易被包含在 L2 区块中，其状态将变为 `Confirmed` 。
+
+### 承诺交易数据
+
+Rollup 节点收集新的 L2 区块并将其打包为块（Chunks）和批次（Batches）（请参阅及[交易批处理](/RxRWLFtiQ7W_wbc0jMnQNA)中的更多详细信息）。它会定期发送一个承诺交易，将一批交易的数据发布到 L1 `ScrollChain` 合约。承诺交易在 L1 区块中被最终确认后，此批次中交易的状态变为 `已提交（Committed）`。此时，用户可以完全根据来自 L1 合约提交的数据自行重构 L2 状态。
+
+### 最终确认交易
+
+生成有效性证明后，rollup 节点在发送包含该批次有效性证明和新状态根的*最终确认交易*来进行链上验证。一旦最终确认交易成功在 L1 区块中确认，此批次中 L2 交易的状态将变为 `最终确认（Finalized）`。新的状态根可以被第三方无需信任地使用。
+
+## 交易批处理
+
+<ClickToZoom src={TransactionBatching} alt="Transaction Batching" />
+
+在 Scroll 中，交易在多个层中进行批处理。
+
+1. 一组排序好的交易被打包进一个区块。
+2. 一系列相邻的区块被分组进入一个块（chunk）中，块是生成 zkEVM 电路证明的基本单元。
+3. 一系列相邻的块被分组到一个批次（batch）中，批次是 L1 上数据承诺和证明验证的基础单元。*批次证明*是此批次中区块证明的聚合证明。
+
+这种多层批处理模式的目标是降低链上数据承诺和证明验证的gas成本。考虑到电路容量固定的情况下，此方法增加了 L1 上 Rollup 单元的颗粒度。因此，批处理减少了要存储在合约中的数据，并将证明验证成本摊销到更多的 L2 交易中。
+
+一旦块创建之后，将生成相应的块证明任务并发送到 zkEVM 证明器。创建新的批次时，将发生两个后续操作：（a） Rollup节点将此批次中的交易数据和块信息提交到 L1 合约，以及 （b） 将聚合块证明的批处理证明任务分派给证明聚合器证明者。[Rollup节点](/technology/sequencer/rollup-node)中详细介绍了提议块和批次的标准。

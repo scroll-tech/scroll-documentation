@@ -4,7 +4,7 @@ date: Last Modified
 title: "Rollup Node"
 lang: "en"
 permalink: "technology/sequencer/rollup-node"
-whatsnext: { "zkTrie": "/technology/sequencer/zktrie/" }
+whatsnext: { "zkTrie": "/en/technology/sequencer/zktrie/" }
 ---
 
 The rollup node is responsible for splitting up the Scroll blockchain into sections that are suitable for proving and commitment on L1. The two main units of this are *chunks* and *batches*.
@@ -20,7 +20,7 @@ The rollup node has the following submodules:
 
 Compared to the execution node, the rollup node is a much more straightforward and simple component.
 It collects L2 blocks, creates chunks and batches, and submits these to L1.
-In this section we outline the main limits that the rollup node must enforce during chunk and batch creation.
+In this section, we outline the main limits that the rollup node must enforce during chunk and batch creation.
 
 Constraints on chunks:
 - **No proof overflow:** Using the circuit capacity checker, we make sure to include as many blocks in a chunk that it would still not lead to proof overflow.

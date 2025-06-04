@@ -21,7 +21,7 @@ const MenuToggle: FunctionalComponent<{ dark: boolean }> = ({ dark }) => {
       type="button"
       aria-pressed={sidebarShown ? "true" : "false"}
       id="menu-toggle"
-      className={clsx(styles.button, dark && styles.dark)}
+      className={clsx(styles.button, "text-black", dark && "text-white", "dark:text-white-800")}
       onClick={() => setSidebarShown(!sidebarShown)}
     >
       {sidebarShown ? (

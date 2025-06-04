@@ -1,0 +1,29 @@
+---
+section: technology
+date: Last Modified
+title: "Hesaplar ve Durum"
+lang: "tr"
+permalink: "technology/chain/accounts-and-state"
+whatsnext: { "İşlemler": "/tr/technology/chain/transactions/" }
+---
+
+## Hesaplar
+
+Ethereum'da olduğu gibi Scroll'un da iki hesap türü vardır: Harici sahipli hesap (EOA - Externally-Owned Account) ve akıllı sözleşmeyi ve ek depoları tutan sözleşme hesabı.
+
+Scroll, durum geçişini daha verimli bir şekilde kanıtlamak amacıyla zkEVM devresini kolaylaştırmak için sözleşme bytecode'una ilişkin ek bilgileri hesapta saklar.
+
+Scroll'daki hesap aşağıdaki alanları içerir:
+
+- `nonce`: Gönderenin gönderdiği işlem sayısını gösteren sayaç.
+- `balance`: Hesaptaki 'ETH' tokeninin bakiyesi (wei cinsinden birim).
+- `storageRoot`: Depolama trie'sinin kök hash'i. Scroll, depolama trie'si için [zkTrie](/tr/techology/sequencer/zktrie)'yi kullandığından, "storageRoot", Poseidon hash'ini 256 bitlik bir tamsayıda saklar.
+- `codeHash`: Sözleşme bytecode'unun Keccak hash'i.
+- `PoseidonCodeHash` (**yeni alan**): Sözleşme bytecodu'nun 256 bitlik bir tam sayıdaki Poseidon hash'i.
+- `CodeSize` (**yeni alan**): Sözleşme bytecodu'nun byte cinsinden boyutu.
+
+## Durum
+
+Bir blokzincirin durumu, hesap verilerinin bir koleksiyonudur. _state trie_, hesap verilerini ve bunlara karşılık gelen adresleri bir [Merkle ağacı](https://en.wikipedia.org/wiki/Merkle_tree) veri yapısına kodlar. Ağacın kökü veya blokzincirin durumu, ağaçta bulunan tüm hesap verilerinin kriptografik bir özetidir.
+
+Ethereum, hem durum trie'si hem de depolama trie'si için [Patricia Merkle Trie](https://ethereum.org/en/developers/docs/data-structures-and-encoding/patricia-merkle-trie/) adlı bir veri yapısı kullanır, bu yapı bir akıllı sözleşmede anahtar/değer girişlerini saklar. Scroll'da Patricia Merkle Trie'yi hem durum denemesi hem de depolama denemesi için zkTrie adı verilen daha zk dostu bir veri yapısıyla değiştiriyoruz. Yüksek düzeyde, zkTrie veri yapısı, zk dostu bir hash fonksiyonu olan [Poseidon hashini](https://eprint.iacr.org/2019/458.pdf) içeren seyrek bir ikili Merkle ağacıdır. [zkTrie](/teknoloji/sequencer/zktrie) belgesinde bu veri yapısı hakkında daha fazla detaylı bilgi açıklanmaktadır.

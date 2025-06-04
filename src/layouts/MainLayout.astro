@@ -7,9 +7,9 @@ import LeftSidebar from "../components/LeftSidebar/LeftSidebar.astro"
 import RightSidebar from "../components/RightSidebar/RightSidebar.astro"
 import * as CONFIG from "../config"
 // import { NewsletterCTA } from "../components/Footer/NewsletterCTA.tsx"
-// import Footer from "~/components/Footer/Footer.astro"
-import Footer from "~/components/Footer/Footer.tsx"
+import Footer from "~/components/Footer/Footer.astro"
 import { changeLanguage } from "i18next"
+import { ViewTransitions } from "astro:transitions"
 
 const { content = {}, frontmatter } = Astro.props
 // Astro.props?.headings is for .mdx pages, Astro.props?.content?.astro.headings is for .md pages
@@ -29,8 +29,9 @@ changeLanguage(content.lang)
 // const includeLinkToWalletScript = !!Astro.props?.content?.metadata?.linkToWallet
 ---
 
-<html dir={content.dir ?? "ltr"} lang={content.lang ?? "en-us"} class="initial">
+<html transition:animate="none" dir={content.dir ?? "ltr"} lang={content.lang ?? "en-us"} class="initial">
   <head>
+    <ViewTransitions />
     <HeadCommon />
     <HeadSEO {content} {canonicalURL} />
     <title>{formattedContentTitle}</title>
@@ -44,18 +45,7 @@ changeLanguage(content.lang)
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@500&family=Roboto+Flex:opsz,wght@8..144,400;8..144,500;8..144,600&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Roboto+Flex:opsz,wght@8..144,400;8..144,500;8..144,600&display=swap"
-      rel="stylesheet"
-    />
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Roboto+Flex:opsz,wght@8..144,400;8..144,500;8..144,600&family=Roboto+Mono:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Roboto:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&family=Roboto+Mono:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap"
       rel="stylesheet"
     />
 
@@ -96,9 +86,9 @@ changeLanguage(content.lang)
 
       #grid-left {
         position: fixed;
-        background-color: var(--theme-bg);
         z-index: 10;
         display: none;
+        @apply bg-pure-white dark:bg-black;
       }
 
       #grid-main {
@@ -152,6 +142,15 @@ changeLanguage(content.lang)
           display: flex;
         }
       }
+
+      @media screen and (max-width: 90em) and (min-width: 72em) {
+        .wider-content {
+          grid-template-columns: 1fr minmax(0, 68vw);
+        }
+        .wider-content #grid-right {
+          display: none;
+        }
+      }
     </style>
     <style is:global>
       .layout > * {
@@ -168,6 +167,7 @@ changeLanguage(content.lang)
         top: 2rem;
         left: 0;
         padding-left: 20px;
+        padding-right: 20px;
         height: calc(100% - 20px);
       }
 
@@ -203,11 +203,27 @@ changeLanguage(content.lang)
         localStorage.setItem("recentArticles", JSON.stringify(recentArticles.slice(0, 5)))
       }
     </script>
+    <script is:inline>
+      var themeMode = localStorage.getItem("THEME_MODE")
+      if (themeMode === "dark") {
+        document.documentElement.classList.add("dark")
+      } else {
+        document.documentElement.classList.remove("dark")
+      }
+    </script>
+    <script>
+      document.addEventListener("astro:after-swap", () => {
+        const themeMode = localStorage.getItem("THEME_MODE")
+        themeMode === "dark"
+          ? document.documentElement.classList.add("dark")
+          : document.documentElement.classList.remove("dark")
+      })
+    </script>
   </head>
 
   <body>
     <Header frontmatter={content} />
-    <main class="layout">
+    <main class={`layout ${content.widerContent ? "wider-content" : ""}`}>
       <aside id="grid-left" class="grid-sidebar" title="Site Navigation">
         <LeftSidebar currentPage={currentPage} {content} />
       </aside>
@@ -221,8 +237,8 @@ changeLanguage(content.lang)
       </aside>
     </main>
     <!-- <NewsletterCTA client:visible />
-    <Footer /> -->
-    <Footer client:idle />
+    <Footer client:idle />  This seems to break i18next in some cases.-->
+    <Footer />
     <!-- TODO: Part 3 - Figure out if we need this footer script tag for linking to wallet. -->
 
     <!-- <script>

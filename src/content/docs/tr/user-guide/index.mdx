@@ -1,0 +1,44 @@
+---
+section: gettingStarted
+date: Last Modified
+title: "Scroll Sepolia Kullanıcı Kılavuzu"
+lang: "tr"
+permalink: "user-guide/"
+excerpt: "Sepolia Test Ağı'mızı denediğiniz için teşekkür ederiz. Sepolia Ağı, Ethereum Sepolia Test Ağı'nı ve Scroll Sepolia Test Ağı'nı içerir."
+whatsnext: { "Cüzdanınızı Kurun": "/tr/user-guide/setup" }
+---
+
+import Aside from "../../../../components/Aside.astro"
+
+<Aside type="tip" title="Ana ağ aktif!">
+
+Scroll'un ana ağı aktif durumda, ancak gerçek fonlar kullanmadan Scroll'u denemek isteyenler için bu kılavuzu oluşturduk.
+
+Scroll ana ağını denemek istiyorsanız kılavuzu takip edin, ardından kenar çubuğundaki ana ağ bağlantılarını kullanın.
+
+</Aside>
+
+Scroll Sepolia Test Ağı'nı denediğiniz için teşekkür ederiz. Sorularınız varsa veya geri bildirimde bulunmak istiyorsanız, [Discord](https://discord.gg/scroll)'umuza katılın!
+
+Sepolia Test Ağı, _Ethereum Sepolia Test Ağı_ ve _Scroll Sepolia Test Ağı'ndan_ oluşur. Sepolia, bir Ethereum test ağıdır; Scroll Sepolia ise, bu test ağının üstüne kurulmuş bir zero knowledge rollup(zk rollup) test ağıdır. Önceden dağıtılmış bazı demo uygulamalar bulunmaktadır: _Sepolia_ ile _Scroll Sepolia_ arasında bir [köprü](https://sepolia.scroll.io/bridge),[^1] _Scroll Sepolia_ için bir [blok gezgini](https://sepolia-blockscout.scroll.io/),[^2] ve bir [rollup gezgini](https://sepolia.scroll.io/rollupscan).
+
+L1 işlemlerini görüntülemek için Etherscan'in [Sepolia gezgini](https://sepolia.etherscan.io/). 
+L2 işlemlerini görüntülemek için [Scrollscan](https://sepolia.scrollscan.com) veya Scroll'un [Blockscout](https://sepolia-blockscout.scroll.io/)'unu kullanabilirsiniz, ancak ayrıca [Dora](https://www.ondora.xyz/network/scroll-sepolia/interactions) veya [L2Scan](https://scroll-sepolia.l2scan.co/)'in sağladığı ek işlevleri de denemek isteyebilirsiniz.
+
+Test ağını keşfetmek için önerilen iş akışı aşağıdaki gibidir:
+
+1. Cüzdanınıza [Sepolia Test Ağı](https://sepolia.scroll.io/portal) yapılandırmalarını ekleyin
+2. Herhangi bir Ethereum Musluğu uygulamasından _Sepolia_ ağında test tokenları isteyin. (bkz. [Musluk](/tr/user-guide/faucet) makalesi)
+3. _Sepolia_ ile _Scroll Sepolia_ arasında [Köprü](https://sepolia.scroll.io/bridge) uygulaması aracılığıyla test tokenlarını aktarın.
+4. Cüzdanınızı kullanarak _Scroll Sepolia_'daki diğer cüzdanlara token aktarın.
+5. [Uniswap](https://uniswap-showcase.sepolia.scroll.xyz/) veya [Aave](https://app.aave.com) gibi akıllı sözleşmelerle etkileşimde bulunarak ekosistemimizi keşfedin.
+6. _Scroll Sepolia_'dan _Sepolia_'ya tokenları [Köprü](https://sepolia.scroll.io/bridge) uygulaması aracılığıyla çekin.
+
+Her uygulama için talimatları bu kullanıcı kılavuzunun geri kalanında bulabilirsiniz.
+
+## Sorular ve Geri Bildirim
+
+Herhangi bir sorunla karşılaşırsanız, [Discord](https://discord.gg/scroll)'a katılın ve `#general-support` kanalında bizimle konuşun. Ayrıca deneyiminizi nasıl iyileştirebileceğimiz hakkındaki düşüncelerinizi veya geri bildirimlerinizi de duymaktan mutluluk duyarız.
+
+[^1]: [Hop Exchange](https://hop.exchange/) arayüzünden forklanmıştır 🐇🙌
+[^2]: [Blockscout](https://blockscout.com/)'un harika açık kaynaklı blok gezgini

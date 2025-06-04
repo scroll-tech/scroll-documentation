@@ -5,6 +5,18 @@
   @apply leading-[1.3] font-medium tracking-[0.18px];
 }
 
+:is(h1, h2, h3, h4, h5, h6) {
+  > a {
+    color: inherit;
+    font-weight: inherit !important;
+    font-family: inherit !important;
+  }
+
+  &:hover > a {
+    color: inherit;
+  }
+}
+
 :where(h6) {
   @apply text-base mb-2;
 }
@@ -45,7 +57,11 @@
 
 /* Paragraph  */
 :where(body, p) {
-  @apply leading-[1.5] font-normal font-text text-primary tracking-[0.09px];
+  @apply leading-[1.5] font-normal font-text text-black dark:text-white-800 tracking-[0.09px];
+}
+
+:where(h1) {
+  @apply dark:text-white-900;
 }
 
 :where(p) {
@@ -54,7 +70,7 @@
 
 /* Text  */
 :where(span, label) {
-  @apply font-text font-normal text-primary leading-[1rem] text-[0.875rem];
+  @apply font-text font-normal text-black dark:text-white-800 leading-[1rem] text-[0.875rem];
 }
 
 :where(button, input, select, textarea) {
@@ -65,7 +81,7 @@
 
 /* Heading styles */
 :where(.heading, .heading-100, .heading-200, .heading-300, .heading-400, .heading-500, .heading-600) {
-  @apply font-text leading-[1.3] font-medium text-heading;
+  @apply font-text leading-[1.3] font-medium text-black dark:text-white-800;
 }
 
 :where(.heading-100) {
@@ -125,7 +141,7 @@
 }
 
 /* Text styles */
-:where(.text, .text-100, .text-200, .text-300, ) {
+:where(.text, .text-100, .text-200, .text-300) {
   @apply font-text font-normal text-primary leading-[1rem];
 }
 

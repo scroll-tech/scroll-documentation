@@ -16,7 +16,7 @@ const { content, githubEditUrl, headings, clientSideToc } = Astro.props
     </div>
 
     <div>
-      <h2 class="heading feedback-title">{t("rightSidebar.feedback")}</h2>
+      <h2 class="heading">{t("rightSidebar.feedback")}</h2>
       <div class="feedback-wrapper">
         <Feedback client:idle />
       </div>
@@ -37,7 +37,7 @@ const { content, githubEditUrl, headings, clientSideToc } = Astro.props
     @apply !mb-6;
   }
   .sidebar-nav-inner {
-    padding: 16px 20px 70px 4px;
+    padding: 24px 20px 24px 4px;
     overflow: auto;
     background: #fff8f3;
     border-radius: 1em;
@@ -45,16 +45,12 @@ const { content, githubEditUrl, headings, clientSideToc } = Astro.props
     width: 280px;
     /* width: 250px; */
     max-height: 100%;
-    /* @apply pt-doc; */
+    @apply bg-white dark:bg-dark-normal;
   }
   .sidebar-nav-inner > * {
-    margin-top: 1rem;
+    margin-top: 32px;
   }
   .sidebar-nav-inner > *:first-child {
     margin-top: 0;
-  }
-
-  .sidebar-nav-inner h2 {
-    @apply m-0 mt-4;
   }
 </style>

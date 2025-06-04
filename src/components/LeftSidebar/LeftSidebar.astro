@@ -1,8 +1,7 @@
 ---
 import { MENU, Frontmatter, getSidebar } from "../../config"
 import { localizePath } from "astro-i18next"
-import { changeLanguage } from "i18next"
-import i18next from "i18next"
+import Icon from "../Icons/Icons.astro"
 
 export type Props = {
   currentPage: string
@@ -26,6 +25,23 @@ const removeSlashes = function (url: string) {
 }
 
 const currentPageMatch = removeSlashes(currentPage.slice(1))
+
+const processedSidebarSections = sidebarSections.map((section) => {
+  return {
+    ...section,
+    contents: section.contents.map((child) => {
+      const isCurrent = currentPageMatch === removeSlashes(localizePath(child.url))
+      return {
+        ...child,
+        isCurrent: isCurrent,
+        open:
+          isCurrent ||
+          (child.children &&
+            child.children.some((subChild) => currentPageMatch === removeSlashes(localizePath(subChild.url)))),
+      }
+    }),
+  }
+})
 ---
 
 <nav aria-labelledby="grid-left" class="menu-nav">
@@ -48,7 +64,7 @@ const currentPageMatch = removeSlashes(currentPage.slice(1))
   <hr class="menu-separator" />
   <ul class="nav-groups sidebar-nav-groups">
     {
-      sidebarSections.map((section) => (
+      processedSidebarSections.map((section) => (
         <li>
           <div class="nav-group">
             <h2 class="nav-group-title">{section.section}</h2>
@@ -56,36 +72,38 @@ const currentPageMatch = removeSlashes(currentPage.slice(1))
               {!!section.contents &&
                 section.contents.map((child) => (
                   <>
-                    <li class="nav-link">
+                    <li class={`nav-link ${child.open ? "open" : ""}`}>
                       <a
                         href={isExternal(child.url) ? `${child.url}` : localizePath(child.url)}
                         target={isExternal(child.url) ? "_blank" : "_self"}
-                        aria-current={`${
-                          currentPageMatch === removeSlashes(localizePath(child.url)) ? "page" : "false"
-                        }`}
+                        aria-current={`${child.isCurrent ? "page" : "false"}`}
+                        class="flex align-center justify-between width-full"
                       >
-                        {child.title}
-                        {isExternal(child.url) && (
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="10"
-                            height="11"
-                            viewBox="0 0 10 11"
-                            fill="none"
-                          >
-                            <g clip-path="url(#clip0_2084_4329)">
-                              <path
-                                d="M9 1.5V8.36538L7.83812 7.2035V3.46385C5.46463 5.76924 3.29542 8.27999 0.853849 10.5L0 9.66344C2.42536 7.44344 4.5762 4.96728 6.93347 2.6781H3.31272L2.13462 1.5H9Z"
-                                fill="#101010"
-                              />
-                            </g>
-                            <defs>
-                              <clipPath id="clip0_2084_4329">
-                                <rect width="10" height="10" fill="white" transform="translate(0 0.5)" />
-                              </clipPath>
-                            </defs>
-                          </svg>
-                        )}
+                        <span>
+                          {child.title}
+                          {isExternal(child.url) && (
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="10"
+                              height="11"
+                              viewBox="0 0 10 11"
+                              fill="none"
+                            >
+                              <g clip-path="url(#clip0_2084_4329)">
+                                <path
+                                  d="M9 1.5V8.36538L7.83812 7.2035V3.46385C5.46463 5.76924 3.29542 8.27999 0.853849 10.5L0 9.66344C2.42536 7.44344 4.5762 4.96728 6.93347 2.6781H3.31272L2.13462 1.5H9Z"
+                                  fill="currentColor"
+                                />
+                              </g>
+                              <defs>
+                                <clipPath id="clip0_2084_4329">
+                                  <rect width="10" height="10" fill="white" transform="translate(0 0.5)" />
+                                </clipPath>
+                              </defs>
+                            </svg>
+                          )}
+                        </span>
+                        {!!child.children && <Icon name="right-caret" class="caret" size="1.25rem" />}
                       </a>
                     </li>
                     {!!child.children && (
@@ -135,18 +153,10 @@ const currentPageMatch = removeSlashes(currentPage.slice(1))
   .menu-separator {
     width: calc(100vw - 40px);
 
-    @apply border-0 border-t-[1px] border-t-divider border-solid;
+    @apply border-0 border-t-[1px] border-solid border-black dark:border-white-800;
   }
   .sidebar-nav-groups.nav-groups > :first-child {
     @apply pt-[15px];
-  }
-
-  @media (min-width: 50em) {
-    #mobile-menu,
-    .menu-separator {
-      display: none;
-      height: 0;
-    }
   }
   .menu-nav {
     width: 100%;
@@ -187,11 +197,20 @@ const currentPageMatch = removeSlashes(currentPage.slice(1))
     font: inherit;
     color: inherit;
     text-decoration: none;
-    display: block;
+    display: flex;
     font-size: 16px;
     /* line-height:1; */
     margin-bottom: 10px;
     font-weight: 500;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .nav-link a span {
+    font-size: inherit;
+    font-weight: inherit;
+    color: inherit;
+    line-height: inherit;
   }
 
   .nav-link a:hover,
@@ -212,11 +231,35 @@ const currentPageMatch = removeSlashes(currentPage.slice(1))
     color: hsla(var(--color-base-white), 100%, 1);
   }
 
+  .nav-link + ul {
+    display: none;
+  }
+
+  .caret {
+    transition: transform 0.2s ease-in-out;
+    flex-shrink: 0;
+  }
+
+  .nav-link.open .caret {
+    transform: rotateZ(90deg);
+  }
+
+  .nav-link.open + ul {
+    display: block;
+    border-left-width: 1px;
+    border-left-style: solid;
+  }
+
   .nested {
     @apply pl-5;
   }
 
   @media (min-width: 50em) {
+    #mobile-menu,
+    .menu-separator {
+      display: none;
+      height: 0;
+    }
     .nav-groups {
       padding: 0;
     }

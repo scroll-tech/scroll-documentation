@@ -18,7 +18,7 @@ Un **[esquema de compromiso](https://en.wikipedia.org/wiki/Commitment_scheme)** 
 
 Los esquemas de compromiso seguros tienen dos características:
 
-1. **Binding**: una vez publicado el compromiso $c$, el committer no debe ser capaz de encontrar algún otro valor $v'$ distinto de $v$ que también corresponda a $c$. Es decir, el compromiso $c$ vincula al committer a su valor original $v$.
+1. **Binding**: una vez publicado el compromiso $c$, el committer no debe ser capaz de encontrar algún otro valor $v'$ distinto de $v$ que también corresponda a $c$. Es decir, el compromiso $c$ vincula al committer al valor original $v$.
 2. **Hiding**: el verifier no debe poder obtener ninguna información sobre el valor original $v$ a partir del compromiso $c$. Es decir, el compromiso $c$ oculta toda la información sobre el valor original $v$.
 
 ## Esquemas de Compromiso Polinómicos

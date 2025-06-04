@@ -1,0 +1,62 @@
+---
+section: sdk
+date: Last Modified
+title: "Running Scroll SDK in Production"
+lang: "en"
+permalink: "sdk/guides/production-deploymnet"
+excerpt: "Run the Scroll SDK in production."
+---
+
+import Aside from "../../../../../components/Aside.astro"
+import ToggleElement from "../../../../../components/ToggleElement.astro"
+import Steps from '../../../../../components/Steps/Steps.astro';
+
+<Aside type="danger">
+This documentation is incomplete. For specifics, please read through our guides and operating a chain documentation.
+</Aside>
+
+## Overview
+
+This guide will support DevOps teams in running Scroll SDK in a production environment. This requires many considerations beyond a local [Devnet deployment](/en/sdk/guides/devnet-deployment).
+
+For a more hands-on guide looking at specifics, see our [Digital Ocean guide](/en/sdk/guides/digital-ocean-alt-gas-token), which walks through a full Kubernetes deployment using an easy-to-understand interface. We also have an [AWS guide](/en/sdk/guides/aws-deployment) available.
+
+### Monitoring
+
+See the [Monitoring](/en/sdk/operation/monitoring) section for more information.
+
+### Ingress
+
+We're using Nginx and Cert Manager. More info later.
+
+### Secrets
+
+We use External Secret Manager to store secrets. This is a Kubernetes-native solution that allows you to store secrets in a separate repository. This is a more secure way to store secrets than in the Scroll SDK repository, but you will still need to bring your own secret management tool. This could be Hashicorp Vault, AWS Secret Manager, or similar.
+
+Our CLI tool currently supports a development mode Hashicorp Vault and AWS Secret Manager. The [Digital Ocean guide](/en/sdk/guides/digital-ocean-alt-gas-token) uses Hashicorp vault, while the [AWS guide](/en/sdk/guides/aws-deployment) uses AWS Secret Manager.
+
+### Machine Resources
+
+In addition to 3 databases (and an optional database for Blockscout), we'll be providing guidance on the resources needed for each Scroll service.
+
+#### Sepolia Configuration
+
+For Scroll's Sepolia environment, we use the following resources:
+
+|Service | Quantity (sepolia) | vCPU (sepolia) | Mem in Mi (sepolia) |
+|----------|------------------|------------------|------------------|
+| balance-checker|	1 |	0.1	|500|
+| bridge-history-api |	2 |	0.2	|200|
+| bridge-history-fetcher	| 1| 	0.2	|200|
+| coordinator-api|	2 |	0.2	|20000|
+| coordinator-cron|	1 |	0.1	|200|
+| chain-monitor|	1 |	0.2	|200|
+| frontends	1||	0.1	|500|
+| gas-oracle|	1|	0.1	|200|
+| l2-bootnode|	3	| 2	|16000|
+| l2-rpc|	4	| 0.5	|4000|
+| l2-sequencer|	1 |	0.1	|1500|
+| rollup-explorer-backend	| 2	| 3	|6000|
+| rollup-node|	1 |	0.1	|200|
+| rpc-gateway|	1	| 0.1	|100|
+| Total	| 22|	15.9	|120000|

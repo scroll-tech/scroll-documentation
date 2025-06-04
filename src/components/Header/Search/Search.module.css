@@ -1,12 +1,11 @@
 /** Style Algolia */
 
 #searchModal.mini {
-  background: #ffffff;
   position: fixed;
   top: 65px;
   left: 0;
   right: 0;
-  height: 100vh;
+  height: calc(100vh - 65px);
   padding-top: 60px;
   border-radius: 0;
 }
@@ -14,8 +13,6 @@
 #searchModal.large {
   top: 0;
   height: fit-content;
-  max-height: 80vh;
-  background: #fff;
   position: absolute;
   border-radius: 24px;
   padding-top: 0;
@@ -24,7 +21,7 @@
 
 .resultsWrapper {
   padding: 20px 20px 1rem;
-  overflow: overlay;
+  height: calc(100% - 50px);
 }
 
 .searchInput {
@@ -40,12 +37,12 @@
   outline: 0;
   cursor: pointer;
   align-items: center;
-  width: 346px;
+  width: 100%;
   height: 35px;
   border-radius: 40px;
   font-style: italic;
-  background: #f6f6f6;
-  @apply border-divider text-placeholder gap-2;
+
+  @apply border-divider text-black gap-2 bg-[#f6f6f6];
 }
 
 .searchInputMobile {
@@ -61,7 +58,7 @@
 
 .searchInput:hover,
 .searchInput:focus {
-  @apply text-text border-light;
+  @apply text-black border-light;
 }
 
 .searchInput::placeholder,
@@ -119,7 +116,6 @@
 
 .closeButtonMobile {
   display: block;
-  background-color: #ffffff;
   border: 3px solid #ffffff;
   padding: 0;
   font-size: 16px;
@@ -127,11 +123,8 @@
   position: relative;
   right: -43px;
   box-sizing: content-box;
-}
 
-.hitWrapper {
-  max-height: 40vh;
-  overflow: overlay;
+  @apply bg-pure-white;
 }
 
 .hitWrapper ol {
@@ -141,12 +134,15 @@
 .hit {
   line-height: 32px;
   display: block;
-  @apply text-primary mb-2;
+  @apply mb-2 text-black;
 }
 
 .queryResults {
   display: grid;
   grid-template-columns: 1fr;
+  grid-auto-rows: max-content;
+  height: 100%;
+  overflow-y: auto;
 }
 
 .queryResults h6 {
@@ -177,6 +173,7 @@
 .hitList mark {
   background-color: transparent;
   font-weight: bold;
+  @apply text-inherit;
 }
 
 .hideSm {
@@ -198,16 +195,17 @@
 
   .container {
     position: relative;
+    width: 100%;
   }
 
   #searchModal.mini {
     top: 0;
     height: fit-content;
     max-height: 80vh;
-    background: #f6f6f6;
     position: absolute;
     border-radius: 17.5px;
     padding-top: 0;
+    @apply bg-[#f6f6f6];
   }
 
   #searchModal.large {
@@ -224,8 +222,8 @@
   }
 
   .hitWrapper {
-    max-height: calc(80vh - 100px);
-    overflow: auto;
+    max-height: calc(80vh - 150px);
+    overflow-y: auto;
   }
 
   .hitList li {
@@ -246,9 +244,9 @@
 }
 
 @media (max-width: 72em) and (min-width: 50em) {
-  :global(.right-box .tools) {
+  /* :global(.right-box .tools) {
     display: none;
-  }
+  } */
 
   .queryResults {
     grid-template-columns: 1fr !important;
@@ -258,5 +256,10 @@
 @media (max-width: 50em) {
   .resultsWrapper * {
     padding-left: 0 !important;
+  }
+
+  .queryResults.large {
+    max-height: calc(80vh - 48px);
+    height: max-content;
   }
 }

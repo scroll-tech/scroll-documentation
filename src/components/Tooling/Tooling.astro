@@ -1,0 +1,30 @@
+---
+import { getCollection } from "astro:content"
+import Content from "./Content/Content.tsx"
+
+const pages = await getCollection("tools")
+
+const tools = await Promise.all(
+  pages.map(async (page) => {
+    const renderedPage = await page.render()
+    return {
+      ...renderedPage,
+      id: "tool-" + renderedPage.remarkPluginFrontmatter.name.toLowerCase().replace(/ /g, "-"),
+    }
+  })
+)
+---
+
+<Content client:load tools={tools}>
+  <Fragment slot="toolsMarkdown">
+    <slot>
+      {
+        tools.map((tool, index) => (
+          <div id={tool.id} class="tools-item" style="display: none;">
+            <tool.Content />
+          </div>
+        ))
+      }
+    </slot>
+  </Fragment>
+</Content>

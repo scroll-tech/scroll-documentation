@@ -1,11 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
+  darkMode: "class",
   theme: {
     screens: {
       xs: "375px",
       sm: "480px",
-      md: "37.75em", //604px
+      md: "37.75em", // 604px
       lg: "50em", // 800px
       xl: "72em", // 1152px
     },
@@ -14,12 +15,34 @@ module.exports = {
         primary: "var(--border-radius-primary)" /* Inputs, Buttons */,
         secondary: "var(--border-radius-secondary)" /* Cards */,
         reset: "var(--border-radius-reset)" /* Border reset */,
-        round: "var(--border-radius-round)" /* Rounded icon buttons*/,
+        round: "var(--border-radius-round)" /* Rounded icon buttons */,
       },
       borderWidth: {
         "w-primary": "var(--border-width-primary)" /* Inputs */,
         "w-secondary": "var(--border-width-secondary)" /* Buttons */,
         "w-reset": "var(--border-width-reset)" /* Border reset */,
+      },
+      backgroundColor: {
+        normal: "#FFF0DD",
+        "dark-normal": "#1D1D1D",
+        highlight: "#FFDEB5",
+        "dark-highlight": "#3b3b3b",
+        "callout-note": "#FFF8F3",
+        "callout-dark-note": "#2E261C",
+        "callout-caution": "#F8F5E0",
+        "callout-dark-caution": "#5D4C38",
+        "callout-danger": "#FFE4DF",
+        "callout-dark-danger": "#662A1E",
+        "callout-tip": "#EEEEEE",
+        "callout-dark-tip": "#3B3B3B",
+        "link-code": "#ffe7e2",
+        "link-dark-code": "#33150F",
+        code: "#dadada",
+        "dark-code": "#5B5B5B",
+      },
+      borderColor: {
+        primary: "#dadada",
+        "dark-primary": "#FFF8F34D",
       },
       colors: {
         blue: {
@@ -145,6 +168,19 @@ module.exports = {
         "interactive-hover": "var(--color-border-interactive-hover)",
         "interactive-pressed": "var(--color-border-interactive-pressed)",
         "interactive-error": "var(--color-border-interactive-error)",
+
+        // theme
+        black: "#101010",
+        // white: "#FFF8F3",
+
+        white: {
+          DEFAULT: "#FFF8F3",
+          800: "#DADADA",
+          900: "#EDEDED",
+        },
+
+        "pure-black": "#000",
+        "pure-white": "#fff",
       },
       fontFamily: {
         text: "var(--font-family-text)",
@@ -158,6 +194,13 @@ module.exports = {
       },
       fontSize: {
         base: ["16px", "28px"],
+      },
+      textColor: {
+        "link-code": "#ff684b",
+        code: "#101010",
+        "dark-code": "#fff",
+        marker: "#586474",
+        "dark-marker": "#FFF8F3",
       },
       height: {
         navbar: "var(--theme-navbar-height)",

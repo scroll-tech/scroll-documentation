@@ -1,5 +1,6 @@
 ---
 import i18next, { t } from "i18next"
+import LinkSvg from "~/assets/svgs/home/home-link.svg?raw"
 export type Props = {
   icon: string
   name: string
@@ -14,12 +15,16 @@ const { icon, name, content, link } = Astro.props as Props
 ---
 
 <div class="navs-item">
-  <span style={{ background: `url(${icon}) center no-repeat` }} class="navs-item-icon"></span>
+  <span class="navs-item-icon">
+    <Fragment set:html={icon} />
+  </span>
   <span class="navs-item-title">{name}</span>
   <span class="navs-item-content">{content}</span>
-  <a class="navs-item-link" href={link}>
+  <a class="navs-item-link text-[#C58D49] dark:text-white-800" href={link}>
     {t("ui.readMore")}
-    <span class="link-icon"></span>
+    <span class="link-icon text-[#C58D49] dark:text-white-800">
+      <Fragment set:html={LinkSvg} />
+    </span>
   </a>
 </div>
 
@@ -33,10 +38,13 @@ const { icon, name, content, link } = Astro.props as Props
   }
 
   .navs-item-icon {
-    display: inline-block;
+    display: inline-flex;
     width: 35px;
     height: 35px;
+    align-items: center;
+    @apply text-black dark:text-white-800;
   }
+
   .navs-item-title {
     font-size: 22px;
     font-weight: 600;
@@ -56,19 +64,17 @@ const { icon, name, content, link } = Astro.props as Props
     font-size: 16px;
     text-decoration: 1px underline;
     text-underline-offset: 2px;
-    color: #c58d49;
-    background-color: #fff0dd;
+    @apply bg-normal dark:bg-dark-normal;
   }
   .navs-item-link:hover {
-    background-color: #ffdeb5;
+    @apply bg-highlight dark:bg-dark-highlight;
   }
 
   .link-icon {
-    display: inline-block;
+    display: inline-flex;
     width: 8px;
     height: 8px;
     margin-left: 2px;
-    background: url(/svgs/home-link.svg) center no-repeat;
   }
 
   @media screen and (max-width: 50em) {

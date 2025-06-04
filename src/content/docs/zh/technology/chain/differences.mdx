@@ -1,0 +1,46 @@
+---
+section: technology
+date: Last Modified
+title: "和以太坊 EVM的区别"
+lang: "zh"
+permalink: "technology/chain/differences"
+whatsnext: { "跨链桥": "/zh/technology/bridge/cross-domain-messaging/" }
+---
+
+## 操作码
+
+| 操作码                     | Scroll 实现                                                                                                  |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `BLOCKHASH`                 | 返回最后256个区块的 `keccak(chain_id \|\| block_number)`                                         |
+| `COINBASE`                  | 返回费用地址 (预部署合约 `0x5300000000000000000000000000000000000005`)               |
+| `DIFFICULTY` / `PREVRANDAO` | 始终返回 0                                                                                                 |
+| `BASEFEE`                   | 未启用，因为我们目前禁用了 EIP-1559。 如果引入了该操作码，交易将会回退 |
+| `SELFDESTRUCT`              | 未启用，如果引入了该操作码，交易将会回退                                       |
+
+## 预编译合约
+
+| 地址 | 名称         | Scroll 实现                                                                              |
+| ------- | ------------ | ----------------------------------------------------------------------------------------------- |
+| `0x02`  | `SHA2-256`   | 当前未支持                                                                        |
+| `0x03`  | `RIPEMD-160` | 当前未支持                                                                        |
+| `0x05`  | `modexp`     | 将输入值 `B, E, M` 限制为小于 $2^{256}$ 的无符号整数                  |
+| `0x08`  | `ecPairing`  | 输入仍然是 6 个 32字节的倍数，但限制元组数量最多为4 |
+| `0x09`  | `blake2f`    | 当前未支持                                                                        |
+
+剩余的预编译合约和以太坊实现相同。但是，它们在一个区块内的最大使用量受 zkEVM电路容量相关限制的约束。
+
+## 以太坊改进提案（EIPs）
+
+我们的排序器最初是基于伦敦升级开发的。我们在伦敦升级中禁用了一些 EIP，并从上海升级引入了一些 EIP 来提高兼容性。
+
+伦敦升级中禁用的EIPs：
+
+- [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559): 费用市场升级和 EIP-1559 交易类型
+- [EIP-2930](https://eips.ethereum.org/EIPS/eip-2930): 可选的访问列表
+- [EIP-3198](https://eips.ethereum.org/EIPS/eip-3198): `BASEFEE` 操作码
+
+上海升级中引入的EIPs：
+
+- [EIP-3651](https://eips.ethereum.org/EIPS/eip-3651): `COINBASE` 热地址
+- [EIP-3855](https://eips.ethereum.org/EIPS/eip-3855): `PUSH0` 指令
+- [EIP-3860](https://eips.ethereum.org/EIPS/eip-3860): 初始化代码量限制

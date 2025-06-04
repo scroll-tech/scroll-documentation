@@ -5,7 +5,7 @@ title: "The Scalability Problem"
 lang: "en"
 permalink: "learn/intro-to-rollups"
 excerpt: "Ethereum’s strong decentralization and security come at the cost of sacrificing scalability: to ensure that all the participating nodes can keep up with the network, the network’s throughput is limited. This limit ultimately results in higher costs and latencies for users."
-whatsnext: { "Intro to Rollups": "/learn/intro-to-rollups" }
+whatsnext: { "Intro to Rollups": "/en/learn/intro-to-rollups" }
 ---
 
 ## Ethereum’s scaling problem
@@ -24,4 +24,4 @@ There are primarily two types of scaling solutions: layer 1 scaling solutions an
 
 **Layer 1** (or **L1**) scaling solutions attempt to scale the network by making modifications to the Ethereum blockchain directly. The term “layer 1” here refers to the main Ethereum blockchain. In general, it is very difficult to design layer 1 scaling solutions that increase throughput and at the same time preserve high levels of security and decentralization. Thus, recent scaling efforts have shifted away from layer 1 solutions and towards layer 2 solutions.
 
-**Layer 2** (or **L2**) scaling solutions are networks that live **on top** of Ethereum layer 1 - they are essentially separate blockchains which are “anchored” to the underlying Ethereum blockchain in some way. These layer 2 networks can generally process transactions at a higher rate than the underlying layer 1 network, as they are not subject to the same limitations. The “anchoring” mechanism, the specifics of which differ across various layer 2s, enables the layer 2 network to inherit the strong security and decentralization properties of Ethereum layer 1.
+**Layer 2** (or **L2**) scaling solutions are networks that live **on top** of Ethereum layer 1 - they are essentially separate blockchains that are “anchored” to the underlying Ethereum blockchain in some way. These layer 2 networks can generally process transactions at a higher rate than the underlying layer 1 network, as they are not subject to the same limitations. The “anchoring” mechanism, the specifics of which differ across various layer 2s, enables the layer 2 network to inherit the strong security and decentralization properties of Ethereum layer 1.

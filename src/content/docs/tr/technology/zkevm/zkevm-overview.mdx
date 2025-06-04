@@ -1,0 +1,56 @@
+---
+section: technology
+date: Last Modified
+title: "zkEVM Genel Bakış"
+lang: "tr"
+permalink: "technology/zkevm-overview"
+excerpt: "EVM'nin çalışmasını kanıtlayan zkEVM'nin nasıl oluşturulacağını anlamak için öncelikle EVM'nin kendisine bakmamız gerekiyor."
+---
+
+import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import zkevm1 from "../_images/zkevm1.png"
+import zkevm2 from "../_images/zkevm2.png"
+import zkevm3 from "../_images/zkevm3.png"
+
+## EVM
+
+EVM'nin çalışmasını kanıtlayan zkEVM'nin nasıl oluşturulacağını anlamak için öncelikle EVM'nin kendisine bakmamız gerekiyor.
+
+EVM, durum geçiş fonksiyonu olarak modellenebilir. Başlangıç dünya durumu `S` ve bir `T` işlemi verildiğinde, yeni bir dünya durumu `S’`: `f(S,T) = S'` üreten bir geçiş fonksiyonu `f`yi belirtir.
+
+"Dünya durumu", [değiştirilmiş Merkle-Patricia Trie](https://ethereum.org/en/developers/docs/data-structures-and-encoding/patricia-merkle-trie/) (MPT) olarak modellenmiştir. Bu trie ağın tüm kalıcı verilerini içerir. Bu, tüm harici sahipli hesapların (EOA'lar) ve akıllı sözleşme hesaplarının bilgilerini içerir. Akıllı sözleşme hesapları, akıllı sözleşmenin bytecode'unu ve kalıcı depolamayı tutan alt trie'lere sahiptir.
+
+EVM, ortaya çıkan hesaplamaları yürüterek ve buna göre dünya durumunda değişiklikler yaparak yeni bir işlemi işler. EVM hesaplaması, geçici veri depolarının (stack and memory) yanı sıra kalıcı veri depoları (contract bytecode ve storage) üzerinde de çalışır.
+
+<ClickToZoom src={zkevm1} />
+
+Bireysel bir işlem tarafından tetiklenen hesaplama, EVM'nin doğrudan anlayıp yürütebileceği "opcodes" adı verilen küçük makine talimatlarına bölünür. Her bir opcode'un davranışı [Ethereum Yellow Paper](https://ethereum.github.io/yellowpaper/paper.pdf)'da belirtilmiştir. Bu nedenle bir işlemin yürütülmesi, yalnızca opcode yürütmelerinin sıralı bir listesi olan bir "yürütme izi" ile özetlenebilir. [Geth](https://geth.ethereum.org/) gibi Ethereum yürütme istemcileri, gerçekleştirdiği hesaplama için açıkça adım adım yürütme takibi çıktısı alabilir.
+
+<ClickToZoom src={zkevm2} />
+
+Opcode'lar yürütüldükçe durum trie'si değiştirilir. Bu, yeni bir durum köküne sahip yeni bir durum trie'si sonuçlanır.
+
+## Bir EVM yürütmesinin kanıtlanması
+
+zkEVM'nin amacı, bir işlemin yürütülmesinin geçerliliğini doğrulayan bir kanıt oluşturmaktır. Başka bir deyişle, başlangıç dünya durumu `S`, bir işlem `T` ve sonuçta ortaya çıkan dünya durumu `S` verildiğinde, zkEVM'nin `f(S,T) = S` olduğuna dair bir kanıt üretmesi gerekir; burada `f`, Ethereum Yellow Paper'da belirtilen durum geçiş fonksiyonudur.
+
+Geçiş fonksiyonu yürütmesinin geçerliliğini kanıtlamak için yürütmeyi adım adım yürütme izine böleriz. `f(S,T)`nin yürütülmesi, sıralı opcode yürütmelerinin bir listesine genişletilir. Yürütme izi, `f(S,T) = S` durum geçişinin doğruluğunu onaylayan bir "tanık" görevi görür - iz, bir anlamda, durumun `S`den `S'`e nasıl geçiş yaptığını adım adım açıklayan bir açıklamadır. 
+
+Daha sonra sorun aşağıdakileri kanıtlamaya indirgenir:
+
+- Yürütme izlemesi _doğru_.
+   - Her bir opcode, Ethereum Yellow Paper spesifikasyonuna göre doğru şekilde yürütülür.
+     - Örneğin, `ADD` opcode'u, yığından iki değerin çıkarılması ve bunların toplamının yığına aktarılmasıyla sonuçlanmalıdır.
+     - Bir kanıt, geçici veri depolarında (stack and memory) veya kalıcı veri depolarında yapılan değişiklikler de dahil olmak üzere her bir opcode'unun uygun davranışla yürütüldüğünü göstermelidir.
+   - Yürütülen opcodelarının sıralı listesi aslında işlem tarafından tetiklenen opcodelarının doğru listesidir.
+     - Bu, ilk işlem çağrı verilerinin ve çağrılan sözleşmelerin bytecode'unun doğru şekilde yüklenmesini içerir.
+- Yürütme izlemesi başlangıç durumu `S` ile başlar ve `S` durumuyla sonuçlanır.
+
+<ClickToZoom src={zkevm3} />
+
+Sonraki bölümlerde EVM yürütme izlerinin doğruluğunun nasıl kanıtlanabileceğinin ayrıntılarına gireceğiz.
+
+## Daha fazla bilgi edin
+
+- EVM'de Cypherpunk'lar [GitBook bölümü](https://cypherpunks-core.github.io/ethereumbook/13evm.html)
+- [zkEVM'ye genel bakış](https://youtu.be/NHwd-gJ8xg4) - Haichen Shen

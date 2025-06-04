@@ -1,0 +1,39 @@
+---
+section: technology
+date: Last Modified
+title: "区块"
+lang: "zh"
+permalink: "technology/chain/blocks"
+whatsnext: { "Rollup 流程": "/zh/technology/chain/rollup/" }
+---
+
+区块是若干交易和先前区块链接的集合。
+
+## 区块头
+
+Scroll 中的区块头映射了以太坊的结构。但是修改了区块头中的某些字段来适应 Layer 2的背景，如下表所述：
+
+| 字段               | 描述                                                        |
+| ------------------- | ------------------------------------------------------------------ |
+| `parentHash`        | 父区块哈希。                                    |
+| `uncleHash`         | `keccak256(rlp([]))`。                                      |
+| `coinbase`          | 手续费收集至预先部署的费用合约地址 `0x5300000000000000000000000000000000000005`。大多数情况下，RPC 返回字段 `"miner"` 是零地址 `0x0000000000000000000000000000000000000000`。 |
+| `stateRoot`         | 状态树的根哈希，是波塞冬哈希。               |
+| `transactionsRoot ` | 交易树的根哈希。                           |
+| `receiptsRoot `     | 交易收据树的根哈希。                |
+| `logsBloom`         | 包括事件日志的数据结构。                        |
+| `difficulty`        | 始终为 1 或者 2。                                                    |
+| `number`            | 区块号。                                                  |
+| `gasLimit`          | 区块中允许的gas上限。                            |
+| `gasUsed`           | 区块中使用的gas。                                            |
+| `timestamp`         | 区块时间。                                                   |
+| `extraData`         | 由区块的签名者签名，跟随任意附加数据。 |
+| `mixHash`           | 始终为 0。                                                         |
+| `nonce`             | 始终为 0。                                                         |
+| `baseFee`           | 目前在Scroll中为空，因为我们尚未启用 EIP-1559。 |
+
+## 区块时间
+
+区块时间是指两个连续区块之间的间隔。在Scroll中，区块时间设置为 3s。减少的区块时间提升了用户体验并增强了Scroll链的可扩展性。
+
+3 秒区块时间是理想状态下，而不是协议保证或者强制执行。

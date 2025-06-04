@@ -1,0 +1,41 @@
+---
+section: gettingStarted
+date: Last Modified
+title: "Yaygın Hatalar"
+lang: "tr"
+permalink: "user-guide/common-errors/"
+excerpt: "Scroll Sepolia Test Ağı ile etkileşim kurmaya çalışırken bir hata mı görüyorsunuz? İşte bazı yaygın yapılandırma hataları ve bunları hızlıca nasıl düzeltebileceğiniz hakkında bilgiler."
+---
+
+## MetaMask'te işlem gönderirken yanlış nonce hatası
+
+MetaMask cüzdanınızda depolanan yerel nonce, Scroll Test Ağı düğümündeki nonce'tan farklı olduğunda bu hatayla karşılaşırsınız. Bunun nedeni yakın zamanda bekleyen bir işleminiz olması olabilir.
+
+Bu sorunu düzeltmek için MetaMask hesabınızı Scroll Sepolia Test Ağı için sıfırlamanız gerekir. Hesabı sıfırlamak için izlenmesi gereken adımlar şunlardır:
+
+1. Tarayıcıda **MetaMask** uzantısını açın
+2. Üst bölgede **Scroll Sepolia Test Ağı'nı** seçin
+3. Sağ üst köşedeki yuvarlak **hesap simgesine** tıklayın
+4. **Ayarlar**'ı seçin
+5. **Gelişmiş** bölümüne gidin
+6. **Hesabı sıfırla**'ya tıklayın
+
+MetaMask hesabınızı sıfırlarken hiçbir varlık kaybolmaz.
+
+:::caution[Caution]
+Bir ağı kaldırmak ve yeniden eklemek bu sorunu düzeltmek için YETERLİ DEĞİLDİR - hesabınızı sıfırlamanız gerekir.
+:::
+
+## Köprüleme/değiştirme işlemi onaylandığında hiçbir şey olmuyor ise
+
+Eğer hata veya konsol kayıtları görünmüyorsa, büyük olasılıkla bir nonce sorunu vardır. Lütfen MetaMask hesabınızı yukarıda belirtilen şekilde [sıfırlayın](/tr/user-guide/common-errors).
+
+## Blok Gezgini "Dahili sunucu hatası" gösteriyor
+
+Bir gizli pencere kullanın veya tarayıcıdan geliştirici konsolunu açıp `_explorer_key` çerezini (veya tüm çerezleri) kaldırın. [Çerezlerin nasıl kaldırılacağı hakkında bu kılavuzu inceleyin.](https://www.contentstack.com/docs/developers/how-to-guides/clear-caches-and-cookies-in-different-browsers/).
+
+## MetaMask'te maksimum Ether gönderme "Başarısız" hatası veriyor
+
+MetaMask kullanarak Ether gönderirken, "Maksimum" miktarı göndermeyi denerseniz, "Başarısız" hatasıyla sonuçlanacaktır. Bunun nedeni, MetaMask'ın, rollup'ların normal gaz ücretlerinin yanı sıra ek "L1 Ücreti"ni hesaba katmaması ve işlemin gazını ödemek için gereken küçük bir miktarın yetersiz kalmasıdır.
+
+Bunu çözmek için, ether miktarını önerilenden biraz daha az olacak şekilde manuel olarak azaltın; işlem gerçekleşecektir.

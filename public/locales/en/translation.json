@@ -48,9 +48,12 @@
       }
     },
     "NewsletterCTA": {
-      "title": "Stay updated on the latest Scroll news",
-      "placeholder": "Enter your email address",
-      "buttonText": "Sign up"
+      "title": "Stay up-to-date on the latest Scroll Developer news",
+      "text": "Roadmap updates, virtual and live events, ecosystem opportunities and more",
+      "placeholder": "your email address here",
+      "thankYouForSubscribing": "Thank you for subscribing!",
+      "correctEmail": "Please use a correct email address.",
+      "pleaseInsertEmail": "Please insert your email."
     }
   },
   "sidebar": {
@@ -66,6 +69,8 @@
       "commonErrors": "Common Errors",
       "rollupExplorer": "Rollup Explorer",
       "scrollSepoliaBlockExplorer": "Scroll Sepolia Explorer",
+      "scrollMainnet": "Scroll Mainnet",
+      "scrollscan": "Scrollscan Block Explorer",
       "sepoliaBlockExplorer": "Sepolia Explorer",
       "community": "Community",
       "discord": "Discord",
@@ -84,6 +89,7 @@
       "erc1155TokenBridge": "ERC1155 Token Bridge",
       "theScrollMessenger": "The Scroll Messenger",
       "transactionFeesOnScroll": "Transaction Fees on Scroll",
+      "toolingDeployedOnScroll": "Tooling deployed On Scroll",
       "l2Fee": "L2 Fee",
       "l1Fee": "L1 Fee",
       "gasOracle": "Gas Oracle",
@@ -91,45 +97,56 @@
       "guides": "Guides",
       "contractDeploymentTutorial": "Contract Deployment Tutorial",
       "crossChainInteraction": "Scroll Messenger Cross-chain Interaction",
+      "runningNode": "Running a Scroll Node",
       "bridgingERC20TokenThroughCustomGateway": "Bridge an ERC20 through the Custom Gateway",
       "bridgingERC721NftThroughCustomGateway": "Bridging ERC721 NFT through Custom Gateway",
       "bridgingERC1155ThroughCustomGateway": "Bridging ERC1155 through Custom Gateway",
       "estimatingGasAndTxFees": "Estimating Gas & Tx Fees",
       "resources": "Resources",
+      "mainnetResources": "Mainnet Resources",
+      "sepoliaResources": "Sepolia Resources",
+      "scrollBlockExplorer": "Scrollscan Explorer",
       "rollupExplorer": "Rollup Explorer",
       "scrollSepoliaBlockExplorer": "Scroll Sepolia Explorer",
-      "sepoliaBlockExplorer": "Sepolia Explorer"
+      "sepoliaRollupExplorer": "Rollup Explorer",
+      "sepoliaBlockExplorer": "Scrollscan Explorer",
+      "canvasBadge": "Canvas & Badge Integration"
     },
     "technology": {
       "introduction": "Introduction",
       "principles": "Principles",
       "scrollArchitecture": "Scroll Architecture",
+      "scrollUpgrades": "Scroll Upgrades",
       "overview": "Overview",
-
       "scrollChain": "Scroll Chain",
       "accountsAndState": "Accounts and State",
       "blocks": "Blocks",
       "transactions": "Transactions",
       "rollupProcess": "Rollup Process",
       "evmDifferencesFromEthereum": "EVM Differences from Ethereum",
-
       "bridge": "Bridge",
       "crossDomainMessaging": "Cross-Domain Messaging",
       "depositGateways": "Deposit Gateways",
       "withdrawGateways": "Withdraw Gateways",
-
       "sequencer": "Sequencer",
       "executionNode": "Execution Node",
       "rollupNode": "Rollup Node",
       "zkTrie": "zkTrie",
-
       "zkevm": "zkEVM",
       "introToZkevm": "Intro to zkEVM",
       "zkevmOverview": "zkEVM Overview",
       "bridgeOverview": "Bridge Overview",
       "prover": "Prover",
       "proofGeneration": "Proof Generation",
-      "cpuProverRepo": "CPU Prover Repo"
+      "cpuProverRepo": "CPU Prover Repo",
+      "security": "Security",
+      "auditsAndBugBounty": "Audits & Bug Bounty",
+      "l2BeatAssessment": "L2Beat Assessment",
+      "euclidUpgrade": "Euclid Upgrade",
+      "darwinV2Upgrade": "Darwin v2 Upgrade",
+      "darwinUpgrade": "Darwin Upgrade",
+      "curieUpgrade": "Curie Upgrade",
+      "bernoulliUpgrade": "Bernoulli Upgrade"
     },
     "learn": {
       "ethereumAndProtocols": "Ethereum & Protocols",
@@ -140,7 +157,67 @@
       "polynomialCommitmentSchemes": "Polynomial Commitment Schemes",
       "kzgCommitmentScheme": "KZG Commitment Scheme",
       "additionalResources": "Additional Resources"
+    },
+    "sdk": {
+      "overview": "Overview",
+      "scrollSdk": "Scroll SDK Introduction",
+      "faq": "Scroll SDK FAQ",
+      "technicalStack": "Technical Stack",
+      "stackOverview": "Stack Overview",
+      "configuration": "Configuration",
+      "services": "Services",
+      "smartContracts": "Smart Contracts",
+      "proofGeneration": "Proof Generation",
+      "integrations": "Integrations",
+      "guides": "Guides",
+      "devnetDeployment": "Devnet Deployment",
+      "productionDeployment": "Production Deployment",
+      "digitalOcean": "Digital Ocean & ERC20 Gas Token Testnet",
+      "customizingSdkComponents": "Customizing SDK Components",
+      "awsDeployment": "AWS Deployment",
+      "operation": "Operating a Chain",
+      "contractsVerification": "Contracts Verification",
+      "gasAndFees": "Gas & Fee Management",
+      "monitoring": "Monitoring",
+      "security": "Security and Recovery",
+      "upgrades": "Upgrading",
+      "troubleshooting": "Troubleshooting"
     }
+  },
+  "footer": {
+    "aboutScroll": {
+      "title": "About Scroll",
+      "bugBounty": "Bug Bounty",
+      "joinUs": "Join Us",
+      "healthStatus": "Health Status",
+      "privacyPolicy": "Privacy Policy",
+      "termsAndConditions": "Terms and Conditions"
+    },
+    "resources": {
+      "title": "Resources",
+      "scrollDocsURL": "https://docs.scroll.io/",
+      "blog": "Blog",
+      "documentation": "Documentation",
+      "brandKit": "Brand Kit",
+      "audits": "Audits"
+    },
+    "followUs": {
+      "title": "Follow Us"
+    }
+  },
+  "pageNotFound": {
+    "title": "Page not found",
+    "text": "We're sorry, but we couldn't find the page you were looking for."
+  },
+  "rpcTable": {
+    "rpcServerAddress": "RPC Server Address",
+    "height": "Height",
+    "latency": "Latency",
+    "score": "Score",
+    "privacy": "Privacy",
+    "addNetwork": "Add Network",
+    "connect": "Connect",
+    "sorting": "Sorting"
   },
   "notTranslated": {
     "notTranslated": "This page has not been translated yet."

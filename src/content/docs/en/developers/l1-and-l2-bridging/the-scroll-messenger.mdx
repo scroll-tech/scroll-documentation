@@ -4,7 +4,7 @@ date: Last Modified
 title: "The Scroll Messenger"
 lang: "en"
 permalink: "developers/l1-and-l2-bridging/the-scroll-messenger"
-whatsnext: { "Transaction Fees on Scroll": "/developers/transaction-fees-on-scroll/" }
+whatsnext: { "Transaction Fees on Scroll": "/en/developers/transaction-fees-on-scroll/" }
 excerpt: "The Scroll Messenger documentation for arbitrary message passing between L1 and L2."
 ---
 
@@ -24,11 +24,15 @@ the messenger smart contract deployed on L1, `L1ScrollMessenger`. To send a mess
 ## Finalizing transactions on L1
 
 Any upcoming transactions from L2 need to be finalized using the `relayMessageWithProof` function on the Scroll Messenger
-contract. We call this process "submitting an Execute Withdrawal transaction," and it is required for both sending arbitrary messages and transferring assets through a gateway or the router. When you use `relayMessageWithProof`, you'll have to provide a Merkle inclusion proof showing your transaction is included in the trie of "withdrawal" messages, along with other parameters. Producing this proof and these values can be done locally and permissionlessly, but at the moment, the easiest way to retrieve these parameters is through our backend API hosted at https://sepolia-api-bridge.scroll.io/api/.
+contract. We call this process "submitting an Execute Withdrawal transaction," and it is required for both sending arbitrary messages and transferring assets through a gateway or the router. When you use `relayMessageWithProof`, you'll have to provide a Merkle inclusion proof showing your transaction is included in the trie of "withdrawal" messages, along with other parameters. Producing this proof and these values can be done locally and permissionlessly, but at the moment, the easiest way to retrieve these parameters is through our backend APIs:
+
+- Scroll Sepolia API: https://sepolia-api-bridge-v2.scroll.io/api/
+- Scroll API: https://mainnet-api-bridge-v2.scroll.io/api/
 
 <Aside type="danger" title="Experimental API">
   This API was made for our Bridge UI. It is not yet finalized and may change in the future. We will update this guide
-  when the API is finalized.
+  when the API is finalized. Additionally, all examples below use the Sepolia API service -- the calls should be easily
+  adapted to work on mainnet.
 </Aside>
 
 Supply the address of the EOA or contract responsible for initiating the original transaction on L2 to the `/claimable`

@@ -4,10 +4,11 @@ date: Last Modified
 title: "Cross-Domain Messaging"
 lang: "en"
 permalink: "technology/bridge/cross-domain-messaging"
-whatsnext: { "Deposit Gateways": "/technology/bridge/deposit-gateways/" }
+whatsnext: { "Deposit Gateways": "/en/technology/bridge/deposit-gateways/" }
 ---
 
 import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import Aside from "../../../../../components/Aside.astro"
 import ToggleElement from "../../../../../components/ToggleElement.astro"
 
 import L1ToL2 from "../_images/L1-to-L2.png"
@@ -21,6 +22,10 @@ Scroll has an arbitrary message passing bridge that enables token transfers and 
 <ClickToZoom src={L1ToL2} alt="L1 to L2 workflow" caption="Figure 1. L1 to L2 message relay workflow" />
 
 There are two primary approaches to sending a message from L1 to L2: sending arbitrary messages via `L1ScrollMessenger` and sending enforced transactions via `EnforcedTxGateway`. Both approaches allow users to initiate a L2 transaction on L1 and call arbitrary contracts on L2. For arbitrary messages, the sender of the L2 transactions is the aliased `L1ScrollMessenger` address. For enforced transactions, the L2 sender is an externally-owned account (EOA). In addition, we provide several standard token gateways to make it easier for users to deposit ETH and other standard tokens including ERC-20, ERC-677, ERC-721, and ERC-1155. In essence, these gateways encode token deposits into a message and send it to their counterparts on L2 through the `L1ScrollMessenger` contract. You can find more details about the L1 token gateways in the [Deposit Gateways](/technology/bridge/deposit-gateways).
+
+<Aside type="danger" title="">
+Enforced Transactions are not yet enabled on Scroll. In future upgrades, users will be able to use this functionality to bypass the `L1ScrollMessenger` and send messages directly to the `L1MessageQueue`.
+</Aside>
 
 As depicted in Figure 1, both arbitrary messages and enforced transactions are appended to the message queue stored in the `L1MessageQueue` contract. The `L1MessageQueue` contract provides two functions `appendCrossDomainMessage` and `appendEnforcedTransaction` for appending arbitrary messages and enforced transactions respectively.
 
@@ -55,7 +60,7 @@ Both functions construct an L1-initiated transaction with a new transaction type
 - `appendCrossDomainMessage` can be only called by `L1ScrollMessenger` and it uses the [aliased address](#address-alias) of `msg.sender`, which will be the address of `L1ScrollMessenger`, as the transaction sender.
 - `appendEnforcedTransaction` can be only called by `EnforcedTxGateway` and it uses `sender` from the function parameter as the transaction sender. This allows users to enforce a withdrawal or transfer of ETH from their L2 accounts directly through the L1 bridge.
 
-After the transaction is successfully executed on L1, the watcher in the Scroll sequencer that monitors the `L1MessageQueue` contract collects the new `QueueTransaction` events from L1 blocks. The sequencer then constructs a new `L1MessageTx` transaction per event and appends them to its local L1 transaction queue. When constructing a new L2 block, the sequencer includes the transactions from both its L1 transaction queue and its L2 mempool. Note that the L1 message transactions must be included sequentially based on the L1 message queue order in the `L1MessageQueue` contract. `L1MessageTx` transactions always come first in the L2 blocks followed by L2 transactions. Currently, we limit the number of `L1MessageTx` transactions in a L2 block to `NumL1MessagesPerBlock` (currently set to 10).
+After the transaction is successfully executed on L1, the watcher in the Scroll sequencer that monitors the `L1MessageQueue` contract collects the new `QueueTransaction` events from L1 blocks. The sequencer then constructs a new `L1MessageTx` transaction per event and appends them to its local L1 transaction queue. When constructing a new L2 block, the sequencer includes the transactions from both its L1 transaction queue and its L2 mempool. Note that the L1 message transactions must be included sequentially based on the L1 message queue order in the `L1MessageQueue` contract. `L1MessageTx` transactions always come first in the L2 blocks followed by L2 transactions. Currently, we limit the number of `L1MessageTx` transactions in an L2 block to `NumL1MessagesPerBlock` (currently set to 10).
 
 Next, we will expand more on the specific process of sending arbitrary messages via `L1ScrollMessenger` and sending enforced transactions via `EnforcedTxGateway`.
 
@@ -93,7 +98,7 @@ function sendMessage(
 </ToggleElement>
 
 
-Both functions require users to provide a gas limit for the corresponding `L1MessageTx` transaction on L2 and prepay the [message relay fee](#message-relay-fee) on L1, which is calculated based on the gas limit amount. The fee is collected to a `feeVault` contract on L1. In case the transaction fails on L2 because the user did not set the correct gas limit for their message on L1, the user can replay the same message with a higher gas limit. You can find more details in the [Retrying failed messages](#retrying-failed-messages) section.
+Both functions require users to provide a gas limit for the corresponding `L1MessageTx` transaction on L2 and prepay the [message relay fee](#message-relay-fee) on L1, which is calculated based on the gas limit amount. The fee is collected to a `feeVault` contract on L1. In case the transaction fails on L2 because the user did not set the correct gas limit for their message on L1, the user can replay the same message with a higher gas limit. You can find more details in the [Retrying failed messages](#retrying-failed-messages) section, but since any unused portion of these fees is refunded to the user, there is no penalty for overestimating the gas limit.
 
 The `sendMessage` functions encode the arguments into a cross-domain message (see the code snippet below), where the message nonce is the next queue index of the L1 message queue. The encoded data is then used as calldata in the `L1MessageTx` transaction executed on L2. Note that such cross-domain messages always call the `relayMessage` function of the `L2ScrollMessenger` contract on L2.
 
@@ -111,6 +116,10 @@ abi.encodeWithSignature(
 The deposited ETH of `value` amount is locked in the `L1ScrollMessenger` contract. If the amount of ETH in the message cannot cover the message relay fee and the deposited amount, the transaction will be reverted. The `L1ScrollMessenger` contract will refund the excess amount to the designated `refundAddress` or the transaction sender otherwise. Finally, `L1ScrollMessenger` appends the cross-domain message to `L1MessageQueue` via the `appendCrossDomainMessage` method.
 
 ### Sending Enforced Transactions
+
+<Aside type="danger" title="">
+Enforced Transactions are not yet enabled on Scroll. In future upgrades, users will be able to use this functionality to bypass the `L1ScrollMessenger` and send messages directly to the `L1MessageQueue`.
+</Aside>
 
 The `EnforcedTxGateway` contract provides two `sendTransaction` functions to send an enforced transaction. In the first function, the sender of the generated `L1MessageTx` transaction is the transaction sender. On the other hand, the second function uses the passed `sender` address as the sender of the `L1MessageTx` transaction. This allows a third party to send an enforced transaction on behalf of the user and pay the relay fee. Note that the second function requires providing a valid signature of the generated `L1MessageTx` transaction that matches the `sender` address. Both `sendTransaction` functions enforce the sender to be an EOA account.
 
@@ -153,7 +162,7 @@ Similar to arbitrary message relaying, `sendTransaction` deducts the message rel
 
 ### Retrying Failed Messages
 
-If a `L1MessageTx` transaction fails on L2 due to insufficient gas, users can replay the message with a higher gas limit. `L1ScrollMessenger` provides the method `replayMessage` that allows users to send the same information as the previous failed message with a higher gas limit. This message will become a new `L1MessageTx` transaction on L2. Note that we won't refund the gas fee for the previous failed transaction as it is already processed on L2.
+If an `L1MessageTx` transaction fails on L2 due to insufficient gas, users can replay the message with a higher gas limit. `L1ScrollMessenger` provides the method `replayMessage` that allows users to send the same information as the previous failed message with a higher gas limit. This message will become a new `L1MessageTx` transaction on L2. Note that we won't refund the gas fee for the previous failed transaction as it is already processed on L2.
 
 <ToggleElement anchor="replayMessage function signature">
 <div slot="title"><code>replayMessage</code> function signature</div>
@@ -184,6 +193,13 @@ Because the `L2ScrollMessenger` contract records all L1 messages that were succe
 ### Message Relay Fee
 
 The contract `L2GasPriceOracle` deployed on L1 computes the relay fee of a message given its gas limit. This contract stores the `l2BaseFee` in its storage, which is updated by a dedicated relayer run by Scroll currently. The relay fee of L1-to-L2 messages is `gasLimit * l2BaseFee`.
+
+<Aside type="tip" title="Upgrade Notice">
+During the February 2024 Bridge Upgrade, `L2GasPriceOracle` will be deprecated, with its functionality moved into the `L1MessageQueueWithGasPriceOracle` contract.
+
+The upgrade is expected to be finalized on February 21, 2024, after a two-week timelock. Scroll Sepolia has already undergone this upgrade. Read more [here](https://scroll.io/blog/protocol-upgrade-bridging-cost-reduction).
+
+</Aside>
 
 ### Address Alias
 

@@ -1,0 +1,62 @@
+---
+section: technology
+date: Last Modified
+title: "zkEVM 概览"
+lang: "zh"
+permalink: "technology/zkevm-overview"
+excerpt: "为了了解如何构建 zkEVM 来证明 EVM 的执行，我们需要首先回到 EVM 本身。"
+whatsnext: { "跨链桥概览": "/zh/technology/bridge/bridge-overview" }
+---
+
+import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import zkevm1 from "../_images/zkevm1.png"
+import zkevm2 from "../_images/zkevm2.png"
+import zkevm3 from "../_images/zkevm3.png"
+
+## EVM
+
+为了了解如何构建 zkEVM 来证明 EVM 的执行，我们需要首先回到 EVM 本身
+
+EVM 可以建模为一个状态转换函数。它指定了一个转换函数，该函数 `f` 在给定初始世界状态和交易 `T` 的情况下，输出一个新的世界状态 `S’`：`f(S,T) = S'`。
+
+“世界状态”被建模为[修改版本的默克尔-帕特里夏树（MPT）](https://ethereum.org/en/developers/docs/data-structures-and-encoding/patricia-merkle-trie/) 。
+其中包含网络的所有持久性数据。这包括所有外部所有账户 （EOA） 和智能合约账户的信息。智能合约账户具有保存智能合约字节码和持久存储的子树。
+
+EVM 通过执行新的交易计算生成计算结果，并相应对世界状态进行更改。EVM 计算适用于瞬态数据存储（堆栈和内存）以及持久数据存储（合约字节码和存储）。
+
+<ClickToZoom src={zkevm1} />
+
+由单个交易触发的计算将被分解为称为“操作码”的小型机器指令，EVM 可以直接理解和执行这些指令。每个操作码的表现在[以太坊黄皮书](https://ethereum.github.io/yellowpaper/paper.pdf)中都有规定。因此，交易的执行可以用“执行踪迹（execution trace）”来概括，它只是操作码执行的有序列表。
+以太坊执行客户端（例如 [Geth](https://geth.ethereum.org/)）可以显式输出其所执行计算的分步执行踪迹。
+
+<ClickToZoom src={zkevm2} />
+
+当操作码被执行时，状态树会发生变化。这会产生具有新状态根的新状态树。
+
+## 证明 EVM 执行
+
+zkEVM 的目标是生成证明，确保交易执行的有效性。
+换言之，给定一个初始世界状态 `S`、一个交易 `T` 和一个由此产生的世界状态 `S'`，zkEVM 必须证明 `f(S,T) = S'` ，其中 `f` 是以太坊黄皮书中指定的状态转换函数。
+
+为了证明转换函数执行的有效性，我们将交易执行分解为分步执行踪迹。
+`f(S,T)` 的执行将展开为按顺序执行的操作码执行列表。
+执行跟踪可以视为“见证”，证明状态转换 `f(S,T) = S'` 的正确性 - 从某种意义上说，踪迹是状态如何从 `S` 到 `S'` 的逐步分解。
+
+然后，问题被简化为证明以下内容：
+
+- 执行踪迹是 _正确的_.
+  - 每个单独的操作码都根据以太坊黄皮书规范正确执行。
+    - 例如， `ADD` 操作码必须从堆栈中弹出两个值，并将其总和推送到堆栈。
+    - 证明必须证明每个操作码都以正确的行为执行，包括对瞬态数据存储（堆栈和内存）或持久数据存储（合约字节码和存储）的任何更改。
+  - 正在执行的操作码的有序列表本质上是正确的由交易触发的操作码列表。
+    - 这包括正确加载初始交易调用数据，以及任何调用的合约的字节码。
+- 执行踪迹从初始状态 `S` 开始，结果为状态 `S'`。
+
+<ClickToZoom src={zkevm3} />
+
+在后续章节中，我们将深入探讨如何证明 EVM 执行跟踪的正确性。
+
+## 了解更多
+
+- Cypherpunks 中关于 EVM 的 [GitBook 章节](https://cypherpunks-core.github.io/ethereumbook/13evm.html) 
+- [zkEVM 概览](https://youtu.be/NHwd-gJ8xg4) - Haichen Shen

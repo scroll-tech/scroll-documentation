@@ -1,0 +1,156 @@
+---
+import SectionHeader from "~/components/SectionHeader/index.astro"
+import LinkArrowSvg from "~/assets/svgs/home/home-link-arrow.svg?raw"
+import DiscordSvg from "~/assets/svgs/home/Discord.svg?raw"
+import ForumSvg from "~/assets/svgs/home/Forum.svg?raw"
+import ContributeSvg from "~/assets/svgs/home/Contribute.svg?raw"
+import NoteSvg from "~/assets/svgs/home/Note.svg?raw"
+
+const mediaList = [
+  {
+    icon: DiscordSvg,
+    name: "加入我们的 Discord",
+    content: "与其他 Scroll 开发者和用户建立联系",
+    link: "https://discord.gg/scroll",
+  },
+  {
+    icon: NoteSvg,
+    name: "获取支持",
+    content: "如果您需要更多的支持，请直接联系我们。",
+    link: "https://tally.so/r/waxLBW",
+  },
+  {
+    icon: ForumSvg,
+    name: "社区论坛",
+    content: "讨论并提出对 Scroll 核心协议的更改。",
+    link: "http://community.scroll.io/",
+  },
+  {
+    icon: ContributeSvg,
+    name: "为Scroll贡献",
+    content: "与其他开发者一起构建。",
+    link: "https://github.com/scroll-tech/contribute-to-scroll",
+  },
+]
+---
+
+<div class="connect-us">
+  <SectionHeader title="联系我们" content="随时了解来自 Scroll 社区的最新新闻和发展信息。" />
+  <div class="medias">
+    {
+      mediaList.map(({ icon, name, content, link }) => (
+        <a class="media-item" href={link} target="_blank">
+          <div class="media-item-header">
+            <span class="media-item-link">
+              <Fragment set:html={LinkArrowSvg} />
+            </span>
+            <span class="media-item-icon">
+              <Fragment set:html={icon} />
+            </span>
+          </div>
+
+          <span class="media-item-title">{name}</span>
+          <span class="media-item-content">{content}</span>
+        </a>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .connect-us {
+    margin-top: 155px;
+  }
+
+  .medias {
+    display: flex;
+    gap: 1.6rem;
+    margin-top: 90px;
+  }
+  .media-item {
+    width: 325px;
+    height: 325px;
+    padding: 30px;
+    border-radius: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    @apply bg-normal dark:bg-dark-normal;
+  }
+
+  .media-item:hover {
+    @apply bg-highlight dark:bg-dark-highlight;
+  }
+
+  .media-item-header {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .media-item-link {
+    width: 23px;
+    height: 23px;
+    background-size: contain;
+    align-self: flex-end;
+    @apply text-black dark:text-white-800;
+  }
+
+  .media-item-icon {
+    display: inline-flex;
+    width: 35px;
+    height: 35px;
+    align-items: center;
+  }
+  .media-item-title {
+    font-size: 22px;
+    font-weight: 600;
+    margin-top: 22px;
+    line-height: normal;
+    margin-bottom: 6px;
+  }
+  .media-item-content {
+    font-size: 20px;
+    line-height: normal;
+    height: 84px;
+  }
+
+  @media screen and (max-width: 50em) {
+    .connect-us {
+      margin-top: 112px;
+    }
+    .medias {
+      flex-direction: column;
+      gap: 3rem;
+    }
+    .media-item {
+      width: 100%;
+      height: 150px;
+      padding: 20px;
+    }
+    .media-item-header {
+      flex-direction: row-reverse;
+      flex: unset;
+    }
+    .media-item-link {
+      width: 13px;
+      height: 13px;
+      align-self: flex-start;
+    }
+    .media-item-icon {
+      width: 26px;
+      height: 26px;
+    }
+    .media-item-title {
+      font-size: 20px;
+      margin-top: 8px;
+      margin-bottom: 0px;
+    }
+    .media-item-content {
+      font-size: 16px;
+      height: auto;
+    }
+  }
+</style>

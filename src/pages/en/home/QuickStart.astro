@@ -1,10 +1,18 @@
 ---
 import SectionHeader from "~/components/SectionHeader/index.astro"
+import EtherSvg from "~/assets/svgs/home/EthersJS.svg?raw"
+
 const toolList = [
   { icon: "/svgs/Hardhat.svg", name: "Hardhat", link: "https://hardhat.org/", quickstartAnchor: "hardhat" },
   { icon: "/svgs/Foundry.svg", name: "Foundry", link: "https://getfoundry.sh/", quickstartAnchor: "foundry" },
   { icon: "/svgs/Remix.svg", name: "Remix", link: "https://remix-project.org/", quickstartAnchor: "remix-web-ide" },
-  { icon: "/svgs/EthersJS.svg", name: "EthersJS", link: "https://ethers.org/", quickstartAnchor: "ethersjs" },
+  {
+    icon: EtherSvg,
+    color: "text-[#2A4B78] dark:text-white-800",
+    name: "EthersJS",
+    link: "https://ethers.org/",
+    quickstartAnchor: "ethersjs",
+  },
   { icon: "/svgs/Brownie.svg", name: "Brownie", link: "https://github.com/eth-brownie", quickstartAnchor: "brownie" },
   { icon: "/svgs/Truffle.svg", name: "Truffle", link: "https://trufflesuite.com/", quickstartAnchor: "truffle" },
 ]
@@ -17,10 +25,10 @@ const toolList = [
   />
   <div class="tools">
     {
-      toolList.map(({ icon, name, quickstartAnchor }) => (
-        <a href={`/en/developers/developer-quickstart#${quickstartAnchor}`} class="tools-item">
-          <figure>
-            <img src={icon} alt={name} />
+      toolList.map(({ icon, name, quickstartAnchor, color }) => (
+        <a href={`/en/developers/developer-quickstart#${quickstartAnchor}`} class={`tools-item ${color}`}>
+          <figure class={color ? "p-[18px]" : ""}>
+            {color ? <Fragment set:html={icon} /> : <img src={icon} alt={name} />}
           </figure>
           <span>{name}</span>
         </a>
@@ -49,10 +57,14 @@ const toolList = [
     justify-content: center;
     align-items: center;
     border-radius: 50%;
-    background-color: #fff0dd;
+    @apply bg-normal dark:bg-dark-normal;
   }
   .tools-item figure:hover {
-    background-color: #ffdeb5;
+    @apply dark:bg-dark-highlight;
+  }
+
+  .tools-item figure svg {
+    width: 80% !important;
   }
   .tools-item span {
     font-size: 20px;
@@ -68,7 +80,6 @@ const toolList = [
       justify-content: center;
       align-items: center;
       border-radius: 50%;
-      background-color: #fff0dd;
     }
 
     .tools-item figure img {

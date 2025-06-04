@@ -7,6 +7,8 @@ excerpt: "Learn more about Ethereum scalability and zero knowledge cryptography.
 ---
 
 import NavCard from "../../../../components/NavCard.astro"
+import TechnologySvg from "../../../../assets/svgs/home/home-technology.svg?raw"
+import LearnSvg from "../../../../assets/svgs/home/home-learn.svg?raw"
 
 Scroll reúne la investigación y la ingeniería de protocolos blockchain y criptografía zero knowledge. Si quieres profundizar más, sigue leyendo y consulta los recursos adicionales.
 
@@ -14,13 +16,13 @@ Scroll reúne la investigación y la ingeniería de protocolos blockchain y crip
 
 <div class="navs" class="flex flex-col flex-wrap items-center md:flex-row md:gap-8 md:items-start">
   <NavCard
-    icon="/svgs/home-technology.svg"
+    icon={TechnologySvg}
     name="Ethereum y Protocolos"
     content="Comprende el ecosistema de Ethereum y cómo encaja Scroll en él."
     link="/es/learn/the-scalability-problem"
   />
   <NavCard
-    icon="/svgs/home-learn.svg"
+    icon={LearnSvg}
     name="Zero Knowledge"
     content="Conozca la criptografía zero knowledge y sus aplicaciones."
     link="/es/learn/zero-knowledge/introduction-to-zero-knowledge"

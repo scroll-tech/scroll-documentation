@@ -4,7 +4,7 @@ date: Last Modified
 title: "ETH and ERC20 Token Bridge"
 lang: "en"
 permalink: "developers/l1-and-l2-bridging/eth-and-erc20-token-bridge"
-whatsnext: { "ERC721 NFT Bridge": "/developers/l1-and-l2-bridging/erc721-nft-bridge/" }
+whatsnext: { "ERC721 NFT Bridge": "/en/developers/l1-and-l2-bridging/erc721-nft-bridge/" }
 excerpt: "The Gateway Router allows ETH and ERC20 token bridging from L1 to L2 using the depositETH and depositERC20 functions respectively."
 ---
 
@@ -23,18 +23,17 @@ The Gateway Router allows ETH and ERC20 token bridging from L1 to L2 using the `
 When bridging ERC20 tokens, you don’t have to worry about selecting the right Gateway. This is because the `L1GatewayRouter` will choose the correct underlying entry point to send the message:
 
 - **`L1StandardERC20Gateway`:** This Gateway permits any ERC20 deposit and will be selected as the default by the L1GatewayRouter for an ERC20 token that doesn’t need custom logic on L2. On the very first token bridging, a new token will be created on L2 that implements the ScrollStandardERC20. To bridge a token, call the `depositERC20` function on the `L1GatewayRouter`.
-- **`L1CustomERC20Gateway`:** This Gateway will be selected by the `L1GatewayRouter` for tokens with custom logic. For an L1/L2 token pair to work on the Scroll Custom ERC20 Bridge, the L2 token contract has to implement `IScrollStandardERC20`. Additionally, the token should grant `mint` or `burn` capability to the `L2CustomERC20Gateway`. Visit the [Bridge an ERC20 through the Custom Gateway](/developers/developer-guides/bridge-erc20-through-the-custom-gateway) guide for a step-by-step example of how to bridge a custom token.
+- **`L1CustomERC20Gateway`:** This Gateway will be selected by the `L1GatewayRouter` for tokens with custom logic. For an L1/L2 token pair to work on the Scroll Custom ERC20 Bridge, the L2 token contract has to implement `IScrollStandardERC20`. Additionally, the token should grant `mint` or `burn` capability to the `L2CustomERC20Gateway`. Visit the [Bridge an ERC20 through the Custom Gateway](/developers/guides/bridge-erc20-through-the-custom-gateway) guide for a step-by-step example of how to bridge a custom token.
 
 All Gateway contracts will form the message and send it to the `L1ScrollMessenger` which can send arbitrary messages to L2. The `L1ScrollMessenger` passes the message to the `L1MessageQueue`. Any user can send messages directly to the Messenger to execute arbitrary data on L2. This means they can execute any function on L2 from a transaction made on L1 via the bridge. Although an application could directly pass messages to existing token contracts, the Gateway abstracts the specifics and simplifies making transfers and calls.
 
 <Aside type="tip" title="">
-  Users can also bypass the `L1ScrollMessenger` and send messages directly to the `L1MessageQueue`. If a message is sent
+  In future upgrades, users will be able to bypass the `L1ScrollMessenger` and send messages directly to the `L1MessageQueue`. If a message is sent
   via the `L1MessageQueue`, the transaction's sender will be the address of the user sending the transaction, not the
-  address of the `L1ScrollMessenger`. Learn more about sending arbitrary messages in the [Scroll
-  Messenger](/developers/l1-and-l2-bridging/the-scroll-messenger) article.
+  address of the `L1ScrollMessenger`. 
 </Aside>
 
-When a new block gets created on L1, the Watcher will detect the message on the `L1MessageQueue` and will pass it to the Relayer service, which will submit the transaction to the L2 via the l2geth node. Finally, the l2geth node will pass the transaction to the `L2ScrollMessagner` contract for execution on L2.
+When a new block gets created on L1, the Watcher will detect the message on the `L1MessageQueue` and will pass it to the Relayer service, which will submit the transaction to the L2 via the l2geth node. Finally, the l2geth node will pass the transaction to the `L2ScrollMessenger` contract for execution on L2.
 
 ## Withdraw ETH and ERC20 tokens from L2
 
@@ -54,7 +53,7 @@ The L2 Gateway is very similar to the L1 Gateway. We can withdraw ETH and ERC20 
 
 ## Creating an ERC20 token with custom logic on L2
 
-If a token needs custom logic on L2, it will need to be bridged through a `L1CustomERC20Gateway` and `L2CustomERC20Gateway` respectively. The custom token on L2 will need to give permission to the Gateway to mint new tokens when a deposit occurs and to burn when tokens are withdrawn
+If a token needs custom logic on L2, it will need to be bridged through an `L1CustomERC20Gateway` and `L2CustomERC20Gateway` respectively. The custom token on L2 will need to give permission to the Gateway to mint new tokens when a deposit occurs and to burn when tokens are withdrawn
 
 The following interface is the `IScrollStandardERC20` needed for deploying tokens compatible with the `L2CustomERC20Gateway` on L2.
 
@@ -77,7 +76,7 @@ interface IScrollStandardERC20 {
   /// @param _amount The amount of token to mint.
   function mint(address _to, uint256 _amount) external;
 
-  /// @notice Mint some token from account.
+  /// @notice Burn some token from account.
   /// @dev Gateway Utilities, only gateway contract can call
   /// @param _from The address of account to burn token.
   /// @param _amount The amount of token to mint.
@@ -105,7 +104,7 @@ Sends ETH from L1 to L2.
 | --------- | --------------------------------------------------------------------------------------------------------------------------- |
 | to        | The address of recipient's account on L2.                                                                                   |
 | amount    | The amount of token to transfer, in wei.                                                                                    |
-| gasLimit  | Gas limit required to complete the deposit on L2. From 4000 to 10000 gas limit should be enough to process the transaction. |
+| gasLimit  | Gas limit required to complete the deposit on L2. 170000 should be enough to process the transaction, but unused funds are refunded. |
 
 ### depositERC20
 
@@ -120,7 +119,7 @@ Sends ERC20 tokens from L1 to L2.
 | token     | The token address on L1.                                                                                                    |
 | to        | The address of recipient's account on L2.                                                                                   |
 | amount    | The amount of token to transfer, in wei.                                                                                    |
-| gasLimit  | Gas limit required to complete the deposit on L2. From 4000 to 10000 gas limit should be enough to process the transaction. |
+| gasLimit  | Gas limit required to complete the deposit on L2. 200000 should be enough to process the transaction, depending on the Gateway, but unused funds are refunded. |
 
 ### getL2ERC20Address
 

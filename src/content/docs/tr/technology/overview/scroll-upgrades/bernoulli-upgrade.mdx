@@ -1,0 +1,104 @@
+---
+section: technology
+date: Last Modified
+title: "Bernoulli Upgrade"
+lang: "tr"
+permalink: "technology/overview/scroll-upgrades/bernoulli-upgrade"
+---
+
+### Genel Bakış
+
+Bu yükseltme, EIP-4844 veri blob'ları desteği ve SHA2-256 ön derlemesi ile işlem maliyetlerini önemli ölçüde azaltır.
+
+### Zaman Çizelgesi
+
+- **Scroll Sepolia**
+  - Ağ Yükseltmesi: 15 Nisan 2024
+- **Scroll Mainnet**
+  - Başlangıç: 15 Nisan 2024
+  - Timelock tamamlanması ve yükseltme: 29 Nisan 2024
+
+### Teknik Detaylar
+
+#### Sözleşme Değişiklikleri
+
+- PR: [Burada](https://github.com/scroll-tech/scroll/pull/1179)  
+- Düzeltmeler: [Burada](https://github.com/scroll-tech/scroll/pulls?q=is%3Apr+created%3A2024-04-10..2024-04-11+fix+in%3Atitle+label%3Abug)
+
+Ana değişiklikler:
+
+- `ScrollChain` artık `calldata` veya blob ile batch kabul eder.
+- `finalizeBatchWithProof4844` fonksiyonu eklendi.
+- `MultipleVersionRollupVerifier` farklı versiyonları destekler.
+
+#### Node Güncellemeleri
+
+Node sürümü: `v5.3.0`  
+[Günlükler](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.3.0)
+
+#### zkEVM Circuit Güncellemeleri
+
+Sürüm: `v0.10.3`  
+[Günlükler](https://github.com/scroll-tech/zkevm-circuits/releases/tag/v0.10.3)
+
+#### Denetimler
+
+- [OpenZeppelin](https://blog.openzeppelin.com/scroll-eip-4844-support-audit)
+- [Trail of Bits](https://github.com/trailofbits/publications/blob/master/reviews/2024-04-scroll-4844-blob-securityreview.pdf)
+
+### Uyumluluk
+
+#### l2geth Nodeları
+
+Bu yükseltme hard fork'tur. Yükseltme öncesi güncelleme gerekir.  
+[Node releases](https://github.com/scroll-tech/go-ethereum/releases)
+
+#### Indexleyiciler ve Köprüler
+
+Veri formatı değişti. [Yeni format](/en/technology/chain/rollup/#codec) incelenmeli.
+
+- `BlockContext` değişmez.
+- `Chunks` artık L2 tx verisi içermez, blob'tadır.
+- `BatchHeader` içinde `BlobVersionedHash` var.
+
+#### Proverlar
+
+Yükseltme gerektirir. [zkevm-circuits](https://github.com/scroll-tech/zkevm-circuits) değişti.
+
+---
+
+## Köprü Yükseltmesi
+
+### Genel Bakış
+
+Köprü sözleşmelerinde gaz optimizasyonları:
+
+- `immutable` kullanımı artırıldı.
+- `L1MessageQueue` daha basit gaz tahmini kullanıyor.
+- `L1MessageQueue` ve `L2GasPriceOracle` birleşti.
+
+### Zaman Çizelgesi
+
+- **Scroll Sepolia:** 19 Ocak 2024  
+- **Scroll Mainnet:** 7-21 Şubat 2024
+
+### Teknik Detaylar
+
+- [PR](https://github.com/scroll-tech/scroll/pull/1011)
+- [Audit düzeltmeleri](https://github.com/scroll-tech/scroll/pulls?q=OZ+is%3Apr+created%3A2024-01-27..2024-02-10)
+
+#### Denetim
+
+- [OpenZeppelin](https://blog.openzeppelin.com/scroll-bridge-gas-optimizations-audit)
+
+### Uyumluluk
+
+##### l2geth Nodeları
+
+Yükseltme gerekmez.
+
+##### Dapps ve Indexçiler
+
+Çoğu değişiklik dahili.  
+`L2GasPriceOracle` devre dışı kalacak.  
+Yeni adres: [`L1MessageQueueWithGasPriceOracle`](https://etherscan.io/address/0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B)

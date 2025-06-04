@@ -5,7 +5,7 @@ title: "Polynomial Commitment Schemes"
 lang: "en"
 permalink: "learn/zero-knowledge/polynomial-commitment-schemes"
 excerpt: "Polynomial commitment schemes are a core building block of zero knowledge proof system"
-whatsnext: { "KZG Commitment Scheme": "/learn/zero-knowledge/kzg-commitment-scheme" }
+whatsnext: { "KZG Commitment Scheme": "/en/learn/zero-knowledge/kzg-commitment-scheme" }
 ---
 
 Polynomial commitment schemes are a core building block of zero knowledge proof systems (as well as other cryptographic protocols).
@@ -18,7 +18,7 @@ A **[commitment scheme](https://en.wikipedia.org/wiki/Commitment_scheme)** is a 
 
 Secure commitment schemes have two properties:
 
-1. **Binding**: once publishing the commitment $c$, the committer should not be able to find some other value $v’$ distinct from $v$ that also corresponds to $c$. I.e., the commitment $c$ binds the committer to his original value $v$.
+1. **Binding**: once publishing the commitment $c$, the committer should not be able to find some other value $v’$ distinct from $v$ that also corresponds to $c$. I.e., the commitment $c$ binds the committer to the original value $v$.
 2. **Hiding**: the verifier should not be able to learn any information about the original value $v$ from the commitment $c$. I.e., the commitment $c$ hides all information about the original value $v$.
 
 ## Polynomial commitment schemes

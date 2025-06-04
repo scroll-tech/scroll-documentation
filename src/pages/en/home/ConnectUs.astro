@@ -1,21 +1,25 @@
 ---
 import SectionHeader from "~/components/SectionHeader/index.astro"
+import LinkArrowSvg from "~/assets/svgs/home/home-link-arrow.svg?raw"
+import DiscordSvg from "~/assets/svgs/home/Discord.svg?raw"
+import ContributeSvg from "~/assets/svgs/home/Contribute.svg?raw"
+import NoteSvg from "~/assets/svgs/home/Note.svg?raw"
 
 const mediaList = [
   {
-    icon: "/svgs/Discord.svg",
+    icon: DiscordSvg,
     name: "Join our Discord",
     content: "Connect with other Scroll developers and users.",
     link: "https://discord.gg/scroll",
   },
   {
-    icon: "/svgs/Forum.svg",
-    name: "Community Forum",
-    content: "Discuss and propose changes to Scroll’s core protocols.",
-    link: "http://community.scroll.io/",
+    icon: NoteSvg,
+    name: "Get in touch",
+    content: "Reach out directly if you need more support for your project.",
+    link: "https://tally.so/r/waxLBW",
   },
   {
-    icon: "/svgs/Contribute.svg",
+    icon: ContributeSvg,
     name: "Contribute to Scroll",
     content: "Build with other developers.",
     link: "https://github.com/scroll-tech/contribute-to-scroll",
@@ -33,11 +37,12 @@ const mediaList = [
       mediaList.map(({ icon, name, content, link }) => (
         <a class="media-item" href={link} target="_blank">
           <div class="media-item-header">
-            <span class="media-item-link" />
-            <span
-              class="media-item-icon"
-              style={{ background: `url(${icon}) center no-repeat`, backgroundSize: "contain" }}
-            />
+            <span class="media-item-link">
+              <Fragment set:html={LinkArrowSvg} />
+            </span>
+            <span class="media-item-icon">
+              <Fragment set:html={icon} />
+            </span>
           </div>
 
           <span class="media-item-title">{name}</span>
@@ -55,23 +60,22 @@ const mediaList = [
 
   .medias {
     display: flex;
-    gap: 3rem;
+    gap: 1.6rem;
     margin-top: 90px;
   }
   .media-item {
-    width: 325px;
+    flex: 1;
     height: 325px;
     padding: 30px;
     border-radius: 25px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-
-    background-color: #fff0dd;
+    @apply bg-normal dark:bg-dark-normal;
   }
 
   .media-item:hover {
-    background-color: #ffdeb5;
+    @apply bg-highlight dark:bg-dark-highlight;
   }
 
   .media-item-header {
@@ -85,15 +89,16 @@ const mediaList = [
   .media-item-link {
     width: 23px;
     height: 23px;
-    background: url(/svgs/home-link-arrow.svg) center no-repeat;
     background-size: contain;
     align-self: flex-end;
+    @apply text-black dark:text-white-800;
   }
 
   .media-item-icon {
-    display: inline-block;
+    display: inline-flex;
     width: 35px;
     height: 35px;
+    align-items: center;
   }
   .media-item-title {
     font-size: 22px;
@@ -105,7 +110,7 @@ const mediaList = [
   .media-item-content {
     font-size: 20px;
     line-height: normal;
-    height: 56px;
+    height: 84px;
   }
 
   @media screen and (max-width: 50em) {

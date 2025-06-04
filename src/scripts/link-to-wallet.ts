@@ -182,7 +182,7 @@ const addChainToWallet = async (chainId: string, ethereum: MetaMaskInpageProvide
 }
 
 /**
- * Functions which validates the format of Link address and interfacs with the contract to make sure
+ * Functions which validates the format of Link address and interacts with the contract to make sure
  * its metadata (e.g.: symbol) is valid
  * @param address
  * @param provider
@@ -246,7 +246,7 @@ try {
   }
 
   // Detect when user initiates the chain switch from the webapp
-  // variable chainFromSwitch used to diffenrentiate when user switch the chain
+  // variable chainFromSwitch used to differentiate when user switch the chain
   // directly from wallet
   let chainFromSwitch: string
   window.addEventListener(initChainChangeEventName, (evt: any) => {

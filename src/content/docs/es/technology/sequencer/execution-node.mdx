@@ -72,7 +72,7 @@ verifica que el bloque puede encajar en la capacidad del espacio del circuito zk
 
 El nodo de ejecución Scroll hereda la mayoría de los comportamientos de Ethereum. Sin embargo, hemos tenido que realizar algunos cambios incompatibles con Ethereum en `l2geth` para permitir una prueba más eficiente. Esta sección proporciona una lista no exhaustiva de las modificaciones, junto con su justificación.
 
-- **State and storage tree**: Ethereum utiliza el MPT (Merkle-Partricia Trie) como estructura de datos de almacenamiento de estados y contratos. La estructura de este trie y el hecho de que utilice hash Keccak lo harían prohibitivamente caro para los circuitos ZK. En su lugar, `l2geth` utiliza [zkTrie](/es/technology/sequencer/zktrie): un trie Merkle binario con Poseidon hash para su almacenamiento de estados y contratos.
+- **State and storage tree**: Ethereum utiliza el MPT (Merkle-Patricia Trie) como estructura de datos de almacenamiento de estados y contratos. La estructura de este trie y el hecho de que utilice hash Keccak lo harían prohibitivamente caro para los circuitos ZK. En su lugar, `l2geth` utiliza [zkTrie](/es/technology/sequencer/zktrie): un trie Merkle binario con Poseidon hash para su almacenamiento de estados y contratos.
 - **StateAccount**: La modificación de la cuenta de estado se describe en [Cuentas y Estado](/technology/chain/accounts).
 - **EVM**: Las modificaciones se describen en las [Diferencias de EVM respecto a Ethereum](/es/technology/chain/differences).
 - **Comisiones de transacción**

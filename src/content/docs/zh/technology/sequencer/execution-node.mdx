@@ -1,0 +1,88 @@
+---
+section: technology
+date: Last Modified
+title: "执行节点"
+lang: "zh"
+permalink: "technology/sequencer/execution-node"
+whatsnext: { "Rollup 节点": "/zh/technology/sequencer/rollup-node/" }
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+执行节点是 Scroll 协议的核心组件：负责维护 L2 区块链。
+执行节点还确保 Scroll 上的用户和开发者体验与以太坊非常相似。它通过直接继承以太坊的 EVM 和 RPC 设计，只进行极少的修改来实现这一点。
+
+Scroll 执行节点的主要功能是：
+- 从 L2 和 L1 收集交易。
+- 验证交易并将其打包到 L2 区块中。
+- 执行区块并维护 L2 区块链状态。
+
+值得强调的是，将消息和代币从 L1 桥接到 L2（存款）也是执行节点的责任。
+另一方面，从 L2 到 L1（提款）的消息可以由 L1 上的任何用户执行。
+
+Scroll执行节点的次要功能是：
+- 提供标准的以太坊 RPC API 和一些 Scroll 的扩展 API。
+- 允许节点（跟随节点）使用以太坊的 p2p 协议同步区块链。
+
+执行节点作为 [go-ethereum](https://github.com/ethereum/go-ethereum) 的一个分支，从以太坊继承了它的大部分功能。这包括交易和区块数据结构、EVM 执行层、RPC 和 p2p 协议。由于这些不是重新实现的，而是直接继承自 go-ethereum ，我们很确信 Scroll 与以太坊的兼容性非常高。
+
+以下部分将介绍执行节点的主要组件、附加验证规则以及修改部分细节的总结。
+
+## `l2geth` 组件
+
+[`l2geth`](https://github.com/scroll-tech/go-ethereum) 是 Scroll 的 [go-ethereum](https://github.com/ethereum/go-ethereum) 分支。 它负责构建和执行区块并维护区块链状态。 l2geth 从以太坊继承了它的大部分功能，下文中列出了一些显著的差异。 `l2geth` 具有以下子模块（不是完整列表）：
+- **Storage**: 使用 LevelDB 实现的账本和状态存储。
+- **EVM**: 以太坊的状态转换规则。
+- **Worker:** 负责创建新的 L2 区块。
+- **L1 SyncService**: 在 `l2geth` 本地数据库中同步和存储 L1 消息。
+- **API layer**: 标准以太坊 RPC 和 p2p 接口。
+- **Transaction pool**: 用于 L2 交易的内存池。
+- **Circuit capacity checker**: 检查交易或区块是否超过电路容量限制。
+
+### 电路容量检查器
+
+使用 Scroll 当前的zkEVM电路，可能会构建出无法证明的交易和区块，因为它们无法适配进 zkEVM 电路。我们称之为 *证明溢出*。
+为了避免这种情况，我们实现了一个 *电路容量检查器* 模块作为 l2geth 的一部分。电路容量检查器在区块创建和区块验证期间都会使用。
+
+在区块创建过程中，如果下一笔交易会导致证明溢出，那么我们会封装区块并将交易留给下一个区块。
+如果单个交易导致证明溢出，l2geth 会丢弃它。我们称这种机制为 *跳过*。
+
+跳过 L2 交易意味着丢弃它们。在这种情况下，用户需要提交另一个具有相同随机数且不会导致证明溢出的交易才能继续。
+
+跳过 L1 交易有一个更详尽的流程。L1 上的 `ScrollChain` 合约和 zkEVM 本身都会验证 `L1MessageQueue` 中的每笔 L1 交易是否被包含并执行或是跳过。
+虽然批次（batch）的编码不包含 L1 交易，但是它会包含一个 *跳过位图（skip bitmap）*，向 `ScrollChain` 合约传达哪些 L1 消息被跳过。
+如果 L1 的存款消息被跳过，用户可以在 L1 上获得代币退款。
+
+<Aside type="note" title="注意">
+  {" "}
+  证明溢出并因此跳过意味着恶意行为；对于正常的存款交易，这永远不会发生。
+  {" "}
+</Aside>
+
+由于zkEVM证明的单位是块（chunk），因此也必须避免块的证明溢出。
+我们将电路容量检查器集成到Rollup中继器中来实现，以确保永远不会提出无法证明的块
+
+## 验证规则
+
+除了以太坊的区块验证规则外，Scroll还添加了一些额外的验证规则，来约束 L2 上包含 L1 消息和 zkEVM 电路容量限制。
+- 上述的 [电路容量检查器](#circuit-capacity-checker) 模块将验证区块大小在 zkEVM 的电路空间容量之内。
+- 与 L1 消息相关的规则：
+    - 区块中的 L1 消息必须是连续的，并且排列在区块的最前面。
+    - 区块中的 L1 消息必须按照其在 `L1MessageQueue` 中的顺序，即他们必须按照递增的 `QueueIndex` 排序。
+    - 区块中的 L1 消息必须与 `L1MessageQueue` 合约中的消息匹配。
+- 这些大多数规则在区块创建和验证期间都有考虑到。因此，如果区块提议者节点违反任何这些规则，跟随节点将拒绝其区块。
+
+
+## 对以太坊的修改小结
+
+Scroll 执行节点继承了以太坊的大部分行为。但是，我们需要对 `l2geth` 进行一些重大更改，来实现更高效的证明。本节提供了非完整版的修改列表及其基本原理。
+
+- **状态和存储树**：以太坊使用 MPT (Merkle-Patricia Trie) 作为其状态和合约存储的数据结构。该树的结构以及其使用的 Keccak 哈希使得 ZK 电路变得非常昂贵。 而 `l2geth` 使用 [zkTrie](/technology/sequencer/zktrie)：一种使用 Poseidon 哈希默克尔二叉树，来存储状态和合约数据。
+- **状态账户（StateAccount）**：对于状态账户的修改已经在 [账户和状态](/technology/chain/accounts) 中说明。
+- **EVM**：对 EVM 的修改已经在 [和以太坊 EVM的区别](/technology/chain/differences) 中说明。
+- **交易手续费**
+    - 在 L2 上收取的所有费用都将发送到 Scroll 维护的 L2 费用库合约。
+    - L1 费用: 除了覆盖 L2 区块空间和执行成本的 L2 gas 费用外，我们还收取 L1 费用，用于支付将交易提交到 L1 的成本。此费用与 RLP 编码的交易大小成正比。实际成本取决于 L2上 `L1GasOracle` 合约中存储的当前设置。这笔费用直接从交易发送方的余额中扣除（而不是从 gas 补贴中扣除）。
+- **L1MessageTx交易**：我们引入了一种新的交易类型 `L1MessageTx`。我们还添加了用于存储此类交易和相关元数据的数据库接口。
+- **同步服务**：监听 L1 上最终确认的区块，并从中收集 L1 消息。
+- **新的API**：`l2geth` 提供了新的API `scroll_traceBlockByNumberOrHash`，供证明器查询踪迹（trace）信息以生成证明。

@@ -4,26 +4,26 @@ date: Last Modified
 title: "Accounts and State"
 lang: "en"
 permalink: "technology/chain/accounts-and-state"
-whatsnext: { "Transactions": "/technology/chain/transactions/" }
+whatsnext: { "Transactions": "/en/technology/chain/transactions/" }
 ---
 
 ## Accounts
 
-Same as Ethereum, Scroll has two account types: Externally-owned account (EOA) and contract account that holds the smart contract and additional storages.
+Same as Ethereum, Scroll has two account types: Externally-owned account (EOA) and contract account that holds the smart contract and additional storage.
 
 Scroll stores additional information of the contract bytecode in the account to facilitate the zkEVM circuit to prove the state transition more efficiently.
 
 The account in Scroll contains the following fields:
 
 - `nonce`: A counter that indicates the number of transactions sent by the sender.
-- `balance`: The balance of `ETH` token in the account balance (unit in wei).
+- `balance`: The balance of `ETH` token in the account (unit in wei).
 - `storageRoot`: The root hash of the storage trie. Since Scroll uses the [zkTrie](/technology/sequencer/zktrie) for the storage trie, the `storageRoot` stores the Poseidon hash digest in a 256-bit integer.
 - `codeHash`: The Keccak hash digest of the contract bytecode.
 - `PoseidonCodeHash` (**new field**): The Poseidon hash digest of the contract bytecode in a 256-bit integer.
-- `CodeSize` (**new field**): The number of bytes in the contract bytecode.
+- `CodeSize` (**new field**): The size of the contract bytecode in bytes.
 
 ## State
 
 The state of a blockchain is a collection of account data. The _state trie_ encodes account data and their corresponding addresses to a [Merkle tree](https://en.wikipedia.org/wiki/Merkle_tree) data structure. The root of tree, or the state of the blockchain, is a cryptographic digest of all the account data contained in the tree.
 
-Ethereum uses a data structure called [Patricia Merkle Trie](https://ethereum.org/en/developers/docs/data-structures-and-encoding/patricia-merkle-trie/) for both the state trie and the storage trie that stores the key-value entries stored in a smart contract. In Scroll, we replace the Patricia Merkle Trie by a more zk-friendly data structure, called zkTrie, for both state trie and storage trie. In the high level, the zkTrie data structure is a sparse binary Merkle tree with the [Poseidon hash](https://eprint.iacr.org/2019/458.pdf), a zk-friendly hash function. The [zkTrie](/technology/sequencer/zktrie) document describes more details about this data structure.
+Ethereum uses a data structure called [Patricia Merkle Trie](https://ethereum.org/en/developers/docs/data-structures-and-encoding/patricia-merkle-trie/) for both the state trie and the storage trie that stores the key-value entries stored in a smart contract. In Scroll, we replace the Patricia Merkle Trie with a more zk-friendly data structure, called zkTrie, for both state trie and storage trie. At a high level, the zkTrie data structure is a sparse binary Merkle tree with the [Poseidon hash](https://eprint.iacr.org/2019/458.pdf), a zk-friendly hash function. The [zkTrie](/technology/sequencer/zktrie) document describes more details about this data structure.

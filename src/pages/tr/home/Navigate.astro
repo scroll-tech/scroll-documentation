@@ -1,0 +1,70 @@
+---
+import NavCard from "~/components/NavCard.astro"
+import StartSvg from "~/assets/svgs/home/home-start.svg?raw"
+import DevelopSvg from "~/assets/svgs/home/home-develop.svg?raw"
+import TechnologySvg from "~/assets/svgs/home/home-technology.svg?raw"
+import LearnSvg from "~/assets/svgs/home/home-learn.svg?raw"
+import SdkSvg from "~/assets/svgs/home/home-sdk.svg?raw"
+import SectionHeader from "~/components/SectionHeader/index.astro"
+
+const navList = [
+  {
+    icon: StartSvg,
+    name: "Başla",
+    content: "Scroll'a geçiş yapın ve dApp ekosistemimizi keşfedin.",
+    link: "/tr/getting-started/overview",
+  },
+  {
+    icon: DevelopSvg,
+    name: "Geliştiriciler",
+    content: "Scroll'un geliştirici dokümanlarını inceleyin.",
+    link: "/tr/developers",
+  },
+  {
+    icon: TechnologySvg,
+    name: "Teknoloji",
+    content: "Scroll'un zkEVM mimarisine genel bakış.",
+    link: "/tr/technology",
+  },
+  {
+    icon: LearnSvg,
+    name: "Öğren",
+    content: "ZK ve ölçeklenebilirliğin dünyasına giriş.",
+    link: "/tr/learn",
+  },
+  {
+    icon: SdkSvg,
+    name: "SDK",
+    content: "Bir zincir ayağa kaldırın ve kendi ekosisteminize sahip olun.",
+    link: "/tr/sdk",
+  },
+]
+---
+
+<div class="navigate">
+  <SectionHeader title="Dokümantasyon'u gezin" content="Scroll'da geliştirmeye bugün başlayın." />
+  <div class="navs">
+    {navList.map(({ icon, name, content, link }) => <NavCard icon={icon} name={name} content={content} link={link} />)}
+  </div>
+</div>
+
+<style>
+  .navigate {
+    margin-top: 146px;
+  }
+
+  .navs {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  @media screen and (max-width: 50em) {
+    .navigate {
+      margin-top: 106px;
+    }
+    .navs {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+</style>

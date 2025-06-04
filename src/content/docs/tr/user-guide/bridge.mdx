@@ -1,0 +1,124 @@
+---
+section: gettingStarted
+date: Last Modified
+title: "Köprü"
+lang: "tr"
+permalink: "user-guide/bridge/"
+excerpt: "Sepolia'dan varlıkları köprülemeye başlamak için Portal Bridge uygulamasına gidin."
+---
+
+{/* // import ClickToZoom from "../../../../components/ClickToZoom.astro" */}
+{/* // import bridge1 from "./\_images/bridge1.png" */}
+{/* // import bridge2 from "./\_images/bridge2.png" */}
+{/* // import bridge3 from "./\_images/bridge3.png" */}
+{/* // import bridge4 from "./\_images/bridge4.png" */}
+{/* // import bridge5 from "./\_images/bridge5.png" */}
+{/* // import bridge6 from "./\_images/bridge6.png" */}
+{/* // import bridge7 from "./\_images/bridge7.png" */}
+{/* // import bridge8 from "./\_images/bridge8.png" */}
+
+{/* TODO: Update all instructions after being able to walk through the whole flow. */}
+
+Başlamak için [Köprü](https://sepolia.scroll.io/bridge) uygulamamızı ziyaret edin![^thanks-hop] Köprü, varlık **Yatırma** ve **Çekme** işlemlerini destekler ve kullanıcılara Sepolia Test Ağı'ndan Scroll Sepolia Test Ağı'na varlıkları güvenle taşıma imkanı sunar.
+[^thanks-hop]: [Hop Exchange](https://hop.exchange/)’in kullanıcı arayüzünden forklanmıştır 🙌
+
+Yatırılan varlıkların Scroll üzerinde kullanılabilir hale gelmesi 15 dakikaya kadar sürebilir.
+
+Varlık çekme işlemleri, çekim işlemi tamamlandıktan sonra Sepolia'da ikinci bir ek etkileşim gerektirmesinden dolayı çok daha uzun sürebilir.
+
+:::caution[Köprü işlemi için uzun süredir bekliyor musunuz?]
+Yukarıdaki zaman tahminleri, normal ağ davranışı ve etkinlik seviyeleri içindir. Bir L2 bloğunda, yalnızca belirli sayıda sıralanmış L1 işlemini işlediğimizden, köprülenmiş mesajların Scroll’a dahil edilmesi, istisnai ağ kullanım durumlarında daha uzun sürebilir.
+:::
+
+## Sepolia'dan Scroll Sepolia'ya Yatırma
+
+### Talimatlar
+
+1. İlk olarak, [Scroll Köprüsü'ne](https://sepolia.scroll.io/bridge) gidin ve "Cüzdanı Bağla" düğmesine basın.
+1. Uygulamada, **Ethereum Sepolia**'nın en üstte ve **Scroll Sepolia**'nın en altta olduğundan emin olun. Pozisyonlarını değiştirmek için "**↓**" düğmesine tıklayabilirsiniz.
+1. Sepolia'dan Scroll Sepolia'ya transfer etmek istediğiniz tokenı seçin. İlk kez köprü kullanıyorsanız, "ETH"yi deneyin.
+1. Eğer belirli bir ERC20 tokenını ilk kez transfer ediyorsanız, Sepolia Köprü sözleşmesine ERC20 tokenınıza erişim izni vermek için **Onayla**'yı seçmelisiniz.
+1. Ardından, yatırma işlemi yapmak için **Scroll Sepolia'ya Gönder** düğmesine tıklayın. Cüzdanınız transfer işlemini onaylamanızı isteyecektir.
+1. Transfer işlemi gönderildikten ve onaylandıktan sonra, token Sepolia cüzdanınızdan düşecektir.
+1. Bir işlemin durumunu her zaman sağ üst köşede cüzdan adresinizin yanındaki "Geçmiş" simgesine basarak kontrol edebilirsiniz.
+
+### Tokenlarınız Scroll Sepolia cüzdanınıza ne zaman ulaşır?
+
+Tokenlarınızın Scroll Sepolia cüzdanınıza gelmesi **8 ile 14 dakika** arasında sürebilir. (Sepolia'da [_Güvenli_](https://www.alchemy.com/overviews/ethereum-commitment-levels#what-are-ethereum-commitment-levels) duruma gelmesi bekleniyor).
+
+{/* You can check the progress of deposit transactions as follows: */}
+
+{/* ##### 1. Click the "History" icon next to your wallet address in the top-right corner. */}
+
+{/* <ClickToZoom src={bridge1} /> */}
+
+{/* The pop-up panel lists the most recent transactions made in the Bridge app. There are two statuses: Sepolia status and Scroll Sepolia status. For deposit transactions (L1 -> L2), once your transaction becomes _Safe_ on Sepolia (**8 to 14 minutes**), you will see the **`success`** status shown. Your funds will be relayed to Scoll Sepolia after this. */}
+
+{/* The Recent Bridge Transactions window should give you an estimate of the time expected before your transaction is _Safe_ on Sepolia. */}
+
+{/* ##### 2. Click on the most recent transaction’s Sepolia transaction hash. */}
+
+{/* <ClickToZoom src={bridge2} /> */}
+
+{/* It will open the Transaction Details page in a new tab. You can see this transaction is confirmed on Sepolia. To check the Block's confirmation status, click the Block number and read the "Status" field. */}
+
+{/* <ClickToZoom src={bridge3} /> */}
+
+{/* ##### 3. Return to the Bridge app and wait! */}
+
+{/* Once your transaction status shows **`success`** on Scroll Sepolia, you should see the funds in your Scroll L2 wallet and a transaction hash: */}
+
+{/* <ClickToZoom src={bridge4} /> */}
+
+## Scroll Sepolia'dan Sepolia'ya Varlık Çekme
+
+### Talimatlar
+
+#### İlk Çekim İşleminizi Gönderme
+
+1. İlk olarak, cüzdanınızda **Scroll Sepolia** Ağı'na geçin.
+1. Uygulamada, **Scroll Sepolia**'nın en üstte ve **Ethereum Sepolia**'nın en altta olduğundan emin olun. Pozisyonlarını değiştirmek için "**↓**" butonuna tıklayabilirsiniz.
+1. **Scroll Sepolia**'dan **Sepolia**'ya aktarmak istediğiniz tokenı seçin. İlk kez köprü kullanıyorsanız, "ETH"yi deneyin.
+1. Eğer belirli bir ERC20 tokenını ilk kez transfer ediyorsanız, Scroll Sepolia Köprü sözleşmesine ERC20 tokenınıza erişim izni vermek için **Onayla**'yı seçmelisiniz.
+1. Ardından, varlık çekme işlemi yapmak için **Ethereum Sepolia'ya Gönder** düğmesine tıklayın. Cüzdanınız transfer işlemini onaylamanızı isteyecektir.
+1. Transfer işlemi gönderildikten ve onaylandıktan sonra, token Scroll Sepolia cüzdanınızdan düşecektir.
+
+#### Çekim Gerçekleştirme İşlemi Göndermek
+
+_Kalan adımlar Scroll Sepolia'da gerçekleşiyor, ama işleminizin Ethereum Sepolia'da tamamen kanıtlanması ("kesinleşmesi") beklenmelidir. Bu süreç en fazla dört saat sürebilir._
+
+1. Varlık çekme işleminiz Ethereum Sepolia'da tamamlandığında, Son İşlemler alanındaki "Talep Et" butonunun sabit hale geldiğini göreceksiniz.
+1. "Talep Et" düğmesine tıklayarak Çekim Gerçekleştirme işlemini gönderin.
+1. Gönderildikten sonra, çekilen fonlarınız Sepolia cüzdanınızda hemen görünmelidir.
+
+### Tokenlarınız ne zaman Sepolia cüzdanınıza ulaşır?
+
+Transfer edilen token, Çekim Gerçekleştirme işlemi Sepolia'da onaylandıktan hemen sonra Sepolia cüzdanınıza ulaşacaktır.
+
+{/* TODO: check architecture link is live */}
+
+:::tip[Rollup Durumu]
+Rollup durumu `Kesinleştirildi`, bu bloktaki işlemlerin doğru bir şekilde yürütülmesinin Sepolia üzerinde bir geçerlilik kanıtının doğrulanmasıyla kanıtlandığını belirtir. Rollup durumu hakkında daha fazla bilgi için [Scroll Mimarisine Genel Bakış](/tr/technology)'a bakın.
+:::
+
+{/* You can check the progress of withdrawal transactions as follows: */}
+
+{/* 1. Click your wallet address at the top-right corner of the Bridge web app. */}
+
+{/* <ClickToZoom src={bridge5} /> */}
+
+{/* The pop-up panel lists the most recent transactions you made in the Bridge app (see the image below). There are two statuses: L1 status and L2 status. In this case, because we are bridging from L2 -> L1, we will quickly get a **`success`** status after submitting the transaction to the L2 Bridge. L1, on the other hand, takes **10 minutes to a few hours** to reach **`success`**. */}
+
+{/* 1. Click on the most recent transaction’s L2 transaction hash: */}
+
+{/* <ClickToZoom src={bridge6} /> */}
+
+{/* It will open the _Transaction Details_ page in a new tab. You can see this transaction is confirmed on L2. */}
+
+{/* <ClickToZoom src={bridge7} /> */}
+
+{/* The transaction is confirmed on L2, but still needs to be finalized on Goerli. */}
+
+{/* 1. Go back to the [Bridge](https://scroll.io/bridge) app. It takes about 10 minutes before the token shows up in your Goerli wallet. Once your transaction status shows success on L2, you should see the funds in your Goerli wallet and a transaction hash: */}
+
+{/* <ClickToZoom src={bridge8} /> */}

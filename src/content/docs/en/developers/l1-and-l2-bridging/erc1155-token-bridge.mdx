@@ -4,7 +4,7 @@ date: Last Modified
 title: "ERC1155 Token Bridge"
 lang: "en"
 permalink: "developers/l1-and-l2-bridging/erc1155-token-bridge"
-whatsnext: { "The Scroll Messenger": "/developers/l1-and-l2-bridging/the-scroll-messenger/" }
+whatsnext: { "The Scroll Messenger": "/en/developers/l1-and-l2-bridging/the-scroll-messenger/" }
 excerpt: "ERC1155 bridging from L1 to L2 is done via the L1ERC1155Gateway."
 ---
 
@@ -16,7 +16,7 @@ ERC1155 bridging from L1 to L2 is done via the L1ERC1155Gateway. Similarly to ER
 
 <Aside type="tip" title="">
   **`depositERC1155`** is a payable function, and the amount of ETH sent to this function will be used to pay for L2
-  fees. If the amount is not enough, the transaction will not be sent. All excess eth will be sent back to sender.
+  fees. If the amount is not enough, the transaction will not be sent. All excess eth will be sent back to the sender.
   `0.00001 ETH` should be more than enough to process a token deposit.
 </Aside>
 
@@ -52,7 +52,7 @@ interface IScrollERC1155 {
   /// @notice Batch mint some token to recipient's account.
   /// @dev Gateway Utilities, only gateway contract can call
   /// @param _to The address of recipient.
-  /// @param _tokenIds The token id to mint.
+  /// @param _tokenIds The list of token ids to mint.
   /// @param _amounts The list of corresponding amount of token to mint.
   /// @param _data The data passed to recipient
   function batchMint(
@@ -115,7 +115,7 @@ Deposit an ERC1155 token from L1 to a recipient's account on L2.
 | to        | The address of recipient's account on L2.         |
 | tokenId   | The NFT id to deposit.                            |
 | amount    | The amount of tokens to deposit.                  |
-| gasLimit  | Gas limit required to complete the deposit on L2. |
+| gasLimit  | Gas limit required to complete the deposit on L2.  Unused portion of fee will be refunded.|
 
 ### updateTokenMapping
 
@@ -158,5 +158,5 @@ Update the mapping that connects an ERC1155 token contract from L2 to L1.
 
 | Parameter | Description                                       |
 | --------- | ------------------------------------------------- |
-| \_l1Token | The address of th ERC1155 token in L1.            |
+| \_l1Token | The address of the ERC1155 token in L1.            |
 | \_l2Token | The address of corresponding ERC1155 token in L2. |

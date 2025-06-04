@@ -1,0 +1,123 @@
+---
+section: sdk
+date: Last Modified
+title: "Customizing SDK Components"
+lang: "en"
+permalink: "sdk/guides/customizing-sdk-components"
+excerpt: "Learn to make custom changes to Scroll SDK services"
+---
+
+import Aside from "../../../../../components/Aside.astro"
+import ToggleElement from "../../../../../components/ToggleElement.astro"
+import Steps from '../../../../../components/Steps/Steps.astro';
+import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+
+## Overview
+
+This guide documents how to run customized components in your own Scroll SDK deployment. We'll see how to modify a service, build a custom Docker image, and deploy your changes to an existing Scroll SDK deployment.
+
+## Prerequisites
+
+<Steps>
+1. Clone the [scroll-sdk repo](https://github.com/scroll-tech/scroll-sdk) to your local machine
+2. Install dependencies:
+    - [Docker](https://docs.docker.com/desktop/install/linux/)
+    - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/)
+    - [minikube](https://minikube.sigs.k8s.io/docs/start/)
+    - [Helm](https://helm.sh/docs/intro/install/)
+3. Verify installations by running:
+    - `docker -v`
+    - `kubectl version`
+    - `minikube status`
+    - `helm version`
+</Steps>
+
+<Aside type="tip">
+If using macOS, refer to the prerequisites in the [Devnet Deployment Guide](/sdk/guides/devnet-deployment).
+</Aside>
+
+## Modifying a Service
+
+<Steps>
+1. Clone the repository of the service you want to modify
+2. Make your desired code modifications
+3. Test your changes locally
+</Steps>
+
+#### Available Services
+
+| Service | Repository |
+|---------|------------|
+| bridge-history-api | [scroll-tech/scroll/bridge-history-api](https://github.com/scroll-tech/scroll/tree/develop/bridge-history-api/cmd/api) |
+| bridge-history-fetcher | [scroll-tech/scroll/bridge-history-fetcher](https://github.com/scroll-tech/scroll/tree/develop/bridge-history-api/cmd/fetcher) |
+| chain-monitor | [scroll-tech/chain-monitor](https://github.com/scroll-tech/chain-monitor) |
+| contracts | [scroll-tech/scroll-contracts](https://github.com/scroll-tech/scroll-contracts/tree/feat-deterministic-deployment) |
+| coordinator-api | [scroll-tech/scroll/coordinator-api](https://github.com/scroll-tech/scroll/tree/develop/coordinator/cmd/api) |
+| coordinator-cron | [scroll-tech/scroll/coordinator-cron](https://github.com/scroll-tech/scroll/tree/develop/coordinator/cmd/cron) |
+| frontends | [scroll-tech/frontends](https://github.com/scroll-tech/frontends) |
+| gas-oracle | [scroll-tech/scroll/gas-oracle](https://github.com/scroll-tech/scroll/tree/develop/rollup/cmd/gas_oracle) |
+| l1-devnet | [scroll-tech/scroll-sdk/l1-devnet](https://github.com/scroll-tech/scroll-sdk/blob/develop/custom-images/l1-devnet/Dockerfile) |
+| l2-bootnode | [scroll-tech/go-ethereum](https://github.com/scroll-tech/go-ethereum) |
+| l2-rpc | [scroll-tech/go-ethereum](https://github.com/scroll-tech/go-ethereum) |
+| l2-sequencer | [scroll-tech/go-ethereum](https://github.com/scroll-tech/go-ethereum) |
+| rollup-explorer-backend | [scroll-tech/rollup-explorer-backend](https://github.com/scroll-tech/rollup-explorer-backend) |
+| rollup-node | [scroll-tech/scroll/rollup-node](https://github.com/scroll-tech/scroll/tree/develop/rollup/cmd/rollup_relayer) |
+
+## Building a Custom Docker Image
+
+<Steps>
+1. Locate the Dockerfile for your service
+2. Build the image:
+    ```bash
+    docker build -f <dockerfile> -t <service-name>:<version> .
+    ```
+3. Choose one of two options for making the image available:
+
+    **Option 1: Publish to Docker Hub**
+    ```bash
+    docker login
+    docker push <your_docker_user_name>/<service_name>:<version>
+    ```
+
+    **Option 2: Load Directly to Minikube**
+    ```bash
+    minikube image load <service_name>:<version>
+    ```
+</Steps>
+
+<Aside type="tip">
+Option 2 is recommended for local development as it doesn't require publishing your image.
+</Aside>
+
+## Updating the Service Configuration
+
+<Steps>
+1. Locate the `values.yaml` file for your service in `devnet/scroll-sdk/charts/<service-name>/values.yaml`
+
+2. Update the `image` field based on your chosen deployment method:
+
+    **For published Docker Hub images:**
+    ```yaml
+    image:
+      repository: <your_docker_user_name>/<service_name>
+      pullPolicy: Always
+      tag: <version>
+    ```
+
+    **For local Minikube images:**
+    ```yaml
+    image:
+      repository: <service_name>
+      tag: <version>
+    ```
+
+3. Apply your changes:
+    ```bash
+    make install
+    ```
+
+4. Verify the deployment:
+    ```bash
+    kubectl get pods
+    ```
+</Steps>

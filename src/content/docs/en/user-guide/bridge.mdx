@@ -19,32 +19,25 @@ excerpt: "To start bridging assets from Sepolia, navigate to the portal bridge a
 
 {/* TODO: Update all instructions after being able to walk through the whole flow. */}
 
-Visit our [Bridge](https://scroll.io/bridge) app to get started![^thanks-hop] The Bridge supports both **Deposit** and **Withdraw** operations, allowing users to trustlessly move assets from Sepolia Testnet to Scroll Sepolia Testnet.
-[^thanks-hop]: Forked from [Hop Exchange](https://hop.exchange/)'s UI 🙌
 
-Deposits can take up to 15 minutes to be available on Scroll.
+Visit our bridge app on [Sepolia testnet](https://sepolia.scroll.io/bridge) or [Mainnet](https://scroll.io/bridge) to get started! The Bridge supports both **Deposit** and **Withdraw** operations, allowing users to trustlessly move assets from L1 to L2.
 
-Withdrawals, which require a second interaction on Sepolia after the withdrawal is finalized, can take much longer.
-
-:::caution[Waiting a long time for a bridge transaction?]
-The time estimates above are typical for normal network behavior and activity levels. Because we only process so many queued L1 transactions per an L2 block, bridged messages may take longer to be included on Scroll in times of exceptional network usage.
-:::
-
-## Deposit from Sepolia to Scroll Sepolia
+## Deposit from Ethereum to Scroll
 
 ### Instructions
 
-1. First, navigate to the [Scroll Bridge](https://scroll.io/bridge) and press the "Connect Wallet."
-1. In the app, ensure that **Ethereum Sepolia** is on top and **Scroll Sepolia** is on the bottom. You can click the "**↓**" button to switch their positions.
-1. Select the token you want to transfer from Sepolia to Scroll Sepolia. If it's you're first time bridging, try "ETH."
-1. If this is your first time transferring a specific ERC20 token, you must **Approve** the Sepolia Bridge contract to access your ERC20 token.
-1. Next, click the **Send to Scroll Sepolia** button to make the deposit. Your wallet will ask to confirm the transfer transaction.
-1. Once the transfer transaction is sent and confirmed, the token will be deducted from your Sepolia wallet.
-1. You can always check the status of a transaction by pressing the "History" icon next to your wallet address in the top-right corner.
+1. After navigating to the bridge app, press the "Connect Wallet" button. You might need to switch your wallet to the right network.
+1. In the app, select the **Deposit to Scroll** tab.
+1. Select the token you want to transfer from the L1 network. If it's your first time bridging, try "ETH."
+1. If this is your first time transferring a specific ERC20 token, you must **Approve** the Sepolia or Ethereum Bridge contract to access your ERC20 token.
+1. Select your deposit mode. The Fast option initiates a bridge transfer immediately, while the Economy option groups multiple requests together and initiates a single bridge transfer for the batch, sharing the cost among all included requests.
+1. Next, slide the **Deposit funds** button to make the deposit. Your wallet will ask to confirm the transfer transaction.
+1. Once the transfer transaction is sent and confirmed, the token will be deducted from your wallet.
+1. You can always check the status of a transaction by pressing the "Transaction History" icon next to your wallet address in the top-right corner.
 
-### When will the token arrive in your Scroll Sepolia wallet?
+{/* ### When will the token arrive in your Scroll Sepolia wallet?
 
-It could take between **8 to 14 minutes** (awaiting block to become [_Safe_](https://www.alchemy.com/overviews/ethereum-commitment-levels#what-are-ethereum-commitment-levels) on Sepolia) before the token shows up in your Scroll Sepolia wallet.
+It could take between **8 to 14 minutes** (awaiting block to become [_Safe_](https://www.alchemy.com/overviews/ethereum-commitment-levels#what-are-ethereum-commitment-levels) on Sepolia) before the token shows up in your Scroll Sepolia wallet. */}
 
 {/* You can check the progress of deposit transactions as follows: */}
 
@@ -70,37 +63,36 @@ It could take between **8 to 14 minutes** (awaiting block to become [_Safe_](htt
 
 {/* <ClickToZoom src={bridge4} /> */}
 
-## Withdraw from Scroll Sepolia to Sepolia
+## Withdraw from Scroll to Ethereum
 
 ### Instructions
 
 #### Submitting your Initial Withdrawal Transaction
 
-1. First, switch to the **Scroll Sepolia** network in your wallet.
-1. In the app, ensure that **Scroll Sepolia** is on top and **Ethereum Sepolia** is on the bottom. You can click the "**↓**" button to switch the positions.
-1. Select the token you want to transfer from **Scroll Sepolia** to **Sepolia**. If it's you're first time bridging, try "ETH."
-1. If this is your first time transferring a specific ERC20 token, you must **Approve** the Scroll Sepolia Bridge contract to access your ERC20 token.
-1. Next, click the **Send to Ethereum Sepolia** button to make the withdrawal. Your wallet will ask to confirm the transfer transaction.
-1. Once the transfer transaction is sent and confirmed, the token will be deducted from your Scroll Sepolia wallet.
+1. First, select the **Withdraw to Ethereum** tab in the app. You might need to switch your wallet to the right network.
+1. Select the token you want to transfer, If it's you're first time bridging, try "ETH."
+1. If this is your first time transferring a specific ERC20 token, you must **Approve** the Scroll Bridge contract to access your ERC20 token.
+1. Next, slide the **Withdraw funds** button to make the withdrawal. Your wallet will ask to confirm the transfer transaction.
+1. Once the transfer transaction is sent and confirmed, the token will be deducted from your wallet.
 
 #### Submitting an Execute Withdrawal Transaction
 
 {/* TODO: finish the additional instructions, better estimate "wait time" */}
 
-_The remaining steps happen on Scroll Sepolia, but you first must wait for your transaction to be fully proven ("finalized") on Ethereum Sepolia. This process can take up to four hours._
+_The remaining steps happen on Scroll, but you first must wait for your transaction to be fully proven ("finalized") on the L1 side. This process can take up to four hours._
 
-1. When your withdrawal transaction is completed finalizing on Ethereum Sepolia, you will see the "Claim" button in the Recent Transactions area become solid.
+1. When your withdrawal transaction is completed finalizing on Sepolia or Ethereum, you will see the "Claim" button in the Recent Transactions area become solid.
 1. Click the "Claim" button to submit the Execute Withdrawal transaction.
-1. Once submitted, your withdrawn funds should appear immediately in your Sepolia wallet.
+1. Once submitted, your withdrawn funds should appear immediately in your wallet.
 
-### When will the token arrive in your Sepolia wallet?
+### When will the token arrive in your wallet?
 
-The transferred token will arrive in your Sepolia wallet immediately after the block containing your Execute Withdrawal transaction is confirmed on Sepolia.
+The transferred token will arrive in your wallet immediately after the block containing your Execute Withdrawal transaction is confirmed.
 
 {/* TODO: check architecture link is live */}
 
 :::tip[Rollup Status]
-The rollup status `Finalized` indicates that the correct execution of transactions in this block has been proven by verifying a validity proof on-chain on Sepolia. For more information about rollup status, see [Scroll's Architecture Overview](/technology).
+The rollup status `Finalized` indicates that the correct execution of transactions in this block has been proven by verifying a validity proof on-chain on the L1 chain. For more information about rollup status, see [Scroll's Architecture Overview](/technology).
 :::
 
 {/* You can check the progress of withdrawal transactions as follows: */}

@@ -4,7 +4,7 @@ date: Last Modified
 title: "Deposit Gateways"
 lang: "en"
 permalink: "technology/bridge/deposit-gateways"
-whatsnext: { "Withdraw Gateways": "/technology/bridge/withdraw-gateways/" }
+whatsnext: { "Withdraw Gateways": "/en/technology/bridge/withdraw-gateways/" }
 ---
 
 import ClickToZoom from "../../../../../components/ClickToZoom.astro"
@@ -80,7 +80,7 @@ The deposit of ERC20 tokens works as follows.
     ) public payable;
     ```
 
-2. Based on the mapping from ERC20 tokens to gateway, the `L1GatewayRouter` calls to the corresponding gateway: `L1StandardERC20Gateway`, `L1CustomERC20Gateway`, or `L1WETHGateway`. The remaining of steps will be described separately.
+2. Based on the mapping from ERC20 tokens to gateway, the `L1GatewayRouter` calls to the corresponding gateway: `L1StandardERC20Gateway`, `L1CustomERC20Gateway`, or `L1WETHGateway`. The remaining steps will be described separately.
 
 ### Standard ERC20 Tokens
 
@@ -96,10 +96,10 @@ Standard ERC20 tokens are tokens that do not require any custom logic. For such 
 
 ### Custom ERC20 Tokens
 
-In comparison to standard ERC20 tokens, the L2 contract of custom ERC20 tokens are deployed by the token owner. The remaining steps for custom ERC20 token deposit are:
+In comparison to standard ERC20 tokens, the L2 contract of custom ERC20 tokens is deployed by the token owner. The remaining steps for custom ERC20 token deposit are:
 
 3. The `L1CustomERC20Gateway` contract locks the ERC20 tokens on L1 by transferring them from the sender to itself.
-4. `L1CustomERC20Gateway` requires a L2 ERC20 token address present in the `tokenMapping`. It retrieves the corresponding ERC20 token address, encodes the token deposit message, and forwards it to `L1ScrollMessenger`.
+4. `L1CustomERC20Gateway` requires an L2 ERC20 token address present in the `tokenMapping`. It retrieves the corresponding ERC20 token address, encodes the token deposit message, and forwards it to `L1ScrollMessenger`.
 5. The corresponding L2 transaction calls the `L2ScrollMessenger.relayMessage` function to finalize the deposit on L2. In the case of custom ERC20 token deposits, the transaction calls `L2CustomERC20Gateway.finalizeDepositERC20`.
 6. `L2CustomERC20Gateway` calls the mint function on the corresponding L2 ERC20 token contract. It is required that the L2 ERC20 token contract grants mint permissions to the `L2CustomERC20Gateway` contract.
 7. If the user calls `depositERC20AndCall` on L1, the `L2CustomERC20Gateway` will call the target L2 contract with additional data.

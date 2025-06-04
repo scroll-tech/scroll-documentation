@@ -1,0 +1,354 @@
+---
+section: developers
+date: Last Modified
+title: "通过自定义 Gateway 跨链 ERC20"
+lang: "zh"
+permalink: "developers/guides/bridge-erc20-through-the-custom-gateway"
+excerpt: "本指南将介绍如何通过自定义 Gateway 将 Scroll 的跨链桥用于需要自定义功能的 ERC20。"
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+本指南将介绍如何通过自定义 Gateway 将 Scroll 的跨链桥用于需要自定义功能的 ERC20。
+
+<Aside type="tip" title="您需要自定义逻辑吗？">
+  请记住，在许多场景下，您无需使用自定义 Gateway 向代币或其跨链桥逻辑添加其他功能。有关更多信息，请参阅有关[ETH和ERC20代币跨链桥](/developers/l1-and-l2-bridging/eth-and-erc20-token-bridge#deposit-eth-and-erc20-tokens-from-l1)的文章。
+</Aside>
+
+## 第 1 步: 在 Sepolia 上发布一个代币
+
+首先，我们需要一个代币来桥接。无需特定的 ERC20 实现即可使代币与 L2 兼容。如果您已有代币，请随时跳过此步骤。如果要部署新代币，请使用以下简单的 ERC20 代币合约，该代币合约在启动时向部署者铸造 100 万个代币。
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.16;
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+
+contract L1Token is ERC20 {
+  constructor() ERC20("My Token L1", "MTL1") {
+    _mint(msg.sender, 1_000_000 ether);
+  }
+}
+```
+
+## 第 2 步: 在 Scroll Sepolia 测试网发布对应代币合约
+
+接下来，您将在 Scroll 上发布此代币的对合约，该代币将代表 Sepolia 上的原始代币。此代币可以实现自定义逻辑以匹配 L1 代币的逻辑，甚至可以添加 L1 代币之外的其他功能。
+
+为此，请执行以下操作：
+
+- 代币必须实现“IScrollStandardERC20”接口才能与跨链桥兼容。
+- 合约应有 `gateway()` 和 `counterpart()` 方法，可以提供 gateway 合约地址和对应的代币地址（我们刚刚发布的 L1 代币）。它还应该允许 L2 gateway在存入和提取代币事调用代币的 `mint()` 和 `burn()` 方法。
+
+以下是与跨链桥兼容的代币的完整示例。对于构造函数，您将传递 Scroll 官方自定义 Gateway 地址 （ 0x058dec71E53079F9ED053F3a0bBca877F6f3eAcf ） 和在 Sepolia 上发布的代币地址。
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.16;
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@scroll-tech/contracts@0.1.0/libraries/token/IScrollERC20Extension.sol";
+
+contract L2Token is ERC20, IScrollERC20Extension {
+  // We store the gateway and the L1 token address to provide the gateway() and counterpart() functions which are needed from the Scroll Standard ERC20 interface
+  address _gateway;
+  address _counterpart;
+
+  // In the constructor we pass as parameter the Custom L2 Gateway and the L1 token address as parameters
+  constructor(address gateway_, address counterpart_) ERC20("My Token L2", "MTL2") {
+    _gateway = gateway_;
+    _counterpart = counterpart_;
+  }
+
+  function gateway() public view returns (address) {
+    return _gateway;
+  }
+
+  function counterpart() external view returns (address) {
+    return _counterpart;
+  }
+
+  // We allow minting only to the Gateway so it can mint new tokens when bridged from L1
+  function transferAndCall(address receiver, uint256 amount, bytes calldata data) external returns (bool success) {
+    transfer(receiver, amount);
+    data;
+    return true;
+  }
+
+  // We allow minting only to the Gateway so it can mint new tokens when bridged from L1
+  function mint(address _to, uint256 _amount) external onlyGateway {
+    _mint(_to, _amount);
+  }
+
+  // Similarly to minting, the Gateway is able to burn tokens when bridged from L2 to L1
+  function burn(address _from, uint256 _amount) external onlyGateway {
+    _burn(_from, _amount);
+  }
+
+  modifier onlyGateway() {
+    require(gateway() == _msgSender(), "Ownable: caller is not the gateway");
+    _;
+  }
+}
+```
+
+## 第 3 步：将代币添加到 Scroll 跨链桥
+
+您需要联系Scroll团队，将代币添加到 Sroll 上的 `L2CustomERC20Gateway` 合约和 L1 上的 `L1CustomERC20Gateway` 合约。此外，请按照[代币列表](https://github.com/scroll-tech/token-list) 仓库内的说明将您的代币添加到 Scroll 官方跨链桥前端.
+
+
+## 第 4 步: 存储代币
+
+一旦您的代币获得Scroll团队的批准，您应该能够从L1存入代币。为此，您必须首先批准 Sepolia 上的 `L1CustomGateway` 合约地址 （ `0x31C994F2017E71b82fd4D8118F140c81215bbb37` ）。然后，通过从 `L1CustomGateway` 合约调用 `depositERC20` 方法来存入代币。这可以使用我们的[跨链桥UI](https://scroll.io/bridge)，[Etherscan Sepolia](https://sepolia.etherscan.io/address/0x31C994F2017E71b82fd4D8118F140c81215bbb37#writeProxyContract)或智能合约来完成。
+
+## Step 5: 提取代币
+
+您将按照类似的步骤将代币从 L2 发送回 L1。首先，批准  `L2CustomGateway` 地址 （ `0x058dec71E53079F9ED053F3a0bBca877F6f3eAcf`），然后从 `L2CustomGateway` 合约中调用 `withdrawERC20` 提取代币。
+
+## 替代方案: 发布并设置自定义的 L1 Gateway 合约
+
+将您的代币添加到Scroll官方跨链桥（如上所述）是将代币与 Scroll 桥接的推荐方法。这种方法将使它们更容易被发现，对持有者来说更安全。但是，这需要Scroll团队的批准。如果您想在没有官方批准流程的情况下发布自定义代币，您可以自己发布自定义 Gateway合约。为此，您需要在 L1 上部署 `L1CustomERC20Gateway` 合约，在 L2 上部署 `L2CustomERC20Gateway` 合约。
+
+### 发布 L1 自定义 Gateway 合约
+
+让我们从在 Sepolia 上发布以下合约开始。
+
+```solidity
+// SPDX-License-Identifier: MIT
+
+// Although it's possible to use other Solidity versions, we recommend using version 0.8.16 because that's where our contracts were audited
+pragma solidity =0.8.16;
+
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+import { IL2ERC20Gateway } from "@scroll-tech/contracts@0.1.0/L2/gateways/IL2ERC20Gateway.sol";
+import { IL1ScrollMessenger } from "@scroll-tech/contracts@0.1.0/L1/IL1ScrollMessenger.sol";
+import { IL1ERC20Gateway } from "@scroll-tech/contracts@0.1.0/L1/gateways/IL1ERC20Gateway.sol";
+
+import { ScrollGatewayBase } from "@scroll-tech/contracts@0.1.0/libraries/gateway/ScrollGatewayBase.sol";
+import { L1ERC20Gateway } from "@scroll-tech/contracts@0.1.0/L1/gateways/L1ERC20Gateway.sol";
+
+// This contract will be used to send and receive tokens from L2
+contract L1CustomERC20Gateway is L1ERC20Gateway, Ownable {
+  // Tokens must be mapped to "bind" them to a token that represents the original token on the original. This event will be emitted when the token mapping for ERC20 token is updated.
+  event UpdateTokenMapping(address indexed l1Token, address indexed oldL2Token, address indexed newL2Token);
+
+  mapping(address => address) public tokenMapping;
+
+  constructor() {}
+
+  // This function must be called once after both the L1 and L2 contract was deployed
+  function initialize(address _counterpart, address _router, address _messenger) external {
+    require(_router != address(0), "zero router address");
+
+    ScrollGatewayBase._initialize(_counterpart, _router, _messenger);
+  }
+
+  /// This function returns the address of the token on L2
+  function getL2ERC20Address(address _l1Token) public view override returns (address) {
+    return tokenMapping[_l1Token];
+  }
+
+  // Updates the token mapping that "binds" a token with another one on the other chain
+  function updateTokenMapping(address _l1Token, address _l2Token) external onlyOwner {
+    require(_l2Token != address(0), "token address cannot be 0");
+
+    address _oldL2Token = tokenMapping[_l1Token];
+    tokenMapping[_l1Token] = _l2Token;
+
+    emit UpdateTokenMapping(_l1Token, _oldL2Token, _l2Token);
+  }
+
+  // Callback called before a token is withdrawn on L1
+  function _beforeFinalizeWithdrawERC20(
+    address _l1Token,
+    address _l2Token,
+    address,
+    address,
+    uint256,
+    bytes calldata
+  ) internal virtual override {
+    require(msg.value == 0, "nonzero msg.value");
+    require(_l2Token != address(0), "token address cannot be 0");
+    require(_l2Token == tokenMapping[_l1Token], "l2 token mismatch");
+  }
+
+  // Token bridged can be "canceled" or dropped. This callback is called before that happens.
+  function _beforeDropMessage(address, address, uint256) internal virtual override {
+    require(msg.value == 0, "nonzero msg.value");
+  }
+
+  // Internal function holding the deposit logic
+  function _deposit(
+    address _token,
+    address _to,
+    uint256 _amount,
+    bytes memory _data,
+    uint256 _gasLimit
+  ) internal virtual override nonReentrant {
+    address _l2Token = tokenMapping[_token];
+    require(_l2Token != address(0), "no corresponding l2 token");
+
+    // 1. Transfer token into this contract.
+    address _from;
+    (_from, _amount, _data) = _transferERC20In(_token, _amount, _data);
+
+    // 2. Generate message passed to L2CustomERC20Gateway.
+    bytes memory _message = abi.encodeCall(
+      IL2ERC20Gateway.finalizeDepositERC20,
+      (_token, _l2Token, _from, _to, _amount, _data)
+    );
+
+    // 3. Send message to L1ScrollMessenger.
+    IL1ScrollMessenger(messenger).sendMessage{ value: msg.value }(counterpart, 0, _message, _gasLimit, _from);
+
+    emit DepositERC20(_token, _l2Token, _from, _to, _amount, _data);
+  }
+}
+```
+
+### 发布 L2 自定义 Gateway 合约
+
+现在让我们在 Scroll 上发布对应合约。
+
+```solidity
+// SPDX-License-Identifier: MIT
+
+pragma solidity =0.8.16;
+
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+import "@scroll-tech/contracts@0.1.0/L2/gateways/L2ERC20Gateway.sol";
+import { IL2ScrollMessenger } from "@scroll-tech/contracts@0.1.0/L2/IL2ScrollMessenger.sol";
+import { IL1ERC20Gateway } from "@scroll-tech/contracts@0.1.0/L1/gateways/IL1ERC20Gateway.sol";
+import { ScrollGatewayBase } from "@scroll-tech/contracts@0.1.0/libraries/gateway/ScrollGatewayBase.sol";
+import "@scroll-tech/contracts@0.1.0/libraries/token/IScrollERC20Extension.sol";
+
+import { IL2ERC20Gateway } from "@scroll-tech/contracts@0.1.0/L2/gateways/IL2ERC20Gateway.sol";
+
+// This contract will be used to send and receive tokens from L1
+contract L2CustomERC20Gateway is L2ERC20Gateway, ScrollGatewayBase, Ownable {
+  event UpdateTokenMapping(address indexed l2Token, address indexed oldL1Token, address indexed newL1Token);
+
+  // solhint-disable-next-line var-name-mixedcase
+  mapping(address => address) public tokenMapping;
+
+  constructor() {}
+
+  // Like with the L1 version of the Gateway, this must be called once after both the L1 and L2 gateways are deployed
+  function initialize(address _counterpart, address _router, address _messenger) external {
+    require(_router != address(0), "zero router address");
+
+    ScrollGatewayBase._initialize(_counterpart, _router, _messenger);
+  }
+
+  /// Returns the address of the token representing the token on L2
+  function getL1ERC20Address(address _l2Token) external view override returns (address) {
+    return tokenMapping[_l2Token];
+  }
+
+  // This returns the L2 token address
+  function getL2ERC20Address(address) public pure override returns (address) {
+    revert("unimplemented");
+  }
+
+  // This function finalizes the token deposit on L2 when the deposit was not finalized due to not enough gas sent from L1
+  function finalizeDepositERC20(
+    address _l1Token,
+    address _l2Token,
+    address _from,
+    address _to,
+    uint256 _amount,
+    bytes calldata _data
+  ) external payable override onlyCallByCounterpart nonReentrant {
+    require(msg.value == 0, "nonzero msg.value");
+    require(_l1Token != address(0), "token address cannot be 0");
+    require(_l1Token == tokenMapping[_l2Token], "l1 token mismatch");
+
+    IScrollERC20Extension(_l2Token).mint(_to, _amount);
+
+    _doCallback(_to, _data);
+
+    emit FinalizeDepositERC20(_l1Token, _l2Token, _from, _to, _amount, _data);
+  }
+
+  // Same as in the L1 version of this contract, this function "binds" a token with a token on the other chain
+  function updateTokenMapping(address _l2Token, address _l1Token) external onlyOwner {
+    require(_l1Token != address(0), "token address cannot be 0");
+
+    address _oldL1Token = tokenMapping[_l2Token];
+    tokenMapping[_l2Token] = _l1Token;
+
+    emit UpdateTokenMapping(_l2Token, _oldL1Token, _l1Token);
+  }
+
+  // Internal function holding the withdraw logic
+  function _withdraw(
+    address _token,
+    address _to,
+    uint256 _amount,
+    bytes memory _data,
+    uint256 _gasLimit
+  ) internal virtual override nonReentrant {
+    address _l1Token = tokenMapping[_token];
+    require(_l1Token != address(0), "no corresponding l1 token");
+
+    require(_amount > 0, "withdraw zero amount");
+
+    // 1. Extract real sender if this call is from L2GatewayRouter.
+    address _from = msg.sender;
+    if (router == msg.sender) {
+      (_from, _data) = abi.decode(_data, (address, bytes));
+    }
+
+    // 2. Burn token.
+    IScrollERC20Extension(_token).burn(_from, _amount);
+
+    // 3. Generate message passed to L1StandardERC20Gateway.
+    bytes memory _message = abi.encodeCall(
+      IL1ERC20Gateway.finalizeWithdrawERC20,
+      (_l1Token, _token, _from, _to, _amount, _data)
+    );
+
+    // 4. send message to L2ScrollMessenger
+    IL2ScrollMessenger(messenger).sendMessage{ value: msg.value }(counterpart, 0, _message, _gasLimit);
+
+    emit WithdrawERC20(_l1Token, _token, _from, _to, _amount, _data);
+  }
+}
+```
+
+### 在 Sepolia 上设置 Gateway 合约
+
+部署合约后，调用以下函数初始化合约，并将其绑定到相应的代币和跨链桥另一端的 gateway 合约。
+
+首先，使用以下参数调用 `MyL1Gateway` 合约上的 `initialize` 方法：
+
+- `_counterpart`: 我们刚刚在Scroll上发布的 `MyL2Gateway` 地址。
+- `_router`: 将其设置为 `0x13FBE0D0e5552b8c9c4AE9e2435F38f37355998a`，Sepolia 上的 `L1GatewayRouter` 合约。
+- `_messenger`: 将其设置为 `0x50c7d3e7f7c656493D1D76aaa1a836CedfCBB16A`，Sepolia 上的 `L1ScrollMessenger` 合约。
+
+自定义gateway可以托管多个代币跨链桥。在这种情况下，我们只允许通过使用以下参数调用 `MyL1Gateway` 合约上的` updateTokenMapping` 方案来桥接 L1Token 和 L2Token：
+
+- `_l1Token`: 我们之前在 Sepolia上 发布的 `L1Token` 合约地址。
+- `_l2Token`: 我们之前在 Scroll 上推出的 `L2Token` 合约地址。
+
+### 在 Scroll 上设置 Gateway 合约
+
+现在让我们切换到Scroll链，按照类似的步骤初始化 `MyL2Gateway` 合约。
+
+首先，调用 `MyL2Gateway` 合约的 `initialize` 方法 ：
+
+- `_counterpart`: 我们刚刚在Sepolia上发布的 `MyL1Gateway`地址。
+- `_router`: 将其设置为 `0x9aD3c5617eCAa556d6E166787A97081907171230`，Scroll 上的 `L2GatewayRouter` 合约。
+- `_messenger`: 将其设置为 `0xBa50f5340FB9F3Bd074bD638c9BE13eCB36E603d`，Scroll 上的 `L2ScrollMessenger` 合约。
+
+接下来，调用 `MyL2Gateway` 合约的 `updateTokenMapping` 方法：
+
+- `_l2Token`: 我们之前在 Scroll 上发布的 `L2Token` 合约地址
+- `_l1Token`: 我们之前在 Sepolia上 发布的 `L1Token` 合约地址。
+
+### 桥接代币
+
+我们现在可以调用 `MyL1Gateway` 合约的 `depositERC20`，`MyL2Gateway` 合约的 `withdrawERC20` ，就像Scroll官方跨链桥一样

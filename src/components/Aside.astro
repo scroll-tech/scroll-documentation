@@ -1,14 +1,14 @@
 ---
-import alertIcon from "./Alert/Assets/alert-icon.svg"
-import infoIcon from "./Alert/Assets/info-icon.svg"
-import dangerIcon from "./Alert/Assets/danger-icon.svg"
-import tipIcon from "./Alert/Assets/tip-icon.svg"
+import alertIcon from "./Alert/Assets/alert-icon.svg?raw"
+import infoIcon from "./Alert/Assets/info-icon.svg?raw"
+import dangerIcon from "./Alert/Assets/danger-icon.svg?raw"
+import tipIcon from "./Alert/Assets/tip-icon.svg?raw"
 export type Props = {
   type?: "note" | "tip" | "caution" | "danger"
   title?: string
 }
 
-const { type = "note", title = type } = Astro.props as Props
+const { type = "note", title } = Astro.props as Props
 
 // SVG icon paths based on GitHub Octicons
 const icons = {
@@ -21,12 +21,18 @@ const icons = {
 
 <aside class={`content ${type}`} aria-label={title}>
   <div class="icon">
-    <img src={icons[type]} style="width: 1.5em;height: 1.5em;" alt={type} />
+    <span class="inline-block w-[1.5rem] h-[1.5rem] text-black dark:text-white-800">
+      <Fragment set:html={icons[type]} />
+    </span>
   </div>
   <section class="asideContent">
-    <p class="title heading-100" aria-hidden="true">
-      {title}
-    </p>
+    {
+      title && (
+        <p class="title heading-100" aria-hidden="true">
+          {title}
+        </p>
+      )
+    }
     <slot />
   </section>
 </aside>
@@ -36,11 +42,8 @@ const icons = {
     /* Indicates the aside boundaries for forced colors users, transparent is changed to a solid color */
     outline: 1px solid transparent;
 
-    --aside-bg: var(--color-background-info);
-    background-color: var(--aside-bg);
-
     /* display: flex; */
-    @apply p-[30px] gap-4 rounded-[27px] text-info mb-[1rem];
+    @apply p-[30px] gap-4 rounded-[27px] text-info mb-[1rem] bg-callout-note dark:bg-callout-dark-note;
   }
 
   aside p.title {
@@ -82,19 +85,23 @@ const icons = {
   }
 
   .tip {
-    --aside-bg: #eee;
+    @apply bg-callout-tip dark:bg-callout-dark-tip;
   }
 
   .caution {
-    --aside-bg: var(--color-background-warning);
+    @apply bg-callout-caution dark:bg-callout-dark-caution;
   }
 
   .danger {
-    --aside-bg: var(--color-background-error);
+    @apply bg-callout-danger dark:bg-callout-dark-danger;
+  }
+
+  .note {
+    @apply bg-callout-note dark:bg-callout-dark-note;
   }
 
   .asideContent :global(p) {
-    margin-bottom: 0;
+    margin-bottom: 0 !important;
     font-size: 16px;
     line-height: 25px;
   }

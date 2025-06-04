@@ -1,0 +1,192 @@
+---
+section: developers
+date: Last Modified
+title: "Scroll'da İşlem Ücretleri"
+lang: "tr"
+permalink: "developers/transaction-fees-on-scroll"
+whatsnext: { "Sözleşme Dağıtımı Eğitimi": "/developers/guides/contract-deployment-tutorial/" }
+excerpt: "Scroll'da L1 ve L2 işlem ücretlerinin nasıl çalıştığını anlayın "
+---
+
+import Aside from "../../../../components/Aside.astro"
+
+## Genel Bakış
+
+Scroll'da işlem ücretleri, destek verdiği katmana (Katman 1) göre oldukça düşüktür. Kullanıcılar ve geliştiriciler için Scroll'daki işlem ücretleri, Ethereum ana ağında olduğuna benzer şekilde çalışır gibi görünür. Mevcut araçlar, cüzdanlar ve kodlar da muhtemelen olduğu gibi çalışacaklardır. Ancak cüzdanda gösterilen işlem ücreti, kullanılan yazılım Scroll'un ücret hesaplamalarından özellikle haberdar olmadığı sürece resmin tamamını içermeyecektir.
+
+L2 rollup'larındaki işlem maliyetleri tasarımları nedeniyle L1'in maliyetlerine bağlıdır. Ethereum'un güvenliğinden yararlanmak için Scroll'un, L1'de veri saklanması ve doğrulanmasında gereken işlem verilerinin ve kanıtların maliyetini de hesaba katması gerekir.
+
+Ethereum ana ağıyla karşılaştırıldığında Scroll, bunu yapmak için işlem ücreti hesaplamasına bazı yeni boyutlar getiriyor. Bir işlemin nihai maliyeti birkaç bölümden oluşur:
+
+- **L2 ücreti**
+  - L1'dekiyle aynı şekilde hesaplanır; "gas_price * gas_used" değerine eşittir
+- **L1 ücreti**
+  - Bu ek ücret, veri kullanılabilirliği için L1'e veri gönderilmesini kapsar. L1 üzerinden başlatılan işlemlerde bu ücret ödenmez.
+  - İşlemin çağrı verilerinin(calldata) boyutuna göre hesaplanır
+  - ETH, ücret karşılığında kullanıcının Scroll'daki bakiyesinden otomatik olarak düşülür
+
+Yüksek düzeyden bakacak olursak; **L2 ücreti** işleminizi L2 sıralayıcısında gerçekleştirmenin maliyetidir, **L1 ücreti** ise bu işlemi L1'de gerçekleştirmenin maliyetidir.
+
+Kısacası, "totalTxFee = l2Fee + l1Fee", tamamı Scroll ağının yerel gas tokenı olan ETH cinsinden ifade edilir.
+
+<Aside type="note" title="İşlem ücretleri nereye gönderilir?">
+Tüm tx ücretleri 'L2ScrollFeeVault' sözleşme bakiyesine toplanır. Bu sözleşme aynı zamanda "totalProcessed()(uint256)" kullanarak geçmişte L1'e çektiğimiz tutarı da takip eder.
+
+Blok üreticisi doğrudan bir ödül almaz ve 'COINBASE' opcode'u ücret kasası adresini(fee vault address) döndürür.
+
+</Aside>
+
+## L2 Ücretleri
+
+Scroll'daki işlemler, Ethereum'da olduğu gibi, hesaplamaları yürütme ve ürettikleri verileri saklama masraflarını ödemek zorundadır.
+
+### Yürütme Ücretinin Hesaplanması
+
+L2 yürütme ücreti basittir:
+
+```javascript
+l2TransactionExecutionFee = l2TransactionGasUsed * l2TransactionGasPrice
+```
+
+Toplam ücret, işlemin ne yaptığına ("l2TransactionGasUsed") ve mevcut piyasa koşullarına ("l2TransactionGasPrice") bağlıdır. Kullanıcılar gaz fiyatını belirler ve "gas used", bir Scroll düğümünde "estimateGas" RPC uç noktası çağrılarak değerlendirilir.
+
+Başka bir deyişle, yürütme ücreti tam olarak [EIP1559](https://eips.ethereum.org/EIPS/eip-1559) Ethereum öncesi gibi hesaplanır.
+
+## L1 Ücreti
+
+Her işlemin çağrı verileri Ethereum'a taahhüt edilmelidir, bu da "L1 Ücreti" olarak adlandırılan ek bir işlem ücretine tabi olur. Bunu yapmadan Scroll yalnızca L1 verilerinden yeniden oluşturulamazdı.
+
+İşlemler birer birer gerçekleştirilmez; blok grupları (ve işlem blokları) halinde toplanırlar. Bireysel bir işlemin maliyeti, veri yükündeki sıfırlar ve sıfır olmayan bytelara göre hesaplanır.
+
+### L1 Veri Ücretinin Tahmin Edilmesi
+
+Scroll, önceden konuşlandırılmış bir "L1GasPriceOracle"a sahiptir ve hem Scroll hem de Scroll Sepolia'da ([`0x5300000000000000000000000000000000000000002`](https://sepolia-blockscout.scroll.io/address/0x530000000000000000000000000000000000000002) adresinden erişilebilir durumdadır). Belirli bir işlemin ham verileri için L1 veri ücretini tahmin etmek için bir "getL1Fee" yöntemi sağlar.
+
+```solidity
+function getL1Fee(bytes memory _data) external view override returns (uint256);
+```
+
+<Aside type="note" title="L1'de gaz fiyatları yükselirse ne olur?">
+
+Sıralayıcı bir işlemi gerçekleştirdikten sonra kullanıcının L1 ücreti sabitlenir ve herhangi bir dalgalanma kullanıcının ödediği tutarı etkilemez.
+
+<br />
+Scroll'un kısa blok süreleri nedeniyle, bir işlemin sunulması ile bir bloğa dahil edilmesi arasındaki herhangi bir L1 gazı değişikliği minimum düzeyde olacaktır. Sıralayıcı, bir işlemin bir bloğa dahil edilmesi ile sıralayıcının verileri L1'e iletmesi arasında L1 gaz maliyetlerinde meydana gelen değişiklikleri karşılayacaktır.
+
+</Aside>
+
+### Gaz Oracle'ı ile L1 Veri Ücretinin Hesaplanması
+
+Bahsedildiği gibi, 'L1GasPriceOracle' verilen ham işlem verilerine göre L1 gaz ücretini tahmin etmek için kullanılır. Bu, Scroll tarafından çalıştırılan bir aktarıcı tarafından güncellenen bir **push oracle**'dır.
+
+İstenecek verinin ücreti birden fazla faktöre bağlıdır:
+
+- İmzalı RLP kodlu bir işlemin "sıfırları" ve "sıfır olmayan" byteları
+- `l1BaseFee` - L1'deki mevcut taban ücret
+- "overhead" - Bir veri taahhüdü işleminin ek gaz yükü
+- `scalingFactor` - Fiyat artışlarını hesaba katmak için kullanılan bir ölçeklendirme faktörü
+- `PRECISION` - Nihai ücreti ölçeklendirmek için kullanılan bir sabit
+
+L1 veri ücretini hesaplamak için aşağıdaki adımlar gerçekleştirilir:
+
+1. 'L1GasPriceOracle' sözleşmesindeki 'l1BaseFee', 'overhead' ve 'scalar' adlı üç alanı oku. Sözleşmedeki bu alanlara ilişkin yuvalar şunlardır:
+
+   | Alan      | Slot |
+   | --------- | ---- |
+   | l1BaseFee | 1    |
+   | overhead  | 2    |
+   | scalar    | 3    |
+
+2. İşlemdeki sıfır byteları ve sıfır olmayan byteları say.
+3. `TX_DATA_ZERO_GAS = 4`, `TX_DATA_NON_ZERO_GAS = 16`[^eip-2028] ve `PRECISION = 1e9`'i göz önüne alarak L1 veri ücretini hesapla:
+
+   ```javascript
+   l1Gas = zeros * TX_DATA_ZERO_GAS + (nonzeros + 4) * TX_DATA_NON_ZERO_GAS
+   l1GasFee = ((l1Gas + overhead) * l1BaseFee * scalar) / PRECISION
+   ```
+
+   RLP kodlu işlemdeki byte sayısını depolamak için sıfır olmayan bytelarda ek 4 byte ayırırız.
+
+[^eip-2028]: Daha fazla bilgi için bkz. [EIP-2028](https://eips.ethereum.org/EIPS/eip-2028).
+
+### L1GasPriceOracle API
+
+#### overhead
+
+```solidity
+function overhead() external view returns (uint256);
+```
+
+Geçerli L1 ücreti gaz yükünü döndürür
+
+#### scalar
+
+```solidity
+function scalar() external view returns (uint256);
+```
+
+Geçerli l1 ücret skaler değerini döndürür
+
+#### l1BaseFee
+
+```solidity
+function l1BaseFee() external view returns (uint256);
+```
+
+Bilinen en son l1 taban ücretini döndürür
+
+#### getL1Fee
+
+```solidity
+function getL1Fee(bytes memory data) external view returns (uint256);
+```
+
+RLP kodlu giriş işleminin(input) boyutuna, mevcut L1 taban ücretine ve çeşitli dinamik parametrelere göre L1 kısmının ücretini hesaplar.
+
+**Döndürür:** İşlem için ödenmesi gereken L1 ücreti
+
+| Parametre | Açıklama                                                    |
+| --------- | ----------------------------------------------------------- |
+| data      | L1 ücretini almak için kullanılan, imzalanmış tamamen RLP kodlu işlem. |
+
+#### getL1GasUsed
+
+```solidity
+function getL1GasUsed(bytes memory data) external view returns (uint256);
+```
+
+Bir işlem için kullanılan L1 gazının miktarını hesaplar. İşlemin ve durum köklerinin L1'e kaydedilmesine ilişkin işlem başına gaz ek yükünü temsil eden ek yükü ekler. Giriş işleminin imzası olmadığı gerçeğini hesaba katarak 74 bytelık dolgu ekler.
+
+**Döndürür:** İşlemi yayınlamak için kullanılan L1 gazı miktarı.
+
+| Parametre | Açıklama                                                    |
+| --------- | ----------------------------------------------------------- |
+| data      | L1 ücretini almak için kullanılan, imzalanmış tamamen RLP kodlu işlem. |
+
+## L1 Kaynaklı İşlemler
+
+L1'den L2'ye mesajlaşırken kullanıcı L1'deki tüm işlem ücretlerini öder. Kullanıcı L1'in kendi gaz ücretini öder ancak bu sebepten Scroll'a L1 Veri Ücreti ödemesine gerek yoktur. Fakat L1 işlemlerinde L2 Yürütme Ücretlerinin hesaba katılması ve ne kadar L2 gazı ödeyeceklerini bilmeleri gerekecek.
+
+L1'deki sözleşmeler, belirli bir işlem için gaz ücretini almak üzere L1'e dağıtılmış L2 Gaz Fiyatı Oracle sözleşmesini kullanabilir. Oracle aynı zamanda mevcut l2BaseFee'yi ve belirli bir gas limiti için tahmini alanlar arası(cross-domain) mesaj ücretini de sağlar.
+
+Ana ağda, "L2GasPriceOracle" [`0x987e300fDfb06093859358522a79098848C33852`](https://etherscan.io/address/0x987e300fDfb06093859358522a79098848C33852) adresinde konuşlandırılır.
+
+Sepolia'da, son versiyona yükseltilmiş bir "L1MessageQueueWithGasPriceOracle" kullanılmalı ve [`0xF0B2293F5D834eAe920c6974D50957A1732de763`](https://sepolia.etherscan.io/address/0xF0B2293F5D834eAe920c6974D50957A1732de763) adresine dağıtılmalıdır.
+
+Sisteminiz zincir dışı mekanizmaları destekliyorsa, belirli bir işlem için gerekli gaza ilişkin bir tahmin almak üzere herhangi bir Scroll RPC düğümünde "eth_estimateGas" ve "eth_gasPrice"ı da çağırabilirsiniz.
+
+<Aside type="danger" title="Yükseltme Bildirimi">
+Şubat 2024 Köprü Yükseltmesinden sonra, "L1GasPriceOracle" kullanımdan kaldırılacak ve yerine [`0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B`](https://etherscan.io/address/0x0d7E906BD9) adresinde bulunabilecek 'L1MessageQueueWithGasPriceOracle' kullanılacaktır. caFa154b048cFa766Cc1E54E39AF9B).
+
+Yükseltme işleminin iki haftalık bir sürenin ardından 21 Şubat 2024'te tamamlanması bekleniyor. Scroll Sepolia zaten bu yükseltmeden geçmiştir. Daha fazlasını [buradan](https://scroll.io/blog/protocol-upgrade-bridging-cost-reduction) okuyun.
+
+</Aside>
+{/* TODO: Add full documentation of key methods */}
+
+## Gelecek Yol Haritası
+
+Şu anda, L1'de kanıt üretimi için gereken hesaplama ve kanıt doğrulaması için gereken gas, Scroll ve çeşitli kanıtlama ortakları tarafından karşılanmaktadır. L2 Gaz Fiyatına bir taban değer belirlenerek kısmen halledilmiştir.
+
+Kanıtlayıcı ağı merkeziyetsizleştikçe, sistemin sürdürülebilir ve ölçeklenebilir olması için kanıt oluşturmaya yönelik teşviklerin protokole dahil edilmesi gerekecektir.
+
+Nihai gaz maliyetinin kanıt üretme maliyetini net bir şekilde içermesini bekliyoruz. Daha fazla protokol optimizasyonu ile her kanıtta birçok işlem kapsandığından kullanıcı için bu maliyet minimum düzeyde olacaktır.

@@ -5,12 +5,12 @@ title: "Intro to Rollups"
 lang: "en"
 permalink: "learn/intro-to-rollups"
 excerpt: "Rollups are the most predominant layer 2 scaling solution in the Ethereum ecosystem."
-whatsnext: { "Scroll Rollup Process": "/technology/chain/rollup" }
+whatsnext: { "Scroll Rollup Process": "/en/technology/chain/rollup" }
 ---
 
 ## What’s a rollup?
 
-Rollups are the most predominant layer 2 scaling solution in the Ethereum ecosystem, and are viewed as a [central part](https://ethereum-magicians.org/t/a-rollup-centric-ethereum-roadmap/4698) of the Ethereum roadmap.
+Rollups are the most predominant layer 2 scaling solution in the Ethereum ecosystem and are viewed as a [central part](https://ethereum-magicians.org/t/a-rollup-centric-ethereum-roadmap/4698) of the Ethereum roadmap.
 
 A rollup processes batches of transactions off-chain (i.e. not on layer 1), and then posts the resulting data on-chain (i.e. on layer 1).
 
@@ -22,13 +22,13 @@ In order for a rollup to be secure, it must prove that its off-chain computation
 
 An optimistic rollup is a rollup that uses fraud proofs to assert the validity of its computation.
 
-Fraud proofs are a mechanism that allow users to challenge and prove the invalidity of any computation performed on the L2. If a fraud proof is successfully submitted, the L2 can be rolled back to a previous state and the invalid computation can be corrected. Fraud proofs depend on at least one honest party checking that the L2 transactions have been correctly executed.
+Fraud proofs are a mechanism that allows users to challenge and prove the invalidity of any computation performed on the L2. If a fraud proof is successfully submitted, the L2 can be rolled back to a previous state and the invalid computation can be corrected. Fraud proofs depend on at least one honest party checking that the L2 transactions have been correctly executed.
 
 ## What’s a ZK rollup?
 
 A ZK rollup is a rollup that uses validity proofs to assert the validity of its computation.
 
-When a ZK rollup executes a batch of transactions and posts the resulting state to L1, it also posts a validity proof. This mathematical proof proves that the resulting state is indeed the state which results from correctly executing the batch of transactions.
+When a ZK rollup executes a batch of transactions and posts the resulting state to L1, it also posts a validity proof. This mathematical proof proves that the resulting state is indeed the state that results from correctly executing the batch of transactions.
 
 Today, there are multiple types of ZK rollups, broadly defined as either zkVMs (zk Virtual Machines) or zkEVMs (zk Ethereum Virtual Machines).
 

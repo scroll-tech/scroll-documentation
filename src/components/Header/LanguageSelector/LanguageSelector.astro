@@ -3,93 +3,148 @@ import i18next from "i18next"
 import { localizePath } from "astro-i18next"
 import localeEmoji from "locale-emoji"
 import ISO6991 from "iso-639-1"
+import { clsx } from "~/lib"
 
 const supportedLanguages = i18next.languages
-const currentLanguage = i18next.language
 
 const { pathname } = Astro.url
 
-const { showFlag = false, languageMapping, ...attributes } = Astro.props
+const { showFlag = false, languageMapping } = Astro.props
+const { dark } = Astro.props
+
+const getLabel = (language) => {
+  const flag = showFlag ? localeEmoji(language) + " " : ""
+  let nativeName = ""
+  if (languageMapping && languageMapping.hasOwnProperty(language)) {
+    nativeName = languageMapping[language]
+  } else {
+    nativeName = ISO6991.getNativeName(language)
+  }
+
+  return flag + nativeName
+}
 ---
 
-<div class="language-selector">
-  <ul class="options-list">
-    {
-      supportedLanguages.map((supportedLanguage) => {
-        let value = localizePath(pathname, supportedLanguage)
-        const flag = showFlag ? localeEmoji(supportedLanguage) + " " : ""
-        let nativeName = ""
-        if (languageMapping && languageMapping.hasOwnProperty(supportedLanguage)) {
-          nativeName = languageMapping[supportedLanguage]
-        } else {
-          nativeName = ISO6991.getNativeName(supportedLanguage)
-        }
-
-        const label = flag + nativeName
-
-        return (
-          <li value={value} onclick={`if ("${value}" !== window.location.pathname) location.href = "${value}";`}>
-            {label}
-          </li>
-        )
-      })
-    }
-  </ul>
+<div class={clsx("language-selector")}>
+  <div
+    class={clsx(
+      "current-language",
+      "text-black border-black dark:text-white-800 dark:border-white-800",
+      dark ? "text-white border-white" : ""
+    )}
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+      <path
+        d="M12.0886 2.19173C11.899 1.99095 11.5825 1.98187 11.3817 2.17145C11.181 2.36103 11.1719 2.67748 11.3615 2.87827L12.0886 2.19173ZM9.82896 1.70578C10.0724 1.83614 10.3754 1.74448 10.5058 1.50104C10.6361 1.25761 10.5445 0.954588 10.301 0.824224L9.82896 1.70578ZM6.475 0.71L6.83644 1.05549L6.83781 1.05405L6.475 0.71ZM6.51 13.325L6.84218 12.9513L6.84158 12.9508L6.51 13.325ZM7.43 13.27L7.8006 13.6056L7.80182 13.6043L7.43 13.27ZM11.3615 2.87827C12.3774 3.95429 13 5.40282 13 7H14C14 5.13718 13.2726 3.44571 12.0886 2.19173L11.3615 2.87827ZM13 7C13 10.3139 10.3139 13 7 13V14C10.8661 14 14 10.8661 14 7H13ZM7 13C3.68614 13 1 10.3139 1 7H0C0 10.8661 3.13386 14 7 14V13ZM1 7C1 3.68614 3.68614 1 7 1V0C3.13386 0 0 3.13386 0 7H1ZM7 1C8.02607 1 8.98516 1.25391 9.82896 1.70578L10.301 0.824224C9.31484 0.296094 8.19393 0 7 0V1ZM1.50005 4.99H12.965V3.99H1.50005V4.99ZM1.49999 9.995H12.97V8.995H1.49999V9.995ZM7.81355 0.406447C7.39863 -0.00847185 6.63779 -0.188318 6.11219 0.365954L6.83781 1.05405C6.86485 1.02554 6.89025 1.0169 6.92687 1.01975C6.97276 1.02331 7.04172 1.04883 7.10645 1.11355L7.81355 0.406447ZM6.11356 0.364509C5.02397 1.5044 4 3.93397 4 7.225H5C5 4.10603 5.97603 1.9556 6.83644 1.05549L6.11356 0.364509ZM4 7.225C4 10.5231 5.07388 12.7206 6.17842 13.6992L6.84158 12.9508C6.01612 12.2194 5 10.3369 5 7.225H4ZM6.17782 13.6987C6.65963 14.127 7.3826 14.0672 7.8006 13.6056L7.0594 12.9344C6.9974 13.0028 6.90037 13.003 6.84218 12.9513L6.17782 13.6987ZM7.80182 13.6043C8.80675 12.4865 10 10.6511 10 7.23H9C9 10.3689 7.92325 11.9735 7.05818 12.9357L7.80182 13.6043ZM10 7.23C10 3.85511 8.90599 1.49888 7.81355 0.406447L7.10645 1.11355C7.96401 1.97112 9 4.04489 9 7.23H10Z"
+        fill="currentColor"></path>
+    </svg>
+    <span>{getLabel(supportedLanguages[0])}</span>
+  </div>
+  <div class="options-modal">
+    <ul
+      class={clsx(
+        "options-list",
+        "bg-pure-white  border-black dark:border-white-800 dark:bg-black",
+        dark ? "!bg-pure-black !border-white dark:!border-white-800" : ""
+      )}
+    >
+      {
+        supportedLanguages.map((supportedLanguage, idx) => {
+          let value = localizePath(pathname, supportedLanguage)
+          const label = getLabel(supportedLanguage)
+          return (
+            <li
+              class={clsx("text-black dark:text-white-800", dark ? "text-white dark:text-white-800" : "")}
+              value={value}
+              onclick={`if ("${value}" !== window.location.pathname) location.href = "${value}";`}
+            >
+              {idx === 0 ? (
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <rect x="0.5" y="0.5" width="15" height="15" rx="7.5" stroke="currentColor" />
+                  <circle cx="7.99989" cy="8.00007" r="4.8" fill="currentColor" />
+                </svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <rect x="0.5" y="0.5" width="15" height="15" rx="7.5" stroke="currentColor" />
+                </svg>
+              )}
+              <span>{label}</span>
+            </li>
+          )
+        })
+      }
+    </ul>
+  </div>
 </div>
 
 <style>
   .language-selector {
     position: relative;
-    height: 22px;
-    width: 83px;
+  }
+
+  .language-selector:hover .options-modal {
+    display: flex;
+  }
+
+  .options-modal {
+    position: absolute;
+    top: 36px;
     display: none;
+    padding-top: 4px;
+  }
+  .current-language {
+    width: 100px;
+    border-radius: 5px;
+    border-width: 1px;
+    border-style: solid;
+    display: flex;
+    height: 36px;
+    padding: 0 12px;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
   }
 
   .options-list {
-    width: 83px;
-    background-color: white;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 6px top 3px;
-    background-size: 1em;
-    text-align: center;
+    width: 100px;
     font-size: 14px;
     font-weight: 500;
-    line-height: 22px;
-    height: 22px;
     letter-spacing: 0.14px;
-    padding: 0px 15px;
-    border-radius: 18px;
-    border: 1px solid var(--black-100);
+    padding: 4px 12px;
+    border-radius: 5px;
+    border-width: 1px;
+    border-style: solid;
     overflow: hidden;
     cursor: pointer;
-    position: absolute;
-    top: 0;
     transition: height 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
   }
 
-  .options-list:hover {
-    height: auto;
+  .options-list li {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    padding: 8px 0px;
   }
 
-  .options-list li:hover {
-    color: var(--orange-500);
+  .options-list li svg,
+  .current-language svg {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    color: inherit;
   }
 
-  @media (min-width: 50em) {
-    .language-selector {
-      width: 94px;
-      height: 35px;
-    }
-
-    .options-list {
-      background-position: right 4px top 8px;
-
-      font-weight: 400;
-      line-height: 35px;
-      letter-spacing: 0.16px;
-      height: 35px;
-      width: 94px;
-    }
+  .options-list li span,
+  .current-language span {
+    flex: 1;
+    text-align: left;
+    margin-left: 8px;
+    color: inherit;
   }
 </style>

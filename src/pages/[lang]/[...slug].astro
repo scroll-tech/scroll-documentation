@@ -45,9 +45,9 @@ if (!page.notTranslated) {
   const render = await page.render()
   Content = render.Content
   headings = render.headings
-} else {
-  changeLanguage(params.lang)
 }
+
+changeLanguage(params.lang)
 
 const content = {
   ...page.data,

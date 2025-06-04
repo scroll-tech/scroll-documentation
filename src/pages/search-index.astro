@@ -8,8 +8,16 @@ changeLanguage("en")
 // import .astro files
 const pages = await Astro.glob("./**/*.astro")
 // import .md files
-const posts = [...(await Astro.glob("../content/docs/en/**/*.md")).filter((post) => !post.frontmatter.draft)]
-const postsMdx = [...(await Astro.glob("../content/docs/en/**/*.mdx")).filter((post) => !post.frontmatter.draft)]
+const posts = [
+  ...(await Astro.glob("../content/docs/en/**/*.md")),
+  ...(await Astro.glob("../content/docs/es/**/*.md")),
+  ...(await Astro.glob("../content/docs/zh/**/*.md")),
+].filter((post) => !post.frontmatter.draft)
+const postsMdx = [
+  ...(await Astro.glob("../content/docs/en/**/*.mdx")),
+  ...(await Astro.glob("../content/docs/es/**/*.mdx")),
+  ...(await Astro.glob("../content/docs/zh/**/*.mdx")),
+].filter((post) => !post.frontmatter.draft)
 const postsMdxWithContent = postsMdx.map((post) => {
   const url = new URL(post.file, import.meta.url)
   const content = fs.readFileSync(url, "utf-8")

@@ -7,7 +7,9 @@ const anchorHash = anchor.replace(/\s+/g, "-")
 ---
 
 <details id={anchorHash}>
-  <summary>
+  <summary
+    class="before:content-[''] before:bg-[url('/svgs/summary-icon.svg')] dark:before:bg-[url('/svgs/summary-icon-white.svg')]"
+  >
     <div>
       <slot name="title" />
     </div>
@@ -46,9 +48,9 @@ const anchorHash = anchor.replace(/\s+/g, "-")
     border-radius: 27px;
     border: 1px solid #dadada;
     overflow: hidden;
-    color: var(--color-text-primary);
-    font-weight: 600;
+    font-weight: 400;
     padding-left: 0.3rem;
+    @apply text-black dark:text-white-800 border-primary dark:border-dark-primary;
   }
 
   details:hover {
@@ -89,7 +91,6 @@ const anchorHash = anchor.replace(/\s+/g, "-")
   }
 
   summary::before {
-    content: "";
     display: inline-block;
     font-size: 0.75em;
     transform: rotate(-90deg);
@@ -97,8 +98,9 @@ const anchorHash = anchor.replace(/\s+/g, "-")
     margin-right: 1rem;
     height: 10px;
     width: 10px;
-    background: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAiIGhlaWdodD0iNiIgdmlld0JveD0iMCAwIDEwIDYiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGlkPSJWZWN0b3IiIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNNC45OTk3NiA2QzQuNzY4MSA2IDQuNTUwMjkgNS45MDc3NCA0LjM4NjQ0IDUuNzQwMTlMMC4yNTM0NTEgMS41MTM4N0MtMC4wODQ0ODM2IDEuMTY4MDIgLTAuMDg0NDgzNiAwLjYwNTY2IDAuMjUzNDUxIDAuMjU5ODExQzAuNDE3Mjk4IDAuMDkyMjY0MiAwLjYzNTExNSAwIDAuODY2NzcgMEMxLjA5ODQzIDAgMS4zMTYyNCAwLjA5MjI2NDIgMS40ODAwOSAwLjI1OTgxMUw1LjAwMDAzIDMuODU5MjVMOC41MTk3IDAuMjU5ODExQzguNjgzNTUgMC4wOTIyNjQyIDguOTAxMzcgMCA5LjEzMzAyIDBDOS4zNjQ2OCAwIDkuNTgyNDkgMC4wOTIyNjQyIDkuNzQ2MzQgMC4yNTk4MTFDMTAuMDg0NiAwLjYwNTY2IDEwLjA4NDYgMS4xNjgzIDkuNzQ2MzQgMS41MTM4N0w1LjYxMzM1IDUuNzQwMTlDNS40NDk1MSA1LjkwNzc0IDUuMjMxNjkgNiA1LjAwMDAzIDZINC45OTk3NloiIGZpbGw9ImJsYWNrIi8+Cjwvc3ZnPgo=)
-      center / contain no-repeat;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
   }
   details[open] summary::before {
     transform: rotate(0deg);

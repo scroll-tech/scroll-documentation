@@ -1,6 +1,7 @@
 import { useState, useEffect } from "preact/hooks"
 import { aboutList, mediaList, resourceList } from "../helper.tsx"
 import styles from "./PureFooter.module.css"
+import { t } from "i18next"
 
 const Footer = () => {
   return (
@@ -9,28 +10,28 @@ const Footer = () => {
         <img src="/scroll-white.svg" style={{ width: "80px" }} />
       </a>
       <div className={styles.about}>
-        <p className={styles.title}>About Scroll</p>
+        <p className={styles.title}>{ t("footer.aboutScroll.title") }</p>
         <ul>
           {aboutList.map((item) => (
             <li key={item.name} className={styles.content}>
-              <a href={item.href}>{item.name}</a>
+              <a href={item.href}>{t(item.name)}</a>
             </li>
           ))}
         </ul>
       </div>
       <div className={styles.resource}>
-        <p className={styles.title}>Resources</p>
+        <p className={styles.title}>{ t("footer.resources.title") }</p>
         <ul>
           {resourceList.map((item) => (
             <li key={item.name} className={styles.content}>
-              <a href={item.href}>{item.name}</a>
+              <a href={item.href}>{t(item.name)}</a>
             </li>
           ))}
         </ul>
       </div>
 
       <div className={styles.follow}>
-        <p className={styles.title}>Follow Us</p>
+        <p className={styles.title}>{ t("footer.followUs.title") }</p>
         <div>
           {mediaList.map((item) => (
             <a external href={item.href} key={item.name} target="_blank">
@@ -39,8 +40,6 @@ const Footer = () => {
           ))}
         </div>
       </div>
-
-      <p className={styles.version}>© Version 1.0.0 Scroll Ltd 2023</p>
     </div>
   )
 }

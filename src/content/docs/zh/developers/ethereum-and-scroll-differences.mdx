@@ -1,0 +1,103 @@
+---
+section: developers
+date: Last Modified
+title: "以太坊和Scroll的区别"
+lang: "zh"
+permalink: "developers/ethereum-and-scroll-differences"
+whatsnext: { "L1 和 L2 跨链": "/zh/developers/l1-and-l2-bridging/" }
+excerpt: "There are a number of technical details that differ between Ethereum mainnet's EVM and Scroll's modified design for a zkEVM. Below you can see those differences as they exist now."
+---
+
+import Aside from "../../../../components/Aside.astro"
+
+以太坊主网的 EVM 和 Scroll 修改设计的 zkEVM 之间存在许多技术细节差异。你可以在如下看到现在存在的这些差异。
+
+对于开源贡献者和基础设施开发者，请联系我们的团队以获得更多支持。
+
+<Aside type="tip" title="不用担心!">
+  对于一般的 Solidity 开发者来说，这些细节不会影响你的开发体验。
+</Aside>
+
+## EVM 操作码
+
+| Opcode                      | Solidity equivalent | Scroll Behavior                                                                                            |
+| --------------------------- | ------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `BLOCKHASH`                 | `block.blockhash`   | 返回最新256个区块的 `keccak(chain_id \|\| block_number)`                                     |
+| `COINBASE`                  | `block.coinbase`    | 返回预部署的费用合约地址，查看 [Scroll 合约](/developers/scroll-contracts) |
+| `DIFFICULTY` / `PREVRANDAO` | `block.difficulty`  | 返回 0                                                                                                 |
+| `BASEFEE`                   | `block.basefee`     | 禁用。[^eip1559] 如果引入该操作码，交易将被还原                       |
+| `SELFDESTRUCT`              | `selfdestruct`      | 禁用。如果引入该操作码，交易将被还原。[^willadpot]                      |
+
+[^eip1559]: 我们目前在 Scroll 上禁用了 EIP-1559。
+[^willadpot]: 我们未来会改用以太坊的方案。
+
+## EVM 预编译合约
+
+`SHA2-256` (地址： `0x2`), `RIPEMD-160` (地址： `0x3`), and `blake2f` (地址： `0x9`) 预编译合约目前不支持。 对这些预编译协定的调用将还被还原。我们计划在未来的硬分叉中启用这三个预编译。
+
+`modexp` 预编译已经支持，但仅支持大小小于或等于 32 字节（即 u256 ）的输入。
+
+`ecPairing` 预编译已经支持， 但点（sets, pairs）的数量限制为 4，而不是 6。
+
+其他 EVM 预编译均已支持： `ecRecover`, `identity`, `ecAdd`, `ecMul`.
+
+## State Account 对象
+
+### **其他字段**
+
+我们将在当前`StateAccount`对象中添加两个字段：`PoseidonCodehash`和`CodeSize`。
+
+```go
+type StateAccount struct {
+	Nonce    uint64
+	Balance  *big.Int
+	Root     common.Hash // merkle root of the storage trie
+	KeccakCodeHash []byte // still the Keccak codehash
+	// added fields
+	PoseidonCodeHash []byte // the Poseidon codehash
+	CodeSize uint64
+}
+```
+
+### **CodeHash**
+
+与此相关，我们为每个合约字节码维护两种类型的代码哈希：Keccak 哈希和 Poseidon 哈希。
+
+保留 `KeccakCodeHash` 是为了保持`EXTCODEHASH` 的兼容性，`PoseidonCodeHash`用于验证 zkEVM 中加载的字节码的正确性，因为Poseiden 哈希效率更高。
+
+### **CodeSize**
+
+验证时 `EXTCODESIZE`，将整个合约数据加载到 zkEVM 中是代价很大。相反，我们在合约创建期间将合约大小存储在存储中。这样，我们就不需要加载代码——存储证明足以验证这个操作码。
+
+## **Block Time**
+
+Sepolia 测试网的目标是恒定的 3 秒出块时间。这比理想情况下以太坊的 12 秒更短且更一致。
+
+选择 3 秒的出块时间有两个原因：
+
+- 更快、更稳定的出块时间可以带来更快的反馈和更好的用户体验
+- 当我们优化测试网中的 zkEVM 电路时，即使我们保持每个区块或batch的较小的Gas上限时，我们仍然可以达到比以太坊更高的吞吐量。
+
+## 未来的 EIPs
+
+我们将密切关注所有以太坊采用的新EIP，并将在合适的时候采用它们。如果你对更多细节感兴趣，请访问[我们的社区论坛](https://community.scroll.io)或[Discord](https://discord.gg/scroll)。
+
+## EVM 目标版本
+
+为了确保合约中不会发生意外行为，我们建议在编译智能合约时使用 `伦敦` 作为目标版本。
+
+您可以更详细地阅读有关上海硬分叉与伦敦在以太坊[执行规范](https://github.com/ethereum/execution-specs/blob/master/network-upgrades/mainnet-upgrades/shanghai.md)上的区别，以及新 `PUSH0` 指令如何影响[Solidity 编译器](https://blog.soliditylang.org/2023/05/10/solidity-0.8.20-release-announcement/).。
+
+## 交易费用
+
+Scroll Sepolia交易收取的费用包含两部分：
+
+- **L2 gas 费：** 与L1类似，L2 Gas费等于 to `L2_gas_price * L2_gas_used`，包括以下费用：
+  - L2 排序器执行和存储成本
+  - L1 的有效性证明验证和最终确认成本
+  - 证明器成本
+- **L1 数据费用:** 除 L2 gas费外的额外费用。L1 数据费用仅向 L2 发起的交易收取，不向 L1 发起的交易收取。该费用包括将数据发送到 L1 以获得数据可用性的成本。由于我们将 tx 数据汇总到 L1，因此 L1 汇总费用是根据 tx 数据的大小计算的。
+
+有关更多信息，请参阅 [Scroll上的交易费用](/developers/transaction-fees-on-scroll).
+
+---

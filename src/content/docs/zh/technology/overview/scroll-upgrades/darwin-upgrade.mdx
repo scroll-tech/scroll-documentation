@@ -1,0 +1,90 @@
+---
+section: technology
+date: Last Modified
+title: "Darwin Upgrade"
+lang: "zh"
+permalink: "technology/overview/scroll-upgrades/darwin-upgrade"
+---
+
+### 概览
+
+此次升级将通过对多个批次使用一个聚合的 zk 证明来将 gas 费用降低 34%，无需再为每个批次分别完成终结。
+
+- Darwin 使用新的 [批次编解码器 V3](https://github.com/scroll-tech/da-codec/tree/main/encoding/codecv3)。
+- 除了之前的 `chunk` 和 `batch` 概念外，还新增了 `bundle` 概念：
+    - `Chunk`：包含多个 L2 区块的 zkEVM 单元。
+    - `Batch`：多个 chunk 的集合，是数据可用性单位。
+    - `Bundle`：多个 batch 的集合，是终结单位。
+
+    与 Curie 的主要区别在于：Scroll 现在通过一个 bundle zk-proof 终结多个 batch。
+
+- 链上的 bundle 验证器使用新的 public input 结构。
+
+### 时间表
+
+- **Scroll Sepolia 测试网**
+  - 升级时间：2024 年 8 月 14 日
+- **Scroll 主网**
+  - timelock 开始：2024 年 8 月 5 日
+  - 升级生效：2024 年 8 月 21 日
+
+### 技术细节
+
+#### 智能合约变更
+
+*备注：自 Curie 升级后，Scroll 的合约已迁移到新仓库 [scroll-contracts](https://github.com/scroll-tech/scroll-contracts)。*
+
+本次升级的代码改动可参考 [此 PR](https://github.com/scroll-tech/scroll-contracts/pull/4)，主要变化：
+
+- 新增 `BatchHeaderV3Codec`
+- `L1MessageQueue` 中的消息处理逻辑由 finalize 步骤提前到 commit。
+- 新的 bundle public input 格式由 `IZkEvmVerifierV2` 实现，并集成到 `MultipleVersionRollupVerifier`。
+- 在 `ScrollChain` 中，引入了 `commitBatchWithBlobProof` 和 `finalizeBundleWithProof` 函数用于 batch 提交与 bundle 终结。
+
+查看 [合约版本发布页](https://github.com/scroll-tech/scroll-contracts/releases/tag/v1.0.0) 了解更多细节。
+
+#### 节点变化
+
+- 节点版本：`v5.6.0`
+- 支持基于时间戳的分叉升级。
+- 支持 batch codec v3 的处理。
+
+详细变更请见 [发布说明](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.6.0)。
+
+#### zkEVM 电路变化
+
+新版本：`v0.12.0`（[发布链接](https://github.com/scroll-tech/zkevm-circuits/releases/tag/v0.12.0)）
+
+- 新增 `RecursionCircuit`，用于递归聚合多个 batch 的 SNARK。
+- 电路结构由 5 层扩展至 7 层。
+- 新的 public input 支持跨 batch 的上下文。
+
+技术细节请参考 [Darwin Notion 文档](https://scrollzkp.notion.site/Upgrade-4-Darwin-Documentation-05a3ecb59e9d4f288254701f8c888173)。
+
+#### 安全审计
+
+- TrailofBits 审计：即将发布！
+
+### 兼容性
+
+#### Sequencer 与 Follower 节点
+
+此次升级不更改状态转换逻辑，因此兼容旧节点。但建议升级至 [v5.6.0](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.6.0)。
+
+#### Dapp 与索引器
+
+升级后涉及关键变更：
+
+- 使用新的 [V3 编解码器](https://github.com/scroll-tech/da-codec/tree/main/encoding/codecv3)，新增字段：
+    - `lastBlockTimestamp`
+    - `blobDataProof`
+- 批次通过 `commitBatchWithBlobProof` 提交。
+- 批次终结使用 `finalizeBundleWithProof`。
+- `FinalizeBatch` 事件语义改变：现在表示从上一个已终结 batch 到当前 batch 之间的所有 batch 都已终结。
+
+建议：
+
+- 索引器需适配新的 batch 编解码逻辑与提交接口。
+- 跟踪状态根时需考虑 batch bundle 的新结构。
+
+详见完整文档：[Darwin 技术文档](https://scrollzkp.notion.site/Upgrade-4-Darwin-Documentation-05a3ecb59e9d4f288254701f8c888173)。

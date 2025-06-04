@@ -16,6 +16,7 @@ export const MENU: MenuItems = {
     { text: "Developers", link: "/en/developers", section: "developers" },
     { text: "Technology", link: "/en/technology", section: "technology" },
     { text: "Learn", link: "/en/learn", section: "learn" },
+    { text: "SDK", link: "/en/sdk", section: "sdk" },
   ],
   zh: [
     {
@@ -36,5 +37,15 @@ export const MENU: MenuItems = {
     { text: "Desarrolladores", link: "/es/developers", section: "developers" },
     { text: "Tecnología", link: "/es/technology", section: "technology" },
     { text: "Aprende", link: "/es/learn", section: "learn" },
+  ],
+  tr: [
+    {
+      text: "Başla",
+      link: "/tr/getting-started/overview",
+      section: "gettingStarted",
+    },
+    { text: "Geliştiriciler", link: "/tr/developers", section: "developers" },
+    { text: "Teknoloji", link: "/tr/technology", section: "technology" },
+    { text: "Öğren", link: "/tr/learn", section: "learn" },
   ],
 }

@@ -1,0 +1,156 @@
+---
+section: technology
+date: Last Modified
+title: "Rollup 流程"
+lang: "zh"
+permalink: "technology/chain/rollup"
+whatsnext: { "和以太坊 EVM的区别": "/zh/technology/chain/differences/" }
+---
+
+import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import RollupProcess from "../_images/rollup.png"
+
+本文档介绍Scroll中的Rollup流程。
+
+## 工作流程
+
+<ClickToZoom src={RollupProcess} alt="Rollup Process" />
+
+该图说明了Rollup工作流。L2 排序器包含三个模块：
+
+- **同步服务** 将订阅从 L1 跨链桥合约中发出的事件。一旦检测到，将附加到 L1 收件箱，同步服务将相应地生成一个新的 `L1MessageTx` 交易，并将其添加到本地 L1 交易队列中。
+- **内存池** 收集直接提交给 L2 排序器的交易。
+- **执行器** 从 L1 交易队列和 L2 内存池中提取交易，执行它们来构造新的 L2 区块。
+
+The rollup node contains three modules:
+Rollup 节点包含三个模块：
+
+- **中继器（Relayer）** 提交承诺交易并将在rollup合约中最终确认，以实现数据可用性和最终性。
+- **块提议者（Chunk Proposer）** 和 **批次提议者（Batch Proposer）** 按照[交易批处理](/technology/chain/transactions#transaction-batching)中描述的约束提议新块和新批次。
+
+Rollup 流程可以分为三个阶段：交易执行、批处理和数据承诺，以及证明生成和最终确认。
+
+### 阶段 1. 交易执行
+
+1. 用户将交易提交到 L1 跨链桥合约或 L2 排序器。
+2. L2 排序器中的同步服务将从跨链桥合约中提取最新添加的 L1 交易。
+3. L2 排序器处理来自 L1 消息队列和 L2 内存池的交易，以构建 L2 区块。
+
+### 阶段 2. 批处理和数据承诺
+
+4. Rollup 节点监听最新的 L2 区块并获取交易数据。
+5. 如果满足条件（如[交易批处理](/technology/chain/transactions#transaction-batching)中所描述的），则Rollup节点将提议一个新块或批次并将其写入数据库。否则，Rollup节点会继续等待更多区块或者块。
+6. 创建新批次后，Rollup 中继器将收集此批次中的交易数据，并将承诺事务提交到Rollup合约以实现数据可用性。
+
+### Phase 3. 证明生成和最终确认
+
+7. 一旦协调器（coordinator）从数据库中轮询新的块或批次：
+   - 在新块上，协调器将从 L2 排序器中查询该块中所有区块的执行踪迹（execution traces），然后将块证明任务发送到随机选择的 zkEVM 证明器。
+   - 在新批次上，协调器将从数据库中收集该批次中所有块的块证明，并将批次证明任务分配给随机选择的聚合证明器。
+8. 当协调器从证明器那里收到块或批次证明时，它会将证明写入数据库。
+9. 一旦Rollup中继器从数据库中轮询得到新的批次证明，它将向Rollup合约提交最终确认交易来验证证明。
+
+## 承诺交易
+
+承诺交易将区块信息和交易数据提交到 L1 以获得数据可用性。该交易包括父批次头，块数据和跳过的 L1 消息的位图。父批次头指定此批次链接到前一个批次。父批次必须在之前提交；否则，交易将被回退。请参考下面的 `commitBatch` 签名。
+
+```solidity
+function commitBatch(
+    uint8 version,
+    bytes calldata parentBatchHeader,
+    bytes[] memory chunks,
+    bytes calldata skippedL1MessageBitmap
+) external override OnlySequencer
+```
+
+在 `commitBatch` 验证先前是否提交父批次后，它会构造批次的批次头，并将批次头的哈希存储在 `ScrollChain`  合约中。
+
+```solidity
+mapping(uint256 => bytes32) public committedBatches;
+```
+
+[编解码器](#codec) 中介绍了批次头和块数据的编码。批次头中的大多数字段都可以直接从块数据派生出来。需要注意的一个重要字段是 `dataHash` ，它将成为验证有效性证明的公共输入的一部分。假设一个批处理包含 `n` 个区块，其 `dataHash` 计算方法如下
+
+```
+batch.dataHash := keccak(chunk[0].dataHash || ... || chunk[n-1].dataHash)
+```
+
+假设一个块包含 `k` 个区块，其 `dataHash` 计算方法如下
+
+```
+chunk.dataHash := keccak(blockContext[0] || ... || blockContext[k-1] ||
+                         block[0].l1TxHashes || block[0].l2TxHashes || ... ||
+                         block[k-1].l1TxHashes || block[k-1].l2TxHashes)
+```
+
+其中 `block.l1TxHashes` 是该区块中 L1 交易的连接交易（concatenated transaction）哈希， `block.l2TxHashes`是该区块中 L2 交易的连接交易哈希。请注意，L1 交易的哈希不是由Rollup节点上传的，而是给定此区块中包含的 L1 消息的索引范围，直接从 `L1MessageQueue` 合约加载而来。L2 交易哈希是根据[`块`](#Chunk-Codec)中 `l2Transactions` 字段的 RLP 编码字节计算而来。
+
+此外，该 `commitBatch` 方法还包含跳过的 L1 消息的位图。不幸的是，由于证明溢出的问题。如果对应于 L1 消息的 L1 交易超过电路容量限制，我们将无法为此交易生成有效证明，因此无法在 L1 上最终确认它。Scroll正在积极努力，通过升级我们的证明系统来消除证明溢出问题。
+
+## 最终确认交易
+
+最终确认交易将利用有效性证明确认先前提交的批次。交易还会在批次后提交状态根和提款状态根。以下是 `finalizeBatchWithProof` 方法的签名：
+
+```solidity
+function finalizeBatchWithProof(
+    bytes calldata batchHeader,
+    bytes32 prevStateRoot,
+    bytes32 postStateRoot,
+    bytes32 withdrawRoot,
+    bytes calldata aggrProof
+) external override OnlyProver
+```
+
+该 `finalizeBatchWithProof` 方法将首先验证批次是否已在合约中提交。然后，它将按如下方式计算公共输入哈希
+
+```
+publicInputHash := keccak(chainId || prevStateRoot || postStateRoot || withdrawRoot || batch.dataHash)
+```
+
+公共输入哈希和有效性证明被发送到 plonk solidity 验证器。验证通过后，新的状态根和提款状态根将存储在 `ScrollChain` 合约中。
+
+```solidity
+mapping(uint256 => bytes32) public override finalizedStateRoots;
+mapping(uint256 => bytes32) public override withdrawRoots;
+```
+
+在这个阶段，可以无需信任地使用最新最终确认的批次的状态根，并且可以使用提款状态根的默克尔证明在 L1 上执行该批次中的提款交易。
+
+## 编解码器
+
+本节将介绍“Rollup”合约中三种数据结构的编解码器：`BatchHeader` 、 `Chunk` 和 `BlockContext` 。
+
+### `BatchHeader` 编解码器
+
+| 字段                    | 字节   | 类型        | 偏移量  | 描述                                                    |
+| ------------------------ | ------- | ----------- | ------ | --------------------------------------------------------------- |
+| `version`                | 1       | `uint8`     | 0      | 批次头版本                                        |
+| `batchIndex`             | 8       | `uint64`    | 1      | 批次序号                                       |
+| `l1MessagePopped`        | 8       | `uint64`    | 9      | 批次中弹出的 L1 消息的数量                    |
+| `totalL1MessagePopped`   | 8       | `uint64`    | 17     | 批次后弹出的 L1 消息的数量        |
+| `dataHash`               | 32      | `bytes32`   | 25     | 批次的数据哈希                                   |
+| `parentBatchHash`        | 32      | `bytes32`   | 57     | 父批次的哈希                                        |
+| `skippedL1MessageBitmap` | dynamic | `uint256[]` | 89     | 在批次中跳过的 L1 消息的位图 |
+
+### `Chunk` 编解码器
+
+| 字段           | 字节   | 类型           | 偏移量    | 描述                                                                                                                                       |
+| ---------------- | ------- | -------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `numBlocks`      | 1       | `uint8`        | 0         | 块中的区块数量                                                                                                                 |
+| `block[0]`       | 60      | `BlockContext` | 1         | 第一个区块的区块信息                                                                                                        |
+| ...              | ...     | ...            | ...       | ...                                                                                                                                               |
+| `block[i]`       | 60      | `BlockContext` | `60*i+1`  | 第 `i+1` 个区块的区块信息                                                                                                        |
+| ...              | ...     | ...            | ...       | ...                                                                                                                                               |
+| `block[n-1]`     | 60      | `BlockContext` | `60*n-59` | 最后a一个区块的区块信息                                                                                                           |
+| `l2Transactions` | dynamic | `bytes`        | `60*n+1`  | 带签名的 L2 交易的连接 RLP 编码。RLP 编码的字节长度 （ uint32 ） 在每笔交易之前插入。 |
+
+### `BlockContext` 编解码器
+
+| 字段            | 字节 | 类型      | 偏移量 | 描述                                                                         |
+| ----------------- | ----- | --------- | ------ | ----------------------------------------------------------------------------------- |
+| `blockNumber`     | 8     | `uint64`  | 0      | 区块编号                                                                    |
+| `timestamp`       | 8     | `uint64`  | 8      | 区块时间                                                                     |
+| `baseFee`         | 32    | `uint256` | 16     | 区块的base fee，当前始终为0，因为我们禁用了EIP1559。 |
+| `gasLimit`        | 8     | `uint64`  | 48     | 区块的 gas 上限                                                        |
+| `numTransactions` | 2     | `uint16`  | 56     | 区块中的交易数量，包括 L1 和 L2 的交易               |
+| `numL1Messages`   | 2     | `uint16`  | 58     | 区块中的 L1 消息数量                                            |

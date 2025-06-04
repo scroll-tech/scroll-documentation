@@ -9,7 +9,7 @@ excerpt: "The Enforced Transaction contract enables sending transactions between
 
 import Aside from "../../../../../components/Aside.astro"
 
-The Enforced Transaction contract enables sending transactions between L1 and L2 the **`sendTransaction`** function. This contract shares similarities with the Scroll Messenger contract as it allows sending arbitrary data from one layer to the other. However, it distinguishes itself by enabling the relaying of signed transactions and the ability to set the sender (CALLER or msg.sender) on the receiving transaction on Scroll.
+In future upgrades to Scroll, the Enforced Transaction contract will enable sending transactions between L1 and L2 with the **`sendTransaction`** function. This contract shares similarities with the Scroll Messenger contract as it allows sending arbitrary data from one layer to the other. However, it distinguishes itself by enabling the relaying of signed transactions and the ability to set the sender (CALLER or msg.sender) on the receiving transaction on Scroll.
 
 ## Enforced Transactions API
 
@@ -25,10 +25,10 @@ Add an enforced transaction to L2 from an EOA account sender.
 
 | Parameter  | Description                                                |
 | ---------- | ---------------------------------------------------------- |
-| \_target   | The address of target contract to call in L2.              |
+| \_target   | The address of the target contract to call in L2.              |
 | \_value    | The value passed.                                          |
 | \_gasLimit | The maximum gas should be used for this transaction in L2. |
-| \_data     | The calldata passed to target contract.                    |
+| \_data     | The calldata passed to the target contract.                    |
 
 ### sendTransaction
 

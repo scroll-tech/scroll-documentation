@@ -1,0 +1,209 @@
+---
+section: technology
+date: Last Modified
+title: "zkTrie"
+lang: "zh"
+permalink: "technology/sequencer/zktrie"
+whatsnext: { "zkEVM": "/zh/technology/zkevm/intro-to-zkevm/" }
+excerpt: "zkTrie 是一种使用 Poseidon 哈希的稀疏 MPT 二叉树"
+---
+
+import Aside from "../../../../../components/Aside.astro"
+import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import zktrie1 from "../_images/zktrie-arch.png"
+import zktrie2 from "../_images/zktrie-insertion.png"
+import zktrie3 from "../_images/zktrie-deletion.png"
+
+本文档介绍了 zkTrie，一种稀疏默克尔帕特里夏（以下简称MPT，Merkle Patricia Trie）二叉树，用于有效存储键值对。我们解释了树结构、构造、节点哈希和树操作，包括插入和删除。
+
+您也可以浏览我们的 [zktrie 仓库](https://github.com/scroll-tech/zktrie).
+
+## 树结构
+
+如上图所示，zkTrie 是一种稀疏 MPT 二叉树。
+在深入研究稀疏默克尔帕特里夏二叉树之前，让我们简单介绍一下 Merkle Trees 和 Patricia Tries。
+* **默克尔树（Merkle Tree）**: 默克尔树是一种树型结构，其中每个叶节点表示数据块的哈希值，每个非叶节点表示其子节点的哈希值。
+* **帕特里夏树（Patricia Trie）**: 帕特里夏树是一种压缩的树型结构，用于有效地存储键值对。它对具有相同键前缀的节点进行编码，来共享相同的路径，其中路径由节点键值确定。
+
+如图 1 所示，zkTrie 中有三种类型的节点。
+- 分支节点：  zkTrie 是一个二叉树，因此一个分支节点有两个子节点。
+- 叶节点: 叶节点保存键值对的数据。
+- 空节点：空节点是一种特殊类型的节点，表示拥有相同前缀的子节点为空。
+
+在 zkTrie 中，我们使用 Poseidon 哈希来计算节点哈希，因为在 zk 电路中证明它更友好、更高效。
+
+<ClickToZoom src={zktrie1} alt="zkTrie 结构" caption="图 1. zkTrie 结构" />
+
+## 树的构建
+
+给定一个键值对，我们首先使用 Poseidon 哈希函数对原始密钥（即帐户地址和存储密钥）进行哈希计算，得到相应叶节点的 *安全密钥（secure key）*。
+这可以使密钥均匀分布在密钥空间上。节点键值的哈希方法在下面的[节点哈希](#node-hashing)部分中进行了介绍。
+
+我们通过遍历从最低有效位 （LSB, Least Significant Bit） 到最高有效位 （MSB, Most Significant Bit） 的安全密钥来编码新的叶节点的路径。在
+在每一个节点，如果位为 0，我们将遍历至左子节点；否则，遍历至右子节点。
+
+我们将 zkTrie 的最大深度限制为 248，这意味着树只会遍历密钥较低的 248 位。
+因为安全密钥空间是 Poseidon 哈希使用的一个有限域，不占满整个 $2^{256}$ 的空间范围。
+而密钥的位表示在有限域下位数是不确定的，会在 ZK 电路中导致健全性问题。
+因此我们将密钥截断至较低的 248 位来完全占满 $2^{248}$ 的范围空间，这样在位表示上就不会有不确定因素。 
+
+此外，我们将只有一个叶节点的子树收缩为单个叶节点，来优化降低树的深度。例如在图 1 中，树总共有三个节点，键分别是 `0100`，`0010` 和 `1010`。
+因为只有一个节点的键后缀为 `00`，`0100` 的叶节点只遍历后缀`00`，并没有完全展开其键至深度为 4 处。
+
+## 树的操作
+
+### 插入
+
+<ClickToZoom src={zktrie2} alt="zkTrie 结构" caption="图 2. 插入一个新的叶节点至 zkTrie" />
+
+当我们向 zkTrie 插入新的叶节点时，如图 2 所示，有两种情况。
+
+1. 当遍历节点键的路径时，它会到达一个空节点（如图 2a）。在这种情况下，我们只需要用这个叶节点替换这个空节点，并回溯路径以更新分支节点的默克尔哈希，直到根节点。
+2. 当遍历节点键的路径时，它会到达另一个叶节点 b （如图 2b）。在这种情况下，我们需要向下推送现有的叶节点 `b`，直到两个叶节点的键的下一个位不同。每一步下推中，我们需要将一个空的同级节点插入到分支节点。当我们达到位不同的层级时，我们根据位放置两个叶节点 `b` 和 `d`。最后，我们回溯路径并更新所有分支节点的默克尔哈希。
+
+### 删除
+
+<ClickToZoom src={zktrie3} alt="zkTrie 结构" caption="Figure 3. 从 zkTrie 中删除一个叶节点" />
+
+叶节点的删除类似于插入。如图 2 所示，也有两种情况。
+
+1. 要删除的叶节点的同级节点是分支节点（如图 3a）。在这种情况下，我们可以简单地用一个空节点替换节点 `a`，并更新其的父节点哈希，直到根节点。
+2. 要删除的叶节点的同级节点是叶节点（如图 3b）。与情况 1 类似，我们首先用空节点替换叶节点，并开始向上收缩其同级节点，直到其同级节点不是空节点。例如在图 3b 中，我们将叶节点 `b` 替换为空节点。由于节点的同级节点现在变为空节点，因此我们需要将节点 `c` 向上移动一级并替换其父节点。此时，节点 `c` 的新同级节点 `e` 仍然是空节点。因此，我们再次向上移动节点 c 。现在 `c` 节点的同级是节点 `a`，一个叶节点，自此删除过程完成。
+
+请注意，有效的 zkTrie 中叶节点的同级节点不能是空节点。否则，我们应该一直修剪子树并将叶节点向上移动。
+
+## 节点哈希
+
+在本节中，我们将介绍如何计算叶节点的安全密钥和默克尔哈希值。两类哈希计算中，我们都是用 arity 为 2 的 Poseidon 哈希算法。在 Scroll 中，Poseidon 哈希函数被配置为每次接受两个域元素和 `domain_value` 作为输入，`domain_value`为域分离的初始上下文，Poseidon 哈希函数表示如下
+```
+h{domain_value}(input1, input2)
+```
+
+### 空节点
+
+空节点的节点哈希值为 0。
+
+### 分支节点
+
+分支节点哈希的计算方式如下
+
+```go
+branchNodeHash = h{BranchNodeType}(leftChildHash, rightChildHash)
+```
+
+### 叶节点
+
+叶节点的节点哈希计算如下。
+
+```go
+leafNodeHash = h{LeafNodeType}(nodeKey, valueHash)
+```
+
+计算涉及两个字段 `nodeKey` 和 `valueHash`.
+- `nodeKey` 对原始密钥哈希处理而来。Poseidon 哈希中使用的域值为 256。
+- `valueHash` 通过对叶节点值进行哈希处理来计算。Poseidon 哈希中使用的域值为 `256 * n`，其中 `n` 是叶节点值中的元素数。
+
+叶节点有两种类型：以太坊账户和存储键值对。接下来，我们将分别介绍每个叶节点类型的节点键和值哈希的计算方法。
+
+#### 以太坊账户叶节点
+对于以太坊账户叶节点，它由以太坊地址和账户状态数据结构组成。安全密钥源自以太坊地址。
+```go
+var address byte[20] // 20 bytes in big-endian
+valHi := address[0:16]
+valLo := address[16:20] * 2^96 // padding 12 bytes of 0 at the end
+nodeKey := h{256}(valHi, valLo)
+```
+
+Scroll 中的帐户状态结构由以下字段组成（ Fr 表示有限域，为 254 位值）
+
+- `Nonce`: u64
+- `Balance`: u256, 但视为 Fr
+- `StorageRoot`: Fr
+- `KeccakCodeHash`: u256
+- `PoseidonCodeHash`: Fr
+- `CodeSize`: u64
+
+在计算值哈希之前，首先将状态帐户封装至 `u256` 值列表中。封装方案是
+
+```text
+(The following scheme assumes the big-endian encoding)
+[0:32]
+	[0:16] Reserved with all 0
+	[16:24] CodeSize, uint64 in big-endian
+	[24:32] Nonce, uint64 in big-endian
+[32:64] Balance
+[64:96] StorageRoot
+[96:128] KeccakCodeHash
+[128:160] PoseidonCodehash
+(total 160 bytes)
+```
+
+封装函数同样会返回一个 `flag` 值和 `u256` 的值向量。其中 `flag` 是一个位图，表示向量中的每一个 `u256` 值是否可以被视作域元素 (Fr)。状态帐户的 `flag` 值为 8，如下所示。
+
+```
+         +--------------------+---------+------+----------+----------+
+ index   |          0         |    1    |   2  |     3    |     4    |
+         +--------------------+---------+------+----------+----------+
+  u256   | nonce||codesize||0 | balance | root |  keccak  | poseidon |
+         +--------------------+---------+------+----------+----------+
+flag bit |          0         |    0    |   0  |     1    |     0    |
+         +--------------------+---------+------+----------+----------+
+         (LSB)                                                   (MSB)
+```
+
+值哈希分为两步计算：
+1. 将不能表示为 Poseidon 哈希的域元素的值转换为域元素。
+2. 在二叉树结构中组合字段元素，直到树的根节点为值哈希。
+
+第一步中，当 `flag` 中位为 1，表示 `u256` 值不能作为域元素处理时，我们将该值拆分成 high-128bit 和 low-128bit 值，再将其传递给 Poseidon 哈希派生出一个域元素值，即 `h(valueHi, valueLo)`。
+
+```go
+// convert Keccak codehash to a field element
+compressedKeccakCodeHash := h{512}(keccakCodeHash[0:16], keccakCodeHash[16:32])
+```
+
+其次，值哈希的计算方式如下所示。
+
+```go
+domain := 256 * 5  // 5 elements to compute the valueHash
+valueHash :=
+    h{domain}(
+        h{domain}(
+            h{domain}(nonce||codesize||0, balance),
+            h{domain}(
+                storageRoot,
+                compressedKeccakCodeHash,
+            ),
+        ),
+        poseidonCodeHash,
+    )
+```
+
+#### 存储叶节点
+
+存储叶节点对键值对进行编码，键和值都是 `u256` 值。该叶节点的安全密钥派生自存储密钥。
+
+```go
+var storageKey byte[32]  // 32 bytes in big-endian
+valHi := storageKey[0:16]
+valLo := storageKey[16:32]
+nodeKey := h{256}(valHi, valLo)
+```
+
+存储值是一个 `u256` 值。存储值的 `flag` 值为 1，如下所示。
+
+```
+         +--------------+
+  index  |      0       |
+         +--------------+
+  u256   | storageValue |
+         +--------------+
+flag bit |      1       |
+         +--------------+
+```
+
+值哈希的计算方式如下
+
+```go
+valueHash = h{512}(storageValue[0:16], storageValue[16:32])
+```

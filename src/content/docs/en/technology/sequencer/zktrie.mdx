@@ -4,7 +4,7 @@ date: Last Modified
 title: "zkTrie"
 lang: "en"
 permalink: "technology/sequencer/zktrie"
-whatsnext: { "zkEVM": "/technology/zkevm/intro-to-zkevm/" }
+whatsnext: { "zkEVM": "/en/technology/zkevm/intro-to-zkevm/" }
 excerpt: "zkTrie is a sparse binary Merkle Patricia Trie built using Poseidon hash."
 ---
 
@@ -20,12 +20,12 @@ You can also explore our [zktrie repo](https://github.com/scroll-tech/zktrie).
 
 ## Tree Structure
 
-zkTrie is a sparse binary Merkle Patricia Trie, depicted in the above figure.
+zkTrie is a sparse binary Merkle Patricia Trie, depicted in the below figure.
 Before diving into the Sparse Binary Merkle Patricia Trie, let's briefly touch on Merkle Trees and Patricia Tries.
 * **Merkle Tree**: A Merkle Tree is a tree where each leaf node represents a hash of a data block, and each non-leaf node represents the hash of its child nodes.
 * **Patricia Trie**: A Patricia Trie is a type of radix tree or compressed trie used to store key-value pairs efficiently. It encodes the nodes with same prefix of the key to share the common path, where the path is determined by the value of the node key.
 
-As illustrated in the Figure 1, there are three types of nodes in the zkTrie.
+As illustrated in Figure 1, there are three types of nodes in the zkTrie.
 - Branch Node: Given the zkTrie is a binary tree, a branch node has two children.
 - Leaf Node: A leaf node holds the data of a key-value pair.
 - Empty Node: An empty node is a special type of node, indicating the sub-trie that shares the same prefix is empty.
@@ -40,9 +40,9 @@ Given a key-value pair, we first compute a *secure key* for the corresponding le
 
 We encode the path of a new leaf node by traversing the secure key from Least Significant Bit (LSB) to the Most Significant Bit (MSB). At each step, if the bit is 0, we will traverse to the left child; otherwise, traverse to the right child.
 
-We limit the maximum depth of zkTrie to 248, meaning that the tree will only traverse the lower 248 bits of the key. Because the secure key space is a finite field used by Poseidon hash that doesn't occupy the full range of $2^{256}$. the bit representation of the key can be ambiguous in the finite field and thus results in a soundness issue in the zk circuit. After we truncate the key to lower 248 bits, the key space can fully occupy the range of $2^{248}$ and won't have the ambiguity in the bit representation.
+We limit the maximum depth of zkTrie to 248, meaning that the tree will only traverse the lower 248 bits of the key. Because the secure key space is a finite field used by Poseidon hash that doesn't occupy the full range of $2^{256}$, the bit representation of the key can be ambiguous in the finite field and thus results in a soundness issue in the zk circuit. After we truncate the key to lower 248 bits, the key space can fully occupy the range of $2^{248}$ and won't have the ambiguity in the bit representation.
 
-We apply an optimization to reduce the tree depth by contracting a subtree that has only one leaf node to a single leaf node. For example, in the Figure 1, the tree has three nodes in total, with keys `0100`, `0010`, and `1010`. Because there is only one node that has key with suffix `00`, the leaf node for key `0100` only traverses the suffix `00` and doesn't fully expand its key which would have resulted in depth of 4.
+We apply an optimization to reduce the tree depth by contracting a subtree that has only one leaf node to a single leaf node. For example, in Figure 1, the tree has three nodes in total, with keys `0100`, `0010`, and `1010`. Because there is only one node that has a key with suffix `00`, the leaf node for key `0100` only traverses the suffix `00` and doesn't fully expand its key which would have resulted in a depth of 4.
 
 ## Tree Operations
 
@@ -50,26 +50,26 @@ We apply an optimization to reduce the tree depth by contracting a subtree that 
 
 <ClickToZoom src={zktrie2} alt="zkTrie Structure" caption="Figure 2. Insert a new leaf node to zkTrie" />
 
-When we insert a new leaf node to a zkTrie, there are two cases illustrated in the Figure 2.
+When we insert a new leaf node into a zkTrie, there are two cases illustrated in Figure 2.
 
 1. When traversing the path of the node key, it reaches an empty node (Figure 2a). In this case, we just need to replace this empty node by this leaf node and backtrace the path to update the merkle hash of branch nodes till the root.
-2. When traversing the path of the node key, it reaches another leaf node `b` (Figure 2b). In this case, we need to push down the existing leaf node `b` until the next bit in the node keys of two leaf nodes differs. At each push-down step, we need to insert an empty sibling node to the branch node. When we reach the level where the bits differ, we then place two leaf nodes `b` and `d` as the left child and the right child depending on their bits. At last, we backtrace the path and update the Merkle hash of all branch nodes.
+2. When traversing the path of the node key, it reaches another leaf node `b` (Figure 2b). In this case, we need to push down the existing leaf node `b` until the next bit in the node keys of two leaf nodes differs. At each push-down step, we need to insert an empty sibling node into the branch node. When we reach the level where the bits differ, we then place two leaf nodes `b` and `d` as the left child and the right child depending on their bits. At last, we backtrace the path and update the Merkle hash of all branch nodes.
 
 ### Deletion
 
 <ClickToZoom src={zktrie3} alt="zkTrie Structure" caption="Figure 3. Delete a leaf node from the zkTrie" />
 
-The deletion of a leaf node is similar to the insertion. There are two cases illustrated in the Figure 3.
+The deletion of a leaf node is similar to the insertion. There are two cases illustrated in Figure 3.
 
-1. The sibling node of to-be-deleted leaf node is a
-branch node (Figure 3a). In this case, we can simply replace the node `a` by an empty node and update the node hash of its ancestors till the root node.
-2. The node of to-be-deleted leaf node is a leaf node (Figure 3b). Similarly to case 1, we first replace the leaf node by an empty node and start to contract its sibling node upwards until its sibling node is not an empty node. For example, in Figure 3b, we replace the leaf node `b` by an empty node. Because the sibling of node `c` now becomes an empty node, we need to move node `c` one level upward and replace its parent. The new sibling of node `c`, node `e`, is still an empty node. So again we move node `c` upward. Now that the sibling of node `c` is node `a`, a leaf node, the deletion process is finished.
+1. The sibling node of the to-be-deleted leaf node is a
+branch node (Figure 3a). In this case, we can simply replace the node `a` with an empty node and update the node hash of its ancestors till the root node.
+2. The sibling node of the to-be-deleted leaf node is a leaf node (Figure 3b). Similarly to case 1, we first replace the leaf node with an empty node and start to contract its sibling node upwards until its sibling node is not an empty node. For example, in Figure 3b, we replace the leaf node `b` with an empty node. Because the sibling of node `c` now becomes an empty node, we need to move node `c` one level upward and replace its parent. The new sibling of node `c`, node `e`, is still an empty node. So again we move node `c` upward. Now that the sibling of node `c` is node `a`, a leaf node, the deletion process is finished.
 
 Note that the sibling of a leaf node in a valid zkTrie cannot be an empty node. Otherwise, we should always prune the subtree and move the leaf node upwards.
 
 ## Node Hashing
 
-In this section, we will describe how leaf secure key and node Merkle hash are computed. We use Poseidon hash with arity 2 for both hashing computation. In Scroll, the Poseidon hash function is configured to take two field element inputs each time and a `domain_value` as the initial context for domain separation, denoted as follows.
+In this section, we will describe how the leaf secure key and node Merkle hash are computed. We use Poseidon hash with arity 2 for both hashing computations. In Scroll, the Poseidon hash function is configured to take two field element inputs each time and a `domain_value` as the initial context for domain separation, denoted as follows.
 ```
 h{domain_value}(input1, input2)
 ```
@@ -101,12 +101,12 @@ The computation involves two fields `nodeKey` and `valueHash`.
 There are two types of leaf nodes: Ethereum accounts and storage key-value pairs. Next, we will describe the calculation method of the node key and value hash for each leaf node type respectively.
 
 #### Ethereum Account Leaf Node
-For an Ethereum Account Leaf Node, it consists of an Ethereum address and a state account data structure. The secure key is derived from the Ethereum address.
+An Ethereum Account Leaf Node consists of an Ethereum address and a state account data structure. The secure key is derived from the Ethereum address.
 ```go
 var address byte[20] // 20 bytes in big-endian
 valHi := address[0:16]
 valLo := address[16:20] * 2^96 // padding 12 bytes of 0 at the end
-nodeKey := h{256}(valHi, valLo)
+nodeKey := h{512}(valHi, valLo)
 ```
 
 A state account struct in the Scroll consists of the following fields (`Fr` indicates the finite field and is a 254-bit value)
@@ -176,16 +176,16 @@ valueHash :=
 
 #### Storage Leaf Node
 
-A Storage Leaf Node encodes a key-value pair, which both key and value are `u256` values. The secure key of this leaf node is derived from the storage key.
+A Storage Leaf Node encodes a key-value pair where both key and value are `u256` values. The secure key of this leaf node is derived from the storage key.
 
 ```go
 var storageKey byte[32]  // 32 bytes in big-endian
 valHi := storageKey[0:16]
 valLo := storageKey[16:32]
-nodeKey := h{256}(valHi, valLo)
+nodeKey := h{512}(valHi, valLo)
 ```
 
-The storage value is a `u256` value. The `flag` for the storage value is 1, showed below.
+The storage value is a `u256` value. The `flag` for the storage value is 1, shown below.
 
 ```
          +--------------+

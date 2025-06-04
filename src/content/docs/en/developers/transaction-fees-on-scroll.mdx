@@ -4,7 +4,7 @@ date: Last Modified
 title: "Transaction Fees on Scroll"
 lang: "en"
 permalink: "developers/transaction-fees-on-scroll"
-whatsnext: { "Contract Deployment Tutorial": "/developers/guides/contract-deployment-tutorial/" }
+whatsnext: { "Contract Deployment Tutorial": "/en/developers/guides/contract-deployment-tutorial/" }
 excerpt: "Understand how L1 and L2 transaction fees work on Scroll "
 ---
 
@@ -12,11 +12,11 @@ import Aside from "../../../../components/Aside.astro"
 
 ## Overview
 
-Scroll Sepolia Testnet fees are notably lower than on its supporting layer. For users and developers, transaction fees on Scroll appear to work similarly to those on Ethereum mainnet, and existing tools, wallets, and code will likely work as if they were. However, the transaction fee shown in the wallet isn't the whole picture unless the software is specifically aware of Scroll's fee calculations.
+Scroll fees are notably lower than on its supporting layer. For users and developers, transaction fees on Scroll appear to work similarly to those on Ethereum mainnet, and existing tools, wallets, and code will likely work as if they were. However, the transaction fee shown in the wallet isn't the whole picture unless the software is specifically aware of Scroll's fee calculations.
 
 Due to the design of L2 rollups, transaction costs depend on the L1's costs. To leverage Ethereum's security, Scroll must account for the cost of the transaction data and proofs that must be stored and verified on the L1.
 
-Compared to Ethereum mainnet, Scroll Sepolia introduces some new dimensions to transaction fee calculation to do this. The final cost of a transaction is constructed from several parts:
+Compared to Ethereum mainnet, Scroll introduces some new dimensions to transaction fee calculation to do this. The final cost of a transaction is constructed from several parts:
 
 - **L2 fee**
   - Calculated in the same manner as on the L1, equaling `gas_price * gas_used`
@@ -60,7 +60,7 @@ Transactions aren't committed 1-by-1 -- they are collected in batches of blocks 
 
 ### Estimating the L1 Data Fee
 
-Scroll has a pre-deployed `L1GasPriceOracle`, accessible on Scroll Sepolia at ([`0x5300000000000000000000000000000000000002`](https://sepolia-blockscout.scroll.io/address/0x5300000000000000000000000000000000000002)). It provides a `getL1Fee` method to estimate the L1 data fee for a given transaction's raw data.
+Scroll has a pre-deployed `L1GasPriceOracle` at `0x5300000000000000000000000000000000000002`, accessible on both [Scroll Mainnet](https://scrollscan.com/address/0x5300000000000000000000000000000000000002) and [Scroll Sepolia](https://sepolia.scrollscan.com/address/0x5300000000000000000000000000000000000002). It provides a `getL1Fee` method to estimate the L1 data fee for a given transaction's raw data.
 
 ```solidity
 function getL1Fee(bytes memory _data) external view override returns (uint256);
@@ -140,7 +140,7 @@ Returns the latest known l1 base fee
 #### getL1Fee
 
 ```solidity
-function getL1Fee(bytes memory _data) external view returns (uint256);
+function getL1Fee(bytes memory data) external view returns (uint256);
 ```
 
 Computes the L1 portion of the fee based on the size of the RLP encoded input transaction, the current L1 base fee, and the various dynamic parameters.
@@ -165,10 +165,30 @@ Computes the amount of L1 gas used for a transaction. Adds the overhead which re
 | --------- | ----------------------------------------------------------- |
 | data      | Signed fully RLP-encoded transaction to get the L1 fee for. |
 
+## L1 Originated Transactions
+
+When messaging from L1 to L2, the user pays all transaction fees on L1. The user pays L1 gas fees, but because of this, doesn't need to pay Scroll an L1 Data Fee. They will need to account for L2 Execution Fees in their L1 transaction though, and will need to know how much L2 gas to pay.
+
+Contracts on L1 can use an L2 Gas Price Oracle deployed to the L1 to get the gas fee for a given transaction. The oracle also exposes the current l2BaseFee and estimated cross-domain message fee for a given gas limit.
+
+On mainnet, the `L2GasPriceOracle` is deployed at [`0x987e300fDfb06093859358522a79098848C33852`](https://etherscan.io/address/0x987e300fDfb06093859358522a79098848C33852).
+
+On Sepolia, an upgraded `L1MessageQueueWithGasPriceOracle` should be used, deployed to [`0xF0B2293F5D834eAe920c6974D50957A1732de763`](https://sepolia.etherscan.io/address/0xF0B2293F5D834eAe920c6974D50957A1732de763).
+
+If your system supports off-chain mechanisms, you can also call `eth_estimateGas` and `eth_gasPrice` on any Scroll RPC node to get an estimate of the gas required for a given transaction.
+
+<Aside type="danger" title="Upgrade Notice">
+After the February 2024 Bridge Upgrade, `L2GasPriceOracle` will be deprecated in favor of `L1MessageQueueWithGasPriceOracle`, which will be available at [`0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B`](https://etherscan.io/address/0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B).
+
+The upgrade is expected to be finalized on February 21, 2024, after a two-week timelock. Scroll Sepolia has already undergone this upgrade. Read more [here](https://scroll.io/blog/protocol-upgrade-bridging-cost-reduction).
+
+</Aside>
+{/* TODO: Add full documentation of key methods */}
+
 ## Future Roadmap
 
-Currently, the computation required for proof generation is completed by and subsidized by Scroll and various proving partners.
+Currently, the computation required for proof generation and gas for proof verification on L1 is subsidized by Scroll and various proving partners. It is partially covered by setting a floor to L2 Gas Price.
 
 As the prover network becomes decentralized, incentives for proof generation will need to be incorporated into the protocol for the system to be sustainable and scalable.
 
-We expect the final gas cost will include the cost of this proof generation. With further protocol optimization, this cost for the user should be minimal, as each proof covers many transactions.
+We expect the final gas cost will explicitly include the cost of this proof generation. With further protocol optimization, this cost for the user should be minimal, as each proof covers many transactions.

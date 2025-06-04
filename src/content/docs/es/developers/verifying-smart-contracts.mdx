@@ -13,12 +13,16 @@ import ClickToZoom from "../../../../components/ClickToZoom.astro"
 import verify1 from "./_images/verify1.png"
 import CodeSample from "../../../../components/CodeSample/CodeSample.astro"
 
-Después de desplegar tus smart contracts, es importante verificar tu código en [nuestro block explorer](https://sepolia-blockscout.scroll.io/). Esto se puede hacer de forma automatizada utilizando tus herramientas de desarrollo o la IU web de Blockscout.
+Después de desplegar tus smart contracts, es importante verificar tu código en [nuestro block explorer](https://scrollscan.com/)o en el [block explorer de Sepolia](https://sepolia-blockscout.scroll.io). Esto se puede hacer de forma automatizada utilizando tus herramientas de desarrollo o la IU web de Blockscout.
 
-<Aside type="danger" title="Alerta">
+Esto se puede automatizar utilizando nuestras herramientas para desarrolladores o a través de UI en la web de Blockscout.
+
+<Aside type="tip" title="Blockscout vs Etherscan">
   Nuestra instancia de Blockscout tiene actualmente un comportamiento inconsistente en la verificación de contratos con Foundry. Estamos trabajando en
   junto con otras mejoras de estabilidad. No dudes en pedir ayuda en [nuestro
   Discord](https://discord.com/channels/853955156100907018/1028102371894624337)
+  Las instrucciones a continuación sobre la verificación en Sepolia Blockscout difieren un poco de Etherscan. Cuando
+  actualizaremos estas instrucciones cuando existan más servicios en mainnet.
 </Aside>
 
 ## Uso de las herramientas para desarrolladores
@@ -80,8 +84,18 @@ npx hardhat verify --network scrollSepolia 0xD9880690bd717189cC3Fbe7B9020F27fae7
 
 ### Foundry
 
+<Aside type="danger" title="Alerta">
+  Nuestra instacia de blockscout actualmente tiene comportamientos incosistentes cuando se verfica usando Foundry, estamos
+  trabajando para solucionar esto junto con otros problemas de estabilidad. En cualquier caso, siempre eres bienvenido
+  a preguntar en [on Discord](https://discord.com/channels/853955156100907018/1028102371894624337).
+</Aside>
+
 Cuando se utiliza Foundry, la función `verify-contract` ayuda a automatizar el proceso de verificación de los contratos.
 
 ```bash
-forge verify-contract <Contract Address> <Space separated params> <Solidity file>:<Contract name> --chain-id 534351 --verifier-url <https://sepolia-blockscout.scroll.io/api> --verifier blockscout
+forge verify-contract <Contract Address> <Space separated params> <Solidity file>:<Contract name> --chain-id 534351 --verifier-url https://sepolia-blockscout.scroll.io/api\? --verifier blockscout
 ```
+
+<Aside type="danger" title="Warning">
+  Observa que añadimos `\?` al final de la URL del verificador, si no lo hacemos la verificación fallará. (Probado en forge v0.2.0).
+</Aside>

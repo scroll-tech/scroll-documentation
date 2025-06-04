@@ -1,0 +1,57 @@
+---
+section: developers
+date: Last Modified
+title: "Zorunlu işlemler"
+lang: "tr"
+permalink: "developers/l1-and-l2-bridging/enforced-transactions"
+excerpt: "Zorunlu İşlem sözleşmesi L1 ve L2 arasında işlemlerin sendTransaction fonksiyonu ile gönderilmesini sağlar."
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+Scroll'un gelecekteki yükseltmelerinde, Zorunlu İşlem sözleşmesi, **`sendTransaction`** fonksiyonu ile L1 ile L2 arasındaki işlemlerin gönderilmesine olanak tanıyacaktır. Bu sözleşme, bir katmandan diğerine rastgele veri gönderilmesine izin verdiği için Scroll Messenger sözleşmesiyle benzerlikler paylaşıyor. Ancak imzalı işlemlerin aktarılmasına olanak sağlaması ve Scroll üzerinde göndericiyi (CALLER veya msg.sender) alıcı işlemde ayarlama olanağı sağlamasıyla öne çıkmaktadır.
+
+## Zorunlu İşlemler API
+
+Scroll sözleşmesi API dokümanlarının tamamı için lütfen [npm kitaplığını](https://www.npmjs.com/package/@scroll-tech/contracts?activeTab=code) ziyaret edin.
+
+### sendTransaction
+
+```solidity
+function sendTransaction(address _target, uint256 _value, uint256 _gasLimit, bytes calldata _data) public payable;
+```
+
+Bir EOA hesabı göndericisinden L2'ye zorunlu bir işlem ekleyin.
+
+| Parametre  | Açıklama                                                   |
+| ---------- | ---------------------------------------------------------- |
+| \_target   | L2'de çağrılacak hedef sözleşmenin adresi.                 |
+| \_value    | Gönderilecek değer                                         |
+| \_gasLimit | L2'de bu işlem tarafından kullanılabilecek maksimum gaz    |
+| \_data     | Hedef sözleşmeye iletilen çağrı verileri                   |
+
+### sendTransaction
+
+```solidity
+function sendTransaction(
+  address _sender,
+  address _target,
+  uint256 _value,
+  uint256 _gasLimit,
+  bytes calldata _data,
+  bytes memory _signature,
+  address _refundAddress
+) public payable;
+```
+
+Gönderenden bir imza aktararak L2'ye zorunlu bir işlem ekleyin.
+
+| Parametre       | Açıklama                                                        |
+| --------------- | --------------------------------------------------------------- |
+| \_sender        | L2'de bu işlemi başlatacak göndericinin adresi                  |
+| \_target        | L2'de çağrılacak hedef sözleşmenin adresi.                      |
+| \_value         | Gönderilecek değer                                              |
+| \_gasLimit      | L2'de bu işlem tarafından kullanılabilecek maksimum gaz         |
+| \_data          | Hedef sözleşmeye iletilen çağrı verileri                        |
+| \_signature     | İşlem imzası.                                                   |
+| \_refundAddress | İşlem ücreti fazlasının iade edileceği adres.                   |

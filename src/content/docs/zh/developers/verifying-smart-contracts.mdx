@@ -1,0 +1,135 @@
+---
+section: developers
+date: Last Modified
+title: "验证智能合约"
+lang: "zh"
+permalink: "developers/verifying-smart-contracts"
+whatsnext: { "Scroll 合约": "/zh/developers/scroll-contracts" }
+excerpt: "Easily verify your smart contracts with Scroll-supported developer tooling or the Blockscout Web API"
+---
+
+import Aside from "../../../../components/Aside.astro"
+import ClickToZoom from "../../../../components/ClickToZoom.astro"
+import verify1 from "./_images/verify1.png"
+import CodeSample from "../../../../components/CodeSample/CodeSample.astro"
+
+部署智能合约后，在[我们的区块浏览器](https://sepolia-blockscout.scroll.io/)上验证您的代码非常重要。这可以使用您的开发者工具或使用Blockscout的网页以自动化方式完成。
+
+<Aside type="danger" title="警告">
+  我们的 Blockscout 实例目前在验证与 Foundry 的合同时行为不一致。我们正在努力修复其他稳定性改进。不过不要犹豫，在我们的 [
+  Discord](https://discord.com/channels/853955156100907018/1028102371894624337) 上寻求帮助。
+</Aside>
+
+## 使用开发者工具
+
+大多数智能合约工具都有插件，可以在Etherscan上轻松验证您的合约。Blockscout支持Etherscan的合约验证API，将这些工具与Scroll Sepolia测试网一起使用非常简单。
+
+| 网络    | Scroll | Scroll Sepolia                                  |
+| ---------- | -------------------------------- | ---------------------------------------- |
+| Scrollscan | https://api.scrollscan.com/api   | https://api-sepolia.scrollscan.com/api   |
+| Blockscout | https://blockscout.scroll.io/api | https://sepolia-blockscout.scroll.io/api |
+
+<Aside type="tip" title="使用 Scrollscan API">
+在使用 Scrollscan 时，您需要 [注册一个账户](https://scrollscan.com/register) 并创建一个 API 密钥。相同的密钥可以用于 Scroll Sepolia 和主网。创建 API 密钥后，请等待几分钟使其生效。
+</Aside>
+
+### Hardhat
+
+首先，修改 `hardhat.config.ts` 以指向 Scroll 的 RPC 和 `sepolia-blockscout.scroll.io/api`. `apyKey` 设置为虚拟值是必需的，但任何内容都适合其 `apyKey` 值。
+
+例如，如果您在 Blockscout 上使用 Scroll Sepolia，您的配置将如下所示：
+```javascript
+...
+
+const config: HardhatUserConfig = {
+  ...
+  networks: {
+    scrollSepolia: {
+      url: 'https://sepolia-rpc.scroll.io' || '',
+      accounts:
+        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    },
+  },
+  etherscan: {
+    apiKey: {
+      scrollSepolia: 'abc',
+    },
+    customChains: [
+      {
+        network: 'scrollSepolia',
+        chainId: 534351,
+        urls: {
+          apiURL: 'https://sepolia-blockscout.scroll.io/api',
+          browserURL: 'https://sepolia-blockscout.scroll.io/',
+        },
+      },
+    ],
+  },
+}
+
+...
+```
+
+现在，您可以通过运行以下命令来验证智能合约。
+
+```solidity
+npx hardhat verify --network scrollSepolia <contract address> <space separated constructor parameters>
+```
+
+例如，如下是在智能合约的构造函数中接收两个 uint 参数的：
+
+```solidity
+npx hardhat verify --network scrollSepolia 0xD9880690bd717189cC3Fbe7B9020F27fae7Ac76F 123 456
+```
+
+<Aside type="danger" title="警告">
+  您可能会收到一条错误消息，指出 `etherscan.apiKey.trim is not a function`。如果是这样，您需要更新
+  `@nomiclabs/hardhat-etherscan` 才能支持自定义链。尝试运行 `npm update
+  @nomiclabs/hardhat-etherscan`
+</Aside>
+
+### Foundry
+
+在使用 Foundry 时，`verify-contract` 命令有助于自动化合约验证的过程。如果您的合约具有构造函数参数，您可以使用 `--constructor-args` 选项以 ABI 编码形式指定这些参数。例如，如果您的构造函数接受两个 `uint256` 变量：
+```bash
+ --constructor-args $(cast abi-encode "constructor(uint256,uint256)" 0 7)
+```
+
+请参考 [Foundry 文档](https://book.getfoundry.sh/reference/forge/forge-verify-contract) 以获取您可以指定的更多选项。
+
+
+#### Scrollscan
+
+```bash
+forge verify-contract <contract address> <contract name> \
+  --verifier-url https://api-sepolia.scrollscan.com/api \
+  --etherscan-api-key <your Scrollscan API key> \
+  --constructor-args <your constructor arguments>
+```
+<Aside type="caution" title="Caution">
+  不要指定链 ID
+</Aside>
+
+#### Blockscout
+
+将验证提供者指定为 `blockscout`。
+
+##### Scroll 
+```bash
+forge verify-contract <contract address> <contract name> \
+  --verifier-url https://blockscout.scroll.io/api\? \
+  --verifier blockscout \
+  --constructor-args <your constructor arguments>  
+```
+
+##### Scroll Sepolia
+```bash
+forge verify-contract <contract address> <contract name> \
+  --verifier-url https://sepolia-blockscout.scroll.io/api\? \
+  --verifier blockscout \
+  --constructor-args <your constructor arguments>
+```
+
+<Aside type="danger" title="Warning">
+  注意，在验证器 URL 的末尾添加 `\?`，否则验证将失败（在 forge v0.2.0 上测试通过）。
+</Aside>

@@ -3,10 +3,10 @@ import HeadCommon from "../components/HeadCommon.astro"
 import HeadSEO from "../components/HeadSEO.astro"
 import Header from "../components/Header/Header.astro"
 import * as CONFIG from "../config"
-import Footer from "~/components/Footer/Footer"
+import Footer from "~/components/Footer/Footer.astro"
 import LeftSidebar from "../components/LeftSidebar/LeftSidebar.astro"
 
-const { content = {}, dark } = Astro.props
+const { content = {} } = Astro.props
 const currentPage = new URL(Astro.request.url).pathname
 const formattedContentTitle = content.title
   ? `${content.title} | ${CONFIG.SITE.title}`
@@ -14,7 +14,7 @@ const formattedContentTitle = content.title
 const canonicalURL = new URL(Astro.url.pathname, Astro.site)
 ---
 
-<html dir={content.dir ?? "ltr"} lang={content.lang ?? "en-us"} class="initial">
+<html transition:animate="none" dir={content.dir ?? "ltr"} lang={content.lang ?? "en-us"} class="initial">
   <head>
     <HeadCommon />
     <HeadSEO content={content} canonicalURL={canonicalURL} site="" />
@@ -23,15 +23,16 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site)
       body {
         --doc-padding: 65px;
       }
+
       .home-layout {
         margin-bottom: 0;
       }
 
       #grid-left {
         position: fixed;
-        background-color: var(--theme-bg);
         z-index: 10;
         display: none;
+        @apply bg-pure-white dark:bg-black;
       }
 
       @media (min-width: 50em) {
@@ -59,16 +60,32 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site)
         height: calc(100vh - 20px);
       }
     </style>
-  </head>
-</html>
+    <script is:inline>
+      var themeMode = localStorage.getItem("THEME_MODE")
 
-<body>
-  <Header dark={dark} />
-  <aside id="grid-left" class="grid-sidebar" title="Site Navigation">
-    <LeftSidebar currentPage={currentPage} {content} />
-  </aside>
-  <main class="home-layout">
-    <slot />
-  </main>
-  <Footer client:idle />
-</body>
+      if (themeMode === "dark") {
+        document.documentElement.classList.add("dark")
+      } else {
+        document.documentElement.classList.remove("dark")
+      }
+    </script>
+    <script>
+      document.addEventListener("astro:after-swap", () => {
+        const themeMode = localStorage.getItem("THEME_MODE")
+        themeMode === "dark"
+          ? document.documentElement.classList.add("dark")
+          : document.documentElement.classList.remove("dark")
+      })
+    </script>
+  </head>
+  <body>
+    <Header dark />
+    <aside id="grid-left" class="grid-sidebar" title="Site Navigation">
+      <LeftSidebar currentPage={currentPage} {content} />
+    </aside>
+    <main class="home-layout">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

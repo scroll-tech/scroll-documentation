@@ -1,0 +1,114 @@
+---
+section: developers
+date: Last Modified
+title: "Scroll Messenger 跨链交互"
+lang: "zh"
+permalink: "developers/guides/scroll-messenger-cross-chain-interaction"
+whatsnext: { "通过自定义 Gateway 跨链 ERC20": "/zh/developers/guides/bridge-erc20-through-the-custom-gateway" }
+excerpt: "In this example, we will launch a dummy smart contract on either Sepolia or Scroll Sepolia testnet and interact with it from the opposite chain."
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+在这个例子中，我们将在 Sepolia 和 Scroll Sepolia 上启动一个虚拟智能合约，并从对方的链上与之交互。我们将使用同时部署在 Sepolia 和 Scroll Sepolia 上的 `ScrollMessenger` 合约。
+
+## 部署合约
+
+### 目标智能合约
+
+让我们从部署目标智能合约开始。在本例中，我们将使用 Greeter 合约。
+但你也可以使用任何其他合约，将其部署到 Sepolia 或 Scroll。
+在 Scroll 上，L1 和 L2 使用相同的 API，一切取决于您。
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.16;
+
+// This Greeter contract will be interacted with through the ScrollMessenger across the bridge
+contract Greeter {
+  string public greeting = "Hello World!";
+
+  // This function will be called by executeFunctionCrosschain on the Operator Smart Contract
+  function setGreeting(string memory greeting_) public {
+    greeting = greeting_;
+  }
+}
+```
+
+我们现在将以跨链方式执行`setGreeting`方法。
+
+### 操作方智能合约
+
+切换到另一条链并部署`GreeterOperator`。因此，如果在 L1 上部署 `Greeter` 合约，请在 L2 上部署 `GreeterOperator`，反之亦然。
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.16;
+
+// The Scroll Messenger interface is the same on both L1 and L2, it allows sending cross-chain transactions
+// Let's import it directly from the Scroll Contracts library
+import "@scroll-tech/contracts@0.1.0/libraries/IScrollMessenger.sol";
+
+// The GreeterOperator is capable of executing the Greeter function through the bridge
+contract GreeterOperator {
+  // This function will execute setGreeting on the Greeter contract
+  function executeFunctionCrosschain(
+    address scrollMessengerAddress,
+    address targetAddress,
+    uint256 value,
+    string memory greeting,
+    uint32 gasLimit
+  ) public payable {
+    IScrollMessenger scrollMessenger = IScrollMessenger(scrollMessengerAddress);
+    // sendMessage is able to execute any function by encoding the abi using the encodeWithSignature function
+    scrollMessenger.sendMessage{ value: msg.value }(
+      targetAddress,
+      value,
+      abi.encodeWithSignature("setGreeting(string)", greeting),
+      gasLimit,
+      msg.sender
+    );
+  }
+}
+```
+
+## 调用跨链方法
+
+我们通过执行 `executeFunctionCrosschain` 并传入以下参数来传递消息：
+
+- `scrollMessengerAddress`: 这将取决于您部署 `GreeterOperator` 合约的位置。
+  - 如果您部署在 Sepolia 上请使用 `0x50c7d3e7f7c656493D1D76aaa1a836CedfCBB16A`。如果您部署在 Scroll 上请使用 `0xBa50f5340FB9F3Bd074bD638c9BE13eCB36E603d`。
+- `targetAddress`:  `Greeter` 合约在对方链上的地址。
+- `value`: 在此示例中，是 `0` ，因为 `setGreeting` 不是付款方法。
+- `greeting`: 这是将通过消息传递的参数，尝试传入 `“This message was crosschain!”`
+- `gasLimit`:
+  - 如果要将消息从 L1 发送到 L2，约 1000000 的 gas 上限应该足够了。话虽如此，如果您设置得太高，并且 `msg.value` 不足以支付 `gasLimit` * `baseFee`，交易将回滚。如果 `msg.value` 大于 gas 费用，多余的部分将被退还。
+  - 如果要将消息从 L2 发送到 L1，请传递 0 ，因为交易通过在 L1 上执行其他交易来最终确认。
+
+### 从 L2 向 L1 中继消息
+
+当交易从 L2 传递至 L1 时，必须在 L1 上发送额外的“执行提款交易”。为此，您必须从EOA钱包调用 L1 上 Scroll Messenger合约的 `relayMessageWithProof `方法。
+
+您可以直接在 [Etherscan Sepolia](https://sepolia.etherscan.io/address/0x50c7d3e7f7c656493d1d76aaa1a836cedfcbb16a#writeProxyContract#F3) 上执行此操作。为此，您需要为桥接交易和其他参数传递默克尔树包含证明。您可以使用 Scroll 跨链桥 API 查询这些内容。
+
+{/* TODO: finish looking into API issues */}
+
+我们正在确定最终 API 的细节，现在，可以通过端点获取：
+
+```bash
+curl "https://sepolia-api-bridge.scroll.io/api/claimable?page_size=10&page=1&address=GREETER_OPERATOR_ADDRESS_ON_L2"
+```
+
+将 `GREETER_OPERATOR_ADDRESS_ON_L2` 替换为您在L2上发布的 GreeterOperator 合约地址。阅读更多关于执行提款交易的信息，请参阅 [Scroll Messenger](/developers/l1-and-l2-bridging/the-scroll-messenger)文章。
+
+<Aside type="danger" title="实验性 API">
+  此 API 是为我们的跨链桥 UI 所定制。它尚未最终确定，将来可能会发生变化。当 API 最终确定时，我们将更新本指南。
+</Aside>
+
+<Aside type="caution" title="任何人可以执行 L2 → L1 消息">
+  `relayMessageWithProof` 完全无需许可，因此如果愿意支付 L1 gas费，任何人都可以代表您调用。此功能允许其他支持基础结构，包括为应用程序和用户自动执行此过程的工具。
+</Aside>
+
+在 L1 和 L2 上执行并确认交易后， `Greeter` 合约 `greeting` 的新状态应为 `“This message was crosschain!”` 。从一个链向另一个链发送消息，最后在源链上确认交易后，大约需要 20 分钟。
+
+恭喜，您现在使用我们的原生跨链桥执行了从一条链到另一条链的交易！

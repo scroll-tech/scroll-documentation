@@ -1,0 +1,108 @@
+---
+section: developers
+date: Last Modified
+title: "Sözleşme Dağıtımı Eğitimi"
+lang: "tr"
+permalink: "developers/guides/contract-deployment-tutorial"
+excerpt: "Scroll Sepolia Test ağı, topluluğun Scroll üzerinde akıllı sözleşmeler dağıtmasına olanak tanır. Bu eğitimde size Scroll Sepolia'da bir sözleşmenin nasıl dağıtılacağını öğreteceğiz."
+whatsnext: { "Scroll Messenger ile Zincirler Arası Etkileşim": "/tr/developers/guides/scroll-messenger-cross-chain-interaction/" }
+---
+
+
+import Aside from "../../../../../components/Aside.astro"
+
+
+Scroll Sepolia Test ağı, herkesin Scroll üzerinde akıllı sözleşme dağıtmasına olanak tanır. Bu eğitimde, Ethereum'da geliştirmeye yönelik ortak araçları kullanarak Scroll Sepolia'da bir sözleşmenin nasıl dağıtılacağını öğreneceksiniz. Bu [demo deposu](https://github.com/scroll-tech/scroll-guides/tree/main/contract-deploy-demo), [Hardhat](https://hardhat.org/) ve [Foundry](https://github.com/foundry-rs/foundry) ile sözleşme dağıtımını gösterir.
+
+
+<Aside type="tip" title="Test ağı ETH'niz var mı?">
+ Sözleşmeyi dağıtmaya başlamadan önce, bir Sepolia musluğundan test tokenları talep etmeniz ve bir miktar test ETH'sini _Sepolia_'dan _Scroll Sepolia_'ya aktarmak için [köprüyü](https://scroll.io/bridge) kullanmanız gerekir. Alternatif olarak Scroll Sepolia ETH'yi doğrudan da alabilirsiniz. Yardım için [Musluk](/tr/user-guide/faucet/) ve [Köprü](/tr/user-guide/bridge/) kılavuzlarımıza bakın.
+</Aside>
+
+
+## Hardhat ile sözleşmeleri dağıtın
+
+
+1. Henüz yapmadıysanız [nodejs](https://nodejs.org/en/download/) ve [yarn](https://classic.yarnpkg.com/lang/en/docs/install) yükleyin .
+2. Depoyu klonlayın ve gereksinimleri yükleyin:
+
+
+  ```shell
+  git clone https://github.com/scroll-tech/scroll-guides.git
+  cd scroll-guides/contract-deploy-demo
+  yarn install
+  ```
+
+
+3. Kök dizinde `.env.example` örneğini takip ederek bir `.env` dosyası oluşturun. `PRIVATE_KEY`i `.env`de kendi hesabınızın özel anahtarıyla değiştirin.
+
+
+4. Sözleşmeyi derlemek için 'yarn compile'ı çalıştırın.
+
+
+5. Sözleşmeyi Scroll Sepolia Test ağında dağıtmak için `yarn deploy:scrollTestnet'i çalıştırın.
+
+
+6. Hardhat testleri için "yarn test"'i çalıştırın.
+
+
+## Foundry ile sözleşmeleri dağıtın
+
+
+1. Depoyu klonlayın:
+
+
+  ```shell
+  git clone https://github.com/scroll-tech/scroll-guides.git
+  cd scroll-guides/contract-deploy-demo
+  ```
+
+
+2. Foundry'yi kurun:
+
+
+  ```shell
+  curl -L https://foundry.paradigm.xyz | bash
+  foundryup
+  ```
+
+
+3. Projeyi oluşturmak için 'forge build'i çalıştırın.
+
+
+4. Foundry ile sözleşmenizi dağıtın:
+
+
+  ```bash
+  forge create --rpc-url https://sepolia-rpc.scroll.io/ \
+    --value <lock_amount> \
+    --constructor-args <unlock_time> \
+    --private-key <your_private_key> \
+    --legacy \
+    contracts/Lock.sol:Lock
+  ```
+
+
+  - `<lock_amount>`, sözleşmede kilitlenecek test `ETH` miktarıdır. Bunu "0,0000001ether" gibi küçük bir miktara ayarlamayı deneyin.&#x20;
+   - `<unlock_time>`, sözleşmede kilitlenen fonların çekilmeye hazır olacağı Unix zaman damgasıdır. Bunu gelecekte "1696118400" gibi bir Unix zaman damgasına ayarlamayı deneyin (bu Unix zaman damgası 1 Ekim 2023'e karşılık gelir).
+
+
+  Örneğin:
+
+
+  ```bash
+  forge create --rpc-url https://sepolia-rpc.scroll.io/ \
+    --value 0.00000000002ether \
+    --constructor-args 1696118400 \
+    --private-key 0xabc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc1 \
+    --legacy contracts/Lock.sol:Lock
+  ```
+
+
+## Sorular ve Geri Bildirim
+
+
+Scroll Sepolia Test ağına katıldığınız ve geliştirdiğiniz için teşekkür ederiz! Herhangi bir sorunla karşılaşırsanız [Discord'umuza](https://discord.gg/scroll) katılın ve "#testnet-devs" kanalından bize sorun.
+
+
+

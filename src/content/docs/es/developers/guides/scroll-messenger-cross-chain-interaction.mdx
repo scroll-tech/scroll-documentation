@@ -78,12 +78,12 @@ contract GreeterOperator {
 Pasamos el mensaje ejecutando `executeFunctionCrosschain` y pasando los siguientes parámetros:
 
 - `scrollMessengerAddress`: Esto dependerá de dónde hayas desplegado el contrato `GreeterOperator`.
-  - Si lo desplegaste en Sepolia utiliza `0x50c7d3e7f7c656493D1D76aaa1a836CedfCBB16A`. Si lo has desplegado en Scroll utiliza `0xBa50f5340FB9F3Bd074bD638c9BE13eCB36E603d`.
+  - Si lo desplegaste en Sepolia utiliza `0x50c7d3e7f7c656493D1D76aaa1a836CedfCBB16A`. Si lo has desplegado en Scroll Sepolia utiliza `0xBa50f5340FB9F3Bd074bD638c9BE13eCB36E603d`.
 - `targetAddress`: La dirección del contrato `Greeter` en la cadena opuesta.
 - `value`: En este caso es `0` porque el `setGreeting` no es de tipo `payable`.
 - `greeting`: Es el parámetro que se enviará a través del mensaje. Prueba pasar `"¡Este mensaje fue ejecutado de manera crosschain!"`.
 - `gasLimit`:
-  - Si estás enviando el mensaje de L1 a L2, alrededor de un límite de gas de `5000` debería ser más que suficiente.
+  - Si estás enviando el mensaje de L1 a L2, alrededor de un límite de gas de `1000000` debería ser más que suficiente. Habiendo dicho esto, si estableces un valor muy alto, y tu `msg.value` no cubre `gasLimit` * `baseFee`, la transacción revertirá. Si `msg.value` es mayor a la comisión de gas, la porción que no se usó se te devolverá.
   - Si estás enviando el mensaje de L2 a L1, pasa `0`, ya que la transacción se completará ejecutando una transacción adicional en L1.
 
 ### Retransmisión del mensaje al enviar de L2 a L1
