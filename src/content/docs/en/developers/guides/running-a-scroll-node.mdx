@@ -11,7 +11,7 @@ whatsnext: { "Canvas & Bridge Integration Guide": "/developers/guides/canvas-bad
 import Aside from "../../../../../components/Aside.astro"
 import ToggleElement from "../../../../../components/ToggleElement.astro"
 
-This guide will walk you through setting up your own Scroll MPT node using Docker with snapshot.
+This guide will walk you through setting up your own Scroll node using Docker with snapshot.
 
 ## Key Differences from Scroll Sepolia
 
@@ -23,11 +23,6 @@ This guide will walk you through setting up your own Scroll MPT node using Docke
 ---
 
 ## Prerequisites
-
-## Important Documents
-
-- [Scroll RPCs (scroll namespace)](https://www.notion.so/Scroll-RPCs-scroll-namespace-e756b0df98fe42cda8a707083486f9e8)
-- [Euclid Upgrade (#5): Note for Partners](https://www.notion.so/scrollzkp/Euclid-Upgrade-5-Note-for-Partners-1ad7792d22af808cad5ac643a5ecdaf0)
 
 ## Staying Up-to-Date
 
@@ -41,10 +36,6 @@ We recommend using the latest release at https://github.com/scroll-tech/go-ether
 ## Naming Conventions
 
 The preferred network name is `Scroll` or `scroll`. If you operate a user-facing service (e.g. public RPC endpoint), please consider using this name.
-
-## Guidance for RPC Providers
-
-For more information about Scroll RPCs and namespace configuration, please refer to this [page](https://bit.ly/scroll-l2geth-rpc)
 
 ### Hardware Requirements
 
@@ -66,24 +57,6 @@ This section assumes you are familiar with [Docker](https://www.docker.com/) and
 You will need access to a fully-synced **Ethereum Mainnet** RPC endpoint before running `l2geth`. You can maintain your own node or choose to use a 3rd-party provider that supports the standard Ethereum RPC APIs. The remainder of the article assumes that you have access to an L1 node’s HTTP RPC API at `L2GETH_L1_ENDPOINT`.
 Example: `L2GETH_L1_ENDPOINT="https://my-node.com:8545"`
 
-## Dedicated Bootnodes
-
-When you run l2geth using the --scroll flag, it will automatically connect to 5 default bootnodes. Additionally, we maintain 2 dedicated bootnodes for selected partners. You can connect to these through the l2geth console:
-
-```bash
-$ l2geth attach "./l2geth-datadir/geth.ipc"
-
-> admin.addPeer("enode://a28f9c5a8f6ed2a5063210a1253ddba9b8b48434e4700198ec8c6e687753dc0eba6dcef4fbbe8a6aeef2079884c2d85ca0bffcab8ec826111576a2cffe7a3266@44.230.97.163:30303")
-true
-
->  admin.addPeer("enode://0bb5919853cb7cfc302d3c7ac266890cc8f3c67cce7e8fa8d45c3714237fbed395a7b964de131617cf10903774a8ef59d89c002136c2dedad9ef8bd8eddc3ef7@52.36.234.198:30303")
-true
-
-> admin.peers.length
-7
-```
-Currently these 2 bootnodes are open but not publicised. If necessary, we will enable IP-whitelisting for these 2 bootnodes in the future.
-
 ---
 ## Build and Run Using Docker with Snapshot
 
@@ -104,12 +77,12 @@ SNAPSHOT_URL =  https://scroll-geth-snapshot.s3.us-west-2.amazonaws.com/mpt/late
 
 1. Create a new folder for the snapshot
 ```bash
-    mkdir l2geth-mpt
+    mkdir l2geth
 ```
 
 2. Go to the created folder
 ```bash
-    push l2geth-mpt
+    push l2geth
 ```
 
 3. Download the snapshot
@@ -126,10 +99,10 @@ SNAPSHOT_URL =  https://scroll-geth-snapshot.s3.us-west-2.amazonaws.com/mpt/late
 
 1. Go to the snapshot folder
 ```bash
-    cd l2geth-mpt
+    cd l2geth
 ```
 
-2. In the l2geth-mpt folder, setup the docker-compose.yaml config
+2. In the l2geth folder, setup the docker-compose.yaml config
 Insert your config in the yaml file and save it, recommended config would be :
 
 ```bash
@@ -151,7 +124,7 @@ Insert your config in the yaml file and save it, recommended config would be :
         - 6060:6060
         - 30303:30303
         - 30303:30303/udp
-        # mpt type
+        
         command: 
             --scroll
             --scroll-mpt
