@@ -8,11 +8,11 @@ excerpt: "Learn how to build a dApp that processes USDT payments and mints NFTs 
 whatsnext: { "Verify Your Smart Contracts": "/en/developers/verifying-smart-contracts" }
 ---
 
-import Aside from "../../../../components/Aside.astro"
-import ClickToZoom from "../../../../components/ClickToZoom.astro"
-import ToggleElement from "../../../../components/ToggleElement.astro"
-import paymentDApp from "../../../../assets/images/developers/stablecoin-payments-tutorial/payment-dapp.png"
-import nftRecipt from "../../../../assets/images/developers/stablecoin-payments-tutorial/nft-recipt.png"
+import Aside from "../../../../../components/Aside.astro"
+import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import ToggleElement from "../../../../../components/ToggleElement.astro"
+import paymentDApp from "../../../../../assets/images/developers/stablecoin-payments-tutorial/payment-dapp.png"
+import nftRecipt from "../../../../../assets/images/developers/stablecoin-payments-tutorial/nft-recipt.png"
 
 Welcome to the Scroll Stablecoin Payments Tutorial. This guide walks you through building a dApp that processes USDT payments and mints NFTs as receipts, from smart contract development to frontend integration.
 
@@ -28,7 +28,7 @@ By the time you're done, you'll have:
 _What you'll build: a payments app that processes USDT payments and mints NFTs as recipts._
 
 <Aside type="tip" title="">
-Scroll’s infrastructure delivers **secure**, **borderless**, **fast**, and **affordable** payments, powered by trusted rails like Binance and [EtherFi](https://scroll.io/blog/etherfi-cash). While Scroll welcomes every dApp, we’re especially committed to solving the unique challenges of emerging markets, explore our work in [Africa](https://scroll.io/blog/scroll-africa-tour) and [Southeast Asia](https://scroll.io/blog/expanding-access-in-sea).
+Scroll’s infrastructure delivers secure, borderless, fast, and affordable payments, powered by trusted rails like Binance and [EtherFi](https://scroll.io/blog/etherfi-cash). While Scroll welcomes every dApp, we’re especially committed to solving the unique challenges of emerging markets, explore our work in [Africa](https://scroll.io/blog/scroll-africa-tour) and [Southeast Asia](https://scroll.io/blog/expanding-access-in-sea).
 </Aside>
 
 If you run into any issues, please reach out in [our Discord](https://discord.gg/scroll).
@@ -163,7 +163,7 @@ pnpm install
 Add your deployed contract address to `.env.local`:
 
 `env.local`
-```
+```bash
 VITE_PAYMENT_PROCESSOR_ADDRESS=0xYourNewContractAddress
 ```
 
@@ -406,7 +406,7 @@ export default App
 
 ## Start the Frontend
 
-```
+```bash
 pnpm run dev
 ```
 
