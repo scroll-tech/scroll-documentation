@@ -13,254 +13,287 @@ import ClickToZoom from "../../../../components/ClickToZoom.astro"
 import networkSelection from "./_images/mmNetworkSelection.png"
 import injectedProviderMM from "./_images/injectedProviderMM.png"
 import ToggleElement from "../../../../components/ToggleElement.astro"
+import wagmiDemo from "../../../../assets/images/developers/getting-started/wagmi-demo.png"
 
-With Scroll, your favorite tools for building and testing smart contracts just work.
+Welcome to the Scroll Developer Quickstart. This guide walks you through building a minimal on-chain app, from installing tooling to deploying contracts on Scroll and connecting it to a React frontend.
 
-Since Scroll is bytecode equivalent with the EVM, you’ll just need to point your favorite builder tools at a Scroll RPC Provider.
+
+## What You'll Build
+
+By the time you're done, you'll have:
+- Installed developer tooling.
+- Deployed a Counter smart contract on Scroll by using Foundry.
+- Created a React frontend (with wagmi and Viem) to read from and write to your contract.
+
+<ClickToZoom src={wagmiDemo} />
+_What you'll build: a hello world dApp on Scroll connecting a React frontend to a contract you deployed._
+
+## Why Scroll?
+
+Scroll is a high performance, EVM equivalent zkEVM Layer 2 designed to help developers build secure, low-cost, and engaging applications. Because Scroll is fully bytecode compatible with the EVM, your existing development and testing tools work out of the box, just configure them to use a Scroll RPC provider.
 
 If you run into any issues, please reach out in [our Discord](https://discord.gg/scroll).
 
-## Acquiring Ether
+## Install and Configure Foundry
 
-Scroll uses ETH as its native currency, which will be needed to pay transaction fees for deploying and interacting with the network.
+We'll use Foundry to compile and deploy our Counter contract.
 
-To start building on Scroll, we suggest you begin with using our Scroll Sepolia testnet. You'll first need to acquire some testnet ETH. See the [Faucet](/user-guide/faucet) page for tips on getting test tokens on Sepolia. After this, you can bridge your testnet ETH to the Scroll Sepolia Testnet (Layer 2) using our [Sepolia Bridge](https://sepolia.scroll.io/bridge), as described in the [Bridge article](/user-guide/bridge).
-
-For a walkthrough, start with the User Guide's [Setup](/user-guide/setup) page.
-
-Once you're ready to deploy on Scroll's mainnet, you can bridge over ETH using [our native bridge](https://scroll.io/bridge/) or one of the 3rd-party bridges.
-
-## Network Configuration
-
-### Scroll Mainnet
-
-Use the table below to configure your Ethereum tools to the Scroll mainnet.
-
-| Network Name       | Scroll                                             | Ethereum Mainnet                                     |
-| ------------------ | -------------------------------------------------- | ---------------------------------------------------- |
-| RPC URL            | [https://rpc.scroll.io/](https://rpc.scroll.io/)   | [https://eth.llamarpc.com](https://eth.llamarpc.com) |
-| Chain ID           | 534352                                             | 1                                                    |
-| Currency Symbol    | ETH                                                | ETH                                                  |
-| Block Explorer URL | [https://scrollscan.com/](https://scrollscan.com/) | [https://etherscan.io](https://etherscan.io)         |
-
-<ToggleElement anchor="mainnet-additional-infra">
-  <div slot="title">Additional Scroll Mainnet RPCs and Infra</div>
-  - [Scroll Native Bridge](https://scroll.io/bridge)
-  - [Scroll RPC Providers on ChainList.org](https://chainlist.org/chain/534352)
-  - [Ethereum RPC Providers on ChainList.org](https://chainlist.org/chain/1)
-  {/* - Additional Block Explorers:
-    - [Dora](https://www.ondora.xyz/network/scroll/interactions)
-    - [L2Scan](https://scroll.l2scan.co/) */}
-
-</ToggleElement>
-
-### Scroll Sepolia Testnet
-
-Use the table below to configure your Ethereum tools to the Scroll Sepolia Testnet.
-
-| Network Name       | Scroll Sepolia                                                    | Ethereum Sepolia                                             |
-| ------------------ | ----------------------------------------------------------------- | ------------------------------------------------------------ |
-| RPC URL            | [https://sepolia-rpc.scroll.io/](https://sepolia-rpc.scroll.io/)  | [https://rpc2.sepolia.org](https://rpc2.sepolia.org)         |
-| Chain ID           | 534351                                                            | 11155111                                                     |
-| Currency Symbol    | ETH                                                               | ETH                                                          |
-| Block Explorer URL | [https://sepolia.scrollscan.com](https://sepolia.scrollscan.com/) | [https://sepolia.etherscan.io](https://sepolia.etherscan.io) |
-
-<ToggleElement anchor="sepolia-additional-infra">
-  <div slot="title">Additional Scroll Sepolia RPCs and Infra</div>
-  - [Scroll Sepolia Native Bridge](https://sepolia.scroll.io/bridge)
-  - [Scroll Sepolia RPC Providers on ChainList.org](https://chainlist.org/chain/534351)
-  - [Ethereum Sepolia RPC Providers on ChainList.org](https://chainlist.org/chain/11155111)
-  - Additional Block Explorers:
-    - [Dora](https://www.ondora.xyz/network/scroll-sepolia/interactions)
-    - [L2Scan](https://scroll.l2scan.co/)
-
-</ToggleElement>
-
-## Configure your tooling
-
-<Aside type="tip" title="">
-  For setting up tooling to verify a smart contract deployment, see [Verifying Smart
-  Contracts](/developers/verifying-smart-contracts).
-</Aside>
-
-<Aside type="danger" title="">
-Features from the Dencun upgrade are not yet available on Scroll. Please use `shanghai` as your EVM target and avoid using a Solidity version higher than `0.8.23`.
-</Aside>
-
-### Hardhat
-
-Modify your Hardhat config file `hardhat.config.ts` to point at the Scroll Sepolia Testnet public RPC.
-
-```jsx
-...
-
-const config: HardhatUserConfig = {
-  ...
-  networks: {
-    scrollSepolia: {
-      url: "https://sepolia-rpc.scroll.io/" || "",
-      accounts:
-        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
-    },
-  },
-};
-
-...
-```
-
-### Foundry
-
-To deploy using the Scroll Sepolia Testnet Public RPC, run:
+Create a folder for the contract:
 
 ```bash
-forge create ... --rpc-url=https://sepolia-rpc.scroll.io/ 
+# create a new contracts directory
+mkdir contracts
+cd contracts
+# install and update foundry if you haven't
+curl -L https://foundry.paradigm.xyz | bash
+foundryup
+# initialize a fresh Foundry project
+forge init --no-git
 ```
 
-### Remix Web IDE
+## Configure Environment Variables
 
-After compiling your contracts, the easiest way to deploy using Remix is by [setting up Metamask](/user-guide/setup#metamask), then selecting the **Scroll Sepolia Testnet** network.
+To deploy your smart contracts on Scroll, you need two key components:
+- An RPC node connection to interact with the Scroll network: https://sepolia-rpc.scroll.io/
+- A funded private key to deploy the contract
 
-<ClickToZoom src={networkSelection} />
+<Aside type="tip" title="Setting Up Your Wallet">
+  New to Web3? Start by installing [Rabby](https://rabby.io/) or [MetaMask](https://metamask.io/). After creating your wallet and securing your seed phrase, head over to [ChainList](https://chainlist.org/chain/534351) to add Scroll Sepolia to your wallet with a single click. Once you're set up, you can export your private key for deployment by following [MetaMask's guide](https://support.metamask.io/configure/accounts/how-to-export-an-accounts-private-key/).
+</Aside>
 
-Now, in the “Deploy and Run Transactions” tab, use the “Environment” drop-down and select “Injected Provider - MetaMask.”
+Let's set up both of these:
 
-<ClickToZoom src={injectedProviderMM} />
+`.env`
+```bash
+SCROLL_SEPOLIA_RPC_URL="https://sepolia-rpc.scroll.io/"
+PRIVATE_KEY=<YOUR_PRIVATE_KEY>
+```
 
-Connect your wallet and select the Scroll Sepolia Testnet. Your account should be selected automatically in Remix, and you can click “Deploy.”
+Also be sure you don't upload this to a public repo by setting up a `.gitignore`.
 
-### Truffle
+`.gitignore`
+```bash
+.env
+```
 
-Assuming you already have a Truffle environment setup, go to the Truffle [configuration file](https://trufflesuite.com/docs/truffle/reference/configuration/), `truffle.js`. Make sure to have installed HDWalletProvider: `npm install @truffle/hdwallet-provider@1.4.0`
+If you don't have Sepolia test ETH yet, join our [Telegram faucet](https://t.me/+0tvdw8QMJBMyOTli) and send `/drop YOUR_ADDRESS` to receive Sepolia ETH on Scroll.
 
-```js
-const HDWalletProvider = require("@truffle/hdwallet-provider")
-...
-module.exports = {
-  networks: {
-    scrollSepolia: {
-      provider: () =>
-        new HDWalletProvider(process.env.PRIVATE_KEY, "https://sepolia-rpc.scroll.io/"),
-      network_id: '*',
-    },
+<Aside type="danger" title="Security Warning">
+  Never share or commit your private key. Always keep it secure and handle with care.
+</Aside>
+
+## Deploy Your Smart Contract
+
+With Foundry set up and `.env` in place, deploy the Counter contract.
+
+In the contracts directory, run:
+
+```bash
+source .env
+forge create src/Counter.sol:Counter \
+  --rpc-url $SCROLL_SEPOLIA_RPC_URL \
+  --broadcast \
+  --private-key $PRIVATE_KEY
+```
+
+After deployment, you'll see something like:
+
+```bash
+[⠊] Compiling...
+No files changed, compilation skipped
+Deployer: 0xbef34f2FCAe62dC3404c3d01AF65a7784c9c4A19
+Deployed to: 0xf0e9ceCAE516B2F5Ac297B3857453b07455f817F
+Transaction hash: 0x2bca5934ad82ce26332847fdd6a9241b0da0e38e6928f06499ee58ebc967bbde
+```
+
+Copy the address under `Deployed to:`. You'll need it when configuring the frontend.
+
+## Create and Configure the React Frontend
+
+We'll build a simple React app (using Vite, wagmi, and Viem) that connects to MetaMask (or another injected provider) and interacts with the Counter contract.
+
+From the root of your project:
+
+```bash
+cd ..
+pnpm create wagmi frontend -t vite-react
+cd frontend
+pnpm install
+```
+
+This scaffolds a new Vite + React + wagmi template.
+
+Now add the smart contract address you just deployed to the `.env.local` file.
+
+`.env.local`
+```bash
+VITE_COUNTER_CONTRACT_ADDRESS=0xYourNewContractAddress
+```
+
+## Implement the Frontend Logic
+
+Create a new `Counter` component on `src/components/Counter.tsx` that is able to read and write to our smart contract.
+
+`src/components/Counter.tsx`
+```tsx
+import { useAccount, useWriteContract } from 'wagmi'
+import { createPublicClient, http } from 'viem'
+import { scrollSepolia } from 'viem/chains'
+import { useState, useEffect } from 'react'
+
+const COUNTER_CONTRACT_ADDRESS = import.meta.env.VITE_COUNTER_CONTRACT_ADDRESS as `0x${string}`
+
+// Connect your client to Scroll Sepolia
+const publicClient = createPublicClient({
+  chain: scrollSepolia,
+  transport: http()
+})
+
+// Define the ABI so we can interact with the contract from TS
+const counterABI = [
+  {
+    inputs: [],
+    name: "increment",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "number",
+    outputs: [{ type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+] as const
+
+// Custom hook for counter functionality
+function useCounter() {
+  const [number, setNumber] = useState<bigint | null>(null)
+  const { writeContract, isPending: isIncrementing } = useWriteContract()
+  const fetchNumber = async () => {
+    try {
+      const result = await publicClient.readContract({
+        address: COUNTER_CONTRACT_ADDRESS,
+        abi: counterABI,
+        functionName: 'number',
+      })
+      setNumber(result)
+    } catch (error) {
+      console.error('Error reading contract:', error)
+    }
+  }
+  useEffect(() => {
+    fetchNumber()
+  }, [])
+  const increment = () => {
+    writeContract({
+      address: COUNTER_CONTRACT_ADDRESS,
+      abi: counterABI,
+      functionName: 'increment',
+    }, {
+      onSuccess: (txHash) => {
+        publicClient.waitForTransactionReceipt({ hash: txHash })
+          .then(() => fetchNumber())
+          .catch(console.error)
+      },
+    })
+  }
+  return {
+    number,
+    isIncrementing,
+    increment,
+    refreshNumber: fetchNumber
   }
 }
-```
-
-### Brownie
-
-To add the Scroll Sepolia Testnet, run the following command:
-
-```bash
-brownie networks add Ethereum scrollSepolia host=https://sepolia-rpc.scroll.io/ chainid=534351
-```
-
-To set this as your default network, add the following in your project config file:
-
-```yaml
-networks:
-  default: scrollSepolia
-```
-
-Another way to add the Scroll Sepolia Testnet is to create a `yaml` file and run a command to add it.
-
-This is an example of a yaml file called `network-config.yaml`
-
-```yaml
-live:
-- name: Ethereum
- networks:
- - chainid: 534351
-   explorer: https://sepolia.scrollscan.com/
-   host: https://sepolia-rpc.scroll.io
-   id: scrollSepolia
-   name: Scroll Sepolia Testnet
-```
-
-To add the Scroll Sepolia Testnet to the network list, run the following command:
-
-```bash
-brownie networks import ./network-config.yaml
-```
-
-To deploy on Scroll, run the following command. In this example, `token.py` is the script to deploy the smart contract. Replace this with the name of your script:
-
-```bash
-brownie run token.py --network scrollSepolia
-```
-
-### ethers.js
-
-Setting up a Scroll Sepolia Testnet provider in an `ethers` script:
-
-```jsx
-import { ethers } from "ethers"
-
-const provider = new ethers.providers.JsonRpcProvider("https://sepolia-rpc.scroll.io/")
-```
-
-### scaffold-eth
-
-To deploy using Scaffold-eth, you’ll need to point both your Hardhat and React settings at the Scroll Sepolia Testnet.
-
-#### Configure Hardhat
-
-In the `packages/hardhat/hardhat.config.js` file, you’ll add the network and select it as the default network.
-
-```jsx
-...
-//
-// Select the network you want to deploy to here:
-//
-const defaultNetwork = "scrollSepolia";
-...
-module.exports = {
-...
-	networks: {
-...
-          scrollSepolia: {
-            url: "https://sepolia-rpc.scroll.io/",
-            accounts: {
-              mnemonic: mnemonic(),
-            },
-          },
-	}
-...
+// Counter Component
+export function Counter() {
+  const account = useAccount()
+  const { number, isIncrementing, increment } = useCounter()
+  return (
+    <div style={{ marginTop: '20px' }}>
+      <h2>Counter</h2>
+      <p>Current number: {number?.toString()}</p>
+      {account.status === 'connected' && (
+        <button
+          onClick={increment}
+          disabled={isIncrementing}
+        >
+          {isIncrementing ? 'Incrementing...' : 'Increment'}
+        </button>
+      )}
+    </div>
+  )
 }
 ```
 
-Be sure to fund the deployment wallet as well! Run `yarn generate` to create the wallet and `yarn account` to check its funds. Once funded, run `yarn deploy --network scrollSepolia` to deploy on the Scroll Sepolia testnet.
+Now let's add our new component into `src/App.tsx`.
 
-<Aside type="danger" title="warning">
-  On some project forks, you'll want to disable the contract verification, which relies on Etherscan. This can be
-  commented out in `packages/hardhat/deploy/00_deploy_your_contract.js`
-</Aside>
+```ts
+import { useAccount, useConnect, useDisconnect } from 'wagmi'
+// Import our newly created component
+import { Counter } from './components/Counter'
 
-#### Configure the Frontend
+function App() {
+  const account = useAccount()
+  const { connectors, connect, error } = useConnect()
+  const { disconnect } = useDisconnect()
 
-To configure your frontend, you need to add the Scroll Sepolia Testnet as a network option, then select it as default.
+  return (
+    <div style={{ padding: '20px' }}>
+      <div>
+        <h2>Wallet</h2>
+        {account.status === 'connected' ? (
+          <>
+            <p>Connected: {account.addresses?.[0]}</p>
+            <button onClick={() => disconnect()}>Disconnect</button>
+          </>
+        ) : (
+          <>
+            {connectors.map((connector) => (
+              <button
+                key={connector.uid}
+                onClick={() => connect({ connector })}
+                style={{ marginRight: '10px' }}
+              >
+                Connect {connector.name}
+              </button>
+            ))}
+            {error && <p style={{ color: 'red' }}>{error.message}</p>}
+          </>
+        )}
+      </div>
 
-To add the network, modify `packages/react-app/src/constants.js`.
-
-```jsx
-...
-export const NETWORKS = {
-...
-  scrollSepolia: {
-    name: "scrollSepolia",
-    color: "#e9d0b8",
-    chainId: 534351,
-    rpcUrl: "https://sepolia-rpc.scroll.io/",
-    blockExplorer: "https://sepolia.scrollscan.com",
-  },
-...
+      {/* Use the Counter component in our dApp */}
+      <Counter />
+    </div>
+  )
 }
+
+export default App
 ```
 
-Next, in `packages/react-app/src/App.jsx` modify
+## Start the Frontend
 
-```jsx
-...
-/// 📡 What chain are your contracts deployed to?
-const initialNetwork = NETWORKS.scrollSepolia;
-...
+Start your development server:
+
+```bash
+pnpm run dev
 ```
+
+Open your browser at http://localhost:5173 or whatever Vite shows. You should see wallet connection buttons and an increment button. First, click the connect wallet button corresponding to the wallet you installed and then click the increment button to see the number going up.
+
+## Ready to go live?
+
+When you’re ready to switch to mainnet, simply replace the Sepolia RPC URL with the Scroll mainnet RPC URL in your environment: `https://rpc.scroll.io/`. In your React code, update the Viem client to use `scroll` instead of `scrollSepolia`:
+
+```ts
+import { scroll } from 'viem/chains'
+
+const publicClient = createPublicClient({
+  chain: scroll,
+  transport: http(),
+})
+```
+
+This change tells Viem to point at the live Scroll chain rather than Sepolia. All of your existing contract reads and writes will now go to mainnet.
