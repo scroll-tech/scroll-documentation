@@ -112,6 +112,12 @@
       "sepoliaBlockExplorer": "Scrollscan Explorer",
       "canvasBadge": "Canvas & Badge Integration"
     },
+    "whatToBuild": {
+      "whatToBuild": "What to Build",
+      "stablecoinPaymentsTutorial": "Stablecoin Payments Tutorial",
+      "solidityCookbook": "Solidity Cookbook",
+      "privacyDappsWithZk": "Privacy dApps with ZK"
+    },
     "technology": {
       "introduction": "Introduction",
       "principles": "Principles",

@@ -181,6 +181,23 @@ export const getSidebar = () => {
         ],
       },
       {
+        section: t("sidebar.whatToBuild.whatToBuild"),
+        contents: [
+          {
+            title: t("sidebar.whatToBuild.stablecoinPaymentsTutorial"),
+            url: formatUrl("developers/what-to-build/stablecoin-payments-tutorial"),
+          },
+          {
+            title: t("sidebar.whatToBuild.solidityCookbook"),
+            url: formatUrl("developers/what-to-build/solidity-cookbook"),
+          },
+          {
+            title: t("sidebar.whatToBuild.privacyDappsWithZk"),
+            url: formatUrl("developers/what-to-build/privacy-dapps-with-zk"),
+          },
+        ],
+      },
+      {
         section: t("sidebar.developers.mainnetResources"),
         contents: [
           { title: t("sidebar.developers.rollupExplorer"), url: "https://scroll.io/rollupscan" },
