@@ -21,11 +21,11 @@ _Diagram of Scroll transaction journey_
 
 | Component             | Role                                             |
 |-----------------------|---------------------------------------------------|
-| Backend               | Submits transaction.                               |
+| User/DApp             | Submits transaction.                               |
 | Monitoring Service    | Tracks transaction progress and logs events.        |
-| Scroll Internal Nodes | Handle transaction validation and mempool logic.    |
+| Scroll Internal Nodes | Peer nodes supporting network operations such as bootnodes or RPC node for internal backend services.   |
 | Scroll Sequencer      | Orders transactions into blocks.                    |
-| Axiom Logging         | Receives logs for external visibility/analysis.     |
+| HTTP API              | External access interface for monitoring service    |
 
 ---
 
@@ -40,7 +40,7 @@ curl -X POST "https://venus.scroll.io/v1/tx/journeys" \
   -H "Content-Type: application/json" \
   -d '{
     "tx_hashes": [
-      "0xcf0982782692a521e6bcbf4f6c5d1db6ac1f2049b7c7304dd89a9522a61406f9"
+      "0xf8a92194cb21dcfaa2efe3230c5d5c80f7e71361575eff33cafa6ebc9eb34357"
     ]
   }' | jq
 ```
@@ -50,7 +50,7 @@ curl -X POST "https://venus.scroll.io/v1/tx/journeys" \
 | Field              | Description |
 |-------------------|-------------|
 | `tx_hash`         | Transaction hash queried. |
-| `current_status`  | Final status (`queued`,`pending`,`executed`,`dropped`,`reorged`,`replaced`). |
+| `current_status`  | Final status (`queued`,`pending`,`executed`,`dropped`,`replaced`). |
 | `execution_status`| Result of execution (`successful`,`reverted`,`unknown`,`error`). |
 | `first_seen_at`   | First time the network detected this transaction. |
 | `last_updated_at` | Most recent status update time. |
@@ -64,8 +64,7 @@ curl -X POST "https://venus.scroll.io/v1/tx/journeys" \
 | `pending`  | Transaction valid and executable in mempool. |
 | `executed` | Transaction included in a block. |
 | `dropped`  | Transaction removed due to expiration, mempool overflow, or invalid parameters. |
-| `reorged`  | Transaction was removed from the canonical chain after a chain reorganization. |
-| `replaced` | Transaction replaced by a new transaction (same sender & nonce, higher gas price). |
+| `replaced` | Transaction replaced by a new transaction (same sender and nonce, with higher gas price). |
 
 #### Execution Status
 
@@ -79,50 +78,53 @@ curl -X POST "https://venus.scroll.io/v1/tx/journeys" \
 ### Journey Field Example 
 
 #### Queued
+
 ```json
 {
-  "event_type": "queued",
-  "timestamp": "2025-04-10T09:55:29.73Z",
-  "node_type": "l2geth-bootnode-0",
-  "event_detail": "Pooled new future transaction (into non-executable queues)"
+    "event_type": "queued",
+    "timestamp": "2025-06-19T17:22:23.27Z",
+    "node_type": "l2geth-bootnode-0",
+    "event_detail": "Transaction added to future queue (initial processing - will be promoted to pending if nonce is correct and all validity checks pass, or wait for conditions to be met)"
 }
 ```
 
 #### Pending
+
 ```json
 {
     "event_type": "pending",
-    "timestamp": "2025-04-10T09:55:29.73Z",
+    "timestamp": "2025-06-19T17:22:23.27Z",
     "node_type": "l2geth-bootnode-0",
-    "event_detail": "Transaction promoted from future queue to pending"
+    "event_detail": "Transaction promoted from future queue to pending pool (passed all checks: correct nonce sequence, sufficient balance including L1 data fee, gas limit compliance, and account pending limit)"
 }
 ```
 
 #### Executed
+
 ```json
 {
     "event_type": "executed",
-    "timestamp": "2025-04-10T09:55:31.02Z",
-    "node_type": "l2geth-bootnode-0",
-    "event_detail": "TX is included in a block"
+    "timestamp": "2025-06-19T17:22:23.299Z",
+    "node_type": "l2geth-mpt-signer-1",
+    "event_detail": "Transaction successfully included in a block and executed on-chain"
 }
 ```
 
 #### Dropped
+
 ```json
 {
     "event_type": "dropped",
-    "timestamp": "2025-04-12T15:33:23.142Z",
-    "node_type": "l2geth-bootnode-0",
-    "event_detail": "Discarding invalid transaction when adding the transaction"
+    "timestamp": "2025-06-19T17:22:23.352Z",
+    "node_type": "l2geth-bootnode-2",
+    "event_detail": "Transaction rejected (validation failed - insufficient funds, unsupported transaction type, or other validation errors)"
 }
 ```
 
 1. `Queued`: Transaction waiting for execution (e.g., nonce gap)
 2. `Pending`: Transaction ready for inclusion by Scroll Sequencer.
 3. `Executed`: Transaction included in a block.
-4. (Optional) `Reorged`: Transaction may get reorged based on network conditions.
-5. `Dropped` or `Replaced`: Transaction invalidated or replaced before execution.
+4. `Dropped` or `Replaced`: Transaction invalidated or replaced before execution.
 
 ### Common Failure Reasons
 
@@ -133,6 +135,3 @@ curl -X POST "https://venus.scroll.io/v1/tx/journeys" \
 
 **Replaced:**
 - Same nonce transaction with higher gas price replaces previous.
-
-**Reorged:**
-- Block containing tx removed due to L2 chain reorganization.
