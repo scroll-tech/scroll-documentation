@@ -1,0 +1,186 @@
+---
+section: developers
+date: Last Modified
+title: "Solidity Cookbook"
+lang: "en"
+permalink: "what-to-build/solidity-cookbook"
+excerpt: "Solidity snipets to plug into your contracts. DeFi integrations and more."
+whatsnext: { "Verify Your Smart Contracts": "/en/developers/verifying-smart-contracts" }
+---
+
+Smart contracts are open and interoperable by default. Scroll’s ecosystem includes both established blue-chip protocols and native projects. Below is a collection of Solidity code snippets you can use to easily integrate DeFi and more into your contracts.
+
+Did we miss an important protocol, or do you want to add your own? Send us a PR [here](#TODO).
+
+## Lend on Aave
+
+Supplying assets to Aave serves two functions: earning yield and providing collateral for loans. By depositing any idle tokens from your protocol into Aave, you create a sustainable revenue stream either for your platform or your users. Additionally, you can integrate Aave’s lending features directly into your app or abstract the borrowing experience behind your own interface.
+
+In the following example we will supply USDC to Aave to generate yield. You will be able to see your supplied assets and also other Markets available at [app.aave.com](https://app.aave.com/). Currently ETH, USDC, weETH, wstETH and SCR are supported.
+
+Learn more at Aave's [official docs](https://aave.com/docs/developers/smart-contracts/pool#write-methods-supply).
+
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.13;
+
+// Import Openzeppelin's IERC20 to interact with XXX and Aave's IPool to interact with the supply API 
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IPool} from  "https://github.com/aave/aave-v3-core/blob/master/contracts/interfaces/IPool.sol";
+
+// Demonstrates how to supply tokens into the Scroll Aave pools
+contract AaveScrollDemo {
+    address public immutable AAVE_POOL_ADDRESS = 0x11fCfe756c05AD438e312a7fd934381537D3cFfe; // Aave pool on Scroll Mainnet
+    address public immutable USDC_ADDRESS = 0x06eFdBFf2a14a7c8E15944D1F4A48F9F95F663A4; // USDC token on Scroll Mainnet
+
+    // Supply tokens to the Aave pool on behalf of the sender
+    // Important: You need to approve this contract before calling this, also remember USDC uses 6 decimals. Approve here: https://scrollscan.com/token/0x06efdbff2a14a7c8e15944d1f4a48f9f95f663a4#writeProxyContract#F1
+    function stake(uint amount) public {
+        // First we transfer the USDC from the sender into this contract and approve the Aave Pool
+        IERC20(USDC_ADDRESS).transferFrom(msg.sender, address(this), amount);
+        IERC20(USDC_ADDRESS).approve(AAVE_POOL_ADDRESS, amount);
+        // Next we call the supply function
+        IPool(AAVE_POOL_ADDRESS).supply(
+            USDC_ADDRESS,
+            amount,
+            msg.sender,
+            0);
+        // After the transaction succeeds you should be able to see your supply at app.aave.com
+    }
+}
+```
+
+## Query Chainlink Price Feeds
+
+Chainlink has been an historical backbone in DeFi. In this demo we query the bitcoin price on Scroll Mainnet.
+
+See the complete list of price feeds in the [official documentation](https://docs.chain.link/data-feeds/price-feeds/addresses?page=1&testnetPage=1&network=scroll#scroll-mainnet).
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.7;
+
+// Import Chainlink's aggregator interface that exposes many data feeds
+import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+
+// Demonstrates how to query Bitcoin price in Scroll Mainnet
+contract ChainlinkScrollDemo {
+    // Connect your contract with the Bitcoin price provider
+    AggregatorV3Interface internal dataFeed = AggregatorV3Interface(
+            0xCaca6BFdeDA537236Ee406437D2F8a400026C589
+    );
+
+    // View function that returns the current Bitcoin price
+    function getChainlinkDataFeedLatestAnswer() public view returns (int) {
+        // prettier-ignore
+        (
+            /* uint80 roundID */,
+            int answer,
+            /*uint startedAt*/,
+            /*uint timeStamp*/,
+            /*uint80 answeredInRound*/
+        ) = dataFeed.latestRoundData();
+        return answer;
+    }
+}
+```
+
+## Attest to Anything on Ethereum Attestation Service
+
+Define custom schemas and issue attestations for anything, from digital identities to DeFi events, by using the EAS. You can interact with EAS directly on Scroll’s [EAScan](https://scroll.easscan.org/) or integrate it into your own smart contracts.
+
+Next, we’ll demonstrate how to issue a “friendship attestation” from a smart contract, certifying that the controller of a given address is your friend.
+
+For full details on EAS and its APIs, refer to the [official documentation](https://docs.attest.org/docs/welcome).
+
+```solidity
+// SPDX-License-Identifier: MIT
+
+pragma solidity ^0.8.24;
+
+import { IEAS, AttestationRequest, AttestationRequestData, RevocationRequest, RevocationRequestData } from "@ethereum-attestation-service/eas-contracts/contracts/IEAS.sol";
+import { NO_EXPIRATION_TIME, EMPTY_UID } from "@ethereum-attestation-service/eas-contracts/contracts/Common.sol";
+
+contract EASScrollDemo
+{
+    address easAddress = 0xaEF4103A04090071165F78D45D83A0C0782c2B2a;
+    bytes32 schema = 0x27d06e3659317e9a4f8154d1e849eb53d43d91fb4f219884d1684f86d797804a;
+    
+    // check at https://scroll-sepolia.easscan.org/schema/view/0x27d06e3659317e9a4f8154d1e849eb53d43d91fb4f219884d1684f86d797804a
+
+    function sendIsFriend(address to, bool isFriend) public returns(bytes32)
+    {
+        return IEAS(easAddress).attest(
+                AttestationRequest({
+                    schema: schema,
+                    data: AttestationRequestData({
+                        recipient: to,
+                        expirationTime: NO_EXPIRATION_TIME,
+                        revocable: false,
+                        refUID: EMPTY_UID,
+                        data: abi.encode(isFriend),
+                        value: 0 // No value/ETH
+                    })
+                })
+            );
+    }
+}
+```
+
+## Swap Tokens on Uniswap V3
+
+Uniswap V3 is a leading DEX protocol that enables token swaps and concentrated liquidity. You can integrate Uniswap V3 swaps directly into your contracts using the ISwapRouter interface. Below is an example of how to swap USDC for WETH on Scroll Mainnet. Important note: keep in mind that currently, in Scroll, most liquidity is onther DEXes other than Uniswap V3.
+
+Learn more at Uniswap [V3 Core Docs](https://docs.uniswap.org/contracts/v3/reference/periphery/interfaces/ISwapRouter).
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.13;
+
+// Import the OpenZeppelin's IERC20 so we can interacts with ERC20 tokens
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+
+// Uniswap v3 Router (Rollups version) deployed on Scroll
+interface ISwapRouter {
+    struct ExactInputSingleParams {
+        address tokenIn;
+        address tokenOut;
+        uint24 fee;
+        address recipient;
+        uint256 amountIn;
+        uint256 amountOutMinimum;
+        uint160 sqrtPriceLimitX96;
+    }
+    function exactInputSingle(ExactInputSingleParams calldata params) external payable returns (uint256 amountOut);
+}
+
+// Demonstrates how to make a swap from within a smart contract on uniswap v3 on Scroll Mainnet
+contract UniV3ScrollDemo {
+    ISwapRouter public immutable swapRouter = ISwapRouter(0xfc30937f5cDe93Df8d48aCAF7e6f5D8D8A31F636);
+    address public constant USDC = 0x06eFdBFf2a14a7c8E15944D1F4A48F9F95F663A4; // USDC on Scroll Mainnet
+    address public constant WETH9 = 0x5300000000000000000000000000000000000004; // WETH on Scroll Mainnet
+    uint24 public constant poolFee = 500; // 0.05%
+
+    // Swaps a specified amount of USDC for WETH
+    function swapUSDCForWETH(uint256 amountIn) external returns (uint256 amountOut) {
+        // Transfer DAI from sender to this contract and approve the Uniswap Router 
+        IERC20(USDC).transferFrom(msg.sender, address(this), amountIn);
+        IERC20(USDC).approve(address(swapRouter), amountIn);
+
+        // Set up the swap parameters
+        ISwapRouter.ExactInputSingleParams memory params = ISwapRouter.ExactInputSingleParams({
+            tokenIn: USDC,
+            tokenOut: WETH9,
+            fee: poolFee,
+            recipient: msg.sender,
+            amountIn: amountIn,
+            amountOutMinimum: 0, // WARNING: Set to 0 for simplicity; consider slippage in production
+            sqrtPriceLimitX96: 0
+        });
+
+        // Execute the swap
+        amountOut = swapRouter.exactInputSingle(params);
+    }
+}
+```

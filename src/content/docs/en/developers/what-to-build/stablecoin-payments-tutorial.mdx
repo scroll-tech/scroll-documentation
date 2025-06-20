@@ -1,0 +1,419 @@
+---
+section: developers
+date: Last Modified
+title: "Stablecoin Payments Tutorial"
+lang: "en"
+permalink: "developers/stablecoin-payments-tutorial"
+excerpt: "Learn how to build a dApp that processes USDT payments and mints NFTs as receipts on Scroll"
+whatsnext: { "Verify Your Smart Contracts": "/en/developers/verifying-smart-contracts" }
+---
+
+import Aside from "../../../../../components/Aside.astro"
+import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import ToggleElement from "../../../../../components/ToggleElement.astro"
+import paymentDApp from "../../../../../assets/images/developers/stablecoin-payments-tutorial/payment-dapp.png"
+import nftRecipt from "../../../../../assets/images/developers/stablecoin-payments-tutorial/nft-recipt.png"
+
+Welcome to the Scroll Stablecoin Payments Tutorial. This guide walks you through building a dApp that processes USDT payments and mints NFTs as receipts, from smart contract development to frontend integration.
+
+<Aside type="note" title="Project Source Code">
+  You can find the complete working example of this tutorial in our [GitHub repository](https://github.com/Turupawn/scroll-payments-demo). Feel free to clone it and experiment with the code!
+</Aside>
+
+## What You'll Build
+
+By the time you're done, you'll have:
+- Deployed a PaymentProcessor smart contract that handles USDT payments
+- Created a React frontend that enables users to approve and make payments
+- Implemented NFT minting as payment receipts
+- Connected everything to Scroll's network
+
+<ClickToZoom src={paymentDApp} />
+_What you'll build: a payments app that processes USDT payments and mints NFTs as recipts._
+
+<Aside type="tip" title="">
+Scroll’s infrastructure delivers secure, borderless, fast, and affordable payments, powered by trusted rails like Binance and [EtherFi](https://scroll.io/blog/etherfi-cash). While Scroll welcomes every dApp, we’re especially committed to solving the unique challenges of emerging markets, explore our work in [Africa](https://scroll.io/blog/scroll-africa-tour) and [Southeast Asia](https://scroll.io/blog/expanding-access-in-sea).
+</Aside>
+
+If you run into any issues, please reach out in [our Discord](https://discord.gg/scroll).
+
+## Install and Configure Foundry
+
+We'll use Foundry to compile and deploy our `PaymentProcessor` contract.
+
+Create a folder for the contract:
+
+```bash
+# create a new contracts directory
+mkdir contracts
+cd contracts
+# install and update foundry if you haven't
+curl -L https://foundry.paradigm.xyz | bash
+foundryup
+# initialize a fresh Foundry project
+forge init --no-git
+# install openzeppelin contracts
+npm install @openzeppelin/contracts
+```
+
+## Configure Contract Dependencies
+
+Create a `remappings.txt` file to help Foundry locate the OpenZeppelin contracts:
+
+`remappings.txt`
+```
+openzeppelin-contracts/=node_modules/@openzeppelin/contracts/
+```
+
+
+`src/PaymentProcessor.sol`
+```solidity
+// SPDX-License-Identifier: MIT
+// Compatible with OpenZeppelin Contracts ^5.0.0
+pragma solidity ^0.8.27;
+
+import {ERC721} from "openzeppelin-contracts/token/ERC721/ERC721.sol";
+import {IERC20} from "openzeppelin-contracts/token/ERC20/IERC20.sol";
+
+// The following contract will process payments from users by debiting the item price and minting an NFT as recipt
+contract PaymentProcessor is ERC721 {
+    // Internal NFT counter for ID generation
+    uint _nextTokenId;
+    // NFT metadata url for our demo
+    string _tokenURI = "https://raw.githubusercontent.com/Turupawn/erc721-nft-metadata-demo/refs/heads/main/metadata.json";
+    // Set to the contract deployer, will receive each USDT payment
+    address public STORE_OWNER;
+    // USDT token address in mainnet
+    address public PAYMENT_TOKEN = 0xf55BEC9cafDbE8730f096Aa55dad6D22d44099Df;
+    // USDT uses 6 decimals, adapt accordingly if you use other token
+    uint8 PAYMENT_TOKEN_DECIMALS = 6;
+    // Item price will cost 0.05 USDT using the formula based on decimal amount
+    uint public ITEM_PRICE = 5 * 10**PAYMENT_TOKEN_DECIMALS / 100;
+
+    constructor() ERC721("MyToken", "MTK")
+    {
+        STORE_OWNER = msg.sender;
+    }
+
+    // During puchase, the item price will be debited from the user and transfered to the shop owner
+    function processPurchase()
+        public
+    {
+        uint tokenId = _nextTokenId++;
+        _safeMint(msg.sender, tokenId);
+        IERC20(PAYMENT_TOKEN).transferFrom(msg.sender, address(this), ITEM_PRICE);
+        IERC20(PAYMENT_TOKEN).transfer(STORE_OWNER, ITEM_PRICE);
+    }
+
+    // Even though in our demo each item has the same metadata we still follow the ERC721 standard
+    function tokenURI(uint tokenId)
+        public
+        view
+        override(ERC721)
+        returns (string memory)
+    {
+        tokenId;
+        return _tokenURI;
+    }
+}
+```
+
+## Deploy the Smart Contract
+
+<Aside type="danger" title="warning">
+This tutorial uses **Scroll Mainnet** with real funds. Please **take special care** of your wallets: separate developer wallets from your personal or production wallets to avoid any unintended losses.
+</Aside>
+
+Set your environment variables:
+
+`.env`
+```bash
+SCROLL_RPC_URL="https://rpc.scroll.io/"
+PRIVATE_KEY=<YOUR_PRIVATE_KEY>
+```
+
+Deploy with Foundry:
+
+```bash
+source .env
+forge create src/PaymentProcessor.sol:PaymentProcessor \
+  --rpc-url $SCROLL_RPC_URL \
+  --broadcast \
+  --private-key $PRIVATE_KEY
+```
+
+You should see output confirming the deployer address, contract address, and transaction hash. Save the contract address under `Deployed to:`, you'll need it when configuring the frontend.
+
+
+```bash
+[⠊] Compiling...
+No files changed, compilation skipped
+Deployer: 0xbef34f2FCAe62dC3404c3d01AF65a7784c9c4A19
+Deployed to: 0xf0e9ceCAE516B2F5Ac297B3857453b07455f817F
+Transaction hash: 0x2bca5934ad82ce26332847fdd6a9241b0da0e38e6928f06499ee58ebc967bbde
+```
+
+## Create and Configure the React Frontend
+
+Scaffold a React app with Vite, wagmi, and Viem:
+
+```bash
+cd ..
+pnpm create wagmi frontend -t vite-react
+cd frontend
+pnpm install
+```
+
+Add your deployed contract address to `.env.local`:
+
+`env.local`
+```bash
+VITE_PAYMENT_PROCESSOR_ADDRESS=0xYourNewContractAddress
+```
+
+## Implement the Frontend Logic
+
+Create a new payments component on `src/components/Payments.tsx`:
+
+`src/components/Payments.tsx`
+```ts
+import { useAccount, useWriteContract } from 'wagmi'
+import { createPublicClient, http } from 'viem'
+import { scroll } from 'viem/chains'
+import { useState, useEffect } from 'react'
+
+const PAYMENT_PROCESSOR_ADDRESS = import.meta.env.VITE_PAYMENT_PROCESSOR_ADDRESS as `0x${string}`
+const USDT_ADDRESS = '0xf55BEC9cafDbE8730f096Aa55dad6D22d44099Df'
+
+// Connect your webapp to Scroll Mainnet
+const publicClient = createPublicClient({
+  chain: scroll,
+  transport: http()
+})
+
+// ABI that allows connecting to our payments smart contract
+const paymentProcessorABI = [
+  {
+    inputs: [],
+    name: "processPurchase",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "ITEM_PRICE",
+    outputs: [{ type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+] as const
+
+// ERC20 ABI to be able to send USDT to our smart contract
+const usdtABI = [
+  {
+    inputs: [
+      { name: "spender", type: "address" },
+      { name: "amount", type: "uint256" }
+    ],
+    name: "approve",
+    outputs: [{ type: "bool" }],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { name: "owner", type: "address" },
+      { name: "spender", type: "address" }
+    ],
+    name: "allowance",
+    outputs: [{ type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+] as const
+
+// Custom hook for payment functionality
+function usePayment() {
+  const { address } = useAccount()
+  const [itemPrice, setItemPrice] = useState<bigint | null>(null)
+  const [allowance, setAllowance] = useState<bigint | null>(null)
+  const { writeContract: writePaymentProcessor, isPending: isProcessing } = useWriteContract()
+  const { writeContract: writeUSDT, isPending: isApproving } = useWriteContract()
+
+  // Fetches the price of the item set on the smart contract: 0.05 USDT
+  const fetchItemPrice = async () => {
+    try {
+      const result = await publicClient.readContract({
+        address: PAYMENT_PROCESSOR_ADDRESS,
+        abi: paymentProcessorABI,
+        functionName: 'ITEM_PRICE',
+      })
+      setItemPrice(result)
+    } catch (error) {
+      console.error('Error reading item price:', error)
+    }
+  }
+
+  // Check if the user already approved the smart contract
+  const fetchAllowance = async () => {
+    if (!address) return
+    try {
+      const result = await publicClient.readContract({
+        address: USDT_ADDRESS,
+        abi: usdtABI,
+        functionName: 'allowance',
+        args: [address, PAYMENT_PROCESSOR_ADDRESS],
+      })
+      setAllowance(result)
+    } catch (error) {
+      console.error('Error reading allowance:', error)
+    }
+  }
+
+  useEffect(() => {
+    fetchItemPrice()
+    fetchAllowance()
+  }, [address])
+
+  // Approves USDT to be sent to our smart contract
+  const approveUSDT = () => {
+    if (!itemPrice) return
+    writeUSDT({
+      address: USDT_ADDRESS,
+      abi: usdtABI,
+      functionName: 'approve',
+      args: [PAYMENT_PROCESSOR_ADDRESS, itemPrice],
+    }, {
+      onSuccess: (txHash) => {
+        publicClient.waitForTransactionReceipt({ hash: txHash })
+          .then(() => fetchAllowance())
+          .catch(console.error)
+      },
+    })
+  }
+
+  // Process the payment
+  const processPurchase = () => {
+    writePaymentProcessor({
+      address: PAYMENT_PROCESSOR_ADDRESS,
+      abi: paymentProcessorABI,
+      functionName: 'processPurchase',
+    }, {
+      onSuccess: (txHash) => {
+        publicClient.waitForTransactionReceipt({ hash: txHash })
+          .then(() => fetchAllowance())
+          .catch(console.error)
+      },
+    })
+  }
+
+  return {
+    itemPrice,
+    allowance,
+    isProcessing,
+    isApproving,
+    approveUSDT,
+    processPurchase,
+    refreshAllowance: fetchAllowance
+  }
+}
+
+// Payment Component
+export function Payments() {
+  const account = useAccount()
+  const { 
+    itemPrice, 
+    allowance, 
+    isProcessing, 
+    isApproving, 
+    approveUSDT, 
+    processPurchase 
+  } = usePayment()
+
+  const needsApproval = allowance !== null && itemPrice !== null && allowance < itemPrice
+
+  // Displays either the approval or purchase button depending on the state
+  return (
+    <div style={{ marginTop: '20px' }}>
+      <h2>Purchase Item</h2>
+      <p>Price: {itemPrice ? Number(itemPrice) / 1e6 : '...'} USDT</p>
+      {account.status === 'connected' && (
+        <>
+          {needsApproval ? (
+            <button
+              onClick={approveUSDT}
+              disabled={isApproving}
+            >
+              {isApproving ? 'Approving...' : 'Approve USDT'}
+            </button>
+          ) : (
+            <button
+              onClick={processPurchase}
+              disabled={isProcessing}
+            >
+              {isProcessing ? 'Processing...' : 'Purchase Item'}
+            </button>
+          )}
+        </>
+      )}
+    </div>
+  )
+}
+```
+
+Add that component to your app:
+
+`src/App.tsx`
+```ts
+import { useAccount, useConnect, useDisconnect } from 'wagmi'
+// Add your new Payments component
+import { Payments } from './components/Payments'
+
+function App() {
+  const account = useAccount()
+  const { connectors, connect, error } = useConnect()
+  const { disconnect } = useDisconnect()
+
+  return (
+    <div style={{ padding: '20px' }}>
+      <div>
+        <h2>Wallet</h2>
+        {account.status === 'connected' ? (
+          <>
+            <p>Connected: {account.addresses?.[0]}</p>
+            <button onClick={() => disconnect()}>Disconnect</button>
+          </>
+        ) : (
+          <>
+            {connectors.map((connector) => (
+              <button
+                key={connector.uid}
+                onClick={() => connect({ connector })}
+                style={{ marginRight: '10px' }}
+              >
+                Connect {connector.name}
+              </button>
+            ))}
+            {error && <p style={{ color: 'red' }}>{error.message}</p>}
+          </>
+        )}
+      </div>
+      // Render your new Payments component
+      <Payments />
+    </div>
+  )
+}
+
+export default App
+```
+
+## Start the Frontend
+
+```bash
+pnpm run dev
+```
+
+Open your browser at `http://localhost:5173`. Connect your wallet, approve USDT, and make a purchase to see your NFT receipt on any marketplace that supports Scroll, such as [Element](https://element.market/).
+
+<ClickToZoom src={nftRecipt} />

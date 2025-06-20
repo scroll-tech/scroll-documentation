@@ -1,0 +1,137 @@
+---
+section: developers
+date: Last Modified
+title: "Checking Transaction Journey Guide"
+lang: "en"
+permalink: "developers/guides/checking-transaction-journey"
+excerpt: "This guide contains instructions on how you can check your transaction's journey."
+---
+
+import Aside from "../../../../../components/Aside.astro"
+import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import ToggleElement from "../../../../../components/ToggleElement.astro"
+import txJourneyDiagram from "../_images/txJourneyDiagram.png"
+
+This guide will help you to check the journey of a transaction through the **Scroll network**, how to inspect it via the `/tx/journeys` API, and interpret its lifecycle.
+
+### Architecture Summary
+
+<ClickToZoom src={txJourneyDiagram} />
+_Diagram of Scroll transaction journey_
+
+| Component             | Role                                             |
+|-----------------------|---------------------------------------------------|
+| User/DApp             | Submits transaction.                               |
+| Monitoring Service    | Logs events and tracks transaction progress        |
+| Scroll Internal Nodes | Peer nodes supporting network operations such as bootnodes or RPC nodes for internal backend services.   |
+| Scroll Sequencer      | Orders transactions into blocks.                    |
+| HTTP API              | External access interface for monitoring service    |
+
+---
+
+### Endpoint
+
+POST https://venus.scroll.io/v1/tx/journeys
+
+### Request Example
+
+```bash
+curl -X POST "https://venus.scroll.io/v1/tx/journeys" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "tx_hashes": [
+      "0xf8a92194cb21dcfaa2efe3230c5d5c80f7e71361575eff33cafa6ebc9eb34357"
+    ]
+  }' | jq
+```
+
+#### Response Fields
+
+| Field              | Description |
+|-------------------|-------------|
+| `tx_hash`         | Transaction hash queried. |
+| `current_status`  | Final status (`queued`,`pending`,`executed`,`dropped`,`replaced`). |
+| `execution_status`| Result of execution (`successful`,`reverted`,`unknown`,`error`). |
+| `first_seen_at`   | First time the network detected this transaction. |
+| `last_updated_at` | Most recent status update time. |
+| `journey`         | Detailed list of state transitions for the transaction. |
+
+#### Current Status
+
+| Stage      | Description |
+|-----------|-------------|
+| `queued`   | Transaction not yet executable, e.g. nonce gap or awaiting prior txs. |
+| `pending`  | Transaction valid and executable in mempool. |
+| `executed` | Transaction included in a block. |
+| `dropped`  | Transaction removed due to expiration, mempool overflow, or invalid parameters. |
+| `replaced` | Transaction replaced by a new transaction (same sender and nonce, with higher gas price). |
+
+#### Execution Status
+
+| Status      | Meaning |
+|------------|---------|
+| `successful`| Transaction executed successfully and included in a block. |
+| `reverted`  | Transaction failed during execution. |
+| `unknown`   | Transaction not yet executed. |
+| `error`     | Unexpected error in query node. Should rarely occur. |
+
+### Journey Field Example 
+
+#### Queued
+
+```json
+{
+    "event_type": "queued",
+    "timestamp": "2025-06-19T17:22:23.27Z",
+    "node_type": "l2geth-bootnode-0",
+    "event_detail": "Transaction added to future queue (initial processing - will be promoted to pending if nonce is correct and all validity checks pass, or wait for conditions to be met)"
+}
+```
+
+#### Pending
+
+```json
+{
+    "event_type": "pending",
+    "timestamp": "2025-06-19T17:22:23.27Z",
+    "node_type": "l2geth-bootnode-0",
+    "event_detail": "Transaction promoted from future queue to pending pool (passed all checks: correct nonce sequence, sufficient balance including L1 data fee, gas limit compliance, and account pending limit)"
+}
+```
+
+#### Executed
+
+```json
+{
+    "event_type": "executed",
+    "timestamp": "2025-06-19T17:22:23.299Z",
+    "node_type": "l2geth-mpt-signer-1",
+    "event_detail": "Transaction successfully included in a block and executed on-chain"
+}
+```
+
+#### Dropped
+
+```json
+{
+    "event_type": "dropped",
+    "timestamp": "2025-06-19T17:22:23.352Z",
+    "node_type": "l2geth-bootnode-2",
+    "event_detail": "Transaction rejected (validation failed - insufficient funds, unsupported transaction type, or other validation errors)"
+}
+```
+
+1. `Queued`: Transaction waiting for execution (e.g., nonce gap)
+2. `Pending`: Transaction ready for inclusion by Scroll Sequencer.
+3. `Executed`: Transaction included in a block.
+4. `Dropped` or `Replaced`: Transaction invalidated or replaced before execution.
+
+### Common Failure Reasons
+
+**Dropped:**
+- Timeout: Stuck too long in queue.
+- Mempool full.
+- Invalid parameters (e.g., nonce too low, fee cap below block base fee).
+
+**Replaced:**
+- Same nonce transaction with higher gas price replaces previous.

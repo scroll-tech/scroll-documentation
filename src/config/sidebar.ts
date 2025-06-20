@@ -166,6 +166,10 @@ export const getSidebar = () => {
             title: t("sidebar.developers.canvasBadge"),
             url: formatUrl("developers/guides/canvas-badge-integration"),
           },
+          {
+            title: t("sidebar.developers.transactionJourney"),
+            url: formatUrl("developers/guides/checking-transaction-journey"),
+          },
           // {
           //   title: t("sidebar.developers.bridgingERC721NftThroughCustomGateway"),
           //   url: formatUrl("developers/guides/"),
@@ -178,6 +182,23 @@ export const getSidebar = () => {
           //   title: t("sidebar.developers.estimatingGasAndTxFees"),
           //   url: formatUrl("developers/guides/"),
           // },
+        ],
+      },
+      {
+        section: t("sidebar.whatToBuild.whatToBuild"),
+        contents: [
+          {
+            title: t("sidebar.whatToBuild.stablecoinPaymentsTutorial"),
+            url: formatUrl("developers/what-to-build/stablecoin-payments-tutorial"),
+          },
+          {
+            title: t("sidebar.whatToBuild.solidityCookbook"),
+            url: formatUrl("developers/what-to-build/solidity-cookbook"),
+          },
+          {
+            title: t("sidebar.whatToBuild.privacyDappsWithZk"),
+            url: formatUrl("developers/what-to-build/privacy-dapps-with-zk"),
+          },
         ],
       },
       {
