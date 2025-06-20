@@ -113,6 +113,12 @@
       "canvasBadge": "Canvas & Badge Integration",
       "transactionJourney": "Checking Transaction Journey"
     },
+    "whatToBuild": {
+      "whatToBuild": "What to Build",
+      "stablecoinPaymentsTutorial": "Stablecoin Payments Tutorial",
+      "solidityCookbook": "Solidity Cookbook",
+      "privacyDappsWithZk": "Privacy dApps with ZK"
+    },
     "technology": {
       "introduction": "Introduction",
       "principles": "Principles",
