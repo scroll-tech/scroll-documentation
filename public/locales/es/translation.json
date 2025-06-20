@@ -109,6 +109,12 @@
       "sepoliaRollupExplorer": "Explorador de Rollup",
       "sepoliaBlockExplorer": "Explorador de bloques Scrollscan"
     },
+    "whatToBuild": {
+      "whatToBuild": "Qué construir",
+      "stablecoinPaymentsTutorial": "Pagos con Stablecoins",
+      "solidityCookbook": "Recetario de Solidity",
+      "privacyDappsWithZk": "Dapps Privadas con ZK"
+    },
     "technology": {
       "introduction": "Introducción",
       "principles": "Principios",
