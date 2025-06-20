@@ -95,6 +95,8 @@
       "future": "Futuro",
       "guides": "Guías",
       "contractDeploymentTutorial": "Tutorial de Despliegue de Contratos",
+      "runningNode": "Corre Nodo de Scroll",
+      "auditingYourCode": "Audita tu código",
       "crossChainInteraction": "Interacción Cross-chain del Scroll Messenger",
       "bridgingERC20TokenThroughCustomGateway": "Bridging de un ERC20 a través de una Gateway Personalizada",
       "bridgingERC721NftThroughCustomGateway": "Bridging de un ERC721 NFT a través de una Gateway Personalizada",
