@@ -163,17 +163,12 @@ export const getSidebar = () => {
             url: formatUrl("developers/guides/running-a-scroll-node"),
           },
           {
-<<<<<<< areta
             title: t("sidebar.developers.auditingYourCode"),
             url: formatUrl("developers/guides/auditing-your-code"),
           },
           {
-            title: t("sidebar.developers.canvasBadge"),
-            url: formatUrl("developers/guides/canvas-badge-integration"),
-=======
             title: t("sidebar.developers.transactionJourney"),
             url: formatUrl("developers/guides/checking-transaction-journey"),
->>>>>>> develop
           },
           // {
           //   title: t("sidebar.developers.bridgingERC721NftThroughCustomGateway"),
