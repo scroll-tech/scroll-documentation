@@ -163,10 +163,6 @@ export const getSidebar = () => {
             url: formatUrl("developers/guides/running-a-scroll-node"),
           },
           {
-            title: t("sidebar.developers.auditingYourCode"),
-            url: formatUrl("developers/guides/auditing-your-code"),
-          },
-          {
             title: t("sidebar.developers.transactionJourney"),
             url: formatUrl("developers/guides/checking-transaction-journey"),
           },
