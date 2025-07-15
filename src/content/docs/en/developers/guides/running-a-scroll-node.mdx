@@ -75,22 +75,12 @@ Download the latest l2geth :
 
 SNAPSHOT_URL =  https://scroll-geth-snapshot.s3.us-west-2.amazonaws.com/mpt/latest.tar
 
-1. Create a new folder for the snapshot
-```bash
-    mkdir l2geth
-```
-
-2. Go to the created folder
-```bash
-    push l2geth
-```
-
-3. Download the snapshot
+1. Download the snapshot
 ```bash
     wget $SNAPSHOT_URL
 ```
 
-4. unarchive the snapshot
+2. unarchive the snapshot
 ```bash
     tar -xf latest.tar
 ```
@@ -144,10 +134,10 @@ Insert your config in the yaml file and save it, recommended config would be :
             --da.blob.beaconnode "${Your beaconnode endpoint}"
             --cache.snapshot=0
         logging:
-        driver: "json-file"
-        options:
-            max-size: "100m"
-            max-file: "1"
+            driver: "json-file"
+            options:
+                max-size: "100m"
+                max-file: "1"
 ```
 
 3. Run the docker
