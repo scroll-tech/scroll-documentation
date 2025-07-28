@@ -1,0 +1,93 @@
+---
+section: developers
+date: Last Modified
+title: "Developer Ecosystem"
+lang: "en"
+permalink: "developers/developer-quickstart"
+excerpt: "Scroll Developer Quickstart helps you acquire testnet Ether, configure your network, and access all of your favorite tooling"
+whatsnext: { "Verify Your Smart Contracts": "/en/developers/verifying-smart-contracts" }
+---
+
+import Aside from "../../../../components/Aside.astro"
+import ClickToZoom from "../../../../components/ClickToZoom.astro"
+import networkSelection from "./_images/mmNetworkSelection.png"
+import injectedProviderMM from "./_images/injectedProviderMM.png"
+import ToggleElement from "../../../../components/ToggleElement.astro"
+import wagmiDemo from "../../../../assets/images/developers/getting-started/wagmi-demo.png"
+
+Explore Scroll’s most active ecosystem tooling and integrate it into your projects. For detailed data, see our [our Dune dashboard](https://dune.com/scroll/developer-ecosystem).
+
+# DEX Volume
+
+Higher DEX volume creates more yield for liquidity providers and brings more arbitrage opportunities. As a builder, you can permissionlessly integrate your application with DEXs to provide swaps or generate yield for your users.
+
+<iframe src="https://dune.com/embeds/5450198/8891807"/>
+
+| Dex | Contract | Docs |
+| - | - |- |
+| Ambient | [Vault](https://scrollscan.com/address/0xaaaaAAAACB71BF2C8CaE522EA5fa455571A74106), [Router](0xfB5f26851E03449A0403Ca945eBB4201415fd1fc) | [CrocSwap](https://docs.ambient.finance/developers/dex-contract-interface/usercmd-callpaths) |
+| Syncswap | [Scroll Deployments](https://docs.syncswap.xyz/syncswap/smart-contracts/smart-contracts#scroll) | [SyncSwap](https://docs.syncswap.xyz/api-documentation) |
+| HonneyPop | [Universal Router](https://scrollscan.com/address/0xc2730c06f3ec562d4e1ff63e04d4c75f417c3366) | [Uniswap Universal Router](https://docs.uniswap.org/contracts/universal-router/technical-reference) |
+| Uniswap V3 | [Scroll Deployments](https://gov.uniswap.org/t/rfc-deploy-uniswap-v3-on-scroll/21651/7) | [Uniswap v3](https://docs.uniswap.org/contracts/v3/overview) | 
+| iZUMi | [Scroll Deployments](https://developer.izumi.finance/iZiSwap/deployed_contracts/mainnet) | [iZiSwap](https://developer.izumi.finance/iZiSwap/contracts/)
+| SushiSwap | [RedSnwapper Router](https://scrollscan.com/address/0xac4c6e212a361c968f1725b4d055b47e63f80b75#code) | Uniswap V2-like contracts |
+
+# DEX Liquidity By Token
+
+DEXes with more liquidity will lead to less slippage when performing swaps.
+
+## WETH in DEXes
+
+<iframe src="https://dune.com/embeds/5515181/8982797"/>
+
+## USDC in DEXes
+
+<iframe src="https://dune.com/embeds/5480764/8932594"/>
+
+## SCR in DEXes
+
+<iframe src="https://dune.com/embeds/5495203/8952930"/>
+
+# Bridge Monthly Transactions
+
+Bridges provide not only ERC-20 token transfers but also are able to send arbitrary data cross-chains. A higher number of transactions signals user preference and trust in the bridge.
+
+<iframe src="https://dune.com/embeds/5328584/8734000"/>
+
+| Bridge | Contract | Docs |
+| - | - |- |
+| li.fi | [Diamond Entryway](https://docs.li.fi/introduction/lifi-architecture/smart-contract-addresses) | [Official docs](https://docs.li.fi/introduction/introduction) |
+| Across | [Scroll Deployment](https://docs.across.to/reference/contract-addresses/scroll-chain-id-534352) | [Official Docs](https://docs.across.to/) |
+| Stargate | [Scroll Deployment](https://docs.stargate.finance/resources/contracts/mainnet-contracts#scroll-endpointid-30214) | [Official Documentation](https://docs.stargate.finance/introduction/overview) |
+| Rhino | [Scroll Deployment](https://docs.rhino.fi/general/contract-addresses) | [Official Documentation](https://docs.rhino.fi/get-started/introduction) |
+| Squid | [Squid Router](https://scrollscan.com/address/0xce16f69375520ab01377ce7b88f5ba8c48f8d666#code) | [Official Docs](https://docs.squidrouter.com/) |
+
+# Borrowing & Lending Platforms
+
+Borrowing and lending platforms let users earn yield, leverage positions or protect against volatility. TVL data is available on [DeFiLlama](https://defillama.com/protocols/lending/Scroll), where the higher the more stable rates and yields. The chart below compares transaction counts across each platform indicating users pereference.
+
+<iframe src="https://dune.com/embeds/5514443/8981638"/>
+
+| Lending Platform | Contract | Docs |
+| - | - |- |
+| EtherFi Borrowing Market | [EtherFi Cash Vault](https://scrollscan.com/address/0x3a6A724595184dda4be69dB1Ce726F2Ac3D66B87) | [EtherFi Cash Docs](https://etherfi.gitbook.io/etherfi/cash/technical-documentation) |
+| Aave V3 | [Aave Contracts](https://aave.com/docs/resources/addresses) | [Aave Documentation](https://aave.com/docs) |
+| LayerBank | [LayerBank Contracts](https://github.com/layerbank-foundation/v2-contracts) | [Layer Bank V2 Documentation](https://docs.layerbank.finance/) |
+| Rho Markets | [Rho Markets Contracts](https://docs.rhomarkets.xyz/protocol/rho-markets-contract-overview#core-contracts) | [Rho Markets Documentation](https://docs.rhomarkets.xyz/) |
+| Morpho | [Morpho Contracts](https://docs.morpho.org/getting-started/resources/addresses#morpho-contracts) | [Morpho Documentation](https://docs.morpho.org/)  |
+| Compound | [Compund Contracts](https://docs.compound.finance/#protocol-contracts) | [Compund Documentation](https://docs.compound.finance/#compound-iii) |
+
+# ETH Liquid Staking & Rebase Tokens
+
+Liquid Staking Tokens produce yield by just holding them on the wallet by a process called Rebase. Higher market cap indicates more accesibility to users.
+
+<iframe src="https://dune.com/embeds/5515252/8983149"/>
+
+# Oracles on Scroll
+
+Oracles offer services that blockchains can't handle natively, by bringing in data from the outside world. In the Scroll ecosystem, Chainlink provides price feeds, while Anyrand supplies decentralized randomness.
+
+| VRF | Contract | Docs |
+| - | - |- |
+| Anyrand | [Anyrand Contract Address](https://docs.anyrand.com/using-anyrand/supported-networks) | [Anyrand Documentation](https://docs.anyrand.com/) |
+| Chainlink | [Chainlink Price Feeds](https://docs.chain.link/data-feeds/price-feeds/addresses?page=1&testnetPage=1&network=scroll) | [Price Feeds Documentation](https://docs.chain.link/data-feeds/using-data-feeds) |
