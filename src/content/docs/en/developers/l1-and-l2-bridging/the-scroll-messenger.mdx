@@ -14,11 +14,11 @@ The Scroll Messenger contracts allow for sending arbitrary messages from L1 to L
 
 ## Sending a Message
 
-Sending a cross-chain message through the `ScrollMessagenger` is performed by calling the [`sendMessage`](#sendmessage) function. In this function you set the `target` address that will recieve the message in the other chain, a `value` param for ETH transfers and `message` byte array to be sent as `CALLDATA` for smart contract execution. Notice the contract also expects a `gasLimit` param that you can safely set to `0` and a `refundAddress` which you can set as sender EOA. These last two params are legacy since L1 to L2 transaction don't need to pay gas and L2 to L1 gas costs are handled differently, as we’ll cover in the next section.
+Sending a cross-chain message through the `ScrollMessenger` is performed by calling the [`sendMessage`](#sendmessage) function. In this function you set the `target` address that will receive the message in the other chain, a `value` parameter for ETH transfers and `message` byte array to be sent as `CALLDATA` for smart contract execution. Notice the contract also expects a `gasLimit` parameter that you can safely set to `0` and a `refundAddress` which you can set as the sender EOA. These last two parameters are legacy since L1 to L2 transactions don't need to pay gas and L2 to L1 gas costs are handled differently, as we’ll cover in the next section.
 
 ## Relaying Transactions on L1
 
-Unlike L1 to L2 transactions, L2 to L1 transaction need to be finalized using the [`relayMessageWithProof`](#relaymessagewithproof) function on the Scroll Messenger contract. We call this process "submitting an Execute Withdrawal transaction", and it is required for both sending arbitrary messages and transferring assets through a gateway or the router. When you use `relayMessageWithProof`, you'll have to provide a Merkle inclusion proof showing your transaction is included in the trie of "withdrawal" messages, along with other parameters. Producing this proof and these values can be done locally and permissionlessly, but at the moment, the easiest way to retrieve these parameters is through our backend APIs:
+Unlike L1 to L2 transactions, L2 to L1 transactions need to be finalized using the [`relayMessageWithProof`](#relaymessagewithproof) function on the Scroll Messenger contract. We call this process "submitting an Execute Withdrawal transaction", and it is required for both sending arbitrary messages and transferring assets through a gateway or the router. When you use `relayMessageWithProof`, you'll have to provide a Merkle inclusion proof showing your transaction is included in the trie of "withdrawal" messages, along with other parameters. Producing this proof and these values can be done locally and permissionlessly, but at the moment, the easiest way to retrieve these parameters is through our backend APIs:
 
 - Scroll Sepolia API: https://sepolia-api-bridge-v2.scroll.io/api/
 - Scroll API: https://mainnet-api-bridge-v2.scroll.io/api/
@@ -29,8 +29,8 @@ Supply the address of the EOA or contract responsible for initiating the origina
 https://sepolia-api-bridge-v2.scroll.io/api/l2/unclaimed/withdrawals?address=0x031407eaaffFB4f1EC2c999bE4477E52C81de3c5&page=1&page_size=10
 ```
 
-<Aside type="caution" title="The address param">
-  The `address` param on by the `/withdrawals` endpoint exptects the sender EOA or contract address in the case sensitive [EIP-55 Mixed-cased Checksum](https://eips.ethereum.org/EIPS/eip-55) format.
+<Aside type="caution" title="The address parameter">
+  The `address` parameter on the `/withdrawals` endpoint expects the sender EOA or contract address in the case sensitive [EIP-55 Mixed-cased Checksum](https://eips.ethereum.org/EIPS/eip-55) format.
 </Aside>
 
 The API should return your transaction data in the following format:
