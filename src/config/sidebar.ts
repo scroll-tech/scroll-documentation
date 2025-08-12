@@ -141,6 +141,10 @@ export const getSidebar = () => {
             title: t("sidebar.developers.toolingDeployedOnScroll"),
             url: formatUrl("developers/tooling-deployed-on-scroll"),
           },
+          {
+            title: t("sidebar.developers.developerEcosystem"),
+            url: formatUrl("developers/developer-ecosystem"),
+          },
         ],
       },
       {
@@ -161,6 +165,10 @@ export const getSidebar = () => {
           {
             title: t("sidebar.developers.runningNode"),
             url: formatUrl("developers/guides/running-a-scroll-node"),
+          },
+          {
+            title: t("sidebar.developers.auditingYourCode"),
+            url: formatUrl("developers/guides/auditing-your-code"),
           },
           {
             title: t("sidebar.developers.transactionJourney"),
