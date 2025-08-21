@@ -80,6 +80,7 @@ export const getSidebar = () => {
         section: t("sidebar.developers.developers"),
         contents: [
           { title: t("sidebar.developers.buildingOnScroll"), url: formatUrl("developers") },
+          { title: t("sidebar.developers.faq"), url: formatUrl("developers/faq") },
           { title: t("sidebar.developers.developerQuickstart"), url: formatUrl("developers/developer-quickstart") },
           {
             title: t("sidebar.developers.verifyingSmartContracts"),
