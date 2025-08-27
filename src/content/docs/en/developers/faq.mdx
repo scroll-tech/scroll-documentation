@@ -14,10 +14,6 @@ excerpt: "."
 
 Scroll is fully EVM-equivalent, but certain rollup-specific opcodes differ. A full breakdown can be found here: [Rollup Codes: Scroll Overview](https://www.rollup.codes/scroll#overview).
 
-**Can I run my own node on Scroll?**
-
-Yes. Scroll provides a step-by-step tutorial for setting up and running your own node. See: [Running a Node](https://docs.scroll.io/en/developers/guides/running-a-scroll-node/).
-
 ## Testnet ETH
 
 **How do I get testnet ETH on Scroll?**
@@ -37,6 +33,22 @@ See the full list here: [Scroll Developer Tooling](https://docs.scroll.io/en/dev
 **Where can I explore the ecosystem of projects deployed on Scroll?**
 
 The live ecosystem page is here: [Scroll Ecosystem Data page](https://docs.scroll.io/en/developers/developer-ecosystem/) and the full list [Scroll Ecosystem Projects](https://scroll.io/ecosystem).
+
+## Node Questions
+
+**Where can i download Scroll node's snapshot?**
+
+Mainnet : https://scroll-geth-snapshot.s3.us-west-2.amazonaws.com/mpt/latest.tar
+Sepolia : https://scroll-sepolia-l2geth-snapshots.s3.us-west-2.amazonaws.com/mpt/latest.tar
+
+**Scroll snapshot size is too large, do you have pruned snapshot?
+
+Unfortunately, pruned snapshots are not available for Scroll. You may consider changing the garbage collection mode from archive to full to reduce the size of the snapshot by changing flag from --gcmode archive to --gcmode full
+
+**Can I run my own node on Scroll?**
+
+Yes. Scroll provides a step-by-step tutorial for setting up and running your own node. See: [Running a Node](https://docs.scroll.io/en/developers/guides/running-a-scroll-node/).
+
 
 ## Errors & Support
 
