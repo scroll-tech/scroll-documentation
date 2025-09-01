@@ -81,7 +81,6 @@ export const getSidebar = () => {
         contents: [
           { title: t("sidebar.developers.buildingOnScroll"), url: formatUrl("developers") },
           { title: t("sidebar.developers.faq"), url: formatUrl("developers/faq") },
-          { title: t("sidebar.developers.developerQuickstart"), url: formatUrl("developers/developer-quickstart") },
           {
             title: t("sidebar.developers.verifyingSmartContracts"),
             url: formatUrl("developers/verifying-smart-contracts"),
@@ -152,10 +151,6 @@ export const getSidebar = () => {
         section: t("sidebar.developers.guides"),
         contents: [
           {
-            title: t("sidebar.developers.contractDeploymentTutorial"),
-            url: formatUrl("developers/guides/contract-deployment-tutorial"),
-          },
-          {
             title: t("sidebar.developers.crossChainInteraction"),
             url: formatUrl("developers/guides/scroll-messenger-cross-chain-interaction"),
           },
@@ -187,23 +182,6 @@ export const getSidebar = () => {
           //   title: t("sidebar.developers.estimatingGasAndTxFees"),
           //   url: formatUrl("developers/guides/"),
           // },
-        ],
-      },
-      {
-        section: t("sidebar.whatToBuild.whatToBuild"),
-        contents: [
-          {
-            title: t("sidebar.whatToBuild.stablecoinPaymentsTutorial"),
-            url: formatUrl("developers/what-to-build/stablecoin-payments-tutorial"),
-          },
-          {
-            title: t("sidebar.whatToBuild.solidityCookbook"),
-            url: formatUrl("developers/what-to-build/solidity-cookbook"),
-          },
-          {
-            title: t("sidebar.whatToBuild.privacyDappsWithZk"),
-            url: formatUrl("developers/what-to-build/privacy-dapps-with-zk"),
-          },
         ],
       },
       {
