@@ -1,0 +1,67 @@
+---
+section: developers
+date: Last Modified
+title: "Developer Frequently Asked Questions"
+lang: "en"
+permalink: "developers/faq"
+whatsnext: { "L1 & L2 Bridging": "/en/developers/getting-started/" }
+excerpt: "."
+---
+
+## EVM Compatibility & Infrastructure
+
+**What are the opcode differences on Scroll compared to Ethereum?**
+
+Scroll is fully EVM-equivalent, but certain rollup-specific opcodes differ. A full breakdown can be found here: [Rollup Codes: Scroll Overview](https://www.rollup.codes/scroll#overview).
+
+## Testnet ETH
+
+**How do I get testnet ETH on Scroll?**
+
+You can request testnet ETH via the official Scroll telegram faucet bot by sending a message to @scroll_up_sepolia_bot who will provide access to the faucet. Once on the faucet telegram group chat, send your wallet address on a `/drop YOUR_ETHEREUM_ADDRESS` command and the bot will automatically send some funds to you.
+
+**Is there an alternative way to get testnet ETH?**
+
+Yes. Please refer to our list of [Unofficial Faucets](https://docs.scroll.io/en/user-guide/faucet/) on both Sepolia and Scroll Sepolia. Remember, you can either receive Scroll Sepolia ETH directly or trough the [Sepolia Testnet Bridge](https://sepolia.scroll.io/bridge).
+
+## Developer Tooling & Ecosystem
+
+**Where can I find the list of developer tooling available on Scroll?**
+
+See the full list here: [Scroll Developer Tooling](https://docs.scroll.io/en/developers/tooling-deployed-on-scroll/).
+
+**Where can I explore the ecosystem of projects deployed on Scroll?**
+
+The live ecosystem page is here: [Scroll Ecosystem Data page](https://docs.scroll.io/en/developers/developer-ecosystem/) and the full list [Scroll Ecosystem Projects](https://scroll.io/ecosystem).
+
+## Node Questions
+
+**Where can i download Scroll node's snapshot?**
+
+Mainnet : https://scroll-geth-snapshot.s3.us-west-2.amazonaws.com/mpt/latest.tar
+
+Sepolia : https://scroll-sepolia-l2geth-snapshots.s3.us-west-2.amazonaws.com/mpt/latest.tar
+
+**Scroll snapshot size is too large, do you have pruned snapshot?**
+
+Unfortunately, pruned snapshots are not available for Scroll. You may consider changing the garbage collection mode from archive to full to reduce the size of the snapshot by changing flag from --gcmode archive to --gcmode full
+
+**Can I run my own node on Scroll?**
+
+Yes. Scroll provides a step-by-step tutorial for setting up and running your own node. See: [Running a Node](https://docs.scroll.io/en/developers/guides/running-a-scroll-node/).
+
+## Errors & Support
+
+**I have a question about my node, the faucet or developing on Scroll. What should I do?**
+
+Please join the Scroll Discord server and ask on the `#developers` or `#developer-support` discord channels.
+
+**I want to connect to the BD team. What should I do?**
+
+To connect with the BD team please fill the [Scroll BD Intake form](https://tally.so/r/wM2aaE).
+
+**How to keep track of any changes in Scroll?**
+
+You can follow our telegram announcement channel [here](https://t.me/scroll_tech_announcements).
+
+Or subscribe to our github [repo](https://github.com/scroll-tech/scroll), click watch, then custom, and tick releases.
