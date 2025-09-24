@@ -138,10 +138,6 @@ export const getSidebar = () => {
             // ],
           },
           {
-            title: t("sidebar.developers.toolingDeployedOnScroll"),
-            url: formatUrl("developers/tooling-deployed-on-scroll"),
-          },
-          {
             title: t("sidebar.developers.developerEcosystem"),
             url: formatUrl("developers/developer-ecosystem"),
           },

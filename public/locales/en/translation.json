@@ -25,8 +25,8 @@
     },
     "nodesCTA": {
       "title": "Need to run your own Scroll Node?",
-      "description": "See the Node Operator’s Guide to learn about starting and maintaining Scroll Nodes.",
-      "buttonText": "Node Operator’s Guide"
+      "description": "See the Node Operator's Guide to learn about starting and maintaining Scroll Nodes.",
+      "buttonText": "Node Operator's Guide"
     },
     "TutorialsCTA": {
       "title": "Watch tutorials",
@@ -90,7 +90,6 @@
       "erc1155TokenBridge": "ERC1155 Token Bridge",
       "theScrollMessenger": "The Scroll Messenger",
       "transactionFeesOnScroll": "Transaction Fees on Scroll",
-      "toolingDeployedOnScroll": "Tooling deployed On Scroll",
       "developerEcosystem": "Developer Ecosystem",
       "l2Fee": "L2 Fee",
       "l1Fee": "L1 Fee",
