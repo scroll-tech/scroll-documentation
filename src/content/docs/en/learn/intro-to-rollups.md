@@ -14,7 +14,7 @@ Rollups are the most predominant layer 2 scaling solution in the Ethereum ecosys
 
 A rollup processes batches of transactions off-chain (i.e. not on layer 1), and then posts the resulting data on-chain (i.e. on layer 1).
 
-The execution of each transaction is performed off-chain, and does not need to be re-executed layer 1 nodes. This allows for high transaction throughput, without impacting the decentralization of layer 1.
+The execution of each transaction is performed off-chain and does not need to be re-executed by layer 1 nodes. This allows for high transaction throughput without impacting the decentralization of layer 1.
 
 In order for a rollup to be secure, it must prove that its off-chain computation (the processing of transactions) was performed correctly. There are predominantly two mechanisms to prove the validity of off-chain computation: validity proofs and fraud proofs.
 
