@@ -542,7 +542,7 @@ Some services do not support this without additional configurations (for example
 
 The Scroll team has been collaborating closely with teams specializing in proof generation to enable plug-and-play proof generation for SDK networks.
 
-In this example, we'll use a sample chart from the `scroll-proving-sdk` repo to generate proofs with [Sindri](https://sindri.app/docs/introduction/). In the future, teams will publish their own charts for chains to easily enable one or external providers.
+In this example, we'll use a sample chart from the `sindri-scroll-sdk` repo to generate proofs with [Sindri](https://sindri.app/docs/introduction/). For more proof generation providers, please check out [here](https://docs.scroll.io/en/sdk/technical-stack/proof-generation/#outsourcing-proof-generation-to-external-service-providers)
 
 Because this feature is not directly built into the Scroll SDK, there will be quite a bit of copy-pasting.
 
@@ -564,11 +564,18 @@ persistence:
     type: configMap
     mountPath: /sdk_prover/
     name: prover-chunk-config
+  db:
+    enabled: true
+    type: pvc
+    mountPath: /db/
+    size: 10Mi
+    accessMode: ReadWriteOnce
 
 scrollConfig: |
   {
     "prover_name_prefix": "sindri_chunk_",
     "keys_dir": "keys",
+    "db_path": "db",
     "coordinator": {
       "base_url": "http://coordinator-api:80",
       "retry_count": 3,
@@ -605,11 +612,18 @@ persistence:
     type: configMap
     mountPath: /sdk_prover/
     name: prover-batch-config
+  db:
+    enabled: true
+    type: pvc
+    mountPath: /db/
+    size: 10Mi
+    accessMode: ReadWriteOnce
 
 scrollConfig: |
   {
     "prover_name_prefix": "sindri_batch_",
     "keys_dir": "keys",
+    "db_path": "db",
     "coordinator": {
       "base_url": "http://coordinator-api:80",
       "retry_count": 3,
@@ -647,11 +661,18 @@ persistence:
     type: configMap
     mountPath: /sdk_prover/
     name: prover-bundle-config
+  db:
+    enabled: true
+    type: pvc
+    mountPath: /db/
+    size: 10Mi
+    accessMode: ReadWriteOnce
 
 scrollConfig: |
   {
     "prover_name_prefix": "sindri_bundle_",
     "keys_dir": "keys",
+    "db_path": "db",
     "coordinator": {
       "base_url": "http://coordinator-api:80",
       "retry_count": 3,
@@ -689,16 +710,16 @@ Now, let's add the prover services to the bottom of your `Makefile`.
 
 ```
 install-provers:
-    helm upgrade -i prover-chunk oci://ghcr.io/scroll-tech/scroll-sdk/helm/scroll-proving-sdk -n $(NAMESPACE) \
-      --version=0.0.5 \
+    helm upgrade -i prover-chunk oci://ghcr.io/sindri-labs/sindri-scroll-sdk/helm/scroll-proving-sindri -n $(NAMESPACE) \
+      --version=0.0.4 \
       --values values/prover-chunk-production.yaml
 
-    helm upgrade -i prover-batch oci://ghcr.io/scroll-tech/scroll-sdk/helm/scroll-proving-sdk -n $(NAMESPACE) \
-      --version=0.0.5 \
+    helm upgrade -i prover-batch oci://ghcr.io/sindri-labs/sindri-scroll-sdk/helm/scroll-proving-sindri -n $(NAMESPACE) \
+      --version=0.0.4 \
       --values values/prover-batch-production.yaml
 
-    helm upgrade -i prover-bundle oci://ghcr.io/scroll-tech/scroll-sdk/helm/scroll-proving-sdk -n $(NAMESPACE) \
-      --version=0.0.5 \
+    helm upgrade -i prover-bundle oci://ghcr.io/sindri-labs/sindri-scroll-sdk/helm/scroll-proving-sindri -n $(NAMESPACE) \
+      --version=0.0.4 \
       --values values/prover-bundle-production.yaml 
 
 delete-provers:
