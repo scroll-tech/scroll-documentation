@@ -82,10 +82,6 @@ export const getSidebar = () => {
           { title: t("sidebar.developers.buildingOnScroll"), url: formatUrl("developers") },
           { title: t("sidebar.developers.faq"), url: formatUrl("developers/faq") },
           {
-            title: t("sidebar.developers.verifyingSmartContracts"),
-            url: formatUrl("developers/verifying-smart-contracts"),
-          },
-          {
             title: t("sidebar.developers.scrollContracts"),
             url: formatUrl("developers/scroll-contracts"),
           },
