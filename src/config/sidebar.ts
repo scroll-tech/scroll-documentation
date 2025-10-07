@@ -82,10 +82,6 @@ export const getSidebar = () => {
           { title: t("sidebar.developers.buildingOnScroll"), url: formatUrl("developers") },
           { title: t("sidebar.developers.faq"), url: formatUrl("developers/faq") },
           {
-            title: t("sidebar.developers.verifyingSmartContracts"),
-            url: formatUrl("developers/verifying-smart-contracts"),
-          },
-          {
             title: t("sidebar.developers.scrollContracts"),
             url: formatUrl("developers/scroll-contracts"),
           },
@@ -136,10 +132,6 @@ export const getSidebar = () => {
             //     url: formatUrl("developers/transaction-fees-on-scroll/future"),
             //   },
             // ],
-          },
-          {
-            title: t("sidebar.developers.toolingDeployedOnScroll"),
-            url: formatUrl("developers/tooling-deployed-on-scroll"),
           },
           {
             title: t("sidebar.developers.developerEcosystem"),
