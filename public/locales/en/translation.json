@@ -57,25 +57,6 @@
     }
   },
   "sidebar": {
-    "gettingStarted": {
-      "gettingStarted": "Getting Started",
-      "overview": "Overview",
-      "scrollSepoliaTestnet": "Scroll Sepolia Testnet",
-      "userGuide": "User Guide",
-      "setup": "Setup",
-      "faucet": "Faucet",
-      "bridge": "Bridge",
-      "transferTokens": "Transfer Tokens",
-      "commonErrors": "Common Errors",
-      "rollupExplorer": "Rollup Explorer",
-      "scrollSepoliaBlockExplorer": "Scroll Sepolia Explorer",
-      "scrollMainnet": "Scroll Mainnet",
-      "scrollscan": "Scrollscan Block Explorer",
-      "sepoliaBlockExplorer": "Sepolia Explorer",
-      "community": "Community",
-      "discord": "Discord",
-      "communityForum": "Community Forum"
-    },
     "developers": {
       "developers": "Developers",
       "buildingOnScroll": "Building on Scroll",
