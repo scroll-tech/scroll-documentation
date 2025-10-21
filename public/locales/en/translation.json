@@ -136,16 +136,6 @@
       "darwinUpgrade": "Darwin Upgrade",
       "curieUpgrade": "Curie Upgrade",
       "bernoulliUpgrade": "Bernoulli Upgrade"
-    },
-    "learn": {
-      "ethereumAndProtocols": "Ethereum & Protocols",
-      "theScalabilityProblem": "The Scalability Problem",
-      "introToRollups": "Intro to Rollups",
-      "zeroKnowledge": "Zero Knowledge",
-      "introToZeroKnowledge": "Intro to Zero Knowledge",
-      "polynomialCommitmentSchemes": "Polynomial Commitment Schemes",
-      "kzgCommitmentScheme": "KZG Commitment Scheme",
-      "additionalResources": "Additional Resources"
     }
   },
   "footer": {

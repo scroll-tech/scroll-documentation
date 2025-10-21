@@ -256,41 +256,5 @@ export const getSidebar = () => {
         ],
       },
     ],
-    learn: [
-      {
-        section: t("sidebar.learn.ethereumAndProtocols"),
-        contents: [
-          {
-            title: t("sidebar.learn.theScalabilityProblem"),
-            url: "learn/the-scalability-problem",
-          },
-          {
-            title: t("sidebar.learn.introToRollups"),
-            url: "learn/intro-to-rollups",
-          },
-        ],
-      },
-      {
-        section: t("sidebar.learn.zeroKnowledge"),
-        contents: [
-          {
-            title: t("sidebar.learn.introToZeroKnowledge"),
-            url: formatUrl("learn/zero-knowledge/introduction-to-zero-knowledge"),
-          },
-          {
-            title: t("sidebar.learn.polynomialCommitmentSchemes"),
-            url: formatUrl("learn/zero-knowledge/polynomial-commitment-schemes"),
-          },
-          {
-            title: t("sidebar.learn.kzgCommitmentScheme"),
-            url: formatUrl("learn/zero-knowledge/kzg-commitment-scheme"),
-          },
-          {
-            title: t("sidebar.learn.additionalResources"),
-            url: formatUrl("learn/zero-knowledge/additional-zk-learning-resources"),
-          },
-        ],
-      },
-    ],
   }
 }
