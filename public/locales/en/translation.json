@@ -136,6 +136,10 @@
       "darwinUpgrade": "Darwin Upgrade",
       "curieUpgrade": "Curie Upgrade",
       "bernoulliUpgrade": "Bernoulli Upgrade"
+    },
+    "community": {
+      "community": "Community",
+      "faq": "Community FAQ"
     }
   },
   "footer": {

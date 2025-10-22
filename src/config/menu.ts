@@ -10,6 +10,7 @@ export const MENU: MenuItems = {
   en: [
     { text: "Developers", link: "/en/developers", section: "developers" },
     { text: "Technology", link: "/en/technology", section: "technology" },
+    { text: "Community", link: "/en/community/faq", section: "community" },
   ],
   zh: [
     { text: "开发者", link: "/zh/developers", section: "developers" },

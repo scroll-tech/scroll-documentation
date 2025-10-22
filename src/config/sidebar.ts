@@ -256,5 +256,16 @@ export const getSidebar = () => {
         ],
       },
     ],
+    community: [
+      {
+        section: t("sidebar.community.community"),
+        contents: [
+          {
+            title: t("sidebar.community.faq"),
+            url: "community/faq",
+          },
+        ],
+      },
+    ],
   }
 }
