@@ -8,8 +8,8 @@ export const getSidebar = () => {
       {
         section: t("sidebar.developers.developers"),
         contents: [
-          { title: t("sidebar.developers.buildingOnScroll"), url: formatUrl("developers") },
-          { title: t("sidebar.developers.faq"), url: formatUrl("developers/faq") },
+          { title: t("sidebar.developers.faq"), url: formatUrl("developers") },
+          { title: t("sidebar.developers.buildingOnScroll"), url: formatUrl("developers/building-on-scroll") },
           {
             title: t("sidebar.developers.scrollContracts"),
             url: formatUrl("developers/scroll-contracts"),
