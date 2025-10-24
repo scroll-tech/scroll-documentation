@@ -1,6 +1,16 @@
 {
   "redirects": [
     {
+      "source": "developers/faq",
+      "destination": "developers",
+      "statusCode": 301
+    },
+    {
+      "source": "community/faq",
+      "destination": "community",
+      "statusCode": 301
+    },
+    {
       "source": "docs/any-api/api-reference",
       "destination": "any-api/api-reference",
       "statusCode": 301
