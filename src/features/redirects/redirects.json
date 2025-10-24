@@ -44,37 +44,6 @@
       "source": "getting-started/overview",
       "destination": "/developers",
       "statusCode": 301
-    },
-
-    {
-      "source": "user-guide",
-      "destination": "/community",
-      "statusCode": 301
-    },
-    {
-      "source": "user-guide/setup",
-      "destination": "/community",
-      "statusCode": 301
-    },
-    {
-      "source": "user-guide/faucet",
-      "destination": "/community",
-      "statusCode": 301
-    },
-    {
-      "source": "user-guide/bridge",
-      "destination": "/community",
-      "statusCode": 301
-    },
-    {
-      "source": "user-guide/transfer-tokens",
-      "destination": "/community",
-      "statusCode": 301
-    },
-    {
-      "source": "user-guide/common-errors",
-      "destination": "/community",
-      "statusCode": 301
     }
   ]
 }
