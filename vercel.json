@@ -11,6 +11,11 @@
       "source": "docs/any-api/api-reference",
       "destination": "any-api/api-reference",
       "statusCode": 301
+    },
+    {
+      "source": "/sdk:path*",
+      "destination": "/developers",
+      "statusCode": 301
     }
   ]
 }
