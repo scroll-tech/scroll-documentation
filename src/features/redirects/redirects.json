@@ -10,13 +10,11 @@
       "destination": "community",
       "statusCode": 301
     },
-
     {
       "source": "docs/any-api/api-reference",
       "destination": "any-api/api-reference",
       "statusCode": 301
     },
-
     {
       "source": "developers/developer-quickstart",
       "destination": "/developers",
@@ -45,159 +43,6 @@
     {
       "source": "getting-started/overview",
       "destination": "/developers",
-      "statusCode": 301
-    },
-
-    {
-      "source": "sdk",
-      "destination": "/developers",
-      "statusCode": 301
-    },
-    {
-      "source": "sdk/sdk-faq",
-      "destination": "/developers",
-      "statusCode": 301
-    },
-    {
-      "source": "sdk/technical-stack",
-      "destination": "/developers",
-      "statusCode": 301
-    },
-    {
-      "source": "sdk/technical-stack/configuration",
-      "destination": "/developers",
-      "statusCode": 301
-    },
-    {
-      "source": "sdk/technical-stack/services",
-      "destination": "/developers",
-      "statusCode": 301
-    },
-    {
-      "source": "sdk/technical-stack/contracts",
-      "destination": "/developers",
-      "statusCode": 301
-    },
-    {
-      "source": "sdk/technical-stack/proof-generation",
-      "destination": "/developers",
-      "statusCode": 301
-    },
-    {
-      "source": "sdk/guides/devnet-deployment",
-      "destination": "/developers",
-      "statusCode": 301
-    },
-    {
-      "source": "sdk/guides/digital-ocean-alt-gas-token",
-      "destination": "/developers",
-      "statusCode": 301
-    },
-    {
-      "source": "sdk/guides/aws-deployment",
-      "destination": "/developers",
-      "statusCode": 301
-    },
-    {
-      "source": "sdk/guides/customizing-sdk-components",
-      "destination": "/developers",
-      "statusCode": 301
-    },
-    {
-      "source": "sdk/operation/contracts-verification",
-      "destination": "/developers",
-      "statusCode": 301
-    },
-    {
-      "source": "sdk/operation/gas-and-fees",
-      "destination": "/developers",
-      "statusCode": 301
-    },
-    {
-      "source": "sdk/operation/monitoring",
-      "destination": "/developers",
-      "statusCode": 301
-    },
-    {
-      "source": "sdk/operation/upgrades",
-      "destination": "/developers",
-      "statusCode": 301
-    },
-    {
-      "source": "sdk/operation/troubleshooting",
-      "destination": "/developers",
-      "statusCode": 301
-    },
-    {
-      "source": "sdk/operation/security-and-recovery",
-      "destination": "/developers",
-      "statusCode": 301
-    },
-
-    {
-      "source": "learn",
-      "destination": "/technology",
-      "statusCode": 301
-    },
-    {
-      "source": "learn/the-scalability-problem",
-      "destination": "/technology",
-      "statusCode": 301
-    },
-    {
-      "source": "learn/intro-to-rollups",
-      "destination": "/technology",
-      "statusCode": 301
-    },
-    {
-      "source": "learn/zero-knowledge/introduction-to-zero-knowledge",
-      "destination": "/technology",
-      "statusCode": 301
-    },
-    {
-      "source": "learn/zero-knowledge/polynomial-commitment-schemes",
-      "destination": "/technology",
-      "statusCode": 301
-    },
-    {
-      "source": "learn/zero-knowledge/kzg-commitment-scheme",
-      "destination": "/technology",
-      "statusCode": 301
-    },
-    {
-      "source": "learn/zero-knowledge/additional-zk-learning-resources",
-      "destination": "/technology",
-      "statusCode": 301
-    },
-
-    {
-      "source": "user-guide",
-      "destination": "/community",
-      "statusCode": 301
-    },
-    {
-      "source": "user-guide/setup",
-      "destination": "/community",
-      "statusCode": 301
-    },
-    {
-      "source": "user-guide/faucet",
-      "destination": "/community",
-      "statusCode": 301
-    },
-    {
-      "source": "user-guide/bridge",
-      "destination": "/community",
-      "statusCode": 301
-    },
-    {
-      "source": "user-guide/transfer-tokens",
-      "destination": "/community",
-      "statusCode": 301
-    },
-    {
-      "source": "user-guide/common-errors",
-      "destination": "/community",
       "statusCode": 301
     }
   ]
