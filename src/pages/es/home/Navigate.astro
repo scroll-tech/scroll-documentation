@@ -1,19 +1,10 @@
 ---
 import NavCard from "~/components/NavCard.astro"
-import StartSvg from "~/assets/svgs/home/home-start.svg?raw"
 import DevelopSvg from "~/assets/svgs/home/home-develop.svg?raw"
 import TechnologySvg from "~/assets/svgs/home/home-technology.svg?raw"
-import LearnSvg from "~/assets/svgs/home/home-learn.svg?raw"
-import SdkSvg from "~/assets/svgs/home/home-sdk.svg?raw"
 import SectionHeader from "~/components/SectionHeader/index.astro"
 
 const navList = [
-  {
-    icon: StartSvg,
-    name: "¿Cómo empezar?",
-    content: "Migra hacia Scroll usando el Bridge y explora el Ecosistema de dApps.",
-    link: "/es/getting-started/overview",
-  },
   {
     icon: DevelopSvg,
     name: "Desarrolladores",
@@ -25,18 +16,6 @@ const navList = [
     name: "Tecnología",
     content: "Un vistazo general a la arquitectura de la zkEVM de Scroll.",
     link: "/es/technology",
-  },
-  {
-    icon: LearnSvg,
-    name: "Aprende",
-    content: "Una introducción al mundo de ZK y de la escalabilidad.",
-    link: "/es/learn",
-  },
-  {
-    icon: SdkSvg,
-    name: "SDK",
-    content: "Lanza una cadena y administra tu propio espacio de bloques.",
-    link: "/es/sdk",
   },
 ]
 ---

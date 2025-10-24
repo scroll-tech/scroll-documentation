@@ -1,19 +1,10 @@
 ---
 import NavCard from "~/components/NavCard.astro"
-import StartSvg from "~/assets/svgs/home/home-start.svg?raw"
 import DevelopSvg from "~/assets/svgs/home/home-develop.svg?raw"
 import TechnologySvg from "~/assets/svgs/home/home-technology.svg?raw"
-import LearnSvg from "~/assets/svgs/home/home-learn.svg?raw"
-import SdkSvg from "~/assets/svgs/home/home-sdk.svg?raw"
 import SectionHeader from "~/components/SectionHeader/index.astro"
 
 const navList = [
-  {
-    icon: StartSvg,
-    name: "入门",
-    content: "通过跨链桥进入 Scroll 并探索我们的 dApp 生态系统",
-    link: "/zh/getting-started/overview",
-  },
   {
     icon: DevelopSvg,
     name: "开发者",
@@ -25,18 +16,6 @@ const navList = [
     name: "技术",
     content: "Scroll 的 zkEVM 架构概述",
     link: "/zh/technology",
-  },
-  {
-    icon: LearnSvg,
-    name: "学习",
-    content: "介绍 ZK 和扩容的世界",
-    link: "/zh/learn",
-  },
-  {
-    icon: SdkSvg,
-    name: "SDK",
-    content: "部署链并拥有您的区块空间。",
-    link: "/zh/sdk",
   },
 ]
 ---
