@@ -4,6 +4,36 @@
       "source": "docs/any-api/api-reference",
       "destination": "any-api/api-reference",
       "statusCode": 301
+    },
+    {
+      "source": "developers/developer-quickstart",
+      "destination": "/developers",
+      "statusCode": 301
+    },
+    {
+      "source": "developers/verifying-smart-contracts",
+      "destination": "/developers",
+      "statusCode": 301
+    },
+    {
+      "source": "developers/tooling-deployed-on-scroll",
+      "destination": "/developers",
+      "statusCode": 301
+    },
+    {
+      "source": "developers/guides/contract-deployment-tutorial",
+      "destination": "/developers",
+      "statusCode": 301
+    },
+    {
+      "source": "developers/guides/canvas-badge-integration",
+      "destination": "/developers",
+      "statusCode": 301
+    },
+    {
+      "source": "getting-started/overview",
+      "destination": "/developers",
+      "statusCode": 301
     }
   ]
 }

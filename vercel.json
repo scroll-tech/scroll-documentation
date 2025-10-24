@@ -5,52 +5,5 @@
       "headers": [{ "key": "Access-Control-Allow-Origin", "value": "*" }]
     }
   ],
-  "cleanUrls": true,
-  "redirects": [
-    {
-      "source": "docs/any-api/api-reference",
-      "destination": "any-api/api-reference",
-      "statusCode": 301
-    },
-    {
-      "source": "/sdk",
-      "destination": "/developers",
-      "statusCode": 301
-    },
-    {
-      "source": "/sdk/(.*)",
-      "destination": "/developers",
-      "statusCode": 301
-    },
-    {
-      "source": "/sdk/*",
-      "destination": "/developers",
-      "statusCode": 301
-    },
-    {
-      "source": "/sdk:path*",
-      "destination": "/developers",
-      "statusCode": 301
-    },
-    {
-      "source": "/en/sdk",
-      "destination": "/developers",
-      "statusCode": 301
-    },
-    {
-      "source": "/en/sdk/(.*)",
-      "destination": "/developers",
-      "statusCode": 301
-    },
-    {
-      "source": "/en/sdk/*",
-      "destination": "/developers",
-      "statusCode": 301
-    },
-    {
-      "source": "/en/sdk/:path*",
-      "destination": "/developers",
-      "statusCode": 301
-    }
-  ]
+  "cleanUrls": true
 }
