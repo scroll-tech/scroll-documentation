@@ -1,91 +1,118 @@
 ---
 section: developers
 date: Last Modified
-title: "Building on Scroll"
+title: "Developer Frequently Asked Questions"
 lang: "en"
 permalink: "developers/"
-excerpt: "Building on Scroll feels just like Ethereum, and you can bring your favorite tooling and contracts with you."
-whatsnext: { "Frequently Asked Questions": "/en/developers/faq" }
+whatsnext: { "Building on Scroll": "/en/developers/building-on-scroll", "Scroll Contracts": "/en/developers/scroll-contracts/" }
+excerpt: "."
 ---
 
 import Aside from "../../../../components/Aside.astro"
-import ToggleElement from "../../../../components/ToggleElement.astro"
 
-**Welcome to the Scroll developer documentation!**
+<Aside type="tip" title="New to Scroll?">
+Scroll is a zkEVM (Zero-Knowledge Ethereum Virtual Machine) fully compatible with the Ethereum Virtual Machine. If you're an Ethereum or EVM developer, you can deploy your existing smart contracts and use your favorite development tools on Scroll simply by changing the RPC URL.
 
-Scroll is its own Layer 2 network built on Ethereum (more specifically, a “zero knowledge rollup”).
-
-If you’re experienced in building on Ethereum, your code, dependencies, and tooling work with Scroll out of the box. This is possible because our network is compatible with EVM bytecode and designed to feel just like developing on Ethereum.
-
-<Aside type="tip" title="New to zero knowledge rollups?">
-Scroll gains its security and speed by executing transactions off-chain, and also producing a cryptographic proof that
-the transactions were executed correctly. This cryptographic proof is verified in a smart contract on Layer 1,
-ensuring that all code executed on the Scroll Layer 2 behaves just as if it were executed on Ethereum Layer 1.
-
-[Learn more about Scroll’s architecture →](/technology)
+**New to EVM development?**
+- Learn by building with [BuidlGuidl](https://buidlguidl.com/)
+- Learn Solidity development in [Cyfrin's 38-hour free course](https://www.youtube.com/watch?v=-1GB6m39-rM)
+- Find developer resources at [ethereum.org](https://ethereum.org/developers/)
 
 </Aside>
 
-## Getting Started
+## Network Configuration
 
-**Looking to build on the Scroll?**
+**What are the network parameters for Scroll Mainnet?**
 
-- Check out our [FAQ](/developers/faq) for the essentials
-- Follow our [guide](/developers/guides/running-a-scroll-node) to run Scroll L2geth Node
-- Explore our [deployed contract addresses](/developers/scroll-contracts) to build on
+Use the following configuration to connect your Ethereum tools to Scroll Mainnet:
 
-## Why Build on Scroll?
+| Network Name       | Scroll                                             | Ethereum Mainnet                                     |
+| ------------------ | -------------------------------------------------- | ---------------------------------------------------- |
+| RPC URL            | [https://rpc.scroll.io/](https://rpc.scroll.io/)   | [https://eth.llamarpc.com](https://eth.llamarpc.com) |
+| Chain ID           | 534352                                             | 1                                                    |
+| Currency Symbol    | ETH                                                | ETH                                                  |
+| Block Explorer URL | [https://scrollscan.com/](https://scrollscan.com/) | [https://etherscan.io](https://etherscan.io)         |
 
-<ToggleElement anchor="throughput">
-  <div slot="title">Throughput — Scroll creates more secure blockspace for Ethereum.</div>
-  <p>
-    ZK Rollups allow for more activity on the network, minimizing congestion. By inheriting the security of Ethereum,
-    which verifies the behavior of the network using zero knowledge proofs, Scroll can process more transactions without
-    compromising on decentralization.
-  </p>
-</ToggleElement>
+**What are the network parameters for Scroll Sepolia Testnet?**
 
-<ToggleElement anchor="cost">
-  <div slot="title">Cost — Scroll saves users gas fees.</div>
-  <p>
-    On Ethereum, competition for blockspace results in higher costs per transaction, as each transaction makes a bid to
-    be included in the next block. Scroll leverages recent breakthroughs in zero knowledge proofs and hardware
-    acceleration to vastly increase secure blockspace and minimize transaction costs for users.
-  </p>
-</ToggleElement>
-<ToggleElement anchor="speed">
-  <div slot="title">Speed — Scroll delivers feedback to users, faster.</div>
-  <p>
-    After the merge, Ethereum blocks reliably confirm every 12 seconds. Scroll blocks are minted every 3 seconds, and
-    for the sake of lower-risk operations, transactions can be assumed to be final once included in a block. This opens
-    up new possibilities for on-chain interaction in social and gaming applications.
-  </p>
-</ToggleElement>
-<ToggleElement anchor="alignment">
-  <div slot="title">Alignment — Scroll builds on Ethereum's vision.</div>
-  <p>
-    Scroll builds on Ethereum’s vision. Our ethos is to build Ethereum, not to splinter it. Decentralization,
-    permissionlessness, censorship-resistance, and community ownership are the core of what we do and the roadmap we’re
-    building. We believe in open-source software, and we work closely with the Ethereum Foundation’s Privacy and Scaling
-    Explorations team to support their work on a zkEVM that might someday be the heart of Ethereum.
-  </p>
-  <p>
-    We also work with governance DAOs and other open-source protocols to make sure that as applications are deployed,
-    we’re working to grow their impact — whether that be in public goods, core infrastructure, or the next generation of
-    zero knowledge use cases.
-  </p>
-</ToggleElement>
-<ToggleElement anchor="community">
-  <div slot="title">Community — Scroll brings together users and builders.</div>
-  <p>
-    We know the challenges of building in the open and getting user engagement! Scroll has a blossoming community of
-    users and builders, and with a Discord community of over 500,000 members eager to try out applications on our
-    testnet or mainnet, we’re excited to connect builders with users who can provide real-world feedback.
-  </p>
-</ToggleElement>
+Use the following configuration to connect your Ethereum tools to Scroll Sepolia Testnet:
 
-## Thank you for building with us.
+| Network Name       | Scroll Sepolia                                                    | Ethereum Sepolia                                             |
+| ------------------ | ----------------------------------------------------------------- | ------------------------------------------------------------ |
+| RPC URL            | [https://sepolia-rpc.scroll.io/](https://sepolia-rpc.scroll.io/)  | [https://rpc2.sepolia.org](https://rpc2.sepolia.org)         |
+| Chain ID           | 534351                                                            | 11155111                                                     |
+| Currency Symbol    | ETH                                                               | ETH                                                          |
+| Block Explorer URL | [https://sepolia.scrollscan.com](https://sepolia.scrollscan.com/) | [https://sepolia.etherscan.io](https://sepolia.etherscan.io) |
 
-Our mainnet is now live, and we're diligently working to bring more integrations and support infrastructure to the network.
+**Where can I find additional RPC providers and infrastructure for Scroll Mainnet?**
 
-Join our growing developer community. You can find us on [Discord](https://discord.gg/scroll), join our [discussion forum](https://community.scroll.io/), or follow our progress on [Twitter](https://twitter.com/Scroll_ZKP).
+- [Scroll RPC Providers on ChainList.org](https://chainlist.org/chain/534352)
+- [Ethereum RPC Providers on ChainList.org](https://chainlist.org/chain/1)
+- [Scrollscan](https://scrollscan.com/)
+- [Scroll Rollup Scanner](https://scroll.io/rollupscan)
+
+**Where can I find additional RPC providers and infrastructure for Scroll Sepolia?**
+
+- [Scroll Sepolia RPC Providers on ChainList.org](https://chainlist.org/chain/534351)
+- [Ethereum Sepolia RPC Providers on ChainList.org](https://chainlist.org/chain/11155111)
+- [Sepolia Scrollscan](http://sepolia.scrollscan.com/)
+- [Scroll Sepolia Rollup Scanner](https://sepolia.scroll.io/rollupscan)
+
+## Testnet ETH
+
+**How do I get testnet ETH on Scroll?**
+
+You can request testnet ETH via the official Scroll telegram faucet bot by sending a message to @scroll_up_sepolia_bot who will provide access to the faucet. Once on the faucet telegram group chat, send your wallet address on a `/drop YOUR_ETHEREUM_ADDRESS` command and the bot will automatically send some funds to you.
+
+**Is there an alternative way to get testnet ETH?**
+
+Yes. Please refer to our list of [Unofficial Faucets](https://docs.scroll.io/en/user-guide/faucet/) on both Sepolia and Scroll Sepolia. Remember, you can either receive Scroll Sepolia ETH directly or trough the [Sepolia Testnet Bridge](https://sepolia.scroll.io/bridge).
+
+## EVM Compatibility & Infrastructure
+
+**What are the opcode differences on Scroll compared to Ethereum?**
+
+Scroll is fully EVM-equivalent, but certain rollup-specific opcodes differ. A full breakdown can be found here: [Rollup Codes: Scroll Overview](https://www.rollup.codes/scroll#overview).
+
+## Developer Tooling & Ecosystem
+
+**Where can I find the list of developer tooling available on Scroll?**
+
+See the full list here: [Scroll Developer Tooling](https://scroll.io/ecosystem).
+
+**Where can I explore the ecosystem of projects deployed on Scroll?**
+
+Use our [Dune dashboard](https://docs.scroll.io/en/developers/developer-ecosystem/) to explore live ecosystem data and visit the [Scroll Ecosystem Projects](https://scroll.io/ecosystem) for the full list.
+
+
+## Node Questions
+
+**Where can i download Scroll node's snapshot?**
+
+Mainnet : https://scroll-geth-snapshot.s3.us-west-2.amazonaws.com/mpt/latest.tar
+
+Sepolia : https://scroll-sepolia-l2geth-snapshots.s3.us-west-2.amazonaws.com/mpt/latest.tar
+
+**Scroll snapshot size is too large, do you have pruned snapshot?**
+
+Unfortunately, pruned snapshots are not available for Scroll. You may consider changing the garbage collection mode from archive to full to reduce the size of the snapshot by changing flag from --gcmode archive to --gcmode full
+
+**Can I run my own node on Scroll?**
+
+Yes. Scroll provides a step-by-step tutorial for setting up and running your own node. See: [Running a Node](https://docs.scroll.io/en/developers/guides/running-a-scroll-node/).
+
+## Errors & Support
+
+**I have a question about my node, the faucet or developing on Scroll. What should I do?**
+
+Please join the Scroll Discord server and ask on the `#developers` or `#developer-support` discord channels.
+
+**I want to connect to the BD team. What should I do?**
+
+To connect with the BD team please fill the [Scroll BD Intake form](https://tally.so/r/wM2aaE).
+
+**How to keep track of any changes in Scroll?**
+
+You can follow our telegram announcement channel [here](https://t.me/scroll_tech_announcements).
+
+Or subscribe to our github [repo](https://github.com/scroll-tech/scroll), click watch, then custom, and tick releases.

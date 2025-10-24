@@ -5,12 +5,5 @@
       "headers": [{ "key": "Access-Control-Allow-Origin", "value": "*" }]
     }
   ],
-  "cleanUrls": true,
-  "redirects": [
-    {
-      "source": "docs/any-api/api-reference",
-      "destination": "any-api/api-reference",
-      "statusCode": 301
-    }
-  ]
+  "cleanUrls": true
 }
