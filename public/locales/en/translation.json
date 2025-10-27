@@ -131,6 +131,7 @@
       "security": "Security",
       "auditsAndBugBounty": "Audits & Bug Bounty",
       "l2BeatAssessment": "L2Beat Assessment",
+      "feynmanUpgrade": "Feynman Upgrade",
       "euclidUpgrade": "Euclid Upgrade",
       "darwinV2Upgrade": "Darwin v2 Upgrade",
       "darwinUpgrade": "Darwin Upgrade",
