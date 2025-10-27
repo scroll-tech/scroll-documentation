@@ -10,18 +10,23 @@ whatsnext: { "Euclid Upgrade": "/en/technology/overview/scroll-upgrades/euclid-u
 ### Overview
 This upgrade contains changes such as:
 - Improve compatibility with EVM:
-    - opcode `blockhash`
-    - pre-compiles `ecPairing`
-- Implemented:
-    - [EIP-2935](https://eips.ethereum.org/EIPS/eip-2935): Serve historical block hashes from state
-    - [EIP-7623](https://eips.ethereum.org/EIPS/eip-7623): Increase calldata cost
+    - The blockhash opcode will now return the actual block hash, instead of a pseudo-random hash derived from the chain ID and block number.
+    - The ecPairing precompile will now be fully compatible with Ethereum’s version, we remove the previous input limits.
+    - Adopt [EIP-2935](https://eips.ethereum.org/EIPS/eip-2935): Serve historical block hashes from state from Pectra. This system contract will allow smart contract devs to access to most recent 8191 block hashes. This EIP also plays a key role in restoring the blockhash opcode’s original behavior.
+    - Adopt [EIP-7623](https://eips.ethereum.org/EIPS/eip-7623): Increase calldata cost from Pectra.
 - Gas fee parameter redesign
 - Post Euclid clean-ups
 
+Please note that [EIP-7702](https://eips.ethereum.org/EIPS/eip-7702) from Pectra has been supported since the Euclid upgrade.
+
+#### Simplified Smart Contracts
+Migrating from halo2 to OpenVM allowed removal of some previous limitations of the protocol, including transaction skipping. 
+In Feynman, skipping is removed, as well as old codec versions from previously deployed smart contracts.
+
 ### Timeline
 
-- **Scroll Sepolia** : Aug 19th, 2025
-- **Scroll Mainnet** : Jul 22nd, 2025
+- **Scroll Sepolia** : Jul 22nd, 2025
+- **Scroll Mainnet** : Aug 19th, 2025
 
 ### Compatibility
 
@@ -69,7 +74,14 @@ This can be used alongside other blob data sources (`da.blob.beaconnode`, `da.bl
   - Scroll mainnet: `--da.blob.awss3 https://scroll-mainnet-blob-data.s3.us-west-2.amazonaws.com`  
   - Scroll Sepolia: `--da.blob.awss3 https://scroll-sepolia-blob-data.s3.us-west-2.amazonaws.com`
 
-
 See more details in the [testnet release notes](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.8.72).
+
+#### Dapps and Indexers
+
+While Feynman introduces several [contract changes](https://github.com/scroll-tech/scroll-contracts/compare/v2.0.0...feat-feynman-contract-changes), most of them are internal. Projects that decode batches can continue using the current EuclidV2 codec, however the batch version will become v8.
+
+Maintainers of smart contracts that rely on the blockhash opcode must carefully consider the impact of the change in this opcode’s behavior on their dapp.
+
+Finally, any projects that do off-chain fee computation (instead of relying on RPC queries) should review the new fee formula [1](https://github.com/scroll-tech/go-ethereum/pull/1199) [2](https://github.com/scroll-tech/go-ethereum/pull/1217) and update their system accordingly.
 
 Projects requiring additional guidance should open a [ticket on Discord](https://discord.com/channels/853955156100907018/1280768286124146732).
