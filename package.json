@@ -20,7 +20,7 @@
     "lint-ts:fix": "eslint --ext ts .",
     "lint-solc": "solhint 'public/samples/**/*.sol'",
     "prepare": "husky install",
-    "setup": "node scripts/setup.js"
+    "setup": "npx playwright install"
   },
   "dependencies": {
     "@algolia/client-search": "^4.14.2",
@@ -81,6 +81,7 @@
     "lint-staged": "^13.0.3",
     "lodash": "^4.17.21",
     "node-fetch": "^2.6.1",
+    "playwright": "^1.37.0",
     "prettier": "^2.7.1",
     "prettier-plugin-astro": "^0.7.0",
     "prettier-plugin-solidity": "^1.0.0-rc.1",
