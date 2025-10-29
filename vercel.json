@@ -1,4 +1,5 @@
 {
+  "buildCommand": "npm run build:vercel",
   "headers": [
     {
       "source": "/samples/(.*)",
