@@ -1,0 +1,87 @@
+---
+section: technology
+date: Last Modified
+title: "Feynman Upgrade"
+lang: "en"
+permalink: "technology/overview/scroll-upgrades/feynman-upgrade"
+whatsnext: { "Euclid Upgrade": "/en/technology/overview/scroll-upgrades/euclid-upgrade" }
+---
+
+### Overview
+This upgrade contains changes such as:
+- Improve compatibility with EVM:
+    - The blockhash opcode will now return the actual block hash, instead of a pseudo-random hash derived from the chain ID and block number.
+    - The ecPairing precompile will now be fully compatible with Ethereum’s version, we remove the previous input limits.
+    - Adopt [EIP-2935](https://eips.ethereum.org/EIPS/eip-2935): Serve historical block hashes from state from Pectra. This system contract will allow smart contract devs to access to most recent 8191 block hashes. This EIP also plays a key role in restoring the blockhash opcode’s original behavior.
+    - Adopt [EIP-7623](https://eips.ethereum.org/EIPS/eip-7623): Increase calldata cost from Pectra.
+- Gas fee parameter redesign
+- Post Euclid clean-ups
+
+Please note that [EIP-7702](https://eips.ethereum.org/EIPS/eip-7702) from Pectra has been supported since the Euclid upgrade.
+
+#### Simplified Smart Contracts
+Migrating from halo2 to OpenVM allowed removal of some previous limitations of the protocol, including transaction skipping. 
+In Feynman, skipping is removed, as well as old codec versions from previously deployed smart contracts.
+
+### Timeline
+
+- **Scroll Sepolia** : Jul 22nd, 2025
+- **Scroll Mainnet** : Aug 19th, 2025
+
+### Compatibility
+
+This release updates the embedded hard fork block timestamp for Scroll mainnet. 
+**Nodes that are not upgraded will be unable to follow the network after the hard fork block.**
+
+To follow the Feynman upgrade, simply run your node with the `--scroll` flag for mainnet (and `--scroll-sepolia` for testnet).
+
+If you do not use the `--scroll` flag, then you must update and reimport `genesis.json`.
+
+Genesis.json difference :
+```json
+{
+  "config": {
+    "chainId": 534352,
+...
+    "euclidTime": 1744815600,
+    "euclidV2Time": 1745305200,
+    "feynmanTime": 1755576000,
+...
+"scroll": {
+...
+      "genesisStateRoot": "0x08d535cc60f40af5dd3b31e0998d7567c2d568b224bed2ba26070aeb078d1339",
+      "missingHeaderFieldsSHA256": "0xfa2746026ec9590e37e495cb20046e20a38fd0e7099abd2012640dddf6c88b25"
+...
+```
+
+#### Node Operators
+
+**Mandatory changes:**
+- `--gpo.congestionthreshold` is deprecated and should be removed.
+
+**Recommended changes:**
+
+- Enable the direct-to-sequencer endpoint using `--gossip.sequencerhttp <sequencer-url>`. This reduces latency for transaction submission.
+  
+  - Scroll mainnet: `--gossip.sequencerhttp https://mainnet-sequencer-proxy.scroll.io`  
+  - Scroll Sepolia: `--gossip.sequencerhttp https://sepolia-sequencer-proxy.scroll.io`
+
+For nodes running with `--rollup.verify` or `--da.sync`: 
+
+- Enable the AWS S3 blob data source using `--da.blob.awss3 <s3-bucket-url>`. 
+This can be used alongside other blob data sources (`da.blob.beaconnode`, `da.blob.blobscan`, `da.blob.blocknative`).
+ 
+  - Scroll mainnet: `--da.blob.awss3 https://scroll-mainnet-blob-data.s3.us-west-2.amazonaws.com`  
+  - Scroll Sepolia: `--da.blob.awss3 https://scroll-sepolia-blob-data.s3.us-west-2.amazonaws.com`
+
+See more details in the [testnet release notes](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.8.72).
+
+#### Dapps and Indexers
+
+While Feynman introduces several [contract changes](https://github.com/scroll-tech/scroll-contracts/compare/v2.0.0...feat-feynman-contract-changes), most of them are internal. Projects that decode batches can continue using the current EuclidV2 codec, however the batch version will become v8.
+
+Maintainers of smart contracts that rely on the blockhash opcode must carefully consider the impact of the change in this opcode’s behavior on their dapp.
+
+Finally, any projects that do off-chain fee computation (instead of relying on RPC queries) should review the new fee formula [1](https://github.com/scroll-tech/go-ethereum/pull/1199) [2](https://github.com/scroll-tech/go-ethereum/pull/1217) and update their system accordingly.
+
+Projects requiring additional guidance should open a [ticket on Discord](https://discord.com/channels/853955156100907018/1280768286124146732).
