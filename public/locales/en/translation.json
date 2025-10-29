@@ -141,6 +141,31 @@
     "community": {
       "community": "Community",
       "faq": "Community FAQ"
+    },
+    "sdk": {
+      "overview": "Overview",
+      "scrollSdk": "Scroll SDK Introduction",
+      "faq": "Scroll SDK FAQ",
+      "technicalStack": "Technical Stack",
+      "stackOverview": "Stack Overview",
+      "configuration": "Configuration",
+      "services": "Services",
+      "smartContracts": "Smart Contracts",
+      "proofGeneration": "Proof Generation",
+      "integrations": "Integrations",
+      "guides": "Guides",
+      "devnetDeployment": "Devnet Deployment",
+      "productionDeployment": "Production Deployment",
+      "digitalOcean": "Digital Ocean & ERC20 Gas Token Testnet",
+      "customizingSdkComponents": "Customizing SDK Components",
+      "awsDeployment": "AWS Deployment",
+      "operation": "Operating a Chain",
+      "contractsVerification": "Contracts Verification",
+      "gasAndFees": "Gas & Fee Management",
+      "monitoring": "Monitoring",
+      "security": "Security and Recovery",
+      "upgrades": "Upgrading",
+      "troubleshooting": "Troubleshooting"
     }
   },
   "footer": {

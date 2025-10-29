@@ -1,0 +1,237 @@
+---
+section: sdk
+title: "Gas & Fee Management in Scroll SDK"
+lang: "en"
+permalink: "sdk/operation/gas-and-fees"
+excerpt: "Learn more about gas and fee management in Scroll SDK"
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+Scroll SDK provides a comprehensive gas and fee management system to ensure the efficient operation of the network. This section provides an overview of the gas and fee management tools and best practices for using them.
+
+## Transaction Fees on an SDK Chain
+
+Transaction fees for users on Scroll are split between an L2 Fee and an L1 Fee. For more information on how transaction fees work, see [Transaction Fees on Scroll](/en/developers/transaction-fees-on-scroll).
+
+Paid network fees are collected in the `L2FeeVault` contract. Any user can trigger the movement of funds to L1, where they can be claimed by the `OWNER` role.
+
+### Configuring L2 Execution Fees
+
+L2 transaction fees are set as a minimum "floor" for the execution component of the fee, beyond which normal mechanisms for EIP1559 adjustment apply. 
+
+This is set with `--miner.gasprice` on the sequencer. You can modify this value and `--gpo.ignoreprice` in the chart by overriding the `L2GETH_MIN_GAS_PRICE` environment variable [here](https://github.com/scroll-tech/scroll-sdk/blob/main/charts/l2-sequencer/values.yaml#L106).
+
+Additionally, you could modify the `--gpo.percentile` and `--gpo.blocks` arguements, but will need to manually modify the `l2-sequencer` chart. 
+
+Lastly, RPC nodes (or any node that accepts transactions) should set `--gpo.congestionthreshold`, which we default to 500. This configuration allows nodes to provide more accurate fee estimate. The value is the number of pending transactions to consider the network congested and suggest a minimum tip cap if there are fewer pending transactions in the txpool.[^congestion-threshold]
+
+[^congestion-threshold]: See these [`l2geth` code comments](https://github.com/scroll-tech/go-ethereum/blob/develop/eth/gasprice/gasprice.go#L197) for more info.
+
+For additional information, see the [geth documentation](https://geth.ethereum.org/docs/fundamentals/command-line-options).
+
+### Configuring L1 Fees
+
+The `L1GasOracle` pre-deployed contract holds the values used to calculate the L1 fee for transactions.
+
+The following fields are set by the Gas Oracle service, specifically by transactions submitted by the `L2GasOracleSender`:
+- `l1BaseFee`: the base fee for the L1 transaction
+- `l1BlobBaseFee`: the base fee for the L1 blob data
+
+The following fields are set by the Owner using setter functions in the `L1GasOracle` contract:
+- `commitScalar`
+- `blobScalar`
+- `overhead`
+- `scalar`
+
+{/* TODO: Just suggest sensible defaults for these values. */}
+
+To see these on Scroll's mainnet deployment, view the [L1GasOracle contract](https://scrollscan.com/address/0x5300000000000000000000000000000000000002#writeContract).
+
+For more information on how gas fees on Scroll are calculated, see the [Calculating the L1 Data Fee with Gas Oracle](/en/developers/transaction-fees-on-scroll/#calculating-the-l1-data-fee-with-gas-oracle).
+
+#### Calculating and Setting Gas Oracle Fields
+
+`L1GasPriceOracle` has two variables `commitScalar` and `blobScalar` which are used to calculate L1 fee for a L1 transaction.
+
+To calculate the scalars, you can use the following formula:
+
+```jsx
+// fixed values
+compression_ratio = 2.887
+blob_util_ratio = 87.1%
+
+// formula to calculate scalars
+// tx_per_block: average transaction number per L2 block
+// tx_per_batch: average transaction number per batch
+// fluctuation_multiplier: multiplier used to pervent loss from transaction number and L1 gas price fluctuation
+commitScalar = (1382.58 / tx_per_block + 71621.32 / tx_per_batch)  * fluctuation_multiplier * 1e9
+blobScalar = fluctuation_multiplier / compression_ratio / blob_util_ratio * 1e9 
+```
+
+To set the scalars on `L1GasPriceOracle`, you can run this command with `cast`:
+
+```jsx
+cast send --rpc-url <l2_rpc_url> 0x5300000000000000000000000000000000000002 "setCommitScalar(uint256)" <commitScalar> --private-key <owner_private_key>
+cast send --rpc-url <l2_rpc_url> 0x5300000000000000000000000000000000000002 "setBlobScalar(uint256)" <blobScalar> --private-key <owner_private_key>
+```
+
+<Aside type="caution">
+We're currently working on tooling to help operators calculate and automate updates to the scalar values.
+</Aside>
+
+### Claiming Fees from the Vault
+
+As L2 Fees accumulate in the L2FeeVault, any user can call the `withdrawl` method to "claim" these fees. This will bridge the funds to the `L1_FEE_VAULT_ADDR` address (configured in `config.toml`) on the L1 chain.
+
+After the funds are bridged, the bridged funds will still need to be claimed on L1 with a proof that can be easily obtained using the `bridge-history-api`. To see this process on Scroll, see [Finalizing Transactions on L1](/en/developers/l1-and-l2-bridging/the-scroll-messenger/#finalizing-transactions-on-l1)
+
+<Aside type="tip">
+We'll likely add these steps to the CLI or Admin System Dashboard in the future.
+</Aside>
+
+## Alternative Gas Token
+
+Beyond using Ethereum as the native gas token, Scroll SDK also supports alternative gas tokens. This customization allows users to use their preferred gas token for transactions.
+
+Because transaction fees are calculated by not just charging a gas fee, but also an L1 fee, conversion is needed between the L1's native token and the SDK's gas token, additional configuration and logic is needed in the gas oracle.
+
+#### Gas Oracle Fields for Alternative Gas Tokens
+
+{/* TODO: What's the latest here? */}
+
+Instead of introducing another variable to the `L1GasPriceOracle` contract which requires manual updates from the owner, operators should modify the Gas Oracle to include the ETH/ERC20 conversion rate.
+
+### Configuring Gas Oracle for Alternative Gas Tokens
+
+Basic configuration for the Gas Oracle can be made in the `config.toml` file before generating the service's config values.
+
+#### config.toml [gas-token] values
+
+- `GAS_ORACLE_INCORPORATE_TOKEN_EXCHANGE_RATE_ENANBLED`
+  - if `true`, includes the L2/L1 exchange rate into gas price. *Should only set to true when alternative gas token enabled.*
+  - Default: `false`
+- `EXCHANGE_RATE_UPDATE_MODE`
+  - The mode used to set L2/L1 gas token exchange rate. Options supported are `Fixed` and `BinanceApi`.
+  - Default: `Fixed`
+- `FIXED_EXCHANGE_RATE`
+  - When using "Fixed" exchange rate mode, the number of native token on L1 required to exchange for 1 native token on L2
+  - Devnet Default: `0.01`
+- `TOKEN_SYMBOL_PAIR`
+  - When using "BinanceApi" exchange rate mode, the pair should be L2 gas token symbol + L1 native token symbol. For instance, if using UNI token as the gas token on L2, the pair should be “UNIETH”. Token pair should be supported by Binance and included in their [ticker list API](https://api.binance.com/api/v3/ticker/price)
+  - **NOTE:** This API is not accessible in some regions, including the US. Confirm access eligibility before using.
+
+#### `gas-oracle` config values
+
+For more complicated configurations, you'll want to make manual adjustments to the your Gas Oracle config values, specifically the `alternative_gas_token_config` sections.
+
+```json
+// L1 gas oracle config
+"gas_oracle_config": {
+  "min_gas_price": 0,
+  "gas_price_diff": 50000,
+  "l1_base_fee_weight": 0.132,
+  "l1_blob_base_fee_weight":  0.145,
+  "check_committed_batches_window_minutes": 5,
+  "l1_base_fee_default": 15000000000,
+  "l1_blob_base_fee_default": 1,
+  "alternative_gas_token_config": {
+    "enabled": false,
+    "mode": "BinanceAp",
+    "fixed_exchange_rate": 0.001,
+    "token_symbol_pair": "UNIETH"
+  }
+}
+
+// L2 gas oracle config
+"gas_oracle_config": {
+  "min_gas_price": 0,
+  "gas_price_diff": 50000,
+  "alternative_gas_token_config": {
+    "enabled": false,
+    "mode": "BinanceAp",
+    "fixed_exchange_rate": 0.001,
+    "token_symbol_pair": "UNIETH"
+  }
+},
+```
+
+**L1 gas oracle config**
+
+- `min_gas_price`
+  - The minimal gas price set to contract `L1GasPriceOracle` *(for both baseFee and blobBaseFee)*
+- `gas_price_diff`
+  - The minimum percentage of gas price difference to update gas oracle *(for both baseFee and blobBaseFee)*
+- `l1_blob_base_fee_weight`
+  - The weight for L1 blob base fee *(deprecated after curie upgrade)*
+- `check_committed_batches_window_minutes`
+  - The time frame to check if we committed batches to decide to update gas oracle or not in minutes. If we are not committing batches due to high fees then we shouldn't update fees to prevent users from paying high l1_data_fee, so we should set fees to some default value 
+  - Should be set it to the same or slightly larger value as `batch_timeout_sec`, remembering to convert second to minutes
+- `l1_base_fee_default`
+  - The default base cost value set when a batch is not committed for longer than `check_committed_batches_window_minutes`.
+- `l1_blob_base_fee_default`
+  - The default blob base cost value set when a batch is not committed for longer than `check_committed_batches_window_minutes`.
+- `alternative_gas_token_config`:
+  - `enabled`
+    - If enabled, incorporates L2/L1 gas token exchange rate into gas price. *(Should only set to true when alternative gas token enabled)*
+  - `mode`
+    - The mode to retrieve L2/L1 gas token exchange rate. (`Fixed` || `BinanceApi`)
+  - `fixed_exchange_rate`
+    - When using "Fixed" exchange rate mode, the number of native tokens on L1 required to exchange for 1 native token on L2
+  - `token_symbol_pair`
+    - When using "BinanceApi" exchange rate mode, the pair should be L2 gas token symbol + L1 native token symbol. For instance, if using UNI token as the gas token on L2, the pair should be “UNIETH”. Token pair should be supported by Binance and included in their [ticker list API](https://api.binance.com/api/v3/ticker/price)
+    - **NOTE:** This API is not accessible in some regions, including the US. Confirm access eligibility before using.
+
+**L2 gas oracle config**
+
+- `min_gas_price`
+  - The minimal gas price set to contract L1GasPriceOracle.
+- `gas_price_diff`
+  - The minimum percentage of gas price difference to update gas oracle.
+- `alternative_gas_token_config`
+  - Refer to `alternative_gas_token_config` on L1 gas oracle config above.
+
+## Security Considerations for Alternative Gas Tokens
+
+When implementing alternative gas tokens, operators should be aware of several important security considerations to prevent potential loss of funds and user errors.
+
+The contract and gas oracle changes for Scroll SDK are not used on Scroll mainnet, but have been audited by Trail of Bits.
+
+{/* TODO: Add link to audit report */}
+
+### L2 to L1 Message Queue Restrictions
+
+<Aside type="danger">
+Native tokens sent via L2 → L1 messages must be sent to the `L1GasTokenGateway` address. Sending native tokens to any other L1 address will result in permanent loss of funds.
+</Aside>
+
+The L2 Message Queue system has strict requirements for handling native token transfers:
+
+- Messages with non-zero value **must** be sent to the `L1GasTokenGateway` address
+- Messages sent to any other address with non-zero value will fail to relay on L1, resulting in burned tokens
+- Ideally, custom gateway implementations should validate destination addresses on L2 before allowing transfers
+
+### Token Decimal Scaling Issues
+
+When bridging ERC-20 tokens to be used as native L2 tokens:
+
+- Tokens are automatically scaled to 18 decimals on L2
+- Example: If using USDT (6 decimals) as gas token:
+  - 1 USDT on L1 = 1012 native tokens on L2
+  - This maintains UI display values but can affect base unit calculations
+
+<Aside type="caution">
+Alternative gas tokens are automatically scaled to 18 decimals on L2, regardless of their L1 decimal places. This can lead to calculation errors in automated systems.
+</Aside>
+
+### Contract Interface Naming
+
+<Aside type="danger">
+Gateway contract function names can be misleading when using alternative gas tokens, as they still reference "ETH" in their naming.
+</Aside>
+
+Operators should be aware of potentially confusing contract interfaces:
+
+- `L1GasTokenGateway.depositETH()` - Actually deposits ERC-20 gas tokens, not ETH
+- L2-side functions reference "ETH" even when using alternative tokens
+- `L1WrappedTokenGateway` handles wrapped ETH, not wrapped gas tokens

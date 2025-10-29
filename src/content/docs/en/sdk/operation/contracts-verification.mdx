@@ -1,0 +1,31 @@
+---
+section: sdk
+title: "Upgrading Scroll SDK"
+lang: "en"
+permalink: "sdk/operation/contracts-verification"
+excerpt: "Learn more about verify smart contract scource code on blockchain explorer"
+---
+
+import Steps from '../../../../../components/Steps/Steps.astro';
+
+## Overview
+
+This guide documents how to verify the smart contract source code of your own Scroll SDK deployment on blockchain explorers.
+
+### Devnet deployment
+
+<Steps>
+1. Go to the `devnet` folder of `scroll-sdk` repository
+2. Configurate `[contracts.verification]` section of your config.toml file as described [here](/en/sdk/technical-stack/configuration#contracts-verification)
+3. To start the verification process, run the following command:
+    - `make verify`
+</Steps>
+
+### Production deployment
+
+<Steps>
+1. Go to the root directory of your local workspace repo
+2. Configurate `[contracts.verification]` section of your config.toml file as described [here](/en/sdk/technical-stack/configuration#contracts-verification)
+3. To start the verification process, run the following command:
+    - `scrollsdk setup verify-contracts`
+</Steps>

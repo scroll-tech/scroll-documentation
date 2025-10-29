@@ -2,6 +2,7 @@
 import NavCard from "~/components/NavCard.astro"
 import DevelopSvg from "~/assets/svgs/home/home-develop.svg?raw"
 import TechnologySvg from "~/assets/svgs/home/home-technology.svg?raw"
+import SdkSvg from "~/assets/svgs/home/home-sdk.svg?raw"
 import SectionHeader from "~/components/SectionHeader/index.astro"
 
 const navList = [
@@ -16,6 +17,12 @@ const navList = [
     name: "技术",
     content: "Scroll 的 zkEVM 架构概述",
     link: "/zh/technology",
+  },
+  {
+    icon: SdkSvg,
+    name: "SDK",
+    content: "部署链并拥有您的区块空间。",
+    link: "/zh/sdk",
   },
 ]
 ---

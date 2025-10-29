@@ -1,0 +1,451 @@
+---
+section: sdk
+title: "Monitoring Scroll SDK"
+lang: "en"
+permalink: "sdk/operation/monitoring"
+excerpt: "Learn more about monitoring Scroll SDK"
+---
+
+import Aside from "../../../../../components/Aside.astro"
+import ClickToZoom from "../../../../../components/ClickToZoom.astro";
+import AdminSystemDashboard from "./_images/admin-system-dashboard-batch-view.png"
+import Alertmanager from "./_images/alertmanager.png"
+import Grafana from "./_images/grafana.png"
+
+Scroll SDK provides a comprehensive monitoring system to ensure the health and performance of the network. This section provides an overview of the monitoring tools and best practices for using them.
+
+## `scroll-monitor` Service
+
+The Scroll Monitor service provides a starting point for adding observability and monitoring to your Scroll SDK deployment. It brings together Grafana, Loki, Prometheus, and AlertManager to provide a comprehensive monitoring solution, or can serve as a template for implementing Scroll SDK into your existing monitoring stack.
+
+### Service Dashboards
+
+We've build and made available a few Grafana dashboards for Scroll SDK chains. These include views for the following services:
+- `bridge-history-api`
+- `bridge-history-fetcher`
+- `chain-monitor`
+- `coordinator-api`
+- `coordinator-cron`
+- `gas-oracle`
+- `l2geth` instances (including `l2-sequencer`, `l2-bootnode` and `l2-rpc`)
+- `rollup-node`
+
+You can access these from the `scroll-sdk` repo [here](https://github.com/scroll-tech/scroll-sdk/tree/develop/charts/scroll-monitor/grafana/scroll-dashboards).
+
+<ClickToZoom src={Grafana} alt="Rollup Node Dashboard" />
+{/* <Aside type="caution">
+Although these are configured to work out-of-the-box with the devnet deployment, you may need to make modifications if you're using your own Prometheus or Grafana configurations.
+</Aside> */}
+
+{/* <Aside type="tip">
+We'll return to this section to provide more detailed overviews of how to identify some of the most useful metrics in each dashboard.
+</Aside> */}
+
+{/* TODO: List important views from various dashboards.  */}
+
+### Notifications with Alertmanager
+
+The `scroll-monitor` services configuration file also supports Slack webhooks for easy integration with your existing Slack workspace.
+
+<ClickToZoom src={Alertmanager} alt="Example Slack Alert" />
+
+
+{/* TODO: Document what we have alerts setup for. */}
+
+For a detailed guide on configuring and setting up AlertManager, you can refer to the [official documentation](https://prometheus.io/docs/alerting/latest/configuration/).
+
+## Scroll Admin System
+
+The Scroll Admin System Dashboard provides a web interface for managing and monitoring proof production in Scroll SDK deployments. It includes features for viewing the status of chunks, batches and bundles, along with all registered provers and assigned tasks.
+
+<ClickToZoom src={AdminSystemDashboard} alt="Admin System Dashboard - Bundle View" />
+
+{/* TODO: Consider describing what you can do in each view */}
+
+{/* ## Balance Checker */}
+
+{/* TODO: Return with simple overview of balance-checker, how to set it up, and what it does. */}
+
+## Chain Monitor
+
+Chain Monitor can be configured to send Slack notifications if:
+- deposit and withdraw messages from L1 and L2 don't match
+- asset value on escrow contracts doesn't match the deposit or withdraw messages
+- WithdrawRoots don't match
+
+To set this up, set a Webhook URL in the `slack_webhook_config` section of the `chain-monitor` config.
+
+## Prometheus Metrics
+
+Below are tables of Prometheus metrics for each service in the Scroll SDK:
+
+### chain-monitor
+
+| METRIC | DESCRIPTION | TYPE |
+|--------|-------------|------|
+| chain_monitor_request_body_total | The server received request body size, unit byte | Counter |
+| chain_monitor_request_duration_bucket | Cumulative counters for the observation buckets (the time server took to handle the request.) | Counter |
+| chain_monitor_request_duration_count | Count of events that have been observed for the histogram metric (the time server took to handle the request.) | Counter (Histogram) |
+| chain_monitor_request_duration_sum | Total sum of all observed values for the histogram metric (the time server took to handle the request.) | Counter (Histogram) |
+| chain_monitor_request_total | All the server received request num. | Counter |
+| chain_monitor_request_uv_total | All the server received ip num. | Counter |
+| chain_monitor_response_body_total | The server send response body size, unit byte | Counter |
+| chain_monitor_uri_request_total | All the server received request num with every uri. | Counter |
+| contract_controller_block_number | The block number of controller running. | Gauge |
+| contract_controller_running_total | The total number of controllers running. | Counter |
+| cross_chain_check_controller_running_total | The total number of cross chain controllers running. | Counter |
+| gateway_batch_finalized_failed_total | The total number of gateway batch finalized failed. | Counter |
+| messenger_batch_finalized_failed_total | The total number of messenger batch finalized failed. | Counter |
+| slack_alert_cross_chain_eth_event_balance_not_match_total | The total number of alert cross chain eth event balance not match total. | Counter |
+| slack_alert_cross_chain_eth_event_not_match_total | The total number of alert cross chain eth event not match total. | Counter |
+| slack_alert_cross_chain_gateway_event_not_match_total | The total number of alert cross chain gateway event not match total. | Counter |
+| slack_alert_gateway_event_duplicated_total | The total number of alert gateway event duplicated. | Counter |
+| slack_alert_gateway_transfer_not_match_total | The total number of alert gateway transfer event not match total. | Counter |
+| slack_alert_messenger_event_duplicated_total | The total number of alert messenger event duplicated. | Counter |
+| slack_alert_withdraw_root_not_match_total | The total number of alert withdraw root not match total. | Counter |
+
+### rollup-node
+
+| METRIC | DESCRIPTION | TYPE |
+|--------|-------------|------|
+| rollup_l2_block_l1_commit_calldata_size | The l1 commitBatch calldata size of the l2 block | Gauge |
+| rollup_l2_watcher_blocks_fetched_gap | The gap of l2 fetch | Gauge |
+| rollup_l2_watcher_fetch_running_missing_blocks_height | The total number of l2 watcher fetch running missing blocks height | Gauge |
+| rollup_l2_watcher_fetch_running_missing_blocks_total | The total number of l2 watcher fetch running missing blocks | Counter |
+| rollup_layer2_bundles_finalized_confirmed_failed_total | Total number of failed confirmations for finalized bundles on layer2. | Counter |
+| rollup_layer2_bundles_finalized_confirmed_total | Total number of finalized bundles confirmed on layer2. | Counter |
+| rollup_layer2_chain_monitor_latest_failed_batch_call | The total number of failed call chain_monitor api | Counter |
+| rollup_layer2_chain_monitor_latest_failed_batch_status | The total number of failed batch status get from chain_monitor | Counter |
+| rollup_layer2_gas_price_latest_gas_price | The latest gas price of rollup relayer l2 | Gauge |
+| rollup_layer2_gas_price_oracler_total | The total number of layer2 gas price oracler run total | Counter |
+| rollup_layer2_process_committed_batches_confirmed_failed_total | The total number of layer2 process committed batches confirmed failed total | Counter |
+| rollup_layer2_process_committed_batches_confirmed_total | The total number of layer2 process committed batches confirmed total | Counter |
+| rollup_layer2_process_committed_batches_finalized_success_total | The total number of layer2 process committed batches finalized success total | Counter |
+| rollup_layer2_process_committed_batches_finalized_total | The total number of layer2 process committed batches finalized total | Counter |
+| rollup_layer2_process_committed_batches_total | The total number of layer2 process committed batches run total | Counter |
+| rollup_layer2_process_finalized_batches_confirmed_failed_total | The total number of layer2 process finalized batches confirmed failed total | Counter |
+| rollup_layer2_process_finalized_batches_confirmed_total | The total number of layer2 process finalized batches confirmed total | Counter |
+| rollup_layer2_process_pending_batch_err_too_many_pending_blob_txs_total | The total number of layer2 process pending batch failed on too many pending blob txs | Counter |
+| rollup_layer2_process_pending_batch_success_total | The total number of layer2 process pending success batch | Counter |
+| rollup_layer2_process_pending_batch_total | The total number of layer2 process pending batch | Counter |
+| rollup_layer2_relayer_process_pending_bundles_finalized_success_total | Total number of times the layer2 relayer has successful finalized proven bundle processes. | Counter |
+| rollup_layer2_relayer_process_pending_bundles_finalized_total | Total number of times the layer2 relayer has finalized proven bundle processes. | Counter |
+| rollup_layer2_relayer_process_pending_bundles_total | Total number of times the layer2 relayer has processed pending bundles. | Counter |
+| rollup_layer2_update_layer1_gas_oracle_confirmed_failed_total | The total number of updating layer2 gas oracle confirmed failed | Counter |
+| rollup_layer2_update_layer1_gas_oracle_confirmed_total | The total number of updating layer2 gas oracle confirmed | Counter |
+| rollup_propose_batch_chunks_number | The number of chunks in the batch | Gauge |
+| rollup_propose_batch_chunks_propose_not_enough_total | Total number of batch chunk propose not enough | Counter |
+| rollup_propose_batch_circle_total | Total number of propose batch total. | Counter |
+| rollup_propose_batch_due_to_compressed_data_compatibility_breach_total | Total number of propose batch due to compressed data compatibility breach. | Counter |
+| rollup_propose_batch_estimate_blob_size_time | Time taken to estimate blob size for the chunk. | Gauge |
+| rollup_propose_batch_estimate_calldata_size_time | Time taken to estimate calldata size for the chunk. | Gauge |
+| rollup_propose_batch_estimate_gas_time | Time taken to estimate gas for the chunk. | Gauge |
+| rollup_propose_batch_failure_circle_total | Total number of propose batch total. | Counter |
+| rollup_propose_batch_first_block_timeout_reached_total | Total times of batch's first block timeout reached | Counter |
+| rollup_propose_batch_total_l1_call_data_size | The total l1 call data size | Gauge |
+| rollup_propose_batch_total_l1_commit_blob_size | The total l1 commit blob size | Gauge |
+| rollup_propose_batch_total_l1_commit_gas | The total l1 commit gas | Gauge |
+| rollup_propose_batch_update_info_failure_total | Total number of propose batch update info failure total. | Counter |
+| rollup_propose_batch_update_info_total | Total number of propose batch update info total. | Counter |
+| rollup_propose_bundle_batches_number | The number of batches in the current bundle. | Gauge |
+| rollup_propose_bundle_batches_propose_not_enough_total | Total number of times there were not enough batches to propose a bundle. | Counter |
+| rollup_propose_bundle_circle_total | Total number of propose bundle attempts. | Counter |
+| rollup_propose_bundle_failure_total | Total number of propose bundle failures. | Counter |
+| rollup_propose_bundle_first_block_timeout_reached_total | Total times the first block in a bundle reached the timeout. | Counter |
+| rollup_propose_bundle_update_info_failure_total | Total number of propose bundle update info failures. | Counter |
+| rollup_propose_bundle_update_info_total | Total number of propose bundle update info attempts. | Counter |
+| rollup_propose_chunk_blocks_propose_not_enough_total | Total number of chunk block propose not enough | Counter |
+| rollup_propose_chunk_chunk_block_number | The number of blocks in the chunk | Gauge |
+| rollup_propose_chunk_circle_total | Total number of propose chunk total. | Counter |
+| rollup_propose_chunk_due_to_compressed_data_compatibility_breach_total | Total number of propose chunk due to compressed data compatibility breach. | Counter |
+| rollup_propose_chunk_estimate_blob_size_time | Time taken to estimate blob size for the chunk. | Gauge |
+| rollup_propose_chunk_estimate_calldata_size_time | Time taken to estimate calldata size for the chunk. | Gauge |
+| rollup_propose_chunk_estimate_gas_time | Time taken to estimate gas for the chunk. | Gauge |
+| rollup_propose_chunk_estimate_l1_commit_gas | The chunk estimate l1 commit gas | Gauge |
+| rollup_propose_chunk_failure_circle_total | Total number of propose chunk failure total. | Counter |
+| rollup_propose_chunk_first_block_timeout_reached_total | Total times of chunk's first block timeout reached | Counter |
+| rollup_propose_chunk_max_tx_consumption | The max tx consumption | Gauge |
+| rollup_propose_chunk_total_l1_commit_blob_size | The total l1 commit blob size | Gauge |
+| rollup_propose_chunk_total_l1_commit_call_data_size | The total l1 commit call data size | Gauge |
+| rollup_propose_chunk_tx_num | The chunk tx num | Gauge |
+| rollup_propose_chunk_update_info_failure_total | Total number of propose chunk update info failure total. | Counter |
+| rollup_propose_chunk_update_info_total | Total number of propose chunk update info total. | Counter |
+| rollup_sender_blob_gas_fee_cap | The blob gas fee cap of current transaction. | Gauge |
+| rollup_sender_check_pending_transaction_total | The total number of check pending transaction. | Counter |
+| rollup_sender_gas_fee_cap | The gas fee cap of current transaction. | Gauge |
+| rollup_sender_gas_limit | The gas limit of current transaction. | Gauge |
+| rollup_sender_gas_tip_cap | The gas tip cap of current transaction. | Gauge |
+| rollup_sender_send_transaction_send_tx_failure_total | The total number of sending transactions failure for sending tx. | Counter |
+| rollup_sender_send_transaction_total | The total number of sending transactions. | Counter |
+
+### bridge-history-api
+
+| METRIC | DESCRIPTION | TYPE |
+|--------|-------------|------|
+| bridge_history_api_cache_hits_total | The total number of cache hits | Counter |
+| bridge_history_api_cache_misses_total | The total number of cache misses | Counter |
+| bridge_history_api_request_body_total | The server received request body size, unit byte | Counter |
+| bridge_history_api_request_duration_bucket | Cumulative counters for the observation buckets (the time server took to handle the request.) | Counter |
+| bridge_history_api_request_duration_count | Count of events that have been observed for the histogram metric (the time server took to handle the request.) | Counter (Histogram) |
+| bridge_history_api_request_duration_sum | Total sum of all observed values for the histogram metric (the time server took to handle the request.) | Counter (Histogram) |
+| bridge_history_api_request_total | All the server received request num. | Counter |
+| bridge_history_api_request_uv_total | All the server received ip num. | Counter |
+| bridge_history_api_response_body_total | The server send response body size, unit byte | Counter |
+| bridge_history_api_uri_request_total | All the server received request num with every uri. | Counter |
+
+### bridge-history-fetcher
+
+| METRIC | DESCRIPTION | TYPE |
+|--------|-------------|------|
+| L1_fetcher_logic_fetched_total | The total number of events or failed txs fetched in L1 fetcher logic. | Counter |
+| L1_message_fetcher_reorg_total | Total count of blockchain reorgs encountered by the L1 message fetcher. | Counter |
+| L1_message_fetcher_running_total | Current count of running L1 message fetcher instances. | Counter |
+| L1_message_fetcher_sync_height | Latest blockchain height the L1 message fetcher has synced with. | Gauge |
+| L2_fetcher_logic_fetched_total | The total number of events or failed txs fetched in L2 fetcher logic. | Counter |
+| L2_message_fetcher_reorg_total | Total count of blockchain reorgs encountered by the L2 message fetcher. | Counter |
+| L2_message_fetcher_running_total | Current count of running L2 message fetcher instances. | Counter |
+| L2_message_fetcher_sync_height | Latest blockchain height the L2 message fetcher has synced with. | Gauge |
+| event_update_logic_L1_finalize_batch_event_L2_block_update_height | L2 block height of the latest L1 batch event that has been finalized and updated in the message_table. | Gauge |
+| event_update_logic_L2_message_nonce_update_height | L2 message nonce height in the latest L1 batch event that has been finalized and updated in the message_table. | Gauge |
+
+### coordinator-api
+
+| METRIC | DESCRIPTION | TYPE |
+|--------|-------------|------|
+| coordinator_submit_proof_failure_total | Total number of submit proof failure. | Counter |
+| coordinator_submit_proof_total | Total number of submit proof. | Counter |
+| coordinator_task_prove_duration_seconds_bucket | Cumulative counters for the observation buckets (Time spend by prover prove task.) | Counter |
+| coordinator_task_prove_duration_seconds_count | Count of events that have been observed for the histogram metric (Time spend by prover prove task.) | Counter (Histogram) |
+| coordinator_task_prove_duration_seconds_sum | Total sum of all observed values for the histogram metric (Time spend by prover prove task.) | Counter (Histogram) |
+| coordinator_validate_failure_submit_have_been_verifier | Total number of submit proof validate failure proof have been verifier. | Counter |
+| coordinator_validate_failure_submit_status_not_ok | Total number of submit proof validate failure proof status not ok. | Counter |
+| coordinator_validate_failure_submit_timeout | Total number of submit proof validate failure timeout. | Counter |
+| coordinator_validate_failure_submit_twice_total | Total number of submit proof validate failure submit twice. | Counter |
+| coordinator_validate_failure_total | Total number of submit proof validate failure. | Counter |
+
+### coordinator-cron
+
+| METRIC | DESCRIPTION | TYPE |
+|--------|-------------|------|
+| coordinator_batch_prover_task_timeout_total | Total number of batch timeout prover task. | Counter |
+| coordinator_batch_timeout_checker_run_total | Total number of batch timeout checker run. | Counter |
+| coordinator_bundle_prover_task_timeout_total | Total number of bundle timeout prover task. | Counter |
+| coordinator_bundle_timeout_checker_run_total | Total number of bundle timeout checker run. | Counter |
+| coordinator_chunk_prover_task_timeout_total | Total number of chunk timeout prover task. | Counter |
+| coordinator_chunk_timeout_checker_run_total | Total number of chunk timeout checker run. | Counter |
+
+### gas-oracle
+
+| METRIC | DESCRIPTION | TYPE |
+|--------|-------------|------|
+| rollup_l1_watcher_fetch_block_header_processed_block_height | The current processed block height of l1 watcher fetch block header | Gauge |
+| rollup_l1_watcher_fetch_block_header_total | The total number of l1 watcher fetch block header total | Counter |
+| rollup_layer1_gas_price_oracler_total | The total number of layer1 gas price oracler run total | Counter |
+| rollup_layer1_latest_base_fee | The latest base fee of l1 rollup relayer | Gauge |
+| rollup_layer1_latest_blob_base_fee | The latest blob base fee of l1 rollup relayer | Gauge |
+| rollup_layer1_update_gas_oracle_confirmed_failed_total | The total number of updating layer1 gas oracle confirmed failed | Counter |
+| rollup_layer1_update_gas_oracle_confirmed_total | The total number of updating layer1 gas oracle confirmed | Counter |
+| rollup_layer2_bundles_finalized_confirmed_failed_total | Total number of failed confirmations for finalized bundles on layer2. | Counter |
+| rollup_layer2_bundles_finalized_confirmed_total | Total number of finalized bundles confirmed on layer2. | Counter |
+| rollup_layer2_chain_monitor_latest_failed_batch_call | The total number of failed call chain_monitor api | Counter |
+| rollup_layer2_chain_monitor_latest_failed_batch_status | The total number of failed batch status get from chain_monitor | Counter |
+| rollup_layer2_gas_price_latest_gas_price | The latest gas price of rollup relayer l2 | Gauge |
+| rollup_layer2_gas_price_oracler_total | The total number of layer2 gas price oracler run total | Counter |
+| rollup_layer2_process_committed_batches_confirmed_failed_total | The total number of layer2 process committed batches confirmed failed total | Counter |
+| rollup_layer2_process_committed_batches_confirmed_total | The total number of layer2 process committed batches confirmed total | Counter |
+| rollup_layer2_process_committed_batches_finalized_success_total | The total number of layer2 process committed batches finalized success total | Counter |
+| rollup_layer2_process_committed_batches_finalized_total | The total number of layer2 process committed batches finalized total | Counter |
+| rollup_layer2_process_committed_batches_total | The total number of layer2 process committed batches run total | Counter |
+| rollup_layer2_process_finalized_batches_confirmed_failed_total | The total number of layer2 process finalized batches confirmed failed total | Counter |
+| rollup_layer2_process_finalized_batches_confirmed_total | The total number of layer2 process finalized batches confirmed total | Counter |
+| rollup_layer2_process_pending_batch_err_too_many_pending_blob_txs_total | The total number of layer2 process pending batch failed on too many pending blob txs | Counter |
+| rollup_layer2_process_pending_batch_success_total | The total number of layer2 process pending success batch | Counter |
+| rollup_layer2_process_pending_batch_total | The total number of layer2 process pending batch | Counter |
+| rollup_layer2_relayer_process_pending_bundles_finalized_success_total | Total number of times the layer2 relayer has successful finalized proven bundle processes. | Counter |
+| rollup_layer2_relayer_process_pending_bundles_finalized_total | Total number of times the layer2 relayer has finalized proven bundle processes. | Counter |
+| rollup_layer2_relayer_process_pending_bundles_total | Total number of times the layer2 relayer has processed pending bundles. | Counter |
+| rollup_layer2_update_layer1_gas_oracle_confirmed_failed_total | The total number of updating layer2 gas oracle confirmed failed | Counter |
+| rollup_layer2_update_layer1_gas_oracle_confirmed_total | The total number of updating layer2 gas oracle confirmed | Counter |
+| rollup_sender_check_pending_transaction_total | The total number of check pending transaction. | Counter |
+| rollup_sender_gas_fee_cap | The gas fee cap of current transaction. | Gauge |
+| rollup_sender_gas_limit | The gas limit of current transaction. | Gauge |
+| rollup_sender_gas_tip_cap | The gas tip cap of current transaction. | Gauge |
+| rollup_sender_send_transaction_get_fee_failure_total | The total number of sending transactions failure for getting fee. | Counter |
+| rollup_sender_send_transaction_total | The total number of sending transactions. | Counter |
+
+### l2geth
+
+L2Geth has an extensive list of metrics. Below are tables grouped by metric name prefixes, highlighting important metrics and those not inherited from geth. For a complete list, please refer to the Prometheus metrics explorer.
+
+#### eth_db_chaindata
+
+| METRIC | DESCRIPTION | TYPE |
+|--------|-------------|------|
+| eth_db_chaindata_disk_size | Size of the chaindata on disk | Gauge |
+| eth_db_chaindata_ancient_size | Size of the ancient chaindata on disk | Gauge |
+
+#### miner
+
+| METRIC | DESCRIPTION | TYPE |
+|--------|-------------|------|
+| miner_commit_gas | Gas used in the last commit | Gauge |
+| miner_ccc_stall | | Summary |
+| miner_ccc_stall_count | Count of events that have been observed for the base metric | Counter |
+| miner_ccc_stall_total_count | | Counter |
+| miner_collect_l1_msgs | | Summary |
+| miner_collect_l1_msgs_count | Count of events that have been observed for the base metric | Counter |
+| miner_collect_l1_msgs_total_count | | Counter |
+| miner_collect_l2_txns | | Summary |
+| miner_collect_l2_txns_count | Count of events that have been observed for the base metric | Counter |
+| miner_collect_l2_txns_total_count | | Counter |
+| miner_commit | | Summary |
+| miner_commit_count | Count of events that have been observed for the base metric | Counter |
+| miner_commit_reason_ccc | | Gauge |
+| miner_commit_reason_deadline | | Gauge |
+| miner_commit_total_count | | Counter |
+| miner_idle | | Summary |
+| miner_idle_count | Count of events that have been observed for the base metric | Counter |
+| miner_idle_total_count | | Counter |
+| miner_prepare | | Summary |
+| miner_prepare_count | Count of events that have been observed for the base metric | Counter |
+| miner_prepare_total_count | | Counter |
+| miner_skipped_txs_l1 | | Gauge |
+| miner_skipped_txs_l2 | | Gauge |
+
+#### p2p
+
+| METRIC | DESCRIPTION | TYPE |
+|--------|-------------|------|
+| p2p_peers | Number of connected peers | Gauge |
+
+#### txpool
+
+| METRIC | DESCRIPTION | TYPE |
+|--------|-------------|------|
+| txpool_pending | Number of pending transactions in the pool | Gauge |
+| txpool_queued | Number of queued transactions in the pool | Gauge |
+
+#### ccc
+
+| METRIC | DESCRIPTION | TYPE |
+|--------|-------------|------|
+| ccc_async_active_workers | | Gauge |
+| ccc_async_check | | Summary |
+| ccc_async_check_count | Count of events that have been observed for the base metric | Counter |
+| ccc_async_check_total_count | | Counter |
+| ccc_async_fail | | Gauge |
+| ccc_encode | | Summary |
+| ccc_encode_count | Count of events that have been observed for the base metric | Counter |
+| ccc_encode_total_count | | Counter |
+
+#### chain
+
+| METRIC | DESCRIPTION | TYPE |
+|--------|-------------|------|
+| chain_account_commits | | Summary |
+| chain_account_commits_count | Count of events that have been observed for the base metric | Counter |
+| chain_account_commits_total_count | | Counter |
+| chain_account_hashes | | Summary |
+| chain_account_hashes_count | Count of events that have been observed for the base metric | Counter |
+| chain_account_hashes_total_count | | Counter |
+| chain_account_reads | | Summary |
+| chain_account_reads_count | Count of events that have been observed for the base metric | Counter |
+| chain_account_reads_total_count | | Counter |
+| chain_account_updates | | Summary |
+| chain_account_updates_count | Count of events that have been observed for the base metric | Counter |
+| chain_account_updates_total_count | | Counter |
+| chain_execution | | Summary |
+| chain_execution_count | Count of events that have been observed for the base metric | Counter |
+| chain_execution_total_count | | Counter |
+| chain_fees_l2basefee | | Gauge |
+| chain_head_block | Current head block number | Gauge |
+| chain_head_header | Current head header number | Gauge |
+| chain_head_receipt | Current head receipt number | Gauge |
+| chain_head_timegap | Time gap between current time and the head block timestamp | Gauge |
+| chain_inserts | | Summary |
+| chain_inserts_count | Count of events that have been observed for the base metric | Counter |
+| chain_inserts_total_count | | Counter |
+| chain_prefetch_executes | | Summary |
+| chain_prefetch_executes_count | Count of events that have been observed for the base metric | Counter |
+| chain_prefetch_executes_total_count | | Counter |
+| chain_prefetch_interrupts | | Gauge |
+| chain_reorg_add | | Gauge |
+| chain_reorg_drop | | Gauge |
+| chain_reorg_executes | | Gauge |
+| chain_reorg_invalidTx | | Gauge |
+| chain_snapshot_account_reads | | Summary |
+| chain_snapshot_account_reads_count | Count of events that have been observed for the base metric | Counter |
+| chain_snapshot_account_reads_total_count | | Counter |
+| chain_snapshot_commits | | Summary |
+| chain_snapshot_commits_count | Count of events that have been observed for the base metric | Counter |
+| chain_snapshot_commits_total_count | | Counter |
+| chain_snapshot_storage_reads | | Summary |
+| chain_snapshot_storage_reads_count | Count of events that have been observed for the base metric | Counter |
+| chain_snapshot_storage_reads_total_count | | Counter |
+| chain_storage_commits | | Summary |
+| chain_storage_commits_count | Count of events that have been observed for the base metric | Counter |
+| chain_storage_commits_total_count | | Counter |
+| chain_storage_hashes | | Summary |
+| chain_storage_hashes_count | Count of events that have been observed for the base metric | Counter |
+| chain_storage_hashes_total_count | | Counter |
+| chain_storage_reads | | Summary |
+| chain_storage_reads_count | Count of events that have been observed for the base metric | Counter |
+| chain_storage_reads_total_count | | Counter |
+| chain_storage_updates | | Summary |
+| chain_storage_updates_count | Count of events that have been observed for the base metric | Counter |
+| chain_storage_updates_total_count | | Counter |
+| chain_validation | | Summary |
+| chain_validation_count | Count of events that have been observed for the base metric | Counter |
+| chain_validation_total_count | | Counter |
+| chain_write | | Summary |
+| chain_write_count | Count of events that have been observed for the base metric | Counter |
+| chain_write_total_count | | Counter |
+
+#### rawdb
+
+| METRIC | DESCRIPTION | TYPE |
+|--------|-------------|------|
+| rawdb_l1_message_iterator_inner_next_called | | Gauge |
+| rawdb_l1_message_iterator_length_mismatch | | Gauge |
+| rawdb_l1_message_iterator_next_called | | Gauge |
+| rawdb_l1_message_iterator_next_time | | Summary |
+| rawdb_l1_message_iterator_next_time_count | Count of events that have been observed for the base metric | Counter |
+| rawdb_l1_message_iterator_next_time_total_count | | Counter |
+| rawdb_l1_message_size | | Gauge |
+
+#### rollup
+
+| METRIC | DESCRIPTION | TYPE |
+|--------|-------------|------|
+| rollup_l1_message | | Gauge |
+| rollup_tracing_feed_tx_to_tracer | | Summary |
+| rollup_tracing_feed_tx_to_tracer_count | Count of events that have been observed for the base metric | Counter |
+| rollup_tracing_feed_tx_to_tracer_total_count | | Counter |
+| rollup_tracing_fill_block_trace | | Summary |
+| rollup_tracing_fill_block_trace_count | Count of events that have been observed for the base metric | Counter |
+| rollup_tracing_fill_block_trace_total_count | | Counter |
+| rollup_tracing_get_tx_result | | Summary |
+| rollup_tracing_get_tx_result_apply_message | | Summary |
+| rollup_tracing_get_tx_result_apply_message_count | Count of events that have been observed for the base metric | Counter |
+| rollup_tracing_get_tx_result_apply_message_total_count | | Counter |
+| rollup_tracing_get_tx_result_count | Count of events that have been observed for the base metric | Counter |
+| rollup_tracing_get_tx_result_total_count | | Counter |
+| rollup_tracing_get_tx_result_tracer_result | | Summary |
+| rollup_tracing_get_tx_result_tracer_result_count | Count of events that have been observed for the base metric | Counter |
+| rollup_tracing_get_tx_result_tracer_result_total_count | | Counter |
+| rollup_tracing_get_tx_result_zk_trie_build | | Summary |
+| rollup_tracing_get_tx_result_zk_trie_build_count | Count of events that have been observed for the base metric | Counter |
+| rollup_tracing_get_tx_result_zk_trie_build_total_count | | Counter |
+
+#### validator
+
+| METRIC | DESCRIPTION | TYPE |
+|--------|-------------|------|
+| validator_async | | Summary |
+| validator_async_count | Count of events that have been observed for the base metric | Counter |
+| validator_async_total_count | | Counter |
+| validator_l1msg | | Summary |
+| validator_l1msg_count | Count of events that have been observed for the base metric | Counter |
+| validator_l1msg_total_count | | Counter |
+
+Note: This is not an exhaustive list. There are many more metrics available for eth_downloader, eth_fetcher, les_client, les_server, miner, p2p, processor, rpc, state, system, trie, txpool, and other components. 
