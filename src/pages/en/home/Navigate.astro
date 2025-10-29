@@ -2,6 +2,7 @@
 import NavCard from "~/components/NavCard.astro"
 import DevelopSvg from "~/assets/svgs/home/home-develop.svg?raw"
 import TechnologySvg from "~/assets/svgs/home/home-technology.svg?raw"
+import SdkSvg from "~/assets/svgs/home/home-sdk.svg?raw"
 import SectionHeader from "~/components/SectionHeader/index.astro"
 
 const navList = [
@@ -16,6 +17,12 @@ const navList = [
     name: "Technology",
     content: "An overview of Scroll’s zkEVM Architecture.",
     link: "/en/technology",
+  },
+  {
+    icon: SdkSvg,
+    name: "SDK",
+    content: "Deploy a chain and own your blockspace.",
+    link: "/en/sdk",
   },
 ]
 ---

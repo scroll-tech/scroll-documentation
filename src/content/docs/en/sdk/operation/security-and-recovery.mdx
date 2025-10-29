@@ -1,0 +1,302 @@
+---
+section: sdk
+title: "Security & Recovery in Scroll SDK"
+lang: "en"
+permalink: "sdk/operation/security-and-recovery"
+excerpt: "Learn more about security and recovery in Scroll SDK"
+---
+
+import Aside from "../../../../../components/Aside.astro"
+import ToggleElement from "../../../../../components/ToggleElement.astro"
+import Steps from "../../../../../components/Steps/Steps.astro"
+
+<Aside type="caution">
+This article will cover many aspects about the security of the protocol, but attack vectors against you, your network and your users go well beyond your Scroll SDK configuration. Consider if you pass [the Rekt test](https://blog.trailofbits.com/2023/08/14/can-you-pass-the-rekt-test/).
+
+The well-being of your users is your responsibility, and we urge you to consider all aspects of security when running a chain. Hiring a security professional is advised.
+</Aside>
+
+## Protocol Security & Risks
+
+For a comprehensive overview of the security of the protocol, L2Beat's [overview of Scroll](https://l2beat.com/scaling/projects/scroll#risk-summary) is a great place to understand the risks, centalization points and permissioned operators on Scroll chain. Because Scroll is a single entity (who also built the tech), the risk factors may increase as you coordinate with external parties (ie RaaS providers).
+
+<Aside>
+For any discoveries of critical vulnerabilities outside of the scope of the bug bounty program, please also send reports to security@scroll.io.
+</Aside>
+
+### Audits
+
+For a list of independent audits of the Scroll protocol, see [Audits & Bug Bounty](en/technology/security/audits-and-bug-bounty#independent-audits).
+
+Additionally, Scroll SDK has undergone the following audits:
+
+- Alternative Gas Token Contracts and Gas Oracle
+  - Trail of Bits *(Report to be released)*
+
+{/* TODO: Add audit report URL */}
+
+<Aside type="danger" title="">
+  Audits don't guarantee the absence of security vulnerabilities. Using blockchains comes with risk, and Scroll is no
+  exception. We encourage users to use the protocol with caution and at their own risk.
+</Aside>
+
+## Owner Role & Safe Management
+
+Because the Owner Role has the ability to upgrade smart contracts, it can compromise the bridge and user funds. This account should be a multi-sig wallet, and we encourage you to review the best practices for [creating a Security Council](https://medium.com/l2beat/stages-update-security-council-requirements-4c79cea8ef52).
+
+If a RaaS provider is used, create a plan for multi-sig upgrades where the provider cannot arbitrarily upgrade the contracts.
+
+## Privileged Smart Contract Roles
+
+The following accounts are given roles that have special permissions and should be managed with extra care:
+
+- `DEPLOYER`
+	- Used to deploy initial contracts and has permissions to set the initial `OWNER`
+	- Private key held in `contracts` service
+- `OWNER`
+	- Can upgrade contracts, set important parameters, whitelist accounts to grant them roles.
+	- Should be a multi-sig wallet, with the RaaS provider having no more signing authority than the other signers.
+- `L1_GAS_ORACLE_SENDER`
+	- Permissioned to report L2 gas prices to L1 `L1_SCROLL_MESSENGER` contract
+	- Private key held in `gas-oracle` service (unless using Web3Signer)
+- `L2_GAS_ORACLE_SENDER`
+	- Permissioned to report L1 gas prices to L2 `L1_GAS_PRICE_ORACLE` contract 
+	- Private key held in `gas-oracle` service (unless using Web3Signer)
+- `L1_COMMIT_SENDER_ADDR`
+	- Permissioned to submit batches to the L1 `ScrollChain` contract
+	- Private key held in `rollup-node` service (unless using Web3Signer)
+- `L1_FINALIZE_SENDER`
+	- Permissioned to submit proofs and finalize batches on L1 `ScrollChain` contract
+	- Private key held in `rollup-node` service (unless using Web3Signer)
+
+
+For additional assessments on protocol permissions and to see how Scroll manages multisigs and timelocks, see [L2Beat's Scroll permissions](https://l2beat.com/scaling/projects/scroll#permissions).
+
+## Handling Private Keys and Secrets
+
+By default, Scroll SDK's production deployments are configured to store "hot" private keys in the service and a secret manager service. We use ExternalSecrets to support a variety of secret manager services, but by default, the CLI tool only automates AWS Secrets Manager and an insecure, development-only deployment of HashiCorp Vault.
+
+We intend to add support for Web3Signer in the future as well, allowing more restricted access to apply to a single service.
+
+For more information on implemententing access control to specific parts of your cluster, see [Kubernetes: Using RBAC Authorization](https://kubernetes.io/docs/reference/access-authn-authz/rbac/).
+
+## Pausing the Bridge
+
+In extreme security instances, you may need to pause the bridge. The easiest way to do this quickly from the infrastructure operator is to bring the rollup node offline. This way, even if blocks contine to be produced, finalization (and thus new withdrawals) will not be processed until the `rollup-node` is back online.
+
+## Key Rotation for Rollup Accounts
+
+Rotating the keys for the `gas-oracle` and `rollup-node` accounts is a manual process requiring involvement from the `OWNER` role.
+
+At a high level, you simply need to add the new key to the whitelist, restart your services, and then remove the old key from the whitelist.
+
+{/* TODO: Provide cast commands for doing this process. */}
+
+## Rotating Sequencer Keys
+
+Rotating sequencer keys requires careful coordination to ensure continuous block production. The process involves running two sequencer nodes temporarily - the active sequencer and a new sequencer with the new keys.
+
+#### Prerequisites
+
+<Steps>
+1. Update your L2 Geth nodes to the latest version
+2. Prepare a second value file for the new sequencer with:
+    - New keystore and password
+    - New nodekey
+    - Updated peer list
+3. Ensure all L2 Geth services have both sequencers in their `L2GETH_PEER_LIST`
+</Steps>
+
+#### Rotation Process
+
+<Steps>
+1. Deploy the new sequencer node with the new keys
+2. Verify the new sequencer is fully synced and connected to peers
+3. On the active sequencer, connect to the Geth console:
+    ```bash
+    geth attach /l2geth/data/geth.ipc
+    ```
+
+    or, if using `kubectl`:
+    ```bash
+    kubectl exec -it l2-sequencer-0 -- geth attach /l2geth/data/geth.ipc
+    ```
+
+4. Check current active signer:
+    ```bash
+    clique.getSigners()
+    ```
+
+5. Propose the new signer (replace with your new signer address):
+    ```bash
+    clique.propose("0xNEW_SIGNER_ADDRESS", true)
+    ```
+
+6. Wait for one block to be generated, then verify both signers are active:
+    ```bash
+    clique.getSigners()  // Should show both addresses
+    ```
+
+7. Remove the old signer from both nodes:
+    - On the old sequencer:
+    ```bash
+    clique.propose("0xOLD_SIGNER_ADDRESS", false)
+    ```
+    - On the new sequencer:
+    ```bash
+    clique.propose("0xOLD_SIGNER_ADDRESS", false)
+    ```
+
+8. After two blocks are generated, verify only the new signer remains:
+    ```bash
+    clique.getSigners()  // Should show only new signer
+    ```
+</Steps>
+
+#### Post-Rotation Verification
+
+<Steps>
+1. Monitor block production on the new sequencer
+2. Verify blocks are being properly signed with the new key
+3. Monitor network health metrics
+4. Once confirmed working, decommission the old sequencer
+</Steps>
+
+<Aside type="caution">
+Ensure you maintain backups of both old and new keys until you've confirmed the rotation is successful. Never delete old keys until the new sequencer is proven stable.
+</Aside>
+
+## Recovering from a Infrastructure Failure
+
+Recoving from an infrastructure failure will depend on what components are affected.
+
+#### Database Failure
+
+For a managed database recovery, we recommend maintaining backups, ideally in an alternate region. If you operate your own database, be sure to take snapshots, and consider backups to alternate cloud providers. We plan to provide further guidance for database recovery in the future.
+
+#### Sequencer Failure
+
+**If your sequencer host goes down:**
+
+We recommend having at least one hot standby sequencer to take its place. This sequencer can be configured with different keys than the original sequencer (and be fully synced in case you need to [rotate the sequencer keys](#rotating-sequencer-keys)), but a simple configuration change will allow it to reboot using the original sequencer's keys to immediately resume block production.
+
+**If all of your sequencer machines are lost:**
+
+You will need either:
+  - Sync a new full node from gensis (assuming there are full nodes remaining somewhere in your p2p network).
+  - Repurpose a synced RPC node. "Converting" it to be the sequencer by creating a new sequencer chart that takes over the RPC node's Persistent Volume Claim.
+
+**If all full nodes in the network are lost:**
+
+If you cannot sync from other network nodes, you will need to sync from L1 data. As of version 0.1.0, this is unsupported, but we plan to add support for this in the near future.
+
+Please reach out to the Scroll team if you need assistance reviewing your recovery plan.
+
+## Planning for your Incident Response & Recovery
+
+It is important to plan for your incident response and recovery before an incident occurs. Here is a list of potential issues, their implications, and things to consider as a team.
+
+### Bug Categories and Response Plans
+
+#### 1. Liveness Issues
+- **Symptoms**: Delays in block production or finalization
+- **Impact**: 
+  - Write operations may be temporarily unavailable
+  - Bridge withdrawals may be delayed
+  - Read operations remain functional
+- **Response**:
+  - Monitor block production metrics
+  - Engage backup systems if necessary
+  - Communicate status to users
+
+#### 2. Safety Issues
+
+##### Scenario A: Invalid Block Production
+- **Symptoms**: RPC nodes rejecting blocks
+- **Impact**: Chain appears offline for writes
+- **Response**: 
+  - Investigate sequencer logs
+  - Prepare for potential rollback
+  - Maintain read-only access
+
+##### Scenario B: Unprovable Batch
+- **Symptoms**: Proof generation failures
+- **Response**:
+  - Coordinate with Scroll team
+  - Potential prover upgrade
+  - Possible L1 batch revocation
+  - Prepare for L2 reorg
+
+##### Scenario C: ZK System Bug
+- **Highest Risk Scenario**
+- **Required Actions**:
+  - Immediate escalation to Scroll team
+  - Potential emergency shutdown
+  - Review of all recent proofs
+  - External party verification
+
+#### 3. Gas Oracle Issues
+- **Monitoring**: Track gas price anomalies
+- **Impact Assessment**:
+  - Transaction cost implications
+  - Potential chain usability issues
+- **Resolution Steps**:
+  - Oracle parameter adjustment
+  - Emergency price override if necessary
+
+### Disaster Recovery
+
+#### Cross-Region Resilience
+1. **Backup Infrastructure**
+   - Maintain 1-2 fullnodes in alternate regions
+   - Regular database snapshots
+   - Off-site backup storage
+   - Cross-region K8s cluster capability
+
+2. **Recovery Procedures**
+   - Sequencer Role Recovery:
+     1. Deploy new sequencer with original keys
+     2. Verify chain sync status
+     3. Resume block production
+   - Signer Change Process:
+     1. Follow documented key rotation
+     2. Update necessary configurations
+     3. Verify new signer functionality
+
+#### Cloud Provider Failover
+
+1. **Temporary Outages**
+   - Maintain hot standby in alternate region
+   - Automated DNS failover configuration
+   - Regular failover testing
+   - Document recovery procedures
+
+2. **Permanent Migration**
+   - Platform-agnostic deployment readiness
+   - Alternative cloud provider prerequisites:
+     - Pre-configured K8s clusters
+     - Network configuration templates
+     - DNS management strategy
+   - Migration checklist:
+     - Sequencer deployment
+     - RPC node setup
+     - Database migration
+     - DNS updates
+     - Security configuration verification
+
+### Security Monitoring and Response Checklist
+
+#### Continuous Monitoring
+- Monitor all privileged key usage
+- Track gas oracle values for anomalies
+- Watch for unusual block proposal patterns
+- Monitor bridge activity for suspicious patterns
+- Track system resource utilization
+- Monitor network latency and availability
+
+#### Incident Response
+- Maintain an up-to-date incident response plan
+- Document escalation procedures
+- Keep backup RaaS provider details readily available
+- Regular testing of recovery procedures
+- Maintain communication templates for various scenarios

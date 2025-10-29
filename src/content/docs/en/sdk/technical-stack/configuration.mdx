@@ -1,0 +1,243 @@
+---
+section: sdk
+date: Last Modified
+title: "Scroll SDK Configuration"
+lang: "en"
+permalink: "sdk/technical-stack/configuration"
+excerpt: "Information on configuring and customizing a Scroll SDK deployment."
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+Initial change configuration is made by modifying `config.toml`. All other config files are auto-generated from this file. For automating changes to your configuration for production deployments, see the [scroll-sdk-cli](https://www.npmjs.com/package/@scroll-tech/scroll-sdk-cli) tool.
+
+For new production deployments, we recommend using the [example template](https://github.com/scroll-tech/scroll-sdk/blob/develop/examples/config.toml.example), which the `scroll-sdk-cli` tool is designed to work with. You can reference the default devnet configuration [here](https://github.com/scroll-tech/scroll-sdk/blob/develop/charts/scroll-sdk/config.toml).
+
+<Aside type="note">
+Although most values don't need modified between subsequent deployments, you may want change the contracts section's `DEPLOYMENT_SALT` in order to have newly initialized contracts on your basechain.
+</Aside>
+
+## `config.toml` Variables
+Local Devnet defaults shown.
+
+### General
+
+Contained in the `[general]` section.
+
+| Config Variable | Description | Default Value |
+|-----------------|-------------|---------------|
+| L1_RPC_ENDPOINT | Specifies the HTTP endpoint for the L1 RPC server. | `http://l1-devnet:8545` |
+| L1_RPC_ENDPOINT_WEBSOCKET | Specifies the WebSocket endpoint for the L1 RPC server. | `ws://l1-devnet:8546` |
+| L2_RPC_ENDPOINT | Specifies the HTTP endpoint for the L2 RPC server. | `http://l2-rpc:8545` |
+| CHAIN_NAME_L1 | Labels the chain name for the L1 network. | Ethereum |
+| CHAIN_NAME_L2 | Labels the chain name for the L2 network. | Scroll SDK |
+| CHAIN_ID_L1 | Defines the chain ID for the L1 network. | 111111 |
+| CHAIN_ID_L2 | Defines the chain ID for the L2 network. | 221122 |
+| L1_CONTRACT_DEPLOYMENT_BLOCK | Specifies the block number at which L1 contracts were deployed. | 0 |
+
+### Accounts
+
+Contained in the `[accounts]` section.
+
+{/* TODO: Add link to where these roles are documented. */}
+
+| Config Variable | Description | Default Value |
+|-----------------|-------------|---------------|
+| DEPLOYER_PRIVATE_KEY | Private key for the deployer account. | `0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80` |
+| L1_COMMIT_SENDER_PRIVATE_KEY | Private key for the L1 commit sender account. | `0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d` |
+| L1_FINALIZE_SENDER_PRIVATE_KEY | Private key for the L1 finalize sender account. | `0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a` |
+| L1_GAS_ORACLE_SENDER_PRIVATE_KEY | Private key for the L1 gas oracle sender account. | `0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6` |
+| L2_GAS_ORACLE_SENDER_PRIVATE_KEY | Private key for the L2 gas oracle sender account. | `0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80` |
+| DEPLOYER_ADDR | Address of the deployer account. | `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266` |
+| OWNER_ADDR | Address of the owner account. Should be a multi-sig wallet. | `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266` |
+| L1_COMMIT_SENDER_ADDR | Address of the L1 commit sender account. | `0x70997970C51812dc3A010C7d01b50e0d17dc79C8` |
+| L1_FINALIZE_SENDER_ADDR | Address of the L1 finalize sender account. | `0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC` |
+| L1_GAS_ORACLE_SENDER_ADDR | Address of the L1 gas oracle sender account. | `0x90F79bf6EB2c4f870365E785982E1f101E93b906` |
+| L2_GAS_ORACLE_SENDER_ADDR | Address of the L2 gas oracle sender account. | `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266` |
+
+### Database
+
+Contained in the `[db]` section.
+
+| Config Variable | Description | Default Value |
+|-----------------|-------------|---------------|
+| ADMIN_SYSTEM_DB_CONNECTION_STRING | Connection string for the Admin System database. | `""` |
+| BLOCKSCOUT_DB_CONNECTION_STRING | Connection string for the Blockscout database. | `postgresql://postgres:qwerty12345@postgresql:5432/blockscout` |
+| BRIDGE_HISTORY_DB_CONNECTION_STRING | Connection string for the Bridge History database. | `postgres://postgres:qwerty12345@postgresql:5432/scroll?sslmode=disable` |
+| CHAIN_MONITOR_DB_CONNECTION_STRING | Connection string for the Chain Monitor database. | `postgres://postgres:qwerty12345@postgresql:5432/scroll?sslmode=disable` |
+| GAS_ORACLE_DB_CONNECTION_STRING | Connection string for the Gas Oracle database. | `postgres://postgres:qwerty12345@postgresql:5432/scroll?sslmode=disable` |
+| COORDINATOR_DB_CONNECTION_STRING | Connection string for the Coordinator database. | `""` |
+| L1_EXPLORER_DB_CONNECTION_STRING | Connection string for the L1 Explorer database. | `postgresql://postgres:qwerty12345@postgresql:5432/l1-explorer` |
+| ROLLUP_NODE_DB_CONNECTION_STRING | Connection string for the Rollup Node database. | `postgres://postgres:qwerty12345@postgresql:5432/scroll?sslmode=disable` |
+| ROLLUP_EXPLORER_DB_CONNECTION_STRING | Connection string for the Rollup Explorer database. | `""` |
+
+### Gas Token
+
+Contained in the `[gas-token]` section.
+
+{/* TODO: Add link to where these modes are documented. */}
+
+| Config Variable | Description | Default Value |
+|-----------------|-------------|---------------|
+| ALTERNATIVE_GAS_TOKEN_ENABLED | Enables using an alternative gas token instead of ETH. | false |
+| EXAMPLE_GAS_TOKEN_DECIMAL | Decimal places for the example gas token. | 6 |
+| L1_GAS_TOKEN | Address of the L1 ERC20 gas token contract. | `0x68a041e7c20Afa4784b5d9C63246c89545Ac0E66` |
+| GAS_ORACLE_INCORPORATE_TOKEN_EXCHANGE_RATE_ENANBLED | Enables incorporating token exchange rates in gas oracle. | false |
+| EXCHANGE_RATE_UPDATE_MODE | Mode for updating exchange rates. | `Fixed` |
+| FIXED_EXCHANGE_RATE | Fixed exchange rate value when using Fixed mode. | `0.01` |
+| TOKEN_SYMBOL_PAIR | Symbol pair for the token exchange. | `UNIETH` |
+
+### Sequencer
+
+Contained in the `[sequencer]` section.
+
+| Config Variable | Description | Default Value |
+|-----------------|-------------|---------------|
+| L2_GETH_STATIC_PEERS | Static peers for L2 Geth nodes, as an array of sequencer enode URLs. | `[""]` |
+| L2GETH_SIGNER_ADDRESS | Address of the primary sequencer's L2 Geth signer account. | `""` |
+| L2GETH_KEYSTORE | Keystore file for the primary sequencer's L2 Geth signer account. | `""` |
+| L2GETH_PASSWORD | Password for the primary sequencer's L2 Geth keystore. | `""` |
+| L2GETH_NODEKEY | Node key for the primary sequencer's L2 Geth node. | `""` |
+
+### Additional Sequencer Instances
+
+Contained in the `[sequencer.sequencer-1]` section and incrementing for each additional sequencer instance.
+
+| Config Variable | Description | Default Value |
+|-----------------|-------------|---------------|
+| L2GETH_SIGNER_ADDRESS | Address of the L2 Geth signer account for this sequencer instance. | `0xE8fFE623460e54e546E54B1a0C93A968aF6295bb` |
+| L2GETH_KEYSTORE | Keystore file for this sequencer instance's signer account. | `{"address":"e8ffe623460e54e546e54b1a0c93a968af6295bb","id":"deef9b4a-a085-4f02-af36-afaa19da4132",...}` |
+| L2GETH_PASSWORD | Password for this sequencer instance's keystore. | `second` |
+| L2GETH_NODEKEY | Node key for this sequencer instance. | `bd347890c9d308957207379679e8ed548d015ef05588c228d13f92ea0288a35b` |
+
+### Bootnode Instances
+
+Contained in the `[bootnode.bootnode-0]` section and incrementing for each additional bootnode instance.
+
+| Config Variable | Description | Default Value |
+|-----------------|-------------|---------------|
+| L2GETH_NODEKEY | Node key for this bootnode instance. | `""` |
+
+
+### Rollup
+
+Contained in the `[rollup]` section.
+
+| Config Variable | Description | Default Value |
+|-----------------|-------------|---------------|
+| MAX_TX_IN_CHUNK | Sets the maximum number of transactions in a chunk. | 100 |
+| MAX_BLOCK_IN_CHUNK | Sets the maximum number of blocks in a chunk. | 100 |
+| MAX_CHUNK_IN_BATCH | Sets the maximum number of chunks in a batch. | 15 |
+| MAX_BATCH_IN_BUNDLE | Sets the maximum number of batches in a bundle. | 30 |
+| MAX_L1_MESSAGE_GAS_LIMIT | Defines the maximum gas limit for L1 messages. | 10000000 |
+| TEST_ENV_MOCK_FINALIZE_ENABLED | Enables mock finalization for testing environments. | true |
+| TEST_ENV_MOCK_FINALIZE_TIMEOUT_SEC | Sets the timeout for mock finalization in seconds. | 300 |
+
+### Frontend
+
+Contained in the `[frontend]` section.
+
+| Config Variable | Description | Default Value |
+|-----------------|-------------|---------------|
+| EXTERNAL_RPC_URI_L1 | External RPC URI for L1. | `http://l1-devnet.scrollsdk` |
+| EXTERNAL_RPC_URI_L2 | External RPC URI for L2. | `http://l2-rpc.scrollsdk` |
+| BRIDGE_API_URI | URI for the Bridge API. | `http://bridge-history-api.scrollsdk/api` |
+| ROLLUPSCAN_API_URI | URI for the Rollupscan API. | `http://rollup-explorer-backend.scrollsdk/api` |
+| EXTERNAL_EXPLORER_URI_L1 | External Explorer URI for L1. | `http://l1-explorer.scrollsdk` |
+| EXTERNAL_EXPLORER_URI_L2 | External Explorer URI for L2. | `http://blockscout.scrollsdk` |
+| ADMIN_SYSTEM_DASHBOARD_URI | URI for the Admin System Dashboard. | `http://admin-system-dashboard.scrollsdk` |
+| GRAFANA_URI | URI for Grafana. | `http://grafana.scrollsdk` |
+
+### Genesis
+
+Contained in the `[genesis]` section.
+
+| Config Variable | Description | Default Value |
+|-----------------|-------------|---------------|
+| L2_MAX_ETH_SUPPLY | Sets the maximum ETH supply for the L2 network. | `226156424291633194186662080095093570025917938800079226639565593765455331328` |
+| L2_DEPLOYER_INITIAL_BALANCE | Sets the initial balance for the L2 deployer account. | 1000000000000000000 |
+
+### Contracts
+
+Contained in the `[contracts]` section.
+
+| Config Variable | Description | Default Value |
+|-----------------|-------------|---------------|
+| DEPLOYMENT_SALT | Salt used for contract deployment. | `salt-000` |
+| L1_FEE_VAULT_ADDR | Address of the L1 fee vault contract. | `0x0000000000000000000000000000000000000001` |
+| L1_PLONK_VERIFIER_ADDR | Address of the L1 PLONK verifier contract. | `0x0000000000000000000000000000000000000001` |
+
+### Contracts Overrides
+
+Contained in the `[contracts.overrides]` section.
+
+| Config Variable | Description | Default Value |
+|-----------------|-------------|---------------|
+| L2_MESSAGE_QUEUE | Override address for the L2 message queue contract. | `0x5300000000000000000000000000000000000000` |
+| L1_GAS_PRICE_ORACLE | Override address for the L1 gas price oracle contract. | `0x5300000000000000000000000000000000000002` |
+| L2_WHITELIST | Override address for the L2 whitelist contract. | `0x5300000000000000000000000000000000000003` |
+| L2_WETH | Override address for the L2 WETH contract. | `0x5300000000000000000000000000000000000004` |
+| L2_TX_FEE_VAULT | Override address for the L2 transaction fee vault contract. | `0x5300000000000000000000000000000000000005` |
+
+### Contracts Verification
+
+Contained in the `[contracts.verification]` section.
+
+| Config Variable | Description | Default Value |
+|-----------------|-------------|---------------|
+| VERIFIER_TYPE_L1 | Verifier type for the L1 contracts. supports `blockscout`, `etherscan` and `sourcify`. | `blockscout` |
+| VERIFIER_TYPE_L2 | Verifier type for the L2 contracts. supports `blockscout`, `etherscan` and `sourcify`. | `blockscout` |
+| EXPLORER_URI_L1 | Homepage URL of L1 explorer. | `http://l1-explorer.scrollsdk` |
+| EXPLORER_URI_L2 | Homepage URL of L2 explorer. | `http://blockscout.scrollsdk` |
+| RPC_URI_L1 | RPC URL of L1 network. | `http://l1-devnet.scrollsdk` |
+| RPC_URI_L2 | RPC URL of L1 network. | `http://l1-devnet.scrollsdk` |
+| EXPLORER_API_KEY_L1 | Explorer API key for L1 contracts verification. Leave it blank if verifier type is `blockscout`. |  |
+| EXPLORER_API_KEY_L2 | Explorer API key for L2 contracts verification. Leave it blank if verifier type is `blockscout`. |  |
+
+### Coordinator
+
+Contained in the `[coordinator]` section.
+
+| Config Variable | Description | Default Value |
+|-----------------|-------------|---------------|
+| CHUNK_COLLECTION_TIME_SEC | Time in seconds for chunk collection. | 3600 |
+| BATCH_COLLECTION_TIME_SEC | Time in seconds for batch collection. | 1800 |
+| BUNDLE_COLLECTION_TIME_SEC | Time in seconds for bundle collection. | 600 |
+| COORDINATOR_JWT_SECRET_KEY | Secret key used for JWT authentication in the coordinator. | `e788b62d39254928a821ac1c76b274a8c835aa1e20ecfb6f50eb10e87847de44` |
+
+
+### Ingress
+
+Contained in the `[ingress]` section.
+
+Ingress values are not used by the configuration generation scripts, but used by the `scroll-sdk-cli` to configure hosts and TLS settings in the values files for each chart.
+
+| Config Variable | Description | Default Value |
+|-----------------|-------------|---------------|
+| FRONTEND_HOST | Host for the frontend. | `frontends.scrollsdk` |
+| BRIDGE_HISTORY_API_HOST | Host for the Bridge History API. | `bridge-history-api.scrollsdk` |
+| ROLLUP_EXPLORER_API_HOST | Host for the Rollup Explorer API. | `rollup-explorer-backend.scrollsdk` |
+| COORDINATOR_API_HOST | Host for the Coordinator API. | `coordinator-api.scrollsdk` |
+| RPC_GATEWAY_HOST | Host for the RPC Gateway. | `l2-rpc.scrollsdk` |
+| BLOCKSCOUT_HOST | Host for Blockscout. | `blockscout.scrollsdk` |
+| BLOCKSCOUT_BACKEND_HOST | Host for Blockscout Backend. | `blockscout-backend.scrollsdk` |
+| ADMIN_SYSTEM_DASHBOARD_HOST | Host for the Admin System Dashboard. | `admin-system-dashboard.scrollsdk` |
+| L1_DEVNET_HOST | Host for the L1 Devnet. | `l1-devnet.scrollsdk` |
+| L1_EXPLORER_HOST | Host for the L1 Explorer. | `l1-explorer.scrollsdk` |
+| GRAFANA_HOST | Host for the Grafana frontend. | `grafana.scrollsdk` |
+
+{/* TODO: Check Blockscout backend host after PR is merged. */}
+
+## Sepolia Deployment
+
+For using Sepolia as the basechain of a testnet deployment, you will need to generate new wallets for the various missing accounts and provide a Sepolia RPC endpoint with generous limits.
+
+The `scroll-sdk-cli` tool has a command for generating new accounts setting the values for various basechain networks.
+
+### Generating Accounts
+
+To generate new test accounts quickly without using the `scroll-sdk-cli`, run the following command on a machine with Foundry installed.
+
+```bash
+cast wallet new --number 6 --json
+```

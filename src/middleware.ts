@@ -5,16 +5,6 @@ export const onRequest: MiddlewareHandler = (context, next) => {
   const pathname = url.pathname
 
   if (
-    pathname.startsWith("/sdk") ||
-    pathname.startsWith("/en/sdk") ||
-    pathname.startsWith("/es/sdk") ||
-    pathname.startsWith("/tr/sdk") ||
-    pathname.startsWith("/zh/sdk")
-  ) {
-    return context.redirect("/developers", 301)
-  }
-
-  if (
     pathname.startsWith("/learn") ||
     pathname.startsWith("/en/learn") ||
     pathname.startsWith("/es/learn") ||
