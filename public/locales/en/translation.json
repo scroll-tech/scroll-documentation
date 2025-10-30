@@ -159,6 +159,7 @@
       "digitalOcean": "Digital Ocean & ERC20 Gas Token Testnet",
       "customizingSdkComponents": "Customizing SDK Components",
       "awsDeployment": "AWS Deployment",
+      "rollupAsAService": "Rollup as a Service",
       "operation": "Operating a Chain",
       "contractsVerification": "Contracts Verification",
       "gasAndFees": "Gas & Fee Management",
