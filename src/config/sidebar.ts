@@ -10,10 +10,8 @@ export const getSidebar = () => {
         contents: [
           { title: t("sidebar.developers.faq"), url: formatUrl("developers") },
           { title: t("sidebar.developers.buildingOnScroll"), url: formatUrl("developers/building-on-scroll") },
-          {
-            title: t("sidebar.developers.scrollContracts"),
-            url: formatUrl("developers/scroll-contracts"),
-          },
+          { title: t("sidebar.developers.scrollContracts"), url: formatUrl("developers/scroll-contracts") },
+          { title: t("sidebar.developers.faucet"), url: formatUrl("developers/faucet") },
           {
             title: t("sidebar.developers.ethereumAndScrollDifferences"),
             url: formatUrl("developers/ethereum-and-scroll-differences"),
