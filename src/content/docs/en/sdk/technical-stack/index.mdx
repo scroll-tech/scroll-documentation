@@ -1,0 +1,129 @@
+---
+section: sdk
+title: "Overview of Scroll SDK Stack"
+lang: "en"
+permalink: "sdk/technical-stack"
+excerpt: "An overview of the architecture and components making up Scroll SDK"
+---
+
+import Steps from '../../../../../components/Steps/Steps.astro';
+import Aside from "../../../../../components/Aside.astro"
+
+## Stack Technical Overview
+
+The architecture of a Scroll SDK chain is based on Scroll, and the architecture specifics of a Scroll SDK chain will match the base behavior of Scroll's network. For more information on how Scroll works, please see the [Technology](/en/technology) section.
+
+The articles in this section will be focus on the various parts a Scroll SDK chain operator will need to deploy and run.
+
+## Tooling
+
+### Scroll SDK Repo & Charts
+
+Scroll SDK can be found [on GitHub](https://github.com/scroll-tech/scroll-sdk). The SDK built is leveraging Kubernetes and is designed to be easy to launch and maintain for anyone familiar with Kubernetes and Helm.
+
+The repo consists of these major components:
+1. Example config files for preparing your network *(see [Configuration](/en/sdk/technical-stack/configuration))*
+1. Helm charts for deploying the necessary services and contracts *(see [Services](/en/sdk/technical-stack/services))*
+1. A docker image for building the correct configuration files for these services and gathering smart contract addresses before deployment *(see [Smart Contracts](/en/sdk/technical-stack/contracts))*
+1. An Ansible playbook for setting up a zk prover if not using a third party proof generation service *(see [Proof Generation](/en/sdk/technical-stack/proof-generation))*
+
+<Aside type="tip">
+Although Scroll SDK is somewhat opinionated towards Kubernetes, it is designed to be easy to modify and extend. Every chart lists the underlying Docker image and container commands.
+</Aside>
+
+### Scroll SDK CLI
+
+Additionally, the [scroll-sdk-cli](https://github.com/scroll-tech/scroll-sdk-cli) tool is available to help with common automations and testing tasks. It greatly simplifies the process of creating a new Scroll SDK chain and includes a number of helpful commands for interacting with your chain.
+
+It also supports custom plugins using the [oclif framework](https://oclif.com/docs/plugins).
+
+## Scroll Proving SDK
+
+The Scroll Proving SDK is a Rust crate for integrating Scroll SDK support into your prover services. The proof generation providers should use this SDK to build their own Helm charts, allowing SDK operators to out-source proof generation.
+
+For an example service built using `scroll-proving-sdk`, see the `cloud.rs` example in the[Scroll Proving SDK](https://github.com/scroll-tech/scroll-proving-sdk/blob/haoyu/sindri_tokio/examples/cloud.rs) repo.
+
+{/* TODO: check if this branch has been merged into main */}
+
+## Deployment Process
+
+Scroll SDK has two deployment options: a local devnet and a production deployment.
+
+When deploying a local Devnet, all services are deployed by a single "chart". Configuration is minimal, and the deployment includes additional services like a hosting a database in the cluster. We assume users are working inside the `devnet` directory of a `scroll-sdk` cloned repo.
+
+In production deployments, each service is deployed as an independent chart. This is often more natural for tight control over upgrades and configuration. Production deployments assume that services like a database or monitoring stacks will be provided by the chain operator. Because of the additional modularity and flexibility, additional configuration is needed and some knowledge of Kubernetes is required. We also assume users will create a new repo for storing their production workflow and configuration files.
+
+### Devnet
+
+For a full devnet deployment walkthrough, see the [Devnet Deployment](/en/sdk/guides/devnet-deployment) guide.
+
+#### PreReqs
+
+To run a local devnet with all services running on a single machine (using minikube), you'll want the following items installed:
+
+- [Docker Engine](https://docs.docker.com/engine/install/) (or Docker Desktop)
+- [kubectl](https://kubernetes.io/docs/tasks/tools/)
+- [minikube](https://minikube.sigs.k8s.io/docs/start/) (for local dev cluster)
+- [Helm](https://helm.sh/docs/intro/install/)
+
+Docker and minikube will need to be running before starting the deployment process.
+
+
+#### Deployment
+
+<Steps>
+1. Clone the Scroll SDK repo and navigate to the `./devnet` directory.
+
+    ```bash
+    git clone git@github.com:scroll-tech/scroll-sdk.git && cd scroll-sdk/devnet
+    ```
+    
+1. Fetch all charts and create configuration files.
+
+    ```bash
+    make bootstrap
+    ```
+
+1. *(Optional)* Modify `./scroll-sdk/config.toml` with your settings and accounts.
+
+    For more information on modifying config.toml, see [Customization](/en/sdk/technical-stack/customization).
+
+1. *(Optional)* Modify `./scroll-sdk/values.yaml` to disable any unneeded services.
+
+    For more information on which services to set `enable:true`, see [Services](/en/sdk/technical-stack/services).
+
+1. *(Optional)* If modifications were made, run `make config` to update the configuration files.
+
+
+1. Launch the Scroll SDK services by running:
+   ```bash
+   make install
+   ```
+
+1. Wait for services to start and contracts to deploy, and you've got a new Scroll SDK chain!
+
+</Steps>
+
+
+### Production
+
+For a full production deployment walkthrough, see the guides for [Digital Ocean](/en/sdk/guides/production-deployment/digital-ocean) and [AWS](/en/sdk/guides/production-deployment/aws).
+
+#### PreReqs
+
+Before getting started, be sure to install the following:
+
+- [Docker Engine](https://docs.docker.com/engine/install/) (or Docker Desktop)
+- [kubectl](https://kubernetes.io/docs/tasks/tools/)
+- [Helm](https://helm.sh/docs/intro/install/)
+ 
+For a production environment, you'll want to have a working Kubernetes cluster and `kubectl` configured to point to it. We assume users will create a new repo for storing their production workflow. Docker will be used locally in the configuration preparation workflow.
+
+In addition, you'll want to prepare the following items:
+- A PostgreSQL-compatible database with an admin user
+    - Up to 3 for chain services, optionally 1 more for Blockscout
+- A Kubernetes Monitor Service (i.e. Prometheus)
+- A Kubernetes Ingress Controller (i.e. Nginx)
+- A Secret Store for storing sensitive information (i.e. AWS Secrets, Hashicorp Vault) and a way to access it from Kubernetes using [External Secrets](https://external-secrets.io/latest/)
+
+More information on choosing and setting up these services for various cloud providers is provided in the [Guides](/en/sdk/guides) section.

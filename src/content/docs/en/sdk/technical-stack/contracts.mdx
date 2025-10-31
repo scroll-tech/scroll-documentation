@@ -1,0 +1,194 @@
+---
+section: sdk
+date: Last Modified
+title: "Scroll SDK Contracts"
+lang: "en"
+permalink: "sdk/technical-stack/contracts"
+excerpt: "Documents the contracts deployed to support the Scroll SDK."
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+{/* TODO: Review full page before launch */}
+
+## Overview
+
+Contracts deployed for a Scroll SDK chain include both contracts on the L1 (or basechain), and contracts deployed on the L2 (or SDK chain). Additionally, the L2 has "pre-deployed" contracts, matching those on [Scroll](/en/developers/scroll-contracts#l2-predeploys).
+
+## Primary Contracts
+
+Although there are many contracts deployed during a new chain deployment, the most important contracts to understand are below.
+
+### Rollup Contract
+
+- Deployed to L1 using a proxy and also called "Scroll Chain"
+- Accepts new batches and proofs posted by the `rollup-relayer` service by calling "Commit Batch" and "Finalize Batch" methods.
+- Keeps track of finalized State Roots and Withdraw Roots.
+- [View on Etherscan](https://etherscan.io/address/0xa13BAF47339d63B743e7Da8741db5456DAc1E556) | [View Source](https://github.com/scroll-tech/scroll-contracts/blob/main/src/L1/rollup/ScrollChain.sol)
+
+### Scroll Message Queues
+
+- Deployed to L1 with a proxy and pre-deployed to L2
+- On L1, every depost to the bridge is added as a message to the L1 message queue.
+  - Messages are read by `l2geth` instances, including the sequencer, and brought into the Scroll chain via L1Message transaction types.
+- On L2, every withdrawal sent through the bridge is added as a message, and each block's resulting withdraw root is made available after finalization on the L1 Rollup Contract.
+  - At any time, a user can permissionlessly generate proof to [finish relaying the message on L1](/en/developers/l1-and-l2-bridging/the-scroll-messenger#finalizing-transactions-on-l1).
+- Messages are added to the queues exclusively by the Messenger contracts on [L1](https://github.com/scroll-tech/scroll-contracts/blob/main/src/L1/L1ScrollMessenger.sol) and [L2](https://github.com/scroll-tech/scroll-contracts/blob/main/src/L2/L2ScrollMessenger.sol).
+- [View L1 Deployment on Etherscan](https://etherscan.io/address/0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B) | [View Source](https://github.com/scroll-tech/scroll-contracts/blob/main/src/L1/rollup/L1MessageQueue.sol)
+- [View L2 Deployment on Scrollscan](https://scrollscan.com/address/0x5300000000000000000000000000000000000000) | [View Source](https://github.com/scroll-tech/scroll-contracts/blob/main/src/L2/predeploys/L2MessageQueue.sol)
+
+### Gas Oracle Contracts
+
+- Deployed on L1 (as part of L1 Message Queue) and pre-deployed on L2
+- On L1, it tracks the gas fees on L2. This is needed since L1 transactions need to pay for their L2 gas upfront.
+  - Stored `l2BaseFee` can only be updated by whitelisted addresses, _TODO: is this done by `gas-oracle` on L1 and L2?_
+- On L2, the contract keeps track of the fees on L1, allowing other contracts to know how the cost required to send a transaction back to L1
+  - Stored `l1BaseFee` can only be updated by whitelisted addresses, _TODO: is this done by `gas-oracle` on L1 and L2?_
+- [View L1 Deployment on Etherscan](https://etherscan.io/address/0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B) | [View Source](https://github.com/scroll-tech/scroll-contracts/blob/main/src/L1/rollup/L2GasPriceOracle.sol)
+- [View L2 Deployment on Scrollscan](https://scrollscan.com/address/0x5300000000000000000000000000000000000002) | [View Source](https://github.com/scroll-tech/scroll-contracts/blob/main/src/L2/predeploys/L1GasPriceOracle.sol)
+
+## Deployment Process
+
+Contracts are deployed by the `contracts` chart. Deterministic addresses are used, with a salt used to generate the address of the contract. For every new deployment, a unique salt should be configured in `config.toml`.
+
+During the configuration generation step, a simulation is first done to determine what address a contract will deploy to. This step is done during the creation of the config files for each service's chart and when the `genesis.json` file is created. Contract addresses are then used to set each service's configuration (see [`gen-configs.sh`](https://github.com/scroll-tech/scroll-contracts/blob/feat-robust-deployment/docker/scripts/gen-configs.sh)).
+
+Then, before the `contracts` chart is installed, you will need to fund your SDK `DEPLOYER` account to deploy all contracts on L1 and L2 using actual transactions.
+
+The `contracts` pod will connect to the L2 RPC and deploy the necessary contracts from the `DEPLOYER` account.
+
+<Aside type="tip">
+All contracts are available in the [scroll-contracts repo](https://github.com/scroll-tech/scroll-contracts), and [Docker files](https://github.com/scroll-tech/scroll-contracts/tree/feat-deterministic-deployment/docker) and [Foundry scripts](https://github.com/scroll-tech/scroll-contracts/tree/feat-deterministic-deployment/scripts/deterministic) used for deployment available in the `feat-deterministic-deployment` branch.
+
+For manually deploying contracts without the reliance on a docker container, please review [this guide](https://github.com/scroll-tech/scroll-contracts/blob/feat-deterministic-deployment/docs/manual-deployment.md).
+</Aside>
+
+### Funding Deployment Accounts
+
+In production deployments, you will need to manually fund the following wallet addresses from `config.toml`:
+
+- `DEPLOYER_ADDR` *(only needs funded on L1)*
+  {/* - Suggested funds: `(L1 basefee * VARIABLE * 10e-9) ETH` */}
+- `L1_COMMIT_SENDER_ADDR`
+  {/* - Suggested funds: `(L1 basefee * VARIABLE * 10e-9) ETH` */}
+- `L1_FINALIZE_SENDER_ADDR`
+  {/* - Suggested funds: `(L1 basefee * VARIABLE * 10e-9) ETH` */}
+- `L1_GAS_ORACLE_SENDER_ADDR`
+  {/* - Suggested funds: `(L1 basefee * VARIABLE * 10e-9) ETH` */}
+- `L2_GAS_ORACLE_SENDER_ADDR` *(funded after L2 chain deployment)*
+  {/* - Suggested funds: `(L1 basefee * VARIABLE * 10e-9) ETH` */}
+
+{/* TODO: Consider recommending an initial funding amount. */}
+
+<Aside type="tip" title="Funding L1 Devnet Accounts">
+
+To fund an L1 addresses when using Anvil in a devnet, run `scrollsdk helper fund-accounts --dev`. Or, to manually set individual account balances, you can also run the command below, replacing the first param with the address.
+
+```bash
+curl --location 'http://l1-devnet.scrollsdk/' \
+--header 'Content-Type: application/json' \
+--data '{
+  "jsonrpc":"2.0",
+  "method":"anvil_setBalance",
+  "params":["0x0000000005D6C5FCB0BA99480e585D2364e98000","0x3635C9ADC5DEA00000"],
+  "id":0
+}'
+```
+
+</Aside>
+
+<Aside type="tip" title="Funding L2 Addresses">
+
+To fund an L2 address directly via the L1 bridge, you can run the command below, replacing the RPC and setting a private key of an account funded on L1 and a recipient address on L2.
+
+```bash
+cast send --rpc-url https://rpc2.sepolia.org  --private-key "$PRIVATE_KEY" "$L1_GATEWAY_ROUTER_PROXY_ADDR" "depositETH(address,uint256,uint256)" "$L2_RECIPENT_ADDR" "1ether" "300000" --value "1.1ether"
+```
+
+You can also use the interactive `scrollsdk helper fund-accounts --layer=2 [--private-key=<private-key>]` command to fund an L2 address, optionally passing a private key as funder.
+
+</Aside>
+
+
+## Contracts Deployed
+
+In the table below, we document every contract deployed for Scroll, including a link to the deployment for Scroll's mainnet. Not all of these are used by default for Scroll SDK.
+
+{/* <!-- TODO: Modify table here for only post-Darwin Scroll SDK contracts. --> */}
+
+| Contract Name                                                                                                              | Description                                            |
+| -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| [L1_WETH_ADDR](https://etherscan.io/address/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2)                                    | The WETH contract on L1.                               |
+| [L2_WETH_ADDR](https://scrollscan.com/address/0x5300000000000000000000000000000000000004)                                  | The WETH contract on L2.                               |
+| [L1_PLONK_VERIFIER_V0_ADDR](https://etherscan.io/address/0x4B8Aa8A96078689384DAb49691E9bA51F9d2F9E1)                       | The PLONK verifier version 0 on L1.                    |
+| [L1_ZKEVM_VERIFIER_V0_ADDR](https://etherscan.io/address/0x585DfaD7bF4099E011D185E266907A8ab60DAD2D)                       | The zkEVM verifier version 0 on L1.                    |
+| [L1_PLONK_VERIFIER_V1_ADDR](https://etherscan.io/address/0x2293cd12e8564e8219d314b075867c2f66ac6941)                       | The PLONK verifier version 1 on L1.                    |
+| [L1_ZKEVM_VERIFIER_V1_ADDR](https://etherscan.io/address/0x4b289E4A5331bAFBc6cCb2F10C39B8EDceCDb247)                       | The zkEVM verifier version 1 on L1.                    |
+| [L1_PLONK_VERIFIER_V2_ADDR](https://etherscan.io/address/0x03a72B00D036C479105fF98A1953b15d9c510110)                       | The PLONK verifier version 2 on L1.                    |
+| [L1_ZKEVM_VERIFIER_V2_ADDR](https://etherscan.io/address/0x63FB51C55d9605a75F8872C80De260a00fACfaA2)                       | The zkEVM verifier version 2 on L1.                    |
+| [L1_MULTIPLE_VERSION_ROLLUP_VERIFIER_ADDR](https://etherscan.io/address/0xf94AfBD9370E25Dd6Ca557d5D67634aeFDA2416B)        | The multiple version rollup verifier on L1.            |
+| [L1_PROXY_ADMIN_ADDR](https://etherscan.io/address/0xEB803eb3F501998126bf37bB823646Ed3D59d072)                             | The proxy admin contract on L1.                        |
+| [L1_PROXY_IMPLEMENTATION_PLACEHOLDER_ADDR](https://etherscan.io/address/0xFAf8f72e54d1089fa1882b6f597BfDFF59a8AFca)        | The proxy implementation placeholder on L1.            |
+| [L1_WHITELIST_ADDR](https://etherscan.io/address/0x259204DDd2bA29bD9b1B9A5c9B093f73d7EAcf37)                               | The whitelist contract on L1.                          |
+| [L1_MESSAGE_QUEUE_IMPLEMENTATION_ADDR](https://etherscan.io/address/0xeBaed7A81c298B24EE6d59c22698A951dc448E01)            | The message queue implementation on L1.                |
+| [L1_MESSAGE_QUEUE_PROXY_ADDR](https://etherscan.io/address/0x0d7E906BD9cAFa154b048cFa766Cc1E54E39AF9B)                     | The message queue proxy on L1.                         |
+| [L2_GAS_PRICE_ORACLE_IMPLEMENTATION_ADDR](https://etherscan.io/address/0xfDF1eE0098168eaa61BF87Db68C39c85151a4E9E)         | The gas price oracle implementation on L1.             |
+| [L2_GAS_PRICE_ORACLE_PROXY_ADDR](https://etherscan.io/address/0x987e300fDfb06093859358522a79098848C33852)                  | The gas price oracle proxy on L1.                      |
+| [L1_SCROLL_CHAIN_IMPLEMENTATION_ADDR](https://etherscan.io/address/0x4F250B05262240C787a1eE222687C6eC395C628A)             | The Scroll chain implementation on L1.                 |
+| [L1_SCROLL_CHAIN_PROXY_ADDR](https://etherscan.io/address/0xa13BAF47339d63B743e7Da8741db5456DAc1E556)                      | The Scroll chain proxy on L1.                          |
+| [L1_ETH_GATEWAY_IMPLEMENTATION_ADDR](https://etherscan.io/address/0x546E0bF31FB6e7babD493452e4e6999191367B42)              | The ETH gateway implementation on L1.                  |
+| [L1_ETH_GATEWAY_PROXY_ADDR](https://etherscan.io/address/0x7F2b8C31F88B6006c382775eea88297Ec1e3E905)                       | The ETH gateway proxy on L1.                           |
+| [L1_WETH_GATEWAY_IMPLEMENTATION_ADDR](https://etherscan.io/address/0xa4F400593DFfc0ae02F940ab58f6e3Cc6fb9FB49)             | The WETH gateway implementation on L1.                 |
+| [L1_WETH_GATEWAY_PROXY_ADDR](https://etherscan.io/address/0x7AC440cAe8EB6328de4fA621163a792c1EA9D4fE)                      | The WETH gateway proxy on L1.                          |
+| [L1_STANDARD_ERC20_GATEWAY_IMPLEMENTATION_ADDR](https://etherscan.io/address/0x4015Fc868C06689ABEba4a9dC8FA43B804F6239c)   | The standard ERC20 gateway implementation on L1.       |
+| [L1_STANDARD_ERC20_GATEWAY_PROXY_ADDR](https://etherscan.io/address/0xD8A791fE2bE73eb6E6cF1eb0cb3F36adC9B3F8f9)            | The standard ERC20 gateway proxy on L1.                |
+| [L1_GATEWAY_ROUTER_IMPLEMENTATION_ADDR](https://etherscan.io/address/0xb93Ac04010Bd61F45BF492022A5b49a902F798F3)           | The gateway router implementation on L1.               |
+| [L1_GATEWAY_ROUTER_PROXY_ADDR](https://etherscan.io/address/0xF8B1378579659D8F7EE5f3C929c2f3E332E41Fd6)                    | The gateway router proxy on L1.                        |
+| [L1_SCROLL_MESSENGER_IMPLEMENTATION_ADDR](https://etherscan.io/address/0x72981fD00087fF4F60aBFdE9f353cB1912A37fb6)         | The Scroll messenger implementation on L1.             |
+| [L1_SCROLL_MESSENGER_PROXY_ADDR](https://etherscan.io/address/0x6774Bcbd5ceCeF1336b5300fb5186a12DDD8b367)                  | The Scroll messenger proxy on L1.                      |
+| [L1_ENFORCED_TX_GATEWAY_IMPLEMENTATION_ADDR](https://etherscan.io/address/0x642af405bF64660665B37977449C9C536B806318)      | The enforced transaction gateway implementation on L1. |
+| [L1_ENFORCED_TX_GATEWAY_PROXY_ADDR](https://etherscan.io/address/0x72CAcBcfDe2d1e19122F8A36a4d6676cd39d7A5d)               | The enforced transaction gateway proxy on L1.          |
+| [L1_CUSTOM_ERC20_GATEWAY_IMPLEMENTATION_ADDR](https://etherscan.io/address/0x7F512E2E9dfC4552941D99A5b2405BBcF5781C2c)     | The custom ERC20 gateway implementation on L1.         |
+| [L1_CUSTOM_ERC20_GATEWAY_PROXY_ADDR](https://etherscan.io/address/0xb2b10a289A229415a124EFDeF310C10cb004B6ff)              | The custom ERC20 gateway proxy on L1.                  |
+| [L1_ERC721_GATEWAY_IMPLEMENTATION_ADDR](https://etherscan.io/address/0xd1841c5756428812233eEA78afC17cb2D3e392bb)           | The ERC721 gateway implementation on L1.               |
+| [L1_ERC721_GATEWAY_PROXY_ADDR](https://etherscan.io/address/0x6260aF48e8948617b8FA17F4e5CEa2d21D21554B)                    | The ERC721 gateway proxy on L1.                        |
+| [L1_ERC1155_GATEWAY_IMPLEMENTATION_ADDR](https://etherscan.io/address/0x244BF7aEf29F03916569470a51fA0794B62F8cd7)          | The ERC1155 gateway implementation on L1.              |
+| [L1_ERC1155_GATEWAY_PROXY_ADDR](https://etherscan.io/address/0xb94f7F6ABcb811c5Ac709dE14E37590fcCd975B6)                   | The ERC1155 gateway proxy on L1.                       |
+| [L1_SCROLL_OWNER_ADDR](https://etherscan.io/address/0x798576400F7D662961BA15C6b3F3d813447a26a6)                            | The Scroll owner contract on L1.                       |
+| [L1_1D_TIMELOCK_ADDR](https://etherscan.io/address/0x0e58939204eEDa84F796FBc86840A50af10eC4F4)                             | The 1-day timelock contract on L1.                     |
+| [L1_7D_TIMELOCK_ADDR](https://etherscan.io/address/0xDC1d1189Da69Ae2016E4976A43De20972D349B1b)                             | The 7-day timelock contract on L1.                     |
+| [L1_14D_TIMELOCK_ADDR](https://etherscan.io/address/0x1A658B88fD0a3c82fa1a0609fCDbD32e7dd4aB9C)                            | The 14-day timelock contract on L1.                    |
+| [L1_GAS_PRICE_ORACLE_ADDR](https://scrollscan.com/address/0x5300000000000000000000000000000000000002)                      | The gas price oracle contract on L2.                   |
+| [L2_MESSAGE_QUEUE_ADDR](https://scrollscan.com/address/0x5300000000000000000000000000000000000000)                         | The message queue contract on L2.                      |
+| [L2_TX_FEE_VAULT_ADDR](https://scrollscan.com/address/0x5300000000000000000000000000000000000005)                          | The transaction fee vault contract on L2.              |
+| [L2_WHITELIST_ADDR](https://scrollscan.com/address/0x5300000000000000000000000000000000000003)                             | The whitelist contract on L2.                          |
+| [L2_PROXY_ADMIN_ADDR](https://scrollscan.com/address/0xA76acF000C890b0DD7AEEf57627d9899F955d026)                           | The proxy admin contract on L2.                        |
+| [L2_PROXY_IMPLEMENTATION_PLACEHOLDER_ADDR](https://scrollscan.com/address/0xF8a069d9230238763Fc574157fa39a78396bd26c)      | The proxy implementation placeholder on L2.            |
+| [L2_SCROLL_MESSENGER_IMPLEMENTATION_ADDR](https://scrollscan.com/address/0x6fa66EeD8e8086f4c77204B5484D26F4e9AB7772)       | The Scroll messenger implementation on L2.             |
+| [L2_SCROLL_MESSENGER_PROXY_ADDR](https://scrollscan.com/address/0x781e90f1c8Fc4611c9b7497C3B47F99Ef6969CbC)                | The Scroll messenger proxy on L2.                      |
+| [L2_ETH_GATEWAY_IMPLEMENTATION_ADDR](https://scrollscan.com/address/0x191770c52309dff2c52FfEcf059ECC3862f5D721)            | The ETH gateway implementation on L2.                  |
+| [L2_ETH_GATEWAY_PROXY_ADDR](https://scrollscan.com/address/0x6EA73e05AdC79974B931123675ea8F78FfdacDF0)                     | The ETH gateway proxy on L2.                           |
+| [L2_WETH_GATEWAY_IMPLEMENTATION_ADDR](https://scrollscan.com/address/0x86c5CBfC03ffFC7faf5dfC7D781A9adfA9f47dD1)           | The WETH gateway implementation on L2.                 |
+| [L2_WETH_GATEWAY_PROXY_ADDR](https://scrollscan.com/address/0x7003E7B7186f0E6601203b99F7B8DECBfA391cf9)                    | The WETH gateway proxy on L2.                          |
+| [L2_STANDARD_ERC20_GATEWAY_IMPLEMENTATION_ADDR](https://scrollscan.com/address/0x3ffe801a43D25d0288683237A848e14f73a226f0) | The standard ERC20 gateway implementation on L2.       |
+| [L2_STANDARD_ERC20_GATEWAY_PROXY_ADDR](https://scrollscan.com/address/0xE2b4795039517653c5Ae8C2A9BFdd783b48f447A)          | The standard ERC20 gateway proxy on L2.                |
+| [L2_GATEWAY_ROUTER_IMPLEMENTATION_ADDR](https://scrollscan.com/address/0x3808d0F2F25839E73e0Fbf711368fC4aE80c7763)         | The gateway router implementation on L2.               |
+| [L2_GATEWAY_ROUTER_PROXY_ADDR](https://scrollscan.com/address/0x4C0926FF5252A435FD19e10ED15e5a249Ba19d79)                  | The gateway router proxy on L2.                        |
+| [L2_SCROLL_STANDARD_ERC20_ADDR](https://scrollscan.com/address/0xC7d86908ccf644Db7C69437D5852CedBC1aD3f69)                 | The Scroll standard ERC20 contract on L2.              |
+| [L2_SCROLL_STANDARD_ERC20_FACTORY_ADDR](https://scrollscan.com/address/0x66e5312EDeEAef6e80759A0F789e7914Fb401484)         | The Scroll standard ERC20 factory contract on L2.      |
+| [L2_CUSTOM_ERC20_GATEWAY_IMPLEMENTATION_ADDR](https://scrollscan.com/address/0x1D40306EEfCF6EBd496d6048F6edf8892346e558)   | The custom ERC20 gateway implementation on L2.         |
+| [L2_CUSTOM_ERC20_GATEWAY_PROXY_ADDR](https://scrollscan.com/address/0x64CCBE37c9A82D85A1F2E74649b7A42923067988)            | The custom ERC20 gateway proxy on L2.                  |
+| [L2_ERC721_GATEWAY_IMPLEMENTATION_ADDR](https://scrollscan.com/address/0x0894150DB82B912105F6D0907B5c69E72F1Df279)         | The ERC721 gateway implementation on L2.               |
+| [L2_ERC721_GATEWAY_PROXY_ADDR](https://scrollscan.com/address/0x7bC08E1c04fb41d75F1410363F0c5746Eae80582)                  | The ERC721 gateway proxy on L2.                        |
+| [L2_ERC1155_GATEWAY_IMPLEMENTATION_ADDR](https://scrollscan.com/address/0xAc92E88bAc1848A5FeEA5cf5A60e0abc3bD5Df94)        | The ERC1155 gateway implementation on L2.              |
+| [L2_ERC1155_GATEWAY_PROXY_ADDR](https://scrollscan.com/address/0x62597Cc19703aF10B58feF87B0d5D29eFE263bcc)                 | The ERC1155 gateway proxy on L2.                       |
+| [L2_SCROLL_OWNER_ADDR](https://scrollscan.com/address/0x13D24a7Ff6F5ec5ff0e9C40Fc3B8C9c01c65437B)                          | The Scroll owner contract on L2.                       |
+| [L2_1D_TIMELOCK_ADDR](https://scrollscan.com/address/0x2b14d0E4b042d11C7e3Fc653132a2c82EFa7d376)                           | The 1-day timelock contract on L2.                     |
+| [L2_7D_TIMELOCK_ADDR](https://scrollscan.com/address/0x98DE219A50584be7ca16A065f7714D220c0105F6)                           | The 7-day timelock contract on L2.                     |
+| [L2_14D_TIMELOCK_ADDR](https://scrollscan.com/address/0xf6069DB81239E5194bb53f83aF564d282357bc99)                          | The 14-day timelock contract on L2.                    |
+| [SCROLL_CHAIN_COMMITMENT_VERIFIER_ADDR](https://etherscan.io/address/0xC4362457a91B2E55934bDCb7DaaF6b1aB3dDf203)           | The Scroll chain commitment verifier contract.         |
+| [POSEIDON_UNIT2_ADDR](https://etherscan.io/address/0x3508174Fa966e75f70B15348209E33BC711AE63e)                             | The Poseidon unit 2 contract.                          |
+| [L1_BATCH_BRIDGE_GATEWAY_PROXY_ADDR](https://etherscan.io/address/0x5Bcfd99c34cf7E06fc756f6f5aE7400504852bc4)              | The Batch Deposit proxy contract on L1.                |
+| [L1_BATCH_BRIDGE_GATEWAY_IMPLEMENTATION_ADDR](https://etherscan.io/address/0x7999cdD5E2893475D89211A2E3FdA67a841E3233)     | The Batch Deposit implementation on L1.                |
+| [L2_BATCH_BRIDGE_GATEWAY_PROXY_ADDR](https://scrollscan.com/address/0xa1a12158bE6269D7580C63eC5E609Cdc0ddD82bC)            | The Batch Deposit proxy contract on L2.                |
+| [L2_BATCH_BRIDGE_GATEWAY_IMPLEMENTATION_ADDR](https://scrollscan.com/address/0x2c51f93E3075A007A746aa91F4BA07Aee8423b6f)   | The Batch Deposit implementation on L2.                |

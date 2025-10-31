@@ -1,0 +1,366 @@
+---
+section: sdk
+date: Last Modified
+title: "Scroll SDK Services"
+lang: "en"
+permalink: "sdk/technical-stack/services"
+excerpt: "The various components running to support the Scroll SDK."
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+{/* TODO: Review full page before launch */}
+
+## Overview
+
+Scroll SDK is composed of various services that work together to create a functional rollup. This article provides an overview of these services, their roles, and how they contribute to the overall architecture of Scroll SDK.
+
+We'll start by listing the services required for a minimal deployment, followed by a detailed description of each service. This information will help you understand the components of Scroll SDK and make informed decisions about which services to enable or disable based on your specific needs.
+
+In a devnet environment, services are enabled using the [values.yaml](https://github.com/scroll-tech/scroll-sdk/blob/develop/charts/scroll-sdk/values.yaml). Production environments deploy charts individually, and each service corresponds to a helm chart, as seen in this example [Makefile](https://github.com/scroll-tech/scroll-sdk/blob/develop/examples/Makefile.example).
+
+**New to Scroll’s Architecture?** Check out [this article](/en/technology/chain/rollup/) for more general info.
+
+## Helm & Kubernetes
+
+The Scroll SDK uses Helm charts and Kubernetes manifests to manage service deployments. Each service has its own configuration files that are automatically generated from the main `config.toml` file using the `scroll-sdk-cli` tool (described in [Configuration](/en/sdk/technical-stack/configuration)).
+
+The configuration flow works like this:
+
+1. Modify the main `config.toml` file with your deployment settings.
+2. The `scroll-sdk-cli` tool processes this file and generates service-specific config files
+3. These config files are mounted into the appropriate services as Kubernetes ConfigMaps
+4. Helm uses these configs along with the values files to deploy the services
+
+The key configuration files for each service are located in:
+
+- `charts/[service-name]/templates/` - Kubernetes manifests and Helm templates
+- `charts/[service-name]/values.yaml` - Default values for the service
+- `charts/[service-name]/values/production.yaml` - Production-specific values for the service, matching `examples/values/[service-name]-production.yaml`.
+
+For cloud deployments, we suggest using the `Makefile`, `config.toml` and chart values files found in the [examples directory](https://github.com/scroll-tech/scroll-sdk/tree/develop/examples)	as a starting point.
+
+
+### Service-specific Config Values
+
+The `config.toml` file is used to generate various service-specific configuration files. When using the `scroll-sdk-cli`, these have the name `[service]-config.yaml` and are passed to charts as a value override of `scrollConfig` alongside the `production.yaml` files mentioned above.
+
+{/* TODO: Double check if this is how devnet works. */}
+
+Each service has a number configuration values -- some quite nuanced.
+
+In most instances, if it is not directly set or calculated from values in the `config.toml`, a sensible default is used. Occassionally, a feature most operators do not need during their initial deployment is here as well (for example LDAP configuration for the `admin-system-backend`). If you manually change these values, keep in mind that the `config.toml` processing script may overwrite your customizations -- please use git commits track changes.
+
+### Ingress
+
+By default, our charts use the `ingress-nginx` helm chart, which automatically creates ingress resources.
+
+The following services need to be exposed to clients outside of the cluster and have ingresses setup by default. In devnet, the host values end in `.scrollsdk`. If using Ingress DNS, these URLs should be accessible from the host machine, assuming a properly configured `etc/hosts` file:
+
+| Name                | Host                          | Port |
+|---------------------|-------------------------------|------|
+| admin-system-dashboard | [admin-system-dashboard.scrollsdk](http://admin-system-dashboard.scrollsdk)  | 80   |
+| blockscout          | [blockscout.scrollsdk](http://blockscout.scrollsdk)          | 80   |
+| blockscout *(backend)*          | [blockscout-backend.scrollsdk](http://blockscout.scrollsdk)          | 80   |
+| bridge-history-api  | [bridge-history-api.scrollsdk](http://bridge-history-api.scrollsdk)  | 80   |
+| frontends           | [frontends.scrollsdk](http://frontends.scrollsdk)           | 80   |
+| grafana             | [grafana.scrollsdk](http://grafana.scrollsdk)             | 80   |
+| l1-devnet           | [l1-devnet.scrollsdk](http://l1-devnet.scrollsdk)           | 80   |
+| l1-explorer         | [l1-devnet-explorer.scrollsdk](http://l1-devnet-explorer.scrollsdk)  | 80   |
+| l2-rpc              | [l2-rpc.scrollsdk](http://l2-rpc.scrollsdk)              | 80   |
+
+When using the example values files for production deployments, these hosts (and any corresponding TLS settings) are set in the service's `production.yaml` file, which is automatically configured by the `scroll-sdk-cli` tool. You will need to configure your host domain's DNS settings to point to the ingress controller or load balancer.
+
+We recommend using TLS for all services in production deployments, which can be configured in the `ingress.tls` section of the `values.yaml` file.
+
+### Secrets
+
+Scroll SDK uses a combination of [secrets](https://kubernetes.io/docs/concepts/configuration/secret/) and [configmaps](https://kubernetes.io/docs/concepts/configuration/configmap/) to manage configuration. Additionally, we use External Secrets to support storing secrets in a secret manager tools like AWS Secrets Manager or HashiCorp Vault.
+
+# Deployment Configurations
+
+Below, we describe three configurations for services:
+- **Default**: a robust, local test environment and the default `values.yaml` used by the devnet.
+- **Minimal**: the minimal required components for a testnet (with notes on possible replacements) 
+- **Production**: the minimal recommended components for a mainnet, including ZK proof generation
+
+> ✅: Required
+> 
+> ⚠️: Hosted options or substitutions are available.
+> 
+
+| Service                 | Default | Minimal | Production |
+| ----------------------- | :-----: | :-----: | :--------: |
+| admin-system-backend    | ✅      |         |            |  
+| admin-system-cron       | ✅      |         |            | 
+| admin-system-dashboard  | ✅      |         |            |
+| balance-checker         |         |         |  ⚠️         |
+| blockscout              | ✅      |         |            |
+| bridge-history-api [^1]     | ✅  | ✅      | ✅        |
+| bridge-history-fetcher [^1] | ✅  | ✅      | ✅        |
+| chain-monitor           |         | ✅      | ✅        |
+| contracts               | ✅      | ✅      | ✅        |
+| coordinator-api [^2]    |         |         | ✅        |
+| coordinator-cron [^2]   |         |         | ✅        |
+| frontends               | ✅      |         | ⚠️         |
+| gas-oracle              | ✅      | ✅      | ✅        |
+| grafana                 | ✅      |         |  ⚠️        |
+| kube-prometheus-stack   | ✅      |         |           |
+| l1-devnet               | ✅      |         |           |
+| l1-explorer             | ✅      |         |           |
+| l2-bootnode             | ✅      |         | ✅        |
+| l2-rpc                  | ✅      |         | ✅        |
+| l2-sequencer            | ✅      | ✅      | ✅        |
+| loki-stack              | ✅      |         | ⚠️ |
+| postgresql              | ✅      | ⚠️      | ⚠️   |
+| rollup-explorer-backend | ✅      |         |           |
+| rollup-node             | ✅      | ✅      | ✅        |
+| rpc-gateway             |       |         |    ️        |
+{/* | scroll-monitor | ✅      |         |           | */}
+
+{/* TODO: add scroll-monitor and remove grafana + kube stack after PR is merged and devnet updated. */}
+
+[^1]: Services necessary for claiming funds bridged from L2 to L1 and used by bridge frontend. Could be replaced by [Bridge History SDK](https://github.com/scroll-tech/scroll-bridge-sdk) for other usage.
+[^2]: Only necessary for chains after testnet, when proof generation is needed.
+
+
+## Services Overview
+
+#### Anvil (`l1-devnet`)
+
+*Devnet only.*
+
+Foundry [Anvil](https://book.getfoundry.sh/reference/anvil/) serves as the default local base chain for devnet deployments. It provides a simulated Ethereum environment for testing and development purposes.
+
+#### Admin System Dashboard (`admin-system-dashboard`)
+
+The Admin System Dashboard is a simple Web UI for monitoring proofs in the Scroll SDK chain. Beyond giving insight into proof jobs and registered provers, it provides a high-level overview of the network's health and status, including the number of transactions, blocks, chunks, batches, and bundles.
+
+#### Admin System Backend (`admin-system-backend`)
+
+Handles the backend API for the Admin System Dashboard. Supports LDAP and 2FA.
+
+#### Admin System Cron (`admin-system-cron`)
+
+Handles the cron jobs for the Admin System.
+
+#### Blockscout (`blockscout`)
+
+[Blockscout](https://docs.blockscout.com/) is an open-source block explorer with an Indexer and WebUI configured specifically for the Scroll SDK chain. It allows users to view and interact with blockchain data in a user-friendly interface. We're working with the Blockscout team to implement more Scroll SDK specific features to better support new chain deployments.
+
+#### Bridge History API (`bridge-history-api`)
+
+The [Bridge History API](https://github.com/scroll-tech/scroll/tree/develop/bridge-history-api) is used by frontends for reporting a user's bridging history and generating withdrawal proofs for L2 → L1 bridge claims. It provides essential functionality for cross-chain operations.
+
+This service supports parallel deployments by setting the `controller.replicas` value.
+
+#### Bridge History Fetcher (`bridge-history-fetcher`)
+
+The [Bridge History Fetcher](https://github.com/scroll-tech/scroll/tree/0fd7a877cebc3be74aa4d5d2e1592a83f45ed75a/bridge-history-api) is an indexer that continuously collects all user bridging transactions. It ensures that bridging data is up-to-date and readily available for the Bridge History API.
+
+#### Balance Checker (`balance-checker`)
+
+The Balance Checker is a simple service to track and monitor the balances of some operator accounts and contracts, such as fee vaults and commit senders. Alerts happen via Slack notification.
+
+#### Chain Monitor (`chain-monitor`)
+
+The [Chain Monitor](https://github.com/scroll-tech/chain-monitor) is a security service that short-circuits batch finalization if certain invariants are not satisfied. While optional, it is recommended for enhanced security.
+
+#### Contracts (`contracts`)
+
+The Contracts service contains scripts to deploy necessary [chain contracts](https://github.com/scroll-tech/scroll-contracts) (rollup and bridge) on both L1 and L2. It ensures that the required smart contracts are in place for the Scroll SDK to function properly.
+
+#### Coordinator API (`coordinator-api`)
+
+The [Coordinator API](https://github.com/scroll-tech/scroll/tree/develop/coordinator) allows Provers to register as being open for work and manages scheduling and storage of proofs. It requires significant RAM to run and is disabled by default in the devnet.
+
+This service supports parallel deployments by setting the `controller.replicas` value.
+
+#### Coordinator Cron (`coordinator-cron`)
+
+The [Coordinator Cron](https://github.com/scroll-tech/scroll/tree/develop/coordinator) is a background job that monitors proving tasks for timeout and marks batches (aggregation tasks) as ready once all sub-proofs are ready.
+
+#### Frontends (`frontends`)
+
+[Frontends](https://github.com/scroll-tech/frontends/tree/scroll-stack) provide generic Web UIs for the Rollup Explorer, Bridge, and basic links for setting up your wallet. They offer user-friendly interfaces for interacting with the Scroll SDK chain and viewing its rollup progress.
+
+#### Gas Oracle (`gas-oracle`)
+
+The [Gas Oracle](https://github.com/scroll-tech/scroll/tree/develop/rollup) is a backend service that relays up-to-date fee information between L1 and L2 by updating the gas oracle contract on both layers. It helps maintain accurate gas pricing across the network.
+
+#### Grafana (`grafana`)
+
+*Devnet only.*
+
+{/* TODO: Remove after scroll-monitor is merged. */}
+
+[Grafana](https://grafana.com/docs/grafana/latest/) is an open-source tool for providing a Web UI for viewing metrics dashboards. It allows for visual monitoring and analysis of various system metrics and is pre-packaged with dashboards for viewing Scroll SDK information and logs from Loki.
+
+<Aside type="note">
+This chart will be replaced with the `scroll-monitor` service in a future release which bundles Grafana, Prometheus, and Loki and supports production deployments and automatic configuration of the SDK dashboards.
+</Aside>
+
+#### Rollup Explorer Backend (`rollup-explorer-backend`)
+
+The [Rollup Explorer Backend](https://github.com/scroll-tech/rollup-explorer-backend) is the backend indexer and API for supporting the Rollup Explorer page served by the Frontends service. It allows querying to see chunk and batch information from the rollup, including numbers of transactions and a batch's current finalization status.
+
+#### Rollup Node (`rollup-node`)
+
+The Rollup Node (also called the [Rollup Relayer](https://github.com/scroll-tech/scroll/tree/develop/rollup)) is a core component of the Scroll SDK architecture. It plays a crucial role in managing the rollup process, by proposing chunks and batches, commiting those to the basechain and relaying proofs for finalization.
+
+#### L1 Explorer (`l1-explorer`)
+
+*Devnet only.*
+
+The L1 Explorer is a [Blockscout]((https://docs.blockscout.com/)) instance for providing a block explorer interface for the L1 devnet service. It allows users to inspect transactions and blocks on the base layer when deployments are made to local networks.
+
+<Aside type="danger">
+L1 Explorer does not currently function correctly -- blocks and transactions are not successfully indexed and do not display on the site.
+</Aside>
+
+#### L2 Sequencer (`l2-sequencer`)
+
+The L2 Sequencer is the node responsible for producing L2 blocks using Clique Proof of Authority (PoA) consensus. It maintains the order of transactions on the L2 chain. It is an archive node of the network, running [`l2geth`](https://github.com/scroll-tech/go-ethereum), Scroll's fork of geth.
+
+In production deployments, we recommend running a backup sequencer node that can quickly take over for the primary sequencer in case of failure. 
+
+#### L2 RPC (`l2-rpc`)
+
+The [L2 RPC node](https://github.com/scroll-tech/go-ethereum) is set up to be exposed to external RPC API consumers. It allows interaction with the L2 chain through standard Ethereum JSON-RPC calls, and incoming transactions are propogated to the mempool, to be picked up and included in blocks by the L2 Sequencer. For more information, see [Running a Scroll Node](/en/developers/guides/running-a-scroll-node/).
+
+This service supports parallel deployments by setting the `controller.replicas` value.
+
+#### L2 Bootnode (`l2-bootnode`)
+
+The [L2 Bootnode](https://github.com/scroll-tech/go-ethereum) is a dedicated node that helps synchronize additional follower nodes. It facilitates network discovery and connectivity, without being exposed to open RPC traffic.
+
+#### Loki Stack (`loki-stack`)
+
+*Devnet only.*
+
+The [Loki Stack](https://grafana.com/docs/loki/latest/) is a log aggregation system. It collects and manages logs from various services within the Scroll SDK ecosystem. By default, these logs are exposed through the Grafana UI.
+
+{/* TODO: Remove after scroll-monitor is merged. */}
+
+#### RPC Gateway (`rpc-gateway`)
+
+The RPC Gateway is a simple RPC load balancer that distributes requests among multiple L2 geth RPC nodes. It helps manage incoming RPC traffic efficiently. This does not replace the need for working with an RPC Infrastructure provider for mainnet deployments.
+
+#### PostgreSQL Database (`postgresql`)
+
+*Devnet only.*
+
+The [PostgreSQL Database](https://www.postgresql.org/) is used across services to coordinate data and tools. It provides a reliable and scalable database solution for the Scroll SDK, but can be replaced with compatible databases.
+
+{/* TODO: Remove after scroll-monitor is merged. */}
+
+#### Kube Prometheus Stack (`kube-prometheus-stack`)
+
+*Devnet only.*
+
+The Kube Prometheus Stack is a collection of Kubernetes manifests, Grafana dashboards, and Prometheus rules combined with documentation and scripts to provide easy to operate end-to-end Kubernetes cluster monitoring with Prometheus using the Prometheus Operator. It provides comprehensive monitoring and alerting capabilities for the Kubernetes cluster running the Scroll SDK.
+
+{/* TODO: Remove after scroll-monitor is merged. */}
+
+#### Database Configuration (`db`)
+
+*Devnet only.*
+
+Allows configurations for a DB outside of the default postgres service included in the stack. This provides flexibility in database setup and management for various services within the Scroll SDK ecosystem.
+
+{/* TODO: Is this even still used in devnet? */}
+
+## Cross-Service Communication
+
+The Scroll SDK uses a variety of techniques to pass information between services, with some data being onchain (both L1 and L2) and some being offchain (via p2p connections and database storage). The diagram below provides a visual overview of how services interact with one another.
+
+<span class="mermaid-diagram">
+```mermaid
+graph LR
+	subgraph K[Key]
+		direction LR
+		SS[Single Service]
+		RL1{{"Hex Shape: Reads from L1"}}
+		RL2[Dashed Border: Reads from L2 Sequencer]:::L2S
+		SS -.p2p connection.- RL1
+		RL1 <-- "Writes to L1" --> RL2
+	end
+
+	classDef L2S stroke:#77b,stroke-width:2px,stroke-dasharray: 7 4 2 4
+```
+```mermaid
+%%{ init: { 'flowchart': { 'curve': 'monotoneX' } } }%%
+flowchart LR
+	L1[l1-devnet / L1 Full Node]
+
+	L1 <----> GO
+	L1 <----> RN
+	L1 <-.via browser and wallet.-> F
+
+	subgraph SSC["Scroll SDK Chain"]
+		direction LR
+
+		DB[(DB)]
+		L2{{L2-sequencer}}
+		RN{{rollup-node}}:::L2S
+		GO{{gas-oracle}}:::L2S
+
+		CM{{chain-monitor}}:::L2S
+		BHF{{bridge-history-fetcher}}:::L2S
+		CC[coordinator-cron]
+
+		L2R{{l2-rpc}}
+		L2B{{l2-bootnode}}
+		L2 -.- L2R
+		L2 -.- L2B
+
+		DB --> GO
+		DB --> CC
+		DB --> CM
+		DB --> BHF
+		DB --> RN
+		DB --> REB
+
+		CC --> CA
+		BHF --> BHA
+
+		subgraph EXT["External APIs"]
+			BHA{{bridge-history-api}}:::L2S
+			CA[coordinator-api]
+			REB[rollup-explorer-backend]
+			RG
+			BHA
+		end
+	end
+
+
+
+
+	L2R --> RG[rpc-gateway]
+
+
+
+	F{{frontends}}:::L2S
+	PR[prover]
+
+	BHA --> F
+	REB --> F
+	RG --> F
+	CA --> PR
+
+	classDef L2S stroke:#77b,stroke-width:2px,stroke-dasharray: 7 4 2 4
+	style EXT fill:#FFE0B2
+    
+```
+
+{/* TODO: Assess is we want Aux services here */}
+	{/* subgraph AUX["Aux Services"]
+		direction TB
+		BC{{balance-checker}}
+		BS[blockscout]
+		GR[grafana]
+		LKI[loki]
+	end */}
+
+
+</span>

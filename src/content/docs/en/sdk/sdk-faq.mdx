@@ -1,0 +1,35 @@
+---
+section: sdk
+date: Last Modified
+title: "Scroll SDK FAQ"
+lang: "en"
+permalink: "sdk/early-access-program"
+excerpt: "Help us sculpt the Scroll SDK by trying it out and giving us early feedback!"
+# whatsnext: { "Scroll Rollup Process": "/en/technology/chain/rollup" }
+---
+
+## Troubleshooting / FAQ
+
+### How long is finality on Scroll chain?
+
+Finality depends on the parameterization of how often your chain wants to finalize to Ethereum. Roughly, a batch is created every minute (containing ~20 blocks or 200 txs), and takes about 50 minutes to finalize on L1.
+
+Our next upgrade with increase the variability on block speed, but also increase how many batches will fit in a proof. We may decide to lengthen finality in order to reduce on-chain costs and lower transaction fees. _(At 556k gas to finalize, each finalize tx costs ~$9.80 as of June 3, 2024)._
+
+If you want to explore more, check out [https://scroll.io/rollupscan](https://scroll.io/rollupscan)
+
+### Does Scroll SDK support a mock prover? How does finality work without running a prover?
+
+The Scroll SDK defaults to the behavior seen on Scroll Sepolia, which does not require proofs to finalize.
+
+In the default testnet configuration, the contracts deployed to L1 allow the `rollup-node` (the service that submits proofs to the verification contract on L1) to submit "empty" proofs and the L1 contract will accept it.
+
+The rollup-node is configured to submit these after a "timeout" period if the service does not receive a valid proof. This mode doesn't require a literal "mock prover" service — if fact, even the `coordinator`, the service which typically assigns works to provers and verifies proofs before storing them for the rollup-node, is not required to run.
+
+The suggested testnet timeout for this finalization is 3600 seconds, to approximate mainnet's finalization latency. To alter this behavior in Scroll SDK or learn more, see [Mock Finalization](/en/sdk/technical-stack/proof-generation#mock-finalization).
+
+### Is Kubernetes a requirement? Do you support docker-compose, ansible, etc?
+
+We do not provide templates for deploying with tooling outside of Kubernetes and Helm. That said, every Helm chart points to a docker image, and we are happy to help teams that need support understanding service configuration. We may explore providing these by default if enough teams need this support, but it's not how we manage Scroll chain in its production environment.
+
+{/* TODO: Add a few more questions here */}
