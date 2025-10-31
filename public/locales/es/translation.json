@@ -79,6 +79,7 @@
     "developers": {
       "developers": "Desarrolladores",
       "buildingOnScroll": "Construyendo en Scroll",
+      "faucet": "Faucet de ETH de Testnet",
       "developerQuickstart": "Inicio rápido para Desarrolladores",
       "verifyingSmartContracts": "Verificando Smart Contracts",
       "scrollContracts": "Contratos de Scroll",
