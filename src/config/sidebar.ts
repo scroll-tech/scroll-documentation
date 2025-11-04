@@ -335,6 +335,10 @@ export const getSidebar = () => {
             title: t("sidebar.sdk.customizingSdkComponents"),
             url: formatUrl("sdk/guides/customizing-sdk-components"),
           },
+          {
+            title: t("sidebar.sdk.rollupAsAService"),
+            url: formatUrl("sdk/guides/rollup-as-a-service"),
+          },
         ],
       },
       {
