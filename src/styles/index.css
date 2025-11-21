@@ -419,3 +419,7 @@ h2.heading {
 .mermaid-diagram > img {
   height: auto;
 }
+
+.mermaid {
+  background: transparent;
+}
