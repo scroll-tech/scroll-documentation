@@ -20,6 +20,12 @@ import "../styles/design-system/global-styles.css"
 <!-- Scrollable a11y code helper -->
 <script src="/make-scrollable-code-focusable.js" is:inline></script>
 
+<!-- Mermaid.js for client-side rendering -->
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs"
+  mermaid.initialize({ startOnLoad: true, theme: "default" })
+</script>
+
 <!-- Google Tag Manager -->
 <!-- <script type="text/javascript">
   ;(function (w, d, s, l, i) {

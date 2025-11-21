@@ -71,7 +71,7 @@ export default defineConfig({
     remarkPlugins: [remarkMath, remarkGfm],
     rehypePlugins: [
       rehypeSlug,
-      [rehypeMermaid, { strategy: "img-png" }],
+      [rehypeMermaid, { strategy: "pre-mermaid" }],
       [
         rehypeAutolinkHeadings,
         {
