@@ -61,6 +61,7 @@
       "developers": "Developers",
       "buildingOnScroll": "Building on Scroll",
       "faq": "Frequently Asked Questions",
+      "faucet": "Testnet ETH Faucet",
       "developerQuickstart": "Developer Quickstart",
       "verifyingSmartContracts": "Verifying Smart Contracts",
       "scrollContracts": "Scroll Contracts",
@@ -94,12 +95,6 @@
       "sepoliaRollupExplorer": "Rollup Explorer",
       "sepoliaBlockExplorer": "Scrollscan Explorer",
       "transactionJourney": "Checking Transaction Journey"
-    },
-    "whatToBuild": {
-      "whatToBuild": "What to Build",
-      "stablecoinPaymentsTutorial": "Stablecoin Payments Tutorial",
-      "solidityCookbook": "Solidity Cookbook",
-      "privacyDappsWithZk": "Privacy dApps with ZK"
     },
     "technology": {
       "introduction": "Introduction",
@@ -159,6 +154,7 @@
       "digitalOcean": "Digital Ocean & ERC20 Gas Token Testnet",
       "customizingSdkComponents": "Customizing SDK Components",
       "awsDeployment": "AWS Deployment",
+      "rollupAsAService": "Rollup as a Service",
       "operation": "Operating a Chain",
       "contractsVerification": "Contracts Verification",
       "gasAndFees": "Gas & Fee Management",

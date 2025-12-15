@@ -10,10 +10,8 @@ export const getSidebar = () => {
         contents: [
           { title: t("sidebar.developers.faq"), url: formatUrl("developers") },
           { title: t("sidebar.developers.buildingOnScroll"), url: formatUrl("developers/building-on-scroll") },
-          {
-            title: t("sidebar.developers.scrollContracts"),
-            url: formatUrl("developers/scroll-contracts"),
-          },
+          { title: t("sidebar.developers.scrollContracts"), url: formatUrl("developers/scroll-contracts") },
+          { title: t("sidebar.developers.faucet"), url: formatUrl("developers/faucet") },
           {
             title: t("sidebar.developers.ethereumAndScrollDifferences"),
             url: formatUrl("developers/ethereum-and-scroll-differences"),
@@ -336,6 +334,10 @@ export const getSidebar = () => {
           {
             title: t("sidebar.sdk.customizingSdkComponents"),
             url: formatUrl("sdk/guides/customizing-sdk-components"),
+          },
+          {
+            title: t("sidebar.sdk.rollupAsAService"),
+            url: formatUrl("sdk/guides/rollup-as-a-service"),
           },
         ],
       },

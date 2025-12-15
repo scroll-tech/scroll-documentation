@@ -79,6 +79,7 @@
     "developers": {
       "developers": "开发者",
       "buildingOnScroll": "在 Scroll 上开发",
+      "faucet": "测试网 ETH 水龙头",
       "developerQuickstart": "开发者快速入门",
       "verifyingSmartContracts": "验证智能合约",
       "scrollContracts": "Scroll 合约",

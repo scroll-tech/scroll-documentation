@@ -3,7 +3,8 @@ import { useState, useEffect } from "preact/hooks"
 import MailchimpSubscribe from "react-mailchimp-subscribe"
 import SubscribeSvg from "~/assets/svgs/footer/subscribe.svg?react"
 import { clsx } from "~/lib"
-import i18next, { changeLanguage, t } from "i18next"
+import { t } from "i18next"
+import { useI18nReady } from "~/hooks/useI18nReady"
 
 import EmailInput from "./EmailInput.tsx"
 import styles from "./Subscribe.module.css"
@@ -19,8 +20,7 @@ export default function Subscribe(props) {
   const [email, setEmail] = useState("")
   const [customMessage, setCustomMessage] = useState("")
   const [emailValid, setEmailValid] = useState(false)
-
-  i18next.changeLanguage(props.lang)
+  const isReady = useI18nReady(props.lang)
 
   useEffect(() => {
     setCustomMessage("")
@@ -42,6 +42,10 @@ export default function Subscribe(props) {
     setEmail(e.target.value)
   }
 
+  if (!isReady) {
+    return null
+  }
+
   return (
     <div className={clsx(styles.container, "dark:bg-dark-highlight")}>
       <div className={styles.subscribeBox}>
@@ -50,14 +54,20 @@ export default function Subscribe(props) {
         </span>
 
         <div className={styles.copyBox}>
-          <div className={styles.subscribeTitle}>{ t("landing.NewsletterCTA.title") }</div>
-          <div className={styles.subscribeText}>
-          { t("landing.NewsletterCTA.text") }
-          </div>
+          <div className={styles.subscribeTitle}>{t("landing.NewsletterCTA.title")}</div>
+          <div className={styles.subscribeText}>{t("landing.NewsletterCTA.text")}</div>
         </div>
         <MailchimpSubscribe
           url={url}
-          render={({ subscribe, status, message }: any) => (
+          render={({
+            subscribe,
+            status,
+            message,
+          }: {
+            subscribe: (data: { EMAIL: string }) => void
+            status: string
+            message: string
+          }) => (
             <div className={styles.emailBox}>
               <EmailInput
                 className={styles.emailInput}
@@ -65,7 +75,7 @@ export default function Subscribe(props) {
                 onChange={handleChangeEmail}
                 onClick={() => handleSubmit(subscribe)}
                 onEnter={() => handleSubmit(subscribe)}
-                placeholder= { t("landing.NewsletterCTA.placeholder") }
+                placeholder={t("landing.NewsletterCTA.placeholder")}
                 end={status === "success"}
               />
               {customMessage && <div className={styles.errorMessage}>{customMessage}</div>}

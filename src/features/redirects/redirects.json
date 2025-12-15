@@ -96,7 +96,7 @@
     },
     {
       "source": "user-guide/faucet",
-      "destination": "/community",
+      "destination": "/en/developers/faucet",
       "statusCode": 301
     },
     {

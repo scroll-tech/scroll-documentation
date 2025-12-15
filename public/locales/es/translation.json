@@ -79,6 +79,7 @@
     "developers": {
       "developers": "Desarrolladores",
       "buildingOnScroll": "Construyendo en Scroll",
+      "faucet": "Faucet de ETH de Testnet",
       "developerQuickstart": "Inicio rápido para Desarrolladores",
       "verifyingSmartContracts": "Verificando Smart Contracts",
       "scrollContracts": "Contratos de Scroll",
@@ -111,12 +112,6 @@
       "scrollSepoliaBlockExplorer": "Scroll Sepolia Explorer",
       "sepoliaRollupExplorer": "Explorador de Rollup",
       "sepoliaBlockExplorer": "Explorador de bloques Scrollscan"
-    },
-    "whatToBuild": {
-      "whatToBuild": "Qué construir",
-      "stablecoinPaymentsTutorial": "Pagos con Stablecoins",
-      "solidityCookbook": "Recetario de Solidity",
-      "privacyDappsWithZk": "Dapps Privadas con ZK"
     },
     "technology": {
       "introduction": "Introducción",
