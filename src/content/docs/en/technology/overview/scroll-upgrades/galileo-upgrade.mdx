@@ -1,0 +1,65 @@
+---
+section: technology
+date: Last Modified
+title: "Galileo Upgrade"
+lang: "en"
+permalink: "technology/overview/scroll-upgrades/galileo-upgrade"
+whatsnext: { "Feynman Upgrade": "/en/technology/overview/scroll-upgrades/feynman-upgrade" }
+---
+
+### Overview
+
+This release enables the 2-phased Galileo upgrade on Scroll mainnet. The upgrade will be activated at timestamps 1765868400 (Tuesday Dec 16 2025 07:00 UTC) and 1766041200 (Thursday Dec 18 2025 07:00 UTC). This upgrade enables a series of important changes including:
+
+- Adopt [EIP-7823](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-7823.md), [EIP-7883](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-7883.md), [EIP-7951](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-7951.md), and [EIP-7939](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-7939.md) from Ethereum's [Fusaka upgrade](https://blog.ethereum.org/2025/11/06/fusaka-mainnet-announcement).
+- Implement a more robust and fair rollup fee formula.
+- Prover optimizations that reduced the prover's ZK cycles by about 50%.
+- Introduction of [scroll-reth](https://github.com/scroll-tech/rollup-node), a new node implementation based on [Reth](https://github.com/paradigmxyz/reth).
+
+### Timeline
+
+- **Scroll Sepolia** :
+    - **Phase 1**: Nov 25th, 2025 (07:00 UTC)
+    - **Phase 2**: Dec 4th, 2025 (07:00 UTC)
+- **Scroll Mainnet** :
+    - **Phase 1**: Dec 16th, 2025 (07:00 UTC)
+    - **Phase 2**: Dec 18th, 2025 (07:00 UTC)
+
+### Compatibility
+
+This release updates the embedded hard fork block timestamp for Scroll mainnet. 
+**Nodes that are not upgraded will be unable to follow the network after the hard fork timestamp.**
+
+To follow the Galileo upgrade, simply run your node with the `--scroll` flag.
+
+If you do not use the `--scroll` flag, then you must update and reimport `genesis.json`.
+
+Genesis.json difference :
+```json
+{
+  "config": {
+    "chainId": 534352,
+...
+    "euclidTime": 1744815600,
+    "euclidV2Time": 1745305200,
+    "feynmanTime": 1755576000,
+    "galileoTime": 1765868400,
+    "galileoV2Time": 1766041200,
+...
+```
+
+#### Node Configuration Changes
+
+For most node operators, there are no configuration changes required to run this release. However, if you are running a node with a custom genesis configuration, please see the Compatibility section above.
+
+Ethereum's [Fusaka upgrade](https://blog.ethereum.org/2025/11/06/fusaka-mainnet-announcement) introduced PeerDAS, which means that normal beacon nodes are no longer able to serve blob data. If you wish to use the beacon node blob data source (the `--da.blob.beaconnode` flag), then you must connect to a [supernode](https://lighthouse-book.sigmaprime.io/advanced_blobs.html). We encourage node operators to always use the AWS S3 blob data source, using the `--da.blob.awss3 https://scroll-mainnet-blob-data.s3.us-west-2.amazonaws.com` flag.
+
+### The Future of L2geth
+
+The Scroll engineering team has been working on a [new node implementation](https://github.com/scroll-tech/rollup-node) based on [Reth](https://github.com/paradigmxyz/reth). As part of the production release of the new scroll-reth node, we will soon ask all node operators to gradually migrate from [l2geth](https://github.com/scroll-tech/go-ethereum/releases) to [scroll-reth](https://github.com/scroll-tech/rollup-node/releases), and eventually we plan to deprecate l2geth.
+
+### Resources
+
+- [Governance Post](https://forum.scroll.io/t/proposal-galileo-upgrade/1315)
+- [Sepolia Release Notes](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.9.18)
+- [Mainnet Release Notes](https://github.com/scroll-tech/go-ethereum/releases/tag/scroll-v5.10.0)

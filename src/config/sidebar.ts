@@ -128,6 +128,10 @@ export const getSidebar = () => {
             url: formatUrl("technology/overview/scroll-upgrades"),
             children: [
               {
+                title: t("sidebar.technology.galileoUpgrade"),
+                url: formatUrl("technology/overview/scroll-upgrades/galileo-upgrade"),
+              },
+              {
                 title: t("sidebar.technology.feynmanUpgrade"),
                 url: formatUrl("technology/overview/scroll-upgrades/feynman-upgrade"),
               },
