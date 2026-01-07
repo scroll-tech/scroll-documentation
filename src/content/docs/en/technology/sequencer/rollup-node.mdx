@@ -4,7 +4,7 @@ date: Last Modified
 title: "Rollup Node"
 lang: "en"
 permalink: "technology/sequencer/rollup-node"
-whatsnext: { "zkTrie": "/en/technology/sequencer/zktrie/" }
+whatsnext: { "Proof Generation": "/en/technology/prover/proof-generation" }
 ---
 
 The rollup node is responsible for splitting up the Scroll blockchain into sections that are suitable for proving and commitment on L1. The two main units of this are *chunks* and *batches*.
@@ -22,12 +22,8 @@ Compared to the execution node, the rollup node is a much more straightforward a
 It collects L2 blocks, creates chunks and batches, and submits these to L1.
 In this section, we outline the main limits that the rollup node must enforce during chunk and batch creation.
 
-Constraints on chunks:
-- **No proof overflow:** Using the circuit capacity checker, we make sure to include as many blocks in a chunk that it would still not lead to proof overflow.
-- **L1 payload**: Inherited constraints from batch proposer, transaction payload cannot exceed 128KB.
-
 Constraints on batches:
-- **L1 payload:** Ethereum has a hardcoded 128KB limit on transaction payload size.
+- **L1 payload:** Ethereum limits the size of blob data and transaction calldata.
 - **L1 commit gas:** The gas cost of committing a batch is proportional to the number of blocks and transactions in it. We must make sure that this cost does not exceed the L1 block gas limit.
 - **Number of chunks:** A batch includes a number of chunks that is optimal for the aggregation prover.
 

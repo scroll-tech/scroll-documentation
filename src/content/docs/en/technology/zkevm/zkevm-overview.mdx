@@ -8,17 +8,26 @@ excerpt: "In order to understand how to build a zkEVM, which proves the executio
 ---
 
 import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import Aside from "../../../../../components/Aside.astro"
 import zkevm1 from "../_images/zkevm1.png"
 import zkevm2 from "../_images/zkevm2.png"
 import zkevm3 from "../_images/zkevm3.png"
+
+<Aside type="note" title="Current Proving System">
+Since the [Euclid upgrade](/en/technology/overview/scroll-upgrades/euclid-upgrade), Scroll uses the **OpenVM prover** built on a general-purpose RISC-V zkVM. This page explains the conceptual foundations of zkEVM technology. For details on Scroll's current proving architecture, see the [Proof Generation](/en/technology/prover/proof-generation) page.
+</Aside>
 
 ## The EVM
 
 In order to understand how to build a zkEVM, which proves the execution of the EVM, we need to first look at the EVM itself.
 
-The EVM can be modeled as a state transition function. It specifies a transition function `f` that, given an initial world state `S` and a transaction `T`, outputs a new world state `S’`: `f(S,T) = S'`.
+The EVM can be modeled as a state transition function. It specifies a transition function `f` that, given an initial world state `S` and a transaction `T`, outputs a new world state `S'`: `f(S,T) = S'`.
 
-The “world state” is modeled as a [modified Merkle-Patricia Trie](https://ethereum.org/en/developers/docs/data-structures-and-encoding/patricia-merkle-trie/) (MPT). This trie contains all of the network’s persistent data. This includes the information of all externally-owned accounts (EOAs) and smart contract accounts. Smart contract accounts have sub-tries that hold the smart contract’s bytecode and persistent storage.
+The "world state" is modeled as a [modified Merkle-Patricia Trie](https://ethereum.org/en/developers/docs/data-structures-and-encoding/patricia-merkle-trie/) (MPT). This trie contains all of the network's persistent data. This includes the information of all externally-owned accounts (EOAs) and smart contract accounts. Smart contract accounts have sub-tries that hold the smart contract's bytecode and persistent storage.
+
+<Aside type="tip" title="State Commitment">
+Scroll uses Ethereum's native [Merkle-Patricia Trie](https://ethereum.org/en/developers/docs/data-structures-and-encoding/patricia-merkle-trie/) (MPT) for state commitment, ensuring full compatibility with the Ethereum ecosystem.
+</Aside>
 
 The EVM processes a new transaction by executing its resulting computations and making changes to the world state accordingly. EVM computation works over transient data stores (stack and memory) as well as persistent data stores (contract bytecode and storage).
 

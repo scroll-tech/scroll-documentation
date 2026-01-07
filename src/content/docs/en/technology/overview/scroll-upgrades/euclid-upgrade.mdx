@@ -41,7 +41,7 @@ Scroll has been among the pioneers of ZK technology through our EVM bytecode com
 The new OpenVM prover offers numerous benefits. Prover code is easier to reason about and to audit. We can better reuse code among different components. We can also reduce proving costs and latency. Finally, the new prover will enable us to prove arbitrarily complex transactions, allowing us to remove the circuit capacity checker module that has been a major bottleneck on sequencer throughput.
 
 ##### MPT State Commitment
-Scroll currently uses a zk-friendly state commitment data structure called [zktrie](https://docs.scroll.io/en/technology/sequencer/zktrie/). With the new OpenVM prover, it is now practical to prove Ethereum’s state structure: the [Merkle-Patricia Trie](https://ethereum.org/en/developers/docs/data-structures-and-encoding/patricia-merkle-trie), also known as MPT. Scroll is now deprecating the zktrie and adopting MPT.
+Prior to this upgrade, Scroll used a custom zk-friendly state commitment data structure called zkTrie. With the new OpenVM prover, it is now practical to prove Ethereum's state structure: the [Merkle-Patricia Trie](https://ethereum.org/en/developers/docs/data-structures-and-encoding/patricia-merkle-trie), also known as MPT. Scroll has deprecated zkTrie and adopted MPT.
 
 MPT unlocks better sequencer performance and offers better compatibility for dapps relying on L2 state proofs.
 

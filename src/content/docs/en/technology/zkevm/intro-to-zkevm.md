@@ -20,11 +20,34 @@ On the other hand, general-purpose ZK rollups support a wider range of transacti
 
 Scroll is a general-purpose ZK rollup that uses the EVM for off-chain computations. Scroll’s execution layer functions similarly to Ethereum’s - transactions are batched into blocks, and then the blocks are executed according to the [EVM](https://ethereum.org/en/developers/docs/evm/) specs (we actually use a slightly [modified version](https://github.com/scroll-tech/go-ethereum) of [Geth](https://geth.ethereum.org/)). This means that users can interact with Scroll in the same way that they would interact with Ethereum. It also means that developers can develop on top of Scroll just as they would develop on top of Ethereum.
 
-However, achieving Ethereum compatibility with a ZK rollup poses a large challenge - the rollup must be able to generate a proof proving that an off-chain EVM computation was executed correctly. This is essentially what a “zkEVM” is: **a zkEVM is a system that proves the correct execution of the EVM**.
+However, achieving Ethereum compatibility with a ZK rollup poses a large challenge - the rollup must be able to generate a proof proving that an off-chain EVM computation was executed correctly. This is essentially what a "zkEVM" is: **a zkEVM is a system that proves the correct execution of the EVM**.
 
-The EVM was originally designed without ZK rollups in mind, and it turns out that it is quite challenging to build a zkEVM. However, we at Scroll are undeterred by the challenge, and have been working hard in collaboration with the [Ethereum Privacy and Scaling Explorations](https://appliedzkp.org/) team to make the zkEVM a reality.
+The EVM was originally designed without ZK rollups in mind, and it turns out that it is quite challenging to build a zkEVM. Scroll has been at the forefront of zkEVM development, evolving our proving technology over time to achieve better performance, lower costs, and improved security.
+
+## Proving System Evolution
+
+Scroll's proving technology has evolved significantly:
+
+**Early Development (2021-2024)**: Scroll initially developed a zkEVM in collaboration with the [Ethereum Privacy and Scaling Explorations](https://appliedzkp.org/) (PSE) team. This system used custom EVM circuits that directly proved each EVM opcode.
+
+**OpenVM Prover (2025-Present)**: With the [Euclid upgrade](/en/technology/overview/scroll-upgrades/euclid-upgrade), Scroll migrated to a new proving system built on [OpenVM](https://scroll.io/blog/the-first-release-of-the-openvm-framework-is-live), a general-purpose RISC-V zkVM developed by Axiom. This approach offers several advantages:
+
+- **Easier to audit**: Prover code is written in standard Rust and is easier to reason about
+- **Better performance**: Reduced proving costs and latency
+- **No transaction limits**: Removal of circuit capacity constraints that previously limited complex transactions
+- **Better code reuse**: Components can be shared across different parts of the proving pipeline
+
+The OpenVM prover uses a hierarchical proof aggregation system:
+
+1. **Chunk proofs**: Prove individual chunks of blocks
+2. **Batch proofs**: Aggregate multiple chunk proofs
+3. **Bundle proofs**: Final aggregation layer, converted to SNARK for on-chain verification
+
+**Future Research - Ceno**: Scroll is also actively developing [Ceno](https://github.com/scroll-tech/ceno), a research project exploring a novel RISC-V zkVM architecture using GKR (Goldwasser-Kalai-Rothblum) proofs instead of the traditional FRI-based approach. Ceno features non-uniform, segmented, and parallel proving capabilities. While still in research phase, Ceno represents Scroll's continued investment in advancing zero-knowledge proof technology.
 
 ## Learn more
 
 - [Blog post](https://scroll.io/blog/zkEVM) introducing zkEVM
 - [zkEVM overview](https://youtu.be/NHwd-gJ8xg4) - Haichen Shen
+- [OpenVM Framework announcement](https://scroll.io/blog/the-first-release-of-the-openvm-framework-is-live)
+- [Euclid Upgrade details](/en/technology/overview/scroll-upgrades/euclid-upgrade)

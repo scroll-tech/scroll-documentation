@@ -86,7 +86,6 @@ chunk.dataHash := keccak(blockContext[0] || ... || blockContext[k-1] ||
 
 , where `block.l1TxHashes` are the concatenated transaction hashes of the L1 transactions in this block and `block.l2TxHashes` are the concatenated transaction hashes of the L2 transactions in this block. Note that the transaction hashes of L1 transactions are not uploaded by the rollup node, but instead directly loaded from the `L1MessageQueue` contract given the index range of included L1 messages in this block. The L2 transaction hashes are calculated from the RLP-encoded bytes in the `l2Transactions` field in the [`Chunk`](#Chunk-Codec).
 
-In addition, the `commitBatchWithBlobProof` function contains a bitmap of skipped L1 messages. Unfortunately, this is due to the problem of proof overflow. If the L1 transaction corresponding to an L1 message exceeds the circuit capacity limit, we won't be able to generate a valid proof for this transaction and thus cannot finalize it on L1. Scroll is working actively to eliminate the proof overflow problem through upgrades to our proving system.
 
 ## Finalize Transaction
 
