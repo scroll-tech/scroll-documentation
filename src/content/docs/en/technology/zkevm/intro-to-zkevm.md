@@ -30,12 +30,7 @@ Scroll's proving technology has evolved significantly:
 
 **Early Development (2021-2024)**: Scroll initially developed a zkEVM in collaboration with the [Ethereum Privacy and Scaling Explorations](https://appliedzkp.org/) (PSE) team. This system used custom EVM circuits that directly proved each EVM opcode.
 
-**OpenVM Prover (2025-Present)**: With the [Euclid upgrade](/en/technology/overview/scroll-upgrades/euclid-upgrade), Scroll migrated to a new proving system built on [OpenVM](https://scroll.io/blog/the-first-release-of-the-openvm-framework-is-live), a general-purpose RISC-V zkVM developed by Axiom. This approach offers several advantages:
-
-- **Easier to audit**: Prover code is written in standard Rust and is easier to reason about
-- **Better performance**: Reduced proving costs and latency
-- **No transaction limits**: Removal of circuit capacity constraints that previously limited complex transactions
-- **Better code reuse**: Components can be shared across different parts of the proving pipeline
+**OpenVM Prover (2025-Present)**: The [Euclid upgrade](/en/technology/overview/scroll-upgrades/euclid-upgrade) migrates Scroll to a new proving system utilizing [OpenVM](https://scroll.io/blog/the-first-release-of-the-openvm-framework-is-live), a general-purpose RISC-V zkVM developed by Axiom. This architecture is capable of proving standard Rust code, which simplifies auditing processes and supports code reuse across the proving pipeline. Additionally, the upgrade reduces proving costs and latency while removing circuit capacity constraints It was this upgrade that made possible for Scroll to become a Stage 2 rollup.
 
 The OpenVM prover uses a hierarchical proof aggregation system:
 

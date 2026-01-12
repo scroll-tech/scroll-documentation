@@ -212,10 +212,6 @@ export const getSidebar = () => {
             title: t("sidebar.technology.rollupNode"),
             url: "technology/sequencer/rollup-node",
           },
-          {
-            title: t("sidebar.technology.zkTrie"),
-            url: "technology/sequencer/zktrie",
-          },
         ],
       },
       //   {
