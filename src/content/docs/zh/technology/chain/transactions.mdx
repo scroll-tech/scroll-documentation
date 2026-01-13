@@ -14,13 +14,14 @@ import TransactionBatching from "../_images/batching.png"
 
 ## 交易类型
 
-目前，Scroll 支持三种类型的交易。
+目前，Scroll 支持四种类型的交易。
 
 - Pre-EIP-155 交易: 以支持 [Singleton Factory](https://eips.ethereum.org/EIPS/eip-2470) 合约。
 - Legacy 交易 (参考 [EIP-155](https://eips.ethereum.org/EIPS/eip-155))
+- [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559) 交易 (类型 2): 自 [Curie 升级](/technology/overview/scroll-upgrades/curie-upgrade)起支持。Scroll 使用修改版的 EIP-1559 费用市场，其中排序器根据 L1 基础费用设置 L2 基础费用，且 ETH 不会被销毁。
 - `L1MessageTx` 类型交易 (类型: `0x7E`): 这是 Scroll 引入的一种新的 [EIP-2718](https://eips.ethereum.org/EIPS/eip-2718) 交易，如下所述。此交易类型适用于在 L1 上发起的交易。
 
-请注意，Scroll 当前不支持 [EIP-2930](https://eips.ethereum.org/EIPS/eip-2930) 和 [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559) 交易类型。Scroll 未来将会引入这两种交易类型。
+请注意，Scroll 当前不支持 [EIP-2930](https://eips.ethereum.org/EIPS/eip-2930) 访问列表交易。
 
 ### L1 Message 交易
 

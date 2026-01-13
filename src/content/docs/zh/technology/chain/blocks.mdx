@@ -30,7 +30,7 @@ Scroll 中的区块头映射了以太坊的结构。但是修改了区块头中�
 | `extraData`         | 由区块的签名者签名，跟随任意附加数据。 |
 | `mixHash`           | 始终为 0。                                                         |
 | `nonce`             | 始终为 0。                                                         |
-| `baseFee`           | 目前在Scroll中为空，因为我们尚未启用 EIP-1559。 |
+| `baseFee`           | 此区块的基础费用。自 [Curie 升级](/technology/overview/scroll-upgrades/curie-upgrade)起，Scroll 使用 EIP-1559，基础费用由排序器设置。 |
 
 ## 区块时间
 

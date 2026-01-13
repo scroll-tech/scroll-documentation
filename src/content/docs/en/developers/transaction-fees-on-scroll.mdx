@@ -81,23 +81,29 @@ when the sequencer commits the data to L1.
 
 As mentioned, the `L1GasPriceOracle` is used to estimate the L1 gas fee given raw transaction data. This is a **push oracle**, updated by a relayer run by Scroll.
 
-The data fee is based on multiple factors:
+<Aside type="note" title="Fee Calculation Changes">
+The L1 data fee calculation has evolved through several network upgrades:
+- **Pre-Curie**: Based on calldata gas costs
+- **Curie**: Introduced blob-based data availability with `commitScalar` and `blobScalar`
+- **Feynman**: Added compression penalty factor
+- **Galileo**: Updated penalty calculation formula
+</Aside>
 
-- The bytes which are `zeros` and `nonzeros` of an RLP-encoded transaction with Signature
-- `l1BaseFee` - Current base fee on the L1
-- `overhead` - Additional gas overhead of a data commitment transaction
-- `scalingFactor` - A scaling factor used to account for price spikes
-- `PRECISION` - A constant used to scale the final fee
+#### Post-Curie Fee Calculation (Current)
 
-The following steps are taken to calculate the L1 data fee:
+Since the [Curie upgrade](/technology/overview/scroll-upgrades/curie-upgrade), transaction data is stored in blobs, and the fee is calculated as:
 
-1. Read three fields `l1BaseFee`, `overhead`, `scalar` from the `L1GasPriceOracle` contract. The slots for these fields in the contract are:
+```javascript
+l1Fee = (commitScalar * l1BaseFee + blobScalar * txDataLength * l1BlobBaseFee) / PRECISION
+```
 
-   | Field     | Slot |
-   | --------- | ---- |
-   | l1BaseFee | 1    |
-   | overhead  | 2    |
-   | scalar    | 3    |
+Where `PRECISION = 1e9`.
+
+#### Pre-Curie Fee Calculation (Legacy)
+
+Before Curie, the fee was based on calldata gas costs:
+
+1. Read three fields `l1BaseFee`, `overhead`, `scalar` from the `L1GasPriceOracle` contract.
 
 2. Count the number of zero bytes and non-zero bytes from the transaction.
 3. Calculate the L1 data fee, given `TX_DATA_ZERO_GAS = 4` and `TX_DATA_NON_ZERO_GAS = 16`[^eip-2028] and `PRECISION = 1e9`:
@@ -119,7 +125,7 @@ The following steps are taken to calculate the L1 data fee:
 function overhead() external view returns (uint256);
 ```
 
-Returns the current L1 fee overhead
+Returns the current L1 fee overhead (used in pre-Curie fee calculation).
 
 #### scalar
 
@@ -127,7 +133,7 @@ Returns the current L1 fee overhead
 function scalar() external view returns (uint256);
 ```
 
-Returns the current l1 fee scalar
+Returns the current L1 fee scalar (used in pre-Curie fee calculation).
 
 #### l1BaseFee
 
@@ -135,7 +141,39 @@ Returns the current l1 fee scalar
 function l1BaseFee() external view returns (uint256);
 ```
 
-Returns the latest known l1 base fee
+Returns the latest known L1 base fee.
+
+#### l1BlobBaseFee
+
+```solidity
+function l1BlobBaseFee() external view returns (uint256);
+```
+
+Returns the latest known L1 blob base fee (introduced in Curie upgrade).
+
+#### commitScalar
+
+```solidity
+function commitScalar() external view returns (uint256);
+```
+
+Returns the current L1 commit fee scalar (introduced in Curie upgrade).
+
+#### blobScalar
+
+```solidity
+function blobScalar() external view returns (uint256);
+```
+
+Returns the current L1 blob fee scalar (introduced in Curie upgrade).
+
+#### penaltyFactor
+
+```solidity
+function penaltyFactor() external view returns (uint256);
+```
+
+Returns the current compression penalty factor (introduced in Feynman upgrade).
 
 #### getL1Fee
 
@@ -143,7 +181,7 @@ Returns the latest known l1 base fee
 function getL1Fee(bytes memory data) external view returns (uint256);
 ```
 
-Computes the L1 portion of the fee based on the size of the RLP encoded input transaction, the current L1 base fee, and the various dynamic parameters.
+Computes the L1 portion of the fee based on the size of the RLP encoded input transaction, the current L1 base fee, and the various dynamic parameters. The calculation method depends on the current network fork (pre-Curie, Curie, Feynman, or Galileo).
 
 **Returns:** L1 fee that should be paid for the transaction
 
@@ -157,9 +195,9 @@ Computes the L1 portion of the fee based on the size of the RLP encoded input tr
 function getL1GasUsed(bytes memory data) external view returns (uint256);
 ```
 
-Computes the amount of L1 gas used for a transaction. Adds the overhead which represents the per-transaction gas overhead of posting the transaction and state roots to L1. Adds 74 bytes of padding to account for the fact that the input does not have a signature.
+Computes the amount of L1 gas used for a transaction. After the Curie upgrade, this returns 0 since all transaction data is stored in blobs.
 
-**Returns:** Amount of L1 gas used to publish the transaction.
+**Returns:** Amount of L1 gas used to publish the transaction (0 post-Curie).
 
 | Parameter | Description                                                 |
 | --------- | ----------------------------------------------------------- |
