@@ -1,6 +1,11 @@
 {
   "redirects": [
     {
+      "source": "technology/sequencer/zktrie",
+      "destination": "/technology/zkevm/zkevm-overview",
+      "statusCode": 301
+    },
+    {
       "source": "developers/faq",
       "destination": "developers",
       "statusCode": 301

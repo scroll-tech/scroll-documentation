@@ -13,22 +13,19 @@ import Aside from "../../../../../components/Aside.astro"
 
 | Opcode                      | Scroll Behavior                                                                                                  |
 | --------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `BLOCKHASH`                 | Returns `keccak(chain_id \|\| block_number)` for the last 256 blocks.                                            |
 | `COINBASE`                  | Returns the fee vault address (predeployed contract `0x5300000000000000000000000000000000000005`).               |
 | `DIFFICULTY` / `PREVRANDAO` | Always return 0.                                                                                                 |
 | `SELFDESTRUCT`              | Disabled. If the opcode is encountered, the transaction will be reverted.                                        |
 
 ## Precompiled Contracts
 
-| Address | Name         | Scroll behavior                                                                                 |
-| ------- | ------------ | ----------------------------------------------------------------------------------------------- |
-| `0x03`  | `RIPEMD-160` | Currently not supported.                                                                        |
-| `0x05`  | `modexp`     | Restrict the input values `B, E, M` to unsigned integers less than $2^{256}$.                   |
-| `0x08`  | `ecPairing`  | The inputs are still multiple of 6 32-byte values, but limit the number of tuples to at most 4. |
-| `0x09`  | `blake2f`    | Currently not supported.                                                                        |
-| `0x0a`  | `point evaluation`    | Currently not supported.                                                                        |
+| Address | Name               | Scroll behavior   |
+| ------- | ------------------ | ----------------- |
+| `0x03`  | `RIPEMD-160`       | Not supported.    |
+| `0x09`  | `blake2f`          | Not supported.    |
+| `0x0a`  | `point evaluation` | Not supported as a precompile. Blob verification is done in ZK circuits. |
 
-The remaining precompiled contracts have the same behavior as Ethereum. However, their maximum usage within a block is constrained by a limit tied to the zkEVM circuit capacity.
+The remaining precompiled contracts have the same behavior as Ethereum.
 
 ## EIPs
 

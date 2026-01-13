@@ -4,4 +4,35 @@ date: Last Modified
 title: "Proof Generation"
 lang: "en"
 permalink: "technology/prover/proof-generation"
+whatsnext: { "zkEVM Overview": "/en/technology/zkevm/zkevm-overview" }
 ---
+
+import Aside from "../../../../../components/Aside.astro"
+
+## Overview
+
+Scroll uses the **OpenVM prover** to generate zero-knowledge proofs that validate L2 transaction execution. This system was introduced in the [Euclid upgrade](/en/technology/overview/scroll-upgrades/euclid-upgrade).
+
+<Aside type="note" title="Proving System History">
+Prior to Euclid, Scroll used custom EVM circuits that directly proved each EVM opcode. The OpenVM prover takes a general-purpose approach: it proves the execution of RISC-V programs (written in Rust) that implement EVM verification logic.
+</Aside>
+
+## Proof Aggregation
+
+The prover uses a three-layer hierarchical aggregation:
+
+1. **Chunk proofs**: Prove execution of individual chunks (collections of blocks)
+2. **Batch proofs**: Aggregate multiple chunk proofs
+3. **Bundle proofs**: Final aggregation, converted to SNARK for on-chain verification
+
+This hierarchy reduces L1 verification costs by combining many proofs into one.
+
+## Proving Infrastructure
+
+The **Coordinator** dispatches proving tasks to a pool of provers, collects completed proofs, and manages aggregation. Final proofs are relayed to the Rollup Node for submission to L1.
+
+## Learn More
+
+- [OpenVM Repository](https://github.com/openvm-org/openvm)
+- [Scroll zkVM Prover](https://github.com/scroll-tech/zkvm-prover)
+- [Euclid Upgrade](/en/technology/overview/scroll-upgrades/euclid-upgrade)

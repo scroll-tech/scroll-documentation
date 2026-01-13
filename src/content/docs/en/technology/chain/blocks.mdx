@@ -30,7 +30,7 @@ The block header in Scroll mirrors the structure of Ethereum's. However, certain
 | `extraData`         | Signature by the block's signer, followed by arbitrary additional data. |
 | `mixHash`           | Always 0.                                                          |
 | `nonce`             | Always 0.                                                          |
-| `baseFee`           | Currently empty in Scroll because we haven't enabled the EIP-1559. |
+| `baseFee`           | The base fee for this block. Since the [Curie upgrade](/technology/overview/scroll-upgrades/curie-upgrade), Scroll uses EIP-1559 with the base fee set by the sequencer. |
 
 ## Block Time
 
