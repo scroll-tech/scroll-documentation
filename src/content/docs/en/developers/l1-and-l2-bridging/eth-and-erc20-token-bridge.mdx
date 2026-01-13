@@ -28,9 +28,7 @@ When bridging ERC20 tokens, you don’t have to worry about selecting the right 
 All Gateway contracts will form the message and send it to the `L1ScrollMessenger` which can send arbitrary messages to L2. The `L1ScrollMessenger` passes the message to the `L1MessageQueue`. Any user can send messages directly to the Messenger to execute arbitrary data on L2. This means they can execute any function on L2 from a transaction made on L1 via the bridge. Although an application could directly pass messages to existing token contracts, the Gateway abstracts the specifics and simplifies making transfers and calls.
 
 <Aside type="tip" title="">
-  In future upgrades, users will be able to bypass the `L1ScrollMessenger` and send messages directly to the `L1MessageQueue`. If a message is sent
-  via the `L1MessageQueue`, the transaction's sender will be the address of the user sending the transaction, not the
-  address of the `L1ScrollMessenger`. 
+  Users can bypass the `L1ScrollMessenger` and send messages directly to the `L1MessageQueue` using the `EnforcedTxGateway` contract. When a message is sent this way, the transaction's sender on L2 will be the address of the user, not the address of the `L1ScrollMessenger`.
 </Aside>
 
 When a new block gets created on L1, the Watcher will detect the message on the `L1MessageQueue` and will pass it to the Relayer service, which will submit the transaction to the L2 via the l2geth node. Finally, the l2geth node will pass the transaction to the `L2ScrollMessenger` contract for execution on L2.

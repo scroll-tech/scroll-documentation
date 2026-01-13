@@ -23,8 +23,8 @@ Scroll has an arbitrary message passing bridge that enables token transfers and 
 
 There are two primary approaches to sending a message from L1 to L2: sending arbitrary messages via `L1ScrollMessenger` and sending enforced transactions via `EnforcedTxGateway`. Both approaches allow users to initiate a L2 transaction on L1 and call arbitrary contracts on L2. For arbitrary messages, the sender of the L2 transactions is the aliased `L1ScrollMessenger` address. For enforced transactions, the L2 sender is an externally-owned account (EOA). In addition, we provide several standard token gateways to make it easier for users to deposit ETH and other standard tokens including ERC-20, ERC-677, ERC-721, and ERC-1155. In essence, these gateways encode token deposits into a message and send it to their counterparts on L2 through the `L1ScrollMessenger` contract. You can find more details about the L1 token gateways in the [Deposit Gateways](/technology/bridge/deposit-gateways).
 
-<Aside type="danger" title="">
-Enforced Transactions are not yet enabled on Scroll. In future upgrades, users will be able to use this functionality to bypass the `L1ScrollMessenger` and send messages directly to the `L1MessageQueue`.
+<Aside type="tip" title="">
+Enforced Transactions allow users to bypass the `L1ScrollMessenger` and send messages directly to the `L1MessageQueue`. This provides a censorship-resistance mechanism, ensuring users can always force transaction inclusion on L2.
 </Aside>
 
 As depicted in Figure 1, both arbitrary messages and enforced transactions are appended to the message queue stored in the `L1MessageQueue` contract. The `L1MessageQueue` contract provides two functions `appendCrossDomainMessage` and `appendEnforcedTransaction` for appending arbitrary messages and enforced transactions respectively.
@@ -117,8 +117,8 @@ The deposited ETH of `value` amount is locked in the `L1ScrollMessenger` contrac
 
 ### Sending Enforced Transactions
 
-<Aside type="danger" title="">
-Enforced Transactions are not yet enabled on Scroll. In future upgrades, users will be able to use this functionality to bypass the `L1ScrollMessenger` and send messages directly to the `L1MessageQueue`.
+<Aside type="tip" title="">
+Enforced Transactions allow users to bypass the `L1ScrollMessenger` and send messages directly to the `L1MessageQueue`. This provides a censorship-resistance mechanism, ensuring users can always force transaction inclusion on L2.
 </Aside>
 
 The `EnforcedTxGateway` contract provides two `sendTransaction` functions to send an enforced transaction. In the first function, the sender of the generated `L1MessageTx` transaction is the transaction sender. On the other hand, the second function uses the passed `sender` address as the sender of the `L1MessageTx` transaction. This allows a third party to send an enforced transaction on behalf of the user and pay the relay fee. Note that the second function requires providing a valid signature of the generated `L1MessageTx` transaction that matches the `sender` address. Both `sendTransaction` functions enforce the sender to be an EOA account.
