@@ -9,7 +9,9 @@ excerpt: "The Enforced Transaction contract enables sending transactions between
 
 import Aside from "../../../../../components/Aside.astro"
 
-In future upgrades to Scroll, the Enforced Transaction contract will enable sending transactions between L1 and L2 with the **`sendTransaction`** function. This contract shares similarities with the Scroll Messenger contract as it allows sending arbitrary data from one layer to the other. However, it distinguishes itself by enabling the relaying of signed transactions and the ability to set the sender (CALLER or msg.sender) on the receiving transaction on Scroll.
+The Enforced Transaction contract enables sending transactions from L1 to L2 with the **`sendTransaction`** function. This contract shares similarities with the Scroll Messenger contract as it allows sending arbitrary data from one layer to the other. However, it distinguishes itself by enabling the relaying of signed transactions and the ability to set the sender (CALLER or msg.sender) on the receiving transaction on Scroll.
+
+For enforced transactions, the L2 sender will be the same as the L1 sender. This means a user can initiate an L2 transaction directly from their wallet via L1, allowing them to withdraw tokens or call other contracts on L2 even if the sequencer is unresponsive.
 
 ## Enforced Transactions API
 

@@ -37,9 +37,7 @@ We support the `cancun` EVM target and the latest Solidity version `0.8.26`.
 
 ## EVM Precompiles
 
-The `RIPEMD-160` (address `0x3`), `blake2f` (address `0x9`), and `point evaluation` (address `0x0a`) precompiles are currently not supported. Calls to unsupported precompiled contracts will revert.
-
-All other EVM precompiles are fully supported and behave the same as Ethereum.
+Most precompiled contracts are supported. For a complete and up-to-date list of supported precompiles and any differences from Ethereum, see [rollup.codes/scroll](https://www.rollup.codes/scroll). Calls to unsupported precompiled contracts will revert.
 
 ## Block Time
 
