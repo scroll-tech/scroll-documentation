@@ -2,14 +2,19 @@
 import MoreMenu from "../RightSidebar/MoreMenu.astro"
 import TableOfContents from "../RightSidebar/TableOfContents"
 import WhatsNext from "./WhatsNext.astro"
+import AskAI from "./AskAI.astro"
 const { content, githubEditUrl, headings } = Astro.props
 const title = content.title
 const whatsNext = content.whatsnext
+const isEnglish = content.lang === "en"
 ---
 
 <article id="article" class="content">
   <section class="main-section">
-    <h1 class="content-title" id="overview">{title}</h1>
+    <div class="title-row">
+      <h1 class="content-title" id="overview">{title}</h1>
+      {isEnglish && <AskAI />}
+    </div>
     <nav class="block sm:hidden">
       <TableOfContents client:media="(max-width: 50em)" headers={headings} />
     </nav>
@@ -31,6 +36,13 @@ const whatsNext = content.whatsnext
     height: 100%;
     display: flex;
     flex-direction: column;
+  }
+
+  .title-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
   }
 
   .block {

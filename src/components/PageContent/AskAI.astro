@@ -1,0 +1,306 @@
+---
+const currentUrl = Astro.url.href
+const markdownUrl = currentUrl.endsWith("/") ? `${currentUrl.slice(0, -1)}.md` : `${currentUrl}.md`
+
+const aiServices = [
+  {
+    name: "ChatGPT",
+    url: `https://chatgpt.com/?hints=search&prompt=${encodeURIComponent(
+      `Help me understand this documentation page: ${markdownUrl}`
+    )}`,
+    icon: "chatgpt",
+  },
+  {
+    name: "Claude",
+    url: `https://claude.ai/new?q=${encodeURIComponent(`Help me understand this documentation page: ${markdownUrl}`)}`,
+    icon: "claude",
+  },
+  {
+    name: "Perplexity",
+    url: `https://www.perplexity.ai/search?q=${encodeURIComponent(
+      `Help me understand this documentation page: ${markdownUrl}`
+    )}`,
+    icon: "perplexity",
+  },
+  {
+    name: "Gemini",
+    url: `https://gemini.google.com/app?prompt=${encodeURIComponent(
+      `Help me understand this documentation page: ${markdownUrl}`
+    )}`,
+    icon: "gemini",
+  },
+]
+---
+
+<div class="ask-ai-container">
+  <div class="ask-ai-dropdown">
+    <button class="ask-ai-btn" id="ask-ai-toggle" aria-expanded="false" aria-haspopup="true">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M12 8V4H8"></path>
+        <rect width="16" height="12" x="4" y="8" rx="2"></rect>
+        <path d="M2 14h2"></path>
+        <path d="M20 14h2"></path>
+        <path d="M15 13v2"></path>
+        <path d="M9 13v2"></path>
+      </svg>
+      <span>Ask AI</span>
+      <svg
+        class="chevron"
+        xmlns="http://www.w3.org/2000/svg"
+        width="12"
+        height="12"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="m6 9 6 6 6-6"></path>
+      </svg>
+    </button>
+    <div class="dropdown-menu" id="ask-ai-menu">
+      {
+        aiServices.map((service) => (
+          <a href={service.url} target="_blank" rel="noopener noreferrer" class="dropdown-item">
+            <span class={`ai-icon ai-icon-${service.icon}`} />
+            <span>{service.name}</span>
+            <svg
+              class="external-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              width="10"
+              height="10"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+              <polyline points="15 3 21 3 21 9" />
+              <line x1="10" y1="14" x2="21" y2="3" />
+            </svg>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+
+  <button id="copy-markdown-btn" class="copy-btn" data-markdown-url={markdownUrl} title="Copy page">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+    </svg>
+    <span id="copy-markdown-text">Copy page</span>
+  </button>
+</div>
+
+<style>
+  .ask-ai-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 12px;
+  }
+
+  .ask-ai-dropdown {
+    position: relative;
+  }
+
+  .ask-ai-btn,
+  .copy-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--theme-bg);
+    border: 1px solid var(--theme-divider);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 0.8125rem;
+    color: var(--theme-text-light);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+  }
+
+  .ask-ai-btn:hover,
+  .copy-btn:hover {
+    border-color: var(--theme-accent);
+    color: var(--theme-accent);
+  }
+
+  .copy-btn.copied {
+    border-color: #10b981;
+    color: #10b981;
+  }
+
+  .chevron {
+    transition: transform 0.15s ease;
+  }
+
+  .ask-ai-dropdown.open .chevron {
+    transform: rotate(180deg);
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    min-width: 160px;
+    background: var(--theme-bg);
+    border: 1px solid var(--theme-divider);
+    border-radius: 8px;
+    padding: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+    transition: all 0.15s ease;
+    z-index: 100;
+  }
+
+  .ask-ai-dropdown.open .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    font-size: 0.8125rem;
+    color: var(--theme-text);
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background 0.15s ease;
+  }
+
+  .dropdown-item:hover {
+    background: var(--theme-bg-hover);
+  }
+
+  .ai-icon {
+    width: 16px;
+    height: 16px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    flex-shrink: 0;
+  }
+
+  .ai-icon-chatgpt {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%2310a37f' d='M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.985 5.985 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zM13.26 22.43a4.476 4.476 0 0 1-2.876-1.04l.141-.081 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.759a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.033.062L9.74 19.95a4.5 4.5 0 0 1-6.14-1.646zM2.34 7.896a4.485 4.485 0 0 1 2.366-1.973V11.6a.766.766 0 0 0 .388.676l5.815 3.355-2.02 1.168a.076.076 0 0 1-.071 0l-4.83-2.786A4.504 4.504 0 0 1 2.34 7.872zm16.597 3.855l-5.833-3.387L15.119 7.2a.076.076 0 0 1 .071 0l4.83 2.791a4.494 4.494 0 0 1-.676 8.105v-5.678a.79.79 0 0 0-.407-.667zm2.01-3.023l-.141-.085-4.774-2.782a.776.776 0 0 0-.785 0L9.409 9.23V6.897a.066.066 0 0 1 .028-.061l4.83-2.787a4.5 4.5 0 0 1 6.68 4.66zm-12.64 4.135l-2.02-1.164a.08.08 0 0 1-.038-.057V6.075a4.5 4.5 0 0 1 7.375-3.453l-.142.08L8.704 5.46a.795.795 0 0 0-.393.681zm1.097-2.365l2.602-1.5 2.607 1.5v2.999l-2.597 1.5-2.607-1.5z'/%3E%3C/svg%3E");
+  }
+
+  .ai-icon-claude {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23cc785c' d='M4.709 15.955l4.72-2.647.08-.23-.08-.128H9.2l-.79-.048-2.698-.144-2.816-.176-.628-.048.048-.527.176-.575.192-.479.096-.415.479.048 2.792.288 2.49.224 1.14.112.383.032.064-.096-.048-.112-.287-.303-1.677-1.805-1.965-2.042-.575-.607.128-.176.16-.16.128-.16.144-.16.192-.096.128.032.16.144 1.677 1.837 1.677 1.901.495.559.128.144.095-.032.017-.128-.017-.511-.096-2.81-.048-2.826v-.575l.527-.096.415-.064.463-.016h.16l.048.463.08 2.058.127 2.266.097 1.597.016.4.031.143.144.017.192-.017 2.602-1.405 2.522-1.309.144-.08.527.527.24.256.207.256.065.16-.097.111-.27.16-2.554 1.31-2.394 1.26-.256.127-.191.097-.097.128.017.08.16.063 2.665.32 2.537.32.83.112-.016.479-.064.4-.112.446-.128.463-.447-.016-2.122-.24-2.634-.335-1.325-.176-.383-.032-.112.064-.016.128.176.32 1.565 2.586 1.725 2.826.367.623-.384.32-.351.287-.32.272-.351.256-.16.016-.08-.064-1.79-2.922-1.39-2.33-.32-.51-.08-.112-.095.016-.08.096-.4.83-1.517 2.89-1.421 2.682-.335.607-.527-.24-.384-.207-.367-.224-.335-.24.016-.16.176-.35 1.485-2.763 1.277-2.378.16-.303.128-.144-.017-.096-.128-.016-.462.064-2.538.415-2.761.415-.68.111.016-.51.048-.384.08-.463.096-.479z'/%3E%3C/svg%3E");
+  }
+
+  .ai-icon-perplexity {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%2320808d' d='M12 0L1.75 6v12L12 24l10.25-6V6L12 0zm0 2.3l7.75 4.52v9.36L12 20.7l-7.75-4.52V6.82L12 2.3zm0 3.07L6.5 8.89v6.22L12 18.63l5.5-3.52V8.89L12 5.37zm0 2.3l3 1.92v3.82l-3 1.92-3-1.92V9.59l3-1.92z'/%3E%3C/svg%3E");
+  }
+
+  .ai-icon-gemini {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='gemini-grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%234285f4'/%3E%3Cstop offset='100%25' stop-color='%23ea4335'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url(%23gemini-grad)' d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z'/%3E%3C/svg%3E");
+  }
+
+  .external-icon {
+    opacity: 0.4;
+    margin-left: auto;
+  }
+
+  @media (max-width: 640px) {
+    .ask-ai-container {
+      margin-left: 0;
+      margin-top: 12px;
+    }
+
+    .ask-ai-btn span:not(.chevron),
+    .copy-btn span {
+      display: none;
+    }
+
+    .ask-ai-btn,
+    .copy-btn {
+      padding: 8px;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const dropdown = document.querySelector(".ask-ai-dropdown")
+    const toggleBtn = document.getElementById("ask-ai-toggle")
+    const copyBtn = document.getElementById("copy-markdown-btn")
+    const copyText = document.getElementById("copy-markdown-text")
+
+    // Dropdown toggle
+    if (toggleBtn && dropdown) {
+      toggleBtn.addEventListener("click", (e) => {
+        e.stopPropagation()
+        dropdown.classList.toggle("open")
+        toggleBtn.setAttribute("aria-expanded", dropdown.classList.contains("open").toString())
+      })
+
+      // Close dropdown when clicking outside
+      document.addEventListener("click", () => {
+        dropdown.classList.remove("open")
+        toggleBtn.setAttribute("aria-expanded", "false")
+      })
+    }
+
+    // Copy markdown
+    if (copyBtn && copyText) {
+      copyBtn.addEventListener("click", async () => {
+        const markdownUrl = copyBtn.getAttribute("data-markdown-url")
+        if (!markdownUrl) return
+
+        try {
+          const response = await fetch(markdownUrl)
+          if (!response.ok) throw new Error("Failed to fetch markdown")
+
+          const markdown = await response.text()
+          await navigator.clipboard.writeText(markdown)
+
+          copyBtn.classList.add("copied")
+          const originalText = copyText.textContent
+          copyText.textContent = "Copied!"
+
+          setTimeout(() => {
+            copyBtn.classList.remove("copied")
+            copyText.textContent = originalText
+          }, 2000)
+        } catch (error) {
+          console.error("Failed to copy markdown:", error)
+          copyText.textContent = "Failed"
+          setTimeout(() => {
+            copyText.textContent = "Copy page"
+          }, 2000)
+        }
+      })
+    }
+  })
+</script>
