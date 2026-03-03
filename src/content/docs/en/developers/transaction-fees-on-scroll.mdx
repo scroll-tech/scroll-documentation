@@ -5,7 +5,7 @@ title: "Transaction Fees on Scroll"
 lang: "en"
 permalink: "developers/transaction-fees-on-scroll"
 whatsnext: { "Developer Ecosystem": "/en/developers/developer-ecosystem/" }
-excerpt: "Understand how L1 and L2 transaction fees work on Scroll "
+excerpt: "Understand how L1 and L2 transaction fees work on Scroll"
 ---
 
 import Aside from "../../../../components/Aside.astro"
@@ -56,7 +56,7 @@ In other words, the execution fee is calculated precisely like pre-[EIP1559](htt
 
 Every transaction's calldata must be committed to Ethereum, which incurs an additional transaction fee, referred to as the "L1 Fee". Without doing this, Scroll couldn't be reconstructed from only L1 data.
 
-Transactions aren't committed 1-by-1 -- they are collected in batches of blocks (and blocks of transactions). The cost of an individual transaction is computed based on the zeros and non-zero bytes in its payload.
+Transactions aren't committed one by one — they are collected in batches of blocks (and blocks of transactions). The cost of an individual transaction is computed based on the zeros and non-zero bytes in its payload.
 
 ### Estimating the L1 Data Fee
 
