@@ -14,13 +14,13 @@ import TransactionBatching from "../_images/batching.png"
 
 ## İşlem tipi
 
-Şu anda Scroll üç tür işlemi desteklemektedir.
+Şu anda Scroll beş tür işlemi desteklemektedir.
 
 - EIP-155 Öncesi İşlem: Bu, [Singleton Factory](https://eips.ethereum.org/EIPS/eip-2470) sözleşmesini desteklemek içindir.
 - Eski Tip İşlem (bkz. [EIP-155](https://eips.ethereum.org/EIPS/eip-155))
+- [EIP-2930](https://eips.ethereum.org/EIPS/eip-2930) Erişim Listesi İşlemi (Tip: `0x01`): [Curie yükseltmesinden](/tr/technology/overview/scroll-upgrades/curie-upgrade) itibaren desteklenmektedir.
+- [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559) Dinamik Ücret İşlemi (Tip: `0x02`): [Curie yükseltmesinden](/tr/technology/overview/scroll-upgrades/curie-upgrade) itibaren desteklenmektedir. Scroll, EIP-1559 fiyatlandırma modelinin değiştirilmiş bir sürümünü kullanır.
 - `L1MessageTx` Tipi Belirli İşlem (Tip: `0x7E`): Bu, aşağıda açıklandığı gibi Scroll'da tanıtılan yeni bir [EIP-2718](https://eips.ethereum.org/EIPS/eip-2718) işlemidir. Bu işlem tipi L1'de başlatılan işlemler içindir.
-
-Unutmayın ki [EIP-2930](https://eips.ethereum.org/EIPS/eip-2930) ve [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559) işlem tipleri şu anda Scroll'da desteklenmemektedir. Scroll gelecekte bu iki işlem türünü geri getirecektir.
 
 ### L1 Mesaj İşlemi
 

@@ -14,13 +14,13 @@ Una transacción es un mensaje firmado criptográficamente que inicia una transi
 
 ## Tipo de Transacción
 
-Actualmente, Scroll admite tres tipos de transacciones.
+Actualmente, Scroll admite cinco tipos de transacciones.
 
 - Transacción Pre-EIP-155: Soporta el contrato [Singleton Factory](https://eips.ethereum.org/EIPS/eip-2470).
 - Transacción Legacy (consulte [EIP-155](https://eips.ethereum.org/EIPS/eip-155))
+- [EIP-2930](https://eips.ethereum.org/EIPS/eip-2930) Transacción con Lista de Acceso (Tipo: `0x01`): Soportado desde la [actualización Curie](/es/technology/overview/scroll-upgrades/curie-upgrade).
+- [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559) Transacción con Tarifa Dinámica (Tipo: `0x02`): Soportado desde la [actualización Curie](/es/technology/overview/scroll-upgrades/curie-upgrade). Scroll utiliza una versión modificada del modelo de precios EIP-1559.
 - Transacción tipo `L1MessageTx` (Tipo: `0x7E`): Se trata de una nueva transacción [EIP-2718](https://eips.ethereum.org/EIPS/eip-2718) introducida en Scroll como se describe a continuación. Este tipo de transacción es para transacciones iniciadas en L1.
-
-Ten en cuenta que los tipos de transacción [EIP-2930](https://eips.ethereum.org/EIPS/eip-2930) y [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559) no están soportados actualmente en Scroll. Scroll incorporará estos dos tipos de transacción en el futuro.
 
 ### Transacción de Mensajes en L1
 
