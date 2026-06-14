@@ -1,0 +1,54 @@
+const navList = [
+  {
+    icon: StartSvg,
+    name: "Commencer",
+    content: "Connectez-vous à Scroll et explorez notre écosystème de dApps.",
+    link: "/en/getting-started/overview",
+  },
+  {
+    icon: DevelopSvg,
+    name: "Développeurs",
+    content: "Plongez dans la documentation de développement de Scroll.",
+    link: "/en/developers",
+  },
+  {
+    icon: TechnologySvg,
+    name: "Technologie",
+    content: "Aperçu de l'architecture zkEVM de Scroll.",
+    link: "/en/technology",
+  },
+  {
+    icon: LearnSvg,
+    name: "Apprendre",
+    content: "Introduction au monde du ZK et de la scalabilité.",
+    link: "/en/learn",
+  },
+]
+
+<div class="navigate">
+  <SectionHeader title="Naviguer dans la documentation" content="Commencez à développer sur Scroll aujourd'hui." />
+  <div class="navs">
+    {navList.map(({ icon, name, content, link }) => <NavCard icon={icon} name={name} content={content} link={link} />)}
+  </div>
+</div>
+
+<style>
+  .navigate {
+    margin-top: 146px;
+  }
+
+  .navs {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  @media screen and (max-width: 50em) {
+    .navigate {
+      margin-top: 106px;
+    }
+    .navs {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+</style>
