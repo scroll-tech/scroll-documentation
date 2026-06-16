@@ -1,0 +1,40 @@
+---
+section: developers
+date: Last Modified
+title: "L1 and L2 Bridging"
+lang: "vn"
+permalink: "developers/l1-and-l2-bridging"
+whatsnext: { "ETH & ERC20 Token Bridge": "/developers/l1-and-l2-bridging/eth-and-erc20-token-bridge/" }
+excerpt: "Tổng quan về kiến ​​trúc Bridge của Scroll"
+---
+
+import ClickToZoom from "../../../../components/ClickToZoom.astro"
+
+import Aside from "../../../../components/Aside.astro"
+
+import L1GatewayWHITE from "../../../../assets/images/developers/L1GatewayWHITE.png"
+
+import withdrawWHITE from "../../../../assets/images/developers/withdrawWHITE.png"
+
+Cầu cuộn cho phép chuyển ETH, mã thông báo ERC20, NFT và tin nhắn tùy ý giữa L1 ​​và L2. Nó phục vụ như một cơ chế an toàn để di chuyển các tài sản kỹ thuật số khác nhau qua L1 và L2.
+
+Để tạo điều kiện thuận lợi cho việc chuyển mã thông báo ETH và ERC20, cầu Scroll sử dụng Bộ định tuyến cổng. Hợp đồng này đảm bảo việc chuyển giao suôn sẻ các tài sản này giữa L1 ​​và L2, cho phép người dùng chuyển mã thông báo dựa trên Ethereum của họ một cách liền mạch.
+
+Cổng ERC721 và ERC1155 cho phép chuyển các tài sản không thể thay thế giữa hai mạng, cho phép người dùng di chuyển NFT của họ qua L1 và L2.
+
+Ngoài việc chuyển mã thông báo, hợp đồng Scroll Messenger còn cho phép tương tác hợp đồng chuỗi chéo. Điều này có nghĩa là các hợp đồng trên một mạng có thể tương tác với các hợp đồng trên mạng khác thông qua hợp đồng Scroll Messenger. Chức năng này mở rộng khả năng cho các ứng dụng phi tập trung và hợp đồng thông minh hoạt động trơn tru trên cả hai mạng.
+
+## L1 Gateway architecture
+
+
+<ClickToZoom src={L1GatewayWHITE} />
+
+Có nhiều điểm vào từ người dùng đến cầu Scroll. Điều này sẽ phụ thuộc vào những gì bạn muốn làm và cách bạn muốn làm điều đó. Nếu bạn muốn gửi mã thông báo ETH hoặc ERC20, bạn nên sử dụng `GatewayRouter` . Nếu muốn gửi NFT, bạn nên sử dụng `L1ERC721Gateway` hoặc `L1ERC1155Gateway`. Nếu bạn muốn gửi dữ liệu tùy ý, bạn nên sử dụng `L1ScrollMessenger`. Tất cả các lần chuyển qua Cổng đều sử dụng Scroll Messenger để gửi nội dung xuyên chuỗi, nhiệm vụ của nó là nối các giao dịch vào Hàng đợi Tin nhắn để đưa vào L2.
+
+## L2 Gateway architecture
+
+<ClickToZoom src={withdrawWHITE} />
+
+Về các điểm vào có thể được phép gọi mà không được phép, Kiến trúc Cổng L2 rất giống với L1. Sự khác biệt là khi gửi tin nhắn từ L2, việc gọi hàm `appendMessage` sẽ lưu trữ tin nhắn trong cây merkle nhị phân chỉ nối thêm (còn gọi là cây rút) trong `L2MessageQueue`. Khi một tin nhắn mới được gửi đến `L2MessageQueue`, bộ chuyển tiếp sẽ phát hiện nó và lưu trữ nó trong cơ sở dữ liệu. Khi khối được hoàn thiện, nó sẽ tạo bằng chứng về đường dẫn merkle mới và chuyển nó đến nút L1geth để thực thi trên `L1ScrollMessenger` . Tất cả các gốc rút tiền cuối cùng sẽ được lưu trữ trong hợp đồng tổng hợp để chúng tôi có thể xác minh bằng chứng chống lại chúng. Trong các phiên bản Scroll tiếp theo, Relayer sẽ không cần thiết vì tất cả người dùng sẽ có thể hoàn tất giao dịch trên L1.
+
+Trong các phần sắp tới, chúng ta sẽ khám phá các khía cạnh kỹ thuật của cây cầu, bao gồm API hợp đồng thông minh cần thiết để tận dụng các khả năng của nó. Hướng dẫn chi tiết với các ví dụ về mã được cung cấp trong phần Hướng dẫn dành cho nhà phát triển để hỗ trợ nhà phát triển và người dùng hiểu và triển khai các chức năng này.

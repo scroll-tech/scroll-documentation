@@ -1,0 +1,82 @@
+---
+section: developers
+date: Last Modified
+title: "Hướng dẫn Triển khai Hợp đồng Thông minh"
+lang: "vi"
+permalink: "developers/guides/contract-deployment-tutorial"
+excerpt: "Mạng thử nghiệm Scroll Sepolia cho phép cộng đồng triển khai các hợp đồng thông minh trên Scroll. Trong hướng dẫn này, chúng ta sẽ hướng dẫn bạn cách triển khai một hợp đồng trên Scroll Sepolia."
+whatsnext: { "Tương Tác Mạng Scroll Messenger Liên chuỗi": "/developers/guides/scroll-messenger-cross-chain-interaction/" }
+---
+
+import Aside from "../../../../../components/Aside.astro"
+
+Mạng thử nghiệm Scroll Sepolia cho phép bất kỳ ai triển khai một hợp đồng thông minh trên Scroll. Trong hướng dẫn này, bạn sẽ học cách triển khai một hợp đồng trên Scroll Sepolia bằng cách sử dụng các công cụ phổ biến cho việc phát triển trên Ethereum. [Repo demo](https://github.com/scroll-tech/scroll-guides/tree/main/contract-deploy-demo) này minh họa việc triển khai hợp đồng với [Hardhat](https://hardhat.org/) và [Foundry](https://github.com/foundry-rs/foundry).
+
+<Aside type="tip" title="Có ETH Thử nghiệm chưa?">
+  Trước khi bạn bắt đầu triển khai hợp đồng, bạn cần yêu cầu các mã thông báo thử nghiệm từ một vòi phun Sepolia và sử dụng [cầu](https://scroll.io/bridge) để chuyển một số ETH thử nghiệm từ _Sepolia_ sang _Scroll Sepolia_. Hoặc bạn có thể mua ETH thử nghiệm trực tiếp từ Scroll Sepolia. Xem hướng dẫn [Vòi phun](/user-guide/faucet/) và [Cầu](/user-guide/bridge/) của chúng tôi để biết thêm chi tiết.
+</Aside>
+
+## Triển khai hợp đồng với Hardhat
+
+1. Nếu bạn chưa có, hãy cài đặt [nodejs](https://nodejs.org/en/download/) và [yarn](https://classic.yarnpkg.com/lang/en/docs/install).
+2. Sao chép repo và cài đặt các phụ thuộc:
+
+   ```shell
+   git clone https://github.com/scroll-tech/scroll-guides.git
+   cd scroll-guides/contract-deploy-demo
+   yarn install
+   ```
+
+3. Tạo một tệp `.env` theo ví dụ trong tệp `.env.example` trong thư mục gốc. Thay đổi `PRIVATE_KEY` thành khóa riêng của bạn trong tệp `.env`.
+
+4. Chạy `yarn compile` để biên dịch hợp đồng.
+
+5. Chạy `yarn deploy:scrollTestnet` để triển khai hợp đồng trên mạng thử nghiệm Scroll Sepolia.
+
+6. Chạy `yarn test` để chạy các bài kiểm tra hardhat.
+
+## Triển khai hợp đồng với Foundry
+
+1. Sao chép kho lưu trữ:
+
+   ```shell
+   git clone https://github.com/scroll-tech/scroll-guides.git
+   cd scroll-guides/contract-deploy-demo
+   ```
+
+2. Cài đặt Foundry:
+
+   ```shell
+   curl -L https://foundry.paradigm.xyz | bash
+   foundryup
+   ```
+
+3. Chạy lệnh `forge build` để xây dựng dự án.
+
+4. Triển khai hợp đồng của bạn bằng Foundry:
+
+   ```bash
+   forge create --rpc-url https://sepolia-rpc.scroll.io/ \
+     --value <lock_amount> \
+     --constructor-args <unlock_time> \
+     --private-key <your_private_key> \
+     --legacy \
+     contracts/Lock.sol:Lock
+   ```
+
+   - `<lock_amount>` là số lượng `ETH` thử nghiệm sẽ được khóa trong hợp đồng. Hãy thử đặt giá trị này thành một số nhỏ, như `0.0000001ether`.
+   - `<unlock_time>` là dấu thời gian Unix sau đó số tiền khóa trong hợp đồng sẽ trở thành có sẵn để rút ra. Hãy thử đặt giá trị này thành một dấu thời gian Unix trong tương lai, như `1696118400` (dấu thời gian Unix này tương ứng với ngày 1 tháng 10 năm 2023).
+
+   Ví dụ:
+
+   ```bash
+   forge create --rpc-url https://sepolia-rpc.scroll.io/ \
+     --value 0.00000000002ether \
+     --constructor-args 1696118400 \
+     --private-key 0xabc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc1 \
+     --legacy contracts/Lock.sol:Lock
+   ```
+
+## Câu hỏi và Phản hồi
+
+Cảm ơn bạn đã tham gia và phát triển trên Mạng thử nghiệm Scroll Sepolia! Nếu bạn gặp bất kỳ vấn đề nào, hãy tham gia [Discord](https://discord.gg/scroll) của chúng tôi và hỏi ở kênh #testnet-devs.
