@@ -1,0 +1,118 @@
+---
+section: gettingStarted
+date: Last Modified
+title: "Bridge"
+lang: "en"
+permalink: "user-guide/bridge/"
+excerpt: "To start bridging assets from Sepolia, navigate to the portal bridge app."
+---
+
+{/* // import ClickToZoom from "../../../../components/ClickToZoom.astro" */}
+{/* // import bridge1 from "./\_images/bridge1.png" */}
+{/* // import bridge2 from "./\_images/bridge2.png" */}
+{/* // import bridge3 from "./\_images/bridge3.png" */}
+{/* // import bridge4 from "./\_images/bridge4.png" */}
+{/* // import bridge5 from "./\_images/bridge5.png" */}
+{/* // import bridge6 from "./\_images/bridge6.png" */}
+{/* // import bridge7 from "./\_images/bridge7.png" */}
+{/* // import bridge8 from "./\_images/bridge8.png" */}
+
+{/* TODO: Update all instructions after being able to walk through the whole flow. */}
+
+
+Visit our bridge app on [Sepolia testnet](https://sepolia.scroll.io/bridge) or [Mainnet](https://scroll.io/bridge) to get started! The Bridge supports both **Deposit** and **Withdraw** operations, allowing users to trustlessly move assets from L1 to L2.
+
+## Deposit from Ethereum to Scroll
+
+### Instructions
+
+1. After navigating to the bridge app, press the "Connect Wallet" button. You might need to switch your wallet to the right network.
+1. In the app, select the **Deposit to Scroll** tab.
+1. Select the token you want to transfer from the L1 network. If it's your first time bridging, try "ETH."
+1. If this is your first time transferring a specific ERC20 token, you must **Approve** the Sepolia or Ethereum Bridge contract to access your ERC20 token.
+1. Select your deposit mode. The Fast option initiates a bridge transfer immediately, while the Economy option groups multiple requests together and initiates a single bridge transfer for the batch, sharing the cost among all included requests.
+1. Next, slide the **Deposit funds** button to make the deposit. Your wallet will ask to confirm the transfer transaction.
+1. Once the transfer transaction is sent and confirmed, the token will be deducted from your wallet.
+1. You can always check the status of a transaction by pressing the "Transaction History" icon next to your wallet address in the top-right corner.
+
+{/* ### When will the token arrive in your Scroll Sepolia wallet?
+
+It could take between **8 to 14 minutes** (awaiting block to become [_Safe_](https://www.alchemy.com/overviews/ethereum-commitment-levels#what-are-ethereum-commitment-levels) on Sepolia) before the token shows up in your Scroll Sepolia wallet. */}
+
+{/* You can check the progress of deposit transactions as follows: */}
+
+{/* ##### 1. Click the "History" icon next to your wallet address in the top-right corner. */}
+
+{/* <ClickToZoom src={bridge1} /> */}
+
+{/* The pop-up panel lists the most recent transactions made in the Bridge app. There are two statuses: Sepolia status and Scroll Sepolia status. For deposit transactions (L1 -> L2), once your transaction becomes _Safe_ on Sepolia (**8 to 14 minutes**), you will see the **`success`** status shown. Your funds will be relayed to Scoll Sepolia after this. */}
+
+{/* The Recent Bridge Transactions window should give you an estimate of the time expected before your transaction is _Safe_ on Sepolia. */}
+
+{/* ##### 2. Click on the most recent transaction’s Sepolia transaction hash. */}
+
+{/* <ClickToZoom src={bridge2} /> */}
+
+{/* It will open the Transaction Details page in a new tab. You can see this transaction is confirmed on Sepolia. To check the Block's confirmation status, click the Block number and read the "Status" field. */}
+
+{/* <ClickToZoom src={bridge3} /> */}
+
+{/* ##### 3. Return to the Bridge app and wait! */}
+
+{/* Once your transaction status shows **`success`** on Scroll Sepolia, you should see the funds in your Scroll L2 wallet and a transaction hash: */}
+
+{/* <ClickToZoom src={bridge4} /> */}
+
+## Withdraw from Scroll to Ethereum
+
+### Instructions
+
+#### Submitting your Initial Withdrawal Transaction
+
+1. First, select the **Withdraw to Ethereum** tab in the app. You might need to switch your wallet to the right network.
+1. Select the token you want to transfer, If it's you're first time bridging, try "ETH."
+1. If this is your first time transferring a specific ERC20 token, you must **Approve** the Scroll Bridge contract to access your ERC20 token.
+1. Next, slide the **Withdraw funds** button to make the withdrawal. Your wallet will ask to confirm the transfer transaction.
+1. Once the transfer transaction is sent and confirmed, the token will be deducted from your wallet.
+
+#### Submitting an Execute Withdrawal Transaction
+
+{/* TODO: finish the additional instructions, better estimate "wait time" */}
+
+_The remaining steps happen on Scroll, but you first must wait for your transaction to be fully proven ("finalized") on the L1 side. This process can take up to four hours._
+
+1. When your withdrawal transaction is completed finalizing on Sepolia or Ethereum, you will see the "Claim" button in the Recent Transactions area become solid.
+1. Click the "Claim" button to submit the Execute Withdrawal transaction.
+1. Once submitted, your withdrawn funds should appear immediately in your wallet.
+
+### When will the token arrive in your wallet?
+
+The transferred token will arrive in your wallet immediately after the block containing your Execute Withdrawal transaction is confirmed.
+
+{/* TODO: check architecture link is live */}
+
+:::tip[Rollup Status]
+The rollup status `Finalized` indicates that the correct execution of transactions in this block has been proven by verifying a validity proof on-chain on the L1 chain. For more information about rollup status, see [Scroll's Architecture Overview](/technology).
+:::
+
+{/* You can check the progress of withdrawal transactions as follows: */}
+
+{/* 1. Click your wallet address at the top-right corner of the Bridge web app. */}
+
+{/* <ClickToZoom src={bridge5} /> */}
+
+{/* The pop-up panel lists the most recent transactions you made in the Bridge app (see the image below). There are two statuses: L1 status and L2 status. In this case, because we are bridging from L2 -> L1, we will quickly get a **`success`** status after submitting the transaction to the L2 Bridge. L1, on the other hand, takes **10 minutes to a few hours** to reach **`success`**. */}
+
+{/* 1. Click on the most recent transaction’s L2 transaction hash: */}
+
+{/* <ClickToZoom src={bridge6} /> */}
+
+{/* It will open the _Transaction Details_ page in a new tab. You can see this transaction is confirmed on L2. */}
+
+{/* <ClickToZoom src={bridge7} /> */}
+
+{/* The transaction is confirmed on L2, but still needs to be finalized on Goerli. */}
+
+{/* 1. Go back to the [Bridge](https://scroll.io/bridge) app. It takes about 10 minutes before the token shows up in your Goerli wallet. Once your transaction status shows success on L2, you should see the funds in your Goerli wallet and a transaction hash: */}
+
+{/* <ClickToZoom src={bridge8} /> */}

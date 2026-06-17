@@ -1,0 +1,56 @@
+---
+section: technology
+date: Last Modified
+title: "zkEVM Overview"
+lang: "en"
+permalink: "technology/zkevm-overview"
+excerpt: "In order to understand how to build a zkEVM, which proves the execution of the EVM, we need to first look at the EVM itself."
+---
+
+import ClickToZoom from "../../../../../components/ClickToZoom.astro"
+import zkevm1 from "../_images/zkevm1.png"
+import zkevm2 from "../_images/zkevm2.png"
+import zkevm3 from "../_images/zkevm3.png"
+
+## The EVM
+
+In order to understand how to build a zkEVM, which proves the execution of the EVM, we need to first look at the EVM itself.
+
+The EVM can be modeled as a state transition function. It specifies a transition function `f` that, given an initial world state `S` and a transaction `T`, outputs a new world state `S’`: `f(S,T) = S'`.
+
+The “world state” is modeled as a [modified Merkle-Patricia Trie](https://ethereum.org/en/developers/docs/data-structures-and-encoding/patricia-merkle-trie/) (MPT). This trie contains all of the network’s persistent data. This includes the information of all externally-owned accounts (EOAs) and smart contract accounts. Smart contract accounts have sub-tries that hold the smart contract’s bytecode and persistent storage.
+
+The EVM processes a new transaction by executing its resulting computations and making changes to the world state accordingly. EVM computation works over transient data stores (stack and memory) as well as persistent data stores (contract bytecode and storage).
+
+<ClickToZoom src={zkevm1} />
+
+The computation triggered by an individual transaction is broken down into small machine instructions called “opcodes,” which the EVM can directly understand and execute. The behavior of each opcode is specified in the [Ethereum Yellow Paper](https://ethereum.github.io/yellowpaper/paper.pdf). The execution of a transaction can therefore be summarized by an “execution trace,” which is simply an ordered list of opcode executions. Ethereum execution clients, such as [Geth](https://geth.ethereum.org/), can explicitly output a step-by-step execution trace for the computation it has performed.
+
+<ClickToZoom src={zkevm2} />
+
+As the opcodes are executed, the state trie is altered. This results in a new state trie, with a new state root.
+
+## Proving an EVM execution
+
+The goal of a zkEVM is to generate a proof attesting to the validity of a transaction’s execution. In other words, given an initial world state `S`, a transaction `T`, and a resulting world state `S'`, the zkEVM must generate a proof that `f(S,T) = S'`, where `f` is the state transition function specified in the Ethereum Yellow Paper.
+
+In order to prove the validity of the transition function execution, we break down the execution into its step-by-step execution trace. The execution of `f(S,T)` is expanded into a list of its sequential opcode executions. The execution trace serves as a “witness” attesting to the correctness of the state transition `f(S,T) = S'` - the trace in a sense a step-by-step explanation of how the state transitions from `S` to `S'`.
+
+The problem is then reduced to proving the following:
+
+- The execution trace is _correct_.
+  - Each individual opcode is correctly executed according to the Ethereum Yellow Paper spec.
+    - For example, the `ADD` opcode must result in popping two values off the stack, and pushing their sum to the stack.
+    - A proof must show that each opcode was executed with the proper behavior, including any alterations to transient data stores (stack and memory) or persistent data stores (contract bytecode and storage).
+  - The ordered list of opcodes being executed is in fact the correct list of opcodes triggered by the transaction.
+    - This includes correctly loading the initial transaction calldata, and the bytecode for any invoked contracts.
+- The execution trace starts with initial state `S` and results in state `S'`.
+
+<ClickToZoom src={zkevm3} />
+
+In subsequent sections, we will dive into the details of how the correctness of EVM execution traces can be proved.
+
+## Learn more
+
+- Cypherpunks [GitBook chapter](https://cypherpunks-core.github.io/ethereumbook/13evm.html) on the EVM
+- [zkEVM overview](https://youtu.be/NHwd-gJ8xg4) - Haichen Shen
