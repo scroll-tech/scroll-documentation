@@ -37,9 +37,9 @@ export const Feedback = () => {
     }
     setRating(selectedNumber + 1)
     setTimeout(() => {
-      const scollElement = document.querySelector(".sidebar-nav-inner")
-      scollElement.scrollTo({
-        top: scollElement.scrollHeight,
+      const scrollElement = document.querySelector(".sidebar-nav-inner")
+      scrollElement.scrollTo({
+        top: scrollElement.scrollHeight,
         behavior: "smooth",
       })
     }, 0)
