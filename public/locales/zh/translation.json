@@ -4,7 +4,12 @@
     "more": "更多",
     "editThisPage": "编辑本页",
     "joinOurCommunity": "加入我们的社区",
-    "feedback": "反馈"
+    "feedback": "反馈",
+    "feedbackForm": {
+      "thankYouMessage": "我们非常感谢您的反馈！🤎",
+      "instructions": "请告诉我们更多关于您的体验。",
+      "submit": "提交"
+    }
   },
   "ui": {
     "whatsNext": "接下来是什么",
