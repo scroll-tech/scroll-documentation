@@ -20,7 +20,7 @@ We try to keep a clean commit history, so we'll follow a standard process initia
   - Start with a present-tense verb
   - Keep your commit headline short but sufficient to understand the scope and focus of the change.
   - Changes are often formatted like `add doc X`, `fix page Y`, `improve docs for Z`.
-  - Example: "`update contract addresses for USDC on Scroll Sepolia`".
+  - Example: "`update contract addresses for USDC on Scroll`".
 - If you touch any infrastructure, make sure it builds with `yarn build`
 - Trust the autoformatter (prettier)
 - Make sure images are optimized and compressed

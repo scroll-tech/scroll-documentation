@@ -68,23 +68,23 @@ We define the Square-Fibonacci sequence[^1], a variation of the Fibonacci sequen
 const config: HardhatUserConfig = {
   ...
   networks: {
-    scrollSepolia: {
-      url: 'https://sepolia-rpc.scroll.io' || '',
+    scroll: {
+      url: 'https://rpc.scroll.io' || '',
       accounts:
         process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
     },
   },
   etherscan: {
     apiKey: {
-      scrollSepolia: <YOUR API KEY>,
+      scroll: <YOUR API KEY>,
     },
     customChains: [
       {
-        network: 'scrollSepolia',
-        chainId: 534351,
+        network: 'scroll',
+        chainId: 534352,
         urls: {
-          apiURL: 'https://api-sepolia.scrollscan.com/api',
-          browserURL: 'https://sepolia.scrollscan.com/',
+          apiURL: 'https://api.scrollscan.com/api',
+          browserURL: 'https://scrollscan.com/',
         },
       },
     ],

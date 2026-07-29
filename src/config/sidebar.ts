@@ -11,7 +11,6 @@ export const getSidebar = () => {
           { title: t("sidebar.developers.faq"), url: formatUrl("developers") },
           { title: t("sidebar.developers.buildingOnScroll"), url: formatUrl("developers/building-on-scroll") },
           { title: t("sidebar.developers.scrollContracts"), url: formatUrl("developers/scroll-contracts") },
-          { title: t("sidebar.developers.faucet"), url: formatUrl("developers/faucet") },
           {
             title: t("sidebar.developers.ethereumAndScrollDifferences"),
             url: formatUrl("developers/ethereum-and-scroll-differences"),
@@ -108,13 +107,6 @@ export const getSidebar = () => {
         contents: [
           { title: t("sidebar.developers.rollupExplorer"), url: "https://scroll.io/rollupscan" },
           { title: t("sidebar.developers.scrollBlockExplorer"), url: "https://scrollscan.com/" },
-        ],
-      },
-      {
-        section: t("sidebar.developers.sepoliaResources"),
-        contents: [
-          { title: t("sidebar.developers.sepoliaRollupExplorer"), url: "https://sepolia.scroll.io/rollupscan" },
-          { title: t("sidebar.developers.scrollSepoliaBlockExplorer"), url: "https://sepolia.scrollscan.dev/" },
         ],
       },
     ],

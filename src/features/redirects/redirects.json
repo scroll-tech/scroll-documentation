@@ -100,11 +100,6 @@
       "statusCode": 301
     },
     {
-      "source": "user-guide/faucet",
-      "destination": "/en/developers/faucet",
-      "statusCode": 301
-    },
-    {
       "source": "user-guide/bridge",
       "destination": "/community",
       "statusCode": 301

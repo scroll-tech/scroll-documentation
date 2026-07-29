@@ -20,7 +20,7 @@ const recommendedArticles = [
     url: "/en/developers/developer-quickstart",
   },
   {
-    title: "Sepolia Testnet Contracts",
+    title: "Scroll Contracts",
     url: "/en/developers/scroll-contracts",
   },
   {

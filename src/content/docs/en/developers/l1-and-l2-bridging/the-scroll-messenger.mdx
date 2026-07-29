@@ -20,13 +20,12 @@ Sending a cross-chain message through the `ScrollMessenger` is performed by call
 
 Unlike L1 to L2 transactions, L2 to L1 transactions need to be finalized using the [`relayMessageWithProof`](#relaymessagewithproof) function on the Scroll Messenger contract. We call this process "submitting an Execute Withdrawal transaction", and it is required for both sending arbitrary messages and transferring assets through a gateway or the router. When you use `relayMessageWithProof`, you'll have to provide a Merkle inclusion proof showing your transaction is included in the trie of "withdrawal" messages, along with other parameters. Producing this proof and these values can be done locally and permissionlessly, but at the moment, the easiest way to retrieve these parameters is through our backend APIs:
 
-- Scroll Sepolia API: https://sepolia-api-bridge-v2.scroll.io/api/
 - Scroll API: https://mainnet-api-bridge-v2.scroll.io/api/
 
 Supply the address of the EOA or contract responsible for initiating the original transaction on L2 to the `/unclaimed` endpoint. The API backend will provide you with all the necessary information to successfully conclude the transaction on L1. Take a look at the following example:
 
 ```bash
-https://sepolia-api-bridge-v2.scroll.io/api/l2/unclaimed/withdrawals?address=0x031407eaaffFB4f1EC2c999bE4477E52C81de3c5&page=1&page_size=10
+https://mainnet-api-bridge-v2.scroll.io/api/l2/unclaimed/withdrawals?address=0x031407eaaffFB4f1EC2c999bE4477E52C81de3c5&page=1&page_size=10
 ```
 
 <Aside type="caution" title="The address parameter">

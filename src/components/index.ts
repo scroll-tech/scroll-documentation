@@ -8,5 +8,4 @@
 export { default as CodeSample } from "./CodeSample/CodeSample.astro"
 export { default as Aside } from "./Aside.astro"
 export { default as ClickToZoom } from "./ClickToZoom.astro"
-export { default as NetworkTabs } from "./Tabs/NetworkTabs.astro"
 export { default as PackageManagerTabs } from "./Tabs/PackageManagerTabs.astro"
