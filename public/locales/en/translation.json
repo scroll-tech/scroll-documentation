@@ -63,7 +63,6 @@
       "developers": "Developers",
       "buildingOnScroll": "Building on Scroll",
       "faq": "Frequently Asked Questions",
-      "faucet": "Testnet ETH Faucet",
       "developerQuickstart": "Developer Quickstart",
       "verifyingSmartContracts": "Verifying Smart Contracts",
       "scrollContracts": "Scroll Contracts",
@@ -90,12 +89,8 @@
       "estimatingGasAndTxFees": "Estimating Gas & Tx Fees",
       "resources": "Resources",
       "mainnetResources": "Mainnet Resources",
-      "sepoliaResources": "Sepolia Resources",
       "scrollBlockExplorer": "Scrollscan Explorer",
       "rollupExplorer": "Rollup Explorer",
-      "scrollSepoliaBlockExplorer": "Scroll Sepolia Explorer",
-      "sepoliaRollupExplorer": "Rollup Explorer",
-      "sepoliaBlockExplorer": "Scrollscan Explorer",
       "transactionJourney": "Checking Transaction Journey"
     },
     "technology": {

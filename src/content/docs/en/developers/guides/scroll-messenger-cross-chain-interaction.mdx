@@ -5,21 +5,21 @@ title: "Scroll Messenger Cross-chain Interaction"
 lang: "en"
 permalink: "developers/guides/scroll-messenger-cross-chain-interaction"
 whatsnext: { "Bridge ERC20 through the Custom Gateway": "/en/developers/guides/bridge-erc20-through-the-custom-gateway" }
-excerpt: "In this example, we will launch a dummy smart contract on either Sepolia or Scroll Sepolia testnet and interact with it from the opposite chain."
+excerpt: "In this example, we will launch a dummy smart contract on either Ethereum or Scroll and interact with it from the opposite chain."
 ---
 
 import Aside from "../../../../../components/Aside.astro"
 
-In this example, we will launch a dummy smart contract on either Sepolia or Scroll and interact
+In this example, we will launch a dummy smart contract on either Ethereum or Scroll and interact
 with it from the opposite chain. We will be using the `ScrollMessenger` that is deployed on both
-Sepolia and Scroll.
+Ethereum and Scroll.
 
 ## Deploying the Contracts
 
 ### Target Smart Contract
 
 Let’s start by deploying the target smart contract. We will use the Greeter contract for this
-example, but you can use any other contract. Deploy it to either Sepolia or Scroll. On Scroll, L1
+example, but you can use any other contract. Deploy it to either Ethereum or Scroll. On Scroll, L1
 and L2 use the same API, so it’s up to you.
 
 ```solidity
@@ -79,7 +79,7 @@ contract GreeterOperator {
 We pass the message by executing `executeFunctionCrosschain` and passing the following parameters:
 
 - `scrollMessengerAddress`: This will depend on where you deployed the `GreeterOperator` contract.
-  - If you deployed it on Sepolia use `0x50c7d3e7f7c656493D1D76aaa1a836CedfCBB16A`. If you deployed on Scroll Sepolia use `0xBa50f5340FB9F3Bd074bD638c9BE13eCB36E603d`.
+  - If you deployed it on Ethereum use `0x6774Bcbd5ceCeF1336b5300fb5186a12DDD8b367`. If you deployed on Scroll use `0x781e90f1c8Fc4611c9b7497C3B47F99Ef6969CbC`.
 - `targetAddress`: The address of the `Greeter` contract on the opposite chain.
 - `value`: In this case, it is `0` because the `setGreeting`is not payable.
 - `greeting`: This is the parameter that will be sent through the message. Try passing `“This message was cross-chain!”`
@@ -92,7 +92,7 @@ We pass the message by executing `executeFunctionCrosschain` and passing the fol
 When a transaction is passed from L2 to L1, an additional "execute withdrawal transaction" must be sent on L1. To do this, you must call `relayMessageWithProof` on the L1 Scroll Messenger
 contract from an EOA wallet.
 
-You can do this directly on [Etherscan Sepolia](https://sepolia.etherscan.io/address/0x50c7d3e7f7c656493d1d76aaa1a836cedfcbb16a#writeProxyContract#F3).
+You can do this directly on [Etherscan](https://etherscan.io/address/0x6774Bcbd5ceCeF1336b5300fb5186a12DDD8b367#writeProxyContract#F3).
 To do so, you will need to pass a Merkle inclusion proof for the bridged transaction and other parameters. You'll query these using the Scroll Bridge API.
 
 {/* TODO: finish looking into API issues */}
@@ -100,7 +100,7 @@ To do so, you will need to pass a Merkle inclusion proof for the bridged transac
 We're finalizing the API specifics, but for now, fetch or curl the following endpoint:
 
 ```bash
-curl "https://sepolia-api-bridge.scroll.io/api/claimable?page_size=10&page=1&address=GREETER_OPERATOR_ADDRESS_ON_L2"
+curl "https://mainnet-api-bridge-v2.scroll.io/api/l2/unclaimed/withdrawals?address=GREETER_OPERATOR_ADDRESS_ON_L2&page=1&page_size=10"
 ```
 
 Replace `GREETER_OPERATOR_ADDRESS_ON_L2` with your GreeterOperator contract address as launched on L2. Read more about Execute Withdraw transactions
