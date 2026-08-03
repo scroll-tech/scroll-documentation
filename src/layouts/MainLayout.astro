@@ -9,7 +9,6 @@ import * as CONFIG from "../config"
 // import { NewsletterCTA } from "../components/Footer/NewsletterCTA.tsx"
 import Footer from "~/components/Footer/Footer.astro"
 import { changeLanguage } from "i18next"
-import { ViewTransitions } from "astro:transitions"
 
 const { content = {}, frontmatter } = Astro.props
 // Astro.props?.headings is for .mdx pages, Astro.props?.content?.astro.headings is for .md pages
@@ -31,7 +30,6 @@ changeLanguage(content.lang)
 
 <html transition:animate="none" dir={content.dir ?? "ltr"} lang={content.lang ?? "en-us"} class="initial">
   <head>
-    <ViewTransitions />
     <HeadCommon />
     <HeadSEO {content} {canonicalURL} />
     <title>{formattedContentTitle}</title>
