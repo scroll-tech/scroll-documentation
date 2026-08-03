@@ -16,7 +16,7 @@ ERC1155 bridging from L1 to L2 is done via the L1ERC1155Gateway. Similarly to ER
 
 <Aside type="tip" title="">
   **`depositERC1155`** is a payable function, and the amount of ETH sent to this function will be used to pay for L2
-  fees. If the amount is not enough, the transaction will not be sent. All excess eth will be sent back to the sender.
+  fees. If the amount is not enough, the transaction will not be sent. All excess ETH will be sent back to the sender.
   `0.00001 ETH` should be more than enough to process a token deposit.
 </Aside>
 
@@ -87,7 +87,7 @@ The `L2ERC1155Gateway` contract is used to send tokens from L2 to L1. Before bri
 
 <Aside type="caution" title="">
   **Make sure the transaction won't revert on L1** while sending from L2. There is no way to recover tokens bridged if
-  you're transaction reverts on L1. All assets are burnt on L2 when the transaction is sent, and it's impossible to mint
+  your transaction reverts on L1. All assets are burnt on L2 when the transaction is sent, and it's impossible to mint
   them again.
 </Aside>
 
