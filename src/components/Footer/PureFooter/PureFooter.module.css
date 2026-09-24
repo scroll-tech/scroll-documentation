@@ -1,105 +1,138 @@
+/* scroll.io's plain footer (frontends landing.module.css .footerPlain): a white panel that
+   casts its shadow upwards, the columns in 14px Inter, the links in the softer ink */
+.footer {
+  position: relative;
+  width: 100%;
+  padding: 56px 20px 40px;
+  background: var(--sc-surface);
+  box-shadow: 0 -8px 32px rgba(17, 17, 17, 0.06);
+}
+
+:global(.dark) .footer {
+  box-shadow: none;
+  border-top: 1px solid var(--sc-line-2);
+}
+
 .footerLayout {
-  grid-template-areas: "logo about resource follow version";
-  @apply grid w-full pb-[80px] pt-[60px] px-[20px] grid-cols-2 gap-[1em] bg-[var(--black-100)] lg:grid-cols-[2fr_2fr_2fr_2fr_4fr]  lg:pb-[100px];
+  display: grid;
+  grid-template-columns: 1fr repeat(3, auto);
+  gap: clamp(28px, 4vw, 72px);
+  align-items: start;
+  width: min(100%, 1200px);
+  margin: 0 auto;
 }
 
-@media screen and (max-width: 50em) {
-  .footerLayout {
-    grid-template-areas:
-      "logo follow"
-      "about resource"
-      "version version";
-    row-gap: 50px;
-  }
-  .version {
-    margin-top: 22px;
-  }
-}
-
-.footerLayout .logo {
-  grid-area: logo;
-}
-
-.footerLayout .logo img {
-  width: 100px;
-  height: auto;
-}
-
-.footerLayout .about {
-  grid-area: about;
+.brand {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  justify-self: start;
+  padding-left: clamp(0px, 6vw, 120px);
+  color: var(--sc-ink);
 }
 
-.footerLayout .title {
-  color: #fff8f3;
-  font-size: 16px;
-  font-style: normal;
+.brand:hover,
+.brand:focus {
+  color: var(--sc-ink);
+}
+
+.mark {
+  width: 30px;
+  height: 30px;
+  color: var(--sc-ink);
+}
+
+.tagline {
+  font-size: 14px;
   font-weight: 600;
-  line-height: normal;
-  letter-spacing: 0.18px;
+  line-height: 1.35;
+  color: var(--sc-ink);
 }
 
-.footerLayout .content {
-  list-style: none;
-  margin-bottom: 16px;
-}
-
-.footerLayout .content a {
-  color: #fff8f3;
-  font-size: 15px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-  letter-spacing: 0.15px;
-}
-
-.footerLayout .content a:hover {
-  color: var(--orange-500);
-}
-
-.footerLayout .follow {
-  grid-area: follow;
+.column,
+.follow {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
+  gap: 16px;
+  min-width: 130px;
 }
 
-.footerLayout .follow .title {
-  @apply hidden md:block;
+.column ul {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
 }
 
-.footerLayout .follow div {
+.title {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4;
+  margin: 0 !important;
+  color: var(--sc-ink);
+}
+
+.content {
+  list-style: none;
+}
+
+.content a {
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--sc-ink-2);
+  transition: color 0.25s var(--sc-ease);
+}
+
+.content a:hover {
+  color: var(--sc-ink);
+}
+
+.media {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: flex-start;
-  @apply mt-[6px] md:mt-[0px];
+  gap: 8px;
 }
 
-.footerLayout .follow a {
-  color: #fff8f3;
-  margin-right: 27px;
+.media a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid var(--sc-line);
+  color: var(--sc-ink-2);
+  transition: color 0.25s var(--sc-ease), border-color 0.25s var(--sc-ease), background-color 0.25s var(--sc-ease);
 }
 
-.footerLayout .follow a:last-of-type {
-  margin-right: 0;
+.media a:hover {
+  color: var(--sc-ink);
+  border-color: var(--sc-ink-4);
+  background: var(--sc-surface-2);
 }
 
-.footerLayout .follow a:hover {
-  color: var(--orange-500);
+.legal {
+  margin: 56px auto 0 !important;
+  max-width: none !important;
+  text-align: center;
+  font-size: 13px !important;
+  color: var(--sc-ink-3) !important;
 }
 
-.footerLayout .version {
-  grid-area: version;
-  color: #fff8f3;
-  font-size: 15px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 25px; /* 166.667% */
-  letter-spacing: 0.15px;
-  @apply md:text-right;
+@media screen and (max-width: 900px) {
+  .footerLayout {
+    grid-template-columns: 1fr 1fr;
+    gap: 44px 32px;
+  }
+
+  .brand {
+    grid-column: 1 / -1;
+    align-items: flex-start;
+    text-align: left;
+    padding-left: 0;
+  }
 }

@@ -4,8 +4,7 @@ import MoonSvg from "~/assets/svgs/header/moon.svg?react"
 import SunSvg from "~/assets/svgs/header/sun.svg?react"
 import { clsx } from "~/lib"
 
-const ThemeModeToggle = (props) => {
-  const { dark } = props
+const ThemeModeToggle = () => {
   const [themeMode, setThemeMode] = useStorage(localStorage, "THEME_MODE", "light")
   const [isDarkMode, setIsDarkMode] = useState(false)
 
@@ -44,13 +43,14 @@ const ThemeModeToggle = (props) => {
   return (
     <button
       id="themeModeToggle"
+      aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
       className={clsx(
-        "relative w-[35px] h-[35px] rounded-[5px] border-solid bg-transparent border border-black dark:border-white-800 text-black dark:text-white-800",
-        dark && "border-white text-white"
+        "relative flex items-center justify-center w-[36px] h-[36px] rounded-full border border-solid border-line bg-transparent text-ink-2 cursor-pointer",
+        "transition-colors duration-200 hover:text-ink hover:bg-surface-2 hover:border-ink-4"
       )}
       onClick={handleToggleThemeMode}
     >
-      {isDarkMode ? <SunSvg className="align-middle"></SunSvg> : <MoonSvg className="align-middle"></MoonSvg>}
+      {isDarkMode ? <SunSvg className="w-[18px] h-[18px]"></SunSvg> : <MoonSvg className="w-[18px] h-[18px]"></MoonSvg>}
     </button>
   )
 }

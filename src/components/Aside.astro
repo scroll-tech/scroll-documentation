@@ -21,7 +21,7 @@ const icons = {
 
 <aside class={`content ${type}`} aria-label={title}>
   <div class="icon">
-    <span class="inline-block w-[1.5rem] h-[1.5rem] text-black dark:text-white-800">
+    <span class="inline-block w-[20px] h-[20px]">
       <Fragment set:html={icons[type]} />
     </span>
   </div>
@@ -38,45 +38,60 @@ const icons = {
 </aside>
 
 <style>
+  /* a callout sits on its type's tint with the icon in the type's ink (styles/brand.css) */
   aside {
     /* Indicates the aside boundaries for forced colors users, transparent is changed to a solid color */
     outline: 1px solid transparent;
 
-    /* display: flex; */
-    @apply p-[30px] gap-4 rounded-[27px] text-info mb-[1rem] bg-callout-note dark:bg-callout-dark-note;
+    --aside-bg: var(--sc-note-bg);
+    --aside-ink: var(--sc-note-ink);
+    display: grid;
+    grid-template-columns: 20px minmax(0, 1fr);
+    column-gap: 14px;
+    align-items: start;
+    padding: 20px 24px;
+    margin-bottom: 1rem;
+    border-radius: 16px;
+    background: var(--aside-bg);
+    color: var(--sc-text);
   }
 
   aside p.title {
-    font-weight: bold;
-    font-size: 16px;
-  }
-
-  aside p {
-    @apply text-info;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 22px;
+    color: var(--sc-ink);
+    margin-bottom: 4px !important;
   }
 
   .icon {
     flex-shrink: 0;
-    width: 1.5em;
-    margin-bottom: 10px;
+    width: 20px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    color: var(--aside-ink);
   }
-  .icon svg {
+  .icon :global(svg) {
+    width: 20px;
+    height: 20px;
     vertical-align: middle;
     fill: currentcolor;
+  }
+  .icon span {
+    color: inherit;
   }
 
   aside :global(a),
   aside :global(a > code:not([class*="language"])) {
     @apply text-link underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
   }
 
   aside :global(p),
   aside.content :global(ul) {
-    @apply text-text;
-  }
-
-  :global(.theme-dark) aside :global(code:not([class*="language"])) {
-    @apply text-code-text;
+    color: var(--sc-text);
   }
 
   aside :global(pre) {
@@ -85,25 +100,33 @@ const icons = {
   }
 
   .tip {
-    @apply bg-callout-tip dark:bg-callout-dark-tip;
+    --aside-bg: var(--sc-tip-bg);
+    --aside-ink: var(--sc-tip-ink);
   }
 
   .caution {
-    @apply bg-callout-caution dark:bg-callout-dark-caution;
+    --aside-bg: var(--sc-caution-bg);
+    --aside-ink: var(--sc-caution-ink);
   }
 
   .danger {
-    @apply bg-callout-danger dark:bg-callout-dark-danger;
+    --aside-bg: var(--sc-danger-bg);
+    --aside-ink: var(--sc-danger-ink);
   }
 
   .note {
-    @apply bg-callout-note dark:bg-callout-dark-note;
+    --aside-bg: var(--sc-note-bg);
+    --aside-ink: var(--sc-note-ink);
+  }
+
+  .asideContent {
+    min-width: 0;
   }
 
   .asideContent :global(p) {
     margin-bottom: 0 !important;
-    font-size: 16px;
-    line-height: 25px;
+    font-size: 15px;
+    line-height: 24px;
   }
 
   .asideContent :global(p + p) {

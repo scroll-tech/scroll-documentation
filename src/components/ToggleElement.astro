@@ -45,12 +45,18 @@ const anchorHash = anchor.replace(/\s+/g, "-")
 <style>
   details {
     margin-bottom: 1rem;
-    border-radius: 27px;
-    border: 1px solid #dadada;
+    border-radius: 12px;
+    border: 1px solid var(--sc-line);
     overflow: hidden;
     font-weight: 400;
     padding-left: 0.3rem;
-    @apply text-black dark:text-white-800 border-primary dark:border-dark-primary;
+    color: var(--sc-text);
+    transition: border-color 0.25s var(--sc-ease);
+  }
+
+  details:hover,
+  details[open] {
+    border-color: var(--sc-ink-4);
   }
 
   details:hover {

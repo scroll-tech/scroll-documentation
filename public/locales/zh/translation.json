@@ -166,7 +166,6 @@
     "aboutScroll": {
       "title": "关于 Scroll",
       "bugBounty": "漏洞赏金",
-      "joinUs": "加入我们",
       "healthStatus": "健康状况",
       "privacyPolicy": "隐私政策",
       "termsAndConditions": "条款和条件"
@@ -176,7 +175,6 @@
       "scrollDocsURL": "https://docs.scroll.io/",
       "blog": "博客",
       "documentation": "文档",
-      "brandKit": "品牌工具包",
       "audits": "审计"
     },
     "followUs": {

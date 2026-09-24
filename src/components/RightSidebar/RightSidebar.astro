@@ -26,7 +26,7 @@ const { content, githubEditUrl, headings, clientSideToc } = Astro.props
 
 <style>
   .feedback-wrapper {
-    @apply pl-4 mt-2;
+    @apply mt-2;
   }
   .sidebar-nav {
     width: 100%;
@@ -37,15 +37,11 @@ const { content, githubEditUrl, headings, clientSideToc } = Astro.props
     @apply !mb-6;
   }
   .sidebar-nav-inner {
-    padding: 24px 20px 24px 4px;
+    padding: 8px 20px 24px 0;
     overflow: auto;
-    background: #fff8f3;
-    border-radius: 1em;
     float: right;
-    width: 280px;
-    /* width: 250px; */
+    width: 260px;
     max-height: 100%;
-    @apply bg-white dark:bg-dark-normal;
   }
   .sidebar-nav-inner > * {
     margin-top: 32px;

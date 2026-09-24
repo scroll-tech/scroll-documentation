@@ -49,8 +49,9 @@ const { content = {} } = Astro.props as Props
 
   .whats-next {
     padding: 0;
-    @apply border-[1px] border-solid border-primary dark:border-dark-primary overflow-hidden;
-    border-radius: 10px;
+    @apply border-[1px] border-solid overflow-hidden;
+    border-color: var(--sc-line);
+    border-radius: 12px;
   }
   .whats-next li:first-child {
     border-top: 0;
@@ -58,7 +59,8 @@ const { content = {} } = Astro.props as Props
   .whats-next li {
     list-style: none;
     margin: 0;
-    @apply border-0 border-t-[1px] border-solid border-primary dark:border-dark-primary;
+    @apply border-0 border-t-[1px] border-solid;
+    border-color: var(--sc-line);
   }
   .whats-next li a {
     width: 100%;
@@ -67,6 +69,6 @@ const { content = {} } = Astro.props as Props
     gap: 8px;
   }
   .whats-next li a:hover {
-    @apply bg-white dark:bg-dark-normal;
+    background: var(--sc-surface-2);
   }
 </style>

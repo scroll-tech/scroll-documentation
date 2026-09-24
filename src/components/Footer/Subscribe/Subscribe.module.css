@@ -1,76 +1,76 @@
+/* the newsletter band over the footer: the brand ground, a serif line, the pill field */
 .container {
-  @apply py-[60px] px-[20px] bg-[#EAF5FD] lg:py-[32px];
+  padding: 48px 20px;
+  background: var(--sc-bg);
+  border-top: 1px solid var(--sc-line-2);
 }
 
 .subscribeBox {
-  @apply flex  flex-col gap-[18px] items-start lg:gap-[22px] lg:items-center lg:flex-row lg:justify-between;
+  @apply flex flex-col gap-[18px] items-start lg:gap-[28px] lg:items-center lg:flex-row lg:justify-between;
+  width: min(100%, 1200px);
+  margin: 0 auto;
 }
 
 .subscribeIcon {
-  width: 48px;
+  display: inline-flex;
+  flex-shrink: 0;
+  border-radius: 50%;
+  color: var(--sc-page);
+  background: var(--sc-ink);
 }
+
+.subscribeIcon svg {
+  width: 52px;
+  height: 52px;
+}
+
 .copyBox {
   display: flex;
   flex: 1;
   flex-direction: column;
+  gap: 4px;
 }
 
 .subscribeTitle {
-  font-size: 20px;
-  font-weight: 600;
-  line-height: normal;
+  font-family: var(--sc-serif);
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  -webkit-text-stroke: 0.3px currentColor;
+  color: var(--sc-ink);
 }
 
 .subscribeText {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 400;
-  /* margin-top: 10px; */
+  line-height: 1.55;
+  color: var(--sc-ink-2);
 }
 
 .emailBox {
-  /* position: "relative", mt: ["3.2rem", "3.2rem", 0], flex: 1, width: ["100%", "auto"], textAlign: "right"  */
   position: relative;
-  /* margin-top: 32px; */
   width: 100%;
   text-align: left;
 }
 
 .errorMessage {
-  /* position: "absolute", fontSize: "1.6rem", textAlign: "center", mt: "1rem", width: "100%", lineHeight: "normal" */
   position: absolute;
-  font-size: 16px;
+  font-size: 14px;
   text-align: center;
   margin-top: 10px;
   width: 100%;
   line-height: normal;
+  color: var(--sc-danger-ink);
 }
 
 @media (min-width: 50em) {
-  .container {
-  }
-
-  .subscribeBox {
-  }
-
-  .subscribeIcon {
-    width: 70px;
-  }
-  .copyBox {
-  }
-
   .subscribeTitle {
-    font-size: 20px;
-  }
-
-  .subscribeText {
-    font-size: 16px;
+    font-size: 32px;
   }
 
   .emailBox {
-    width: 448px;
+    width: 420px;
     text-align: right;
-  }
-
-  .errorMessage {
   }
 }

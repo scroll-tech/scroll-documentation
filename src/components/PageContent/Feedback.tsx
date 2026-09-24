@@ -97,8 +97,9 @@ export const Feedback = () => {
             }}
             style={{
               cursor: "pointer",
-              marginRight: "10px",
+              marginRight: "8px",
               fontSize: 0,
+              color: rating >= i + 1 ? "var(--sc-violet)" : "var(--sc-ink-3)",
             }}
           >
             {rating >= i + 1 ? star : starOutline}
@@ -112,7 +113,7 @@ export const Feedback = () => {
           }}
         >
           {isSent ? (
-            <div className="text-dark dark:text-white-800" style={{ fontSize: "1rem", lineHeight: "normal" }}>
+            <div className="text-ink-2" style={{ fontSize: "1rem", lineHeight: "normal" }}>
               We appreciate your feedback! 🤎
             </div>
           ) : (
@@ -123,7 +124,7 @@ export const Feedback = () => {
             >
               <label
                 htmlFor="name"
-                className="text-dark dark:text-white-800"
+                className="text-ink-2"
                 style={{ fontSize: "1rem", lineHeight: "normal", marginBottom: "16px" }}
               >
                 Tell us more about your experience.
@@ -132,19 +133,19 @@ export const Feedback = () => {
                 <textarea
                   name="msg"
                   rows="4"
-                  className="text-black dark:text-white-800 border-black dark:border-white-800 bg-pure-white dark:bg-black"
+                  className="text-ink bg-page border border-solid border-line focus:border-ink-3"
                   style={{
-                    padding: "15px",
-                    caretColor: "#C4C4C4",
+                    padding: "12px 14px",
+                    caretColor: "var(--sc-violet)",
                     outline: "none",
-                    fontSize: "1rem",
-                    borderRadius: "10px",
-                    marginBottom: "16px",
+                    fontSize: "14px",
+                    borderRadius: "12px",
+                    marginBottom: "12px",
                   }}
                 />
                 <button
                   className={button.primary}
-                  style={{ borderRadius: "5px", borderWidth: " 0", background: "var(--orange-400)" }}
+                  style={{ fontSize: "14px", fontWeight: 500 }}
                   disabled={isSubmitting}
                 >
                   submit

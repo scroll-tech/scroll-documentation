@@ -128,31 +128,34 @@ const aiServices = [
     position: relative;
   }
 
+  /* the landing page's outline pill, as the header's tools are */
   .ask-ai-btn,
   .copy-btn {
     display: flex;
     align-items: center;
     gap: 6px;
-    background: var(--theme-bg);
-    border: 1px solid var(--theme-divider);
-    border-radius: 6px;
-    padding: 6px 10px;
+    background: var(--sc-surface);
+    border: 1px solid var(--sc-line);
+    border-radius: 999px;
+    padding: 7px 14px;
     font-size: 0.8125rem;
-    color: var(--theme-text-light);
+    font-weight: 500;
+    color: var(--sc-ink-2);
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: color 0.25s var(--sc-ease), border-color 0.25s var(--sc-ease), background-color 0.25s var(--sc-ease);
     white-space: nowrap;
   }
 
   .ask-ai-btn:hover,
   .copy-btn:hover {
-    border-color: var(--theme-accent);
-    color: var(--theme-accent);
+    color: var(--sc-ink);
+    border-color: var(--sc-ink-4);
+    background: var(--sc-surface-2);
   }
 
   .copy-btn.copied {
-    border-color: #10b981;
-    color: #10b981;
+    border-color: var(--sc-tip-ink);
+    color: var(--sc-tip-ink);
   }
 
   .chevron {
@@ -168,11 +171,11 @@ const aiServices = [
     top: calc(100% + 4px);
     left: 0;
     min-width: 160px;
-    background: var(--theme-bg);
-    border: 1px solid var(--theme-divider);
-    border-radius: 8px;
-    padding: 4px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background: var(--sc-surface);
+    border: 1px solid var(--sc-line);
+    border-radius: 12px;
+    padding: 6px;
+    box-shadow: 0 20px 50px -24px rgba(46, 27, 112, 0.3);
     opacity: 0;
     visibility: hidden;
     transform: translateY(-4px);
@@ -192,9 +195,9 @@ const aiServices = [
     gap: 8px;
     padding: 8px 10px;
     font-size: 0.8125rem;
-    color: var(--theme-text);
+    color: var(--sc-ink);
     text-decoration: none;
-    border-radius: 4px;
+    border-radius: 8px;
     transition: background 0.15s ease;
   }
 
@@ -245,7 +248,7 @@ const aiServices = [
 
     .ask-ai-btn,
     .copy-btn {
-      padding: 8px;
+      padding: 9px;
     }
   }
 </style>

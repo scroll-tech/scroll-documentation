@@ -167,7 +167,6 @@
     "aboutScroll": {
       "title": "Scroll Hakkında",
       "bugBounty": "Hata Ödül Programı",
-      "joinUs": "Bize Katılın",
       "healthStatus": "Sağlık Durumu",
       "privacyPolicy": "Gizlilik Politikası",
       "termsAndConditions": "Şartlar ve Koşullar"
@@ -177,7 +176,6 @@
       "scrollDocsURL": "https://docs.scroll.io/",
       "blog": "Blog",
       "documentation": "Dokümantasyon",
-      "brandKit": "Marka Kiti",
       "audits": "Denetimler"
     },
     "followUs": {

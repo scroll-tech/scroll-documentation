@@ -22,27 +22,28 @@ module.exports = {
         "w-secondary": "var(--border-width-secondary)" /* Buttons */,
         "w-reset": "var(--border-width-reset)" /* Border reset */,
       },
+      // the brand's light and dark values (styles/brand.css), for the classes that pair them
       backgroundColor: {
-        normal: "#FFF0DD",
-        "dark-normal": "#1D1D1D",
-        highlight: "#FFDEB5",
-        "dark-highlight": "#3b3b3b",
-        "callout-note": "#FFF8F3",
-        "callout-dark-note": "#2E261C",
-        "callout-caution": "#F8F5E0",
-        "callout-dark-caution": "#5D4C38",
-        "callout-danger": "#FFE4DF",
-        "callout-dark-danger": "#662A1E",
-        "callout-tip": "#EEEEEE",
-        "callout-dark-tip": "#3B3B3B",
-        "link-code": "#ffe7e2",
-        "link-dark-code": "#33150F",
-        code: "#dadada",
-        "dark-code": "#5B5B5B",
+        normal: "#F4F2F0",
+        "dark-normal": "#1B1A18",
+        highlight: "#EDE8FC",
+        "dark-highlight": "#221B3A",
+        "callout-note": "#F3EFFD",
+        "callout-dark-note": "#1C1730",
+        "callout-caution": "#FBF4E3",
+        "callout-dark-caution": "#261F12",
+        "callout-danger": "#FDEEEC",
+        "callout-dark-danger": "#2B1614",
+        "callout-tip": "#EEF5F0",
+        "callout-dark-tip": "#14201A",
+        "link-code": "#EDE8FC",
+        "link-dark-code": "#221B3A",
+        code: "#F4F2F0",
+        "dark-code": "#1F1D1B",
       },
       borderColor: {
-        primary: "#dadada",
-        "dark-primary": "#FFF8F34D",
+        primary: "#E5E1DC",
+        "dark-primary": "#2C2A27",
       },
       colors: {
         blue: {
@@ -145,7 +146,7 @@ module.exports = {
         "bg-hover": "var(--theme-bg-hover)",
         "bg-offset": "var(--theme-bg-offset)",
         "bg-accent": "var(--theme-bg-accent)",
-        divider: "#000000",
+        divider: "var(--sc-line)",
         accent: "var(--theme-accent)",
         "code-text": "var(--theme-code-text)",
         "code-bg": "var(--theme-code-bg)",
@@ -169,15 +170,37 @@ module.exports = {
         "interactive-pressed": "var(--color-border-interactive-pressed)",
         "interactive-error": "var(--color-border-interactive-error)",
 
-        // theme
-        black: "#101010",
-        // white: "#FFF8F3",
+        // theme: the landing page's ink and its warm off-white (dark mode's text)
+        black: "#0A0A0A",
 
         white: {
-          DEFAULT: "#FFF8F3",
-          800: "#DADADA",
-          900: "#EDEDED",
+          DEFAULT: "#F4F2F0",
+          800: "#DCD7D0",
+          900: "#F4F2F0",
         },
+
+        // brand tokens that flip with dark mode on their own (styles/brand.css)
+        ink: {
+          DEFAULT: "var(--sc-ink)",
+          2: "var(--sc-ink-2)",
+          3: "var(--sc-ink-3)",
+          4: "var(--sc-ink-4)",
+        },
+        line: {
+          DEFAULT: "var(--sc-line)",
+          2: "var(--sc-line-2)",
+        },
+        violet: {
+          DEFAULT: "var(--sc-violet)",
+          soft: "var(--sc-violet-soft)",
+          ink: "var(--sc-violet-ink)",
+        },
+        surface: {
+          DEFAULT: "var(--sc-surface)",
+          2: "var(--sc-surface-2)",
+        },
+        page: "var(--sc-page)",
+        ground: "var(--sc-bg)",
 
         "pure-black": "#000",
         "pure-white": "#fff",
@@ -186,6 +209,7 @@ module.exports = {
         text: "var(--font-family-text)",
         code: "var(--font-family-code)",
         mono: "var(--font-family-code)",
+        display: "var(--font-family-display)",
       },
       fontWeight: {
         normal: "var(--font-weight-normal)",
@@ -196,11 +220,11 @@ module.exports = {
         base: ["16px", "28px"],
       },
       textColor: {
-        "link-code": "#ff684b",
-        code: "#101010",
-        "dark-code": "#fff",
-        marker: "#586474",
-        "dark-marker": "#FFF8F3",
+        "link-code": "var(--sc-violet)",
+        code: "#0A0A0A",
+        "dark-code": "#DCD7D0",
+        marker: "#8B8781",
+        "dark-marker": "#8B8781",
       },
       height: {
         navbar: "var(--theme-navbar-height)",

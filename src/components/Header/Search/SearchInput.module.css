@@ -1,4 +1,5 @@
 .wrapper {
+  background: var(--sc-surface);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -28,12 +29,11 @@
   padding-left: 36px;
   padding-bottom: 30px;
   border: none;
-  border-bottom: 1px solid #000;
+  border-bottom: 1px solid var(--sc-line);
   border-radius: 0;
   height: 50px;
   line-height: 45px;
-
-  @apply text-black border-black;
+  color: var(--sc-ink);
 }
 .input.large {
   height: 48px;
@@ -44,7 +44,7 @@
 }
 
 .input::placeholder {
-  font-style: italic;
+  color: var(--sc-ink-3);
 }
 
 .input:focus {
@@ -63,9 +63,13 @@
 @media (min-width: 50em) {
   .wrapper {
     width: 346px;
-    height: 35px;
-    border-radius: 40px;
+    height: 36px;
+    border-radius: 999px;
     padding: unset;
+  }
+
+  .wrapper.mini {
+    background: transparent;
   }
 
   .wrapper.large {

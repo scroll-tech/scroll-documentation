@@ -59,27 +59,36 @@ const mediaList = [
 
 <style>
   .connect-us {
-    margin-top: 155px;
+    margin-top: 120px;
   }
 
   .medias {
-    display: flex;
-    gap: 1.6rem;
-    margin-top: 90px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+    margin-top: 48px;
   }
+
+  /* the landing page's cards: a white sheet with a hairline that lifts on hover */
   .media-item {
-    width: 325px;
-    height: 325px;
-    padding: 30px;
-    border-radius: 25px;
+    min-height: 260px;
+    padding: 28px;
+    border-radius: 20px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    @apply bg-normal dark:bg-dark-normal;
+    background: var(--sc-surface);
+    border: 1px solid var(--sc-line-2);
+    color: var(--sc-ink);
+    transition: transform 0.85s var(--sc-ease-soft), box-shadow 0.85s var(--sc-ease-soft),
+      border-color 0.4s var(--sc-ease);
   }
 
   .media-item:hover {
-    @apply bg-highlight dark:bg-dark-highlight;
+    color: var(--sc-ink);
+    transform: translateY(-6px);
+    border-color: var(--sc-line);
+    box-shadow: var(--sc-shadow-lift);
   }
 
   .media-item-header {
@@ -91,52 +100,68 @@ const mediaList = [
   }
 
   .media-item-link {
-    width: 23px;
-    height: 23px;
-    background-size: contain;
+    width: 18px;
+    height: 18px;
     align-self: flex-end;
-    @apply text-black dark:text-white-800;
+    color: var(--sc-ink-3);
+    transition: color 0.25s var(--sc-ease);
+  }
+
+  .media-item:hover .media-item-link {
+    color: var(--sc-violet);
+  }
+
+  .media-item-link :global(svg) {
+    width: 100%;
+    height: 100%;
   }
 
   .media-item-icon {
     display: inline-flex;
-    width: 35px;
-    height: 35px;
+    width: 32px;
+    height: 32px;
     align-items: center;
+    color: var(--sc-ink);
+  }
+  .media-item-icon :global(svg) {
+    width: 100%;
+    height: 100%;
   }
   .media-item-title {
-    font-size: 22px;
+    font-size: 19px;
     font-weight: 600;
-    margin-top: 22px;
-    line-height: normal;
-    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+    margin-top: 24px;
+    line-height: 1.3;
+    margin-bottom: 8px;
+    color: var(--sc-ink);
   }
   .media-item-content {
-    font-size: 20px;
-    line-height: normal;
-    height: 84px;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--sc-ink-2);
   }
 
   @media screen and (max-width: 50em) {
     .connect-us {
-      margin-top: 112px;
+      margin-top: 88px;
     }
     .medias {
-      flex-direction: column;
-      gap: 3rem;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-top: 32px;
     }
     .media-item {
-      width: 100%;
-      height: 150px;
-      padding: 20px;
+      min-height: 0;
+      padding: 22px;
     }
     .media-item-header {
       flex-direction: row-reverse;
       flex: unset;
     }
     .media-item-link {
-      width: 13px;
-      height: 13px;
+      width: 14px;
+      height: 14px;
       align-self: flex-start;
     }
     .media-item-icon {
@@ -144,13 +169,7 @@ const mediaList = [
       height: 26px;
     }
     .media-item-title {
-      font-size: 20px;
-      margin-top: 8px;
-      margin-bottom: 0px;
-    }
-    .media-item-content {
-      font-size: 16px;
-      height: auto;
+      margin-top: 12px;
     }
   }
 </style>

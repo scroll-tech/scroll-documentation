@@ -1,35 +1,46 @@
 .container {
   position: relative;
-  width: 684px;
-}
-.searchInput {
-  display: flex;
-  box-sizing: border-box;
-  padding: 8px 22px;
-  font-weight: 500;
-  cursor: pointer;
-  width: 100%;
-  height: 55px;
-  border-radius: 27.5px;
-  font-style: italic;
-  background: var(--white);
+  width: min(100%, 640px);
+  text-align: left;
 }
 
-.searchInput img {
-  width: 22px;
+/* the landing page's field: a white pill with a hairline, the glow of its buttons on hover */
+.searchInput {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  padding: 0 14px 0 24px;
+  cursor: pointer;
+  width: 100%;
+  height: 56px;
+  border-radius: 999px;
+  background: var(--sc-surface);
+  border: 1px solid var(--sc-line);
+  color: var(--sc-ink-3);
+  box-shadow: var(--sc-shadow);
+  transition: color 0.25s var(--sc-ease), border-color 0.25s var(--sc-ease), transform 0.45s var(--sc-ease);
+}
+
+.searchInput:hover {
+  color: var(--sc-ink);
+  border-color: var(--sc-ink-4);
+  transform: translateY(-1px);
+}
+
+.hint {
+  font-family: var(--sc-mono);
+  font-size: 12px;
+  line-height: 1;
+  padding: 5px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--sc-line);
+  color: var(--sc-ink-3);
 }
 
 @media screen and (max-width: 50em) {
-  .container {
-    width: 100%;
-  }
   .searchInput {
-    width: 100%;
-    height: 48px;
-    padding: 8px 20px;
-    border-spacing: 24px;
-  }
-  .searchInput img {
-    width: 20px;
+    height: 50px;
+    padding: 0 12px 0 20px;
   }
 }

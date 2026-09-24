@@ -27,44 +27,57 @@
   box-shadow: none;
 }
 
+/* the landing page's buttons (scroll.html .btn): a solid ink pill, and a white one with a hairline */
+.primary,
+.secondary {
+  border-radius: 999px;
+  border-width: 1px;
+  transition: color 0.3s var(--sc-ease), background-color 0.3s var(--sc-ease), border-color 0.3s var(--sc-ease),
+    transform 0.45s var(--sc-ease);
+}
+
 .primary {
-  @apply text-white bg-blue-600 border-blue-600;
+  color: var(--sc-page);
+  background: var(--sc-ink);
+  border-color: var(--sc-ink);
+}
+
+.primary:hover,
+.primary:focus {
+  transform: translateY(-1px);
 }
 
 .primary:active {
-  @apply border-gray-900 bg-gray-900;
-}
-
-.primary:focus {
-  @apply border-gray-900 bg-gray-800;
-}
-
-.primary:hover {
-  @apply border-gray-900 bg-gray-800;
+  transform: translateY(0) scale(0.985);
 }
 
 .primary:disabled {
-  @apply border-gray-200 bg-gray-200 text-gray-500;
+  color: var(--sc-ink-3);
+  background: var(--sc-line-2);
+  border-color: var(--sc-line-2);
+  transform: none;
 }
 
 .secondary {
-  @apply text-blue-600 bg-white border-blue-600;
+  color: var(--sc-ink);
+  background: var(--sc-surface);
+  border-color: var(--sc-line);
+}
+
+.secondary:hover,
+.secondary:focus {
+  border-color: var(--sc-ink-4);
+  background: var(--sc-surface-2);
 }
 
 .secondary:active {
-  @apply text-gray-900 bg-blue-100 border-gray-600;
-}
-
-.secondary:focus {
-  @apply border-blue-800 bg-white;
-}
-
-.secondary:hover {
-  @apply border-blue-800 bg-blue-100 text-blue-800;
+  transform: scale(0.985);
 }
 
 .secondary:disabled {
-  @apply border-gray-300 bg-white text-gray-300;
+  color: var(--sc-ink-4);
+  background: var(--sc-surface);
+  border-color: var(--sc-line);
 }
 
 .tertiary {
@@ -111,18 +124,22 @@
 
 .reset:focus-visible {
   outline-offset: var(--border-width-secondary);
-  outline: var(--border-width-primary) solid var(--blue-600);
+  outline: var(--border-width-primary) solid var(--sc-violet);
 }
 
 .tag {
-  @apply text-start bg-blue-200 rounded-primary py-1 px-2 text-blue-600 border-w-primary border-solid border-transparent;
+  @apply text-start rounded-primary py-1 px-2 border-w-primary border-solid border-transparent;
+  color: var(--sc-violet-ink);
+  background: var(--sc-violet-soft);
 }
 
 .tag:focus-visible,
 .tag:hover {
-  @apply bg-transparent border-w-primary border-solid border-blue-300;
+  background: transparent;
+  border-color: var(--sc-line);
 }
 
 .tag:active {
-  @apply text-blue-200 bg-blue-800;
+  color: var(--sc-page);
+  background: var(--sc-ink);
 }
