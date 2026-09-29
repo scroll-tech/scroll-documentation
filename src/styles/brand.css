@@ -1,0 +1,110 @@
+/*
+ * Scroll brand tokens — the system of scroll.io's landing page (frontends/design/landing.html):
+ * the warm ink ramp, the hairlines, the one violet accent, and three faces — Instrument Serif
+ * for the display lines, Inter for the running text, JetBrains Mono for code and small labels.
+ *
+ * The landing page is light only. The docs keep their dark mode, so every token has a dark
+ * value under `.dark` (the class ThemeModeToggle puts on <html>). The older design-system and
+ * theme tokens (--color-*, --theme-*) point at these, so change a colour here, not there.
+ */
+:root {
+  --sc-bg: #f4f2f0; /* the landing page's ground: the home page, cards' surroundings */
+  --sc-page: #ffffff; /* a docs page's reading surface */
+  --sc-surface: #ffffff;
+  --sc-surface-2: #faf9f8;
+  --sc-ink: #0a0a0a;
+  --sc-ink-2: #4a4845;
+  --sc-ink-3: #8b8781;
+  --sc-ink-4: #b6b2ac;
+  --sc-text: #2a2826; /* running text, a step softer than the ink */
+  --sc-line: #e5e1dc;
+  --sc-line-2: #efebe6;
+  --sc-wash: rgba(10, 10, 10, 0.055); /* the faint pill behind the word in the nav */
+
+  --sc-violet: #6d45e8;
+  --sc-violet-hover: #5230d6;
+  --sc-violet-soft: #ede8fc;
+  --sc-violet-ink: #2e1b70;
+
+  --sc-code-inline-bg: #f4f2f0;
+  --sc-code-block-bg: #faf9f8;
+
+  /* callouts: a tint to sit on and an ink for the icon */
+  --sc-note-bg: #f3effd;
+  --sc-note-ink: #6d45e8;
+  --sc-tip-bg: #eef5f0;
+  --sc-tip-ink: #2f7a4b;
+  --sc-caution-bg: #fbf4e3;
+  --sc-caution-ink: #94650f;
+  --sc-danger-bg: #fdeeec;
+  --sc-danger-ink: #c23b2e;
+
+  --sc-shadow: 0 6px 28px -12px rgba(46, 27, 112, 0.22);
+  --sc-shadow-lift: 0 4px 10px rgba(46, 27, 112, 0.04), 0 40px 80px -40px rgba(46, 27, 112, 0.3);
+  --sc-nav-bg: rgba(255, 255, 255, 0.86);
+
+  --sc-r-sm: 8px;
+  --sc-r-md: 12px;
+  --sc-r-lg: 20px;
+  --sc-r-xl: 28px;
+  --sc-r-pill: 999px;
+
+  --sc-serif: "Instrument Serif", Georgia, serif;
+  --sc-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --sc-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --sc-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --sc-ease-soft: cubic-bezier(0.16, 0.84, 0.44, 1);
+}
+
+.dark {
+  --sc-bg: #131211;
+  --sc-page: #0a0a0a;
+  --sc-surface: #171614;
+  --sc-surface-2: #1b1a18;
+  --sc-ink: #f4f2f0;
+  --sc-ink-2: #bdb8b1;
+  --sc-ink-3: #8b8781;
+  --sc-ink-4: #5f5b56;
+  --sc-text: #dcd7d0;
+  --sc-line: #2c2a27;
+  --sc-line-2: #211f1d;
+  --sc-wash: rgba(244, 242, 240, 0.08);
+
+  --sc-violet: #a48bff;
+  --sc-violet-hover: #c0adff;
+  --sc-violet-soft: #221b3a;
+  --sc-violet-ink: #d8ceff;
+
+  --sc-code-inline-bg: #1f1d1b;
+  --sc-code-block-bg: #141312;
+
+  --sc-note-bg: #1c1730;
+  --sc-note-ink: #a48bff;
+  --sc-tip-bg: #14201a;
+  --sc-tip-ink: #6cc38d;
+  --sc-caution-bg: #261f12;
+  --sc-caution-ink: #e0b25a;
+  --sc-danger-bg: #2b1614;
+  --sc-danger-ink: #f0857a;
+
+  --sc-shadow: 0 6px 28px -12px rgba(0, 0, 0, 0.6);
+  --sc-shadow-lift: 0 4px 10px rgba(0, 0, 0, 0.2), 0 40px 80px -40px rgba(0, 0, 0, 0.7);
+  --sc-nav-bg: rgba(10, 10, 10, 0.82);
+}
+
+::selection {
+  background: var(--sc-violet-soft);
+  color: var(--sc-violet-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--sc-violet);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

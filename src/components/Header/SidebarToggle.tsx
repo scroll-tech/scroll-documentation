@@ -4,7 +4,7 @@ import { useState, useEffect } from "preact/hooks"
 import styles from "./SidebarToggle.module.css"
 import { clsx } from "~/lib"
 
-const MenuToggle: FunctionalComponent<{ dark: boolean }> = ({ dark }) => {
+const MenuToggle: FunctionalComponent = () => {
   const [sidebarShown, setSidebarShown] = useState(false)
 
   useEffect(() => {
@@ -21,7 +21,8 @@ const MenuToggle: FunctionalComponent<{ dark: boolean }> = ({ dark }) => {
       type="button"
       aria-pressed={sidebarShown ? "true" : "false"}
       id="menu-toggle"
-      className={clsx(styles.button, "text-black", dark && "text-white", "dark:text-white-800")}
+      aria-label={sidebarShown ? "Close menu" : "Open menu"}
+      className={clsx(styles.button, "text-ink")}
       onClick={() => setSidebarShown(!sidebarShown)}
     >
       {sidebarShown ? (

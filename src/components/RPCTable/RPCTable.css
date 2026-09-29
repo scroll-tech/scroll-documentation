@@ -24,3 +24,34 @@ table.__ethereum-rpc-table > caption > span {
   text-align: left;
   padding-left: 16px;
 }
+
+/* the package paints its table black on white; these follow the brand tokens so dark mode reads */
+table.__ethereum-rpc-table {
+  color: var(--sc-text);
+}
+
+table.__ethereum-rpc-table button {
+  font-family: var(--sc-sans);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--sc-ink);
+  background: var(--sc-surface-2);
+  border: 1px solid var(--sc-line);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color 0.25s var(--sc-ease), background-color 0.25s var(--sc-ease), border-color 0.25s var(--sc-ease);
+}
+
+table.__ethereum-rpc-table button:hover {
+  color: var(--sc-page);
+  background: var(--sc-ink);
+  border-color: var(--sc-ink);
+}
+
+#__ethereum-rpc-table-privacy-note-tooltip {
+  color: var(--sc-text);
+  background-color: var(--sc-surface);
+  border: 1px solid var(--sc-line);
+  border-radius: 12px;
+  box-shadow: var(--sc-shadow);
+}

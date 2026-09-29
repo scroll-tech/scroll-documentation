@@ -166,7 +166,6 @@
     "aboutScroll": {
       "title": "About Scroll",
       "bugBounty": "Bug Bounty",
-      "joinUs": "Join Us",
       "healthStatus": "Health Status",
       "privacyPolicy": "Privacy Policy",
       "termsAndConditions": "Terms and Conditions"
@@ -176,7 +175,6 @@
       "scrollDocsURL": "https://docs.scroll.io/",
       "blog": "Blog",
       "documentation": "Documentation",
-      "brandKit": "Brand Kit",
       "audits": "Audits"
     },
     "followUs": {

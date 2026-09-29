@@ -2,7 +2,18 @@
 
 /* Heading styles */
 :where(h1, h2, h3, h4, h5, h6) {
-  @apply leading-[1.3] font-medium tracking-[0.18px];
+  @apply leading-[1.3] font-semibold;
+  letter-spacing: -0.01em;
+  color: var(--sc-ink);
+}
+
+/* the landing page's display type: Instrument Serif at its one weight, thickened a hair with a
+   stroke in the text colour the way scroll.html does for .display (it has no bold cut, and the
+   browser's synthetic bold smears it) */
+:where(h1, h2) {
+  font-family: var(--font-family-display);
+  font-weight: 400;
+  -webkit-text-stroke: 0.3px currentColor;
 }
 
 :is(h1, h2, h3, h4, h5, h6) {
@@ -26,42 +37,40 @@
 }
 
 :where(h4) {
-  @apply text-[1.5rem] mb-4;
+  @apply text-[17px] mb-4;
 }
 
 :where(h3) {
-  @apply text-[20px] mb-[36px] mt-[40px];
+  @apply text-[19px] mb-[20px] mt-[40px];
 }
 
 :where(h2) {
-  @apply text-[28px] mb-4;
+  @apply text-[30px] mb-4 leading-[1.1];
 }
 
 :where(h1) {
-  @apply text-[40px] mb-4 leading-[1];
+  @apply text-[40px] mb-4 leading-[1.05];
+  letter-spacing: -0.015em;
 }
 
 @media screen and (min-width: 50em) {
   :where(h3) {
-    @apply text-[1.75rem];
+    @apply text-[21px];
   }
 
   :where(h2) {
-    @apply text-[2rem];
+    @apply text-[36px];
   }
 
   :where(h1) {
-    @apply text-[2.5rem] mb-9;
+    @apply text-[54px] mb-9;
   }
 }
 
 /* Paragraph  */
 :where(body, p) {
-  @apply leading-[1.5] font-normal font-text text-black dark:text-white-800 tracking-[0.09px];
-}
-
-:where(h1) {
-  @apply dark:text-white-900;
+  @apply leading-[1.5] font-normal font-text;
+  color: var(--sc-text);
 }
 
 :where(p) {
@@ -70,7 +79,8 @@
 
 /* Text  */
 :where(span, label) {
-  @apply font-text font-normal text-black dark:text-white-800 leading-[1rem] text-[0.875rem];
+  @apply font-text font-normal leading-[1rem] text-[0.875rem];
+  color: var(--sc-text);
 }
 
 :where(button, input, select, textarea) {
@@ -81,7 +91,9 @@
 
 /* Heading styles */
 :where(.heading, .heading-100, .heading-200, .heading-300, .heading-400, .heading-500, .heading-600) {
-  @apply font-text leading-[1.3] font-medium text-black dark:text-white-800;
+  @apply font-text leading-[1.3] font-medium;
+  -webkit-text-stroke: 0;
+  color: var(--sc-ink);
 }
 
 :where(.heading-100) {

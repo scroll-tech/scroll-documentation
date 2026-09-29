@@ -2,16 +2,26 @@
   @apply mt-4;
 }
 .tablist {
-  @apply border-0 border-b border-solid border-black mb-4;
+  @apply border-0 border-b border-solid mb-4;
+  border-color: var(--sc-line);
 }
 
 .tablist button {
-  @apply bg-transparent text-black border-none text-xl font-semibold leading-8 outline-none mb-[-1px] mr-12 capitalize;
+  @apply bg-transparent border-none text-[15px] font-medium leading-8 outline-none mb-[-1px] mr-8 capitalize cursor-pointer;
+  color: var(--sc-ink-3);
+  transition: color 0.25s var(--sc-ease);
 }
 
+.tablist button:hover {
+  color: var(--sc-ink);
+}
+
+/* the current tab: the ink over a violet stroke, as the blog's contents rail marks its place */
 button.primary,
 button.contentTabPrimary {
-  @apply !text-link border-link border-0 border-b-4 border-solid;
+  @apply border-0 border-b-2 border-solid;
+  color: var(--sc-ink) !important;
+  border-color: var(--sc-violet);
 }
 
 button.secondary {

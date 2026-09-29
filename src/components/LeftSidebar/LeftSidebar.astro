@@ -153,7 +153,8 @@ const processedSidebarSections = sidebarSections.map((section) => {
   .menu-separator {
     width: calc(100vw - 40px);
 
-    @apply border-0 border-t-[1px] border-solid border-black dark:border-white-800;
+    @apply border-0 border-t-[1px] border-solid;
+    border-color: var(--sc-line);
   }
   .sidebar-nav-groups.nav-groups > :first-child {
     @apply pt-[15px];
@@ -171,7 +172,7 @@ const processedSidebarSections = sidebarSections.map((section) => {
   }
 
   .nav-groups > li + li {
-    margin-top: 1.8rem;
+    margin-top: 2rem;
   }
 
   .nav-groups > :first-child {
@@ -183,27 +184,35 @@ const processedSidebarSections = sidebarSections.map((section) => {
     @apply mb-navbar;
   }
 
+  /* the group labels in the mono, as the blog sets its small labels */
   .nav-group-title {
-    font-size: 16px;
-    font-weight: 600;
-    /* padding: 0.1rem 1rem; */
-    padding: 0.1rem 0;
+    font-family: var(--sc-mono);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--sc-ink-3);
+    -webkit-text-stroke: 0;
+    padding: 0.1rem 10px;
     margin-bottom: 0.6rem;
   }
 
+  /* the rows carry their own 10px inset (the current page's pill needs it), so the labels share it */
   .nav-link a {
-    margin: 1px;
-    /* padding: 0.3rem 1rem; */
     font: inherit;
-    color: inherit;
+    color: var(--sc-ink-2);
     text-decoration: none;
     display: flex;
-    font-size: 16px;
-    /* line-height:1; */
-    margin-bottom: 10px;
+    font-size: 14.5px;
+    line-height: 1.45;
+    margin: 0 0 2px;
+    padding: 6px 10px;
+    border-radius: 8px;
     font-weight: 500;
     justify-content: space-between;
     align-items: center;
+    transition: color 0.2s var(--sc-ease), background-color 0.2s var(--sc-ease);
   }
 
   .nav-link a span {
@@ -215,20 +224,15 @@ const processedSidebarSections = sidebarSections.map((section) => {
 
   .nav-link a:hover,
   .nav-link a:focus {
-    /* @apply bg-bg-hover; */
-    /* background-color: var(--orange-100);  */
-    color: var(--orange-500);
+    color: var(--sc-ink);
+    background: var(--sc-surface-2);
   }
 
+  /* the current page: the violet's ink on its soft wash */
   .nav-link a[aria-current="page"] {
-    font-weight: 600;
-    color: var(--orange-500);
-    /* background-color: var(--orange-100);  */
-    /* @apply text-accent bg-bg-accent; */
-  }
-
-  :global(:root.theme-dark) .nav-link a[aria-current="page"] {
-    color: hsla(var(--color-base-white), 100%, 1);
+    font-weight: 500;
+    color: var(--sc-violet-ink);
+    background: var(--sc-violet-soft);
   }
 
   .nav-link + ul {
@@ -246,12 +250,12 @@ const processedSidebarSections = sidebarSections.map((section) => {
 
   .nav-link.open + ul {
     display: block;
-    border-left-width: 1px;
-    border-left-style: solid;
+    margin: 2px 0 8px 2px;
+    border-left: 1px solid var(--sc-line);
   }
 
   .nested {
-    @apply pl-5;
+    @apply pl-4;
   }
 
   @media (min-width: 50em) {

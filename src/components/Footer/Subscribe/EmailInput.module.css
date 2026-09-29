@@ -4,21 +4,21 @@
   display: inline-block;
   height: 48px;
   width: 100%;
-  max-width: 448px;
+  max-width: 420px;
 }
 
 .mask {
   width: 48px;
   height: 100%;
   position: absolute;
-  border-radius: 10px;
+  border-radius: 999px;
   z-index: 1;
   top: 0;
   display: flex;
-  transition: width 0.5s ease;
+  transition: width 0.5s var(--sc-ease);
   overflow: hidden;
   cursor: default;
-  @apply bg-black;
+  background: var(--sc-ink);
 }
 
 .iconButton {
@@ -46,7 +46,7 @@
   border-radius: 50%;
   overflow: visible;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  @apply text-white;
+  color: var(--sc-page);
 }
 
 .iconButton img {
@@ -55,26 +55,37 @@
 }
 
 .success {
-  font-size: 16px;
-  font-weight: 600;
-  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 999px;
   border-left: none;
   text-align: center;
   flex: 1;
-  line-height: 54px;
-  @apply text-white  bg-black;
+  line-height: 48px;
+  color: var(--sc-page);
+  background: var(--sc-ink);
 }
 
 .inputBase {
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 400;
   height: 100%;
   width: 100%;
-  border-radius: 10px;
-  border: 1px solid #000;
-  border-left: none;
-  text-align: center;
-  @apply text-black bg-pure-white border-black;
+  border-radius: 999px;
+  border: 1px solid var(--sc-line);
+  padding: 0 20px 0 64px;
+  text-align: left;
+  color: var(--sc-ink);
+  background: var(--sc-surface);
+  transition: border-color 0.25s var(--sc-ease);
+}
+
+.inputBase::placeholder {
+  color: var(--sc-ink-3);
+}
+
+.inputBase:focus {
+  border-color: var(--sc-ink-3);
 }
 
 @media (min-width: 50em) {
@@ -96,10 +107,6 @@
   }
 
   .success {
-    font-size: 20px;
-  }
-
-  .inputBase {
-    font-size: 20px;
+    line-height: 52px;
   }
 }

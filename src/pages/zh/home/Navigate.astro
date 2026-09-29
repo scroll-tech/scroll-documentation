@@ -36,21 +36,24 @@ const navList = [
 
 <style>
   .navigate {
-    margin-top: 146px;
+    margin-top: 40px;
   }
 
   .navs {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+    margin-top: 48px;
   }
 
   @media screen and (max-width: 50em) {
     .navigate {
-      margin-top: 106px;
+      margin-top: 24px;
     }
     .navs {
-      flex-direction: column;
-      align-items: center;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-top: 32px;
     }
   }
 </style>

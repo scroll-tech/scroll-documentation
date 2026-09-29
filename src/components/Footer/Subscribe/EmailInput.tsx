@@ -16,29 +16,21 @@ const EmailInput = (props) => {
   return (
     <div className={styles.container}>
       <div
-        className={clsx(styles.mask, "dark:bg-white")}
+        className={styles.mask}
         style={{
           ...(end && { width: "100%" }),
         }}
       >
-        <button className={clsx(styles.iconButton, "dark:text-black")} onClick={onClick} disabled={end}>
+        <button className={styles.iconButton} onClick={onClick} disabled={end} aria-label="Subscribe">
           <ArrowSvg></ArrowSvg>
         </button>
-        <div className={clsx(styles.success, "dark:text-black", "dark:bg-white")}>{ t("landing.NewsletterCTA.thankYouForSubscribing") }</div>
+        <div className={styles.success}>{t("landing.NewsletterCTA.thankYouForSubscribing")}</div>
       </div>
       <input
         placeholder="your email address here"
         {...restProps}
         onKeyDown={handleEnter}
-        className={clsx(
-          styles.inputBase,
-          "dark:text-white-800",
-          "dark:bg-black",
-          "dark:border-white-800",
-          "placeholder:text-[#dcdcdc]",
-          "placeholder:dark:text-[#FFF8F366]",
-          "focus:outline-none"
-        )}
+        className={clsx(styles.inputBase, "focus:outline-none")}
       ></input>
     </div>
   )

@@ -56,7 +56,8 @@ nav ul {
   text-decoration: none;
   align-items: center;
   gap: 0.3rem;
-  @apply text-link tracking-[0.18px];
+  @apply text-link;
+  transition: color 0.25s var(--sc-ease), text-decoration-color 0.25s var(--sc-ease);
 }
 
 :where(a:hover) {
@@ -101,12 +102,7 @@ article > section nav {
 }
 
 article > section ::marker {
-  font-weight: bold;
-  @apply text-marker;
-}
-
-.dark article > section ::marker {
-  @apply text-dark-marker;
+  color: var(--sc-ink-3);
 }
 
 article > section iframe {
@@ -127,14 +123,31 @@ article > section iframe {
   /* Override styles from design-system */
   margin: 0 0 16px;
   max-width: 100%;
-  line-height: 1.6em;
+  line-height: 1.7;
 }
 
 .main-section :is(h2, h3, h4) {
   /* Override styles from design-system */
-  margin-top: 36px;
-  margin-bottom: 24px;
+  margin-top: 40px;
+  margin-bottom: 20px;
   max-width: 100%;
+}
+
+.main-section h2 {
+  margin-top: 56px;
+}
+
+/* links in running text: the violet, underlined with a quiet line that firms up on hover */
+.main-section :is(p, li, td, th, dd, figcaption) a:not(.remix-callout a, .header-link a, .whats-next a, nav a) {
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
+}
+
+.main-section :is(p, li, td, th, dd, figcaption) a:not(.remix-callout a, .header-link a, .whats-next a, nav a):hover {
+  text-decoration-color: currentColor;
 }
 
 a > code::before {
@@ -159,26 +172,37 @@ strong {
   color: inherit;
 }
 
+.main-section strong {
+  color: var(--sc-ink);
+}
+
+.main-section a strong {
+  color: inherit;
+}
+
 /* Supporting Content */
 
 /* pre > code {
   background-color: transparent;
 } */
 :not(pre) > code {
-  --border-radius: 3px;
-  --padding-block: 0.1rem;
-  --padding-inline: 0.33rem;
-  font-size: 0.85em;
+  --border-radius: 6px;
+  --padding-block: 0.12em;
+  --padding-inline: 0.4em;
+  font-size: 0.86em;
   padding: var(--padding-block) var(--padding-inline);
   margin: 0.125em;
   border-radius: var(--border-radius);
   word-break: break-word;
-  @apply font-mono text-code bg-code dark:text-dark-code dark:bg-dark-code;
+  @apply font-mono;
+  color: var(--sc-ink);
+  background: var(--sc-code-inline-bg);
 }
 
 a > code {
   position: relative;
-  @apply text-link-code dark:text-link-code bg-link-code dark:bg-link-dark-code;
+  color: var(--sc-violet);
+  background: var(--sc-violet-soft);
 }
 
 pre.astro-code > code {
@@ -206,15 +230,17 @@ pre {
   @apply font-mono;
 }
 
+/* the blog's tables (frontends blog.module.css): hairlines, a tinted head, 12px corners */
 table {
   width: 100%;
-  border-radius: 27px;
-  padding: var(--padding-block) 0;
+  padding: 0;
   margin: 0;
   border-collapse: collapse;
-  line-height: 2;
-  @apply text-black dark:text-white-800 font-text border-none bg-pure-white dark:bg-black;
-  border-radius: 10px;
+  line-height: 1.6;
+  @apply font-text border-none;
+  color: var(--sc-text);
+  background: var(--sc-page);
+  border-radius: 12px;
   position: relative;
   z-index: 1;
 }
@@ -223,23 +249,35 @@ table::before {
   content: "";
   display: block;
   position: absolute;
-  z-index: -1;
+  z-index: 1;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
-  border-radius: 27px;
-  border: 1px solid #dadada;
-  @apply border-primary dark:border-dark-primary;
+  border-radius: 12px;
+  border: 1px solid var(--sc-line);
+  pointer-events: none;
 }
 
 table thead tr {
-  line-height: 2.2;
   @apply font-text font-medium text-heading;
 }
 
+table thead th {
+  background: var(--sc-surface-2);
+}
+
+table thead th:first-child {
+  border-top-left-radius: 12px;
+}
+
+table thead th:last-child {
+  border-top-right-radius: 12px;
+}
+
 table tbody tr {
-  @apply border-0 border-t-[1px] border-solid border-primary dark:border-dark-primary;
+  @apply border-0 border-t-[1px] border-solid;
+  border-color: var(--sc-line);
 }
 
 table code {
@@ -247,32 +285,45 @@ table code {
 }
 
 th {
-  font-weight: bold;
-  @apply text-black dark:text-white-800;
+  font-weight: 600;
+  color: var(--sc-ink);
 }
 
 td,
 th {
-  padding: 8px 30px;
+  padding: 11px 20px;
   text-align: left;
-  font-size: 16px;
+  font-size: 15px;
 }
 
 pre {
-  @apply text-code-text bg-code-bg;
+  color: var(--sc-ink);
+  background: var(--sc-code-block-bg);
+  border: 1px solid var(--sc-line-2);
+}
+
+/* Prism (MarkmapView) keeps its dark Darcula palette, so it keeps a dark ground */
+pre[data-language] {
+  background: #141312;
+  border-color: #141312;
 }
 
 blockquote code {
-  @apply bg-bg;
+  background: var(--sc-code-inline-bg);
 }
 
+/* the blog's quote: a hairline to the left and the softer ink, no panel */
 blockquote {
   margin: 2rem 0;
-  padding: 20px 1.5rem 4px;
-  border-radius: 0 0.25rem 0.25rem 0;
+  padding: 2px 0 2px 22px;
   line-height: 1.7;
-  @apply border-0 border-l-[29px] border-solid border-[#FFF0DD] dark:border-[#3b3b3b] bg-white dark:bg-dark-normal;
-  border-radius: 27px;
+  border: 0;
+  border-left: 2px solid var(--sc-line);
+  color: var(--sc-ink-2);
+}
+
+blockquote :is(p, li) {
+  color: var(--sc-ink-2);
 }
 
 blockquote h4 {
@@ -288,43 +339,47 @@ img {
   /* align-items: center; */
 }
 
+/* the small labels over the sidebars' lists, set in the mono as the blog's "Contents" is */
 h2.heading {
-  font-size: 18px;
-  font-weight: 700 !important;
+  font-family: var(--sc-mono);
+  font-size: 11px;
+  font-weight: 500 !important;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sc-ink-3);
   padding: 0.1rem 0rem;
-  /* margin-top: 30px; */
-  margin-bottom: 16px;
-  font-family: var(--font-family-body-text);
+  margin-bottom: 12px;
 }
 
+/* the blog's table of contents: a hairline rail, the current entry in ink over a violet stroke */
 .header-link {
-  font-size: 16px;
-  line-height: normal;
-  padding: 4.5px 0 5.5px 1rem;
-  /* margin-left: 1rem; */
-  /* border-color: var(--black-100); */
-
-  @apply border-0 border-l-[4px] border-solid border-black dark:border-white-800;
+  font-size: 13px;
+  line-height: 1.45;
+  padding: 7px 0 7px 16px;
+  margin-left: 0;
+  color: var(--sc-ink-3);
+  @apply border-0 border-l-[1px] border-solid;
+  border-color: var(--sc-line);
+  transition: color 0.25s var(--sc-ease), border-color 0.25s var(--sc-ease);
 }
 
 .header-link.active,
 .header-link:hover,
 .header-link:focus {
-  border-color: var(--orange-500);
-  color: var(--orange-500);
+  color: var(--sc-ink);
+}
+
+.header-link.active {
+  border-color: var(--sc-violet);
 }
 
 .header-link:focus-within {
-  border-left-color: hsla(var(--color-gray-40), 1);
-  @apply text-light;
+  color: var(--sc-ink);
 }
 
-.header-link:hover svg {
-  color: var(--orange-500);
-}
-
-.header-link:hover span {
-  color: var(--orange-500);
+.header-link:hover :is(svg, span) {
+  color: var(--sc-ink);
 }
 
 .header-link a {
@@ -335,11 +390,11 @@ h2.heading {
 }
 
 .header-link.depth-3 {
-  padding-left: 2rem;
+  padding-left: 28px;
 }
 
 .header-link.depth-4 {
-  padding-left: 3rem;
+  padding-left: 40px;
 }
 
 .header-link a {
@@ -349,8 +404,14 @@ h2.heading {
 }
 
 .header-link a span {
-  font-size: 16px;
-  line-height: normal;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.main-section hr {
+  border: 0;
+  border-top: 1px solid var(--sc-line);
+  margin-block: 44px;
 }
 
 /* Screenreader Only Text */
@@ -397,13 +458,8 @@ h2.heading {
     --fullwidth-max-width: 80rem;
   }
 
-  .header-link {
-    margin-left: 1rem;
-  }
-
   h2.heading {
-    font-size: 16px;
-    padding: 0.1rem 1rem;
+    padding: 0.1rem 0;
   }
 }
 

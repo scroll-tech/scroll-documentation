@@ -67,7 +67,12 @@ function EmptyQueryBoundary({ children, size, fallback }) {
                       <a
                         style={{ padding: "var(--space-1x) var(--space-2x)" }}
                         href={article.url}
-                        className={clsx(styles.hit, "paragraph-200", "recently-viewed-match-hit", "dark:text-white-800")}
+                        className={clsx(
+                          styles.hit,
+                          "paragraph-200",
+                          "recently-viewed-match-hit",
+                          "dark:text-white-800"
+                        )}
                       >
                         {article.title}
                       </a>
@@ -148,14 +153,7 @@ export function SearchModal({ size = "mini", isOpen, onClose }: { size: Size; is
   }
 
   return (
-    <div
-      id={styles.searchModal}
-      className={clsx(
-        styles[size],
-        "bg-pure-white",
-        size === "mini" ? "dark:bg-black lg:dark:!bg-dark-normal" : "dark:bg-dark-normal"
-      )}
-    >
+    <div id={styles.searchModal} className={clsx(styles[size])}>
       <InstantSearch indexName={getIndexName()} searchClient={searchClient}>
         <SearchInput size={size} onClose={onClose} />
         <div className={styles.resultsWrapper}>

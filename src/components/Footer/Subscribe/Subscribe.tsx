@@ -47,9 +47,9 @@ export default function Subscribe(props) {
   }
 
   return (
-    <div className={clsx(styles.container, "dark:bg-dark-highlight")}>
+    <div className={styles.container}>
       <div className={styles.subscribeBox}>
-        <span className="text-white dark:text-black bg-black dark:bg-white rounded-[50%]">
+        <span className={styles.subscribeIcon}>
           <SubscribeSvg></SubscribeSvg>
         </span>
 

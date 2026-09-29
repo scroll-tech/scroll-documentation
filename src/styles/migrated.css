@@ -3,6 +3,8 @@
 @tailwind utilities;
 
 @layer utilities {
+  /* the landing page's pill button (scroll.html .btn): an ink outline whose ink chip, carrying
+     the arrow, fills the whole pill on hover */
   .remix-callout {
     gap: 1rem;
     @apply inline-flex flex-wrap mb-[1em] relative;
@@ -13,22 +15,26 @@
     font-family: var(--font-family-text);
     position: relative;
     z-index: 1;
-    font-weight: 600;
-    padding: 0.1rem 16px 0.1rem 64px;
-    height: 48px;
-    line-height: 46px;
-    border: 1px solid #ed7255;
-    border-radius: 11px;
+    font-weight: 500;
+    padding: 0 24px 0 60px;
+    height: 44px;
+    line-height: 42px;
+    border: 1px solid var(--sc-ink);
+    border-radius: 999px;
+    color: var(--sc-ink);
     cursor: pointer;
     margin: 0;
     min-width: 250px;
     width: 100%;
-    font-weight: 600;
-    font-size: 16px;
+    font-size: 15px;
+    overflow: hidden;
+    isolation: isolate;
+    transition: color 0.3s var(--sc-ease), transform 0.45s var(--sc-ease);
   }
 
   .remix-callout a:hover {
-    color: #ffffff;
+    color: var(--sc-page);
+    transform: translateY(-1px);
   }
 
   .remix-callout a::before {
@@ -38,12 +44,16 @@
     top: 0;
     bottom: 0;
     left: 0;
-    background: #ed7255
-      url("data:image/svg+xml,%3Csvg fill='none' height='16' viewBox='0 0 21 16' width='21' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m21 8.00267-8.3996 7.99733v-2.7067l4.5767-4.35752c-5.7251-.08013-11.45204.31876-17.1565267.05877l-.02057369-1.96951c5.68391039.23862 11.34730039-.1389 17.03120039-.06055l-4.4308-4.21858v-2.74591055l8.3996 7.99733055z' fill='%23fff8f3'/%3E%3C/svg%3E")
-      left 16px center no-repeat;
-    border-radius: 10px;
-    right: calc(100% - 48px);
-    transition: right 0.3s ease-in-out;
+    background: var(--sc-ink)
+      url("data:image/svg+xml,%3Csvg fill='none' height='16' viewBox='0 0 21 16' width='21' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m21 8.00267-8.3996 7.99733v-2.7067l4.5767-4.35752c-5.7251-.08013-11.45204.31876-17.1565267.05877l-.02057369-1.96951c5.68391039.23862 11.34730039-.1389 17.03120039-.06055l-4.4308-4.21858v-2.74591055l8.3996 7.99733055z' fill='%23ffffff'/%3E%3C/svg%3E")
+      left 13px center / 18px auto no-repeat;
+    border-radius: 999px;
+    right: calc(100% - 42px);
+    transition: right 0.4s var(--sc-ease);
+  }
+
+  .dark .remix-callout a::before {
+    background-image: url("data:image/svg+xml,%3Csvg fill='none' height='16' viewBox='0 0 21 16' width='21' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m21 8.00267-8.3996 7.99733v-2.7067l4.5767-4.35752c-5.7251-.08013-11.45204.31876-17.1565267.05877l-.02057369-1.96951c5.68391039.23862 11.34730039-.1389 17.03120039-.06055l-4.4308-4.21858v-2.74591055l8.3996 7.99733055z' fill='%230a0a0a'/%3E%3C/svg%3E");
   }
 
   .remix-callout a:hover::before {
@@ -51,28 +61,22 @@
   }
 
   @media screen and (min-width: 50em) {
-    .remix-callout {
-    }
-
     .remix-callout a {
-      padding: 0.1rem 16px 0.1rem 64px;
-      height: 54px;
-      line-height: 52px;
-      font-size: 18px;
+      padding: 0 26px 0 64px;
+      height: 48px;
+      line-height: 46px;
+      font-size: 16px;
       width: auto;
     }
 
-    .remix-callout a:hover {
-    }
-
     .remix-callout a::before {
-      background: #ed7255
-        url("data:image/svg+xml,%3Csvg fill='none' height='16' viewBox='0 0 21 16' width='21' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m21 8.00267-8.3996 7.99733v-2.7067l4.5767-4.35752c-5.7251-.08013-11.45204.31876-17.1565267.05877l-.02057369-1.96951c5.68391039.23862 11.34730039-.1389 17.03120039-.06055l-4.4308-4.21858v-2.74591055l8.3996 7.99733055z' fill='%23fff8f3'/%3E%3C/svg%3E")
-        left 16px center no-repeat;
-      right: calc(100% - 54px);
+      left: 0;
+      right: calc(100% - 46px);
+      background-position: left 14px center;
     }
 
     .remix-callout a:hover::before {
+      right: 0;
     }
   }
 }

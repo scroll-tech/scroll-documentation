@@ -169,7 +169,6 @@
     "aboutScroll": {
       "title": "Acerca de Scroll",
       "bugBounty": "Cazarecompensas de bugs",
-      "joinUs": "Únete a nosotros",
       "healthStatus": "Estado de servicios",
       "privacyPolicy": "Políticas de privacidad",
       "termsAndConditions": "Terminos y condiciones"
@@ -179,7 +178,6 @@
       "scrollDocsURL": "https://docs.scroll.io/es",
       "blog": "Blog",
       "documentation": "Documentación",
-      "brandKit": "Kit de Marca",
       "audits": "Auditorías"
     },
     "followUs": {

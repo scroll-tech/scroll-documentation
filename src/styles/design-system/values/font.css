@@ -1,7 +1,9 @@
 :root {
-  --font-family-text: "trans-sans", "circular", Arial, "Helvetica Neue", Helvetica, sans-serif;
-  --font-family-code: "Roboto Mono", "Fira Code", "Courier New", monospace, sans-serif;
-  --font-family-body-text: "Roboto", "trans-sans", "circular", Arial, "Helvetica Neue", Helvetica, sans-serif;
+  /* the landing page's faces, see styles/brand.css */
+  --font-family-text: var(--sc-sans);
+  --font-family-code: var(--sc-mono);
+  --font-family-body-text: var(--sc-sans);
+  --font-family-display: var(--sc-serif);
 
   /* Font weights */
   --font-weight-normal: 400;

@@ -22,6 +22,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site)
     <style>
       body {
         --doc-padding: 65px;
+        background: var(--sc-bg);
       }
 
       .home-layout {
@@ -32,7 +33,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site)
         position: fixed;
         z-index: 10;
         display: none;
-        @apply bg-pure-white dark:bg-black;
+        background: var(--sc-page);
       }
 
       @media (min-width: 50em) {
@@ -78,8 +79,8 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site)
       })
     </script>
   </head>
-  <body>
-    <Header dark />
+  <body class="home">
+    <Header transparent />
     <aside id="grid-left" class="grid-sidebar" title="Site Navigation">
       <LeftSidebar currentPage={currentPage} {content} />
     </aside>

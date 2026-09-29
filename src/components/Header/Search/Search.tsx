@@ -41,16 +41,7 @@ export default function Search() {
 
   return (
     <div className={styles.container}>
-      <div
-        onClick={onOpen}
-        className={clsx(
-          styles.searchInput,
-          "dark:bg-dark-normal",
-          "dark:text-white-800",
-          "hover:dark:text-white-800",
-          "focus:dark:text-white-800"
-        )}
-      >
+      <div onClick={onOpen} className={styles.searchInput}>
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
           <path
             fill-rule="evenodd"
@@ -68,7 +59,7 @@ export default function Search() {
             height="18"
             viewBox="0 0 18 18"
             fill="none"
-            className={clsx(styles.closeButtonMobile, "dark:border-black dark:bg-black")}
+            className={styles.closeButtonMobile}
             onClick={onClose}
           >
             <path

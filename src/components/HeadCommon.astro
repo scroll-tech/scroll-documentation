@@ -1,4 +1,5 @@
 ---
+import "../styles/brand.css"
 import "../styles/theme.css"
 import "../styles/index.css"
 import "../styles/migrated.css"
@@ -17,13 +18,35 @@ import "../styles/design-system/global-styles.css"
 
 <link rel="sitemap" href="/sitemap-index.xml" />
 
+<!-- The faces of scroll.io's landing page: Instrument Serif for display, Inter for text, JetBrains Mono for code -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+  rel="stylesheet"
+/>
+
 <!-- Scrollable a11y code helper -->
 <script src="/make-scrollable-code-focusable.js" is:inline></script>
 
 <!-- Mermaid.js for client-side rendering -->
 <script type="module">
   import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs"
-  mermaid.initialize({ startOnLoad: true, theme: "default" })
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "base",
+    themeVariables: {
+      fontFamily: "Inter, -apple-system, BlinkMacSystemFont, sans-serif",
+      primaryColor: "#EDE8FC",
+      primaryBorderColor: "#6D45E8",
+      primaryTextColor: "#0A0A0A",
+      secondaryColor: "#F4F2F0",
+      tertiaryColor: "#FAF9F8",
+      lineColor: "#8B8781",
+      noteBkgColor: "#FAF9F8",
+      noteBorderColor: "#E5E1DC",
+    },
+  })
 </script>
 
 <!-- Google Tag Manager -->
